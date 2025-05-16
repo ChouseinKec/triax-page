@@ -2,7 +2,7 @@
 
 ## 🧩 Property Reference
 
-| **Category**           | **Property**                                                                               | [Scalable Units](#scalable-units) | [Keywords](#keywords)                                                   | [Functions](#functions)                                                                                 |
+| **Category**           | **Property**                                                                               | [Scalable Units](#-scalable-units) | [Keywords](#-keywords)                                                   | [Functions](#-math-functions)                                                                                 |
 | ---------------------- | ------------------------------------------------------------------------------------------ | --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | **Display**            | display                                                                                    |                                   | block, flex, grid, none                                                 |                                                                                                         |
 |                        | flexDirection                                                                              |                                   | row, column, row-reverse, column-reverse                                |                                                                                                         |
@@ -114,8 +114,8 @@ Common universal keywords:
 
 | Function  | Accepted Values                                      |
 | --------- | ---------------------------------------------------- |
-| `min()`   | [Scalable Units](#scalable-units), `var()`           |
-| `max()`   | [Scalable Units](#scalable-units), `var()`           |
+| `min()`   | [Scalable Units](#-scalable-units), `var()`           |
+| `max()`   | [Scalable Units](#-scalable-units), `var()`           |
 | `clamp()` | min, preferred, max values (`min()`, `max()`, units) |
 | `calc()`  | Any combinable units (e.g., `100% - 10px`)           |
 
@@ -125,8 +125,8 @@ Common universal keywords:
 
 | Function        | Accepted Values                                                                                                         |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `minmax()`      | [Scalable Units](#scalable-units), `min-content`, `max-content`, `auto`, `min()`, `max()`, `clamp()`, `calc()`, `var()` |
-| `fit-content()` | [Scalable Units](#scalable-units)                                                                                       |
+| `minmax()`      | [Scalable Units](#-scalable-units), `min-content`, `max-content`, `auto`, `min()`, `max()`, `clamp()`, `calc()`, `var()` |
+| `fit-content()` | [Scalable Units](#-scalable-units)                                                                                       |
 | `repeat()`      | Numeric or `auto-fill`, `auto-fit` + value(s)                                                                           |
 
 ---
@@ -135,12 +135,12 @@ Common universal keywords:
 
 | Function       | Accepted Units                             |
 | -------------- | ------------------------------------------ |
-| `translateX()` | [Scalable Units](#scalable-units), `var()` |
-| `translateY()` | [Scalable Units](#scalable-units), `var()` |
-| `translateZ()` | [Scalable Units](#scalable-units), `var()` |
-| `rotateX()`    | [Angle Units](#angle-units), `var()`       |
-| `rotateY()`    | [Angle Units](#angle-units), `var()`       |
-| `rotateZ()`    | [Angle Units](#angle-units), `var()`       |
+| `translateX()` | [Scalable Units](#-scalable-units), `var()` |
+| `translateY()` | [Scalable Units](#-scalable-units), `var()` |
+| `translateZ()` | [Scalable Units](#-scalable-units), `var()` |
+| `rotateX()`    | [Angle Units](#-angle-units), `var()`       |
+| `rotateY()`    | [Angle Units](#-angle-units), `var()`       |
+| `rotateZ()`    | [Angle Units](#-angle-units), `var()`       |
 | `scaleX()`     | number (e.g. 1, 1.2)                       |
 | `scaleY()`     | number                                     |
 | `scaleZ()`     | number                                     |
