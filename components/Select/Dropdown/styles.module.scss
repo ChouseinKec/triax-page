@@ -1,0 +1,11 @@
+.DropdownSelect {
+	text-align: center;
+}
+
+.DropdownSelect_Options {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: var(--size-sm);
+}

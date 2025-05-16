@@ -1,0 +1,72 @@
+@use '../../../mixins//mixins.module.scss' as inputMixins;
+
+.PositionSelect {
+	width: 100%;
+	min-width: 80px;
+	max-width: 150px;
+	background: var(--color-black--lighter);
+
+	@include inputMixins.components--container($background: false);
+}
+
+.PositionSelect_Positions {
+	padding: var(--size-sm);
+	aspect-ratio: 1/1;
+
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	gap: var(--size-md);
+
+	&[data-corners='false'] {
+		[data-value*='TopLeft'],
+		[data-value*='TopRight'],
+		[data-value*='BottomLeft'],
+		[data-value*='BottomRight'] {
+			opacity: 0.3;
+			pointer-events: none;
+		}
+	}
+}
+
+.PositionSelect_Position {
+	position: relative;
+	cursor: pointer;
+	border-radius: var(--size-sm);
+
+	&::after {
+		content: '';
+		display: block;
+
+		width: var(--size-sm);
+		height: var(--size-sm);
+
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+
+		background: var(--color-gray);
+		border-radius: 50%;
+	}
+
+	&[data-value='Center'] {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
+	&:hover,
+	&[data-selected='true'] {
+		background: var(--color-gray);
+	}
+}
+
+.PositionSelect_Current {
+	width: 100%;
+	color: var(--color-gray--darker);
+	text-align: center;
+	text-transform: uppercase;
+	font-size: var(--font-size-sm);
+	padding: var(--size-sm);
+	border-top: 1px solid var(--color-gray--darker);
+}

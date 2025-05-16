@@ -1,0 +1,14 @@
+.group {
+	display: grid;
+	grid-template-columns: var(--group-columns);
+	grid-template-rows: var(--group-rows);
+
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: var(--size-md);
+	padding: var(--size-md);
+
+	.group {
+		padding: 0;
+	}
+}
