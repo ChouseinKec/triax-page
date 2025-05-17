@@ -15,6 +15,7 @@ import {
 	isFunctionVariable,
 	isKeywordValid,
 	isFunctionValid,
+	getStyleOptionByValue,
 } from './style';
 
 describe('extractNumber', () => {
@@ -641,5 +642,77 @@ describe('isFunctionValid', () => {
 			option = { name: '', value: '', syntax };
 			expect(isFunctionValid(value, option)).toBe(false);
 		});
+	});
+});
+
+describe('getStyleOptionByValue', () => {
+	// Basic numeric matches
+	it('should find exact numeric matches', () => {
+		const options: STYLE_VALUE[] = [
+			{ value: '100', name: 'Thin', syntax: 'length' },
+			{ value: '200', name: 'Bold', syntax: 'length' },
+		];
+		expect(getStyleOptionByValue('100', options)).toEqual({ value: '100', name: 'Thin', syntax: 'length' });
+		expect(getStyleOptionByValue('200', options)).toEqual({ value: '200', name: 'Bold', syntax: 'length' });
+	});
+
+	// Basic non-numeric matches (length comparison)
+	it('should match values with same length when non-numeric', () => {
+		const options: STYLE_VALUE[] = [
+			{ value: '10px', name: 'Small', syntax: 'length' },
+			{ value: '10%', name: 'Medium', syntax: 'length' },
+			{ value: 'auto', name: 'Auto', syntax: 'keyword' },
+		];
+
+		expect(getStyleOptionByValue('10px', options)).toEqual({ value: '10px', name: 'Small', syntax: 'length' });
+		expect(getStyleOptionByValue('10%', options)).toEqual({ value: '10%', name: 'Medium', syntax: 'length' });
+		expect(getStyleOptionByValue('auto', options)).toEqual({ value: 'auto', name: 'Auto', syntax: 'keyword' });
+	});
+
+	// No match cases
+	it('should return undefined when no match found', () => {
+		const options: STYLE_VALUE[] = [
+			{ value: '20rem', name: 'Medium', syntax: 'length' },
+			{ value: 'normal', name: 'Normal', syntax: 'keyword' },
+			{ value: 'bold', name: 'Bold', syntax: 'keyword' },
+		];
+		expect(getStyleOptionByValue('italic', options)).toBeUndefined();
+		expect(getStyleOptionByValue('100', options)).toBeUndefined();
+		expect(getStyleOptionByValue('20%', options)).toBeUndefined();
+	});
+
+	// Single option cases
+	it('should return the single option regardless of value', () => {
+		const singleOption: STYLE_VALUE[] = [{ value: '400', name: 'Regular', syntax: 'number' }];
+		expect(getStyleOptionByValue('100', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
+		expect(getStyleOptionByValue('abc', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
+	});
+
+	// Edge cases
+	it('should handle empty or invalid options', () => {
+		expect(getStyleOptionByValue('100', [])).toBeUndefined();
+		expect(getStyleOptionByValue('100', null as any)).toBeUndefined();
+	});
+
+	it('should handle empty or invalid values', () => {
+		const options: STYLE_VALUE[] = [
+			{ value: '10px', name: 'Small', syntax: 'length' },
+			{ value: '20px', name: 'Large', syntax: 'length' },
+		];
+		expect(getStyleOptionByValue('', options)).toBeUndefined();
+		expect(getStyleOptionByValue(null as any, options)).toBeUndefined();
+	});
+
+	// Mixed cases
+	it('should handle mixed numeric and non-numeric options correctly', () => {
+		const mixedOptions: STYLE_VALUE[] = [
+			{ value: '100px', name: 'px', syntax: 'length' },
+			{ value: '100', name: '100', syntax: 'length' },
+			{ value: 'bold', name: 'Bold', syntax: 'keyword' },
+		];
+
+		expect(getStyleOptionByValue('100', mixedOptions)).toEqual({ value: '100', name: '100', syntax: 'length' });
+		expect(getStyleOptionByValue('100px', mixedOptions)).toEqual({ value: '100px', name: 'px', syntax: 'length' });
+		expect(getStyleOptionByValue('bold', mixedOptions)).toEqual({ value: 'bold', name: 'Bold', syntax: 'keyword' });
 	});
 });

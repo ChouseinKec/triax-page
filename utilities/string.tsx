@@ -38,6 +38,7 @@ export function isLetters(input: unknown): boolean {
         input.length > 0 &&
         /^[a-zA-Z]+(-[a-zA-Z]+)*$/.test(input);
 }
+
 /**
  * Checks whether the given value is a valid number.
  *
