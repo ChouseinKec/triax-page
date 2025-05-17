@@ -1,0 +1,16 @@
+@use '../../../mixins/mixins.module.scss' as inputMixins;
+
+.StringInput {
+	width: 100%;
+	text-align: center;
+
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	-moz-appearance: textfield;
+	appearance: textfield;
+	@include inputMixins.components--input;
+}
