@@ -1021,11 +1021,14 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
     const options = STYLES_CONSTANTS[property]?.options;
     const option = getStyleOptionByValue(value, options);
 
+
     // If no option found 
     if (!option) {
         devLog.error(`Couldn't find matching option for property:'${property}' and value:'${value}'`);
         return false;
     }
+
+
 
     // Validate option
     return isOptionValid(value, option);
@@ -1095,15 +1098,50 @@ export const splitSyntax = (input: string): string[] | undefined => {
 }
 
 
-
+/**
+ * Finds a style option from an array that matches the given value.
+ * The matching logic differs based on whether the value is numeric or not.
+ * 
+ * @param {string} value - The style value to match against options. 
+ *                         Examples: "100", "12px", "bold"
+ * @param {STYLE_VALUE[]} options - Array of style options to search through.
+ *                                  Example: [{value: "100", name: "Thin"}, 
+ *                                           {value: "10px", name: "px"}]
+ * 
+ * @returns {STYLE_VALUE | undefined} The matching style option or undefined if not found.
+ * 
+ * @example
+ * // Numeric value match
+ * options = [{value: "100", name: "Thin"},{value: "200", name: "200"}]
+ * getStyleOptionByValue("100", options); * // returns {value: "100", name: "Thin"}
+ * 
+ * // Non-numeric value match
+ * options = [{value: "10px", name: "Medium"}, *{value: "10rem", name: "Small"}]
+ * getStyleOptionByValue("10px", options); * // returns {value: "10px", name: "Small"}
+ * 
+ * // No match found
+ * options = [{value: "normal", name: "Normal"}]
+ * getStyleOptionByValue("bold", options); * // returns undefined
+*/
 export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): STYLE_VALUE | undefined => {
+
+    // Check if options is a valid non-empty array
     if (!Array.isArray(options) || options.length <= 0) {
         devLog.error(`Options should be non-empty array<STYLE_VALUE[]>.`);
         return undefined;
     }
 
+    // If there's only one option, return it immediately
     if (options.length === 1) return options[0];
 
+    // Handle numeric values (like font-weight: 100, 200, etc.)
+    if (isNumeric(value)) {
+        return options.find((option) => {
+            return option.value === value;
+        });;
+    }
+
+    // Handle other values by comparing extracted length values
     return options.find((option) => {
         return extractLength(option.value) === extractLength(value);
     });;
