@@ -90,6 +90,42 @@ export function isNumeric(input: unknown): boolean {
 }
 
 /**
+ * Robust URL validation with regex
+ * @param {string} input - The string to validate
+ * @param {boolean} [requireProtocol=false] - Require http/https prefix
+ * @returns {boolean} - True if valid URL
+ * 
+ * @example
+ * isUrlValid('https://www.google.com') // true
+ * isUrlValid('google.com')            // true
+ * isUrlValid('https://www.google')    // false (incomplete domain)
+ * isUrlValid('asdkasjdasd')           // false
+ */
+export function isURL(input: string, requireProtocol: boolean = false): boolean {
+  // Quick sanity checks
+  if (typeof input !== 'string' || input.length < (requireProtocol ? 10 : 3)) {
+    return false;
+  }
+
+  const protocolPattern = requireProtocol ? '^(https?:\\/\\/)' : '^(https?:\\/\\/)?';
+  const domainPattern = '([a-z0-9-]+\\.)+'; // Subdomains
+  const tldPattern = '[a-z]{2,}'; // TLD (min 2 chars)
+  const portPathQueryPattern = '(\\:\\d+)?(\\/[-\\w$.+!*\'(),%;:@&=]*)*(\\?[;&\\w%.+!*\'(),%;:@&=]*)?(\\#[-\\w]*)?$';
+  
+  const regex = new RegExp(
+    `${protocolPattern}${domainPattern}${tldPattern}${portPathQueryPattern}`,
+    'i'
+  );
+
+  // Additional check for dots in TLD (e.g., "google.")
+  if (input.endsWith('.') || input.includes('..')) {
+    return false;
+  }
+
+  return regex.test(input);
+}
+
+/**
  * Extracts text between specified start and end characters, supporting nested structures.
  * 
  * @param {string} input - The input string to search within
