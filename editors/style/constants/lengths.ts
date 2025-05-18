@@ -63,6 +63,15 @@ const keyword_revert: STYLE_VALUE = createKeyword('revert');
 const keyword_revertlayer: STYLE_VALUE = createKeyword('revert-layer');
 
 /* --------------- FUNCTION --------------- */
+// Generic Functions
+const function_url: STYLE_VALUE = {
+	name: 'url()',
+	value: "url('https://github.com/ChouseinKec/triax-page')",
+	syntax: 'function(url)',
+	category: 'function',
+	lengths: [],
+};
+
 // Math Functions
 const function_min: STYLE_VALUE = {
 	name: 'min()',
@@ -395,6 +404,10 @@ const FUNCTIONS: Record<string, Record<string, STYLE_VALUE>> = {
 		scaleX: function_scalex,
 		scaleY: function_scaley,
 		scaleZ: function_scalez,
+	},
+
+	generic: {
+		url: function_url,
 	},
 };
 

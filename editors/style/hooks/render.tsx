@@ -26,7 +26,6 @@ import { useStyleState } from '@/editors/style/hooks/state';
 interface STYLE_RENDER {
 	renderFlexView: () => ReactElement;
 	renderGridView: () => ReactElement;
-
 	renderLengthInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderInputGroup: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
 	renderNumberInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
@@ -34,6 +33,9 @@ interface STYLE_RENDER {
 	renderColorSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderRadioSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderPositionSelect: (onChangeSide: (value: POSITION_SELECT_SIDE) => void, onChangeCorner: (value: POSITION_SELECT_CORNER) => void, areCornersVisible?: boolean,) => ReactElement;
+
+	renderURLInput: (style: STYLES_CONSTANTS_KEY, prefix?: string, suffix?: string) => ReactElement;
+
 }
 
 /**
@@ -50,7 +52,6 @@ interface STYLE_RENDER {
  */
 export const useStyleRender = (): STYLE_RENDER => {
 	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleState();
-
 
 
 	const renderFlexView = useCallback<STYLE_RENDER['renderFlexView']>(() => {
@@ -227,7 +228,25 @@ export const useStyleRender = (): STYLE_RENDER => {
 		[]
 	);
 
+	const renderURLInput = useCallback<STYLE_RENDER['renderURLInput']>((style, prefix = '', suffix = '') => {
+		let value = getSingleStyle(style);
+		value = value.replace(prefix, '').replace(suffix, '');
 
+		const handleChange = (val: string) => {
+			const value = val.length === 0 ? '' : `${prefix}${val}${suffix}`;
+			setSingleStyle(style, value)
+		}
+
+		return (
+			<StringInput
+				value={value}
+				onChange={handleChange}
+				pattern={'url'}
+			/>
+		);
+	},
+		[getSingleStyle, setSingleStyle]
+	);
 
 	return {
 		renderFlexView,
@@ -239,5 +258,6 @@ export const useStyleRender = (): STYLE_RENDER => {
 		renderRadioSelect,
 		renderLengthInput,
 		renderPositionSelect,
+		renderURLInput,
 	};
 };

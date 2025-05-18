@@ -22,7 +22,7 @@ import { STYLE_LAYOUT_GROUP } from '@/editors/style/layout/components/group/type
 */
 const Group: React.FC<STYLE_LAYOUT_GROUP> = ({ properties, columns = '1fr 1fr', rows = 'auto', hidden }: STYLE_LAYOUT_GROUP): ReactElement => {
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
-    if (hidden === false) return <></>;
+    if (hidden === true) return <></>;
 
     // Define the CSS styles for the grid layout using CSS variables
     const _style: React.CSSProperties = {

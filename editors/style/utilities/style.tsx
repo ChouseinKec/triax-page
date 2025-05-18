@@ -3,7 +3,7 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
 import { OPTIONS_SELECT_OPTION } from '@/components/Select/Options/types';
 
 // Utilities
-import { isCamelCase, isLetters, isNumeric, extractBetween } from '@/utilities/string';
+import { isCamelCase, isLetters, isNumeric, extractBetween, isURL } from '@/utilities/string';
 import { devLog } from '@/utilities/dev';
 
 // Constants
@@ -259,60 +259,59 @@ export function extractFunction(input: string): string {
 
 
 /**
- * Detects the most likely separator to use for splitting multi-value strings by analyzing
- * the entire string to find the most consistently used top-level separator.
+ * Detects the most likely top-level separator used in a multi-value string by analyzing
+ * the first clear separator found outside of nested structures. Useful for parsing CSS-like values.
  * 
- * @param {string} input - The input string to analyze for potential separators
- * @returns {string} The detected separator (defaults to space if none clearly identified)
+ * @param {string} input - The string to analyze for potential separators
+ * @returns {string|undefined} The detected separator (or undefined if no clear separator found)
  * 
  * @example
- * // Space separators
- * extractSeperator('1px 2px 3px'); // ' '
- * extractSeperator('red green blue'); // ' '
+ * // Basic separators
+ * extractSeparator('1px 2px 3px'); // ' '
+ * extractSeparator('red,green,blue'); // ','
+ * extractSeparator('Arial/sans-serif'); // '/'
  * 
- * // Comma separators
- * extractSeperator('red, green, blue'); // ','
- * extractSeperator('1px,2px,3px'); // ','
+ * // Prioritizes first encountered top-level separator
+ * extractSeparator('1px, 2px | 3px'); // ','
  * 
- * // Slash separators
- * extractSeperator('1/2/3'); // '/'
- * extractSeperator('Arial / sans-serif'); // '/'
+ * // Handles nested structures
+ * extractSeparator('rgb(255,0,0),hsl(120,100%,50%)'); // ','
  * 
- * // Mixed separators (picks first encountered)
- * extractSeperator('1px, 2px | 3px'); // ','
- * extractSeperator('1px / 2px, 3px'); // '/'
- * 
- * // Ignores separators inside functions
- * extractSeperator('rgb(255, 0, 0), hsl(120, 100%, 50%)'); // ','
- * extractSeperator('var(--space) var(--size)'); // ' '
+ * // Excludes URL-like strings
+ * extractSeparator('url(image.png)'); // undefined
+ * extractSeparator('https://example.com'); // undefined
  * 
  * // Edge cases
- * extractSeperator(''); // undefined
- * extractSeperator('no-separator'); // undefined
- * extractSeperator('(a,b,c)'); // undefined
- * extractSeperator('a,b(c,d)e,f'); // ','
- * 
- * // Defaults to undefined when no clear separator
- * extractSeperator('var(--value)var(--other)'); // undefined
- * extractSeperator('1px2px3px'); // undefined
+ * extractSeparator(''); // undefined
+ * extractSeparator('no-separator'); // undefined
+ * extractSeparator('var(--test)var(--other)'); // undefined
  */
-export function extractSeperator(input: string): string | undefined {
-    const candidates = [' ', ',', '/'];
-    let parenDepth = 0;
+export function extractSeparator(input: string): string | undefined {
+    // Skip empty strings or URL-like patterns
+    if (!input.trim() || input.includes('://')) {
+        return undefined;
+    }
+
+    const candidateSeparators = [' ', ',', '/', '|'];
+    let nestingDepth = 0;
+    let inQuotes = false;
 
     for (const char of input) {
-        if (char === '(') parenDepth++;
-        if (char === ')') parenDepth--;
+        // Track nesting and quotes to ignore separators inside them
+        if (char === '(' && !inQuotes) nestingDepth++;
+        if (char === ')' && !inQuotes) nestingDepth--;
+        if (char === '"' || char === "'") inQuotes = !inQuotes;
 
-        // Only check separators at top level (not inside parentheses)
-        if (parenDepth === 0 && candidates.includes(char)) {
-            // Return the first valid separator found
+        // Only check separators at top level and outside quotes
+        if (nestingDepth === 0 && !inQuotes && candidateSeparators.includes(char)) {
             return char;
         }
     }
 
     return undefined;
 }
+
+
 
 /**
  * Splits a mathematical expression into values and operators.
@@ -483,7 +482,7 @@ export function updateMultiValue(input: string, value: string, index: number, se
     updatedValues[index] = value;
 
     // Join with detected separator (or space if none found)
-    const _separator = separator ?? (extractSeperator(input) || ' ');
+    const _separator = separator ?? (extractSeparator(input) || ' ');
     return updatedValues.join(_separator);
 }
 
@@ -633,7 +632,7 @@ export const isLengthFunction = (input: string): boolean => {
     if (typeof (input) !== 'string' || input.length === 0) return false;
 
     // First check if input starts with any excluded function
-    if (['rgb', 'rgba', 'hsl', 'hsla', 'url'].some(fn => input.startsWith(`${fn}(`))) {
+    if (['rgb', 'rgba', 'hsl', 'hsla'].some(fn => input.startsWith(`${fn}(`))) {
         return false;
     }
 
@@ -742,7 +741,7 @@ export const isFunctionExpression = (input: string): boolean => {
 export const isLengthList = (input: string): boolean => {
     if (!input.trim()) return false; // empty string is not a list
 
-    const separator = extractSeperator(input);
+    const separator = extractSeparator(input);
     if (!separator) return false; // no separator found
 
     const parts = splitMultiValue(input, separator);
@@ -782,7 +781,6 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
     const safeLength = extractLength(input);
     const safePattern = extractBetween(pattern, '(', ')') || pattern;
 
-
     if (!safeValue) {
         devLog.error(`Value: ${input} is not valid value for function().`)
         return false;
@@ -801,6 +799,41 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
 
     return isPatternValid(safePattern, safeValue, option.lengths)
 };
+
+
+/**
+ * Validates URL strings, handling quoted URLs and various edge cases.
+ * @param {string} value - The URL string to validate (may be wrapped in quotes)
+ * @returns {boolean} - True if the string is a valid URL after quote removal
+ * 
+ * @example
+ * isURLValid('https://example.com') // true
+ * isURLValid('"https://example.com"') // true
+ * isURLValid('example.com') // false (requires protocol)
+ * isURLValid('data:image/png,...') // false (no data URLs)
+ */
+export const isURLValid = (value: string): boolean => {
+    // Clean the input first
+    const cleanedValue = value
+        .replace(/^["'`]|["'`]$/g, '')  // Remove surrounding quotes
+        .trim();
+
+    // Quick sanity checks
+    if (!cleanedValue || cleanedValue.length < 10) {  // "https://a.b" = 10 chars
+        return false;
+    }
+
+    // Explicitly reject data URLs and CSS functions
+    if (cleanedValue.startsWith('data:') ||
+        cleanedValue.startsWith('url(') ||
+        cleanedValue.includes('://') === false) {
+        return false;
+    }
+
+    // Use the existing isURL function with strict protocol requirements
+    return isURL(cleanedValue, true);  // Force protocol requirement
+};
+
 
 /**
  * Validates if a value is both a valid CSS variable syntax AND matches an existing variable
@@ -848,6 +881,8 @@ export const isColorValid = (value: string): boolean => {
 export const isNumberValid = (value: string): boolean => {
     return isNumeric(value);
 };
+
+
 
 /**
  * Validates if a value is a valid CSS length
@@ -898,7 +933,7 @@ export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_V
     const patterns = pattern.split("|");
 
     const hasValid = patterns.some((_pattern) => {
-        const seperator = extractSeperator(input) || ' ';
+        const seperator = extractSeparator(input) || ' ';
         const patternParts = splitSyntax(_pattern);
         const valueParts = splitMultiValue(input, seperator);
 
@@ -909,13 +944,14 @@ export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_V
 
         // Validate each part
         return patternParts.every((patternPart, i) => {
-            const _value = valueParts[i];
+            const value = valueParts[i];
 
             switch (patternPart) {
-                case 'length': return isLengthValid(_value, lengths);
-                case 'number': return isNumberValid(_value);
-                case 'color': return isColorValid(_value);
-                case 'keyword': return lengths && isKeywordValid(_value, lengths);
+                case 'length': return isLengthValid(value, lengths);
+                case 'number': return isNumberValid(value);
+                case 'color': return isColorValid(value);
+                case 'keyword': return lengths && isKeywordValid(value, lengths);
+                case 'url': return isURLValid(value);
                 default: return false;
             }
 
@@ -969,6 +1005,7 @@ export const isOptionValid = (input: string, option: STYLE_VALUE): boolean => {
         return isFunctionValid(input, option);
     }
 
+
     return isPatternValid(pattern, input, option.lengths)
 
 };
@@ -1021,13 +1058,11 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
     const options = STYLES_CONSTANTS[property]?.options;
     const option = getStyleOptionByValue(value, options);
 
-
     // If no option found 
     if (!option) {
         devLog.error(`Couldn't find matching option for property:'${property}' and value:'${value}'`);
         return false;
     }
-
 
 
     // Validate option
@@ -1090,7 +1125,7 @@ export const splitSyntax = (input: string): string[] | undefined => {
     // Return undefined if the syntax is empty
     if (!safeInput) return undefined;
 
-    const seperator = extractSeperator(safeInput) || ' ';
+    const seperator = extractSeparator(safeInput) || ' ';
 
 
     // Split the extracted or original syntax by commas
@@ -1164,15 +1199,4 @@ export const getStyleOptions: (property: STYLES_CONSTANTS_KEY) => STYLE_VALUE[] 
 
     return STYLES_CONSTANTS[property].options;
 };
-
-
-
-
-
-export const OBJToCSS = (): string => {
-
-    return '';
-}
-
-
 

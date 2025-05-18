@@ -8,13 +8,13 @@ import MultiValueInput from '@/components/Input/Multi/components';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, splitSyntax, extractValue, extractFunction, extractSeperator, splitMultiValue } from '@/editors/style/utilities/style';
+import { getStyleOptionByValue, splitSyntax, extractValue, extractFunction, extractSeparator, splitMultiValue } from '@/editors/style/utilities/style';
 
 
 const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value, onChange, options }: FUNCTION_INPUT): ReactElement => {
     const extractedValue = extractValue(value);
     const extractedFunc = extractFunction(value);
-    const extractedSepa = extractSeperator(extractedValue) || ' ';
+    const extractedSepa = extractSeparator(extractedValue) || ' ';
     const splitedValues = splitMultiValue(extractedValue, extractedSepa);
 
 

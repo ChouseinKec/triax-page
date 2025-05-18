@@ -12,7 +12,7 @@ import { useDisplayLayout } from '@/editors/style/layout/hooks/display';
 import { useSizeLayout } from '@/editors/style/layout/hooks/size';
 import { usePositionLayout } from '@/editors/style/layout/hooks/position';
 import { useFontLayout } from '@/editors/style/layout/hooks/font';
-import { useBorderLayout } from '@/editors/style/layout/hooks/border';
+import { useBackgroundLayout } from '@/editors/style/layout/hooks/background';
 import { useEffectLayout } from '@/editors/style/layout/hooks/effect';
 
 /**
@@ -29,7 +29,7 @@ const Layout: React.FC = ({ }): ReactElement => {
         useSizeLayout(),
         usePositionLayout(),
         useFontLayout(),
-        useBorderLayout(),
+        useBackgroundLayout(),
         useEffectLayout(),
     ];
 

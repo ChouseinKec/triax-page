@@ -90,39 +90,83 @@ export function isNumeric(input: unknown): boolean {
 }
 
 /**
- * Robust URL validation with regex
+ * URL validation with support for:
+ * - Protocols (http/https)
+ * - Domain names and IP addresses
+ * - Port numbers
+ * - Paths, queries, and fragments
+ * 
  * @param {string} input - The string to validate
- * @param {boolean} [requireProtocol=false] - Require http/https prefix
- * @returns {boolean} - True if valid URL
+ * @param {boolean} [requireProtocol=true] - Require http/https protocol
+ * @returns {boolean} True if valid URL
  * 
  * @example
- * isUrlValid('https://www.google.com') // true
- * isUrlValid('google.com')            // true
- * isUrlValid('https://www.google')    // false (incomplete domain)
- * isUrlValid('asdkasjdasd')           // false
+ * // Standard URLs
+ * isURL('https://example.com') // true
+ * isURL('http://sub.domain.co.uk/path') // true
+ * 
+ * // IP addresses
+ * isURL('http://192.168.1.1') // true
+ * isURL('https://8.8.8.8:53/dns') // true
+ * 
+ * // With ports
+ * isURL('http://localhost:3000') // true
+ * isURL('https://example.com:8080') // true
+ * 
+ * // With query/fragments
+ * isURL('https://site.com/search?q=term') // true
+ * isURL('http://example.com/#section') // true
+ * 
+ * // Without protocol (when requireProtocol=false)
+ * isURL('example.com', false) // true
+ * isURL('sub.example.com/path', false) // true
+ * 
+ * // Failure cases
+ * isURL('example.com') // false (missing protocol)
+ * isURL('https://') // false (empty domain)
+ * isURL('http://256.0.0.1') // false (invalid IP)
+ * isURL('ftp://files.com') // false (unsupported protocol)
+ * isURL('https://example.com:999999') // false (invalid port)
+ * isURL('data:image/png;base64,...') // false (data URI)
+ * isURL('url("example.com")') // false (CSS function)
  */
-export function isURL(input: string, requireProtocol: boolean = false): boolean {
-  // Quick sanity checks
-  if (typeof input !== 'string' || input.length < (requireProtocol ? 10 : 3)) {
-    return false;
-  }
+export function isURL(input: string, requireProtocol: boolean = true): boolean {
+    if (typeof input !== 'string') return false;
 
-  const protocolPattern = requireProtocol ? '^(https?:\\/\\/)' : '^(https?:\\/\\/)?';
-  const domainPattern = '([a-z0-9-]+\\.)+'; // Subdomains
-  const tldPattern = '[a-z]{2,}'; // TLD (min 2 chars)
-  const portPathQueryPattern = '(\\:\\d+)?(\\/[-\\w$.+!*\'(),%;:@&=]*)*(\\?[;&\\w%.+!*\'(),%;:@&=]*)?(\\#[-\\w]*)?$';
-  
-  const regex = new RegExp(
-    `${protocolPattern}${domainPattern}${tldPattern}${portPathQueryPattern}`,
-    'i'
-  );
+    const cleaned = input.trim();
+    if (!cleaned || cleaned.length < (requireProtocol ? 8 : 1)) return false;
 
-  // Additional check for dots in TLD (e.g., "google.")
-  if (input.endsWith('.') || input.includes('..')) {
-    return false;
-  }
+    // Early rejection for problematic patterns
+    if (cleaned.includes(' ') ||
+        cleaned.startsWith('data:') ||
+        cleaned.startsWith('url(') ||
+        cleaned.startsWith('javascript:')) {
+        return false;
+    }
 
-  return regex.test(input);
+    // Protocol pattern
+    const protocol = requireProtocol ? '^(https?:\\/\\/)' : '^(https?:\\/\\/)?';
+
+    // Domain patterns
+    const domain = '(?:[a-z0-9-]+\\.)+[a-z]{2,}';
+    const ipv4 = '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)';
+    const fullIpv4 = `(?:${ipv4}\\.){3}${ipv4}`;
+    const localhost = 'localhost';
+
+    // Strict port validation (1-65535)
+    const port = '(?::([1-9][0-9]{0,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?';
+
+    // Path components
+    const path = '(?:\\/[\\w~!$&\'()*+,;=:@.%#-]*)*';
+    const query = '(?:\\?[\\w~!$&\'()*+,;=:@.%#-]*)?';
+    const fragment = '(?:#[\\w~!$&\'()*+,;=:@.%#-]*)?$';
+
+    const regex = new RegExp(
+        `${protocol}(?:${domain}|${fullIpv4}|${localhost})${port}${path}${query}${fragment}`,
+        'i'
+    );
+
+    return regex.test(cleaned);
 }
 
 /**

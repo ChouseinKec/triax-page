@@ -395,3 +395,12 @@ export const BREAK: STYLE_VALUE[] = [
 
 // Aspect Ratio
 export const ASPECT_RATIO: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'number|number/number' }];
+
+// Background-Image
+export const BACKGROUND_IMAGE: STYLE_VALUE[] = [LENGTHS.functions.generic.url];
+export const BACKGROUND_ATTACHMENT: STYLE_VALUE[] = [
+	{ name: 'scroll', value: 'scroll', syntax: 'keyword' },
+	{ name: 'fixed', value: 'fixed', syntax: 'keyword' },
+	{ name: 'local', value: 'local', syntax: 'keyword' },
+
+];

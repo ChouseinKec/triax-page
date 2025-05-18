@@ -24,7 +24,7 @@ import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse
 const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: STYLE_PROPERTY): ReactElement => {
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
-    if (hidden === false) return <></>;
+    if (hidden === true) return <></>;
 
     // Define the CSS styles for the property using CSS variables
     const _style: React.CSSProperties = {

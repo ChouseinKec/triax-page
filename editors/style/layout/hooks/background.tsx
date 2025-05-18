@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+// Components
+import DropdownReveal from '@/components/Reveal/Dropdown/component';
+import Group from '@/editors/style/layout/components/group/component';
+
 // Types
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
@@ -13,13 +17,13 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * 
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
-export const useBorderLayout = (): STYLE_LAYOUT => {
-    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
+export const useBackgroundLayout = (): STYLE_LAYOUT => {
+    const { renderURLInput, renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
     return {
-        label: 'Border & Shadow',
+        label: 'Background & Border',
         groups: [
             {
                 columns: '0.2fr 1fr 1fr',
@@ -94,6 +98,42 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect('outlineColor'),
                     },
 
+
+
+
+
+
+                    // Background Image
+                    {
+                        label: '',
+                        column: '1/-1',
+                        direction: 'column',
+                        component: () => (
+                            <DropdownReveal closeOnChange={false} value='Background'>
+                                <Group
+                                    columns='minmax(0, 0.5fr) minmax(0, 0.5fr) minmax(0, 0.5fr)'
+                                    properties={[
+                                        // Image
+                                        {
+                                            label: 'Image',
+                                            column: '1/-1',
+                                            direction: 'column',
+                                            component: () => renderURLInput('backgroundImage', 'url("', '")'),
+                                        },
+
+                                        // Attachment
+                                        {
+                                            label: 'Attachment',
+                                            column: 'auto',
+                                            direction: 'column',
+                                            component: () => renderDropdownSelect('backgroundAttachment'),
+                                        },
+
+                                    ]}
+                                />
+                            </DropdownReveal>
+                        ),
+                    },
 
 
 

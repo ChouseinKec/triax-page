@@ -35,7 +35,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
 
             // Flex 
             {
-                hidden: getSingleStyle('display') === 'flex', // Hide if the selected display type is 'flex'
+                hidden: getSingleStyle('display') !== 'flex', // Hide if the selected display type is 'flex'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Flex View component (for visualizing flex properties)
@@ -106,7 +106,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
 
             // Grid section
             {
-                hidden: getSingleStyle('display') === 'grid', // Hide if the selected display type is 'grid'
+                hidden: getSingleStyle('display') !== 'grid', // Hide if the selected display type is 'grid'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Grid View (for visualizing grid properties)

@@ -16,10 +16,11 @@
  *   onChange: (val) => console.log(val)
  * }
  */
+
 export type STRING_INPUT = {
 	value?: string;
 	minLength?: number;
 	maxLength?: number;
-	pattern?: 'url';
+	pattern?: string;
 	onChange?: (value: string) => void;
 };

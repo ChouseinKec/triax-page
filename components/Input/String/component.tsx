@@ -22,8 +22,9 @@ import { devLog } from '@/utilities/dev';
  * @returns {ReactElement} - Text input element with validation
  */
 const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity, maxLength = Infinity, pattern, onChange = () => { } }: STRING_INPUT): ReactElement => {
-	const inputRef = useRef<HTMLInputElement>(null); // Reference to the DOM input element
-	const [isError, setIsError] = useState(false); // Tracks input validation state
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [isError, setIsError] = useState(false);
+
 
 	/**
 	 * Validates the input value against constraints
@@ -52,19 +53,28 @@ const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity
 	/**
 	 * Commits the current input value after validation
 	 */
-	const handleCommit = useCallback(() => {
-		const inputValue = inputRef.current?.value.trim() || '';
-		const isValid = validateValue(inputValue);
-		setIsError(!isValid);
+	const handleCommit = useCallback((resetInput: boolean = false) => {
+		const inputEl = inputRef.current;
+		const inputValue = inputEl?.value.trim() || '';
+		const isEmpty = inputValue.length === 0;
+		const isValid = !isEmpty && validateValue(inputValue);
 
-		if (!isValid) {
-			// Reset input and parent state if invalid
-			if (inputRef.current) inputRef.current.value = '';
+
+		// Handle empty input case
+		if (isEmpty) {
+			inputEl?.blur();
 			onChange('');
 			return;
 		}
 
-		// Only update parent if value changed
+		// Handle invalid input case
+		if (!isValid) {
+			if (resetInput && inputEl) { inputEl.value = ''; }
+			onChange('');
+			return;
+		}
+
+		// Handle valid input case
 		if (inputValue !== value) {
 			onChange(inputValue);
 		}
@@ -94,6 +104,11 @@ const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity
 	}, [validateValue]
 	);
 
+	const handleBlur = useCallback(() => {
+		setIsError(false);
+		handleCommit(true);
+	}, [handleCommit]);
+
 	return (
 		<input
 			ref={inputRef}
@@ -102,8 +117,10 @@ const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity
 			placeholder={pattern ? `Enter ${pattern}` : 'Enter text'}
 			minLength={minLength > 0 ? minLength : undefined}
 			maxLength={maxLength < Infinity ? maxLength : undefined}
+
 			defaultValue={value}
-			onBlur={handleCommit}
+
+			onBlur={handleBlur}
 			onChange={handleChange}
 			onKeyDown={handleKeyDown}
 		/>
