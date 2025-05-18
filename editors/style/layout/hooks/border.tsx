@@ -70,14 +70,6 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect(`border${currentSide || 'Top'}Color`), // Dynamic color selector based on selected side
                     },
 
-                    // Box Shadow (e.g., x-offset, y-offset, blur, spread, color)
-                    {
-                        label: 'Shadow',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => renderInputGroup('boxShadow', ','),
-                    },
-
                     // Outline Style
                     {
                         label: 'Outline Style',
@@ -101,6 +93,10 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         direction: 'column',
                         component: () => renderColorSelect('outlineColor'),
                     },
+
+
+
+                    
                 ],
             },
         ],

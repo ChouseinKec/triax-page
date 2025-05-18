@@ -13,6 +13,7 @@ import { useSizeLayout } from '@/editors/style/layout/hooks/size';
 import { usePositionLayout } from '@/editors/style/layout/hooks/position';
 import { useFontLayout } from '@/editors/style/layout/hooks/font';
 import { useBorderLayout } from '@/editors/style/layout/hooks/border';
+import { useEffectLayout } from '@/editors/style/layout/hooks/effect';
 
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
@@ -29,6 +30,7 @@ const Layout: React.FC = ({ }): ReactElement => {
         usePositionLayout(),
         useFontLayout(),
         useBorderLayout(),
+        useEffectLayout(),
     ];
 
 
