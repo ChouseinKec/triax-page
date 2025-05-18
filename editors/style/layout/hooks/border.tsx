@@ -14,7 +14,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useBorderLayout = (): STYLE_LAYOUT => {
-    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
+    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
@@ -40,7 +40,7 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         column: '2',
                         direction: 'column',
                         disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => renderUnitInput(`border${currentSide || 'Top'}Width`), // Dynamic length input based on selected side
+                        component: () => renderLengthInput(`border${currentSide || 'Top'}Width`), // Dynamic length input based on selected side
                     },
 
                     // Border Radius
@@ -49,7 +49,7 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         column: '3',
                         direction: 'column',
                         disabled: currentCorner === null, // Disabled if no corner is selected
-                        component: () => renderUnitInput(`border${currentCorner || 'TopLeft'}Radius`), // Dynamic length input based on selected corner
+                        component: () => renderLengthInput(`border${currentCorner || 'TopLeft'}Radius`), // Dynamic length input based on selected corner
                     },
 
                     // Border Style (solid, dashed, etc.)
@@ -83,7 +83,7 @@ export const useBorderLayout = (): STYLE_LAYOUT => {
                         label: 'Outline Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('outlineWidth'),
+                        component: () => renderLengthInput('outlineWidth'),
                     },
 
                     // Outline Color picker

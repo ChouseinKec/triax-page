@@ -14,7 +14,7 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} The layout configuration for display and layout settings.
  */
 export const useDisplayLayout = (): STYLE_LAYOUT => {
-    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderUnitInput, renderInputGroup } = useStyleRender();
+    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderInputGroup } = useStyleRender();
     const { getSingleStyle } = useStyleState();
 
     return {
@@ -91,7 +91,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Row Gap',
                         column: '2',
                         direction: 'column',
-                        component: () => renderUnitInput('rowGap')
+                        component: () => renderLengthInput('rowGap')
                     },
 
                     // Column Gap for flex container
@@ -99,7 +99,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Column Gap',
                         column: '3',
                         direction: 'column',
-                        component: () => renderUnitInput('columnGap')
+                        component: () => renderLengthInput('columnGap')
                     },
                 ],
             },
@@ -202,7 +202,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Row Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('rowGap')
+                        component: () => renderLengthInput('rowGap')
                     },
 
                     // Column Gap for grid container
@@ -210,7 +210,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Column Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('columnGap')
+                        component: () => renderLengthInput('columnGap')
                     },
                 ],
             },

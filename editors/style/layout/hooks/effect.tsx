@@ -14,7 +14,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useEffectLayout = (): STYLE_LAYOUT => {
-    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
+    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 

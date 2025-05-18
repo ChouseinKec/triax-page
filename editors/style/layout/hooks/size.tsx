@@ -17,7 +17,7 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): STYLE_LAYOUT => {
-    const { renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
+    const { renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     const { getSingleStyle, setSingleStyle } = useStyleState();
     return {
         label: 'Size & Overflow',
@@ -30,7 +30,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('width'),
+                        component: () => renderLengthInput('width'),
                     },
 
                     // Min-Width
@@ -38,7 +38,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('minWidth'),
+                        component: () => renderLengthInput('minWidth'),
                     },
 
                     // Max-Width
@@ -46,7 +46,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('maxWidth'),
+                        component: () => renderLengthInput('maxWidth'),
                     },
 
                     // Height
@@ -54,7 +54,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Height',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('height'),
+                        component: () => renderLengthInput('height'),
                     },
 
                     // Min-Height
@@ -62,7 +62,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('minHeight'),
+                        component: () => renderLengthInput('minHeight'),
                     },
 
                     // Max-Height
@@ -70,7 +70,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('maxHeight'),
+                        component: () => renderLengthInput('maxHeight'),
                     },
 
                     // Overflow

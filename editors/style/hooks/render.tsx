@@ -27,7 +27,7 @@ interface STYLE_RENDER {
 	renderFlexView: () => ReactElement;
 	renderGridView: () => ReactElement;
 
-	renderUnitInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
+	renderLengthInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderInputGroup: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
 	renderNumberInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderDropdownSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
@@ -43,10 +43,10 @@ interface STYLE_RENDER {
  * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumberInput, etc.)
  * 
  * @example
- * const { renderUnitInput, getSingleStyle } = useStyleRender();
+ * const { renderLengthInput, getSingleStyle } = useStyleRender();
  * 
  * // In your component:
- * renderUnitInput('width');
+ * renderLengthInput('width');
  */
 export const useStyleRender = (): STYLE_RENDER => {
 	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleState();
@@ -97,7 +97,7 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
 	 * @returns {React.ReactElement} The rendered length input
 	 */
-	const renderUnitInput = useCallback<STYLE_RENDER['renderUnitInput']>((style) => {
+	const renderLengthInput = useCallback<STYLE_RENDER['renderLengthInput']>((style) => {
 		const options = getStyleOptions(style);
 		if (!options) { throw new Error(`No options available for style '${style}'`); }
 
@@ -237,7 +237,7 @@ export const useStyleRender = (): STYLE_RENDER => {
 		renderDropdownSelect,
 		renderColorSelect,
 		renderRadioSelect,
-		renderUnitInput,
+		renderLengthInput,
 		renderPositionSelect,
 	};
 };

@@ -16,7 +16,7 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for the position and spacing properties in the style editor.
  */
 export const usePositionLayout = (): STYLE_LAYOUT => {
-    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput, renderPositionSelect } = useStyleRender();
+    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleRender();
     const { getSingleStyle } = useStyleState();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
@@ -50,7 +50,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         column: '3', 
                         direction: 'column', 
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getSingleStyle('position')), // Disable if position is not absolute, fixed, or sticky
-                        component: () => renderUnitInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
+                        component: () => renderLengthInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
                     },
 
                     // Padding dynamic based on current side selected.
@@ -58,7 +58,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Padding', 
                         column: '2', 
                         direction: 'column', 
-                        component: () => renderUnitInput(`padding${currentSide || 'Top'}`), 
+                        component: () => renderLengthInput(`padding${currentSide || 'Top'}`), 
                     },
 
                     // Margin dynamic based on current side selected.
@@ -66,7 +66,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Margin', 
                         column: '3', 
                         direction: 'column', 
-                        component: () => renderUnitInput(`margin${currentSide || 'Top'}`), 
+                        component: () => renderLengthInput(`margin${currentSide || 'Top'}`), 
                     },
                 ],
             },

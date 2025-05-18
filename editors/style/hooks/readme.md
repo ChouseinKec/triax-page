@@ -16,7 +16,7 @@ Renders a preview of flexbox container with current flex styles.
 
 Renders a preview of grid container with current grid styles.
 
-### `renderUnitInput(style)`
+### `renderLengthInput(style)`
 
 Renders a length input with unit selector.  
 **Parameters:**  
