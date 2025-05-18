@@ -9,6 +9,7 @@ import RadioSelect from '@/components/Select/Radio/component';
 import DropdownSelect from '@/components/Select/Dropdown/component';
 import PositionSelect from '@/components/Select/Position/component';
 import FlexView from '@/components/View/Flex/component';
+import StringInput from '@/components/Input/String/component';
 
 // Types
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
@@ -28,7 +29,7 @@ interface STYLE_RENDER {
 
 	renderUnitInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderInputGroup: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
-	renderNumber: (style: STYLES_CONSTANTS_KEY) => ReactElement;
+	renderNumberInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderDropdownSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderColorSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
 	renderRadioSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
@@ -39,7 +40,7 @@ interface STYLE_RENDER {
  * A custom hook that provides helper functions for rendering style-related components.
  * These helpers prevent duplication and provide a consistent way to render inputs, selects, and dynamic groups.
  * 
- * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumber, etc.)
+ * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumberInput, etc.)
  * 
  * @example
  * const { renderUnitInput, getSingleStyle } = useStyleRender();
@@ -139,7 +140,7 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
 	 * @returns {React.ReactElement} The rendered number input
 	 */
-	const renderNumber = useCallback<STYLE_RENDER['renderNumber']>((style) => {
+	const renderNumberInput = useCallback<STYLE_RENDER['renderNumberInput']>((style) => {
 		return (
 			<NumberInput
 				value={getSingleStyle(style)}
@@ -232,7 +233,7 @@ export const useStyleRender = (): STYLE_RENDER => {
 		renderFlexView,
 		renderGridView,
 		renderInputGroup,
-		renderNumber,
+		renderNumberInput,
 		renderDropdownSelect,
 		renderColorSelect,
 		renderRadioSelect,

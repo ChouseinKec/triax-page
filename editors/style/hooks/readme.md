@@ -31,7 +31,7 @@ Renders dynamic inputs for multi-value properties like padding/margin.
 - `style`: The CSS property  
 - `separator`: Character to split values (e.g. space for '10px 20px')
 
-### `renderNumber(style)`
+### `renderNumberInput(style)`
 
 Renders a basic number input for style properties.
 

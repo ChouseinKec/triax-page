@@ -12,7 +12,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
 
 export const useFontLayout = (): STYLE_LAYOUT => {
 
-    const { renderColorSelect, renderNumber, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
+    const { renderColorSelect, renderNumberInput, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
 
     return {
         label: 'Font & Text',
@@ -237,7 +237,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Count',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderNumber('columnCount'),
+                                                                component: () => renderNumberInput('columnCount'),
                                                             },
 
                                                             // Column Width
