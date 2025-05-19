@@ -10,12 +10,14 @@ import DropdownSelect from '@/components/Select/Dropdown/component';
 import PositionSelect from '@/components/Select/Position/component';
 import FlexView from '@/components/View/Flex/component';
 import StringInput from '@/components/Input/String/component';
+import VariantValueInput from '@/components/Input/Variant/component';
 
 // Types
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
 
 // Utilities
 import { getStyleOptions } from '@/editors/style/utilities/style'
+import { devLog } from '@/utilities/dev';
 
 // Constants
 import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
@@ -35,7 +37,7 @@ interface STYLE_RENDER {
 	renderPositionSelect: (onChangeSide: (value: POSITION_SELECT_SIDE) => void, onChangeCorner: (value: POSITION_SELECT_CORNER) => void, areCornersVisible?: boolean,) => ReactElement;
 
 	renderURLInput: (style: STYLES_CONSTANTS_KEY, prefix?: string, suffix?: string) => ReactElement;
-
+	renderVariantInput: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
 }
 
 /**
@@ -100,7 +102,10 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 */
 	const renderLengthInput = useCallback<STYLE_RENDER['renderLengthInput']>((style) => {
 		const options = getStyleOptions(style);
-		if (!options) { throw new Error(`No options available for style '${style}'`); }
+		if (!options) {
+			devLog.error(`No options available for style '${style}'`);
+			return <></>
+		}
 
 		return (
 			<LengthInput
@@ -122,7 +127,8 @@ export const useStyleRender = (): STYLE_RENDER => {
 	const renderInputGroup = useCallback<STYLE_RENDER['renderInputGroup']>((style, separator) => {
 		const options = getStyleOptions(style);
 		if (!options) {
-			throw new Error(`Style '${style}' is not supported for input groups`);
+			devLog.error(`No options available for style '${style}'`);
+			return <></>
 		}
 
 		return (
@@ -160,7 +166,8 @@ export const useStyleRender = (): STYLE_RENDER => {
 	const renderDropdownSelect = useCallback<STYLE_RENDER['renderDropdownSelect']>((style) => {
 		const options = getStyleOptions(style);
 		if (!options) {
-			throw new Error(`No options available for style '${style}'`);
+			devLog.error(`No options available for style '${style}'`);
+			return <></>
 		}
 
 		return (
@@ -198,7 +205,10 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 */
 	const renderRadioSelect = useCallback<STYLE_RENDER['renderRadioSelect']>((style) => {
 		const options = getStyleOptions(style);
-		if (!options) { throw new Error(`No options available for style '${style}'`); }
+		if (!options) {
+			devLog.error(`No options available for style '${style}'`);
+			return <></>
+		}
 
 		return (
 			<RadioSelect
@@ -248,6 +258,24 @@ export const useStyleRender = (): STYLE_RENDER => {
 		[getSingleStyle, setSingleStyle]
 	);
 
+
+	const renderVariantInput = useCallback<STYLE_RENDER['renderVariantInput']>((style, separator) => {
+		const options = getStyleOptions(style);
+		if (!options) {
+			devLog.error(`No options available for style '${style}'`);
+			return <></>
+		}
+
+		return (
+			<VariantValueInput value={getSingleStyle(style)}
+				onChange={(value) => setSingleStyle(style, value)}
+				separator={separator}
+				option={options[0]} />
+		);
+	},
+		[getMultiStyle, setMultiStyle]
+	);
+
 	return {
 		renderFlexView,
 		renderGridView,
@@ -259,5 +287,6 @@ export const useStyleRender = (): STYLE_RENDER => {
 		renderLengthInput,
 		renderPositionSelect,
 		renderURLInput,
+		renderVariantInput
 	};
 };

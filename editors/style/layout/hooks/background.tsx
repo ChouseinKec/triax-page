@@ -111,7 +111,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => (
                             <DropdownReveal closeOnChange={false} value='Background'>
                                 <Group
-                                    columns='minmax(0, 0.5fr) minmax(0, 0.5fr) minmax(0, 0.5fr)'
+                                    columns='minmax(0, 0.5fr) minmax(0, 0.5fr)'
                                     properties={[
                                         // Image
                                         {
@@ -127,6 +127,31 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                             column: 'auto',
                                             direction: 'column',
                                             component: () => renderDropdownSelect('backgroundAttachment'),
+                                        },
+
+                                        // Clip
+                                        {
+                                            label: 'Clip',
+                                            column: 'auto',
+                                            direction: 'column',
+                                            component: () => renderDropdownSelect('backgroundClip'),
+                                        },
+
+                                        // Color
+                                        {
+                                            label: 'Color',
+                                            column: 'auto',
+                                            direction: 'column',
+                                            component: () => renderColorSelect('backgroundColor'),
+                                        },
+
+
+                                        // Origin
+                                        {
+                                            label: 'Origin',
+                                            column: 'auto',
+                                            direction: 'column',
+                                            component: () => renderDropdownSelect('backgroundOrigin'),
                                         },
 
                                     ]}

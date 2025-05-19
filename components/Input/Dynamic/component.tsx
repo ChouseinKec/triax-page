@@ -51,7 +51,7 @@ const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, identifier, onChange, op
      * @param {STYLE_VALUE} option - Current matched style option definition
      * @returns {ReactElement} - Input field element
      */
-    const renderInputElement = useCallback((value: string, identifier: string, option: STYLE_VALUE): ReactElement<MULTI_INPUT_CHILD> => {
+    const renderInputElement = useCallback((value: string, identifier: string, option?: STYLE_VALUE): ReactElement<MULTI_INPUT_CHILD> => {
         switch (identifier) {
             case 'length':
                 return (
@@ -59,7 +59,7 @@ const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, identifier, onChange, op
                         value={value}
                         onChange={(value: string) => handleChange(value)}
                         isStrict={true}
-                        options={option.lengths}
+                        options={option?.lengths}
                     />
                 );
             case 'number':

@@ -339,9 +339,6 @@ export const TEXT_ORIENTATION: STYLE_VALUE[] = [
 	{ name: 'sideways-lr', value: 'sideways-lr', syntax: 'keyword' },
 ];
 
-// Color
-export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
-
 // Border
 export const BORDER_STYLE: STYLE_VALUE[] = [
 	{ name: 'none', value: 'none', syntax: 'keyword', icon: 'borderStyle_none' },
@@ -394,13 +391,27 @@ export const BREAK: STYLE_VALUE[] = [
 ];
 
 // Aspect Ratio
-export const ASPECT_RATIO: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'number|number/number' }];
+export const ASPECT_RATIO: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'number || number/number' }];
 
 // Background-Image
-export const BACKGROUND_IMAGE: STYLE_VALUE[] = [LENGTHS.functions.generic.url];
 export const BACKGROUND_ATTACHMENT: STYLE_VALUE[] = [
 	{ name: 'scroll', value: 'scroll', syntax: 'keyword' },
 	{ name: 'fixed', value: 'fixed', syntax: 'keyword' },
 	{ name: 'local', value: 'local', syntax: 'keyword' },
-
 ];
+export const BACKGROUND_CLIP: STYLE_VALUE[] = [
+	{ name: 'border-box', value: 'border-box', syntax: 'keyword' },
+	{ name: 'padding-box', value: 'padding-box', syntax: 'keyword' },
+	{ name: 'content-box', value: 'content-box', syntax: 'keyword' },
+	{ name: 'text', value: 'text', syntax: 'keyword' },
+];
+
+export const BACKGROUND_ORIGIN: STYLE_VALUE[] = [
+	{ name: 'border-box', value: 'border-box', syntax: 'keyword' },
+	{ name: 'padding-box', value: 'padding-box', syntax: 'keyword' },
+	{ name: 'content-box', value: 'content-box', syntax: 'keyword' },
+];
+
+// GENERICS
+export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
+export const URL: STYLE_VALUE[] = [{ name: 'url()', value: "url('https://github.com/ChouseinKec/triax-page')", syntax: 'function(url)' }];

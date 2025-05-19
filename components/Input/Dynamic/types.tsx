@@ -11,6 +11,6 @@ export type DYNAMIC_INPUT = {
     value: string;
     onChange: (value: string) => void;
     identifier: string;
-    option: STYLE_VALUE;
+    option?: STYLE_VALUE;
 };
 

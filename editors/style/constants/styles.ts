@@ -305,11 +305,19 @@ export const STYLES_CONSTANTS = {
 	},
 
 	backgroundImage: {
-		options: OPTIONS.BACKGROUND_IMAGE,
+		options: OPTIONS.URL,
 	},
-
+	backgroundColor: {
+		options: OPTIONS.COLOR,
+	},
 	backgroundAttachment: {
 		options: OPTIONS.BACKGROUND_ATTACHMENT,
+	},
+	backgroundClip: {
+		options: OPTIONS.BACKGROUND_CLIP,
+	},
+	backgroundOrigin: {
+		options: OPTIONS.BACKGROUND_ORIGIN,
 	},
 
 	// -------------------------------- SHADOW & EFFECTS --------------------------------

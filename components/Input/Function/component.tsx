@@ -8,7 +8,7 @@ import MultiValueInput from '@/components/Input/Multi/components';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, splitSyntax, extractValue, extractFunction, extractSeparator, splitMultiValue } from '@/editors/style/utilities/style';
+import { getStyleOptionByValue, splitSyntaxIdentifiers, extractValue, extractFunction, extractSeparator, splitMultiValue } from '@/editors/style/utilities/style';
 
 
 const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value, onChange, options }: FUNCTION_INPUT): ReactElement => {
@@ -35,7 +35,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value, onChange, options }: F
         return <p>No option found</p>;
     }
 
-    const identifiers = splitSyntax(option.syntax);
+    const identifiers = splitSyntaxIdentifiers(option.syntax);
     if (!identifiers) {
         return (
             <input

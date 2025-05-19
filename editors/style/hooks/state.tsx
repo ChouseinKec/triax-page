@@ -30,7 +30,6 @@ export const useStyleState = (): STYLE_STATE => {
 
         // If value is not empty and value is not valid
         if (value !== '' && !isSingleValueValid(property, value)) return devLog.error(`Error setting single-style value: ${value} is not valid`);
-
         useStyleStore.getState().setStyle(property, value);
     },
         []

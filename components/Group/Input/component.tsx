@@ -42,7 +42,6 @@ const InputGroup: React.FC<INPUT_GROUP> = ({ values = [], onChange, options }: I
      * Handle input value change at a given index
     */
     const handleChange = useCallback((value: string, index: number) => {
-        console.log(value);
         onChange(value, index);
     }, [onChange]
     );

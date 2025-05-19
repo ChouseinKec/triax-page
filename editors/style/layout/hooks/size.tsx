@@ -2,6 +2,7 @@
 import NumberInput from '@/components/Input/Number/component';
 import Expand from '@/components/Reveal/Expand/component';
 import MultiValueInput from '@/components/Input/Multi/components';
+import VariantValueInput from '@/components/Input/Variant/component';
 import Group from '@/editors/style/layout/components/group/component';
 
 // Types
@@ -9,7 +10,6 @@ import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // Hooks
 import { useStyleRender } from '@/editors/style/hooks/render';
-import { useStyleState } from '@/editors/style/hooks/state';
 
 /**
  * Custom hook for managing the "Size & Overflow" section layout in the style editor.
@@ -17,8 +17,7 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): STYLE_LAYOUT => {
-    const { renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
-    const { getSingleStyle, setSingleStyle } = useStyleState();
+    const { renderVariantInput, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     return {
         label: 'Size & Overflow',
         groups: [
@@ -110,16 +109,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                             label: 'Aspect-Ratio',
                                             column: '1/-1',
                                             direction: 'column',
-                                            component: () => (
-                                                <MultiValueInput
-                                                    value={getSingleStyle('aspectRatio')}
-                                                    onChange={(value) => setSingleStyle('aspectRatio', value)}
-                                                    separator='/'
-                                                >
-                                                    <NumberInput />
-                                                    <NumberInput />
-                                                </MultiValueInput>
-                                            ),
+                                            component: () => (renderVariantInput('aspectRatio', '/')),
                                         },
                                     ]}
                                 />
