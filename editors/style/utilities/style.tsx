@@ -797,7 +797,7 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
         return false;
     }
 
-    return isPatternValid(safePattern, safeValue, option.lengths)
+    return isSyntaxValid(safeValue, safePattern, option.lengths)
 };
 
 
@@ -959,21 +959,21 @@ export const isLengthValid = (value: string, lengths?: STYLE_VALUE[]): boolean =
  * 
  * @example
  * // Atomic types
- * isPatternValid('length', '10px'); // true
- * isPatternValid('color', '#fff'); // true
+ * isSyntaxValid('length', '10px'); // true
+ * isSyntaxValid('color', '#fff'); // true
  * 
  * // Multi-value patterns
- * isPatternValid('number/number', '16/9'); // true
- * isPatternValid('length keyword', '2px solid'); // true
+ * isSyntaxValid('number/number', '16/9'); // true
+ * isSyntaxValid('length keyword', '2px solid'); // true
  * 
  * // Variant patterns
- * isPatternValid('length || color', '50%'); // true
- * isPatternValid('auto || length', '10px'); // true
+ * isSyntaxValid('length || color', '50%'); // true
+ * isSyntaxValid('auto || length', '10px'); // true
  * 
  * // With length references
- * isPatternValid('keyword', 'solid', [{ syntax: 'keyword', value: 'solid' }]); // true
+ * isSyntaxValid('keyword', 'solid', [{ syntax: 'keyword', value: 'solid' }]); // true
  */
-export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_VALUE[]): boolean => {
+export const isSyntaxValid = (input: string, syntax: string, lengths?: STYLE_VALUE[]): boolean => {
     // Early return for empty input
     if (!input.trim()) return false;
 
@@ -981,48 +981,77 @@ export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_V
     const patternCache = new Map<string, string[]>();
     const valueCache = new Map<string, string[]>();
 
-    const variants = splitSyntaxVariants(pattern) ?? [];
 
-    return variants.some(variant => {
-        const separator = extractSeparator(input) || ' ';
+    const separator = extractSeparator(input) || ' ';
 
-        // Get or cache pattern parts
-        let patternParts = patternCache.get(variant);
-        if (!patternParts) {
-            patternParts = splitSyntaxIdentifiers(variant) ?? [];
-            patternCache.set(variant, patternParts);
-        }
+    // Get or cache pattern parts
+    let patternParts = patternCache.get(syntax);
+    if (!patternParts) {
+        patternParts = extractSyntaxTypes(syntax) ?? [];
+        patternCache.set(syntax, patternParts);
+    }
 
-        // Get or cache value parts
-        let valueParts = valueCache.get(input);
-        if (!valueParts) {
-            valueParts = splitMultiValue(input, separator) ?? [];
-            valueCache.set(input, valueParts);
-        }
+    // Get or cache value parts
+    let valueParts = valueCache.get(input);
+    if (!valueParts) {
+        valueParts = splitMultiValue(input, separator) ?? [];
+        valueCache.set(input, valueParts);
+    }
 
-        // Fast length check
-        if (patternParts.length !== valueParts.length) {
-            return false;
-        }
+    // Fast length check
+    if (patternParts.length !== valueParts.length) {
+        return false;
+    }
 
-        return patternParts.every((type, index) => {
-            const value = valueParts[index];
-            switch (type) {
-                case 'length': return isLengthValid(value, lengths);
-                case 'number': return isNumberValid(value);
-                case 'color': return isColorValid(value);
-                case 'keyword': return lengths ? isKeywordValid(value, lengths) : false;
-                case 'url': return isURLValid(value);
-                default: {
-                    devLog.error(`No valid pattern for value: ${input} in patterns: ${pattern}`);
-                    return false;
-                }
+    return patternParts.every((type, index) => {
+        const value = valueParts[index];
+
+        switch (type) {
+            case 'length': return isLengthValid(value, lengths);
+            case 'number': return isNumberValid(value);
+            case 'color': return isColorValid(value);
+            case 'keyword': return lengths ? isKeywordValid(value, lengths) : false;
+            case 'url': return isURLValid(value);
+            default: {
+                devLog.error(`No valid pattern for value: ${input} in syntax: ${syntax}`);
+                return false;
             }
-        });
+        }
     });
 
 
 }
+
+/**
+ * Validates if a CSS value matches any variant in a syntax-variant option.
+ * Designed for options where syntax === 'variant' (contains multiple possible syntax patterns).
+ * 
+ * @param value - The CSS value to validate (e.g., "repeat", "10px 20px")
+ * @param option - The style option containing variant definitions
+ * @returns True if the value matches any variant syntax, false otherwise
+ * 
+ * @example
+ * const option = {
+ *   syntax: 'variant',
+ *   lengths: [
+ *     { syntax: 'keyword', value: 'repeat' },
+ *     { syntax: 'length length', value: '10px 20px' }
+ *   ]
+ * };
+ * isVariantValid('repeat', option); // true
+ * isVariantValid('10px 20px', option); // true
+ * isVariantValid('invalid', option); // false
+ */
+export const isVariantValid = (value: string, option: STYLE_VALUE): boolean => {
+    if (!option || option.syntax !== 'variant') return false;
+    if (!option.lengths?.length) return false;
+
+    return option.lengths.some(variant => {
+        return isSyntaxValid(value, variant.syntax, variant.lengths);
+    });
+};
+
+
 
 /**
  * Validates if a CSS value matches any of the provided patterns in syntaxPattern
@@ -1046,27 +1075,31 @@ export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_V
  * isOptionValid("10px solid red", "length [keyword] color"); // true
  */
 export const isOptionValid = (input: string, option: STYLE_VALUE): boolean => {
-    const pattern = option.syntax;
+    if (!option?.syntax) {
+        devLog.error('[isOptionValid] Invalid syntax');
+        return false
+    };
 
-    if (pattern === 'keyword') {
-        return isKeywordValid(input, [option]);
+
+    // Handle variant case first
+    if (option.syntax === 'variant') {
+        return isVariantValid(input, option);
     }
 
-    if (pattern === 'variable') {
-        return isVariableValid(input);
+    // Existing cases
+    switch (option.syntax) {
+        case 'keyword':
+            return isKeywordValid(input, [option]);
+        case 'variable':
+            return isVariableValid(input);
+        case 'expression':
+            return isExpressionValid(input);
+        default:
+            if (option.syntax.startsWith('function')) {
+                return isFunctionValid(input, option);
+            }
+            return isSyntaxValid(input, option.syntax, option.lengths);
     }
-
-    if (pattern === 'expression') {
-        return isExpressionValid(input);
-    }
-
-    if (pattern.startsWith('function')) {
-        return isFunctionValid(input, option);
-    }
-
-
-    return isPatternValid(pattern, input, option.lengths)
-
 };
 
 /**
@@ -1116,6 +1149,7 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
 
     const options = STYLES_CONSTANTS[property]?.options;
     const option = getStyleOptionByValue(value, options);
+
 
     // If no option found 
     if (!option) {
@@ -1169,14 +1203,14 @@ export const isIndexValid = (index: number): boolean => {
  * 
  * @param input - The CSS syntax string to process
  * @example 
- * splitSyntaxIdentifiers('fit-content(length,number,color)'); // Returns ['length', 'number', 'color']
- * splitSyntaxIdentifiers('auto');                             // Returns ['auto']
- * splitSyntaxIdentifiers('');                                 // Returns undefined
- * splitSyntaxIdentifiers('linear-gradient(color,percentage)'); // Returns ['color', 'percentage']
+ * extractSyntaxTypes('fit-content(length,number,color)'); // Returns ['length', 'number', 'color']
+ * extractSyntaxTypes('auto');                             // Returns ['auto']
+ * extractSyntaxTypes('');                                 // Returns undefined
+ * extractSyntaxTypes('linear-gradient(color,percentage)'); // Returns ['color', 'percentage']
  * 
  * @returns An array of identifiers if successful, undefined for empty input
  */
-export const splitSyntaxIdentifiers = (input: string): string[] | undefined => {
+export const extractSyntaxTypes = (input: string): string[] | undefined => {
     if (!input) return undefined;
 
     // Extract content between parentheses if they exist
@@ -1196,58 +1230,28 @@ export const splitSyntaxIdentifiers = (input: string): string[] | undefined => {
 };
 
 /**
- * Splits CSS syntax variants strictly on double-pipe (||) with surrounding spaces.
- * Only splits when the pattern " || " (with spaces) is found.
- * 
- * @param input - The CSS syntax string containing variants
- * @example
- * splitSyntaxVariants('A || B');      // Returns ['A', 'B']
- * splitSyntaxVariants('A||B');        // Returns ['A||B'] (no split, missing spaces)
- * splitSyntaxVariants('A | B');       // Returns ['A | B'] (ignores single pipe)
- * splitSyntaxVariants('  A  ||  B  '); // Returns ['A', 'B'] (trims whitespace)
- * splitSyntaxVariants('');            // Returns undefined
- * 
- * @returns An array of variants if split occurs, original string as single array item otherwise
- */
-export const splitSyntaxVariants = (input: string): string[] | undefined => {
-    if (!input) return undefined;
-
-    // Split only on " || " with at least one space before and after
-    const parts = input.includes(' || ')
-        ? input.split(/\s+\|\|\s+/) // Split on 1+ spaces, double pipe, 1+ spaces
-        : [input]; // No valid split found, return original as single item
-
-    // Trim each part and filter out empty strings
-    return parts
-        .map(part => part.trim())
-        .filter(part => part.length > 0);
-};
-
-/**
  * Finds which variant in a syntax string matches the given value.
  * 
  * @param value - The CSS value to validate (e.g., "10px", "auto")
- * @param syntax - The syntax pattern with variants (e.g., "length || percentage")
+ * @param variants - The variants array (e.g., ['number','number length'])
  * @param lengths - Optional array of valid lengths/keywords
  * @returns The index of the matching variant or null if no match found
  * 
  * @example
- * getSyntaxVariantIndex('10', 'number || number/number'); // Returns 0
- * getSyntaxVariantIndex('16/9', 'number || number/number'); // Returns 1
- * getSyntaxVariantIndex('auto', 'length || percentage'); // Returns null
+ * matchSyntaxVariant('10', ['number', 'number number']); // Returns 0
+ * matchSyntaxVariant('16/9', ['number', 'number/number']); // Returns 1
+ * matchSyntaxVariant('auto', ['number', 'color']); // Returns null
  */
-export const getSyntaxVariantIndex = (value: string, syntax: string, lengths?: STYLE_VALUE[]): number | null => {
-    // Check if the syntax contains variants
-    const variants = splitSyntaxVariants(syntax);
+export const matchSyntaxVariant = (value: string, variants: string[], lengths?: STYLE_VALUE[]): number | null => {
 
     if (!variants) {
-        devLog.error(`Invalid syntax pattern: ${syntax}`);
+        devLog.error(`Invalid variants: ${variants}`);
         return null;
     }
 
     // Check each variant until we find a match
     for (let i = 0; i < variants.length; i++) {
-        if (isPatternValid(variants[i], value, lengths)) {
+        if (isSyntaxValid(value, variants[i], lengths)) {
             return i;
         }
     }
@@ -1256,6 +1260,35 @@ export const getSyntaxVariantIndex = (value: string, syntax: string, lengths?: S
 };
 
 
+
+
+/**
+ * Extracts syntax variants from a CSS style option.
+ * 
+ * @param option - The style option to process
+ * @returns Array of syntax strings if valid, `undefined` if input is invalid
+ * 
+ * @example
+ * getSyntaxVariants({
+ *   syntax: 'variant',
+ *   lengths: [{ syntax: 'length', ... }, { syntax: 'percentage', ... }]
+ * }); // Returns ['length', 'percentage']
+ */
+export const getSyntaxVariants = (option: STYLE_VALUE): string[] | undefined => {
+    if (!option || option?.syntax !== 'variant') {
+        devLog.error(('Invalid option or syntax value'));
+        return undefined
+    };
+
+
+    if (!option?.lengths) {
+        devLog.error(('Invalid option lengths'));
+        return undefined
+    }
+
+    return option.lengths.map(length => length.syntax);
+
+}
 
 
 /**
@@ -1285,9 +1318,9 @@ export const getSyntaxVariantIndex = (value: string, syntax: string, lengths?: S
 */
 export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): STYLE_VALUE | undefined => {
 
-    // Check if options is a valid non-empty array
-    if (!Array.isArray(options) || options.length <= 0) {
-        devLog.error(`Options should be non-empty array<STYLE_VALUE[]>.`);
+    // Early return for invalid inputs
+    if (!Array.isArray(options) || options.length === 0) {
+        devLog.error('Options must be a non-empty array');
         return undefined;
     }
 
@@ -1296,15 +1329,13 @@ export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): ST
 
     // Handle numeric values (like font-weight: 100, 200, etc.)
     if (isNumeric(value)) {
-        return options.find((option) => {
-            return option.value === value;
-        });;
+        return options.find(option => option.value === value);
     }
 
     // Handle other values by comparing extracted length values
-    return options.find((option) => {
-        return extractLength(option.value) === extractLength(value);
-    });;
+    return options.find(option =>
+        extractLength(option.value) === extractLength(value)
+    );
 };
 
 export const getStyleVariables = (): OPTIONS_SELECT_OPTION[] => {

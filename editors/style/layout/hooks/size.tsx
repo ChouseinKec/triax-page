@@ -2,7 +2,7 @@
 import NumberInput from '@/components/Input/Number/component';
 import Expand from '@/components/Reveal/Expand/component';
 import MultiValueInput from '@/components/Input/Multi/components';
-import VariantValueInput from '@/components/Input/Variant/component';
+import VariantInput from '@/components/Input/Variant/component';
 import Group from '@/editors/style/layout/components/group/component';
 
 // Types

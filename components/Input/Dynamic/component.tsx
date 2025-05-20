@@ -7,11 +7,14 @@ import CSS from '@/components/Input/Dynamic/styles.module.css';
 import LengthInput from '@/components/Input/Length/component';
 import NumberInput from '@/components/Input/Number/component';
 import ColorSelect from '@/components/Select/Color/component';
+import DropdownSelect from '@/components/Select/Dropdown/component';
+
 
 // Types
 import { DYNAMIC_INPUT } from '@/components/Input/Dynamic/types';
 import { MULTI_INPUT_CHILD } from '@/components/Input/Multi/types';
 import { STYLE_VALUE } from '@/editors/style/constants/types';
+import { devLog } from '@/utilities/dev';
 
 
 /**
@@ -27,7 +30,7 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
  * @param {STYLE_VALUE[]} props.options - Available style options to match the input format
  * @returns {ReactElement} - Dynamic input field(s) based on the value's syntax
  */
-const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, identifier, onChange, option }: DYNAMIC_INPUT): ReactElement => {
+const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, type, onChange, option }: DYNAMIC_INPUT): ReactElement => {
     /**
      * Handle changes to the input value.
      * Memoized to prevent unnecessary re-creations.
@@ -40,24 +43,32 @@ const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, identifier, onChange, op
     );
 
     /**
-     * Creates an input field based on the input identifier (e.g., length, number, color).
+     * Creates an input field based on the input type (e.g., length, number, color).
      * Memoized to prevent unnecessary re-creations.
      * 
      * @param {string} value - Value passed to component (e.g., "fit-content(10px)")
      * @param {string} extractedValue - Extracted value from original value (e.g., "10px")
      * @param {string} extractedFunc - Extracted function from original value (e.g., "fit-content")
-     * @param {string} identifier - Type of input (e.g., "length")
+     * @param {string} type - Type of input (e.g., "length")
      * @param {number} key - React key index
      * @param {STYLE_VALUE} option - Current matched style option definition
      * @returns {ReactElement} - Input field element
      */
-    const renderInputElement = useCallback((value: string, identifier: string, option?: STYLE_VALUE): ReactElement<MULTI_INPUT_CHILD> => {
-        switch (identifier) {
+    const renderInputElement = useCallback((value: string, type: string, option?: STYLE_VALUE): ReactElement<MULTI_INPUT_CHILD> => {
+        switch (type) {
+            case 'keyword':
+                return (
+                    <DropdownSelect
+                        value={value}
+                        onChange={handleChange}
+                        options={option?.lengths ?? []}
+                    />
+                )
             case 'length':
                 return (
                     <LengthInput
                         value={value}
-                        onChange={(value: string) => handleChange(value)}
+                        onChange={handleChange}
                         isStrict={true}
                         options={option?.lengths}
                     />
@@ -66,29 +77,26 @@ const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, identifier, onChange, op
                 return (
                     <NumberInput
                         value={value}
-                        onChange={(value: string) => handleChange(value)}
+                        onChange={handleChange}
                     />
                 );
             case 'color':
                 return (
                     <ColorSelect
                         value={value}
-                        onChange={(value: string) => handleChange(value)}
+                        onChange={handleChange}
                     />
                 );
             default:
-                return (
-                    <button className={CSS.placeholder}>
-                        unsupported value
-                    </button>
-                );
+                devLog.error(`[DynamicInput] Unsupported input type '${type}'`)
+                return <></>
         }
     }, [handleChange]
     );
 
 
 
-    return renderInputElement(value, identifier, option)
+    return renderInputElement(value, type, option)
 };
 
 export default memo(DynamicInput);

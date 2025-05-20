@@ -120,9 +120,18 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                         // Position
                                         {
                                             label: 'Position',
-                                            column: 'auto',
+                                            column: '1/-1',
                                             direction: 'column',
                                             component: () => renderVariantInput('backgroundPosition', ' '),
+                                        },
+
+
+                                        // Repeat
+                                        {
+                                            label: 'Repeat',
+                                            column: '1/-1',
+                                            direction: 'column',
+                                            component: () => renderVariantInput('backgroundRepeat', ' '),
                                         },
 
                                         // Attachment

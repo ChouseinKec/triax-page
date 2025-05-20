@@ -8,7 +8,7 @@ import MultiValueInput from '@/components/Input/Multi/components';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, splitSyntaxIdentifiers, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/editors/style/utilities/style';
+import { getStyleOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/editors/style/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -48,7 +48,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
     }
 
     // Split syntax into identifiers (e.g., ["number", "length"] for repeat(number,length))
-    const identifiers = splitSyntaxIdentifiers(option.syntax);
+    const identifiers = extractSyntaxTypes(option.syntax);
     // Fallback for unsupported syntax
     if (!identifiers) {
         devLog.error('[FunctionInput]: Unsupported syntax format in option:', option.syntax);

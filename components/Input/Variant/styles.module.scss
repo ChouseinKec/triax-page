@@ -7,12 +7,18 @@
 	gap: var(--size-sm);
 
 	position: relative;
+
+	& > *:not(button) {
+		flex: 1;
+	}
 }
 
 .CycleButton {
 	@include inputMixins.components--button;
 
+	z-index: 1;
 	position: absolute;
+	right: -7%;
 }
 
 .Separator {

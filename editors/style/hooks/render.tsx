@@ -10,7 +10,7 @@ import DropdownSelect from '@/components/Select/Dropdown/component';
 import PositionSelect from '@/components/Select/Position/component';
 import FlexView from '@/components/View/Flex/component';
 import StringInput from '@/components/Input/String/component';
-import VariantValueInput from '@/components/Input/Variant/component';
+import VariantInput from '@/components/Input/Variant/component';
 
 // Types
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
@@ -267,7 +267,7 @@ export const useStyleRender = (): STYLE_RENDER => {
 		}
 
 		return (
-			<VariantValueInput value={getSingleStyle(style)}
+			<VariantInput value={getSingleStyle(style)}
 				onChange={(value) => setSingleStyle(style, value)}
 				separator={separator}
 				option={options[0]} />

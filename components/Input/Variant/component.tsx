@@ -1,4 +1,4 @@
-import { memo, cloneElement, Children, ReactElement, useCallback, useState } from 'react';
+import { memo, ReactElement, useCallback, useMemo, useState } from 'react';
 
 // Styles 
 import CSS from '@/components/Input/Variant/styles.module.css';
@@ -10,7 +10,7 @@ import DynamicInput from '@/components/Input/Dynamic/component';
 import { VARIANT_INPUT } from '@/components/Input/Variant/types';
 
 // Utilities
-import { splitMultiValue, splitSyntaxIdentifiers, splitSyntaxVariants, getSyntaxVariantIndex, updateMultiValue } from '@/editors/style/utilities/style';
+import { splitMultiValue, extractSyntaxTypes, getSyntaxVariants, matchSyntaxVariant, updateMultiValue } from '@/editors/style/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 /**
@@ -26,7 +26,7 @@ import { devLog } from '@/utilities/dev';
  * @example
  * // Basic usage
  * const lengths = [{name:'px',value:'0px',syntax:'length'}]
- * <VariantValueInput
+ * <VariantInput
  *   value="10px,20px"
  *   option={value:'',name:'',lengths:lengths}
  *   separator=","
@@ -35,34 +35,27 @@ import { devLog } from '@/utilities/dev';
  * 
  * // With more complex syntax variants
  * const option = {name:'px',value:'0px',syntax:'number || number/number'}
- * <VariantValueInput
+ * <VariantInput
  *   value="1 || 1/2"
  *   option = {option}
  *   separator="/"
  * />
  */
-const VariantValueInput: React.FC<VARIANT_INPUT> = ({ value = '', option, separator, onChange = () => { } }: VARIANT_INPUT): ReactElement | null => {
+const VariantInput: React.FC<VARIANT_INPUT> = ({ value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } }: VARIANT_INPUT): ReactElement | null => {
     const splitedValues = splitMultiValue(value, separator);
-    const syntaxes = splitSyntaxVariants(option.syntax);
-    const initialSyntaxIndex = getSyntaxVariantIndex(value, option.syntax) || 0;
-    const [currentIndex, setCurrentIndex] = useState(initialSyntaxIndex);
+    const syntaxes = useMemo(() => getSyntaxVariants(option), [option]);
 
-    /**
-     * Normalizes the value when syntax variant changes
-     */
-    const normalizeValueForSyntax = useCallback((targetSyntax: string) => {
-        const identifiers = splitSyntaxIdentifiers(targetSyntax);
-        if (!identifiers) return '';
+    // Initialize current index based on the value
+    const [currentIndex, setCurrentIndex] = useState(() => {
+        return matchSyntaxVariant(value, syntaxes || []) || 0;
+    });
 
-        // Take only the values that fit the target syntax
-        const normalizedValues = splitedValues.slice(0, identifiers.length);
-        return normalizedValues.join(separator);
-    }, [splitedValues, separator]);
-
-    const handleChange = useCallback((input: string, index: number) => {
+    // Memoize event handlers to prevent unnecessary re-renders of child components
+    const handleChange = useCallback((input: string, value: string, index: number) => {
         const updatedValue = updateMultiValue(value, input, index, separator);
         onChange(updatedValue);
-    }, [value, separator, onChange]);
+    }, [separator, onChange]
+    );
 
     const handleVariantChange = useCallback(() => {
         if (!syntaxes?.length) {
@@ -70,41 +63,40 @@ const VariantValueInput: React.FC<VARIANT_INPUT> = ({ value = '', option, separa
             return;
         }
 
-        setCurrentIndex(prev => {
-            const nextIndex = (prev + 1) % syntaxes.length;
-            const nextSyntax = syntaxes[nextIndex];
-            const normalizedValue = normalizeValueForSyntax(nextSyntax);
+        const nextIndex = (currentIndex + 1) % syntaxes.length;
+        const nextValue = option.lengths ? option.lengths[nextIndex].value : '';
 
-            // Update parent with normalized value if needed
-            if (normalizedValue !== value) {
-                onChange(normalizedValue);
-            }
+        // First update the state
+        setCurrentIndex(nextIndex);
 
-            return nextIndex;
-        });
-    }, [syntaxes, value, onChange, normalizeValueForSyntax]);
+        // Then trigger the onChange in a separate update
+        onChange(nextValue);
+
+    }, [syntaxes, onChange, option]
+    );
 
     const childrenElements = (() => {
         if (!syntaxes?.length) return null;
 
         const currentSyntax = syntaxes[currentIndex];
-        const identifiers = splitSyntaxIdentifiers(currentSyntax);
-        if (!identifiers?.length) return null;
+        const syntaxTypes = extractSyntaxTypes(currentSyntax);
 
-        return identifiers.map((identifier, index) => (
-            <>
+        if (!syntaxTypes?.length) return null;
+
+        return syntaxTypes.map((syntaxType, index) => {
+            const currentOption = option.lengths?.[currentIndex];
+            const inputValue = splitedValues[index] ?? '';
+
+            return (
                 <DynamicInput
-                    key={`${identifier}-${index}`}
-                    value={splitedValues[index] ?? ''}
-                    onChange={(val) => handleChange(val, index)}
-                    identifier={identifier}
+                    key={`${syntaxType}-${index}-${currentIndex}`}
+                    value={inputValue}
+                    onChange={(val) => handleChange(val, value, index)}
+                    type={syntaxType}
+                    option={currentOption}
                 />
-
-                {index < identifiers.length - 1 &&
-                    <span className={CSS.Separator}>─</span>
-                }
-            </>
-        ));
+            );
+        });
     })();
 
     return (
@@ -123,4 +115,4 @@ const VariantValueInput: React.FC<VARIANT_INPUT> = ({ value = '', option, separa
 };
 
 
-export default memo(VariantValueInput);
+export default memo(VariantInput);

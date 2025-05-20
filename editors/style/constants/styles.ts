@@ -322,6 +322,9 @@ export const STYLES_CONSTANTS = {
 	backgroundPosition: {
 		options: OPTIONS.BACKGROUND_POSITION,
 	},
+	backgroundRepeat: {
+		options: OPTIONS.BACKGROUND_REPEAT,
+	},
 
 	// -------------------------------- SHADOW & EFFECTS --------------------------------
 	boxShadow: {

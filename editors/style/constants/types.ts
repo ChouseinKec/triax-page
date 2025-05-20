@@ -19,6 +19,8 @@
  */
 export type STYLE_VALUE_SYNTAX =
 	| 'keyword' //
+	| 'keyword keyword'
+	| 'variant'
 	| 'variable'
 	| 'expression'
 	| 'function(url)'
@@ -29,10 +31,10 @@ export type STYLE_VALUE_SYNTAX =
 	| 'function(length,length,length)'
 	| 'length length length color'
 	| 'length'
-	| 'length || length length'
 	| 'color'
 	| 'number'
 	| 'number || number/number'
+	| 'length length'
 	| '';
 
 /**

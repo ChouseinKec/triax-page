@@ -130,7 +130,7 @@ Validates camelCase CSS property names.
 
 ## Helpers
 
-### `splitSyntaxIdentifiers(input)`
+### `extractSyntaxTypes(input)`
 
 Splits CSS syntax strings.  
 **Example:**  
