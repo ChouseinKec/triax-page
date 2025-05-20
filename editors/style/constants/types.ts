@@ -17,7 +17,23 @@
  * @value 'number || number/number' - A format for fractions or aspect ratios (e.g., `16/9`).
  * @value '' - An empty value, used for fallback or reset.
  */
-export type STYLE_VALUE_SYNTAX = 'keyword' | 'variable' | 'expression' | 'function(url)' | 'function(length)' | 'function(number)' | 'function(length,length)' | 'function(number,length)' | 'function(length,length,length)' | 'length length length color' | 'length' | 'color' | 'number' | 'number || number/number' | '';
+export type STYLE_VALUE_SYNTAX =
+	| 'keyword' //
+	| 'variable'
+	| 'expression'
+	| 'function(url)'
+	| 'function(length)'
+	| 'function(number)'
+	| 'function(length,length)'
+	| 'function(number,length)'
+	| 'function(length,length,length)'
+	| 'length length length color'
+	| 'length'
+	| 'length || length length'
+	| 'color'
+	| 'number'
+	| 'number || number/number'
+	| '';
 
 /**
  * Represents a single style value configuration.

@@ -412,6 +412,23 @@ export const BACKGROUND_ORIGIN: STYLE_VALUE[] = [
 	{ name: 'content-box', value: 'content-box', syntax: 'keyword' },
 ];
 
+export const BACKGROUND_POSITION: STYLE_VALUE[] = [
+	{
+		name: '',
+		value: '0% 0%',
+		syntax: 'length || length length',
+		lengths: [
+			//
+			{ name: 'top', value: 'top', syntax: 'keyword', category: 'Keyword' },
+			{ name: 'bottom', value: 'bottom', syntax: 'keyword', category: 'Keyword' },
+			{ name: 'left', value: 'left', syntax: 'keyword', category: 'Keyword' },
+			{ name: 'right', value: 'right', syntax: 'keyword', category: 'Keyword' },
+			{ name: 'center', value: 'center', syntax: 'keyword', category: 'Keyword' },
+			...LENGTH,
+		],
+	},
+];
+
 // GENERICS
 export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
 export const URL: STYLE_VALUE[] = [{ name: 'url()', value: "url('https://github.com/ChouseinKec/triax-page')", syntax: 'function(url)' }];

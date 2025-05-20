@@ -319,6 +319,9 @@ export const STYLES_CONSTANTS = {
 	backgroundOrigin: {
 		options: OPTIONS.BACKGROUND_ORIGIN,
 	},
+	backgroundPosition: {
+		options: OPTIONS.BACKGROUND_POSITION,
+	},
 
 	// -------------------------------- SHADOW & EFFECTS --------------------------------
 	boxShadow: {

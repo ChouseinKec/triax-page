@@ -18,7 +18,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useBackgroundLayout = (): STYLE_LAYOUT => {
-    const { renderURLInput, renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
+    const { renderVariantInput, renderURLInput, renderPositionSelect, renderColorSelect, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
@@ -98,11 +98,6 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect('outlineColor'),
                     },
 
-
-
-
-
-
                     // Background Image
                     {
                         label: '',
@@ -119,6 +114,15 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                             column: '1/-1',
                                             direction: 'column',
                                             component: () => renderURLInput('backgroundImage', 'url("', '")'),
+                                        },
+
+
+                                        // Position
+                                        {
+                                            label: 'Position',
+                                            column: 'auto',
+                                            direction: 'column',
+                                            component: () => renderVariantInput('backgroundPosition', ' '),
                                         },
 
                                         // Attachment
@@ -153,6 +157,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                             direction: 'column',
                                             component: () => renderDropdownSelect('backgroundOrigin'),
                                         },
+
 
                                     ]}
                                 />
