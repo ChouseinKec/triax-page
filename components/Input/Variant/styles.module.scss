@@ -1,9 +1,10 @@
 @use '../../../mixins/mixins.module.scss' as inputMixins;
 
 .VariantInput {
-	display: grid;
-	grid-template-columns: 0.5fr 0.5fr;
-	gap: var(--size-lg);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-sm);
 
 	position: relative;
 }
@@ -12,4 +13,8 @@
 	@include inputMixins.components--button;
 
 	position: absolute;
+}
+
+.Separator {
+	opacity: 0.3;
 }

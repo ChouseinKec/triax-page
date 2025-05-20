@@ -1,7 +1,7 @@
 import { memo, cloneElement, Children, ReactElement, useCallback, useState } from 'react';
 
 // Styles 
-import componentStyle from '@/components/Input/Variant/styles.module.css';
+import CSS from '@/components/Input/Variant/styles.module.css';
 
 // Components
 import DynamicInput from '@/components/Input/Dynamic/component';
@@ -84,7 +84,6 @@ const VariantValueInput: React.FC<VARIANT_INPUT> = ({ value = '', option, separa
         });
     }, [syntaxes, value, onChange, normalizeValueForSyntax]);
 
-    // Generate input elements
     const childrenElements = (() => {
         if (!syntaxes?.length) return null;
 
@@ -93,20 +92,26 @@ const VariantValueInput: React.FC<VARIANT_INPUT> = ({ value = '', option, separa
         if (!identifiers?.length) return null;
 
         return identifiers.map((identifier, index) => (
-            <DynamicInput
-                key={`${identifier}-${index}`}
-                value={splitedValues[index] ?? ''}
-                onChange={(val) => handleChange(val, index)}
-                identifier={identifier}
-            />
+            <>
+                <DynamicInput
+                    key={`${identifier}-${index}`}
+                    value={splitedValues[index] ?? ''}
+                    onChange={(val) => handleChange(val, index)}
+                    identifier={identifier}
+                />
+
+                {index < identifiers.length - 1 &&
+                    <span className={CSS.Separator}>─</span>
+                }
+            </>
         ));
     })();
 
     return (
-        <div className={componentStyle.VariantInput} role="group" aria-label="Variant-value input group">
+        <div className={CSS.VariantInput} role="group" aria-label="Variant-value input group">
             <button
                 type="button"
-                className={componentStyle.CycleButton}
+                className={CSS.CycleButton}
                 onClick={handleVariantChange}
                 aria-label="Cycle syntax variant"
             >
