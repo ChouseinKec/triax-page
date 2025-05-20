@@ -67,8 +67,6 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 		return null;
 	})();
 
-
-
 	/**
 	 * Handles numeric value changes with validation and fallback handling.
 	 * Memoized to prevent unnecessary re-creations.
@@ -119,22 +117,18 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 		[DEFAULT_UNIT, extractedNumber, isStrict, onChange, options]
 	);
 
-
-
-	const renderLengthSelect = useCallback((extractedUnit: string): ReactElement => {
-		return (
+	const renderLengthSelect = useMemo(() => {
+		return (unit: string) => (
 			<SelectDropdown
 				options={options}
-				value={extractedUnit.replace(')', '')}
+				value={unit.replace(')', '')}
 				onChange={handleUnitChange}
 				hasSearch={true}
 				isGrouped={true}
 				placeholder="length"
 			/>
-		)
-	}, [handleUnitChange, options])
-
-
+		);
+	}, [handleUnitChange, options]);
 
 	/**
 	 * Renders the correct combination of inputs based on detected calculatedState.
@@ -195,7 +189,7 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 				);
 
 			default:
-				return <p>OOOOPS</p>;
+				return <div>Invalid length value</div>
 		}
 	})();
 
