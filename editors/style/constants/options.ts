@@ -476,6 +476,32 @@ export const BACKGROUND_REPEAT: STYLE_VALUE[] = [
 	},
 ];
 
+export const BACKGROUND_SIZE: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: 'cover',
+				value: 'cover',
+				syntax: 'keyword',
+				lengths: [
+					{ name: 'cover', value: 'cover', syntax: 'keyword' },
+					{ name: 'contain', value: 'contain', syntax: 'keyword' },
+				],
+			},
+
+			{
+				name: '50% 50%',
+				value: '50% 50%',
+				syntax: 'length length',
+				lengths: [...LENGTH],
+			},
+		],
+	},
+];
+
 // GENERICS
 export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
 export const URL: STYLE_VALUE[] = [{ name: 'url()', value: "url('https://github.com/ChouseinKec/triax-page')", syntax: 'function(url)' }];

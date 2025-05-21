@@ -98,81 +98,76 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect('outlineColor'),
                     },
 
-                    // Background Image
+
+
+                    // Background-Image
                     {
-                        label: '',
+                        label: 'Background Image',
+                        column: '1/3',
+                        direction: 'column',
+                        component: () => renderURLInput('backgroundImage', 'url("', '")'),
+                    },
+
+
+                    // Background-Color
+                    {
+                        label: 'Background Color',
+                        column: 'auto',
+                        direction: 'column',
+                        component: () => renderColorSelect('backgroundColor'),
+                    },
+
+                    // Background-Size
+                    {
+                        label: 'Background Size',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => (
-                            <DropdownReveal closeOnChange={false} value='Background'>
-                                <Group
-                                    columns='minmax(0, 0.5fr) minmax(0, 0.5fr)'
-                                    properties={[
-                                        // Image
-                                        {
-                                            label: 'Image',
-                                            column: '1/-1',
-                                            direction: 'column',
-                                            component: () => renderURLInput('backgroundImage', 'url("', '")'),
-                                        },
-
-
-                                        // Position
-                                        {
-                                            label: 'Position',
-                                            column: '1/-1',
-                                            direction: 'column',
-                                            component: () => renderVariantInput('backgroundPosition', ' '),
-                                        },
-
-
-                                        // Repeat
-                                        {
-                                            label: 'Repeat',
-                                            column: '1/-1',
-                                            direction: 'column',
-                                            component: () => renderVariantInput('backgroundRepeat', ' '),
-                                        },
-
-                                        // Attachment
-                                        {
-                                            label: 'Attachment',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            component: () => renderDropdownSelect('backgroundAttachment'),
-                                        },
-
-                                        // Clip
-                                        {
-                                            label: 'Clip',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            component: () => renderDropdownSelect('backgroundClip'),
-                                        },
-
-                                        // Color
-                                        {
-                                            label: 'Color',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            component: () => renderColorSelect('backgroundColor'),
-                                        },
-
-
-                                        // Origin
-                                        {
-                                            label: 'Origin',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            component: () => renderDropdownSelect('backgroundOrigin'),
-                                        },
-
-
-                                    ]}
-                                />
-                            </DropdownReveal>
-                        ),
+                        component: () => renderVariantInput('backgroundSize', ' '),
                     },
+
+
+                    // Background-Position
+                    {
+                        label: 'Background Position',
+                        column: '1/-1',
+                        direction: 'column',
+                        component: () => renderVariantInput('backgroundPosition', ' '),
+                    },
+
+
+                    // Background-Repeat
+                    {
+                        label: 'Background Repeat',
+                        column: '1/-1',
+                        direction: 'column',
+                        component: () => renderVariantInput('backgroundRepeat', ' '),
+                    },
+
+                    // Background-Attachment
+                    {
+                        label: 'Background Attachment',
+                        column: 'auto',
+                        direction: 'column',
+                        component: () => renderDropdownSelect('backgroundAttachment'),
+                    },
+
+                    // Background-Clip
+                    {
+                        label: 'Background Clip',
+                        column: 'auto',
+                        direction: 'column',
+                        component: () => renderDropdownSelect('backgroundClip'),
+                    },
+
+
+                    // Background-Origin
+                    {
+                        label: 'Background Origin',
+                        column: 'auto',
+                        direction: 'column',
+                        component: () => renderDropdownSelect('backgroundOrigin'),
+                    },
+
 
 
 
