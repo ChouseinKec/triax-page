@@ -402,7 +402,7 @@ export const ASPECT_RATIO: STYLE_VALUE[] = [
 				value: '1',
 				syntax: 'number',
 			},
-			
+
 			{
 				name: '1/1',
 				value: '1/1',
@@ -438,6 +438,13 @@ export const BACKGROUND_POSITION: STYLE_VALUE[] = [
 		syntax: 'variant',
 		lengths: [
 			{
+				name: '50% 50%',
+				value: '50% 50%',
+				syntax: 'length length',
+				lengths: [...LENGTH],
+			},
+
+			{
 				name: 'center',
 				value: 'center',
 				syntax: 'keyword',
@@ -448,13 +455,6 @@ export const BACKGROUND_POSITION: STYLE_VALUE[] = [
 					{ name: 'left', value: 'left', syntax: 'keyword' },
 					{ name: 'center', value: 'center', syntax: 'keyword' },
 				],
-			},
-
-			{
-				name: '50% 50%',
-				value: '50% 50%',
-				syntax: 'length length',
-				lengths: [...LENGTH],
 			},
 		],
 	},
@@ -467,13 +467,11 @@ export const BACKGROUND_REPEAT: STYLE_VALUE[] = [
 		syntax: 'variant',
 		lengths: [
 			{
-				name: 'repeat',
-				value: 'repeat',
-				syntax: 'keyword',
+				name: 'repeat repeat',
+				value: 'repeat repeat',
+				syntax: 'keyword keyword',
 				lengths: [
 					{ name: 'repeat', value: 'repeat', syntax: 'keyword' },
-					{ name: 'repeat-x', value: 'repeat-x', syntax: 'keyword' },
-					{ name: 'repeat-y', value: 'repeat-y', syntax: 'keyword' },
 					{ name: 'space', value: 'space', syntax: 'keyword' },
 					{ name: 'round', value: 'round', syntax: 'keyword' },
 					{ name: 'no-repeat', value: 'no-repeat', syntax: 'keyword' },
@@ -481,11 +479,13 @@ export const BACKGROUND_REPEAT: STYLE_VALUE[] = [
 			},
 
 			{
-				name: 'repeat repeat',
-				value: 'repeat repeat',
-				syntax: 'keyword keyword',
+				name: 'repeat',
+				value: 'repeat',
+				syntax: 'keyword',
 				lengths: [
 					{ name: 'repeat', value: 'repeat', syntax: 'keyword' },
+					{ name: 'repeat-x', value: 'repeat-x', syntax: 'keyword' },
+					{ name: 'repeat-y', value: 'repeat-y', syntax: 'keyword' },
 					{ name: 'space', value: 'space', syntax: 'keyword' },
 					{ name: 'round', value: 'round', syntax: 'keyword' },
 					{ name: 'no-repeat', value: 'no-repeat', syntax: 'keyword' },
@@ -502,6 +502,13 @@ export const BACKGROUND_SIZE: STYLE_VALUE[] = [
 		syntax: 'variant',
 		lengths: [
 			{
+				name: '50% 50%',
+				value: '50% 50%',
+				syntax: 'length length',
+				lengths: [...LENGTH],
+			},
+
+			{
 				name: 'cover',
 				value: 'cover',
 				syntax: 'keyword',
@@ -509,13 +516,6 @@ export const BACKGROUND_SIZE: STYLE_VALUE[] = [
 					{ name: 'cover', value: 'cover', syntax: 'keyword' },
 					{ name: 'contain', value: 'contain', syntax: 'keyword' },
 				],
-			},
-
-			{
-				name: '50% 50%',
-				value: '50% 50%',
-				syntax: 'length length',
-				lengths: [...LENGTH],
 			},
 		],
 	},

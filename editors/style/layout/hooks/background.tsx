@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
-// Components
-import DropdownReveal from '@/components/Reveal/Dropdown/component';
-import Group from '@/editors/style/layout/components/group/component';
-
 // Types
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
 
 // Hooks
 import { useStyleRender } from '@/editors/style/hooks/render';
+
+// Components
+import HorizontalDivider from '@/components/Divider/Horizontal/component';
+import Group from '@/editors/style/layout/components/group/component';
 
 /**
  * Custom hook to render the layout for the border and shadow styles.
@@ -99,45 +99,66 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                     },
 
 
+                    // Divider
+                    {
+                        label: '',
+                        column: '1/-1',
+                        direction: 'column',
+                        component: () => <HorizontalDivider />,
+                    },
 
                     // Background-Image
                     {
-                        label: 'Background Image',
+                        label: 'Image',
                         column: '1/3',
                         direction: 'column',
                         component: () => renderURLInput('backgroundImage', 'url("', '")'),
                     },
 
-
                     // Background-Color
                     {
-                        label: 'Background Color',
+                        label: 'Color',
                         column: 'auto',
                         direction: 'column',
                         component: () => renderColorSelect('backgroundColor'),
                     },
 
-                    // Background-Size
+
+
                     {
-                        label: 'Background Size',
+                        label: '',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => renderVariantInput('backgroundSize', ' '),
+                        component: () => <Group
+                            columns="minmax(0,1fr) minmax(0,1fr)"
+                            properties={[
+                                // Background-Size
+                                {
+                                    label: 'Size',
+                                    column: 'auto',
+                                    direction: 'column',
+                                    component: () => renderVariantInput('backgroundSize', ' '),
+                                },
+
+                                // Background-Position
+                                {
+                                    label: 'Position',
+                                    column: 'auto',
+                                    direction: 'column',
+                                    component: () => renderVariantInput('backgroundPosition', ' '),
+                                },
+
+                            ]}
+                        />,
                     },
 
 
-                    // Background-Position
-                    {
-                        label: 'Background Position',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => renderVariantInput('backgroundPosition', ' '),
-                    },
+
 
 
                     // Background-Repeat
                     {
-                        label: 'Background Repeat',
+                        label: 'Repeat',
                         column: '1/-1',
                         direction: 'column',
                         component: () => renderVariantInput('backgroundRepeat', ' '),
@@ -145,7 +166,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
 
                     // Background-Attachment
                     {
-                        label: 'Background Attachment',
+                        label: 'Attachment',
                         column: 'auto',
                         direction: 'column',
                         component: () => renderDropdownSelect('backgroundAttachment'),
@@ -153,16 +174,15 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
 
                     // Background-Clip
                     {
-                        label: 'Background Clip',
+                        label: 'Clip',
                         column: 'auto',
                         direction: 'column',
                         component: () => renderDropdownSelect('backgroundClip'),
                     },
 
-
                     // Background-Origin
                     {
-                        label: 'Background Origin',
+                        label: 'Origin',
                         column: 'auto',
                         direction: 'column',
                         component: () => renderDropdownSelect('backgroundOrigin'),

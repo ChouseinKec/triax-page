@@ -1,8 +1,5 @@
 // Components
-import NumberInput from '@/components/Input/Number/component';
-import Expand from '@/components/Reveal/Expand/component';
-import MultiValueInput from '@/components/Input/Multi/components';
-import VariantInput from '@/components/Input/Variant/component';
+import ExpandReveal from '@/components/Reveal/Expand/component';
 import Group from '@/editors/style/layout/components/group/component';
 
 // Types
@@ -80,12 +77,12 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         component: () => renderRadioSelect('overflow'),
                     },
 
-                    // Expand: Expands to reveal additional properties such as object-fit, box-sizing, and aspect-ratio.
+                    // expandReveal: Expands to reveal additional properties such as object-fit, box-sizing, and aspect-ratio.
                     {
                         label: null, // No label
                         column: '1/-1',
                         component: () => (
-                            <Expand>
+                            <ExpandReveal>
                                 <Group
                                     properties={[
                                         // Object-Fit (e.g., cover, contain).
@@ -113,7 +110,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                         },
                                     ]}
                                 />
-                            </Expand>
+                            </ExpandReveal>
                         ),
                     },
                 ],

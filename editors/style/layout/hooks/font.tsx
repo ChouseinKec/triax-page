@@ -1,5 +1,5 @@
 // Components
-import Expand from '@/components/Reveal/Expand/component';
+import ExpandReveal from '@/components/Reveal/Expand/component';
 import Dropdown from '@/components/Reveal/Dropdown/component';
 import Group from '@/editors/style/layout/components/group/component';
 
@@ -130,15 +130,15 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                 ],
             },
 
-            // Expand
+            // ExpandReveal
             {
                 properties: [
-                    // Expand
+                    // ExpandReveal
                     {
                         label: null,
                         column: '1/-1',
                         component: () => (
-                            <Expand>
+                            <ExpandReveal>
                                 <Group
                                     columns="minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"
                                     properties={[
@@ -343,7 +343,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                         },
                                     ]}
                                 />
-                            </Expand>
+                            </ExpandReveal>
                         ),
                     },
                 ],
