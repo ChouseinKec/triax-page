@@ -391,7 +391,26 @@ export const BREAK: STYLE_VALUE[] = [
 ];
 
 // Aspect Ratio
-export const ASPECT_RATIO: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'number || number/number' }];
+export const ASPECT_RATIO: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: '1',
+				value: '1',
+				syntax: 'number',
+			},
+			
+			{
+				name: '1/1',
+				value: '1/1',
+				syntax: 'number/number',
+			},
+		],
+	},
+];
 
 // Background-Image
 export const BACKGROUND_ATTACHMENT: STYLE_VALUE[] = [

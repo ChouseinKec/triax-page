@@ -33,7 +33,7 @@ export type STYLE_VALUE_SYNTAX =
 	| 'length'
 	| 'color'
 	| 'number'
-	| 'number || number/number'
+	| 'number/number'
 	| 'length length'
 	| '';
 
