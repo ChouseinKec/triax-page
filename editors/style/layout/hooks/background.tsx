@@ -26,7 +26,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
         label: 'Background & Border',
         groups: [
             {
-                columns: '0.2fr 1fr 1fr',
+                columns: '0.6fr 1fr 1fr',
                 rows: 'auto',
                 properties: [
 

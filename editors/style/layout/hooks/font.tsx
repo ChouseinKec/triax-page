@@ -140,7 +140,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         component: () => (
                             <Expand>
                                 <Group
-                                    columns="1fr 1fr"
+                                    columns="minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"
                                     properties={[
                                         // Letter Spacing
                                         {
@@ -225,12 +225,12 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                         // Columns
                                         {
                                             label: 'Columns',
-                                            column: '1/-1',
+                                            column: '2/-1',
                                             direction: 'column',
                                             component: () => (
                                                 <Dropdown closeOnChange={false}>
                                                     <Group
-                                                        columns='minmax(0, 0.5fr) minmax(0, 0.5fr) minmax(0, 0.5fr)'
+                                                        columns='minmax(0, 0.7fr) minmax(0, 0.7fr) minmax(0, 0.7fr)'
                                                         properties={[
                                                             // Column Count
                                                             {
@@ -262,6 +262,22 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 column: 'auto',
                                                                 direction: 'column',
                                                                 component: () => renderLengthInput('columnRuleWidth'),
+                                                            },
+
+                                                            // Widows
+                                                            {
+                                                                label: 'Widows',
+                                                                column: 'auto',
+                                                                direction: 'column',
+                                                                component: () => renderLengthInput('widows'),
+                                                            },
+
+                                                            // Orphans
+                                                            {
+                                                                label: 'Orphans',
+                                                                column: 'auto',
+                                                                direction: 'column',
+                                                                component: () => renderLengthInput('orphans'),
                                                             },
 
                                                             // Column Rule Style
@@ -320,21 +336,6 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 component: () => renderDropdownSelect('columnFill'),
                                                             },
 
-                                                            // Widows
-                                                            {
-                                                                label: 'Widows',
-                                                                column: 'auto',
-                                                                direction: 'column',
-                                                                component: () => renderLengthInput('widows'),
-                                                            },
-
-                                                            // Orphans
-                                                            {
-                                                                label: 'Orphans',
-                                                                column: 'auto',
-                                                                direction: 'column',
-                                                                component: () => renderLengthInput('orphans'),
-                                                            },
                                                         ]}
                                                     />
                                                 </Dropdown>

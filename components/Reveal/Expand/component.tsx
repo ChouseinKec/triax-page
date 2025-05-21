@@ -39,9 +39,7 @@ const Expand: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): ReactElem
         <div className={CSS.ExpandReveal} data-isopen={isOpen} >
 
             {/* Toggle button to expand/collapse the content */}
-            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} >
-                <span />
-            </button>
+            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} />
 
             {/* Conditionally render content if the expand is open */}
             {isOpen && (
