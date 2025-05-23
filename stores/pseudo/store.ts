@@ -48,21 +48,18 @@ const usePseudoStore = create<PSEUDO_STORE>()((set, get) => ({
 	 */
 	setPseudo: (value: string) => {
 		const allPseudos = get().allPseudos;
-		const _pseudo = allPseudos.find((pse) => {
+		const pseudo = allPseudos.find((pse) => {
 			return pse.value === value;
 		});
 
-		if (!_pseudo) {
-			throw new Error(
-				`Invalid pseudo: ${value}. Available pseudos: ${allPseudos
-					.map((dev) => {
-						return dev.name;
-					})
-					.join(',')}`
-			);
+		if (!pseudo) {
+			throw new Error(`Invalid pseudo: ${value}. Available pseudos: ${allPseudos.map((pse) => pse.name).join(',')}`);
 		}
 
-		set({ currentPseudo: _pseudo });
+		// Only update if the device actually changed
+		if (get().currentPseudo.value !== pseudo.value) {
+			set({ currentPseudo: pseudo });
+		}
 	},
 }));
 

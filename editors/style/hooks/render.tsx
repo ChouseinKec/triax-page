@@ -55,6 +55,10 @@ interface STYLE_RENDER {
 export const useStyleRender = (): STYLE_RENDER => {
 	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleState();
 
+	const getOptions = useCallback((style: STYLES_CONSTANTS_KEY) => {
+		return getStyleOptions(style)
+	}, [getStyleOptions]
+	)
 
 	const renderFlexView = useCallback<STYLE_RENDER['renderFlexView']>(() => {
 		return (
@@ -101,21 +105,26 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered length input
 	 */
 	const renderLengthInput = useCallback<STYLE_RENDER['renderLengthInput']>((style) => {
-		const options = getStyleOptions(style);
+		const options = getOptions(style);
 		if (!options) {
 			devLog.error(`No options available for style '${style}'`);
 			return <></>
 		}
 
+		const handleChange = useCallback((value: string) => {
+			setSingleStyle(style, value);
+		}, [style, setSingleStyle])
+
+
 		return (
 			<LengthInput
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[getSingleStyle, setSingleStyle, getOptions]
 	);
 
 	/**
@@ -125,21 +134,26 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered input group or error fallback
 	 */
 	const renderInputGroup = useCallback<STYLE_RENDER['renderInputGroup']>((style, separator) => {
-		const options = getStyleOptions(style);
+		const options = getOptions(style);
 		if (!options) {
 			devLog.error(`No options available for style '${style}'`);
 			return <></>
 		}
 
+		const handleChange = useCallback((value: string, index: number) => {
+			setMultiStyle(style, value, index, separator)
+		}, [style, setMultiStyle, separator])
+
+
 		return (
 			<InputGroup
 				values={getMultiStyle(style, separator)}
-				onChange={(value, index) => setMultiStyle(style, value, index, separator)}
+				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getMultiStyle, setMultiStyle]
+		[getMultiStyle, setMultiStyle, getOptions]
 	);
 
 	/**
@@ -148,10 +162,14 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered number input
 	 */
 	const renderNumberInput = useCallback<STYLE_RENDER['renderNumberInput']>((style) => {
+		const handleChange = useCallback((value: string) => {
+			setSingleStyle(style, value);
+		}, [style, setSingleStyle])
+
 		return (
 			<NumberInput
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 			/>
 		);
 	},
@@ -164,21 +182,24 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered dropdown select
 	 */
 	const renderDropdownSelect = useCallback<STYLE_RENDER['renderDropdownSelect']>((style) => {
-		const options = getStyleOptions(style);
+		const options = getOptions(style);
 		if (!options) {
 			devLog.error(`No options available for style '${style}'`);
 			return <></>
 		}
+		const handleChange = useCallback((value: string) => {
+			setSingleStyle(style, value);
+		}, [style, setSingleStyle])
 
 		return (
 			<DropdownSelect
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[getSingleStyle, setSingleStyle, getOptions]
 	);
 
 	/**
@@ -187,15 +208,19 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered color select
 	 */
 	const renderColorSelect = useCallback<STYLE_RENDER['renderColorSelect']>((style) => {
+		const handleChange = useCallback((value: string) => {
+			setSingleStyle(style, value);
+		}, [style, setSingleStyle])
+
 		return (
 			<ColorSelect
 				placeholder="Color"
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[setSingleStyle, getSingleStyle]
 	);
 
 	/**
@@ -204,21 +229,26 @@ export const useStyleRender = (): STYLE_RENDER => {
 	 * @returns {React.ReactElement} The rendered radio select
 	 */
 	const renderRadioSelect = useCallback<STYLE_RENDER['renderRadioSelect']>((style) => {
-		const options = getStyleOptions(style);
+		const options = getOptions(style);
 		if (!options) {
 			devLog.error(`No options available for style '${style}'`);
 			return <></>
 		}
 
+		const handleChange = useCallback((value: string) => {
+			setSingleStyle(style, value);
+		}, [style, setSingleStyle])
+
+
 		return (
 			<RadioSelect
 				options={options}
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[setSingleStyle, getSingleStyle, getOptions]
 	);
 
 	/**
@@ -242,10 +272,10 @@ export const useStyleRender = (): STYLE_RENDER => {
 		let value = getSingleStyle(style);
 		value = value.replace(prefix, '').replace(suffix, '');
 
-		const handleChange = (val: string) => {
-			const value = val.length === 0 ? '' : `${prefix}${val}${suffix}`;
-			setSingleStyle(style, value)
-		}
+		const handleChange = useCallback((value: string) => {
+			const _value = value.length === 0 ? '' : `${prefix}${value}${suffix}`;
+			setSingleStyle(style, _value)
+		}, [style, setSingleStyle, prefix, suffix])
 
 		return (
 			<StringInput
@@ -255,29 +285,33 @@ export const useStyleRender = (): STYLE_RENDER => {
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[setSingleStyle, getSingleStyle]
 	);
 
-
 	const renderVariantInput = useCallback<STYLE_RENDER['renderVariantInput']>((style, separator) => {
-		const options = getStyleOptions(style);
+		const options = getOptions(style);
+
 		if (!options) {
 			devLog.error(`No options available for style '${style}'`);
 			return <></>
 		}
 
+		const handleChange = useCallback((value: string) => {
+			return setSingleStyle(style, value);
+		}, [style, setSingleStyle])
+
 
 		return (
 			<VariantInput
 				value={getSingleStyle(style)}
-				onChange={(value) => setSingleStyle(style, value)}
+				onChange={handleChange}
 				separator={separator}
 				option={options[0]}
 				id={style}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[setSingleStyle, getSingleStyle]
 	);
 
 	return {
@@ -293,4 +327,6 @@ export const useStyleRender = (): STYLE_RENDER => {
 		renderURLInput,
 		renderVariantInput
 	};
+
+
 };

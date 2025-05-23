@@ -1,4 +1,4 @@
-import { useCallback, ReactElement } from 'react';
+import { useCallback, ReactElement, useMemo } from 'react';
 
 // Components
 import DropdownSelect from '@/components/Select/Dropdown/component';
@@ -13,22 +13,20 @@ interface ORIENTATION_RENDER {
 
 
 export const useOrientationRender = (): ORIENTATION_RENDER => {
-    const { getOrientations, getOrientation, setOrientation, } = useOrientationStore();
+    const options = useOrientationStore(useCallback(store => store.getOrientations(), []));
+    const currentOrientation = useOrientationStore(useCallback(store => store.getOrientation(), []));
+    const setOrientation = useOrientationStore(useCallback(store => store.setOrientation, []));
 
     const renderOrientationSelect = useCallback<ORIENTATION_RENDER['renderOrientationSelect']>(() => {
-        const options = getOrientations();
-        const currentOrientation = getOrientation();
-
         return <DropdownSelect options={options} value={currentOrientation.value} onChange={(value) => setOrientation(value)} />
-
     },
-        [getOrientation, getOrientations, setOrientation]
+        [options, currentOrientation.value, setOrientation]
     );
 
 
+    return useMemo(() => ({
+        renderOrientationSelect
+    }), [renderOrientationSelect]);
 
 
-    return {
-        renderOrientationSelect,
-    };
 };

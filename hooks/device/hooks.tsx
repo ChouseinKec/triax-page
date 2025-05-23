@@ -1,4 +1,4 @@
-import { useCallback, ReactElement } from 'react';
+import { useCallback, ReactElement, useMemo } from 'react';
 
 // Components
 import DropdownSelect from '@/components/Select/Dropdown/component';
@@ -13,20 +13,20 @@ interface DEVICE_RENDER {
 
 
 export const useDeviceRender = (): DEVICE_RENDER => {
-    const { getDevices, getDevice, setDevice, } = useDeviceStore();
+    // Use more specific selectors to prevent unnecessary updates
+    const options = useDeviceStore(useCallback(store => store.getDevices(), []));
+    const currentDevice = useDeviceStore(useCallback(store => store.getDevice(), []));
+    const setDevice = useDeviceStore(useCallback(store => store.setDevice, []));
+
     const renderDeviceSelect = useCallback<DEVICE_RENDER['renderDeviceSelect']>(() => {
-        const options = getDevices();
-        const currentDevice = getDevice();
-
         return <DropdownSelect options={options} value={currentDevice.value} onChange={(value) => setDevice(value)} />
-
     },
-        [getDevice, getDevices, setDevice]
+        [options, currentDevice.value, setDevice]
     );
 
 
 
-    return {
-        renderDeviceSelect,
-    };
+    return useMemo(() => ({
+        renderDeviceSelect
+    }), [renderDeviceSelect]);
 };

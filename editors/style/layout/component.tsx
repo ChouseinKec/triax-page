@@ -33,12 +33,12 @@ const Layout: React.FC = ({ }): ReactElement => {
     const effectLayout = useEffectLayout();
 
     const layouts: STYLE_LAYOUT[] = [
-        displayLayout,
-        sizeLayout,
-        positionLayout,
-        fontLayout,
+        // displayLayout,
+        // sizeLayout,
+        // positionLayout,
+        // fontLayout,
         backgroundLayout,
-        effectLayout,
+        // effectLayout,
     ];
 
     const AccordionItems = layouts.map((category) => ({

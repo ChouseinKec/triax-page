@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
+// Components
+import Group from '@/editors/style/layout/components/group/component';
+import HorizontalDivider from '@/components/Divider/Horizontal/component';
+
 // Types
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
 
 // Hooks
 import { useStyleRender } from '@/editors/style/hooks/render';
-
-// Components
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
-import Group from '@/editors/style/layout/components/group/component';
 
 /**
  * Custom hook to render the layout for the border and shadow styles.
@@ -26,7 +26,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
         label: 'Background & Border',
         groups: [
             {
-                columns: '0.6fr 1fr 1fr',
+                columns: '0.2fr 1fr 1fr',
                 rows: 'auto',
                 properties: [
 
@@ -98,8 +98,6 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect('outlineColor'),
                     },
 
-
-                    // Divider
                     {
                         label: '',
                         column: '1/-1',
@@ -107,12 +105,14 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => <HorizontalDivider />,
                     },
 
+
                     // Background-Image
                     {
                         label: 'Image',
                         column: '1/3',
                         direction: 'column',
                         component: () => renderURLInput('backgroundImage', 'url("', '")'),
+
                     },
 
                     // Background-Color
@@ -123,37 +123,34 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => renderColorSelect('backgroundColor'),
                     },
 
-
-
                     {
                         label: '',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => <Group
-                            columns="minmax(0,1fr) minmax(0,1fr)"
-                            properties={[
-                                // Background-Size
-                                {
-                                    label: 'Size',
-                                    column: 'auto',
-                                    direction: 'column',
-                                    component: () => renderVariantInput('backgroundSize', ' '),
-                                },
+                        component: () =>
+                            <Group
+                                columns="minmax(0,1fr) minmax(0,1fr)"
+                                properties={[
+                                    // Background-Size
+                                    {
+                                        label: 'Size',
+                                        column: 'auto',
+                                        direction: 'column',
+                                        component: () => renderVariantInput('backgroundSize', ' '),
 
-                                // Background-Position
-                                {
-                                    label: 'Position',
-                                    column: 'auto',
-                                    direction: 'column',
-                                    component: () => renderVariantInput('backgroundPosition', ' '),
-                                },
+                                    },
 
-                            ]}
-                        />,
+                                    // Background-Position
+                                    {
+                                        label: 'Position',
+                                        column: 'auto',
+                                        direction: 'column',
+                                        component: () => renderVariantInput('backgroundPosition', ' '),
+                                    },
+
+                                ]}
+                            />,
                     },
-
-
-
 
 
                     // Background-Repeat
