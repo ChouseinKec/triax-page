@@ -2,13 +2,13 @@ import { memo, useCallback, ReactElement } from 'react';
 
 // Components 
 import DynamicInput from '@/components/Input/Dynamic/component';
-import MultiValueInput from '@/components/Input/Multi/components';
+import MultiValueInput from '@/components/Input/Multi/component';
 
 // Types
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/editors/style/utilities/style';
+import { getStyleOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -26,7 +26,6 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
     const extractedValue = extractValue(value);
     const extractedFunc = extractFunction(value);
     const extractedSepa = extractSeparator(extractedValue) || ' ';
-    const splitedValues = splitMultiValue(extractedValue, extractedSepa);
 
     /**
      * Handles value changes and reconstructs the function string
@@ -47,13 +46,21 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
         return <></>;
     }
 
-    // Split syntax into identifiers (e.g., ["number", "length"] for repeat(number,length))
-    const identifiers = extractSyntaxTypes(option.syntax);
+    // Split syntax into syntaxTypes (e.g., ["number", "length"] for repeat(number,length))
+    const syntaxTypes = extractSyntaxTypes(option.syntax);
     // Fallback for unsupported syntax
-    if (!identifiers) {
+    if (!syntaxTypes) {
         devLog.error('[FunctionInput]: Unsupported syntax format in option:', option.syntax);
         return <></>
     }
+
+    const inputElements = syntaxTypes.map((syntaxType, index) => (
+        <DynamicInput
+            key={`${syntaxType}-${index}`}
+            option={option}
+            type={syntaxType}
+        />
+    ));
 
     return (
         <div>
@@ -62,18 +69,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
                 value={extractedValue}
                 separator={extractedSepa}
             >
-                {identifiers.map((id, i) => (
-                    <DynamicInput
-                        key={`${id}-${i}`}
-                        option={option}
-                        value={splitedValues[i] || ''}
-                        identifier={id}
-                        onChange={(val) => handleChange(
-                            updateMultiValue(extractedValue, val, i, extractedSepa),
-                            extractedFunc
-                        )}
-                    />
-                ))}
+                {inputElements}
             </MultiValueInput>
         </div>
     );

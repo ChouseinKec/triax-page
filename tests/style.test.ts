@@ -17,7 +17,7 @@ import {
 	isFunctionValid,
 	isURLValid,
 	getStyleOptionByValue,
-} from './style';
+} from '../utilities/style';
 
 describe('extractNumber', () => {
 	// Basic cases

@@ -7,7 +7,7 @@ import componentStyle from '@/components/Input/Multi/styles.module.css';
 import { MULTI_INPUT } from '@/components/Input/Multi/types';
 
 // Utilities
-import { updateMultiValue, splitMultiValue } from '@/editors/style/utilities/style';
+import { updateMultiValue, splitMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 /**

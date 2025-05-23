@@ -188,9 +188,6 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         component: () => renderDropdownSelect('backgroundOrigin'),
                     },
 
-
-
-
                 ],
             },
         ],

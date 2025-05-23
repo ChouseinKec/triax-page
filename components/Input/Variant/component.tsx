@@ -1,4 +1,4 @@
-import { memo, ReactElement, useCallback, useMemo, useState } from 'react';
+import { memo, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // Styles 
 import CSS from '@/components/Input/Variant/styles.module.css';
@@ -10,8 +10,12 @@ import DynamicInput from '@/components/Input/Dynamic/component';
 import { VARIANT_INPUT } from '@/components/Input/Variant/types';
 
 // Utilities
-import { splitMultiValue, extractSyntaxTypes, getSyntaxVariants, matchSyntaxVariant, updateMultiValue } from '@/editors/style/utilities/style';
+import { splitMultiValue, extractSyntaxTypes, getSyntaxVariants, matchSyntaxVariant, updateMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
+
+// Contexts
+import { useToolbar } from '@/contexts/ToolbarContext';
+
 
 /**
  * A component that handles input variants with multiple syntax options.
@@ -41,7 +45,10 @@ import { devLog } from '@/utilities/dev';
  *   separator="/"
  * />
  */
-const VariantInput: React.FC<VARIANT_INPUT> = ({ value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } }: VARIANT_INPUT): ReactElement | null => {
+const VariantInput: React.FC<VARIANT_INPUT> = (props: VARIANT_INPUT): ReactElement | null => {
+    const { id, value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } } = props;
+
+    const { addButton, removeButtons } = useToolbar();
     const splitedValues = splitMultiValue(value, separator);
     const syntaxes = useMemo(() => getSyntaxVariants(option), [option]);
 
@@ -75,6 +82,27 @@ const VariantInput: React.FC<VARIANT_INPUT> = ({ value = '', option = { name: ''
     }, [syntaxes, onChange, option]
     );
 
+    // Memoize the button to prevent recreation on every render
+    const cycleButton = useMemo(() => (
+        <button
+            key={id}
+            type="button"
+            onClick={handleVariantChange}
+            aria-label="Cycle syntax variant"
+        >
+            ⟳
+        </button>
+    ), [handleVariantChange]);
+
+
+    // Add/remove button effect
+    // useEffect(() => {
+    //     addButton(cycleButton);
+    //     return () => removeButtons();
+
+    // }, [cycleButton]);
+
+
     const childrenElements = (() => {
         if (!syntaxes?.length) return null;
 
@@ -101,14 +129,6 @@ const VariantInput: React.FC<VARIANT_INPUT> = ({ value = '', option = { name: ''
 
     return (
         <div className={CSS.VariantInput} role="group" aria-label="Variant-value input group">
-            <button
-                type="button"
-                className={CSS.CycleButton}
-                onClick={handleVariantChange}
-                aria-label="Cycle syntax variant"
-            >
-                ⟳
-            </button>
             {childrenElements}
         </div>
     );

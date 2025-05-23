@@ -16,7 +16,7 @@ import FunctionInput from '@/components/Input/Function/component';
 import { UNIT_INPUT } from '@/components/Input/Length/types';
 
 // Utilities
-import { extractNumber, extractLength, isLengthScalable, isLengthKeyword, isLengthFunction, isFunctionVariable, isLengthList, getStyleVariables, isFunctionExpression, isKeywordValid } from '@/editors/style/utilities/style';
+import { extractNumber, extractLength, isLengthScalable, isLengthKeyword, isLengthFunction, isFunctionVariable, isLengthList, getStyleVariables, isFunctionExpression, isKeywordValid } from '@/utilities/style';
 
 // Constants
 import { LENGTH } from '@/editors/style/constants/options';

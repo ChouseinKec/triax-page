@@ -1259,9 +1259,6 @@ export const matchSyntaxVariant = (value: string, variants: string[], lengths?: 
     return null;
 };
 
-
-
-
 /**
  * Extracts syntax variants from a CSS style option.
  * 

@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
 
 // Utilities
-import { isPropertyValid, isSingleValueValid, isMultiValueValid, isIndexValid, splitMultiValue, updateMultiValue, deleteMultiValue } from '@/editors/style/utilities/style'
+import { isPropertyValid, isSingleValueValid, isMultiValueValid, isIndexValid, splitMultiValue, updateMultiValue, deleteMultiValue } from '@/utilities/style'
 import { devLog } from '@/utilities/dev';
 
 // Stores

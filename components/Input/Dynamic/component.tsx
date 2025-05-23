@@ -30,7 +30,7 @@ import { devLog } from '@/utilities/dev';
  * @param {STYLE_VALUE[]} props.options - Available style options to match the input format
  * @returns {ReactElement} - Dynamic input field(s) based on the value's syntax
  */
-const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value, type, onChange, option }: DYNAMIC_INPUT): ReactElement => {
+const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value = '', type = '', onChange = () => { }, option }: DYNAMIC_INPUT): ReactElement => {
     /**
      * Handle changes to the input value.
      * Memoized to prevent unnecessary re-creations.

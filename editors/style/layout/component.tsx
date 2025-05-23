@@ -15,6 +15,9 @@ import { useFontLayout } from '@/editors/style/layout/hooks/font';
 import { useBackgroundLayout } from '@/editors/style/layout/hooks/background';
 import { useEffectLayout } from '@/editors/style/layout/hooks/effect';
 
+// Contexts
+import { ToolbarProvider } from '@/contexts/ToolbarContext';
+
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
  * using an accordion layout for better user experience.
@@ -22,28 +25,32 @@ import { useEffectLayout } from '@/editors/style/layout/hooks/effect';
  * @returns {ReactElement} The rendered layout with collapsible accordion items for style editing.
 */
 const Layout: React.FC = ({ }): ReactElement => {
+    const displayLayout = useDisplayLayout();
+    const sizeLayout = useSizeLayout();
+    const positionLayout = usePositionLayout();
+    const fontLayout = useFontLayout();
+    const backgroundLayout = useBackgroundLayout();
+    const effectLayout = useEffectLayout();
 
-    // Use hooks to fetch layout configurations for different style categories.
-    const styles: STYLE_LAYOUT[] = [
-        useDisplayLayout(),
-        useSizeLayout(),
-        usePositionLayout(),
-        useFontLayout(),
-        useBackgroundLayout(),
-        useEffectLayout(),
+    const layouts: STYLE_LAYOUT[] = [
+        displayLayout,
+        sizeLayout,
+        positionLayout,
+        fontLayout,
+        backgroundLayout,
+        effectLayout,
     ];
 
-
-    // Map through each style category to create accordion items.
-    const AccordionItems = styles.map((category, index) => ({
-        title: <span>{category.label}</span>, // Title for the accordion item
-        content: (
-            <Category key={index} groups={category.groups} /> // Renders the Category component with style groups
-        ),
+    const AccordionItems = layouts.map((category) => ({
+        title: <span>{category.label}</span>,
+        content: <Category key={category.label} groups={category.groups} />,
     }));
 
-    return <AccordionGroup items={AccordionItems} />
-
+    return (
+        <ToolbarProvider>
+            <AccordionGroup items={AccordionItems} />
+        </ToolbarProvider>
+    );
 
 };
 

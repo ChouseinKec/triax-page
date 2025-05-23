@@ -8,7 +8,7 @@ import {
 	isCamelCase,
 	canCamelCase,
 	toCamelCase,
-} from './string';
+} from '../utilities/string';
 
 describe('isLetters', () => {
 	it('returns true for alphabetic strings with internal hyphens only', () => {

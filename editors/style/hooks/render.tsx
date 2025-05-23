@@ -1,4 +1,4 @@
-import { useCallback, ReactElement } from 'react';
+import { useCallback, ReactElement, useRef } from 'react';
 
 // Components
 import LengthInput from '@/components/Input/Length/component';
@@ -16,7 +16,7 @@ import VariantInput from '@/components/Input/Variant/component';
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
 
 // Utilities
-import { getStyleOptions } from '@/editors/style/utilities/style'
+import { getStyleOptions } from '@/utilities/style'
 import { devLog } from '@/utilities/dev';
 
 // Constants
@@ -266,14 +266,18 @@ export const useStyleRender = (): STYLE_RENDER => {
 			return <></>
 		}
 
+
 		return (
-			<VariantInput value={getSingleStyle(style)}
+			<VariantInput
+				value={getSingleStyle(style)}
 				onChange={(value) => setSingleStyle(style, value)}
 				separator={separator}
-				option={options[0]} />
+				option={options[0]}
+				id={style}
+			/>
 		);
 	},
-		[getMultiStyle, setMultiStyle]
+		[getSingleStyle, setSingleStyle]
 	);
 
 	return {
