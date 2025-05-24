@@ -140,7 +140,8 @@ export function isURL(input: string, requireProtocol: boolean = true): boolean {
     if (cleaned.includes(' ') ||
         cleaned.startsWith('data:') ||
         cleaned.startsWith('url(') ||
-        cleaned.startsWith('javascript:')) {
+        cleaned.startsWith('javascript:') ||
+        cleaned.startsWith('vbscript:')) {
         return false;
     }
 
