@@ -35,10 +35,10 @@ export const MATH_FUNCTIONS: STYLE_VALUE[] = [
 
 export const LAYOUT_KEYWORDS: STYLE_VALUE[] = [
 	//
-	LENGTHS.keywords.layout.auto,
-	LENGTHS.keywords.layout.minContent,
-	LENGTHS.keywords.layout.maxContent,
-	LENGTHS.keywords.layout.fitContent,
+	LENGTHS.keywords.special.auto,
+	LENGTHS.keywords.special.minContent,
+	LENGTHS.keywords.special.maxContent,
+	LENGTHS.keywords.special.fitContent,
 ];
 
 export const GLOBAL_KEYWORDS: STYLE_VALUE[] = [
@@ -94,7 +94,7 @@ export const LENGTH_MATH_LAYOUT: STYLE_VALUE[] = [
 export const LENGTH_MATH_AUTO: STYLE_VALUE[] = [
 	//
 	...LENGTH_MATH,
-	LENGTHS.keywords.layout.auto,
+	LENGTHS.keywords.special.auto,
 ];
 
 /**
@@ -339,9 +339,6 @@ export const TEXT_ORIENTATION: STYLE_VALUE[] = [
 	{ name: 'sideways-lr', value: 'sideways-lr', syntax: 'keyword' },
 ];
 
-// Color
-export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
-
 // Border
 export const BORDER_STYLE: STYLE_VALUE[] = [
 	{ name: 'none', value: 'none', syntax: 'keyword', icon: 'borderStyle_none' },
@@ -394,4 +391,136 @@ export const BREAK: STYLE_VALUE[] = [
 ];
 
 // Aspect Ratio
-export const ASPECT_RATIO: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'number|number/number' }];
+export const ASPECT_RATIO: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: '1',
+				value: '1',
+				syntax: 'number',
+			},
+
+			{
+				name: '1/1',
+				value: '1/1',
+				syntax: 'number/number',
+			},
+		],
+	},
+];
+
+// Background-Image
+export const BACKGROUND_ATTACHMENT: STYLE_VALUE[] = [
+	{ name: 'scroll', value: 'scroll', syntax: 'keyword' },
+	{ name: 'fixed', value: 'fixed', syntax: 'keyword' },
+	{ name: 'local', value: 'local', syntax: 'keyword' },
+];
+export const BACKGROUND_CLIP: STYLE_VALUE[] = [
+	{ name: 'border-box', value: 'border-box', syntax: 'keyword' },
+	{ name: 'padding-box', value: 'padding-box', syntax: 'keyword' },
+	{ name: 'content-box', value: 'content-box', syntax: 'keyword' },
+	{ name: 'text', value: 'text', syntax: 'keyword' },
+];
+
+export const BACKGROUND_ORIGIN: STYLE_VALUE[] = [
+	{ name: 'border-box', value: 'border-box', syntax: 'keyword' },
+	{ name: 'padding-box', value: 'padding-box', syntax: 'keyword' },
+	{ name: 'content-box', value: 'content-box', syntax: 'keyword' },
+];
+
+export const BACKGROUND_POSITION: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: '50% 50%',
+				value: '50% 50%',
+				syntax: 'length length',
+				lengths: [...LENGTH],
+			},
+
+			{
+				name: 'center',
+				value: 'center',
+				syntax: 'keyword',
+				lengths: [
+					{ name: 'top', value: 'top', syntax: 'keyword' },
+					{ name: 'right', value: 'right', syntax: 'keyword' },
+					{ name: 'bottom', value: 'bottom', syntax: 'keyword' },
+					{ name: 'left', value: 'left', syntax: 'keyword' },
+					{ name: 'center', value: 'center', syntax: 'keyword' },
+				],
+			},
+		],
+	},
+];
+
+export const BACKGROUND_REPEAT: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: 'repeat repeat',
+				value: 'repeat repeat',
+				syntax: 'keyword keyword',
+				lengths: [
+					{ name: 'repeat', value: 'repeat', syntax: 'keyword' },
+					{ name: 'space', value: 'space', syntax: 'keyword' },
+					{ name: 'round', value: 'round', syntax: 'keyword' },
+					{ name: 'no-repeat', value: 'no-repeat', syntax: 'keyword' },
+				],
+			},
+
+			{
+				name: 'repeat',
+				value: 'repeat',
+				syntax: 'keyword',
+				lengths: [
+					{ name: 'repeat', value: 'repeat', syntax: 'keyword' },
+					{ name: 'repeat-x', value: 'repeat-x', syntax: 'keyword' },
+					{ name: 'repeat-y', value: 'repeat-y', syntax: 'keyword' },
+					{ name: 'space', value: 'space', syntax: 'keyword' },
+					{ name: 'round', value: 'round', syntax: 'keyword' },
+					{ name: 'no-repeat', value: 'no-repeat', syntax: 'keyword' },
+				],
+			},
+		],
+	},
+];
+
+export const BACKGROUND_SIZE: STYLE_VALUE[] = [
+	{
+		name: 'variant',
+		value: 'variant',
+		syntax: 'variant',
+		lengths: [
+			{
+				name: '50% 50%',
+				value: '50% 50%',
+				syntax: 'length length',
+				lengths: [...LENGTH],
+			},
+
+			{
+				name: 'cover',
+				value: 'cover',
+				syntax: 'keyword',
+				lengths: [
+					{ name: 'cover', value: 'cover', syntax: 'keyword' },
+					{ name: 'contain', value: 'contain', syntax: 'keyword' },
+				],
+			},
+		],
+	},
+];
+
+// GENERICS
+export const COLOR: STYLE_VALUE[] = [{ name: '', value: '', syntax: 'color' }];
+export const URL: STYLE_VALUE[] = [{ name: 'url()', value: "url('https://github.com/ChouseinKec/triax-page')", syntax: 'function(url)' }];

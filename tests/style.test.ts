@@ -5,7 +5,7 @@ import {
 	extractLength,
 	extractValue,
 	extractFunction,
-	extractSeperator,
+	extractSeparator,
 	splitMultiValue,
 	updateMultiValue,
 	deleteMultiValue,
@@ -15,8 +15,9 @@ import {
 	isFunctionVariable,
 	isKeywordValid,
 	isFunctionValid,
+	isURLValid,
 	getStyleOptionByValue,
-} from './style';
+} from '../utilities/style';
 
 describe('extractNumber', () => {
 	// Basic cases
@@ -165,49 +166,55 @@ describe('extractFunction', () => {
 	});
 });
 
-describe('extractSeperator', () => {
+describe('extractSeparator', () => {
 	// Space-separated values
 	it('should detect space as separator', () => {
-		expect(extractSeperator('1px 2px 3px')).toBe(' ');
-		expect(extractSeperator('red green blue')).toBe(' ');
+		expect(extractSeparator('1px 2px 3px')).toBe(' ');
+		expect(extractSeparator('red green blue')).toBe(' ');
 	});
 
 	// Comma-separated values
 	it('should detect comma as separator', () => {
-		expect(extractSeperator('red, green, blue')).toBe(',');
-		expect(extractSeperator('1px,2px,3px')).toBe(',');
+		expect(extractSeparator('red, green, blue')).toBe(',');
+		expect(extractSeparator('1px,2px,3px')).toBe(',');
 	});
 
 	// Slash-separated values
 	it('should detect slash as separator', () => {
-		expect(extractSeperator('1/2/3')).toBe('/');
-		expect(extractSeperator('Arial/sans-serif')).toBe('/');
+		expect(extractSeparator('1/2/3')).toBe('/');
+		expect(extractSeparator('Arial/sans-serif')).toBe('/');
 	});
 
 	// Mixed separators – first top-level one wins
 	it('should return the first top-level separator in mixed input', () => {
-		expect(extractSeperator('1px, 2px | 3px')).toBe(',');
-		expect(extractSeperator('1px / 2px, 3px')).toBe(' ');
+		expect(extractSeparator('1px, 2px | 3px')).toBe(',');
+		expect(extractSeparator('1px / 2px, 3px')).toBe(' ');
 	});
 
 	// Should ignore separators inside functions
 	it('should ignore characters inside parentheses', () => {
-		expect(extractSeperator('rgb(255, 0, 0), hsl(120, 100%, 50%)')).toBe(',');
-		expect(extractSeperator('var(--space) var(--size)')).toBe(' ');
+		expect(extractSeparator('rgb(255, 0, 0), hsl(120, 100%, 50%)')).toBe(',');
+		expect(extractSeparator('var(--space) var(--size)')).toBe(' ');
 	});
 
 	// Edge cases
 	it('should return undefined when no clear separator is found', () => {
-		expect(extractSeperator('')).toBeUndefined();
-		expect(extractSeperator('no-separator')).toBeUndefined();
-		expect(extractSeperator('(a,b,c)')).toBeUndefined();
-		expect(extractSeperator('var(--value)var(--other)')).toBeUndefined();
-		expect(extractSeperator('1px2px3px')).toBeUndefined();
+		expect(extractSeparator('')).toBeUndefined();
+		expect(extractSeparator('no-separator')).toBeUndefined();
+		expect(extractSeparator('(a,b,c)')).toBeUndefined();
+		expect(extractSeparator('var(--value)var(--other)')).toBeUndefined();
+		expect(extractSeparator('1px2px3px')).toBeUndefined();
+	});
+
+	it('should return undefined when :// is found', () => {
+		expect(extractSeparator('https://google.com')).toBeUndefined();
+		expect(extractSeparator('http://google.com')).toBeUndefined();
+		expect(extractSeparator('ftp://google.com')).toBeUndefined();
 	});
 
 	// Separator outside of function call
 	it('should detect separator if used outside of function', () => {
-		expect(extractSeperator('a,b(c,d)e,f')).toBe(',');
+		expect(extractSeparator('a,b(c,d)e,f')).toBe(',');
 	});
 });
 
@@ -455,12 +462,11 @@ describe('isLengthFunction', () => {
 		expect(isLengthFunction('var(--some-var)')).toBe(true);
 	});
 
-	it('returns false for excluded functions like rgb, hsl, and url', () => {
+	it('returns false for excluded functions like rgb, hsl', () => {
 		expect(isLengthFunction('rgb(255,0,0)')).toBe(false);
 		expect(isLengthFunction('rgba(255,0,0,0.5)')).toBe(false);
 		expect(isLengthFunction('hsl(120, 100%, 50%)')).toBe(false);
 		expect(isLengthFunction('hsla(120, 100%, 50%, 0.5)')).toBe(false);
-		expect(isLengthFunction('url(image.png)')).toBe(false);
 	});
 
 	it('returns false for non-functional strings', () => {
@@ -554,6 +560,7 @@ describe('isFunctionValid', () => {
 
 	describe('basic function patterns', () => {
 		test.each([
+			['url("https://google.com")', 'function(url)' as STYLE_VALUE_SYNTAX],
 			['min(0px,0px)', 'function(length,length)' as STYLE_VALUE_SYNTAX],
 			['max(0px,0px)', 'function(length,length)' as STYLE_VALUE_SYNTAX],
 			['minmax(0px,0px)', 'function(length,length)' as STYLE_VALUE_SYNTAX],
@@ -631,6 +638,8 @@ describe('isFunctionValid', () => {
 
 	describe('invalid patterns', () => {
 		test.each([
+			['url("google.c")', 'function(url)' as STYLE_VALUE_SYNTAX],
+			['url("google")', 'function(url)' as STYLE_VALUE_SYNTAX],
 			['min()', 'function(length,length)' as STYLE_VALUE_SYNTAX],
 			['repeat(1,)', 'function(number,length)' as STYLE_VALUE_SYNTAX],
 			['clamp(0px)', 'function(length,length,length)' as STYLE_VALUE_SYNTAX],
@@ -642,6 +651,47 @@ describe('isFunctionValid', () => {
 			option = { name: '', value: '', syntax };
 			expect(isFunctionValid(value, option)).toBe(false);
 		});
+	});
+});
+
+describe('isURLValid', () => {
+	it('returns true for valid URLs', () => {
+		// Standard URL formats
+		expect(isURLValid('https://example.com')).toBe(true);
+		expect(isURLValid('http://localhost:3000')).toBe(true);
+		expect(isURLValid('https://sub.domain.co.uk/path?query=value')).toBe(true);
+	});
+
+	it('returns true for quoted URLs', () => {
+		// URL wrapped in various quote types
+		expect(isURLValid('"https://example.com"')).toBe(true);
+		expect(isURLValid("'http://site.com'")).toBe(true);
+	});
+
+	it('returns false for invalid URLs', () => {
+		// Malformed or incomplete URLs
+		expect(isURLValid('`ftp://files.org`')).toBe(false);
+		expect(isURLValid('https://user:pass@example.com')).toBe(false);
+
+		expect(isURLValid('example.com')).toBe(false); // Missing protocol
+		expect(isURLValid('https://')).toBe(false); // Missing domain
+		expect(isURLValid('justastring')).toBe(false);
+		expect(isURLValid('url("example.com")')).toBe(false); // CSS function syntax
+	});
+
+	it('returns false for empty or whitespace-only strings', () => {
+		// Edge cases
+		expect(isURLValid('')).toBe(false);
+		expect(isURLValid('   ')).toBe(false);
+		expect(isURLValid('\n\t')).toBe(false);
+	});
+
+	it('handles special cases correctly', () => {
+		// URLs with special characters
+		expect(isURLValid('https://example.com/pa%20th')).toBe(true);
+		expect(isURLValid('"https://site.com/?q=search+term"')).toBe(true);
+		expect(isURLValid('http://192.168.1.1')).toBe(true);
+		expect(isURLValid('data:image/png;base64,...')).toBe(false); // Data URLs not typically handled by basic validation
 	});
 });
 

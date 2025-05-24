@@ -8,7 +8,8 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
  * @param {STYLE_VALUE[]} options - Available style options used to guide rendering and parsing
  */
 export type INPUT_GROUP = {
-    values: string[];
-    onChange: (value: string, index: number) => void;
+    value: string;
+    separator: string;
     options: STYLE_VALUE[];
+    onChange: (value: string, index: number) => void;
 };

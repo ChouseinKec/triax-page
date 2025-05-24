@@ -2,64 +2,77 @@ import { memo, useCallback, ReactElement } from 'react';
 
 // Components 
 import DynamicInput from '@/components/Input/Dynamic/component';
-import MultiValueInput from '@/components/Input/Multi/components';
+import MultiInput from '@/components/Input/Multi/component';
 
 // Types
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, splitSyntax, extractValue, extractFunction, extractSeperator, splitMultiValue } from '@/editors/style/utilities/style';
+import { getStyleOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/utilities/style';
+import { devLog } from '@/utilities/dev';
 
 
-const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value, onChange, options }: FUNCTION_INPUT): ReactElement => {
+/**
+ * A component that handles function-style CSS input values (e.g., `fit-content(10px)`, `repeat(1,20px)`).
+ * Supports both single values and multi-value functions with automatic syntax validation.
+ *
+ * @param {object} props - Component props
+ * @param {string} props.value - Current function value (e.g., "fit-content(10px)")
+ * @param {Function} props.onChange - Callback when value changes
+ * @param {Array} props.options - Available style options for validation
+ */
+const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => { }, options = [] }: FUNCTION_INPUT): ReactElement => {
+    // Extract components from function string
     const extractedValue = extractValue(value);
     const extractedFunc = extractFunction(value);
-    const extractedSepa = extractSeperator(extractedValue) || ' ';
-    const splitedValues = splitMultiValue(extractedValue, extractedSepa);
-
+    const extractedSepa = extractSeparator(extractedValue) || ' ';
 
     /**
-     * Handle changes to the input value.
-     * Memoized to prevent unnecessary re-creations.
-     * 
-     * @param {string} newValue - The new input value
+     * Handles value changes and reconstructs the function string
+     * @param {string} newValue - The new inner value (without function wrapper)
+     * @param {string} func - The function name (e.g., "rgb", "calc")
      */
-    const handleChange = useCallback((value: string, func: string) => {
-        const finalValue = func.length >= 1 ? `${func}(${value})` : value;
+    const handleChange = useCallback((newValue: string, func: string) => {
+        const finalValue = func ? `${func}(${newValue})` : newValue;
         onChange(finalValue);
     }, [onChange]
     );
 
+    // Find matching style option
     const option = getStyleOptionByValue(value, options);
+    // Early return if no valid option found
     if (!option) {
-        return <p>No option found</p>;
+        devLog.error('[FunctionInput]: No matching style option found for value:', value);
+        return <></>;
     }
 
-    const identifiers = splitSyntax(option.syntax);
-    if (!identifiers) {
-        return (
-            <input
-                type="text"
-                placeholder="Option not supported"
-                value={value}
-                onChange={(e) => handleChange(e.target.value, extractedFunc)}
-            />
-        );
+    // Split syntax into syntaxTypes (e.g., ["number", "length"] for repeat(number,length))
+    const syntaxTypes = extractSyntaxTypes(option.syntax);
+    // Fallback for unsupported syntax
+    if (!syntaxTypes) {
+        devLog.error('[FunctionInput]: Unsupported syntax format in option:', option.syntax);
+        return <></>
     }
 
-
-    const inputElements = splitedValues.map((value, index) =>
-        <DynamicInput option={option} key={index} value={value} identifier={identifiers[index]} onChange={(value: string) => handleChange(value, extractedFunc)} />
-    );
-
-
+    const inputElements = syntaxTypes.map((syntaxType, index) => (
+        <DynamicInput
+            key={`${syntaxType}-${index}`}
+            option={option}
+            type={syntaxType}
+        />
+    ));
 
     return (
-        <MultiValueInput onChange={(value: string) => handleChange(value, extractedFunc)} value={extractedValue} separator={extractedSepa}>
-            {inputElements}
-        </MultiValueInput>
-    )
-
+        <div>
+            <MultiInput
+                onChange={(val) => handleChange(val, extractedFunc)}
+                value={extractedValue}
+                separator={extractedSepa}
+            >
+                {inputElements}
+            </MultiInput>
+        </div>
+    );
 };
 
 export default memo(FunctionInput);

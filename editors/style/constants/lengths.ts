@@ -55,6 +55,12 @@ const keyword_eachline: STYLE_VALUE = createKeyword('each-line');
 const keyword_hanging: STYLE_VALUE = createKeyword('hanging');
 const keyword_normal: STYLE_VALUE = createKeyword('normal');
 
+const keyword_top: STYLE_VALUE = createKeyword('top');
+const keyword_right: STYLE_VALUE = createKeyword('right');
+const keyword_bottom: STYLE_VALUE = createKeyword('bottom');
+const keyword_left: STYLE_VALUE = createKeyword('left');
+const keyword_center: STYLE_VALUE = createKeyword('center');
+
 // Global Keywords
 const keyword_initial: STYLE_VALUE = createKeyword('initial');
 const keyword_inherit: STYLE_VALUE = createKeyword('inherit');
@@ -347,19 +353,23 @@ const LENGTH: Record<string, Record<string, STYLE_VALUE>> = {
 };
 
 const KEYWORDS: Record<string, Record<string, STYLE_VALUE>> = {
-	layout: {
+	special: {
 		auto: keyword_auto,
 		minContent: keyword_mincontent,
 		maxContent: keyword_maxcontent,
 		fitContent: keyword_fitcontent,
-	},
 
-	special: {
 		subgrid: keyword_subgrid,
 		masonry: keyword_masonry,
 		eachLine: keyword_eachline,
 		hanging: keyword_hanging,
 		normal: keyword_normal,
+
+		top: keyword_top,
+		right: keyword_right,
+		bottom: keyword_bottom,
+		left: keyword_left,
+		center: keyword_center,
 	},
 
 	global: {

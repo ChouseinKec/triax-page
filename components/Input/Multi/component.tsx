@@ -7,11 +7,11 @@ import componentStyle from '@/components/Input/Multi/styles.module.css';
 import { MULTI_INPUT } from '@/components/Input/Multi/types';
 
 // Utilities
-import { updateMultiValue, splitMultiValue } from '@/editors/style/utilities/style';
+import { updateMultiValue, splitMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 /**
- * MultiValueInput Component
+ * MultiInput Component
  * 
  * A controlled component that manages multiple child inputs as a single delimited string value.
  * Distributes individual splitedValues to each child and consolidates changes back into a delimited string.
@@ -25,21 +25,20 @@ import { devLog } from '@/utilities/dev';
  * 
  * @example 
  * // Basic usage with space separator
- * <MultiValueInput value="10px 20px" onChange={updateValue}>
+ * <MultiInput value="10px 20px" onChange={updateValue}>
  *   <LengthInput />
  *   <LengthInput />
- * </MultiValueInput>
+ * </MultiInput>
  * 
  * @example
  * // Comma-separated splitedValues
- * <MultiValueInput value="red,blue" separator="," onChange={handleChange}>
+ * <MultiInput value="red,blue" separator="," onChange={handleChange}>
  *   <ColorInput />
  *   <ColorInput />
- * </MultiValueInput>
+ * </MultiInput>
  */
-const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separator, onChange = () => { } }: MULTI_INPUT): ReactElement | null => {
+const MultiInput: React.FC<MULTI_INPUT> = ({ value = '', children, separator, onChange = () => { } }: MULTI_INPUT): ReactElement | null => {
     const splitedValues = splitMultiValue(value, separator);
-
 
     /**
      * Handles individual input changes and updates the delimited value.
@@ -48,12 +47,12 @@ const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separato
      * @param {string} newValue - The updated value for the input
      * @param {number} index - The index of the changed input
      */
-    const handleChange = useCallback((_value: string, value: string, index: number): void => {
-        const updatedValue = updateMultiValue(value, _value, index, separator);
+    const handleChange = useCallback((input: string, value: string, index: number): void => {
+        const updatedValue = updateMultiValue(value, input, index, separator);
         onChange(updatedValue);
     }, [onChange, separator]
     );
-    
+
     const childrenElements = Children.map(children, (child, index) => {
         if (!isValidElement(child)) {
             devLog.warn(`Invalid child element at index ${index}`);
@@ -62,7 +61,7 @@ const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separato
 
         return cloneElement(child, {
             value: splitedValues[index] ?? '',
-            onChange: (_value: string) => handleChange(_value, value, index),
+            onChange: (val: string) => handleChange(val, value, index),
             key: `multi-input-${index}`,
         });
     });
@@ -74,4 +73,4 @@ const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separato
     );
 };
 
-export default memo(MultiValueInput);
+export default memo(MultiInput);

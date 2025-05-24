@@ -3,7 +3,7 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
 import { OPTIONS_SELECT_OPTION } from '@/components/Select/Options/types';
 
 // Utilities
-import { isCamelCase, isLetters, isNumeric, extractBetween } from '@/utilities/string';
+import { isCamelCase, isLetters, isNumeric, extractBetween, isURL } from '@/utilities/string';
 import { devLog } from '@/utilities/dev';
 
 // Constants
@@ -259,60 +259,59 @@ export function extractFunction(input: string): string {
 
 
 /**
- * Detects the most likely separator to use for splitting multi-value strings by analyzing
- * the entire string to find the most consistently used top-level separator.
+ * Detects the most likely top-level separator used in a multi-value string by analyzing
+ * the first clear separator found outside of nested structures. Useful for parsing CSS-like values.
  * 
- * @param {string} input - The input string to analyze for potential separators
- * @returns {string} The detected separator (defaults to space if none clearly identified)
+ * @param {string} input - The string to analyze for potential separators
+ * @returns {string|undefined} The detected separator (or undefined if no clear separator found)
  * 
  * @example
- * // Space separators
- * extractSeperator('1px 2px 3px'); // ' '
- * extractSeperator('red green blue'); // ' '
+ * // Basic separators
+ * extractSeparator('1px 2px 3px'); // ' '
+ * extractSeparator('red,green,blue'); // ','
+ * extractSeparator('Arial/sans-serif'); // '/'
  * 
- * // Comma separators
- * extractSeperator('red, green, blue'); // ','
- * extractSeperator('1px,2px,3px'); // ','
+ * // Prioritizes first encountered top-level separator
+ * extractSeparator('1px, 2px | 3px'); // ','
  * 
- * // Slash separators
- * extractSeperator('1/2/3'); // '/'
- * extractSeperator('Arial / sans-serif'); // '/'
+ * // Handles nested structures
+ * extractSeparator('rgb(255,0,0),hsl(120,100%,50%)'); // ','
  * 
- * // Mixed separators (picks first encountered)
- * extractSeperator('1px, 2px | 3px'); // ','
- * extractSeperator('1px / 2px, 3px'); // '/'
- * 
- * // Ignores separators inside functions
- * extractSeperator('rgb(255, 0, 0), hsl(120, 100%, 50%)'); // ','
- * extractSeperator('var(--space) var(--size)'); // ' '
+ * // Excludes URL-like strings
+ * extractSeparator('url(image.png)'); // undefined
+ * extractSeparator('https://example.com'); // undefined
  * 
  * // Edge cases
- * extractSeperator(''); // undefined
- * extractSeperator('no-separator'); // undefined
- * extractSeperator('(a,b,c)'); // undefined
- * extractSeperator('a,b(c,d)e,f'); // ','
- * 
- * // Defaults to undefined when no clear separator
- * extractSeperator('var(--value)var(--other)'); // undefined
- * extractSeperator('1px2px3px'); // undefined
+ * extractSeparator(''); // undefined
+ * extractSeparator('no-separator'); // undefined
+ * extractSeparator('var(--test)var(--other)'); // undefined
  */
-export function extractSeperator(input: string): string | undefined {
-    const candidates = [' ', ',', '/'];
-    let parenDepth = 0;
+export function extractSeparator(input: string): string | undefined {
+    // Skip empty strings or URL-like patterns
+    if (!input.trim() || input.includes('://')) {
+        return undefined;
+    }
+
+    const candidateSeparators = [' ', ',', '/', '|'];
+    let nestingDepth = 0;
+    let inQuotes = false;
 
     for (const char of input) {
-        if (char === '(') parenDepth++;
-        if (char === ')') parenDepth--;
+        // Track nesting and quotes to ignore separators inside them
+        if (char === '(' && !inQuotes) nestingDepth++;
+        if (char === ')' && !inQuotes) nestingDepth--;
+        if (char === '"' || char === "'") inQuotes = !inQuotes;
 
-        // Only check separators at top level (not inside parentheses)
-        if (parenDepth === 0 && candidates.includes(char)) {
-            // Return the first valid separator found
+        // Only check separators at top level and outside quotes
+        if (nestingDepth === 0 && !inQuotes && candidateSeparators.includes(char)) {
             return char;
         }
     }
 
     return undefined;
 }
+
+
 
 /**
  * Splits a mathematical expression into values and operators.
@@ -369,6 +368,8 @@ export function splitExpression(expression: string): [string[], string[]] {
 
     return [values, operators];
 }
+
+
 
 /**
  * Splits a string based on a separator, ignoring separators that appear inside parentheses ().
@@ -483,8 +484,8 @@ export function updateMultiValue(input: string, value: string, index: number, se
     updatedValues[index] = value;
 
     // Join with detected separator (or space if none found)
-    const _separator = separator ?? (extractSeperator(input) || ' ');
-    return updatedValues.join(_separator);
+    const _separator = separator ?? (extractSeparator(input) || ' ');
+    return updatedValues.filter(Boolean).join(_separator);
 }
 
 /**
@@ -539,6 +540,8 @@ export function deleteMultiValue(input: string, index: number, separator: string
     // Filter out empty strings and join the remaining values with the separator
     return _values.filter((input) => input !== '').join(separator);
 }
+
+
 
 
 
@@ -633,7 +636,7 @@ export const isLengthFunction = (input: string): boolean => {
     if (typeof (input) !== 'string' || input.length === 0) return false;
 
     // First check if input starts with any excluded function
-    if (['rgb', 'rgba', 'hsl', 'hsla', 'url'].some(fn => input.startsWith(`${fn}(`))) {
+    if (['rgb', 'rgba', 'hsl', 'hsla'].some(fn => input.startsWith(`${fn}(`))) {
         return false;
     }
 
@@ -742,7 +745,7 @@ export const isFunctionExpression = (input: string): boolean => {
 export const isLengthList = (input: string): boolean => {
     if (!input.trim()) return false; // empty string is not a list
 
-    const separator = extractSeperator(input);
+    const separator = extractSeparator(input);
     if (!separator) return false; // no separator found
 
     const parts = splitMultiValue(input, separator);
@@ -782,7 +785,6 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
     const safeLength = extractLength(input);
     const safePattern = extractBetween(pattern, '(', ')') || pattern;
 
-
     if (!safeValue) {
         devLog.error(`Value: ${input} is not valid value for function().`)
         return false;
@@ -799,8 +801,43 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
         return false;
     }
 
-    return isPatternValid(safePattern, safeValue, option.lengths)
+    return isSyntaxValid(safeValue, safePattern, option.lengths)
 };
+
+
+/**
+ * Validates URL strings, handling quoted URLs and various edge cases.
+ * @param {string} value - The URL string to validate (may be wrapped in quotes)
+ * @returns {boolean} - True if the string is a valid URL after quote removal
+ * 
+ * @example
+ * isURLValid('https://example.com') // true
+ * isURLValid('"https://example.com"') // true
+ * isURLValid('example.com') // false (requires protocol)
+ * isURLValid('data:image/png,...') // false (no data URLs)
+ */
+export const isURLValid = (value: string): boolean => {
+    // Clean the input first
+    const cleanedValue = value
+        .replace(/^["'`]|["'`]$/g, '')  // Remove surrounding quotes
+        .trim();
+
+    // Quick sanity checks
+    if (!cleanedValue || cleanedValue.length < 10) {  // "https://a.b" = 10 chars
+        return false;
+    }
+
+    // Explicitly reject data URLs and CSS functions
+    if (cleanedValue.startsWith('data:') ||
+        cleanedValue.startsWith('url(') ||
+        cleanedValue.includes('://') === false) {
+        return false;
+    }
+
+    // Use the existing isURL function with strict protocol requirements
+    return isURL(cleanedValue, true);  // Force protocol requirement
+};
+
 
 /**
  * Validates if a value is both a valid CSS variable syntax AND matches an existing variable
@@ -850,28 +887,47 @@ export const isNumberValid = (value: string): boolean => {
 };
 
 /**
- * Validates if a value is a valid CSS length
- * @param {string} value - The value to check (e.g., "10px", "100%", "0")
- * @returns {boolean} - True if value has valid length/number combination
-*/
+ * Validates if a value is a valid CSS length or matches allowed options.
+ * 
+ * @param {string} value - The CSS value to validate (e.g., "10px", "100%", "var(--size)", "0")
+ * @param {STYLE_VALUE[]} [lengths] - Optional array of allowed style values. If not provided, 
+ *                                    defaults to standard length units.
+ * @returns {boolean} True if the value is a valid CSS length/number or matches allowed options.
+ * 
+ * @example
+ * // Basic length validation
+ * isLengthValid("10px"); // returns true
+ * isLengthValid("5rem"); // returns true
+ * isLengthValid("abc");  // returns false
+ * 
+ * // With allowed options
+ * const allowed = [{value: "10px"}, {value: "20px"}, {value: "var(--size)"}];
+ * isLengthValid("10px", allowed); // returns true
+ * isLengthValid("var(--size)", allowed); // returns true
+ * isLengthValid("30px", allowed); // returns false
+ */
 export const isLengthValid = (value: string, lengths?: STYLE_VALUE[]): boolean => {
+    // Check if value matches any allowed keyword first
+    if (lengths && isKeywordValid(value, lengths)) {
+        return true;
+    }
 
-    // Keyword
-    if (lengths && isKeywordValid(value, lengths)) return true;
-
-    // Function
-    if (isLengthFunction(extractLength(value))) {
-        // Variable
+    // Handle CSS functions like calc(), var(), etc.
+    const extractedLength = extractLength(value);
+    if (isLengthFunction(extractedLength)) {
+        // Special case for CSS variables
         if (isFunctionVariable(value)) {
-            const option = { name: 'var', value, syntax: 'variable' } as STYLE_VALUE;
-            return isOptionValid(value, option)
+            const variableOption = { name: 'var', value, syntax: 'variable' } as STYLE_VALUE;
+            return isOptionValid(value, variableOption);
         }
 
+        // If lengths array was provided but is empty, log error
         if (!lengths) {
-            devLog.error(`Lengths must be non-empty array`)
+            devLog.error(`Lengths must be non-empty array`);
             return false;
         }
 
+        // Find matching option in allowed lengths
         const option = getStyleOptionByValue(value, lengths);
         if (!option) {
             devLog.error(`Couldn't find matching option for options:'${lengths}' and value:'${value}'`);
@@ -881,53 +937,125 @@ export const isLengthValid = (value: string, lengths?: STYLE_VALUE[]): boolean =
         return isFunctionValid(value, option);
     }
 
-    // Length
+    // Handle regular length values (numbers with units)
     const number = extractNumber(value);
     if (!isNumeric(number)) {
-        devLog.error(`Value: ${value} is not valid number.`)
+        devLog.error(`Value: ${value} is not a valid number.`);
         return false;
     }
 
-    const length = extractLength(value);
-    const _units = lengths ? lengths : OPTIONS.LENGTH_MATH;
+    // Get allowed units - use provided lengths or default to standard units
+    const allowedUnits = lengths ? lengths : OPTIONS.LENGTH_MATH;
+    const unit = extractLength(value);
 
-    return !!length && [..._units].some((u) => length.startsWith(extractLength(u.value)));
+    // Check if the unit matches any of the allowed units
+    return !!unit && [...allowedUnits].some((u) => unit.startsWith(extractLength(u.value)));
 };
 
-export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_VALUE[]): boolean => {
-    const patterns = pattern.split("|");
+/**
+ * Validates if a CSS value matches any pattern in a syntax string.
+ * Handles complex patterns including variants (||), multi-value patterns, and atomic types.
+ * 
+ * @param pattern - The syntax pattern to validate against (e.g., "length", "number/number")
+ * @param input - The CSS value to validate (e.g., "10px", "16/9")
+ * @param lengths - Optional array of valid length/keyword values for reference
+ * @returns Whether the input matches any variant of the pattern
+ * 
+ * @example
+ * // Atomic types
+ * isSyntaxValid('length', '10px'); // true
+ * isSyntaxValid('color', '#fff'); // true
+ * 
+ * // Multi-value patterns
+ * isSyntaxValid('number/number', '16/9'); // true
+ * isSyntaxValid('length keyword', '2px solid'); // true
+ * 
+ * // Variant patterns
+ * isSyntaxValid('length || color', '50%'); // true
+ * isSyntaxValid('auto || length', '10px'); // true
+ * 
+ * // With length references
+ * isSyntaxValid('keyword', 'solid', [{ syntax: 'keyword', value: 'solid' }]); // true
+ */
+export const isSyntaxValid = (input: string, syntax: string, lengths?: STYLE_VALUE[]): boolean => {
+    // Early return for empty input
+    if (!input.trim()) return false;
 
-    const hasValid = patterns.some((_pattern) => {
-        const seperator = extractSeperator(input) || ' ';
-        const patternParts = splitSyntax(_pattern);
-        const valueParts = splitMultiValue(input, seperator);
+    // Cache for pattern parts to avoid reprocessing
+    const patternCache = new Map<string, string[]>();
+    const valueCache = new Map<string, string[]>();
 
-        if (!patternParts) {
-            devLog.error(`There was an error splitting pattern to parts: ${_pattern}`);
-            return false;
-        }
 
-        // Validate each part
-        return patternParts.every((patternPart, i) => {
-            const _value = valueParts[i];
+    const separator = extractSeparator(input) || ' ';
 
-            switch (patternPart) {
-                case 'length': return isLengthValid(_value, lengths);
-                case 'number': return isNumberValid(_value);
-                case 'color': return isColorValid(_value);
-                case 'keyword': return lengths && isKeywordValid(_value, lengths);
-                default: return false;
+    // Get or cache pattern parts
+    let patternParts = patternCache.get(syntax);
+    if (!patternParts) {
+        patternParts = extractSyntaxTypes(syntax) ?? [];
+        patternCache.set(syntax, patternParts);
+    }
+
+    // Get or cache value parts
+    let valueParts = valueCache.get(input);
+    if (!valueParts) {
+        valueParts = splitMultiValue(input, separator) ?? [];
+        valueCache.set(input, valueParts);
+    }
+
+    // Fast length check
+    if (patternParts.length !== valueParts.length) {
+        return false;
+    }
+
+    return patternParts.every((type, index) => {
+        const value = valueParts[index];
+
+        switch (type) {
+            case 'length': return isLengthValid(value, lengths);
+            case 'number': return isNumberValid(value);
+            case 'color': return isColorValid(value);
+            case 'keyword': return lengths ? isKeywordValid(value, lengths) : false;
+            case 'url': return isURLValid(value);
+            default: {
+                devLog.error(`No valid pattern for value: ${input} in syntax: ${syntax}`);
+                return false;
             }
+        }
+    });
 
-        });
 
-    })
-
-    if (hasValid) return true;
-
-    devLog.error(`Couldn't find valid pattern for value: ${input} and pattern: ${patterns}`);
-    return false;
 }
+
+/**
+ * Validates if a CSS value matches any variant in a syntax-variant option.
+ * Designed for options where syntax === 'variant' (contains multiple possible syntax patterns).
+ * 
+ * @param value - The CSS value to validate (e.g., "repeat", "10px 20px")
+ * @param option - The style option containing variant definitions
+ * @returns True if the value matches any variant syntax, false otherwise
+ * 
+ * @example
+ * const option = {
+ *   syntax: 'variant',
+ *   lengths: [
+ *     { syntax: 'keyword', value: 'repeat' },
+ *     { syntax: 'length length', value: '10px 20px' }
+ *   ]
+ * };
+ * isVariantValid('repeat', option); // true
+ * isVariantValid('10px 20px', option); // true
+ * isVariantValid('invalid', option); // false
+ */
+export const isVariantValid = (value: string, option: STYLE_VALUE): boolean => {
+    if (!option || option.syntax !== 'variant') return false;
+    if (!option.lengths?.length) return false;
+
+    return option.lengths.some(variant => {
+        return isSyntaxValid(value, variant.syntax, variant.lengths);
+    });
+};
+
+
 
 /**
  * Validates if a CSS value matches any of the provided patterns in syntaxPattern
@@ -951,26 +1079,31 @@ export const isPatternValid = (pattern: string, input: string, lengths?: STYLE_V
  * isOptionValid("10px solid red", "length [keyword] color"); // true
  */
 export const isOptionValid = (input: string, option: STYLE_VALUE): boolean => {
-    const pattern = option.syntax;
+    if (!option?.syntax) {
+        devLog.error('[isOptionValid] Invalid syntax');
+        return false
+    };
 
-    if (pattern === 'keyword') {
-        return isKeywordValid(input, [option]);
+
+    // Handle variant case first
+    if (option.syntax === 'variant') {
+        return isVariantValid(input, option);
     }
 
-    if (pattern === 'variable') {
-        return isVariableValid(input);
+    // Existing cases
+    switch (option.syntax) {
+        case 'keyword':
+            return isKeywordValid(input, [option]);
+        case 'variable':
+            return isVariableValid(input);
+        case 'expression':
+            return isExpressionValid(input);
+        default:
+            if (option.syntax.startsWith('function')) {
+                return isFunctionValid(input, option);
+            }
+            return isSyntaxValid(input, option.syntax, option.lengths);
     }
-
-    if (pattern === 'expression') {
-        return isExpressionValid(input);
-    }
-
-    if (pattern.startsWith('function')) {
-        return isFunctionValid(input, option);
-    }
-
-    return isPatternValid(pattern, input, option.lengths)
-
 };
 
 /**
@@ -1028,73 +1161,102 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
         return false;
     }
 
-
-
     // Validate option
     return isOptionValid(value, option);
 };
 
-export const isMultiValueValid = (property: STYLES_CONSTANTS_KEY, value: string, separator: string): boolean => {
-    // If valie is not valid string
-    if (typeof value !== 'string') {
-        devLog.error(`Value: ${value} should be non-empty string`);
-        return false;
-    }
 
-    if (typeof separator !== 'string' || separator.length !== 1) {
-        devLog.error(`Invalid separator: '${separator}'. Must be a non-empty single-char string.`);
-        return false;
-    }
-
-    const splitValues = splitMultiValue(value, separator);
-    const hasInvalidValue = splitValues.some((splitValue) => {
-        return !isSingleValueValid(property, splitValue);
-    });
-
-
-    if (hasInvalidValue) {
-        devLog.error(`Value: '${value}' for property: '${property}' is not in correct pattern.`);
-        return false;
-    }
-
-    return true;
-};
-
-export const isIndexValid = (index: number): boolean => {
-    if (typeof index !== 'number' || index < 0) return false;
-
-    return true;
-};
 
 
 
 /**
- * Splits a CSS syntax string based on whether it contains parentheses or not.
- * If the syntax contains parentheses, extracts the content between them before splitting.
+ * Extracts and splits CSS syntax identifiers from a given input string.
+ * Handles both parenthesized syntax (e.g., 'function(a,b,c)') and simple values.
  * 
- * @param syntax - The CSS syntax string to split
+ * @param input - The CSS syntax string to process
  * @example 
- * // Returns ['length', 'number', 'color']
- * splitSyntax('fit-content(length,number,color)');
- * // Returns ['auto']
- * splitSyntax('auto');
- * // Returns undefined
- * splitSyntax('');
+ * extractSyntaxTypes('fit-content(length,number,color)'); // Returns ['length', 'number', 'color']
+ * extractSyntaxTypes('auto');                             // Returns ['auto']
+ * extractSyntaxTypes('');                                 // Returns undefined
+ * extractSyntaxTypes('linear-gradient(color,percentage)'); // Returns ['color', 'percentage']
  * 
- * @returns An array of split values if successful, undefined if the syntax is empty
+ * @returns An array of identifiers if successful, undefined for empty input
  */
-export const splitSyntax = (input: string): string[] | undefined => {
-    // Check if syntax contains parentheses, if yes extract content between them
-    const safeInput = input.includes('(') ? extractBetween(input, '(', ')') : input;
+export const extractSyntaxTypes = (input: string): string[] | undefined => {
+    if (!input) return undefined;
 
-    // Return undefined if the syntax is empty
-    if (!safeInput) return undefined;
+    // Extract content between parentheses if they exist
+    const content = input.includes('(')
+        ? extractBetween(input, '(', ')')
+        : input;
 
-    const seperator = extractSeperator(safeInput) || ' ';
+    if (!content) return undefined;
+
+    // Determine separator (defaults to space if none found)
+    const separator = extractSeparator(content) || ' ';
+
+    // Split and trim whitespace from each part
+    return splitMultiValue(content, separator)
+        ?.map(part => part.trim())
+        .filter(part => part.length > 0);
+};
+
+/**
+ * Finds which variant in a syntax string matches the given value.
+ * 
+ * @param value - The CSS value to validate (e.g., "10px", "auto")
+ * @param variants - The variants array (e.g., ['number','number length'])
+ * @param lengths - Optional array of valid lengths/keywords
+ * @returns The index of the matching variant or null if no match found
+ * 
+ * @example
+ * matchSyntaxVariant('10', ['number', 'number number']); // Returns 0
+ * matchSyntaxVariant('16/9', ['number', 'number/number']); // Returns 1
+ * matchSyntaxVariant('auto', ['number', 'color']); // Returns null
+ */
+export const matchSyntaxVariant = (value: string, variants: string[], lengths?: STYLE_VALUE[]): number | null => {
+
+    if (!variants) {
+        devLog.error(`Invalid variants: ${variants}`);
+        return null;
+    }
+
+    // Check each variant until we find a match
+    for (let i = 0; i < variants.length; i++) {
+        if (isSyntaxValid(value, variants[i], lengths)) {
+            return i;
+        }
+    }
+
+    return null;
+};
+
+/**
+ * Extracts syntax variants from a CSS style option.
+ * 
+ * @param option - The style option to process
+ * @returns Array of syntax strings if valid, `undefined` if input is invalid
+ * 
+ * @example
+ * getSyntaxVariants({
+ *   syntax: 'variant',
+ *   lengths: [{ syntax: 'length', ... }, { syntax: 'percentage', ... }]
+ * }); // Returns ['length', 'percentage']
+ */
+export const getSyntaxVariants = (option: STYLE_VALUE): string[] | undefined => {
+    if (!option || option?.syntax !== 'variant') {
+        devLog.error(('Invalid option or syntax value'));
+        return undefined
+    };
 
 
-    // Split the extracted or original syntax by commas
-    return splitMultiValue(safeInput, seperator);
+    if (!option?.lengths) {
+        devLog.error(('Invalid option lengths'));
+        return undefined
+    }
+
+    return option.lengths.map(length => length.syntax);
+
 }
 
 
@@ -1125,9 +1287,9 @@ export const splitSyntax = (input: string): string[] | undefined => {
 */
 export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): STYLE_VALUE | undefined => {
 
-    // Check if options is a valid non-empty array
-    if (!Array.isArray(options) || options.length <= 0) {
-        devLog.error(`Options should be non-empty array<STYLE_VALUE[]>.`);
+    // Early return for invalid inputs
+    if (!Array.isArray(options) || options.length === 0) {
+        devLog.error('Options must be a non-empty array');
         return undefined;
     }
 
@@ -1136,15 +1298,13 @@ export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): ST
 
     // Handle numeric values (like font-weight: 100, 200, etc.)
     if (isNumeric(value)) {
-        return options.find((option) => {
-            return option.value === value;
-        });;
+        return options.find(option => option.value === value);
     }
 
     // Handle other values by comparing extracted length values
-    return options.find((option) => {
-        return extractLength(option.value) === extractLength(value);
-    });;
+    return options.find(option =>
+        extractLength(option.value) === extractLength(value)
+    );
 };
 
 export const getStyleVariables = (): OPTIONS_SELECT_OPTION[] => {
@@ -1164,15 +1324,4 @@ export const getStyleOptions: (property: STYLES_CONSTANTS_KEY) => STYLE_VALUE[] 
 
     return STYLES_CONSTANTS[property].options;
 };
-
-
-
-
-
-export const OBJToCSS = (): string => {
-
-    return '';
-}
-
-
 

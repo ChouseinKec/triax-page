@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // HOOKS
-import { useStyleRender } from '@/editors/style/hooks/render';
-import { useStyleState } from '@/editors/style/hooks/state';
+import { useStyleFactory } from '@/hooks/style/factory';
+import { useStyleManager } from '@/hooks/style/manager';
 
 /**
  * Custom hook to render the layout for the "Display & Layout" section.
@@ -14,8 +14,8 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} The layout configuration for display and layout settings.
  */
 export const useDisplayLayout = (): STYLE_LAYOUT => {
-    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderUnitInput, renderInputGroup } = useStyleRender();
-    const { getSingleStyle } = useStyleState();
+    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderInputGroup } = useStyleFactory();
+    const { getStyle } = useStyleManager();
 
     return {
         label: 'Display & Layout',
@@ -35,7 +35,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
 
             // Flex 
             {
-                hidden: getSingleStyle('display') === 'flex', // Hide if the selected display type is 'flex'
+                hidden: getStyle('display') !== 'flex', // Hide if the selected display type is 'flex'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Flex View component (for visualizing flex properties)
@@ -91,7 +91,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Row Gap',
                         column: '2',
                         direction: 'column',
-                        component: () => renderUnitInput('rowGap')
+                        component: () => renderLengthInput('rowGap')
                     },
 
                     // Column Gap for flex container
@@ -99,14 +99,14 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Column Gap',
                         column: '3',
                         direction: 'column',
-                        component: () => renderUnitInput('columnGap')
+                        component: () => renderLengthInput('columnGap')
                     },
                 ],
             },
 
             // Grid section
             {
-                hidden: getSingleStyle('display') === 'grid', // Hide if the selected display type is 'grid'
+                hidden: getStyle('display') !== 'grid', // Hide if the selected display type is 'grid'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Grid View (for visualizing grid properties)
@@ -202,7 +202,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Row Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('rowGap')
+                        component: () => renderLengthInput('rowGap')
                     },
 
                     // Column Gap for grid container
@@ -210,7 +210,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Column Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('columnGap')
+                        component: () => renderLengthInput('columnGap')
                     },
                 ],
             },

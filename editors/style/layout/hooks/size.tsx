@@ -1,15 +1,12 @@
 // Components
-import NumberInput from '@/components/Input/Number/component';
-import Expand from '@/components/Reveal/Expand/component';
-import MultiValueInput from '@/components/Input/Multi/components';
+import ExpandReveal from '@/components/Reveal/Expand/component';
 import Group from '@/editors/style/layout/components/group/component';
 
 // Types
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render';
-import { useStyleState } from '@/editors/style/hooks/state';
+import { useStyleFactory } from '@/hooks/style/factory';
 
 /**
  * Custom hook for managing the "Size & Overflow" section layout in the style editor.
@@ -17,8 +14,7 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): STYLE_LAYOUT => {
-    const { renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
-    const { getSingleStyle, setSingleStyle } = useStyleState();
+    const { renderVariantInput, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
     return {
         label: 'Size & Overflow',
         groups: [
@@ -30,7 +26,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('width'),
+                        component: () => renderLengthInput('width'),
                     },
 
                     // Min-Width
@@ -38,7 +34,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('minWidth'),
+                        component: () => renderLengthInput('minWidth'),
                     },
 
                     // Max-Width
@@ -46,7 +42,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('maxWidth'),
+                        component: () => renderLengthInput('maxWidth'),
                     },
 
                     // Height
@@ -54,7 +50,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Height',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('height'),
+                        component: () => renderLengthInput('height'),
                     },
 
                     // Min-Height
@@ -62,7 +58,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('minHeight'),
+                        component: () => renderLengthInput('minHeight'),
                     },
 
                     // Max-Height
@@ -70,7 +66,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderUnitInput('maxHeight'),
+                        component: () => renderLengthInput('maxHeight'),
                     },
 
                     // Overflow
@@ -81,12 +77,12 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         component: () => renderRadioSelect('overflow'),
                     },
 
-                    // Expand: Expands to reveal additional properties such as object-fit, box-sizing, and aspect-ratio.
+                    // expandReveal: Expands to reveal additional properties such as object-fit, box-sizing, and aspect-ratio.
                     {
                         label: null, // No label
                         column: '1/-1',
                         component: () => (
-                            <Expand>
+                            <ExpandReveal>
                                 <Group
                                     properties={[
                                         // Object-Fit (e.g., cover, contain).
@@ -110,20 +106,11 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                             label: 'Aspect-Ratio',
                                             column: '1/-1',
                                             direction: 'column',
-                                            component: () => (
-                                                <MultiValueInput
-                                                    value={getSingleStyle('aspectRatio')}
-                                                    onChange={(value) => setSingleStyle('aspectRatio', value)}
-                                                    separator='/'
-                                                >
-                                                    <NumberInput />
-                                                    <NumberInput />
-                                                </MultiValueInput>
-                                            ),
+                                            component: () => (renderVariantInput('aspectRatio', '/')),
                                         },
                                     ]}
                                 />
-                            </Expand>
+                            </ExpandReveal>
                         ),
                     },
                 ],

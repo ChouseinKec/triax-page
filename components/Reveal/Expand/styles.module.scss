@@ -2,8 +2,8 @@
 	width: 100%;
 
 	&[data-isopen='true'] {
-		.button::after {
-			content: '-';
+		.ExpandReveal_Button::after {
+			content: '| - |';
 		}
 	}
 }
@@ -11,7 +11,7 @@
 .ExpandReveal_Button {
 	width: 100%;
 	height: 1px;
-	margin-bottom: var(--size-lg);
+	margin-bottom: var(--size-xl);
 
 	position: relative;
 
@@ -22,9 +22,8 @@
 	cursor: pointer;
 
 	&::after {
-		content: '+';
+		content: '| + |';
 		width: max-content;
-		padding: 0 var(--size-lg);
 		display: block;
 
 		position: absolute;
@@ -32,9 +31,9 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 
-		font-size: var(--size-xl);
+		font-size: var(--size-lg);
 
-		color: var(--color-black);
+		color: var(--color-white--darker);
 		background: var(--color-white);
 	}
 }

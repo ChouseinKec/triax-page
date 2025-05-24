@@ -8,9 +8,9 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
  * @param {STYLE_VALUE[]} options - Available input style configurations
  */
 export type DYNAMIC_INPUT = {
-    value: string;
-    onChange: (value: string) => void;
-    identifier: string;
-    option: STYLE_VALUE;
+    value?: string;
+    onChange?: (value: string) => void;
+    type?: string;
+    option?: STYLE_VALUE;
 };
 

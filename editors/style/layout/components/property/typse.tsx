@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 /**
  * Represents a single style property within a layout group.
  * Defines UI rendering details and display behavior for a style input component.

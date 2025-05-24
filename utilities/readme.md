@@ -38,7 +38,7 @@ Gets the function name if the string is wrapped in a single function.
 - `"var(--test)"` → `"var"`  
 - `"10px"` → `""` (no function)
 
-### `extractSeperator(input)`
+### `extractSeparator(input)`
 
 Detects the top-level separator in multi-value strings.  
 **Examples:**  
@@ -130,7 +130,7 @@ Validates camelCase CSS property names.
 
 ## Helpers
 
-### `splitSyntax(input)`
+### `extractSyntaxTypes(input)`
 
 Splits CSS syntax strings.  
 **Example:**  

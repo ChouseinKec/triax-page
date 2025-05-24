@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 import CSS from './style.module.css';
 
 // Components
@@ -17,14 +17,17 @@ const StyleEditor: React.FC<STYLE_EDITOR> = ({ }): ReactElement => {
     const { renderOrientationSelect } = useOrientationRender();
     const { renderPseudoSelect } = usePseudoRender();
 
+    const deviceSelect = useMemo(() => renderDeviceSelect(), [renderDeviceSelect]);
+    const orientationSelect = useMemo(() => renderOrientationSelect(), [renderOrientationSelect]);
+    const pseudoSelect = useMemo(() => renderPseudoSelect(), [renderPseudoSelect]);
 
     return (
         <div className={CSS.Styles}>
 
             <div className={CSS.Styles_Controls}>
-                {renderDeviceSelect()}
-                {renderOrientationSelect()}
-                {renderPseudoSelect()}
+                {deviceSelect}
+                {orientationSelect}
+                {pseudoSelect}
             </div>
 
             <Layout />

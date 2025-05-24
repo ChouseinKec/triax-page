@@ -2,7 +2,7 @@
 
 A collection of React hooks for rendering style-related UI components consistently.
 
-## `useStyleRender()`
+## `useStyleFactory()`
 
 The main hook that provides all rendering utilities.  
 **Returns:**  
@@ -16,7 +16,7 @@ Renders a preview of flexbox container with current flex styles.
 
 Renders a preview of grid container with current grid styles.
 
-### `renderUnitInput(style)`
+### `renderLengthInput(style)`
 
 Renders a length input with unit selector.  
 **Parameters:**  
@@ -31,7 +31,7 @@ Renders dynamic inputs for multi-value properties like padding/margin.
 - `style`: The CSS property  
 - `separator`: Character to split values (e.g. space for '10px 20px')
 
-### `renderNumber(style)`
+### `renderNumberInput(style)`
 
 Renders a basic number input for style properties.
 
@@ -60,13 +60,13 @@ Renders a visual position selector.
 
 Core hook for managing style properties with validation and multi-value support.
 
-## `useStyleState()`
+## `useStyleManager()`
 
 The main hook that provides style management utilities.  
 **Returns:**  
 An object containing all style management functions below.
 
-### `getSingleStyle(property)`
+### `getStyle(property)`
 
 Gets a single style property value.  
 **Parameters:**  
@@ -75,7 +75,7 @@ Gets a single style property value.
 **Returns:**  
 The current property value or empty string if not found
 
-### `setSingleStyle(property, value)`
+### `setStyle(property, value)`
 
 Sets a single style property value.  
 **Parameters:**  

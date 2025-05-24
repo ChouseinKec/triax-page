@@ -1,5 +1,5 @@
 // Components
-import Expand from '@/components/Reveal/Expand/component';
+import ExpandReveal from '@/components/Reveal/Expand/component';
 import Dropdown from '@/components/Reveal/Dropdown/component';
 import Group from '@/editors/style/layout/components/group/component';
 
@@ -7,12 +7,12 @@ import Group from '@/editors/style/layout/components/group/component';
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render';
+import { useStyleFactory } from '@/hooks/style/factory';
 
 
 export const useFontLayout = (): STYLE_LAYOUT => {
 
-    const { renderColorSelect, renderNumber, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput } = useStyleRender();
+    const { renderColorSelect, renderNumberInput, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
 
     return {
         label: 'Font & Text',
@@ -37,14 +37,14 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                     {
                         label: 'Size',
                         column: 'auto',
-                        component: () => renderUnitInput('fontSize')
+                        component: () => renderLengthInput('fontSize')
                     },
 
                     // Height
                     {
                         label: 'Height',
                         column: 'auto',
-                        component: () => renderUnitInput('lineHeight')
+                        component: () => renderLengthInput('lineHeight')
                     },
 
                     // Color
@@ -125,29 +125,29 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: null,
                         column: '3',
                         row: '2',
-                        component: () => renderUnitInput('textDecorationThickness')
+                        component: () => renderLengthInput('textDecorationThickness')
                     },
                 ],
             },
 
-            // Expand
+            // ExpandReveal
             {
                 properties: [
-                    // Expand
+                    // ExpandReveal
                     {
                         label: null,
                         column: '1/-1',
                         component: () => (
-                            <Expand>
+                            <ExpandReveal>
                                 <Group
-                                    columns="1fr 1fr"
+                                    columns="minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"
                                     properties={[
                                         // Letter Spacing
                                         {
                                             label: 'Letter Spacing',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderUnitInput('letterSpacing')
+                                            component: () => renderLengthInput('letterSpacing')
                                         },
 
                                         // Text Indent
@@ -155,7 +155,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Text Indent',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderUnitInput('textIndent')
+                                            component: () => renderLengthInput('textIndent')
                                         },
 
                                         // Word-Break
@@ -211,7 +211,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Stroke Width',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderUnitInput('strokeWidth'),
+                                            component: () => renderLengthInput('strokeWidth'),
                                         },
 
                                         // Stroke Color
@@ -225,19 +225,19 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                         // Columns
                                         {
                                             label: 'Columns',
-                                            column: '1/-1',
+                                            column: '2/-1',
                                             direction: 'column',
                                             component: () => (
                                                 <Dropdown closeOnChange={false}>
                                                     <Group
-                                                        columns='minmax(0, 0.5fr) minmax(0, 0.5fr) minmax(0, 0.5fr)'
+                                                        columns='minmax(0, 0.7fr) minmax(0, 0.7fr) minmax(0, 0.7fr)'
                                                         properties={[
                                                             // Column Count
                                                             {
                                                                 label: 'Count',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderNumber('columnCount'),
+                                                                component: () => renderNumberInput('columnCount'),
                                                             },
 
                                                             // Column Width
@@ -245,7 +245,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Width',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderUnitInput('columnWidth'),
+                                                                component: () => renderLengthInput('columnWidth'),
                                                             },
 
                                                             // Column Gap
@@ -253,7 +253,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Gap',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderUnitInput('columnGap'),
+                                                                component: () => renderLengthInput('columnGap'),
                                                             },
 
                                                             // Column Rule Width
@@ -261,7 +261,23 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Rule Width',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderUnitInput('columnRuleWidth'),
+                                                                component: () => renderLengthInput('columnRuleWidth'),
+                                                            },
+
+                                                            // Widows
+                                                            {
+                                                                label: 'Widows',
+                                                                column: 'auto',
+                                                                direction: 'column',
+                                                                component: () => renderLengthInput('widows'),
+                                                            },
+
+                                                            // Orphans
+                                                            {
+                                                                label: 'Orphans',
+                                                                column: 'auto',
+                                                                direction: 'column',
+                                                                component: () => renderLengthInput('orphans'),
                                                             },
 
                                                             // Column Rule Style
@@ -320,21 +336,6 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 component: () => renderDropdownSelect('columnFill'),
                                                             },
 
-                                                            // Widows
-                                                            {
-                                                                label: 'Widows',
-                                                                column: 'auto',
-                                                                direction: 'column',
-                                                                component: () => renderUnitInput('widows'),
-                                                            },
-
-                                                            // Orphans
-                                                            {
-                                                                label: 'Orphans',
-                                                                column: 'auto',
-                                                                direction: 'column',
-                                                                component: () => renderUnitInput('orphans'),
-                                                            },
                                                         ]}
                                                     />
                                                 </Dropdown>
@@ -342,7 +343,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                         },
                                     ]}
                                 />
-                            </Expand>
+                            </ExpandReveal>
                         ),
                     },
                 ],

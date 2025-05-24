@@ -7,8 +7,8 @@ import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types'; 
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render'; 
-import { useStyleState } from '@/editors/style/hooks/state'; 
+import { useStyleFactory } from '@/hooks/style/factory'; 
+import { useStyleManager } from '@/hooks/style/manager'; 
 
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
@@ -16,8 +16,8 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for the position and spacing properties in the style editor.
  */
 export const usePositionLayout = (): STYLE_LAYOUT => {
-    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderUnitInput, renderPositionSelect } = useStyleRender();
-    const { getSingleStyle } = useStyleState();
+    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleFactory();
+    const { getStyle } = useStyleManager();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
 
@@ -49,8 +49,8 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: currentSide, // Label dynamic based on selected side (e.g., 'Top')
                         column: '3', 
                         direction: 'column', 
-                        disabled: !['absolute', 'fixed', 'sticky'].includes(getSingleStyle('position')), // Disable if position is not absolute, fixed, or sticky
-                        component: () => renderUnitInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
+                        disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')), // Disable if position is not absolute, fixed, or sticky
+                        component: () => renderLengthInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
                     },
 
                     // Padding dynamic based on current side selected.
@@ -58,7 +58,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Padding', 
                         column: '2', 
                         direction: 'column', 
-                        component: () => renderUnitInput(`padding${currentSide || 'Top'}`), 
+                        component: () => renderLengthInput(`padding${currentSide || 'Top'}`), 
                     },
 
                     // Margin dynamic based on current side selected.
@@ -66,7 +66,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Margin', 
                         column: '3', 
                         direction: 'column', 
-                        component: () => renderUnitInput(`margin${currentSide || 'Top'}`), 
+                        component: () => renderLengthInput(`margin${currentSide || 'Top'}`), 
                     },
                 ],
             },

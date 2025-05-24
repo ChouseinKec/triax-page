@@ -1,10 +1,22 @@
-import { memo, ReactElement } from 'react';
+import { memo, ReactElement, useRef, useState, ReactNode, useMemo, Fragment, useContext } from 'react';
 
 // Styles
 import CSS from '@/editors/style/layout/components/property/styles.module.css';
 
+// Components
+import FloatReveal from '@/components/Reveal/Float/component';
+import HorizontalDivider from '@/components/Divider/Horizontal/component';
+
 // Types
 import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse';
+
+// Hooks
+import { useStyleManager } from '@/hooks/style/manager';
+
+
+// Contexts
+import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
+
 
 /**
  * Property component represents an individual style input field within a group.
@@ -22,9 +34,10 @@ import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse
  * @returns {ReactElement} The rendered Property component.
 */
 const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: STYLE_PROPERTY): ReactElement => {
+    const { getStyle, setStyle } = useStyleManager();
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
-    if (hidden === false) return <></>;
+    if (hidden === true) return <></>;
 
     // Define the CSS styles for the property using CSS variables
     const _style: React.CSSProperties = {
@@ -34,25 +47,68 @@ const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 
     };
 
     return (
-        <div
-            className={CSS.property}
-            style={_style}
-            data-label={label?.toLocaleLowerCase()}
-            data-direction={direction}
-            data-disabled={disabled}
-        >
+        <ToolbarProvider>
+            <div
+                className={CSS.Property}
+                style={_style}
+                data-label={label?.toLocaleLowerCase()}
+                data-direction={direction}
+                data-disabled={disabled}
+            >
 
+                <Content component={component} label={label} />
+
+            </div>
+        </ToolbarProvider>
+    );
+};
+
+
+const Content: React.FC<STYLE_PROPERTY> = ({ component, label }: STYLE_PROPERTY): ReactElement => {
+    const labelRef = useRef<HTMLLabelElement>(null);
+    const { buttons } = useToolbar();
+
+    return (
+        <>
             {/* Render the label if provided */}
             {label && (
-                <label className={CSS.label}>
-                    {label}
-                </label>
+                <>
+                    <label className={CSS.Property_Label} ref={labelRef}>
+                        {label}
+                    </label>
+
+                    <FloatReveal className={CSS.Property_Float} targetRef={labelRef} position='top'>
+
+                        <div className={CSS.Property_Float__Title}>
+                            {label}
+                        </div>
+
+                        <div className={CSS.Property__Float__Description}>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                        </div>
+
+                        {buttons.length > 0 && <HorizontalDivider />}
+
+                        <div className={CSS.Property_Float__Tools}>
+                            <button title='Reset Style'>✖</button>
+                            <button title='Copy Style'>⎘</button>
+                            <button title='Paste Style'>⎌</button>
+                            {buttons}
+                        </div>
+
+
+                    </FloatReveal>
+                </>
             )}
 
             {component()}
 
-        </div>
-    );
+
+        </>
+    )
+
 };
 
 export default memo(Property);
+
+

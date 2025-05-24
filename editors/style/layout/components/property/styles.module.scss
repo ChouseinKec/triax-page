@@ -1,6 +1,7 @@
-.property {
+@use '../../../../../mixins//mixins.module.scss' as inputMixins;
+
+.Property {
 	display: grid;
-	// align-items: center;
 	grid-column: auto;
 	gap: var(--size-sm);
 	grid-column: var(--property-column);
@@ -15,7 +16,6 @@
 
 	&[data-direction='column'] {
 		grid-template-columns: auto;
-		// text-align: center;
 
 		&[data-label] {
 			grid-template-rows: auto auto;
@@ -26,22 +26,65 @@
 		pointer-events: none;
 		opacity: 0.5;
 	}
+}
 
-	.label {
-		width: 100%;
-		align-self: var(--property-label--align);
+.Property_Label {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: var(--size-sm);
+	align-self: var(--property-label--align);
 
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-		letter-spacing: -0.5px;
-		font-size: var(--font-size-lg);
-		font-weight: 500;
-		font-family: 'Segoe UI';
-		text-transform: capitalize;
+	position: relative;
 
-		sup {
-			text-transform: capitalize;
-		}
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	letter-spacing: -0.5px;
+	font-size: var(--font-size-lg);
+	font-weight: 500;
+	font-family: 'Segoe UI';
+	text-transform: capitalize;
+
+	cursor: pointer;
+}
+
+.Property_Float {
+	max-width: 200px;
+	padding: var(--size-md);
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-md);
+
+	z-index: 9999;
+
+	@include inputMixins.components--container;
+}
+
+.Property_Float__Tools {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-sm);
+
+	> button {
+		@include inputMixins.components--button;
+
+		height: 100%;
+		width: auto;
+		aspect-ratio: 1;
+
+		padding: 0px;
+		font-size: var(--font-size-sm);
+		
 	}
+}
+
+.Property__Float__Title {
+	font-size: var(--font-size-lg);
+}
+
+.Property__Float__Description {
+	font-size: var(--font-size-md);
+	opacity: 0.8;
 }

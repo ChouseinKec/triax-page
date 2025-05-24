@@ -2,12 +2,13 @@ import {
 	//
 	isLetters,
 	isNumeric,
+	isURL,
 	extractBetween,
 	clearSpaces,
 	isCamelCase,
 	canCamelCase,
 	toCamelCase,
-} from './string';
+} from '../utilities/string';
 
 describe('isLetters', () => {
 	it('returns true for alphabetic strings with internal hyphens only', () => {
@@ -84,6 +85,105 @@ describe('isNumeric', () => {
 	it('should return true for valid number values as strings', () => {
 		expect(isNumeric('123.45')).toBe(true); // valid decimal
 		expect(isNumeric('  -99  ')).toBe(true); // valid negative number
+	});
+});
+
+describe('isURL', () => {
+	describe('valid URLs (with protocol required)', () => {
+		it('accepts standard HTTPS URLs', () => {
+			expect(isURL('https://example.com')).toBe(true);
+			expect(isURL('https://sub.domain.co.uk')).toBe(true);
+		});
+
+		it('accepts HTTP URLs', () => {
+			expect(isURL('http://example.com')).toBe(true);
+			expect(isURL('http://localhost')).toBe(true);
+		});
+
+		it('accepts URLs with paths', () => {
+			expect(isURL('https://example.com/path/to/resource')).toBe(true);
+			expect(isURL('http://site.com/search?q=term')).toBe(true);
+		});
+
+		it('accepts URLs with ports', () => {
+			expect(isURL('https://example.com:8080')).toBe(true);
+			expect(isURL('http://localhost:3000')).toBe(true);
+		});
+
+		it('accepts URLs with query strings and fragments', () => {
+			expect(isURL('https://example.com/?query=value')).toBe(true);
+			expect(isURL('http://site.com/#section')).toBe(true);
+			expect(isURL('https://domain.com/path?q=term#anchor')).toBe(true);
+		});
+
+		it('accepts IP addresses', () => {
+			expect(isURL('http://192.168.1.1')).toBe(true);
+			expect(isURL('https://8.8.8.8')).toBe(true);
+			expect(isURL('http://127.0.0.1:8080')).toBe(true);
+		});
+	});
+
+	describe('valid URLs (without protocol required)', () => {
+		it('accepts protocol-less URLs when requireProtocol=false', () => {
+			expect(isURL('example.com', false)).toBe(true);
+			expect(isURL('sub.example.com/path', false)).toBe(true);
+			expect(isURL('localhost:3000', false)).toBe(true);
+		});
+	});
+
+	describe('invalid URLs', () => {
+		it('rejects missing protocols when required', () => {
+			expect(isURL('example.com')).toBe(false);
+			expect(isURL('sub.domain.com/path')).toBe(false);
+		});
+
+		it('rejects malformed URLs', () => {
+			expect(isURL('https://')).toBe(false);
+			expect(isURL('http://:3000')).toBe(false);
+			expect(isURL('https://example..com')).toBe(false);
+		});
+
+		it('rejects invalid IP addresses', () => {
+			expect(isURL('http://256.0.0.1')).toBe(false);
+			expect(isURL('https://192.168.1.')).toBe(false);
+			expect(isURL('http://300.100.50.1')).toBe(false);
+		});
+
+		it('rejects invalid ports', () => {
+			expect(isURL('https://example.com:999999')).toBe(false);
+			expect(isURL('http://localhost:0')).toBe(false);
+			expect(isURL('https://site.com:abc')).toBe(false);
+		});
+
+		it('rejects unsupported protocols', () => {
+			expect(isURL('ftp://files.com')).toBe(false);
+			expect(isURL('ws://socket.io')).toBe(false);
+		});
+
+		it('rejects special cases', () => {
+			expect(isURL('data:image/png;base64,...')).toBe(false);
+			expect(isURL('url("example.com")')).toBe(false);
+			expect(isURL('javascript:alert(1)')).toBe(false);
+		});
+
+		it('rejects empty or whitespace strings', () => {
+			expect(isURL('')).toBe(false);
+			expect(isURL('   ')).toBe(false);
+			expect(isURL('\n\t')).toBe(false);
+		});
+	});
+
+	describe('edge cases', () => {
+		it('handles special characters in paths', () => {
+			expect(isURL('https://example.com/~user/file.txt')).toBe(true);
+			expect(isURL('http://site.com/file$name')).toBe(true);
+			expect(isURL('https://domain.com/path with spaces')).toBe(false);
+		});
+
+		it('handles internationalized domain names', () => {
+			expect(isURL('https://xn--exmple-cua.com')).toBe(true); // Punycode
+			expect(isURL('https://例.com')).toBe(false); // Should be converted to punycode first
+		});
 	});
 });
 
