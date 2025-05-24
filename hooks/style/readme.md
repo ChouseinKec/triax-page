@@ -2,7 +2,7 @@
 
 A collection of React hooks for rendering style-related UI components consistently.
 
-## `useStyleRender()`
+## `useStyleFactory()`
 
 The main hook that provides all rendering utilities.  
 **Returns:**  
@@ -60,7 +60,7 @@ Renders a visual position selector.
 
 Core hook for managing style properties with validation and multi-value support.
 
-## `useStyleState()`
+## `useStyleManager()`
 
 The main hook that provides style management utilities.  
 **Returns:**  

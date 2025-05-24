@@ -7,12 +7,12 @@ import Group from '@/editors/style/layout/components/group/component';
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render';
+import { useStyleFactory } from '@/hooks/style/factory';
 
 
 export const useFontLayout = (): STYLE_LAYOUT => {
 
-    const { renderColorSelect, renderNumberInput, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
+    const { renderColorSelect, renderNumberInput, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
 
     return {
         label: 'Font & Text',

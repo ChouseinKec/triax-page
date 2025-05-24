@@ -8,9 +8,10 @@ import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse
 
 // Components
 import FloatReveal from '@/components/Reveal/Float/component';
+import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Contexts
-import { useToolbar } from '@/contexts/ToolbarContext';
+import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
 
 
 /**
@@ -29,8 +30,6 @@ import { useToolbar } from '@/contexts/ToolbarContext';
  * @returns {ReactElement} The rendered Property component.
 */
 const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: STYLE_PROPERTY): ReactElement => {
-    const labelRef = useRef<HTMLLabelElement>(null);
-    const { buttons } = useToolbar();
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
     if (hidden === true) return <></>;
@@ -43,14 +42,29 @@ const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 
     };
 
     return (
-        <div
-            className={CSS.Property}
-            style={_style}
-            data-label={label?.toLocaleLowerCase()}
-            data-direction={direction}
-            data-disabled={disabled}
-        >
+        <ToolbarProvider>
+            <div
+                className={CSS.Property}
+                style={_style}
+                data-label={label?.toLocaleLowerCase()}
+                data-direction={direction}
+                data-disabled={disabled}
+            >
 
+                <Content component={component} label={label} />
+
+            </div>
+        </ToolbarProvider>
+    );
+};
+
+
+const Content: React.FC<STYLE_PROPERTY> = ({ component, label }: STYLE_PROPERTY): ReactElement => {
+    const labelRef = useRef<HTMLLabelElement>(null);
+    const { buttons } = useToolbar();
+
+    return (
+        <>
             {/* Render the label if provided */}
             {label && (
                 <>
@@ -64,13 +78,16 @@ const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 
                             {label}
                         </div>
 
+                        <div className={CSS.Property__Float__Description}>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                        </div>
+
+                        {buttons.length > 0 && <HorizontalDivider />}
+
                         <div className={CSS.Property_Float__Tools}>
                             {buttons}
                         </div>
 
-                        <div className={CSS.Property__Float__Description}>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        </div>
 
                     </FloatReveal>
                 </>
@@ -78,8 +95,10 @@ const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 
 
             {component()}
 
-        </div>
-    );
+
+        </>
+    )
+
 };
 
 export default memo(Property);

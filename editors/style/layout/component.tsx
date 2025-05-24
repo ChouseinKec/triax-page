@@ -15,9 +15,6 @@ import { useFontLayout } from '@/editors/style/layout/hooks/font';
 import { useBackgroundLayout } from '@/editors/style/layout/hooks/background';
 import { useEffectLayout } from '@/editors/style/layout/hooks/effect';
 
-// Contexts
-import { ToolbarProvider } from '@/contexts/ToolbarContext';
-
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
  * using an accordion layout for better user experience.
@@ -33,12 +30,12 @@ const Layout: React.FC = ({ }): ReactElement => {
     const effectLayout = useEffectLayout();
 
     const layouts: STYLE_LAYOUT[] = [
-        // displayLayout,
-        // sizeLayout,
-        // positionLayout,
-        // fontLayout,
+        displayLayout,
+        sizeLayout,
+        positionLayout,
+        fontLayout,
         backgroundLayout,
-        // effectLayout,
+        effectLayout,
     ];
 
     const AccordionItems = layouts.map((category) => ({
@@ -47,9 +44,7 @@ const Layout: React.FC = ({ }): ReactElement => {
     }));
 
     return (
-        <ToolbarProvider>
-            <AccordionGroup items={AccordionItems} />
-        </ToolbarProvider>
+        <AccordionGroup items={AccordionItems} />
     );
 
 };

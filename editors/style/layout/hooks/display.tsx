@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // HOOKS
-import { useStyleRender } from '@/editors/style/hooks/render';
-import { useStyleState } from '@/editors/style/hooks/state';
+import { useStyleFactory } from '@/hooks/style/factory';
+import { useStyleManager } from '@/hooks/style/manager';
 
 /**
  * Custom hook to render the layout for the "Display & Layout" section.
@@ -14,8 +14,8 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} The layout configuration for display and layout settings.
  */
 export const useDisplayLayout = (): STYLE_LAYOUT => {
-    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderInputGroup } = useStyleRender();
-    const { getSingleStyle } = useStyleState();
+    const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderInputGroup } = useStyleFactory();
+    const { getSingleStyle } = useStyleManager();
 
     return {
         label: 'Display & Layout',

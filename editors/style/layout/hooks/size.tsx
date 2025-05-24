@@ -6,7 +6,7 @@ import Group from '@/editors/style/layout/components/group/component';
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render';
+import { useStyleFactory } from '@/hooks/style/factory';
 
 /**
  * Custom hook for managing the "Size & Overflow" section layout in the style editor.
@@ -14,7 +14,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): STYLE_LAYOUT => {
-    const { renderVariantInput, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
+    const { renderVariantInput, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
     return {
         label: 'Size & Overflow',
         groups: [

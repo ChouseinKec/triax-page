@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 // Constants
 import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
@@ -21,7 +21,7 @@ interface STYLE_STATE {
     setMultiStyle: (property: STYLES_CONSTANTS_KEY, value: string, index: number, separator: string) => void;
 }
 
-export const useStyleState = (): STYLE_STATE => {
+export const useStyleManager = (): STYLE_STATE => {
     const selectedBlock = useBlockStore(state => state.selectedBlock);
     const getBlockStyles = useBlockStore(state => state.getBlockStyles);
     const setBlockStyle = useBlockStore(state => state.setBlockStyle);
@@ -67,28 +67,25 @@ export const useStyleState = (): STYLE_STATE => {
         if (!blockStyles) return '';
 
 
-        return useMemo(
-            () => {
-                return (
-                    // 1. Exact match
-                    blockStyles[device]?.[orientation]?.[pseudo]?.[property] ??
-                    // 2. Same context, default pseudo
-                    blockStyles[device]?.[orientation]?.[defaultPseudo]?.[property] ??
-                    // 3. Default orientation
-                    blockStyles[device]?.[defaultOrientation]?.[pseudo]?.[property] ??
-                    blockStyles[device]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-                    // 4. Default device
-                    blockStyles[defaultDevice]?.[orientation]?.[pseudo]?.[property] ??
-                    blockStyles[defaultDevice]?.[orientation]?.[defaultPseudo]?.[property] ??
-                    blockStyles[defaultDevice]?.[defaultOrientation]?.[pseudo]?.[property] ??
-                    // 5. Global fallback
-                    blockStyles[defaultDevice]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-                    // 6. Empty string if nothing found
-                    ''
-                );
-            },
-            [blockStyles, property] // Recomputes only when blockStyles or property changes
+
+        return (
+            // 1. Exact match
+            blockStyles[device]?.[orientation]?.[pseudo]?.[property] ??
+            // 2. Same context, default pseudo
+            blockStyles[device]?.[orientation]?.[defaultPseudo]?.[property] ??
+            // 3. Default orientation
+            blockStyles[device]?.[defaultOrientation]?.[pseudo]?.[property] ??
+            blockStyles[device]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
+            // 4. Default device
+            blockStyles[defaultDevice]?.[orientation]?.[pseudo]?.[property] ??
+            blockStyles[defaultDevice]?.[orientation]?.[defaultPseudo]?.[property] ??
+            blockStyles[defaultDevice]?.[defaultOrientation]?.[pseudo]?.[property] ??
+            // 5. Global fallback
+            blockStyles[defaultDevice]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
+            // 6. Empty string if nothing found
+            ''
         );
+
 
 
 

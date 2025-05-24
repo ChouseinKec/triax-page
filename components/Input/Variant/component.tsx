@@ -1,4 +1,4 @@
-import { memo, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useImperativeHandle, useMemo, useState } from 'react';
 
 // Styles 
 import CSS from '@/components/Input/Variant/styles.module.css';
@@ -13,9 +13,9 @@ import { VARIANT_INPUT } from '@/components/Input/Variant/types';
 import { splitMultiValue, extractSyntaxTypes, getSyntaxVariants, matchSyntaxVariant, updateMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
-// Contexts
-import { useToolbar } from '@/contexts/ToolbarContext';
-
+export interface VariantInputRef {
+    cycleVariant: () => void;
+}
 
 /**
  * A component that handles input variants with multiple syntax options.
@@ -45,12 +45,12 @@ import { useToolbar } from '@/contexts/ToolbarContext';
  *   separator="/"
  * />
  */
-const VariantInput: React.FC<VARIANT_INPUT> = (props: VARIANT_INPUT): ReactElement | null => {
-    const { id, value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } } = props;
+const VariantInput = forwardRef<VariantInputRef, VARIANT_INPUT>((props, ref) => {
+    const { value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } } = props;
 
-    const { addButton, removeButtons } = useToolbar();
     const splitedValues = splitMultiValue(value, separator);
     const syntaxes = useMemo(() => getSyntaxVariants(option), [option]);
+
 
     // Initialize current index based on the value
     const [currentIndex, setCurrentIndex] = useState(() => {
@@ -59,6 +59,13 @@ const VariantInput: React.FC<VARIANT_INPUT> = (props: VARIANT_INPUT): ReactEleme
 
     // Memoize event handlers to prevent unnecessary re-renders of child components
     const handleChange = useCallback((input: string, value: string, index: number) => {
+        if (!option.lengths) return;
+
+        // If value is empty force it to have a value
+        if (value.length === 0) {
+            value = option.lengths[currentIndex].value;
+        }
+
         const updatedValue = updateMultiValue(value, input, index, separator);
         onChange(updatedValue);
     }, [separator, onChange]
@@ -76,32 +83,14 @@ const VariantInput: React.FC<VARIANT_INPUT> = (props: VARIANT_INPUT): ReactEleme
         // First update the state
         setCurrentIndex(nextIndex);
 
-        // Then trigger the onChange in a separate update
         onChange(nextValue);
 
-    }, [syntaxes, onChange, option]
+    }, [syntaxes, onChange, option, currentIndex]
     );
 
-    // Memoize the button to prevent recreation on every render
-    const cycleButton = useMemo(() => (
-        <button
-            key={id}
-            type="button"
-            onClick={handleVariantChange}
-            aria-label="Cycle syntax variant"
-        >
-            ⟳
-        </button>
-    ), [handleVariantChange]);
-
-
-    // Add/remove button effect
-    // useEffect(() => {
-    //     addButton(cycleButton);
-    //     return () => removeButtons();
-
-    // }, [cycleButton]);
-
+    useImperativeHandle(ref, () => ({
+        cycleVariant: handleVariantChange
+    }));
 
     const childrenElements = (() => {
         if (!syntaxes?.length) return null;
@@ -132,7 +121,7 @@ const VariantInput: React.FC<VARIANT_INPUT> = (props: VARIANT_INPUT): ReactEleme
             {childrenElements}
         </div>
     );
-};
+});
 
 
 export default memo(VariantInput);

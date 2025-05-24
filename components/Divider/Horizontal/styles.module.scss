@@ -9,20 +9,22 @@
 
 	background: var(--color-white--darker);
 
-	&::after {
-		content: '| |';
-		width: max-content;
-		padding: var(--size-sm);
-		display: block;
+	&[data-type='bracket'] {
+		&::after {
+			content: '| |';
+			width: max-content;
+			padding: var(--size-sm);
+			display: block;
 
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
 
-		font-size: calc(var(--size-lg) * 0.8);
+			font-size: calc(var(--size-lg) * 0.8);
 
-		color: var(--color-white--darker);
-		background: var(--color-white);
+			color: var(--color-white--darker);
+			background: var(--color-white);
+		}
 	}
 }

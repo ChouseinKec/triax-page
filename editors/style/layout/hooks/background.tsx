@@ -9,7 +9,7 @@ import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render';
+import { useStyleFactory } from '@/hooks/style/factory';
 
 /**
  * Custom hook to render the layout for the border and shadow styles.
@@ -18,7 +18,7 @@ import { useStyleRender } from '@/editors/style/hooks/render';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useBackgroundLayout = (): STYLE_LAYOUT => {
-    const { renderVariantInput, renderURLInput, renderPositionSelect, renderColorSelect, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleRender();
+    const { renderVariantInput, renderURLInput, renderPositionSelect, renderColorSelect, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
@@ -102,7 +102,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: '',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => <HorizontalDivider />,
+                        component: () => <HorizontalDivider type={'bracket'} />,
                     },
 
 

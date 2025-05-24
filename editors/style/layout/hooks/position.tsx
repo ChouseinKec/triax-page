@@ -7,8 +7,8 @@ import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types'; 
 
 // Hooks
-import { useStyleRender } from '@/editors/style/hooks/render'; 
-import { useStyleState } from '@/editors/style/hooks/state'; 
+import { useStyleFactory } from '@/hooks/style/factory'; 
+import { useStyleManager } from '@/hooks/style/manager'; 
 
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
@@ -16,8 +16,8 @@ import { useStyleState } from '@/editors/style/hooks/state';
  * @returns {STYLE_LAYOUT} Configuration for the position and spacing properties in the style editor.
  */
 export const usePositionLayout = (): STYLE_LAYOUT => {
-    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleRender();
-    const { getSingleStyle } = useStyleState();
+    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleFactory();
+    const { getSingleStyle } = useStyleManager();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
 

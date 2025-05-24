@@ -1,4 +1,4 @@
-import { useCallback, ReactElement, useRef } from 'react';
+import { useCallback, ReactElement, useRef, useEffect } from 'react';
 
 // Components
 import LengthInput from '@/components/Input/Length/component';
@@ -10,7 +10,7 @@ import DropdownSelect from '@/components/Select/Dropdown/component';
 import PositionSelect from '@/components/Select/Position/component';
 import FlexView from '@/components/View/Flex/component';
 import StringInput from '@/components/Input/String/component';
-import VariantInput from '@/components/Input/Variant/component';
+import VariantInput, { VariantInputRef } from '@/components/Input/Variant/component';
 
 // Types
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
@@ -23,7 +23,8 @@ import { devLog } from '@/utilities/dev';
 import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
 
 // Store
-import { useStyleState } from '@/editors/style/hooks/state';
+import { useStyleManager } from '@/hooks/style/manager';
+import { useToolbar } from '@/contexts/ToolbarContext';
 
 interface STYLE_RENDER {
 	renderFlexView: () => ReactElement;
@@ -47,13 +48,13 @@ interface STYLE_RENDER {
  * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumberInput, etc.)
  * 
  * @example
- * const { renderLengthInput, getSingleStyle } = useStyleRender();
+ * const { renderLengthInput, getSingleStyle } = useStyleFactory();
  * 
  * // In your component:
  * renderLengthInput('width');
  */
-export const useStyleRender = (): STYLE_RENDER => {
-	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleState();
+export const useStyleFactory = (): STYLE_RENDER => {
+	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleManager();
 
 	const getOptions = useCallback((style: STYLES_CONSTANTS_KEY) => {
 		return getStyleOptions(style)
@@ -288,6 +289,9 @@ export const useStyleRender = (): STYLE_RENDER => {
 		[setSingleStyle, getSingleStyle]
 	);
 
+
+	// ! Find a better solution for the internal useRef and useEffect.
+	// ! Works for now,but not best practice.Create a wrapper component or custom hook
 	const renderVariantInput = useCallback<STYLE_RENDER['renderVariantInput']>((style, separator) => {
 		const options = getOptions(style);
 
@@ -296,6 +300,22 @@ export const useStyleRender = (): STYLE_RENDER => {
 			return <></>
 		}
 
+		const variantInputRef = useRef<VariantInputRef>(null);
+		const { addButton } = useToolbar();
+
+		useEffect(() => {
+			addButton(
+				<button
+					key={`${style}-variant-cycle`}
+					onClick={() => variantInputRef.current?.cycleVariant()}
+					aria-label="Cycle variant"
+				>
+					⟳
+				</button>
+			);
+		}, []);
+
+
 		const handleChange = useCallback((value: string) => {
 			return setSingleStyle(style, value);
 		}, [style, setSingleStyle])
@@ -303,12 +323,13 @@ export const useStyleRender = (): STYLE_RENDER => {
 
 		return (
 			<VariantInput
+				ref={variantInputRef}
 				value={getSingleStyle(style)}
 				onChange={handleChange}
 				separator={separator}
 				option={options[0]}
-				id={style}
 			/>
+
 		);
 	},
 		[setSingleStyle, getSingleStyle]

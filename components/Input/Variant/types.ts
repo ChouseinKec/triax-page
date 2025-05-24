@@ -12,5 +12,4 @@ export type VARIANT_INPUT = {
 	separator: string;
 	option: STYLE_VALUE;
 	onChange?: (value: string) => void;
-	id?: string;
 };
