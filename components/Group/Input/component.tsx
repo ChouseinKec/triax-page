@@ -14,7 +14,7 @@ import { INPUT_GROUP } from '@/components/Group/Input/types';
 
 // Utilities 
 import { devLog } from '@/utilities/dev';
-
+import { splitMultiValue } from '@/utilities/style';
 
 /**
  * InputGroup Component
@@ -37,7 +37,9 @@ import { devLog } from '@/utilities/dev';
  *   options={[{ name: '10px', value: '10px', , syntax: 'length' }, { name: 'auto', value: 'auto', syntax: 'keyword' }]}
  * />
  */
-const InputGroup: React.FC<INPUT_GROUP> = ({ values = [], onChange, options }: INPUT_GROUP): ReactElement => {
+const InputGroup: React.FC<INPUT_GROUP> = ({ value = '', onChange, options }: INPUT_GROUP): ReactElement => {
+    const values = splitMultiValue(value, ' ');
+
     /**
      * Handle input value change at a given index
     */
@@ -66,8 +68,6 @@ const InputGroup: React.FC<INPUT_GROUP> = ({ values = [], onChange, options }: I
         handleChange(value, values.length);
     }, [handleChange]
     );
-
-
 
     /**
      * Renders a single input wrapped in a DropdownReveal.

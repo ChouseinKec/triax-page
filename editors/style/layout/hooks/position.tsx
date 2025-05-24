@@ -17,7 +17,7 @@ import { useStyleManager } from '@/hooks/style/manager';
  */
 export const usePositionLayout = (): STYLE_LAYOUT => {
     const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleFactory();
-    const { getSingleStyle } = useStyleManager();
+    const { getStyle } = useStyleManager();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
 
@@ -49,7 +49,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: currentSide, // Label dynamic based on selected side (e.g., 'Top')
                         column: '3', 
                         direction: 'column', 
-                        disabled: !['absolute', 'fixed', 'sticky'].includes(getSingleStyle('position')), // Disable if position is not absolute, fixed, or sticky
+                        disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')), // Disable if position is not absolute, fixed, or sticky
                         component: () => renderLengthInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
                     },
 

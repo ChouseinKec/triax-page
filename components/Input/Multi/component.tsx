@@ -11,7 +11,7 @@ import { updateMultiValue, splitMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 /**
- * MultiValueInput Component
+ * MultiInput Component
  * 
  * A controlled component that manages multiple child inputs as a single delimited string value.
  * Distributes individual splitedValues to each child and consolidates changes back into a delimited string.
@@ -25,19 +25,19 @@ import { devLog } from '@/utilities/dev';
  * 
  * @example 
  * // Basic usage with space separator
- * <MultiValueInput value="10px 20px" onChange={updateValue}>
+ * <MultiInput value="10px 20px" onChange={updateValue}>
  *   <LengthInput />
  *   <LengthInput />
- * </MultiValueInput>
+ * </MultiInput>
  * 
  * @example
  * // Comma-separated splitedValues
- * <MultiValueInput value="red,blue" separator="," onChange={handleChange}>
+ * <MultiInput value="red,blue" separator="," onChange={handleChange}>
  *   <ColorInput />
  *   <ColorInput />
- * </MultiValueInput>
+ * </MultiInput>
  */
-const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separator, onChange = () => { } }: MULTI_INPUT): ReactElement | null => {
+const MultiInput: React.FC<MULTI_INPUT> = ({ value = '', children, separator, onChange = () => { } }: MULTI_INPUT): ReactElement | null => {
     const splitedValues = splitMultiValue(value, separator);
 
     /**
@@ -73,4 +73,4 @@ const MultiValueInput: React.FC<MULTI_INPUT> = ({ value = '', children, separato
     );
 };
 
-export default memo(MultiValueInput);
+export default memo(MultiInput);

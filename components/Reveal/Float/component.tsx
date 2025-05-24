@@ -23,7 +23,7 @@ const FloatReveal: React.FC<FLOAT_REVEAL> = ({ targetRef, position = "top", chil
         if (!isVisible) {
             showTimeoutRef.current = window.setTimeout(() => {
                 setIsVisible(true);
-            }, 400);
+            }, 200);
         }
     }, [isVisible]
     );

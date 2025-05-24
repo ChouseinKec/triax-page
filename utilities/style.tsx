@@ -369,6 +369,8 @@ export function splitExpression(expression: string): [string[], string[]] {
     return [values, operators];
 }
 
+
+
 /**
  * Splits a string based on a separator, ignoring separators that appear inside parentheses ().
  * This is particularly useful for splitting CSS values while preserving function arguments.
@@ -538,6 +540,8 @@ export function deleteMultiValue(input: string, index: number, separator: string
     // Filter out empty strings and join the remaining values with the separator
     return _values.filter((input) => input !== '').join(separator);
 }
+
+
 
 
 
@@ -1159,38 +1163,6 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
 
     // Validate option
     return isOptionValid(value, option);
-};
-
-export const isMultiValueValid = (property: STYLES_CONSTANTS_KEY, value: string, separator: string): boolean => {
-    // If valie is not valid string
-    if (typeof value !== 'string') {
-        devLog.error(`Value: ${value} should be non-empty string`);
-        return false;
-    }
-
-    if (typeof separator !== 'string' || separator.length !== 1) {
-        devLog.error(`Invalid separator: '${separator}'. Must be a non-empty single-char string.`);
-        return false;
-    }
-
-    const splitValues = splitMultiValue(value, separator);
-    const hasInvalidValue = splitValues.some((splitValue) => {
-        return !isSingleValueValid(property, splitValue);
-    });
-
-
-    if (hasInvalidValue) {
-        devLog.error(`Value: '${value}' for property: '${property}' is not in correct pattern.`);
-        return false;
-    }
-
-    return true;
-};
-
-export const isIndexValid = (index: number): boolean => {
-    if (typeof index !== 'number' || index < 0) return false;
-
-    return true;
 };
 
 

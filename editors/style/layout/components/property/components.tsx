@@ -3,12 +3,16 @@ import { memo, ReactElement, useRef, useState, ReactNode, useMemo, Fragment, use
 // Styles
 import CSS from '@/editors/style/layout/components/property/styles.module.css';
 
-// Types
-import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse';
-
 // Components
 import FloatReveal from '@/components/Reveal/Float/component';
 import HorizontalDivider from '@/components/Divider/Horizontal/component';
+
+// Types
+import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse';
+
+// Hooks
+import { useStyleManager } from '@/hooks/style/manager';
+
 
 // Contexts
 import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
@@ -30,6 +34,7 @@ import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
  * @returns {ReactElement} The rendered Property component.
 */
 const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: STYLE_PROPERTY): ReactElement => {
+    const { getStyle, setStyle } = useStyleManager();
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
     if (hidden === true) return <></>;
@@ -85,6 +90,9 @@ const Content: React.FC<STYLE_PROPERTY> = ({ component, label }: STYLE_PROPERTY)
                         {buttons.length > 0 && <HorizontalDivider />}
 
                         <div className={CSS.Property_Float__Tools}>
+                            <button title='Reset Style'>✖</button>
+                            <button title='Copy Style'>⎘</button>
+                            <button title='Paste Style'>⎌</button>
                             {buttons}
                         </div>
 

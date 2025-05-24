@@ -15,7 +15,7 @@ import { useStyleManager } from '@/hooks/style/manager';
  */
 export const useDisplayLayout = (): STYLE_LAYOUT => {
     const { renderFlexView, renderGridView, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderInputGroup } = useStyleFactory();
-    const { getSingleStyle } = useStyleManager();
+    const { getStyle } = useStyleManager();
 
     return {
         label: 'Display & Layout',
@@ -35,7 +35,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
 
             // Flex 
             {
-                hidden: getSingleStyle('display') !== 'flex', // Hide if the selected display type is 'flex'
+                hidden: getStyle('display') !== 'flex', // Hide if the selected display type is 'flex'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Flex View component (for visualizing flex properties)
@@ -106,7 +106,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
 
             // Grid section
             {
-                hidden: getSingleStyle('display') !== 'grid', // Hide if the selected display type is 'grid'
+                hidden: getStyle('display') !== 'grid', // Hide if the selected display type is 'grid'
                 columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
                 properties: [
                     // Grid View (for visualizing grid properties)

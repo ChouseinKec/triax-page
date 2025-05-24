@@ -48,13 +48,13 @@ interface STYLE_RENDER {
  * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumberInput, etc.)
  * 
  * @example
- * const { renderLengthInput, getSingleStyle } = useStyleFactory();
+ * const { renderLengthInput, getStyle } = useStyleFactory();
  * 
  * // In your component:
  * renderLengthInput('width');
  */
 export const useStyleFactory = (): STYLE_RENDER => {
-	const { getSingleStyle, setSingleStyle, getMultiStyle, setMultiStyle } = useStyleManager();
+	const { getStyle, setStyle } = useStyleManager();
 
 	const getOptions = useCallback((style: STYLES_CONSTANTS_KEY) => {
 		return getStyleOptions(style)
@@ -66,16 +66,16 @@ export const useStyleFactory = (): STYLE_RENDER => {
 			<FlexView
 				styles={{
 					display: 'flex',
-					flexDirection: getSingleStyle('flexDirection'),
-					flexWrap: getSingleStyle('flexWrap'),
-					justifyContent: getSingleStyle('justifyContent'),
-					alignItems: getSingleStyle('alignItems'),
-					alignContent: getSingleStyle('alignContent'),
+					flexDirection: getStyle('flexDirection'),
+					flexWrap: getStyle('flexWrap'),
+					justifyContent: getStyle('justifyContent'),
+					alignItems: getStyle('alignItems'),
+					alignContent: getStyle('alignContent'),
 				}}
 			/>
 		);
 	},
-		[getSingleStyle]
+		[getStyle]
 	);
 
 	const renderGridView = useCallback<STYLE_RENDER['renderGridView']>(() => {
@@ -83,21 +83,21 @@ export const useStyleFactory = (): STYLE_RENDER => {
 			<FlexView
 				styles={{
 					display: 'grid',
-					flexDirection: getSingleStyle('flexDirection'),
-					justifyContent: getSingleStyle('justifyContent'),
-					justifyItems: getSingleStyle('justifyItems'),
-					alignItems: getSingleStyle('alignItems'),
-					alignContent: getSingleStyle('alignContent'),
-					gridAutoFlow: getSingleStyle('gridAutoFlow'),
-					gridTemplateColumns: getSingleStyle('gridTemplateColumns'),
-					gridTemplateRows: getSingleStyle('gridTemplateRows'),
-					gridAutoColumns: getSingleStyle('gridAutoColumns'),
-					gridAutoRows: getSingleStyle('gridAutoRows'),
+					flexDirection: getStyle('flexDirection'),
+					justifyContent: getStyle('justifyContent'),
+					justifyItems: getStyle('justifyItems'),
+					alignItems: getStyle('alignItems'),
+					alignContent: getStyle('alignContent'),
+					gridAutoFlow: getStyle('gridAutoFlow'),
+					gridTemplateColumns: getStyle('gridTemplateColumns'),
+					gridTemplateRows: getStyle('gridTemplateRows'),
+					gridAutoColumns: getStyle('gridAutoColumns'),
+					gridAutoRows: getStyle('gridAutoRows'),
 				}}
 			/>
 		);
 	},
-		[getSingleStyle]
+		[getStyle]
 	);
 
 	/**
@@ -113,19 +113,19 @@ export const useStyleFactory = (): STYLE_RENDER => {
 		}
 
 		const handleChange = useCallback((value: string) => {
-			setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			setStyle(style, value);
+		}, [style, setStyle])
 
 
 		return (
 			<LengthInput
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle, getOptions]
+		[getStyle, setStyle, getOptions]
 	);
 
 	/**
@@ -141,20 +141,22 @@ export const useStyleFactory = (): STYLE_RENDER => {
 			return <></>
 		}
 
-		const handleChange = useCallback((value: string, index: number) => {
-			setMultiStyle(style, value, index, separator)
-		}, [style, setMultiStyle, separator])
+		const handleChange = useCallback((value: string) => {
+			setStyle(style, value);
+		}, [style, setStyle])
+
 
 
 		return (
 			<InputGroup
-				values={getMultiStyle(style, separator)}
+				value={getStyle(style)}
+				separator={separator}
 				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getMultiStyle, setMultiStyle, getOptions]
+		[getStyle, setStyle, getOptions]
 	);
 
 	/**
@@ -164,17 +166,17 @@ export const useStyleFactory = (): STYLE_RENDER => {
 	 */
 	const renderNumberInput = useCallback<STYLE_RENDER['renderNumberInput']>((style) => {
 		const handleChange = useCallback((value: string) => {
-			setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			setStyle(style, value);
+		}, [style, setStyle])
 
 		return (
 			<NumberInput
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle]
+		[getStyle, setStyle]
 	);
 
 	/**
@@ -189,18 +191,18 @@ export const useStyleFactory = (): STYLE_RENDER => {
 			return <></>
 		}
 		const handleChange = useCallback((value: string) => {
-			setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			setStyle(style, value);
+		}, [style, setStyle])
 
 		return (
 			<DropdownSelect
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 				options={options}
 			/>
 		);
 	},
-		[getSingleStyle, setSingleStyle, getOptions]
+		[getStyle, setStyle, getOptions]
 	);
 
 	/**
@@ -210,18 +212,18 @@ export const useStyleFactory = (): STYLE_RENDER => {
 	 */
 	const renderColorSelect = useCallback<STYLE_RENDER['renderColorSelect']>((style) => {
 		const handleChange = useCallback((value: string) => {
-			setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			setStyle(style, value);
+		}, [style, setStyle])
 
 		return (
 			<ColorSelect
 				placeholder="Color"
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 			/>
 		);
 	},
-		[setSingleStyle, getSingleStyle]
+		[setStyle, getStyle]
 	);
 
 	/**
@@ -237,19 +239,19 @@ export const useStyleFactory = (): STYLE_RENDER => {
 		}
 
 		const handleChange = useCallback((value: string) => {
-			setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			setStyle(style, value);
+		}, [style, setStyle])
 
 
 		return (
 			<RadioSelect
 				options={options}
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 			/>
 		);
 	},
-		[setSingleStyle, getSingleStyle, getOptions]
+		[setStyle, getStyle, getOptions]
 	);
 
 	/**
@@ -270,13 +272,13 @@ export const useStyleFactory = (): STYLE_RENDER => {
 	);
 
 	const renderURLInput = useCallback<STYLE_RENDER['renderURLInput']>((style, prefix = '', suffix = '') => {
-		let value = getSingleStyle(style);
+		let value = getStyle(style);
 		value = value.replace(prefix, '').replace(suffix, '');
 
 		const handleChange = useCallback((value: string) => {
 			const _value = value.length === 0 ? '' : `${prefix}${value}${suffix}`;
-			setSingleStyle(style, _value)
-		}, [style, setSingleStyle, prefix, suffix])
+			setStyle(style, _value)
+		}, [style, setStyle, prefix, suffix])
 
 		return (
 			<StringInput
@@ -286,7 +288,7 @@ export const useStyleFactory = (): STYLE_RENDER => {
 			/>
 		);
 	},
-		[setSingleStyle, getSingleStyle]
+		[setStyle, getStyle]
 	);
 
 
@@ -308,7 +310,7 @@ export const useStyleFactory = (): STYLE_RENDER => {
 				<button
 					key={`${style}-variant-cycle`}
 					onClick={() => variantInputRef.current?.cycleVariant()}
-					aria-label="Cycle variant"
+					title="Change Syntax"
 				>
 					⟳
 				</button>
@@ -317,14 +319,14 @@ export const useStyleFactory = (): STYLE_RENDER => {
 
 
 		const handleChange = useCallback((value: string) => {
-			return setSingleStyle(style, value);
-		}, [style, setSingleStyle])
+			return setStyle(style, value);
+		}, [style, setStyle])
 
 
 		return (
 			<VariantInput
 				ref={variantInputRef}
-				value={getSingleStyle(style)}
+				value={getStyle(style)}
 				onChange={handleChange}
 				separator={separator}
 				option={options[0]}
@@ -332,7 +334,7 @@ export const useStyleFactory = (): STYLE_RENDER => {
 
 		);
 	},
-		[setSingleStyle, getSingleStyle]
+		[setStyle, getStyle]
 	);
 
 	return {

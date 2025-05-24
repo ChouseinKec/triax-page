@@ -66,7 +66,7 @@ The main hook that provides style management utilities.
 **Returns:**  
 An object containing all style management functions below.
 
-### `getSingleStyle(property)`
+### `getStyle(property)`
 
 Gets a single style property value.  
 **Parameters:**  
@@ -75,7 +75,7 @@ Gets a single style property value.
 **Returns:**  
 The current property value or empty string if not found
 
-### `setSingleStyle(property, value)`
+### `setStyle(property, value)`
 
 Sets a single style property value.  
 **Parameters:**  

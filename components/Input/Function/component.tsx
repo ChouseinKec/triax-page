@@ -2,7 +2,7 @@ import { memo, useCallback, ReactElement } from 'react';
 
 // Components 
 import DynamicInput from '@/components/Input/Dynamic/component';
-import MultiValueInput from '@/components/Input/Multi/component';
+import MultiInput from '@/components/Input/Multi/component';
 
 // Types
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
@@ -64,13 +64,13 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
 
     return (
         <div>
-            <MultiValueInput
+            <MultiInput
                 onChange={(val) => handleChange(val, extractedFunc)}
                 value={extractedValue}
                 separator={extractedSepa}
             >
                 {inputElements}
-            </MultiValueInput>
+            </MultiInput>
         </div>
     );
 };
