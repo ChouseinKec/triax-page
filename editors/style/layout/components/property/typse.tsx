@@ -13,7 +13,7 @@ import { ReactElement } from "react";
  * @param {boolean} [disabled] - Optional flag to disable interaction with the property.
  * @param {function} component - A function that returns the React component for rendering the style input.
  */
-export type STYLE_PROPERTY = {
+export type LAYOUT_PROPERTY = {
     label: string | null;
     labelAlign?: string;
     column?: string;

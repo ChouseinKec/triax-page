@@ -12,7 +12,7 @@ import { useStyleFactory } from '@/hooks/style/factory';
 
 export const useFontLayout = (): STYLE_LAYOUT => {
 
-    const { renderColorSelect, renderNumberInput, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
+    const { ColorSelect, NumberInput, InputGroup, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
 
     return {
         label: 'Font & Text',
@@ -23,35 +23,35 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                     {
                         label: 'Family',
                         column: 'auto',
-                        component: () => renderDropdownSelect('fontFamily'),
+                        component: () => DropdownSelect('fontFamily'),
                     },
 
                     // Weight
                     {
                         label: 'Weight',
                         column: 'auto',
-                        component: () => renderDropdownSelect('fontWeight'),
+                        component: () => DropdownSelect('fontWeight'),
                     },
 
                     // Size
                     {
                         label: 'Size',
                         column: 'auto',
-                        component: () => renderLengthInput('fontSize')
+                        component: () => LengthInput('fontSize')
                     },
 
                     // Height
                     {
                         label: 'Height',
                         column: 'auto',
-                        component: () => renderLengthInput('lineHeight')
+                        component: () => LengthInput('lineHeight')
                     },
 
                     // Color
                     {
                         label: 'Color',
                         column: '1/-1',
-                        component: () => renderColorSelect('color'),
+                        component: () => ColorSelect('color'),
                     },
 
                     // Shadow
@@ -59,35 +59,35 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: 'Shadow',
                         column: '1/-1',
                         labelAlign: 'flex-start',
-                        component: () => renderInputGroup('textShadow', ',')
+                        component: () => InputGroup('textShadow', ',')
                     },
 
                     // Align
                     {
                         label: 'Align',
                         column: '1/-1',
-                        component: () => renderRadioSelect('textAlign')
+                        component: () => RadioSelect('textAlign')
                     },
 
                     // Style
                     {
                         label: 'Style',
                         column: 'auto',
-                        component: () => renderRadioSelect('fontStyle')
+                        component: () => RadioSelect('fontStyle')
                     },
 
                     // Direction
                     {
                         label: 'Direction',
                         column: 'auto',
-                        component: () => renderRadioSelect('direction')
+                        component: () => RadioSelect('direction')
                     },
 
                     // Transform
                     {
                         label: 'Transform',
                         column: '1/-1',
-                        component: () => renderRadioSelect('textTransform')
+                        component: () => RadioSelect('textTransform')
                     },
                 ],
             },
@@ -101,7 +101,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: 'Decoration',
                         column: '1/-1',
                         row: '1',
-                        component: () => renderRadioSelect('textDecorationLine')
+                        component: () => RadioSelect('textDecorationLine')
                     },
 
                     // Decoration Color
@@ -109,7 +109,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: ' ',
                         column: '1',
                         row: '2',
-                        component: () => renderColorSelect('textDecorationColor'),
+                        component: () => ColorSelect('textDecorationColor'),
                     },
 
                     // Decoration Style
@@ -117,7 +117,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: null,
                         column: '2',
                         row: '2',
-                        component: () => renderDropdownSelect('textDecorationStyle'),
+                        component: () => DropdownSelect('textDecorationStyle'),
                     },
 
                     // Decoration Thickness
@@ -125,7 +125,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                         label: null,
                         column: '3',
                         row: '2',
-                        component: () => renderLengthInput('textDecorationThickness')
+                        component: () => LengthInput('textDecorationThickness')
                     },
                 ],
             },
@@ -147,7 +147,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Letter Spacing',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderLengthInput('letterSpacing')
+                                            component: () => LengthInput('letterSpacing')
                                         },
 
                                         // Text Indent
@@ -155,7 +155,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Text Indent',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderLengthInput('textIndent')
+                                            component: () => LengthInput('textIndent')
                                         },
 
                                         // Word-Break
@@ -163,7 +163,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Word-Break',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('wordBreak'),
+                                            component: () => DropdownSelect('wordBreak'),
                                         },
 
                                         // Line-Break
@@ -171,7 +171,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Line-Break',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('lineBreak'),
+                                            component: () => DropdownSelect('lineBreak'),
                                         },
 
                                         // White-Space
@@ -179,7 +179,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'White-Space',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('whiteSpace'),
+                                            component: () => DropdownSelect('whiteSpace'),
                                         },
 
                                         // Overflow
@@ -187,7 +187,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Text-Overflow',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('textOverflow'),
+                                            component: () => DropdownSelect('textOverflow'),
                                         },
 
                                         // Writing Mode
@@ -195,7 +195,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Writing Mode',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('writingMode'),
+                                            component: () => DropdownSelect('writingMode'),
                                         },
 
                                         // Text Orientation
@@ -203,7 +203,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Text Orientation',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('textOrientation'),
+                                            component: () => DropdownSelect('textOrientation'),
                                         },
 
                                         // Stroke Width
@@ -211,7 +211,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Stroke Width',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderLengthInput('strokeWidth'),
+                                            component: () => LengthInput('strokeWidth'),
                                         },
 
                                         // Stroke Color
@@ -219,7 +219,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                             label: 'Stroke Color',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderColorSelect('strokeColor'),
+                                            component: () => ColorSelect('strokeColor'),
                                         },
 
                                         // Columns
@@ -237,7 +237,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Count',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderNumberInput('columnCount'),
+                                                                component: () => NumberInput('columnCount'),
                                                             },
 
                                                             // Column Width
@@ -245,7 +245,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Width',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderLengthInput('columnWidth'),
+                                                                component: () => LengthInput('columnWidth'),
                                                             },
 
                                                             // Column Gap
@@ -253,7 +253,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Gap',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderLengthInput('columnGap'),
+                                                                component: () => LengthInput('columnGap'),
                                                             },
 
                                                             // Column Rule Width
@@ -261,7 +261,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Rule Width',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderLengthInput('columnRuleWidth'),
+                                                                component: () => LengthInput('columnRuleWidth'),
                                                             },
 
                                                             // Widows
@@ -269,7 +269,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Widows',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderLengthInput('widows'),
+                                                                component: () => LengthInput('widows'),
                                                             },
 
                                                             // Orphans
@@ -277,7 +277,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Orphans',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderLengthInput('orphans'),
+                                                                component: () => LengthInput('orphans'),
                                                             },
 
                                                             // Column Rule Style
@@ -285,7 +285,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Rule Style',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('columnRuleStyle'),
+                                                                component: () => DropdownSelect('columnRuleStyle'),
                                                             },
 
                                                             // Column Rule Color
@@ -293,7 +293,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Rule Color',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderColorSelect('columnRuleColor'),
+                                                                component: () => ColorSelect('columnRuleColor'),
                                                             },
 
                                                             // Break Before
@@ -301,7 +301,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Break Before',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('breakBefore'),
+                                                                component: () => DropdownSelect('breakBefore'),
                                                             },
 
                                                             // Break Inside
@@ -309,7 +309,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Break Inside',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('breakInside'),
+                                                                component: () => DropdownSelect('breakInside'),
                                                             },
 
                                                             // Break After
@@ -317,7 +317,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Break After',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('breakAfter'),
+                                                                component: () => DropdownSelect('breakAfter'),
                                                             },
 
                                                             // Column Span
@@ -325,7 +325,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Column Span',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('columnSpan'),
+                                                                component: () => DropdownSelect('columnSpan'),
                                                             },
 
                                                             // Column Fill
@@ -333,7 +333,7 @@ export const useFontLayout = (): STYLE_LAYOUT => {
                                                                 label: 'Column Fill',
                                                                 column: 'auto',
                                                                 direction: 'column',
-                                                                component: () => renderDropdownSelect('columnFill'),
+                                                                component: () => DropdownSelect('columnFill'),
                                                             },
 
                                                         ]}

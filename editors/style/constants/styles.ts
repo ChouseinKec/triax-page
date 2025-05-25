@@ -2,7 +2,7 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
 
 import * as OPTIONS from '@/editors/style/constants/options';
 
-export const STYLES_CONSTANTS = {
+export const STYLE_CONSTANTS = {
 	// -------------------------------- DISPLAY --------------------------------
 	display: {
 		options: OPTIONS.DISPLAY,
@@ -342,4 +342,4 @@ export type STYLE = {
 };
 
 //Enforce it to only be string as we do not use index
-export type STYLES_CONSTANTS_KEY = keyof typeof STYLES_CONSTANTS & string;
+export type STYLE_PROPERTIES = keyof typeof STYLE_CONSTANTS & string;

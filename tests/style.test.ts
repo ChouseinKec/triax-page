@@ -16,7 +16,7 @@ import {
 	isKeywordValid,
 	isFunctionValid,
 	isURLValid,
-	getStyleOptionByValue,
+	getOptionByValue,
 } from '../utilities/style';
 
 describe('extractNumber', () => {
@@ -695,15 +695,15 @@ describe('isURLValid', () => {
 	});
 });
 
-describe('getStyleOptionByValue', () => {
+describe('getOptionByValue', () => {
 	// Basic numeric matches
 	it('should find exact numeric matches', () => {
 		const options: STYLE_VALUE[] = [
 			{ value: '100', name: 'Thin', syntax: 'length' },
 			{ value: '200', name: 'Bold', syntax: 'length' },
 		];
-		expect(getStyleOptionByValue('100', options)).toEqual({ value: '100', name: 'Thin', syntax: 'length' });
-		expect(getStyleOptionByValue('200', options)).toEqual({ value: '200', name: 'Bold', syntax: 'length' });
+		expect(getOptionByValue('100', options)).toEqual({ value: '100', name: 'Thin', syntax: 'length' });
+		expect(getOptionByValue('200', options)).toEqual({ value: '200', name: 'Bold', syntax: 'length' });
 	});
 
 	// Basic non-numeric matches (length comparison)
@@ -714,9 +714,9 @@ describe('getStyleOptionByValue', () => {
 			{ value: 'auto', name: 'Auto', syntax: 'keyword' },
 		];
 
-		expect(getStyleOptionByValue('10px', options)).toEqual({ value: '10px', name: 'Small', syntax: 'length' });
-		expect(getStyleOptionByValue('10%', options)).toEqual({ value: '10%', name: 'Medium', syntax: 'length' });
-		expect(getStyleOptionByValue('auto', options)).toEqual({ value: 'auto', name: 'Auto', syntax: 'keyword' });
+		expect(getOptionByValue('10px', options)).toEqual({ value: '10px', name: 'Small', syntax: 'length' });
+		expect(getOptionByValue('10%', options)).toEqual({ value: '10%', name: 'Medium', syntax: 'length' });
+		expect(getOptionByValue('auto', options)).toEqual({ value: 'auto', name: 'Auto', syntax: 'keyword' });
 	});
 
 	// No match cases
@@ -726,22 +726,22 @@ describe('getStyleOptionByValue', () => {
 			{ value: 'normal', name: 'Normal', syntax: 'keyword' },
 			{ value: 'bold', name: 'Bold', syntax: 'keyword' },
 		];
-		expect(getStyleOptionByValue('italic', options)).toBeUndefined();
-		expect(getStyleOptionByValue('100', options)).toBeUndefined();
-		expect(getStyleOptionByValue('20%', options)).toBeUndefined();
+		expect(getOptionByValue('italic', options)).toBeUndefined();
+		expect(getOptionByValue('100', options)).toBeUndefined();
+		expect(getOptionByValue('20%', options)).toBeUndefined();
 	});
 
 	// Single option cases
 	it('should return the single option regardless of value', () => {
 		const singleOption: STYLE_VALUE[] = [{ value: '400', name: 'Regular', syntax: 'number' }];
-		expect(getStyleOptionByValue('100', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
-		expect(getStyleOptionByValue('abc', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
+		expect(getOptionByValue('100', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
+		expect(getOptionByValue('abc', singleOption)).toEqual({ value: '400', name: 'Regular', syntax: 'number' });
 	});
 
 	// Edge cases
 	it('should handle empty or invalid options', () => {
-		expect(getStyleOptionByValue('100', [])).toBeUndefined();
-		expect(getStyleOptionByValue('100', null as any)).toBeUndefined();
+		expect(getOptionByValue('100', [])).toBeUndefined();
+		expect(getOptionByValue('100', null as any)).toBeUndefined();
 	});
 
 	it('should handle empty or invalid values', () => {
@@ -749,8 +749,8 @@ describe('getStyleOptionByValue', () => {
 			{ value: '10px', name: 'Small', syntax: 'length' },
 			{ value: '20px', name: 'Large', syntax: 'length' },
 		];
-		expect(getStyleOptionByValue('', options)).toBeUndefined();
-		expect(getStyleOptionByValue(null as any, options)).toBeUndefined();
+		expect(getOptionByValue('', options)).toBeUndefined();
+		expect(getOptionByValue(null as any, options)).toBeUndefined();
 	});
 
 	// Mixed cases
@@ -761,8 +761,8 @@ describe('getStyleOptionByValue', () => {
 			{ value: 'bold', name: 'Bold', syntax: 'keyword' },
 		];
 
-		expect(getStyleOptionByValue('100', mixedOptions)).toEqual({ value: '100', name: '100', syntax: 'length' });
-		expect(getStyleOptionByValue('100px', mixedOptions)).toEqual({ value: '100px', name: 'px', syntax: 'length' });
-		expect(getStyleOptionByValue('bold', mixedOptions)).toEqual({ value: 'bold', name: 'Bold', syntax: 'keyword' });
+		expect(getOptionByValue('100', mixedOptions)).toEqual({ value: '100', name: '100', syntax: 'length' });
+		expect(getOptionByValue('100px', mixedOptions)).toEqual({ value: '100px', name: 'px', syntax: 'length' });
+		expect(getOptionByValue('bold', mixedOptions)).toEqual({ value: 'bold', name: 'Bold', syntax: 'keyword' });
 	});
 });

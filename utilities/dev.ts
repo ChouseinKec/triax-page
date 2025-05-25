@@ -1,3 +1,5 @@
+import { info } from 'console';
+
 export const isDevelopment = process.env.NODE_ENV === 'development';
 
 /**
@@ -36,5 +38,16 @@ export const devLog = {
 	 */
 	log: (...args: unknown[]): void => {
 		if (isDevelopment) console.log(...args);
+	},
+
+	/**
+	 * Logs info messages to console.info (development only)
+	 * @param {...unknown} args - One or more values to log (same signature as console.info)
+	 * @example
+	 * devLog.info('User logged in:', user);
+	 * devLog.info('Data fetched successfully');
+	 */
+	info: (...args: unknown[]): void => {
+		if (isDevelopment) console.info(...args);
 	},
 };

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 // Types
-import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles'; 
+import { STYLE_PROPERTIES } from '@/editors/style/constants/styles'; 
 import { STYLE_LAYOUT } from '@/editors/style/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types'; 
 
@@ -16,7 +16,7 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @returns {STYLE_LAYOUT} Configuration for the position and spacing properties in the style editor.
  */
 export const usePositionLayout = (): STYLE_LAYOUT => {
-    const { renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput, renderPositionSelect } = useStyleFactory();
+    const { InputGroup, RadioSelect, DropdownSelect, LengthInput, renderPositionSelect } = useStyleFactory();
     const { getStyle } = useStyleManager();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
@@ -41,7 +41,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Position', 
                         column: '2', 
                         direction: 'column', 
-                        component: () => renderDropdownSelect('position'), 
+                        component: () => DropdownSelect('position'), 
                     },
 
                     // Top-Right-Bottom-Left
@@ -50,7 +50,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         column: '3', 
                         direction: 'column', 
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')), // Disable if position is not absolute, fixed, or sticky
-                        component: () => renderLengthInput(currentSide?.toLowerCase() as STYLES_CONSTANTS_KEY || 'top'), 
+                        component: () => LengthInput(currentSide?.toLowerCase() as STYLE_PROPERTIES || 'top'), 
                     },
 
                     // Padding dynamic based on current side selected.
@@ -58,7 +58,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Padding', 
                         column: '2', 
                         direction: 'column', 
-                        component: () => renderLengthInput(`padding${currentSide || 'Top'}`), 
+                        component: () => LengthInput(`padding${currentSide || 'Top'}`), 
                     },
 
                     // Margin dynamic based on current side selected.
@@ -66,7 +66,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Margin', 
                         column: '3', 
                         direction: 'column', 
-                        component: () => renderLengthInput(`margin${currentSide || 'Top'}`), 
+                        component: () => LengthInput(`margin${currentSide || 'Top'}`), 
                     },
                 ],
             },
@@ -79,14 +79,14 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                     {
                         label: 'Float', 
                         column: '1/-1', 
-                        component: () => renderRadioSelect('float'), 
+                        component: () => RadioSelect('float'), 
                     },
 
                     // Clear
                     {
                         label: 'Clear', 
                         column: '1/-1', 
-                        component: () => renderRadioSelect('clear'),
+                        component: () => RadioSelect('clear'),
                     },
 
                     // Transform (e.g., translate, rotate).
@@ -94,7 +94,7 @@ export const usePositionLayout = (): STYLE_LAYOUT => {
                         label: 'Transform', 
                         column: '1/-1', 
                         labelAlign: 'flex-start', 
-                        component: () => renderInputGroup('transform', ' '), 
+                        component: () => InputGroup('transform', ' '), 
                     },
                 ],
             },

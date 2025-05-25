@@ -1,4 +1,4 @@
-@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false) {
+@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false, $error: false) {
 	@if $hover {
 		&:hover {
 			background: var(--color-hover);
@@ -55,6 +55,12 @@
 			}
 		}
 	}
+
+	@if $error {
+		&[data-iserror='true'] {
+			background: var(--color-error);
+		}
+	}
 }
 
 @mixin components--container($background: true) {
@@ -83,7 +89,7 @@
 	text-transform: uppercase;
 	cursor: pointer;
 
-	@include states($selected: false, $open: true, $svg: true);
+	@include states($open: true, $svg: true);
 
 	&:hover {
 		box-shadow: var(--shadow-inset);
@@ -109,7 +115,7 @@
 	box-shadow: var(--shadow-inset);
 	font-size: var(--font-size-md);
 
-	@include states($selected: false);
+	@include states($error: true);
 }
 
 @mixin components--option {
@@ -129,7 +135,7 @@
 	text-transform: uppercase;
 
 	cursor: pointer;
-	@include states;
+	@include states($selected: true);
 
 	svg {
 		width: 15px;
@@ -145,10 +151,6 @@
 		margin-top: 5px;
 		margin-left: 5px;
 		display: block;
-
-		// position: absolute;
-		// top: 53%;
-		// right: var(--size-sm);
 
 		transform: translateY(-50%);
 

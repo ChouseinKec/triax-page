@@ -18,7 +18,7 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useBackgroundLayout = (): STYLE_LAYOUT => {
-    const { renderVariantInput, renderURLInput, renderPositionSelect, renderColorSelect, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
+    const { VariantInput, UrlInput, renderPositionSelect, ColorSelect, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
@@ -44,7 +44,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         column: '2',
                         direction: 'column',
                         disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => renderLengthInput(`border${currentSide || 'Top'}Width`), // Dynamic length input based on selected side
+                        component: () => LengthInput(`border${currentSide || 'Top'}Width`), // Dynamic length input based on selected side
                     },
 
                     // Border Radius
@@ -53,7 +53,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         column: '3',
                         direction: 'column',
                         disabled: currentCorner === null, // Disabled if no corner is selected
-                        component: () => renderLengthInput(`border${currentCorner || 'TopLeft'}Radius`), // Dynamic length input based on selected corner
+                        component: () => LengthInput(`border${currentCorner || 'TopLeft'}Radius`), // Dynamic length input based on selected corner
                     },
 
                     // Border Style (solid, dashed, etc.)
@@ -62,7 +62,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         column: '2',
                         direction: 'column',
                         disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => renderRadioSelect(`border${currentSide || 'Top'}Style`), // Dynamic radio selector based on selected side
+                        component: () => RadioSelect(`border${currentSide || 'Top'}Style`), // Dynamic radio selector based on selected side
                     },
 
                     // Border Color picker
@@ -71,7 +71,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         column: '3',
                         direction: 'column',
                         disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => renderColorSelect(`border${currentSide || 'Top'}Color`), // Dynamic color selector based on selected side
+                        component: () => ColorSelect(`border${currentSide || 'Top'}Color`), // Dynamic color selector based on selected side
                     },
 
                     // Outline Style
@@ -79,7 +79,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Outline Style',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderDropdownSelect('outlineStyle'),
+                        component: () => DropdownSelect('outlineStyle'),
                     },
 
                     // Outline Width
@@ -87,7 +87,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Outline Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('outlineWidth'),
+                        component: () => LengthInput('outlineWidth'),
                     },
 
                     // Outline Color picker
@@ -95,7 +95,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Outline Color',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderColorSelect('outlineColor'),
+                        component: () => ColorSelect('outlineColor'),
                     },
 
                     {
@@ -111,7 +111,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Image',
                         column: '1/3',
                         direction: 'column',
-                        component: () => renderURLInput('backgroundImage', 'url("', '")'),
+                        component: () => UrlInput('backgroundImage', 'url("', '")'),
 
                     },
 
@@ -120,7 +120,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Color',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderColorSelect('backgroundColor'),
+                        component: () => ColorSelect('backgroundColor'),
                     },
 
                     {
@@ -136,7 +136,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                         label: 'Size',
                                         column: 'auto',
                                         direction: 'column',
-                                        component: () => renderVariantInput('backgroundSize', ' '),
+                                        component: () => VariantInput('backgroundSize', ' '),
 
                                     },
 
@@ -145,7 +145,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                                         label: 'Position',
                                         column: 'auto',
                                         direction: 'column',
-                                        component: () => renderVariantInput('backgroundPosition', ' '),
+                                        component: () => VariantInput('backgroundPosition', ' '),
                                     },
 
                                 ]}
@@ -158,7 +158,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Repeat',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => renderVariantInput('backgroundRepeat', ' '),
+                        component: () => VariantInput('backgroundRepeat', ' '),
                     },
 
                     // Background-Attachment
@@ -166,7 +166,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Attachment',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderDropdownSelect('backgroundAttachment'),
+                        component: () => DropdownSelect('backgroundAttachment'),
                     },
 
                     // Background-Clip
@@ -174,7 +174,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Clip',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderDropdownSelect('backgroundClip'),
+                        component: () => DropdownSelect('backgroundClip'),
                     },
 
                     // Background-Origin
@@ -182,7 +182,7 @@ export const useBackgroundLayout = (): STYLE_LAYOUT => {
                         label: 'Origin',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderDropdownSelect('backgroundOrigin'),
+                        component: () => DropdownSelect('backgroundOrigin'),
                     },
 
                 ],

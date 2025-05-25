@@ -14,7 +14,7 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
  */
 export const useEffectLayout = (): STYLE_LAYOUT => {
-    const { renderPositionSelect, renderColorSelect, renderInputGroup, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
+    const { renderPositionSelect, ColorSelect, InputGroup, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
 
@@ -31,7 +31,7 @@ export const useEffectLayout = (): STYLE_LAYOUT => {
                         label: 'Shadow',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => renderInputGroup('boxShadow', ','),
+                        component: () => InputGroup('boxShadow', ','),
                     },
 
                 ],

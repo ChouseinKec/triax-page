@@ -25,7 +25,6 @@ const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [isError, setIsError] = useState(false);
 
-
 	/**
 	 * Validates the input value against constraints
 	 * @param {string} value - Input value to validate
@@ -107,16 +106,19 @@ const StringInput: React.FC<STRING_INPUT> = ({ value = '', minLength = -Infinity
 	const handleBlur = useCallback(() => {
 		setIsError(false);
 		handleCommit(true);
-	}, [handleCommit]);
+	}, [handleCommit]
+	);
 
 	return (
 		<input
 			ref={inputRef}
 			type="text"
-			className={`${CSS.StringInput} ${isError ? CSS.isError : ''}`}
+			className={CSS.StringInput}
 			placeholder={pattern ? `Enter ${pattern}` : 'Enter text'}
 			minLength={minLength > 0 ? minLength : undefined}
 			maxLength={maxLength < Infinity ? maxLength : undefined}
+
+			data-iserror={isError}
 
 			defaultValue={value}
 

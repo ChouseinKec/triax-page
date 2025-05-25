@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 type ToolbarContextType = {
     buttons: ReactNode[];
     addButton: (button: ReactNode) => void;
+    addButtons: (newButtons: ReactNode[]) => void;
     removeButtons: () => void;
 };
 
@@ -14,6 +15,8 @@ export const ToolbarProvider = ({ children }: { children: ReactNode }) => {
 
     const value = useMemo(() => ({
         buttons,
+        addButtons: (newButtons: ReactNode[]) =>
+            setButtons(prev => [...prev, ...newButtons]),
         addButton: (button: ReactNode) =>
             setButtons(prev => [...prev, button]),
         removeButtons: () =>

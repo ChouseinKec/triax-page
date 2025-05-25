@@ -8,10 +8,7 @@ import FloatReveal from '@/components/Reveal/Float/component';
 import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Types
-import { STYLE_PROPERTY } from '@/editors/style/layout/components/property/typse';
-
-// Hooks
-import { useStyleManager } from '@/hooks/style/manager';
+import { LAYOUT_PROPERTY } from '@/editors/style/layout/components/property/typse';
 
 
 // Contexts
@@ -22,7 +19,7 @@ import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
  * Property component represents an individual style input field within a group.
  * It includes a label and a component (e.g., input, dropdown) for user interaction.
  * 
- * @param {STYLE_PROPERTY} props - The props for the Property component.
+ * @param {LAYOUT_PROPERTY} props - The props for the Property component.
  * @param {React.ReactNode} props.component - The component to render (e.g., input, dropdown, etc.).
  * @param {string} [props.column='auto'] - The column layout for the property.
  * @param {string} [props.row='auto'] - The row layout for the property.
@@ -33,8 +30,7 @@ import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
  * @param {boolean} [props.disabled] - Flag to disable the property input.
  * @returns {ReactElement} The rendered Property component.
 */
-const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: STYLE_PROPERTY): ReactElement => {
-    const { getStyle, setStyle } = useStyleManager();
+const Property: React.FC<LAYOUT_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: LAYOUT_PROPERTY): ReactElement => {
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
     if (hidden === true) return <></>;
@@ -64,7 +60,7 @@ const Property: React.FC<STYLE_PROPERTY> = ({ component, column = 'auto', row = 
 };
 
 
-const Content: React.FC<STYLE_PROPERTY> = ({ component, label }: STYLE_PROPERTY): ReactElement => {
+const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERTY): ReactElement => {
     const labelRef = useRef<HTMLLabelElement>(null);
     const { buttons } = useToolbar();
 
@@ -90,9 +86,6 @@ const Content: React.FC<STYLE_PROPERTY> = ({ component, label }: STYLE_PROPERTY)
                         {buttons.length > 0 && <HorizontalDivider />}
 
                         <div className={CSS.Property_Float__Tools}>
-                            <button title='Reset Style'>✖</button>
-                            <button title='Copy Style'>⎘</button>
-                            <button title='Paste Style'>⎌</button>
                             {buttons}
                         </div>
 

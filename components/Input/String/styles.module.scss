@@ -1,7 +1,6 @@
 @use '../../../mixins/mixins.module.scss' as inputMixins;
 
 
-
 .StringInput {
 	width: 100%;
 	text-align: center;
@@ -10,7 +9,3 @@
 
 }
 
-.isError {
-	border-color: #ff4d4f;
-	box-shadow: 0 0 4px 4px rgba(255, 77, 79, 0.2);
-}

@@ -7,7 +7,7 @@ import { isCamelCase, isLetters, isNumeric, extractBetween, isURL } from '@/util
 import { devLog } from '@/utilities/dev';
 
 // Constants
-import { STYLES_CONSTANTS, STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
+import { STYLE_CONSTANTS, STYLE_PROPERTIES } from '@/editors/style/constants/styles';
 
 import * as OPTIONS from '@/editors/style/constants/options';
 
@@ -256,8 +256,6 @@ export function extractFunction(input: string): string {
     return "";
 }
 
-
-
 /**
  * Detects the most likely top-level separator used in a multi-value string by analyzing
  * the first clear separator found outside of nested structures. Useful for parsing CSS-like values.
@@ -310,6 +308,7 @@ export function extractSeparator(input: string): string | undefined {
 
     return undefined;
 }
+
 
 
 
@@ -368,8 +367,6 @@ export function splitExpression(expression: string): [string[], string[]] {
 
     return [values, operators];
 }
-
-
 
 /**
  * Splits a string based on a separator, ignoring separators that appear inside parentheses ().
@@ -540,8 +537,6 @@ export function deleteMultiValue(input: string, index: number, separator: string
     // Filter out empty strings and join the remaining values with the separator
     return _values.filter((input) => input !== '').join(separator);
 }
-
-
 
 
 
@@ -755,6 +750,7 @@ export const isLengthList = (input: string): boolean => {
 };
 
 
+
 /**
  * Validates if a value is a CSS keyword
  * @param {string} input - The value to check (e.g., "block", "flex")
@@ -804,7 +800,6 @@ export const isFunctionValid = (input: string, option: STYLE_VALUE): boolean => 
     return isSyntaxValid(safeValue, safePattern, option.lengths)
 };
 
-
 /**
  * Validates URL strings, handling quoted URLs and various edge cases.
  * @param {string} value - The URL string to validate (may be wrapped in quotes)
@@ -837,7 +832,6 @@ export const isURLValid = (value: string): boolean => {
     // Use the existing isURL function with strict protocol requirements
     return isURL(cleanedValue, true);  // Force protocol requirement
 };
-
 
 /**
  * Validates if a value is both a valid CSS variable syntax AND matches an existing variable
@@ -928,7 +922,7 @@ export const isLengthValid = (value: string, lengths?: STYLE_VALUE[]): boolean =
         }
 
         // Find matching option in allowed lengths
-        const option = getStyleOptionByValue(value, lengths);
+        const option = getOptionByValue(value, lengths);
         if (!option) {
             devLog.error(`Couldn't find matching option for options:'${lengths}' and value:'${value}'`);
             return false;
@@ -1023,7 +1017,6 @@ export const isSyntaxValid = (input: string, syntax: string, lengths?: STYLE_VAL
         }
     });
 
-
 }
 
 /**
@@ -1055,8 +1048,6 @@ export const isVariantValid = (value: string, option: STYLE_VALUE): boolean => {
     });
 };
 
-
-
 /**
  * Validates if a CSS value matches any of the provided patterns in syntaxPattern
  * Supports multiple patterns separated by | and complex patterns with brackets
@@ -1084,7 +1075,6 @@ export const isOptionValid = (input: string, option: STYLE_VALUE): boolean => {
         return false
     };
 
-
     // Handle variant case first
     if (option.syntax === 'variant') {
         return isVariantValid(input, option);
@@ -1107,21 +1097,21 @@ export const isOptionValid = (input: string, option: STYLE_VALUE): boolean => {
 };
 
 /**
- * Type guard function that checks if a property is a valid STYLES_CONSTANTS_KEY
+ * Type guard function that checks if a property is a valid STYLE_PROPERTIES
  * 
  * @param {string} property - The property name to validate
- * @returns {property is STYLES_CONSTANTS_KEY} - Type predicate indicating whether the property is valid
+ * @returns {property is STYLE_PROPERTIES} - Type predicate indicating whether the property is valid
  * 
  * @example
  * // Returns true if property is valid
- * isPropertyValid('backgroundColor'); // true if 'backgroundColor' exists in STYLES_CONSTANTS
+ * isPropertyValid('backgroundColor'); // true if 'backgroundColor' exists in STYLE_CONSTANTS
  * 
  * // Returns false for invalid properties
  * isPropertyValid(''); // false
  * isPropertyValid('background-color'); // false
  * isPropertyValid('unknownProperty'); // false
  */
-export const isPropertyValid = (property: string): property is STYLES_CONSTANTS_KEY => {
+export const isPropertyValid = (property: string): property is STYLE_PROPERTIES => {
     // If property is not valid string
     if (typeof property !== 'string' || property.length <= 0) {
         devLog.error(`Property: ${property} should be non-empty string`);
@@ -1134,11 +1124,11 @@ export const isPropertyValid = (property: string): property is STYLES_CONSTANTS_
         return false;
     }
 
-    // Check if property exists in STYLES_CONSTANTS object
-    return property in STYLES_CONSTANTS;
+    // Check if property exists in STYLE_CONSTANTS object
+    return property in STYLE_CONSTANTS;
 };
 
-export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string): boolean => {
+export const isValueValid = (property: STYLE_PROPERTIES, value: string): boolean => {
     // If valie is not valid string
     if (typeof value !== 'string') {
         devLog.error(`Value: ${value} should be non-empty string`);
@@ -1151,8 +1141,8 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
         return false;
     }
 
-    const options = STYLES_CONSTANTS[property]?.options;
-    const option = getStyleOptionByValue(value, options);
+    const options = STYLE_CONSTANTS[property]?.options;
+    const option = getOptionByValue(value, options);
 
 
     // If no option found 
@@ -1164,8 +1154,6 @@ export const isSingleValueValid = (property: STYLES_CONSTANTS_KEY, value: string
     // Validate option
     return isOptionValid(value, option);
 };
-
-
 
 
 
@@ -1260,6 +1248,7 @@ export const getSyntaxVariants = (option: STYLE_VALUE): string[] | undefined => 
 }
 
 
+
 /**
  * Finds a style option from an array that matches the given value.
  * The matching logic differs based on whether the value is numeric or not.
@@ -1275,17 +1264,17 @@ export const getSyntaxVariants = (option: STYLE_VALUE): string[] | undefined => 
  * @example
  * // Numeric value match
  * options = [{value: "100", name: "Thin"},{value: "200", name: "200"}]
- * getStyleOptionByValue("100", options); * // returns {value: "100", name: "Thin"}
+ * getOptionByValue("100", options); * // returns {value: "100", name: "Thin"}
  * 
  * // Non-numeric value match
  * options = [{value: "10px", name: "Medium"}, *{value: "10rem", name: "Small"}]
- * getStyleOptionByValue("10px", options); * // returns {value: "10px", name: "Small"}
+ * getOptionByValue("10px", options); * // returns {value: "10px", name: "Small"}
  * 
  * // No match found
  * options = [{value: "normal", name: "Normal"}]
- * getStyleOptionByValue("bold", options); * // returns undefined
+ * getOptionByValue("bold", options); * // returns undefined
 */
-export const getStyleOptionByValue = (value: string, options: STYLE_VALUE[]): STYLE_VALUE | undefined => {
+export const getOptionByValue = (value: string, options: STYLE_VALUE[]): STYLE_VALUE | undefined => {
 
     // Early return for invalid inputs
     if (!Array.isArray(options) || options.length === 0) {
@@ -1316,12 +1305,12 @@ export const getStyleVariables = (): OPTIONS_SELECT_OPTION[] => {
     ]
 };
 
-export const getStyleOptions: (property: STYLES_CONSTANTS_KEY) => STYLE_VALUE[] = (property): STYLE_VALUE[] => {
-    // Check if the property exists in STYLES_CONSTANTS and is an array
-    if (!STYLES_CONSTANTS[property]) {
-        throw Error(`Property "${property}" not found in STYLES_CONSTANTS or is not an array.`);
+export const getStyleOptions: (property: STYLE_PROPERTIES) => STYLE_VALUE[] = (property): STYLE_VALUE[] => {
+    // Check if the property exists in STYLE_CONSTANTS and is an array
+    if (!STYLE_CONSTANTS[property]) {
+        throw Error(`Property "${property}" not found in STYLE_CONSTANTS or is not an array.`);
     }
 
-    return STYLES_CONSTANTS[property].options;
+    return STYLE_CONSTANTS[property].options;
 };
 

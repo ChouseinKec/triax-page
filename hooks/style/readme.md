@@ -16,14 +16,14 @@ Renders a preview of flexbox container with current flex styles.
 
 Renders a preview of grid container with current grid styles.
 
-### `renderLengthInput(style)`
+### `LengthInput(style)`
 
 Renders a length input with unit selector.  
 **Parameters:**  
 
 - `style`: The CSS property to control (e.g. 'width', 'height')
 
-### `renderInputGroup(style, separator)`
+### `InputGroup(style, separator)`
 
 Renders dynamic inputs for multi-value properties like padding/margin.  
 **Parameters:**  
@@ -31,19 +31,19 @@ Renders dynamic inputs for multi-value properties like padding/margin.
 - `style`: The CSS property  
 - `separator`: Character to split values (e.g. space for '10px 20px')
 
-### `renderNumberInput(style)`
+### `NumberInput(style)`
 
 Renders a basic number input for style properties.
 
-### `renderDropdownSelect(style)`
+### `DropdownSelect(style)`
 
 Renders a dropdown select for style properties.
 
-### `renderColorSelect(style)`
+### `ColorSelect(style)`
 
 Renders a color picker input.
 
-### `renderRadioSelect(style)`
+### `RadioSelect(style)`
 
 Renders radio button options for style properties.
 
@@ -71,7 +71,7 @@ An object containing all style management functions below.
 Gets a single style property value.  
 **Parameters:**  
 
-- `property`: The style property to get (STYLES_CONSTANTS_KEY)  
+- `property`: The style property to get (STYLE_PROPERTIES)  
 **Returns:**  
 The current property value or empty string if not found
 
@@ -80,7 +80,7 @@ The current property value or empty string if not found
 Sets a single style property value.  
 **Parameters:**  
 
-- `property`: The style property to set (STYLES_CONSTANTS_KEY)  
+- `property`: The style property to set (STYLE_PROPERTIES)  
 - `value`: The value to set for the property  
 **Validation:**  
 - Checks property validity  
@@ -91,7 +91,7 @@ Sets a single style property value.
 Gets a multi-value style property split into array.  
 **Parameters:**  
 
-- `property`: The style property to get (STYLES_CONSTANTS_KEY)  
+- `property`: The style property to get (STYLE_PROPERTIES)  
 - `separator`: Character used to split values (e.g. space for padding)  
 **Returns:**  
 Array of split values or empty array on error  

@@ -10,7 +10,7 @@ The main hook that provides all rendering utilities.
 
 - `style`: The CSS property to control (e.g. 'width', 'height')
 
-### `renderInputGroup(style, separator)`
+### `InputGroup(style, separator)`
 
 **Returns:**  
 An object containing all render functions below.

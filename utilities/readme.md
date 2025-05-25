@@ -136,11 +136,11 @@ Splits CSS syntax strings.
 **Example:**  
 `"length|number|color"` → `["length", "number", "color"]`
 
-### `getStyleOptionByValue(value, options)`
+### `getOptionByValue(value, options)`
 
 Finds a style option matching a value.  
 **Example:**  
-`getStyleOptionByValue("10px", LENGTH_OPTIONS)` → `{ value: "10px", ... }`
+`getOptionByValue("10px", LENGTH_OPTIONS)` → `{ value: "10px", ... }`
 
 ### `getStyleVariables()`
 

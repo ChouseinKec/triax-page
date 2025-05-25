@@ -8,7 +8,7 @@ import MultiInput from '@/components/Input/Multi/component';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getStyleOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/utilities/style';
+import { getOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -39,7 +39,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
     );
 
     // Find matching style option
-    const option = getStyleOptionByValue(value, options);
+    const option = getOptionByValue(value, options);
     // Early return if no valid option found
     if (!option) {
         devLog.error('[FunctionInput]: No matching style option found for value:', value);

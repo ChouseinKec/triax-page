@@ -14,7 +14,7 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): STYLE_LAYOUT => {
-    const { renderVariantInput, renderRadioSelect, renderDropdownSelect, renderLengthInput } = useStyleFactory();
+    const { VariantInput, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     return {
         label: 'Size & Overflow',
         groups: [
@@ -26,7 +26,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('width'),
+                        component: () => LengthInput('width'),
                     },
 
                     // Min-Width
@@ -34,7 +34,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('minWidth'),
+                        component: () => LengthInput('minWidth'),
                     },
 
                     // Max-Width
@@ -42,7 +42,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('maxWidth'),
+                        component: () => LengthInput('maxWidth'),
                     },
 
                     // Height
@@ -50,7 +50,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Height',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('height'),
+                        component: () => LengthInput('height'),
                     },
 
                     // Min-Height
@@ -58,7 +58,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Min',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('minHeight'),
+                        component: () => LengthInput('minHeight'),
                     },
 
                     // Max-Height
@@ -66,7 +66,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Max',
                         column: 'auto',
                         direction: 'column',
-                        component: () => renderLengthInput('maxHeight'),
+                        component: () => LengthInput('maxHeight'),
                     },
 
                     // Overflow
@@ -74,7 +74,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Overflow',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => renderRadioSelect('overflow'),
+                        component: () => RadioSelect('overflow'),
                     },
 
                     // expandReveal: Expands to reveal additional properties such as object-fit, box-sizing, and aspect-ratio.
@@ -90,7 +90,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                             label: 'Object-Fit',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderDropdownSelect('objectFit'),
+                                            component: () => DropdownSelect('objectFit'),
                                         },
 
                                         // Box-Sizing(e.g., border-box, content-box).
@@ -98,7 +98,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                             label: 'Box-Sizing',
                                             column: 'auto',
                                             direction: 'column',
-                                            component: () => renderRadioSelect('boxSizing'),
+                                            component: () => RadioSelect('boxSizing'),
                                         },
 
                                         // Aspect-Ratio(width / height).
@@ -106,7 +106,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                                             label: 'Aspect-Ratio',
                                             column: '1/-1',
                                             direction: 'column',
-                                            component: () => (renderVariantInput('aspectRatio', '/')),
+                                            component: () => (VariantInput('aspectRatio', '/')),
                                         },
                                     ]}
                                 />

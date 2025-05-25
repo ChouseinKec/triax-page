@@ -1,5 +1,5 @@
 // Constants
-import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
+import { STYLE_PROPERTIES } from '@/editors/style/constants/styles';
 
 /**
  * Represents the full style configuration for a block.
@@ -9,13 +9,13 @@ import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
  * @param {string} deviceName - The name of the device (e.g., 'desktop', 'tablet').
  * @param {string} orientationName - The orientation (e.g., 'portrait', 'landscape').
  * @param {string} pseudoName - The pseudo selector (e.g., 'hover', 'active').
- * @param {STYLES_CONSTANTS_KEY} key - A style property key (e.g., 'margin', 'color').
+ * @param {STYLE_PROPERTIES} key - A style property key (e.g., 'margin', 'color').
  */
 export type STYLE = {
 	[deviceName: string]: {
 		[orientationName: string]: {
 			[pseudoName: string]: {
-				[key in STYLES_CONSTANTS_KEY]?: string;
+				[key in STYLE_PROPERTIES]?: string;
 			};
 		};
 	};
