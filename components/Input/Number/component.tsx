@@ -29,8 +29,6 @@ const NumberInput: React.FC<NUMBER_INPUT> = (props: NUMBER_INPUT): ReactElement 
 		onChange = () => { },
 		minValue = 0,
 		maxValue = Infinity,
-		onFocus = () => { },
-		onBlur = () => { },
 	} = props;
 
 	/**
@@ -80,8 +78,6 @@ const NumberInput: React.FC<NUMBER_INPUT> = (props: NUMBER_INPUT): ReactElement 
 			validate={validate}
 			placeholder='0'
 			onChange={onChange}
-			onFocus={onFocus}
-			onBlur={onBlur}
 		/>
 	);
 };

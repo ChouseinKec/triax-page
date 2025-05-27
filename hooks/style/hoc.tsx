@@ -9,7 +9,6 @@ import ColorSelect from '@/components/Select/Color/component';
 import RadioSelect from '@/components/Select/Radio/component';
 import StringInput from '@/components/Input/String/component';
 import VariantInput, { VariantInputRef } from '@/components/Input/Variant/component';
-import FloatReveal from '@/components/Reveal/Float/component';
 
 // Utilities
 import { getStyleOptions } from '@/utilities/style'
@@ -34,10 +33,9 @@ interface INPUT {
 
 const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
     const { property, value, type, separator, prefix, suffix } = props;
-    const { setStyle, pasteStyle, copyStyle, resetStyle } = useStyleManager();
+    const { setStyle } = useStyleManager();
     const variantRef = useRef<VariantInputRef>(null);
     const inputRef = useRef<HTMLDivElement>(null);
-    const [isFocus, setIsFocus] = useState(false);
 
 
     if (!type || !property) {
@@ -78,59 +76,15 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
     }, [property, setStyle, prefix, suffix]
     );
 
-    const handleReset = useCallback(() => {
-        resetStyle(property);
-    }, [property, resetStyle]
-    );
-
-    const handleCopy = useCallback(() => {
-        copyStyle(property);
-    }, [property, copyStyle]
-    );
-
-    const handlePaste = useCallback(() => {
-        pasteStyle(property);
-    }, [property, pasteStyle]
-    );
-
-    const toolbar = useMemo(() => {
-        // If the input is focused, we show the toolbar
-        // This is used to determine if the input is currently focused
-        return (
-            <FloatReveal targetRef={inputRef} position='top' isOpen={isFocus}>
-                <button key={`${property}-reset`} title='Reset Style' onClick={handleReset}>✖</button>
-                <button key={`${property}-copy`} title='Copy Style' onClick={handleCopy}>⎘</button>
-                <button key={`${property}-paste`} title='Paste Style' onClick={handlePaste}>⎌</button>
-
-                {type === 'variant' && (
-                    <button
-                        key={`${property}-variant-cycle`}
-                        onClick={() => variantRef.current?.cycleVariant()}
-                        title="Change Syntax"
-                    >
-                        ⟳
-                    </button>
-                )}
-
-            </FloatReveal>
-        )
-    }, [property, handleReset, handleCopy, handlePaste, inputRef, type, variantRef, isFocus]);
-
-
     switch (type) {
         case 'length':
             return (
-                <>
-                    {toolbar}
                     <LengthInput
                         ref={inputRef}
                         value={value}
                         onChange={handleChange}
                         options={options}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                     />
-                </>
 
             );
 

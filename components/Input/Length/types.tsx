@@ -55,18 +55,5 @@ export type LENGTH_INPUT = {
    * @type {(value: string) => void}
    */
   onChange?: (value: string) => void;
-
-
-  /**
-   * Callback function to handle focus events.
-   * @type {() => void}
-   */
-  onFocus?: () => void;
-
-  /**
-   * Callback function to handle blur events.
-   * @type {() => void}
-   */
-  onBlur?: () => void;
 };
 

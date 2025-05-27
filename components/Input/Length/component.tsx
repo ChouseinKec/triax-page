@@ -37,8 +37,6 @@ import { LENGTH } from '@/editors/style/constants/options';
  * @param {number} [props.maxValue=Infinity] - Maximum numeric value
  * @param {boolean} [props.isStrict=false] - If true, empty inputs are replaced with defaults
  * @param {React.RefObject<HTMLDivElement | null>} [props.ref] - Optional ref for the input container
- * @param {() => void} [props.onFocus] - Focus event handler
- * @param {() => void} [props.onBlur] - Blur event handler
  * @returns {ReactElement} Rendered LengthInput component
  * @example
  * <LengthInput value="10px" onChange={setValue} />
@@ -54,8 +52,6 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 		maxValue = Infinity,
 		isStrict = false,
 		ref,
-		onFocus = () => { },
-		onBlur = () => { },
 	} = props;
 
 	// Default unit is the first option's value, extracted for consistency
@@ -176,8 +172,6 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 							maxValue={maxValue}
 							onChange={handleValueChange}
 							aria-label="Numeric value"
-							onFocus={onFocus}
-							onBlur={onBlur}
 						/>
 						{renderLengthSelect(extractedUnit)}
 					</>
