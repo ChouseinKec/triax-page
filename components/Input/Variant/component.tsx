@@ -46,6 +46,7 @@ export interface VariantInputRef {
  * />
  */
 const VariantInput = forwardRef<VariantInputRef, VARIANT_INPUT>((props, ref) => {
+    
     const { value = '', option = { name: '', value: '', syntax: '' }, separator, onChange = () => { } } = props;
 
     const splitedValues = splitMultiValue(value, separator);
@@ -68,7 +69,7 @@ const VariantInput = forwardRef<VariantInputRef, VARIANT_INPUT>((props, ref) => 
 
         const updatedValue = updateMultiValue(value, input, index, separator);
         onChange(updatedValue);
-    }, [separator, onChange]
+    }, [separator, onChange, option.lengths, currentIndex]
     );
 
     const handleVariantChange = useCallback(() => {
@@ -123,5 +124,5 @@ const VariantInput = forwardRef<VariantInputRef, VARIANT_INPUT>((props, ref) => 
     );
 });
 
-
+VariantInput.displayName = 'VariantInput';
 export default memo(VariantInput);

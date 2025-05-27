@@ -73,7 +73,7 @@ const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERT
                         {label}
                     </label>
 
-                    <FloatReveal className={CSS.Property_Float} targetRef={labelRef} position='top'>
+                    <FloatReveal targetRef={labelRef} position='top'>
 
                         <div className={CSS.Property_Float__Title}>
                             {label}

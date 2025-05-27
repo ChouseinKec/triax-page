@@ -58,7 +58,7 @@
 
 	@if $error {
 		&[data-iserror='true'] {
-			background: var(--color-error);
+			border-bottom: 3px solid var(--color-error);
 		}
 	}
 }

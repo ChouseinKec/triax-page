@@ -13,7 +13,7 @@ import ExpressionInput from '@/components/Input/Expression/components';
 import FunctionInput from '@/components/Input/Function/component';
 
 // Types
-import { UNIT_INPUT } from '@/components/Input/Length/types';
+import { LENGTH_INPUT } from '@/components/Input/Length/types';
 
 // Utilities
 import { extractNumber, extractLength, isLengthScalable, isLengthKeyword, isLengthFunction, isFunctionVariable, isLengthList, getStyleVariables, isFunctionExpression, isKeywordValid } from '@/utilities/style';
@@ -29,25 +29,44 @@ import { LENGTH } from '@/editors/style/constants/options';
  * functions (calc()), expressions, and CSS variables.
  * 
  * @component
- * @param {UNIT_INPUT} props - Component props
+ * @param {LENGTH_INPUT} props - Component props
  * @param {string} [props.value=""] - Current value (e.g., "10px", "auto", "calc(...)")
  * @param {(value: string) => void} props.onChange - Change handler
  * @param {string[]} [props.options=LENGTH] - Available length options
  * @param {number} [props.minValue=-Infinity] - Minimum numeric value
  * @param {number} [props.maxValue=Infinity] - Maximum numeric value
  * @param {boolean} [props.isStrict=false] - If true, empty inputs are replaced with defaults
- * 
+ * @param {React.RefObject<HTMLDivElement | null>} [props.ref] - Optional ref for the input container
+ * @param {() => void} [props.onFocus] - Focus event handler
+ * @param {() => void} [props.onBlur] - Blur event handler
+ * @returns {ReactElement} Rendered LengthInput component
  * @example
  * <LengthInput value="10px" onChange={setValue} />
- * 
- * @example
  * <LengthInput value="auto" isStrict onChange={setValue} />
  */
-const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, maxValue = Infinity, options = LENGTH, onChange = () => { }, isStrict = false }: UNIT_INPUT): ReactElement => {
+const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement => {
+
+	const {
+		value = '',
+		onChange = () => { },
+		options = LENGTH,
+		minValue = -Infinity,
+		maxValue = Infinity,
+		isStrict = false,
+		ref,
+		onFocus = () => { },
+		onBlur = () => { },
+	} = props;
+
+	// Default unit is the first option's value, extracted for consistency
+	// This ensures that the default unit is always a valid length unit.	
 	const DEFAULT_UNIT = useMemo(() => extractLength(options[0].value), [options]);
+	// Default number is '0', used when no numeric value is provided
 	const DEFAULT_NUMBER = '0';
 
+	// Extract the numeric part and the unit from the value
 	const extractedNumber = extractNumber(value);
+	// Extract the unit from the value.
 	const extractedUnit = extractLength(value);
 
 	/**
@@ -68,9 +87,10 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 	})();
 
 	/**
-	 * Handles numeric value changes with validation and fallback handling.
+	 * Handles numeric value changes with appropriate parsing and fallback logic.
 	 * Memoized to prevent unnecessary re-creations.
-	*/
+	 * @param {string} value - The new numeric value
+	 */
 	const handleValueChange = useCallback((value: string): void => {
 		// If value is empty
 		if (value === '') {
@@ -90,8 +110,9 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 	);
 
 	/**
-	 * Handles length changes with appropriate parsing and fallback logic.
+	 * Handles unit changes, including empty values, functions, and keywords.
 	 * Memoized to prevent unnecessary re-creations.
+	 * @param {string} length - The new length unit
 	*/
 	const handleUnitChange = useCallback((length: string): void => {
 		// If length is empty
@@ -117,22 +138,33 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 		[DEFAULT_UNIT, extractedNumber, isStrict, onChange, options]
 	);
 
+	/**
+	 * Renders the length select dropdown with the current unit.
+	 * Memoized to prevent unnecessary re-creations.
+	 * @param {string} unit - The current length unit
+	 * @returns {ReactElement} The rendered SelectDropdown component
+	*/
 	const renderLengthSelect = useMemo(() => {
-		return (unit: string) => (
-			<SelectDropdown
-				options={options}
-				value={unit.replace(')', '')}
-				onChange={handleUnitChange}
-				hasSearch={true}
-				isGrouped={true}
-				placeholder="length"
-			/>
-		);
-	}, [handleUnitChange, options]);
+		return function RenderLengthSelect(unit: string) {
+			return (
+				<SelectDropdown
+					options={options}
+					value={unit.replace(')', '')}
+					onChange={handleUnitChange}
+					hasSearch={true}
+					isGrouped={true}
+					placeholder="length"
+				/>
+			);
+		};
+	}, [handleUnitChange, options]
+	);
 
 	/**
-	 * Renders the correct combination of inputs based on detected calculatedState.
-	*/
+	 * Renders the children elements based on the calculated state.
+	 * Uses a switch statement to determine the appropriate rendering logic.
+	 * @returns {ReactElement} The rendered children elements
+	 */
 	const childrenElements = (() => {
 		switch (calculatedState) {
 			case 'scalable':
@@ -144,6 +176,8 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 							maxValue={maxValue}
 							onChange={handleValueChange}
 							aria-label="Numeric value"
+							onFocus={onFocus}
+							onBlur={onBlur}
 						/>
 						{renderLengthSelect(extractedUnit)}
 					</>
@@ -195,7 +229,7 @@ const LengthInput: React.FC<UNIT_INPUT> = ({ value = '', minValue = -Infinity, m
 
 
 	return (
-		<div className={CSS.LengthInput} data-state={calculatedState}>
+		<div className={CSS.LengthInput} data-state={calculatedState} ref={ref}>
 			{childrenElements}
 		</div>
 	);

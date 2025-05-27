@@ -1,15 +1,28 @@
 import { STYLE_VALUE } from '@/editors/style/constants/types';
 
+
 /**
- * Props for the DynamicInput component
- * 
- * @param {string} value - Current input value in string format
- * @param {(value: string) => void} onChange - Callback triggered when the value changes
- * @param {STYLE_VALUE[]} options - Available input style configurations
+ * FUNCTION_INPUT
+ * @typedef {Object} FUNCTION_INPUT
+ * @property {string} value - The current input value in string format.
+ * @property {function} onChange - Callback triggered when the value changes.
+ * @property {STYLE_VALUE[]} options - Available input style configurations.
  */
 export type FUNCTION_INPUT = {
+    /**
+     * Current input value in string format
+     * @type {string}
+     */
     value: string;
+    /**
+     * Callback triggered when the value changes
+     * @param {string} value - New input value
+     */
     onChange: (value: string) => void;
+    /**
+     * Available input style configurations
+     * @type {STYLE_VALUE[]}
+     */
     options: STYLE_VALUE[];
 };
 

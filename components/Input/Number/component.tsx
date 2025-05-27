@@ -1,16 +1,10 @@
-import React, { useCallback, ChangeEvent, ReactElement, memo } from 'react';
-
-// Styles
-import CSS from '@/components/Input/Number/styles.module.css';
+import React, { useCallback, ReactElement, memo } from 'react';
 
 // Components
-import { useDebouncedCallback } from '@/hooks/hooks';
+import GenericInput from '@/components/Input/Generic/component';
 
 // Types
 import { NUMBER_INPUT } from '@/components/Input/Number/types';
-
-// Utilities
-import { devLog } from '@/utilities/dev';
 
 /**
  * NumberInput Component
@@ -29,61 +23,68 @@ import { devLog } from '@/utilities/dev';
  * @example
  * <NumberInput value="25" onChange={handleUpdate} minValue={0} maxValue={100} />
  */
-const NumberInput: React.FC<NUMBER_INPUT> = ({ value = '', minValue = -Infinity, maxValue = Infinity, onChange = () => { }, }: NUMBER_INPUT): ReactElement => {
+const NumberInput: React.FC<NUMBER_INPUT> = (props: NUMBER_INPUT): ReactElement => {
+	const {
+		value = '',
+		onChange = () => { },
+		minValue = 0,
+		maxValue = Infinity,
+		onFocus = () => { },
+		onBlur = () => { },
+	} = props;
 
 	/**
-	 * Debounced change handler to limit update frequency.
-	 * Memoized to prevent unnecessary re-creations.
+	 * Callback function to validate the input value
+	 * @param {string} value - The input value to validate
+	 * @returns {{ status: boolean; message: string }} - Validation result with status and message
 	*/
-	const debouncedOnChange = useDebouncedCallback(onChange, 10);
-
-	/**
-	 * Handles value changes from the input field.
-	 * Memoized to prevent unnecessary re-creations.
-	*/
-	const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-		const newValue = event.target.value.trim();
-
-		// Allow empty input (useful for clearing the field)
-		if (newValue === '') {
-			debouncedOnChange('');
-			return;
+	const validate = useCallback((value: string): { status: boolean; message: string } => {
+		// Allow empty input for optional fields
+		if (value.trim() === '') {
+			return {
+				status: true,
+				message: ''
+			};
 		}
 
-		// Validate numeric input
-		const numericValue = Number(newValue);
-		if (isNaN(numericValue)) {
-			devLog.warn(`NumberInput: Expected numeric value, got "${newValue}"`);
-			return;
+		const numValue = parseFloat(value);
+
+		if (isNaN(numValue)) {
+			return {
+				status: false,
+				message: 'Please enter a valid number'
+			};
 		}
 
-		// Check value boundaries
-		if (numericValue < minValue) {
-			devLog.warn(`NumberInput: Value ${numericValue} is below minimum ${minValue}`);
-			return;
+		if (numValue < minValue || numValue > maxValue) {
+			return {
+				status: false,
+				message: `Value must be between ${minValue} and ${maxValue}`
+			};
 		}
 
-		if (numericValue > maxValue) {
-			devLog.warn(`NumberInput: Value ${numericValue} exceeds maximum ${maxValue}`);
-			return;
-		}
+		return {
+			status: true,
+			message: ''
+		};
+	}, [minValue, maxValue]);
 
-		debouncedOnChange(newValue);
-	}, [minValue, maxValue, debouncedOnChange]
-	);
 
 	return (
-		<input
+		<GenericInput
 			type="number"
 			value={value}
 			min={minValue}
 			max={maxValue}
-			onChange={handleChange}
-			className={CSS.NumberInput}
-			placeholder="0"
-			aria-label="Numeric input"
+
+			validate={validate}
+			placeholder='0'
+			onChange={onChange}
+			onFocus={onFocus}
+			onBlur={onBlur}
 		/>
 	);
 };
+
 
 export default memo(NumberInput);

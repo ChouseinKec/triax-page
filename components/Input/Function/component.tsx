@@ -8,7 +8,7 @@ import MultiInput from '@/components/Input/Multi/component';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 
 // Utilities
-import { getOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator, splitMultiValue, updateMultiValue } from '@/utilities/style';
+import { getOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -21,7 +21,9 @@ import { devLog } from '@/utilities/dev';
  * @param {Function} props.onChange - Callback when value changes
  * @param {Array} props.options - Available style options for validation
  */
-const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => { }, options = [] }: FUNCTION_INPUT): ReactElement => {
+const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactElement => {
+    const { value, onChange, options } = props;
+
     // Extract components from function string
     const extractedValue = extractValue(value);
     const extractedFunc = extractFunction(value);
@@ -54,6 +56,8 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = ({ value = '', onChange = () => 
         return <></>
     }
 
+    // Create input elements based on syntaxTypes
+    // Each input corresponds to a part of the function syntax (e.g., "repeat(1, 20px)" -> ["number", "length"])
     const inputElements = syntaxTypes.map((syntaxType, index) => (
         <DynamicInput
             key={`${syntaxType}-${index}`}

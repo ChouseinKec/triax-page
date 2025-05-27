@@ -1,143 +1,71 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, memo, useCallback } from "react";
+import React, { useRef, useEffect, memo } from "react";
 
+// Styles
+import CSS from "@/components/Reveal/Float/styles.module.css";
+
+// Types
 import { FLOAT_REVEAL } from "@/components/Reveal/Float/types";
 
+// Hooks
+import useHover from "@/hooks/interaction/useHover";
+import usePosition from "@/hooks/position/usePosition";
 
-const FloatReveal: React.FC<FLOAT_REVEAL> = ({ targetRef, position = "top", children, className = "", }) => {
-    const [isVisible, setIsVisible] = useState(false);
-    const floatRef = useRef<HTMLDivElement>(null);
-    const showTimeoutRef = useRef<number | null>(null);
-    const hideTimeoutRef = useRef<number | null>(null);
-    const isHoveringFloat = useRef(false);
+const FloatReveal: React.FC<FLOAT_REVEAL> = (props) => {
+    const {
+        targetRef,
+        position = "top",
+        children,
+        isOpen, // Parent controlled state overrides the hover state
+    } = props;
 
+    const floatRef = useRef<HTMLDivElement | null>(null);
 
-    // Event handlers
-    const showFloat = useCallback(() => {
-        // Clear any pending hide operations
-        if (hideTimeoutRef.current) {
-            clearTimeout(hideTimeoutRef.current);
-            hideTimeoutRef.current = null;
-        }
+    // Use hover hook to manage hover state and handlers
+    const { isVisible, ...hoverHandlers } = useHover();
 
-        // Only set show timeout if not already visible
-        if (!isVisible) {
-            showTimeoutRef.current = window.setTimeout(() => {
-                setIsVisible(true);
-            }, 200);
-        }
-    }, [isVisible]
-    );
+    // Use position hook to manage the position of the float based on the target element
+    usePosition(targetRef, floatRef, position, isOpen ?? isVisible);
 
-    const hideFloat = useCallback(() => {
-        // Clear any pending show operations
-        if (showTimeoutRef.current) {
-            clearTimeout(showTimeoutRef.current);
-            showTimeoutRef.current = null;
-        }
-
-        hideTimeoutRef.current = window.setTimeout(() => {
-            if (!isHoveringFloat.current) {
-                setIsVisible(false);
-            }
-        }, 200); // 200ms delay before hiding
-    }, []
-    );
-
-    const handleTargetEnter = useCallback(() => {
-        isHoveringFloat.current = false;
-        showFloat();
-    }, [showFloat]
-    );
-
-    const handleTargetLeave = useCallback(() => {
-        hideFloat();
-    }, [hideFloat]
-    );
-
-    const handleFloatEnter = useCallback(() => {
-        isHoveringFloat.current = true;
-        // Immediately show if not already visible
-        if (!isVisible) {
-            if (showTimeoutRef.current) {
-                clearTimeout(showTimeoutRef.current);
-            }
-            setIsVisible(true);
-        }
-    }, [isVisible]
-    );
-
-    const handleFloatLeave = useCallback(() => {
-        isHoveringFloat.current = false;
-        hideFloat();
-    }, [hideFloat]
-    );
-
-
-    // Position calculation
-    useLayoutEffect(() => {
-        if (!isVisible || !targetRef.current || !floatRef.current) return;
-
-        const targetRect = targetRef.current.getBoundingClientRect();
-        const floatRect = floatRef.current.getBoundingClientRect();
-
-        let top = 0;
-        let left = 0;
-
-        switch (position) {
-            case "top":
-                top = targetRect.top - floatRect.height;
-                // left = targetRect.left + targetRect.width / 2 - floatRect.width / 2;
-                left = targetRect.left;
-                break;
-            case "bottom":
-                top = targetRect.bottom;
-                left = targetRect.left + targetRect.width / 2 - floatRect.width / 2;
-                break;
-            case "left":
-                top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
-                left = targetRect.left - floatRect.width;
-                break;
-            case "right":
-                top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
-                left = targetRect.right;
-                break;
-        }
-
-        top = Math.max(0, Math.min(top, window.innerHeight - floatRect.height));
-        left = Math.max(0, Math.min(left, window.innerWidth - floatRect.width));
-
-        floatRef.current.style.top = `${top}px`;
-        floatRef.current.style.left = `${left}px`;
-    }, [isVisible, position, targetRef]
-    );
-
-    // Setup event listeners
+    /**
+     * Effect to handle hover interactions
+     * This effect adds mouseenter and mouseleave listeners to the target element
+     * to control the visibility of the float.
+     * If isOpen is explicitly set to true or false, we do not add hover listeners,
+     * allowing the parent to control visibility without hover interaction.
+     * If isOpen is undefined, we add hover listeners to toggle visibility based on mouse events.
+     * @param {React.RefObject} targetRef - Reference to the target element that triggers the float
+     * @param {Object} hoverHandlers - Handlers for mouse enter and leave events
+     * @param {boolean | undefined} isOpen - Parent controlled state for visibility
+    */
     useEffect(() => {
+        // If isOpen is explicitly set to true or false, we don't need to add hover listeners
+        // This allows the parent to control the visibility without hover interaction
+        if (isOpen === true || isOpen === false) { return; }
+
+
         const target = targetRef.current;
         if (!target) return;
 
-        target.addEventListener("mouseenter", handleTargetEnter);
-        target.addEventListener("mouseleave", handleTargetLeave);
+        target.addEventListener("mouseenter", hoverHandlers.handleTargetEnter);
+        target.addEventListener("mouseleave", hoverHandlers.handleTargetLeave);
 
         return () => {
-            target.removeEventListener("mouseenter", handleTargetEnter);
-            target.removeEventListener("mouseleave", handleTargetLeave);
-            if (showTimeoutRef.current) clearTimeout(showTimeoutRef.current);
-            if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-
+            target.removeEventListener("mouseenter", hoverHandlers.handleTargetEnter);
+            target.removeEventListener("mouseleave", hoverHandlers.handleTargetLeave);
         };
-    }, [targetRef, handleTargetEnter, handleTargetLeave]
-    );
+    }, [targetRef, hoverHandlers, isOpen]);
 
-    if (!isVisible) return null;
+    // If isOpen is null and not visible, or explicitly set to false, do not render the float
+    // This allows the parent to control visibility without hover interaction
+    if (isOpen == null && !isVisible || isOpen === false) return null;
 
     return (
         <div
+            className={CSS.FloatReveal}
             ref={floatRef}
-            className={className}
             style={{ position: "fixed" }}
-            onMouseEnter={handleFloatEnter}
-            onMouseLeave={handleFloatLeave}
+            onMouseEnter={isOpen === undefined ? hoverHandlers.handleFloatEnter : undefined}
+            onMouseLeave={isOpen === undefined ? hoverHandlers.handleFloatLeave : undefined}
         >
             {children}
         </div>

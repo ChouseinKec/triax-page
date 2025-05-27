@@ -24,7 +24,7 @@ interface STYLE_MANAGER {
 
 export const useStyleManager = (): STYLE_MANAGER => {
     const setBlockStyle = useBlockStore(state => state.setBlockStyle);
-
+    const getBlockStyles = useBlockStore(state => state.getBlockStyles);
 
     /**
          * Gets a style property value with CSS cascade fallback logic
@@ -57,7 +57,6 @@ export const useStyleManager = (): STYLE_MANAGER => {
         const device = useDeviceStore.getState().currentDevice.name;
         const orientation = useOrientationStore.getState().currentOrientation.name;
         const pseudo = usePseudoStore.getState().currentPseudo.name;
-        const getBlockStyles = useBlockStore(state => state.getBlockStyles);
 
         const defaultPseudo = 'default';
         const defaultOrientation = 'default';

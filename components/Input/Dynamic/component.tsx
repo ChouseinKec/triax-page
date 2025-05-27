@@ -1,8 +1,5 @@
 import { memo, useCallback, ReactElement } from 'react';
 
-// Styles
-import CSS from '@/components/Input/Dynamic/styles.module.css';
-
 // Components 
 import LengthInput from '@/components/Input/Length/component';
 import NumberInput from '@/components/Input/Number/component';

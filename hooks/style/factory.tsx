@@ -1,9 +1,8 @@
-import { useCallback, ReactElement, useRef, useEffect } from 'react';
+import { useCallback, ReactElement } from 'react';
 
 // Components
 import PositionSelect from '@/components/Select/Position/component';
 import FlexView from '@/components/View/Flex/component';
-import StringInput from '@/components/Input/String/component';
 
 // Types
 import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
@@ -97,7 +96,6 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 		[getStyle]
 	);
 
-
 	/**
 	 * Renders a position select component for choosing layout positions
 	 * @param {boolean} [areCornersVisible=false] - Whether to show corner positions (top-left, top-right, etc.)
@@ -114,7 +112,6 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	},
 		[]
 	);
-
 
 	/**
 	 * Renders a length input for a given style property

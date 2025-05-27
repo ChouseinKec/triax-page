@@ -1,4 +1,4 @@
-import { useCallback, ReactElement, useRef, useEffect, useMemo, memo } from 'react';
+import { useCallback, ReactElement, useRef, useEffect, useMemo, memo, useState } from 'react';
 
 // Components
 import LengthInput from '@/components/Input/Length/component';
@@ -9,6 +9,7 @@ import ColorSelect from '@/components/Select/Color/component';
 import RadioSelect from '@/components/Select/Radio/component';
 import StringInput from '@/components/Input/String/component';
 import VariantInput, { VariantInputRef } from '@/components/Input/Variant/component';
+import FloatReveal from '@/components/Reveal/Float/component';
 
 // Utilities
 import { getStyleOptions } from '@/utilities/style'
@@ -16,7 +17,6 @@ import { devLog } from '@/utilities/dev';
 
 // Constants
 import { STYLE_PROPERTIES } from '@/editors/style/constants/styles';
-import { useToolbar } from '@/contexts/ToolbarContext';
 import { useStyleManager } from '@/hooks/style/manager';
 
 
@@ -35,8 +35,10 @@ interface INPUT {
 const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
     const { property, value, type, separator, prefix, suffix } = props;
     const { setStyle, pasteStyle, copyStyle, resetStyle } = useStyleManager();
-    const { addButton, addButtons } = useToolbar();
     const variantRef = useRef<VariantInputRef>(null);
+    const inputRef = useRef<HTMLDivElement>(null);
+    const [isFocus, setIsFocus] = useState(false);
+
 
     if (!type || !property) {
         devLog.error('Input requires type and property parameters');
@@ -91,36 +93,45 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
     }, [property, pasteStyle]
     );
 
-    useEffect(() => {
+    const toolbar = useMemo(() => {
+        // If the input is focused, we show the toolbar
+        // This is used to determine if the input is currently focused
+        return (
+            <FloatReveal targetRef={inputRef} position='top' isOpen={isFocus}>
+                <button key={`${property}-reset`} title='Reset Style' onClick={handleReset}>✖</button>
+                <button key={`${property}-copy`} title='Copy Style' onClick={handleCopy}>⎘</button>
+                <button key={`${property}-paste`} title='Paste Style' onClick={handlePaste}>⎌</button>
 
-        addButtons([
-            <button key={`${property}-reset`} title='Reset Style' onClick={handleReset}>✖</button>,
-            <button key={`${property}-copy`} title='Copy Style' onClick={handleCopy}>⎘</button>,
-            <button key={`${property}-paste`} title='Paste Style' onClick={handlePaste}>⎌</button>
-        ]);
+                {type === 'variant' && (
+                    <button
+                        key={`${property}-variant-cycle`}
+                        onClick={() => variantRef.current?.cycleVariant()}
+                        title="Change Syntax"
+                    >
+                        ⟳
+                    </button>
+                )}
 
-        if (type === 'variant') {
-            addButton(
-                <button
-                    key={`${property}-variant-cycle`}
-                    onClick={() => variantRef.current?.cycleVariant()}
-                    title="Change Syntax"
-                >
-                    ⟳
-                </button>
-            );
-        }
-    }, []);
+            </FloatReveal>
+        )
+    }, [property, handleReset, handleCopy, handlePaste, inputRef, type, variantRef, isFocus]);
 
 
     switch (type) {
         case 'length':
             return (
-                <LengthInput
-                    value={value}
-                    onChange={handleChange}
-                    options={options}
-                />
+                <>
+                    {toolbar}
+                    <LengthInput
+                        ref={inputRef}
+                        value={value}
+                        onChange={handleChange}
+                        options={options}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                    />
+                </>
+
             );
 
         case 'group':
@@ -168,9 +179,15 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
             );
 
         case 'url':
+
+            let _value = value;
+            if (prefix) _value = _value.replace(prefix, '');
+            if (suffix) _value = _value.replace(suffix, '');
+
+
             return (
                 <StringInput
-                    value={value}
+                    value={_value}
                     onChange={handleChange}
                     pattern='url'
                 />
