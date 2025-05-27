@@ -51,11 +51,9 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 		minValue = -Infinity,
 		maxValue = Infinity,
 		isStrict = false,
-		ref,
 	} = props;
 
 	// Default unit is the first option's value, extracted for consistency
-	// This ensures that the default unit is always a valid length unit.	
 	const DEFAULT_UNIT = useMemo(() => extractLength(options[0].value), [options]);
 	// Default number is '0', used when no numeric value is provided
 	const DEFAULT_NUMBER = '0';
@@ -223,7 +221,7 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 
 
 	return (
-		<div className={CSS.LengthInput} data-state={calculatedState} ref={ref}>
+		<div className={CSS.LengthInput} data-state={calculatedState} >
 			{childrenElements}
 		</div>
 	);

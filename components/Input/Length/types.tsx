@@ -37,18 +37,11 @@ export type LENGTH_INPUT = {
    */
   options?: STYLE_VALUE[];
 
-
   /**
    * If true, empty inputs are replaced with defaults, default is false.
    * @type {boolean}
    */
   isStrict?: boolean;
-
-  /**
-   * Optional ref for the input container.
-   * @type {RefObject<HTMLDivElement | null>}
-   */
-  ref?: RefObject<HTMLDivElement | null>;
 
   /**
    * Callback function to handle value changes.

@@ -1,4 +1,4 @@
-import { useCallback, ReactElement, useRef, useEffect, useMemo, memo, useState } from 'react';
+import { useCallback, ReactElement, useRef, useEffect, useMemo, memo } from 'react';
 
 // Components
 import LengthInput from '@/components/Input/Length/component';
@@ -16,43 +16,53 @@ import { devLog } from '@/utilities/dev';
 
 // Constants
 import { STYLE_PROPERTIES } from '@/editors/style/constants/styles';
-import { useStyleManager } from '@/hooks/style/manager';
-
+import { useToolbar } from '@/contexts/ToolbarContext';
 
 interface INPUT {
     property: STYLE_PROPERTIES,
     value: string,
     type: 'length' | 'group' | 'number' | 'dropdown' | 'color' | 'radio' | 'position' | 'url' | 'variant',
-
     separator?: string,
-
+    actions: {
+        onChange: (property: STYLE_PROPERTIES, value: string) => void;
+        onReset: (property: STYLE_PROPERTIES) => void;
+        onCopy: (property: STYLE_PROPERTIES) => void;
+        onPaste: (property: STYLE_PROPERTIES) => void;
+    };
     prefix?: string,
     suffix?: string,
-
 }
 
 const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
-    const { property, value, type, separator, prefix, suffix } = props;
-    const { setStyle } = useStyleManager();
+    const { property, value, type, separator, prefix, suffix, actions } = props;
+    const { onChange, onReset, onCopy, onPaste } = actions;
+    const { addButton, addButtons } = useToolbar();
     const variantRef = useRef<VariantInputRef>(null);
-    const inputRef = useRef<HTMLDivElement>(null);
-
 
     if (!type || !property) {
         devLog.error('Input requires type and property parameters');
         return null;
     }
 
+    // Get the style options for the given property
     const options = useMemo(() => {
         return getStyleOptions(property)
     }, [getStyleOptions, property]
     )
 
+    // Ensure options are available for the given property
     if (!options) {
         devLog.error(`No options available for property '${property}'`);
         return null;
     }
 
+    /**
+     * Handles changes to the style value for the given property.
+     * This function is called when the input value changes.
+     * @param {STYLE_PROPERTIES} property - The style property to change.
+     * @param {string} value - The new value for the style property.
+     * @returns {void}
+    */
     const handleChange = useCallback((value: string) => {
         if (value == null) {
             devLog.error(`Invalid value for property '${property}': ${value}`);
@@ -60,7 +70,7 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
         }
 
         if (value === '') {
-            setStyle(property, '');
+            onChange(property, '');
             return;
         }
 
@@ -72,20 +82,74 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
             value = `${value}${suffix}`;
         }
 
-        setStyle(property, value);
-    }, [property, setStyle, prefix, suffix]
+        onChange(property, value);
+    }, [property, onChange, prefix, suffix]
     );
 
+    /**
+     * Handles resetting the style value for the given property.
+     * This function is called when the reset button is clicked in the toolbar.
+     * @param {STYLE_PROPERTIES} property - The style property to reset.
+     * @returns {void}
+    */
+    const handleReset = useCallback(() => {
+        onReset(property);
+    }, [property, onReset]
+    );
+
+    /**
+     * Handles copying the style value for the given property.
+     * This function is called when the copy button is clicked in the toolbar.
+     * @param {STYLE_PROPERTIES} property - The style property to copy.
+     * @returns {void}
+    */
+    const handleCopy = useCallback(() => {
+        onCopy(property);
+    }, [property, onCopy]
+    );
+
+    /**
+     * Handles pasting the style value for the given property.
+     * This function is called when the paste button is clicked in the toolbar.
+     * @param {STYLE_PROPERTIES} property - The style property to paste the value for.
+     * @returns {void}
+    */
+    const handlePaste = useCallback(() => {
+        onPaste(property);
+    }, [property, onPaste]
+    );
+
+    // Add buttons to the toolbar for reset, copy, paste, and variant cycling
+    useEffect(() => {
+
+        addButtons([
+            <button key={`${property}-reset`} title='Reset Style' onClick={handleReset}>✖</button>,
+            <button key={`${property}-copy`} title='Copy Style' onClick={handleCopy}>⎘</button>,
+            <button key={`${property}-paste`} title='Paste Style' onClick={handlePaste}>⎌</button>
+        ]);
+
+        if (type === 'variant') {
+            addButton(
+                <button
+                    key={`${property}-variant-cycle`}
+                    onClick={() => variantRef.current?.cycleVariant()}
+                    title="Change Syntax"
+                >
+                    ⟳
+                </button>
+            );
+        }
+    }, []);
+
+    // Render the appropriate input based on the type
     switch (type) {
         case 'length':
             return (
-                    <LengthInput
-                        ref={inputRef}
-                        value={value}
-                        onChange={handleChange}
-                        options={options}
-                    />
-
+                <LengthInput
+                    value={value}
+                    onChange={handleChange}
+                    options={options}
+                />
             );
 
         case 'group':
@@ -133,15 +197,9 @@ const Input: React.FC<INPUT> = (props: INPUT): ReactElement | null => {
             );
 
         case 'url':
-
-            let _value = value;
-            if (prefix) _value = _value.replace(prefix, '');
-            if (suffix) _value = _value.replace(suffix, '');
-
-
             return (
                 <StringInput
-                    value={_value}
+                    value={value}
                     onChange={handleChange}
                     pattern='url'
                 />

@@ -5,4 +5,5 @@
 */
 export type HORIZONTAL_DIVIDER = {
     type?: 'straight' | 'bracket';
+    className?: string;
 };

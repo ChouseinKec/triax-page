@@ -50,7 +50,14 @@ interface STYLE_FACTORY {
  * LengthInput('width');
  */
 export const useStyleFactory = (): STYLE_FACTORY => {
-	const { getStyle, setStyle } = useStyleManager();
+	const { getStyle, setStyle, resetStyle, copyStyle, pasteStyle } = useStyleManager();
+
+	const actions = {
+		onChange: setStyle,
+		onReset: resetStyle,
+		onCopy: copyStyle,
+		onPaste: pasteStyle
+	};
 
 	const getOptions = useCallback((property: STYLE_PROPERTIES) => {
 		return getStyleOptions(property)
@@ -119,8 +126,8 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered length input
 	 */
 	const LengthInput = useCallback<STYLE_FACTORY['LengthInput']>((property) => {
-		return <Input type="length" property={property} value={getStyle(property)} />;
-	}, [getStyle, setStyle]
+		return <Input actions={actions} type="length" property={property} value={getStyle(property)} />;
+	}, [getStyle, setStyle, copyStyle, resetStyle, pasteStyle]
 	);
 
 	/**
@@ -130,7 +137,7 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered input group or error fallback
 	 */
 	const InputGroup = useCallback<STYLE_FACTORY['InputGroup']>((property, separator) => {
-		return <Input type="group" property={property} value={getStyle(property)} separator={separator} />;
+		return <Input actions={actions} type="group" property={property} value={getStyle(property)} separator={separator} />;
 	},
 		[getStyle, setStyle, getOptions]
 	);
@@ -141,9 +148,14 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered number input
 	 */
 	const NumberInput = useCallback<STYLE_FACTORY['NumberInput']>((property) => {
-		return <Input type="number" property={property} value={getStyle(property)} />;
+		return <Input
+			actions={actions}
+			type="number"
+			property={property}
+			value={getStyle(property)}
+		/>;
 	},
-		[getStyle, setStyle]
+		[getStyle, setStyle, copyStyle, resetStyle, pasteStyle]
 	);
 
 	/**
@@ -152,7 +164,7 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered dropdown select
 	 */
 	const DropdownSelect = useCallback<STYLE_FACTORY['DropdownSelect']>((property) => {
-		return <Input type="dropdown" property={property} value={getStyle(property)} />;
+		return <Input actions={actions} type="dropdown" property={property} value={getStyle(property)} />;
 	},
 		[getStyle, setStyle]
 	);
@@ -163,7 +175,7 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered color select
 	 */
 	const ColorSelect = useCallback<STYLE_FACTORY['ColorSelect']>((property) => {
-		return <Input type="color" property={property} value={getStyle(property)} />;
+		return <Input actions={actions} type="color" property={property} value={getStyle(property)} />;
 	},
 		[setStyle, getStyle]
 	);
@@ -174,13 +186,13 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered radio select
 	 */
 	const RadioSelect = useCallback<STYLE_FACTORY['RadioSelect']>((property) => {
-		return <Input type="radio" property={property} value={getStyle(property)} />;
+		return <Input actions={actions} type="radio" property={property} value={getStyle(property)} />;
 	},
 		[setStyle, getStyle]
 	);
 
 	const UrlInput = useCallback<STYLE_FACTORY['UrlInput']>((property, prefix = '', suffix = '') => {
-		return <Input type="url" property={property} value={getStyle(property)} prefix={prefix} suffix={suffix} />;
+		return <Input actions={actions} type="url" property={property} value={getStyle(property)} prefix={prefix} suffix={suffix} />;
 	},
 		[setStyle, getStyle]
 	);
@@ -192,7 +204,7 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	 * @returns {React.ReactElement} The rendered variant input
 	*/
 	const VariantInput = useCallback<STYLE_FACTORY['VariantInput']>((property, separator) => {
-		return <Input type="variant" property={property} value={getStyle(property)} separator={separator} />;
+		return <Input actions={actions} type="variant" property={property} value={getStyle(property)} separator={separator} />;
 	},
 		[setStyle, getStyle]
 	);

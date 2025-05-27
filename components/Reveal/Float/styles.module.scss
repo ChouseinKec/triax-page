@@ -1,30 +1,14 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
 
 .FloatReveal {
-	max-width: 300px;
-	padding: var(--size-sm);
+	max-width: 250px;
+	padding: var(--size-md);
 	display: flex;
-	flex-direction: row;
-	gap: var(--size-sm);
+	flex-direction: column;
+	gap: var(--size-md);
 
 	z-index: 9999;
 
 	@include inputMixins.components--container;
-
-	> button {
-		@include inputMixins.components--button;
-
-		height: 100%;
-		width: auto;
-		aspect-ratio: 1;
-
-		font-size: var(--font-size-sm);
-	}
 }
 
-.Property_Float__Tools {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--size-sm);
-}

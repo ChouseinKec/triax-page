@@ -62,7 +62,7 @@ const Property: React.FC<LAYOUT_PROPERTY> = ({ component, column = 'auto', row =
 
 const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERTY): ReactElement => {
     const labelRef = useRef<HTMLLabelElement>(null);
-    const { buttons } = useToolbar();
+    const { buttons, title, description } = useToolbar();
 
     return (
         <>
@@ -76,19 +76,18 @@ const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERT
                     <FloatReveal targetRef={labelRef} position='top'>
 
                         <div className={CSS.Property_Float__Title}>
-                            {label}
+                            {title}
                         </div>
 
                         <div className={CSS.Property__Float__Description}>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                            {description}
                         </div>
 
-                        {buttons.length > 0 && <HorizontalDivider />}
+                        {buttons.length > 0 && <HorizontalDivider className={CSS.Property_Float__Divider} />}
 
                         <div className={CSS.Property_Float__Tools}>
                             {buttons}
                         </div>
-
 
                     </FloatReveal>
                 </>

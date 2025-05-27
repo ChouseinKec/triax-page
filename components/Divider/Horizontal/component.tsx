@@ -6,9 +6,9 @@ import CSS from '@/components/Divider/Horizontal/styles.module.css';
 import { HORIZONTAL_DIVIDER } from '@/components/Divider/Horizontal/types';
 
 
-const HorizontalDivider: React.FC<HORIZONTAL_DIVIDER> = ({ type = 'straight' }: HORIZONTAL_DIVIDER): ReactElement => {
+const HorizontalDivider: React.FC<HORIZONTAL_DIVIDER> = ({ type = 'straight', className }: HORIZONTAL_DIVIDER): ReactElement => {
     return (
-        <div className={CSS.HorizontalDivider} data-type={type} />
+        <div className={` ${className} ${CSS.HorizontalDivider}`} data-type={type} />
     );
 };
 

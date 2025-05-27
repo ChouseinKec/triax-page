@@ -49,18 +49,6 @@
 	cursor: pointer;
 }
 
-.Property_Float {
-	max-width: 200px;
-	padding: var(--size-md);
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-md);
-
-	z-index: 9999;
-
-	@include inputMixins.components--container;
-}
-
 .Property_Float__Tools {
 	display: flex;
 	flex-direction: row;
@@ -76,7 +64,6 @@
 
 		padding: 0px;
 		font-size: var(--font-size-sm);
-		
 	}
 }
 
@@ -87,4 +74,8 @@
 .Property__Float__Description {
 	font-size: var(--font-size-md);
 	opacity: 0.8;
+}
+
+.Property_Float__Divider {
+	margin-top: 0 !important;
 }
