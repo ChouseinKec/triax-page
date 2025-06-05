@@ -1,0 +1,7 @@
+@use '../../../../mixins/mixins.module.scss' as inputMixins;
+
+.Option {
+	width: 100%;
+	font-style: normal;
+	@include inputMixins.components--option;
+}

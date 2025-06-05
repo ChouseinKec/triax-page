@@ -6,7 +6,7 @@ import CSS from '@/components/Group/Input/styles.module.css';
 // Components
 import DropdownReveal from '@/components/Reveal/Dropdown/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
-import LengthInput from '@/components/Input/Length/component';
+import LengthInput from '@/components/Input/Dimension/component';
 import SVG from '@/components/SVG/svg';
 
 // Types
@@ -14,7 +14,7 @@ import { INPUT_GROUP } from '@/components/Group/Input/types';
 
 // Utilities 
 import { devLog } from '@/utilities/dev';
-import { splitMultiValue } from '@/utilities/style';
+// import { splitMultiValue } from '@/utilities/style';
 
 /**
  * InputGroup Component
@@ -34,11 +34,13 @@ import { splitMultiValue } from '@/utilities/style';
  * <InputGroup
  *   values={['10px', 'auto']}
  *   onChange={(value, index) => updateStyle(value, index)}
- *   options={[{ name: '10px', value: '10px', , syntax: 'length' }, { name: 'auto', value: 'auto', syntax: 'keyword' }]}
+ *   options={[{ name: '10px', value: '10px', , syntax: 'length' }, { name: 'auto', value: 'auto', type:'keyword',
+syntax: 'keyword'}]}
  * />
  */
 const InputGroup: React.FC<INPUT_GROUP> = ({ value = '', onChange, options }: INPUT_GROUP): ReactElement => {
-    const values = splitMultiValue(value, ' ');
+    // const values = splitMultiValue(value, ' ');
+    const values = [];
 
     /**
      * Handle input value change at a given index

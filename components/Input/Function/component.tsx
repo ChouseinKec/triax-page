@@ -6,9 +6,9 @@ import MultiInput from '@/components/Input/Multi/component';
 
 // Types
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
-
+import { STYLE_OPTION_FUNCTION } from '@/editors/style/constants/types';
 // Utilities
-import { getOptionByValue, extractSyntaxTypes, extractValue, extractFunction, extractSeparator } from '@/utilities/style';
+import { getOptionByValue, extractValue, extractFunction } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -27,7 +27,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactEl
     // Extract components from function string
     const extractedValue = extractValue(value);
     const extractedFunc = extractFunction(value);
-    const extractedSepa = extractSeparator(extractedValue) || ' ';
+
 
     /**
      * Handles value changes and reconstructs the function string
@@ -40,8 +40,14 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactEl
     }, [onChange]
     );
 
+
+    if (!extractedFunc) {
+        devLog.error(`[FunctionInput] Failed to extract function from value:`, value);
+        return <></>;
+    }
+
     // Find matching style option
-    const option = getOptionByValue(value, options);
+    const option = getOptionByValue(value, options) as STYLE_OPTION_FUNCTION;
     // Early return if no valid option found
     if (!option) {
         devLog.error('[FunctionInput]: No matching style option found for value:', value);
@@ -49,12 +55,20 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactEl
     }
 
     // Split syntax into syntaxTypes (e.g., ["number", "length"] for repeat(number,length))
-    const syntaxTypes = extractSyntaxTypes(option.syntax);
+    const syntaxTypes = option.syntax;
     // Fallback for unsupported syntax
     if (!syntaxTypes) {
         devLog.error('[FunctionInput]: Unsupported syntax format in option:', option.syntax);
         return <></>
     }
+
+
+    if (!option.separator) {
+        devLog.error('[FunctionInput]: Missing separator in option:', option);
+        return <></>;
+    }
+
+
 
     // Create input elements based on syntaxTypes
     // Each input corresponds to a part of the function syntax (e.g., "repeat(1, 20px)" -> ["number", "length"])
@@ -71,7 +85,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactEl
             <MultiInput
                 onChange={(val) => handleChange(val, extractedFunc)}
                 value={extractedValue}
-                separator={extractedSepa}
+                separator={option.separator}
             >
                 {inputElements}
             </MultiInput>

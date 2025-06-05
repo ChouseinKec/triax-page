@@ -1,0 +1,122 @@
+// Types
+import { CSSDataType, CSSDataTypes } from '@/types/style/data-type';
+
+const createDataType = (type: CSSDataTypes, syntax: string): CSSDataType => {
+	return {
+		type,
+		syntax,
+	};
+};
+
+export const CSSDataTypeDefs: Partial<Record<CSSDataTypes, CSSDataType>> = {
+	// === Numeric Types ===
+	'<number>': createDataType('<number>', '<number>'),
+	'<integer>': createDataType('<integer>', '<integer>'),
+	'<percentage>': createDataType('<percentage>', '<percentage>'),
+	// '<dimension>': createDataType('<dimension>', '<number><unit>'),
+	// '<alpha-value>': createDataType('<alpha-value>', '<number> | <percentage>'),
+
+	// === Unit Types ===
+	'<length>': createDataType('<length>', '<length>'),
+	'<angle>': createDataType('<angle>', '<angle>'),
+	// '<time>': createDataType('<time>', '<number><time-unit>'),
+	// '<frequency>': createDataType('<frequency>', '<number><frequency-unit>'),
+	// '<resolution>': createDataType('<resolution>', '<number><resolution-unit>'),
+	'<flex>': createDataType('<flex>', '<flex>'),
+
+	// === Composite Types ===
+	'<length-percentage>': createDataType('<length-percentage>', '<length> | <percentage>'),
+	// '<position>': createDataType('<position>', '[left | center | right] [top | center | bottom] | <length-percentage>{1,2}'),
+	'<color>': createDataType('<color>', '<named-color> | <hex> | rgb() | rgba() | hsl() | hsla() | lab() | lch() | oklab() | oklch()'),
+	'<image>': createDataType('<image>', '<url> | <gradient> | <image-function>'),
+	'<url>': createDataType('<url>', 'url(<string>)'),
+	'<string>': createDataType('<string>', '<string>'),
+	'<track-breadth>': createDataType('<track-breadth>', '<length> | <percentage> | <flex> | min-content | max-content | auto'),
+	// '<size-keyword>': createDataType('<size-keyword>', 'auto | max-content | min-content | fit-content(<length-percentage>?) | stretch'),
+	// '<display-keyword>': createDataType('<display-keyword>', 'block | inline | flex | grid | contents | none'),
+	'<line-style>': createDataType('<line-style>', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'<shadow>': createDataType('<shadow>', '[inset? <length>{2,4} <color>?]'),
+	'<transform-function>': createDataType('<transform-function>', 'matrix() | translate() | scale() | rotate() | skew() | perspective()'),
+	'<ratio>': createDataType('<ratio>', '<number [0,∞]> [ / <number [0,∞]> ]'),
+
+	// === Math Types ===
+	// '<calc()>': createDataType('<calc()>', 'calc(<calc-sum>)'),
+	'<min()>': createDataType('<min()>', 'min(<calc-sum>#{1,∞})'),
+	'<max()>': createDataType('<max()>', 'max(<calc-sum>#{1,∞})'),
+	'<clamp()>': createDataType('<clamp()>', 'clamp(<calc-sum>, <calc-sum>, <calc-sum>)'),
+	// '<calc-size()>': createDataType('<calc-size()>', 'calc-size(<size-keyword> | <calc-size()>, <calc-sum>)'),
+	// '<anchor-size()>': createDataType('<anchor-size()>', 'anchor-size([<anchor-name>,] <length-percentage>?)'),
+	// '<sin()>': createDataType('<sin()>', 'sin(<angle> | <number>)'),
+	// '<cos()>': createDataType('<cos()>', 'cos(<angle> | <number>)'),
+	// '<tan()>': createDataType('<tan()>', 'tan(<angle> | <number>)'),
+	// '<asin()>': createDataType('<asin()>', 'asin(<number>)'),
+	// '<acos()>': createDataType('<acos()>', 'acos(<number>)'),
+	// '<atan()>': createDataType('<atan()>', 'atan(<number>)'),
+	// '<atan2()>': createDataType('<atan2()>', 'atan2(<number>, <number>)'),
+	// '<pow()>': createDataType('<pow()>', 'pow(<number>, <number>)'),
+	// '<sqrt()>': createDataType('<sqrt()>', 'sqrt(<number>)'),
+	// '<hypot()>': createDataType('<hypot()>', 'hypot(<number>#{1,∞})'),
+	// '<log()>': createDataType('<log()>', 'log(<number>, <number>?)'),
+	// '<exp()>': createDataType('<exp()>', 'exp(<number>)'),
+	// '<abs()>': createDataType('<abs()>', 'abs(<number>)'),
+	// '<sign()>': createDataType('<sign()>', 'sign(<number>)'),
+	// '<mod()>': createDataType('<mod()>', 'mod(<number>, <number>)'),
+	// '<rem()>': createDataType('<rem()>', 'rem(<number>, <number>)'),
+	// '<round()>': createDataType('<round()>', 'round(<rounding-strategy>?, <number>, <number>)'),
+
+	// === Function Types ===
+	'<repeat()>': createDataType('<repeat()>', 'repeat(<repeat-count>, <track-list>)'),
+	'<minmax()>': createDataType('<minmax()>', 'minmax(<track-breadth>, <track-breadth>)'),
+	'<fit-content()>': createDataType('<fit-content()>', 'fit-content( <length-percentage [0,∞]> )'),
+	// '<var()>': createDataType('<var()>', 'var(--<custom-ident>, <declaration-value>?)'),
+	// '<linear-gradient()>': createDataType('<linear-gradient()>', 'linear-gradient([<angle> | to <side-or-corner>]?, <color-stop-list>)'),
+	// '<radial-gradient()>': createDataType('<radial-gradient()>', 'radial-gradient([<ending-shape> || <size>]? [at <position>]?, <color-stop-list>)'),
+	// '<conic-gradient()>': createDataType('<conic-gradient()>', 'conic-gradient([from <angle>]? [at <position>]?, <angular-color-stop-list>)'),
+	// '<repeating-linear-gradient()>': createDataType('<repeating-linear-gradient()>', 'repeating-linear-gradient([<angle> | to <side-or-corner>]?, <color-stop-list>)'),
+	// '<repeating-radial-gradient()>': createDataType('<repeating-radial-gradient()>', 'repeating-radial-gradient([<ending-shape> || <size>]? [at <position>]?, <color-stop-list>)'),
+	// '<repeating-conic-gradient()>': createDataType('<repeating-conic-gradient()>', 'repeating-conic-gradient([from <angle>]? [at <position>]?, <angular-color-stop-list>)'),
+	// '<matrix()>': createDataType('<matrix()>', 'matrix(<number>#{6})'),
+	// '<matrix3d()>': createDataType('<matrix3d()>', 'matrix3d(<number>#{16})'),
+	// '<perspective()>': createDataType('<perspective()>', 'perspective(<length>)'),
+	'<rotate()>': createDataType('<rotate()>', 'rotate(<angle>)'),
+	'<rotate3d()>': createDataType('<rotate3d()>', 'rotate3d(<number>, <number>, <number>, <angle>)'),
+	'<rotateX()>': createDataType('<rotateX()>', 'rotateX(<angle>)'),
+	'<rotateY()>': createDataType('<rotateY()>', 'rotateY(<angle>)'),
+	'<rotateZ()>': createDataType('<rotateZ()>', 'rotateZ(<angle>)'),
+	'<scale()>': createDataType('<scale()>', 'scale(<number>[, <number>]?)'),
+	'<scale3d()>': createDataType('<scale3d()>', 'scale3d(<number>, <number>, <number>)'),
+	'<scaleX()>': createDataType('<scaleX()>', 'scaleX(<number>)'),
+	'<scaleY()>': createDataType('<scaleY()>', 'scaleY(<number>)'),
+	'<scaleZ()>': createDataType('<scaleZ()>', 'scaleZ(<number>)'),
+	'<skew()>': createDataType('<skew()>', 'skew(<angle>[, <angle>]?)'),
+	'<skewX()>': createDataType('<skewX()>', 'skewX(<angle>)'),
+	'<skewY()>': createDataType('<skewY()>', 'skewY(<angle>)'),
+	'<translate()>': createDataType('<translate()>', 'translate(<length-percentage>[, <length-percentage>]?)'),
+	'<translate3d()>': createDataType('<translate3d()>', 'translate3d(<length-percentage>, <length-percentage>, <length>)'),
+	'<translateX()>': createDataType('<translateX()>', 'translateX(<length-percentage>)'),
+	'<translateY()>': createDataType('<translateY()>', 'translateY(<length-percentage>)'),
+	'<translateZ()>': createDataType('<translateZ()>', 'translateZ(<length>)'),
+	// '<steps()>': createDataType('<steps()>', 'steps(<integer>[, <step-position>]?)'),
+	'<cubic-bezier()>': createDataType('<cubic-bezier()>', 'cubic-bezier(<number>, <number>, <number>, <number>)'),
+	'<drop-shadow()>': createDataType('<drop-shadow()>', 'drop-shadow(<shadow>)'),
+	'<blur()>': createDataType('<blur()>', 'blur(<length>)'),
+	'<brightness()>': createDataType('<brightness()>', 'brightness(<percentage>)'),
+	'<contrast()>': createDataType('<contrast()>', 'contrast(<percentage>)'),
+	'<grayscale()>': createDataType('<grayscale()>', 'grayscale(<percentage>)'),
+	'<hue-rotate()>': createDataType('<hue-rotate()>', 'hue-rotate(<angle>)'),
+	'<invert()>': createDataType('<invert()>', 'invert(<percentage>)'),
+	'<opacity()>': createDataType('<opacity()>', 'opacity(<percentage>)'),
+	'<saturate()>': createDataType('<saturate()>', 'saturate(<percentage>)'),
+	'<sepia()>': createDataType('<sepia()>', 'sepia(<percentage>)'),
+	'<url()>': createDataType('<url()>', 'url(<string>)'),
+
+	// === Identifier Types ===
+	// '<ident>': createDataType('<ident>', '[a-zA-Z_][a-zA-Z0-9_-]*'),
+	// '<custom-ident>': createDataType('<custom-ident>', '<ident> excluding [initial, inherit, unset, revert]'),
+	// '<dashed-ident>': createDataType('<dashed-ident>', '--[a-zA-Z0-9-_]+'),
+	// '<family-name>': createDataType('<family-name>', '<string> | <custom-ident>+'),
+
+	// === Special/Const Types ===
+	'<calc-keyword>': createDataType('<calc-keyword>', 'e | pi | infinity | -infinity | NaN'),
+	'<global-keyword>': createDataType('<global-keyword>', 'initial | inherit | unset | revert'),
+};

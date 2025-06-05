@@ -1,4 +1,4 @@
-import { STYLE_VALUE } from '@/editors/style/constants/types';
+import { STYLE_OPTION } from '@/editors/style/constants/types';
 
 /**
  * Props for the MultiInput component.
@@ -10,6 +10,6 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
 export type VARIANT_INPUT = {
 	value?: string;
 	separator: string;
-	option: STYLE_VALUE;
+	option: STYLE_OPTION;
 	onChange?: (value: string) => void;
 };

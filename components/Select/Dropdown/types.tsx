@@ -1,8 +1,8 @@
-import { OPTIONS_SELECT_OPTION } from '@/components/Select/Options/types';
+import { Option } from '@/components/Select/Options/types';
 
 export type DROPDOWN_SELECT = {
   value: string;
-  options: OPTIONS_SELECT_OPTION[];
+  options: Option[];
 
   placeholder?: string;
   hasSearch?: boolean;

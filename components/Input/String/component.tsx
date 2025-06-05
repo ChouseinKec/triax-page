@@ -7,7 +7,7 @@ import GenericInput from '@/components/Input/Generic/component';
 import { STRING_INPUT } from '@/components/Input/String/types';
 
 // Utilities
-import { isURL } from '@/utilities/string';
+import { isURL } from '@/utilities/string/string';
 
 /**
  * StringInput Component - A controlled text input with validation capabilities

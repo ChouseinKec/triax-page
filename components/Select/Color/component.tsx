@@ -8,7 +8,7 @@ import Dropdown from '@/components/Reveal/Dropdown/component';
 import { COLOR_SELECT } from '@/components/Select/Color/types';
 
 // Utilities
-import { clearSpaces } from '@/utilities/string';
+import { clearSpaces } from '@/utilities/string/string';
 
 /**
  * ColorSelect Component

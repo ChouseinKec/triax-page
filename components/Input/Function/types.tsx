@@ -1,4 +1,4 @@
-import { STYLE_VALUE } from '@/editors/style/constants/types';
+import { STYLE_OPTION } from '@/editors/style/constants/types';
 
 
 /**
@@ -6,7 +6,7 @@ import { STYLE_VALUE } from '@/editors/style/constants/types';
  * @typedef {Object} FUNCTION_INPUT
  * @property {string} value - The current input value in string format.
  * @property {function} onChange - Callback triggered when the value changes.
- * @property {STYLE_VALUE[]} options - Available input style configurations.
+ * @property {STYLE_OPTION[]} options - Available input style configurations.
  */
 export type FUNCTION_INPUT = {
     /**
@@ -21,8 +21,8 @@ export type FUNCTION_INPUT = {
     onChange: (value: string) => void;
     /**
      * Available input style configurations
-     * @type {STYLE_VALUE[]}
+     * @type {STYLE_OPTION[]}
      */
-    options: STYLE_VALUE[];
+    options: STYLE_OPTION[];
 };
 

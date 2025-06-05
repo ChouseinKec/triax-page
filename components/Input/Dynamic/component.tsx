@@ -1,7 +1,7 @@
 import { memo, useCallback, ReactElement } from 'react';
 
 // Components 
-import LengthInput from '@/components/Input/Length/component';
+import LengthInput from '@/components/Input/Dimension/component';
 import NumberInput from '@/components/Input/Number/component';
 import ColorSelect from '@/components/Select/Color/component';
 import DropdownSelect from '@/components/Select/Dropdown/component';
@@ -10,7 +10,7 @@ import DropdownSelect from '@/components/Select/Dropdown/component';
 // Types
 import { DYNAMIC_INPUT } from '@/components/Input/Dynamic/types';
 import { MULTI_INPUT_CHILD } from '@/components/Input/Multi/types';
-import { STYLE_VALUE } from '@/editors/style/constants/types';
+import { STYLE_OPTION } from '@/editors/style/constants/types';
 import { devLog } from '@/utilities/dev';
 
 
@@ -24,7 +24,7 @@ import { devLog } from '@/utilities/dev';
  * @param {DYNAMIC_INPUT} props - Component props
  * @param {string} props.value - The current input value string
  * @param {(value: string) => void} props.onChange - Callback to update the value
- * @param {STYLE_VALUE[]} props.options - Available style options to match the input format
+ * @param {STYLE_OPTION[]} props.options - Available style options to match the input format
  * @returns {ReactElement} - Dynamic input field(s) based on the value's syntax
  */
 const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value = '', type = '', onChange = () => { }, option }: DYNAMIC_INPUT): ReactElement => {
@@ -48,10 +48,10 @@ const DynamicInput: React.FC<DYNAMIC_INPUT> = ({ value = '', type = '', onChange
      * @param {string} extractedFunc - Extracted function from original value (e.g., "fit-content")
      * @param {string} type - Type of input (e.g., "length")
      * @param {number} key - React key index
-     * @param {STYLE_VALUE} option - Current matched style option definition
+     * @param {STYLE_OPTION} option - Current matched style option definition
      * @returns {ReactElement} - Input field element
      */
-    const renderInputElement = useCallback((value: string, type: string, option?: STYLE_VALUE): ReactElement<MULTI_INPUT_CHILD> => {
+    const renderInputElement = useCallback((value: string, type: string, option?: STYLE_OPTION): ReactElement<MULTI_INPUT_CHILD> => {
         switch (type) {
             case 'keyword':
                 return (

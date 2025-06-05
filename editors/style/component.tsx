@@ -2,7 +2,7 @@ import React, { ReactElement, useMemo } from 'react';
 import CSS from './style.module.css';
 
 // Components
-import Layout from '@/editors/style/layout/component';
+import Layout from '@/editors/style/components/layout/component';
 
 // Types 
 import { STYLE_EDITOR } from '@/editors/style/types';

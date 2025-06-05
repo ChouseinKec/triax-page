@@ -1,7 +1,7 @@
 import { useCallback, ReactElement, useRef, useEffect, useMemo, memo } from 'react';
 
 // Components
-import LengthInput from '@/components/Input/Length/component';
+import LengthInput from '@/components/Input/Dimension/component';
 import InputGroup from '@/components/Group/Input/component';
 import NumberInput from '@/components/Input/Number/component';
 import DropdownSelect from '@/components/Select/Dropdown/component';

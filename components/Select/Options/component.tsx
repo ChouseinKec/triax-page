@@ -1,14 +1,14 @@
 import { memo, ReactElement, useState, useMemo, useCallback } from 'react';
 
 // Styles
-import CSS from '@/components/Select/Options/styles.module.css';
+import CSS from './styles.module.css';
 
 // Components
-import OptionItem from '@/components/Select/Options/Item/component';
+import Option from '@/components/Select/Options/Option/component';
 
 // Types
-import { OPTIONS_SELECT } from '@/components/Select/Options/types';
-import { OPTIONS_SELECT_OPTION } from '@/components/Select/Options/types';
+import { OptionsSelectProps } from './types';
+import { OptionData } from '@/types/interface/option';
 
 // Hooks
 import { useDebouncedValue } from '@/hooks/hooks';
@@ -19,22 +19,16 @@ import { useDebouncedValue } from '@/hooks/hooks';
  * A reusable component for displaying and selecting options from a list. It supports search functionality,
  * option grouping, and selection handling.
  * 
- * @param {OPTIONS_SELECT} props - The component props.
+ * @param {OptionsSelectProps} props - The component props.
  * @param {string} props.value - The currently selected value.
- * @param {Array<OPTIONS_SELECT_OPTION>} props.options - The list of options to display in the dropdown.
+ * @param {Array<Option>} props.options - The list of options to display in the dropdown.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected or cleared.
  * @param {boolean} [props.hasSearch=false] - Whether the options should be searchable.
  * @param {boolean} [props.isGrouped=false] - Whether the options should be grouped by category.
  * @returns {ReactElement} - The rendered options component.
- * 
- * @example
- * <OptionsSelect 
- *   value="option1"
- *   options={[{ name: 'Option 1', value: 'option1' }, { name: 'Option 2', value: 'option2' }]}
- *   onChange={(value) => setSelectedValue(value)}
- * />
- */
-const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, hasSearch, isGrouped }: OPTIONS_SELECT): ReactElement | ReactElement[] => {
+ *
+*/
+const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange, hasSearch, isGrouped }: OptionsSelectProps): ReactElement | ReactElement[] => {
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);
 
@@ -65,12 +59,11 @@ const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, has
     );
 
 
-
     /**
      * Filters the options based on the search term (if search is enabled).
      * Memoized to optimize performance when search term or options change.
      * 
-     * @returns {Array<OPTIONS_SELECT_OPTION>} - The filtered list of options.
+     * @returns {Array<Option>} - The filtered list of options.
     */
     const filteredOptions = useMemo(() => {
         if (!hasSearch) return options;
@@ -87,7 +80,7 @@ const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, has
      * Groups the filtered options by category if grouping is enabled.
      * Memoized to optimize performance when filtered options change.
      * 
-     * @returns {Record<string, OPTIONS_SELECT_OPTION[]> | null} - The grouped options or null.
+     * @returns {Record<string, Option[]> | null} - The grouped options or null.
     */
     const groupedOptions = useMemo(() => {
         return isGrouped
@@ -118,7 +111,7 @@ const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, has
 
 
 
-    
+
     /**
     * Renders the list of options or grouped options based on the filtered data.
     * 
@@ -142,9 +135,9 @@ const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, has
                             <span className={CSS.OptionsSelect_CategoryTitle}>{category}</span>
 
                             <div className={CSS.OptionsSelect_CategoryItems}>
-                                {categoryOptions?.map((option: OPTIONS_SELECT_OPTION, index) => {
+                                {categoryOptions?.map((option: OptionData, index) => {
                                     return (
-                                        <OptionItem
+                                        <Option
                                             key={index}
                                             {...option}
                                             isSelected={value.length > 0 && option.value.startsWith(value)}
@@ -160,9 +153,9 @@ const OptionsSelect: React.FC<OPTIONS_SELECT> = ({ value, options, onChange, has
         }
 
         // If options are basic
-        return (filteredOptions.map((option: OPTIONS_SELECT_OPTION, index) => {
+        return (filteredOptions.map((option: OptionData, index) => {
             return (
-                <OptionItem
+                <Option
                     key={index}
                     {...option}
                     isSelected={value === option.value}
