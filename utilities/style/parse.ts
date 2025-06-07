@@ -3,7 +3,7 @@ import { CSSDataDefs } from '@/constants/style/data';
 
 // Types
 import type { CSSCombinations } from '@/types/style/parse';
-import { CSSDatas } from '@/types/style/data-type';
+import { CSSDatas } from '@/types/style/data';
 
 // Utilities
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';

@@ -127,6 +127,8 @@ type SpecialTypes =
  */
 export type CSSDatas = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes;
 
+export type CSSDimensions = 'length' | 'angle' | 'flex' | 'percentage';
+
 /**
  * Represents a single CSS data type definition, including its name and syntax.
  * Used for data type lookup, expansion, and validation.

@@ -1,5 +1,5 @@
 // Types
-import { CSSData, CSSDatas } from '@/types/style/data-type';
+import { CSSData, CSSDatas } from '@/types/style/data';
 
 const createData = (type: CSSDatas, syntax: string): CSSData => {
 	return {

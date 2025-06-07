@@ -1,3 +1,5 @@
+import { CSSDimensions } from "@/types/style/data";
+
 type RelativeFontUnits = 'cap' | 'ch' | 'em' | 'ex' | 'ic' | 'lh'; // Only em is widely supported
 type RelativeRootFontUnits = 'rcap' | 'rch' | 'rem' | 'rex' | 'ric' | 'rlh'; // Only rem is widely supported
 type RelativeViewportUnits = 'vh' | 'vw' | 'vmax' | 'vmin' | 'vb' | 'vi'; // vh, vw, vmin, vmax are widely supported
@@ -29,6 +31,7 @@ export type CSSUnitSupported = 'widely' | 'not widely' | 'experimental';
  * Used for grouping and filtering units in the UI.
  */
 export type CSSUnitCategory = 'relative' | 'absolute' | 'angle' | 'grid' | 'percentage' | 'time';
+
 
 /**
  * Represents a single CSS unit definition, including its name, value, support status, and category.
@@ -63,4 +66,10 @@ export interface CSSUnit {
 	 * Used for grouping and filtering units in the UI.
 	 */
 	category: CSSUnitCategory;
+
+	/**
+	 * The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex').
+	 * Used for functional grouping in the UI.
+	 */
+	group: CSSDimensions;
 }

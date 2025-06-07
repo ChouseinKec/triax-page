@@ -1,75 +1,5 @@
 import { CSSUnits, CSSUnit, CSSUnitCategory, CSSUnitSupported } from '@/types/style/units';
-
-/**
- * A lookup table of all supported CSS units and their metadata.
- * Each entry is a CSSUnit object describing the unit's name, category, and support status.
- * Used for unit validation, UI dropdowns, and documentation.
- */
-export const CSSUnitDefs: Record<CSSUnits, CSSUnit> = {
-	fr: createUnit('fr', 'relative', 'widely'),
-	em: createUnit('em', 'relative', 'widely'),
-	rem: createUnit('rem', 'relative', 'widely'),
-	vh: createUnit('vh', 'relative', 'widely'),
-	vw: createUnit('vw', 'relative', 'widely'),
-	vmax: createUnit('vmax', 'relative', 'widely'),
-	vmin: createUnit('vmin', 'relative', 'widely'),
-	ex: createUnit('ex', 'relative', 'not widely'),
-	ic: createUnit('ic', 'relative', 'not widely'),
-	lh: createUnit('lh', 'relative', 'not widely'),
-	cap: createUnit('cap', 'relative', 'not widely'),
-	ch: createUnit('ch', 'relative', 'not widely'),
-	rcap: createUnit('rcap', 'relative', 'not widely'),
-	rch: createUnit('rch', 'relative', 'not widely'),
-	rex: createUnit('rex', 'relative', 'not widely'),
-	ric: createUnit('ric', 'relative', 'not widely'),
-	rlh: createUnit('rlh', 'relative', 'not widely'),
-	vb: createUnit('vb', 'relative', 'not widely'),
-	vi: createUnit('vi', 'relative', 'not widely'),
-	svh: createUnit('svh', 'relative', 'not widely'),
-	svw: createUnit('svw', 'relative', 'not widely'),
-	svmax: createUnit('svmax', 'relative', 'not widely'),
-	svmin: createUnit('svmin', 'relative', 'not widely'),
-	svb: createUnit('svb', 'relative', 'not widely'),
-	svi: createUnit('svi', 'relative', 'not widely'),
-	lvh: createUnit('lvh', 'relative', 'not widely'),
-	lvw: createUnit('lvw', 'relative', 'not widely'),
-	lvmax: createUnit('lvmax', 'relative', 'not widely'),
-	lvmin: createUnit('lvmin', 'relative', 'not widely'),
-	lvb: createUnit('lvb', 'relative', 'not widely'),
-	lvi: createUnit('lvi', 'relative', 'not widely'),
-	dvh: createUnit('dvh', 'relative', 'not widely'),
-	dvw: createUnit('dvw', 'relative', 'not widely'),
-	dvmax: createUnit('dvmax', 'relative', 'not widely'),
-	dvmin: createUnit('dvmin', 'relative', 'not widely'),
-	dvb: createUnit('dvb', 'relative', 'not widely'),
-	dvi: createUnit('dvi', 'relative', 'not widely'),
-	cqw: createUnit('cqw', 'relative', 'not widely'),
-	cqh: createUnit('cqh', 'relative', 'not widely'),
-	cqi: createUnit('cqi', 'relative', 'not widely'),
-	cqb: createUnit('cqb', 'relative', 'not widely'),
-	cqmin: createUnit('cqmin', 'relative', 'not widely'),
-	cqmax: createUnit('cqmax', 'relative', 'not widely'),
-
-	px: createUnit('px', 'absolute', 'widely'),
-	cm: createUnit('cm', 'absolute', 'not widely'),
-	mm: createUnit('mm', 'absolute', 'not widely'),
-	Q: createUnit('Q', 'absolute', 'not widely'),
-	in: createUnit('in', 'absolute', 'not widely'),
-	pt: createUnit('pt', 'absolute', 'not widely'),
-	pc: createUnit('pc', 'absolute', 'not widely'),
-
-	deg: createUnit('deg', 'angle', 'widely'),
-	grad: createUnit('grad', 'angle', 'not widely'),
-	rad: createUnit('rad', 'angle', 'not widely'),
-	turn: createUnit('turn', 'angle', 'not widely'),
-
-	'%': createUnit('%', 'percentage', 'widely'),
-
-	s: createUnit('s', 'time', 'widely'),
-	ms: createUnit('ms', 'time', 'not widely'),
-};
-
-
+import { CSSDimensions } from '@/types/style/data';
 /**
  * Helper function to create a CSSUnit object.
  * @param name - The canonical name of the unit (e.g. 'px', 'em').
@@ -77,12 +7,83 @@ export const CSSUnitDefs: Record<CSSUnits, CSSUnit> = {
  * @param supported - The support status of the unit (e.g. 'widely', 'not widely').
  * @returns A CSSUnit object with all metadata fields populated.
  */
-function createUnit(name: CSSUnits, category: CSSUnitCategory, supported: CSSUnitSupported): CSSUnit {
+function createUnit(name: CSSUnits, category: CSSUnitCategory, group: CSSDimensions, supported: CSSUnitSupported): CSSUnit {
 	return {
 		type: 'unit',
 		name,
 		value: name,
 		supported,
 		category,
+		group,
 	};
 }
+
+/**
+ * A lookup table of all supported CSS units and their metadata.
+ * Each entry is a CSSUnit object describing the unit's name, category, and support status.
+ * Used for unit validation, UI dropdowns, and documentation.
+ */
+export const CSSUnitDefs: Partial<Record<CSSUnits, CSSUnit>> = {
+	fr: createUnit('fr', 'relative', 'flex', 'widely'),
+	em: createUnit('em', 'relative', 'length', 'widely'),
+	rem: createUnit('rem', 'relative', 'length', 'widely'),
+	vh: createUnit('vh', 'relative', 'length', 'widely'),
+	vw: createUnit('vw', 'relative', 'length', 'widely'),
+	vmax: createUnit('vmax', 'relative', 'length', 'widely'),
+	vmin: createUnit('vmin', 'relative', 'length', 'widely'),
+	// ex: createUnit('ex', 'relative', 'length', 'not widely'),
+	// ic: createUnit('ic', 'relative', 'length', 'not widely'),
+	// lh: createUnit('lh', 'relative', 'length', 'not widely'),
+	// cap: createUnit('cap', 'relative', 'length', 'not widely'),
+	// ch: createUnit('ch', 'relative', 'length', 'not widely'),
+	// rcap: createUnit('rcap', 'relative', 'length', 'not widely'),
+	// rch: createUnit('rch', 'relative', 'length', 'not widely'),
+	// rex: createUnit('rex', 'relative', 'length', 'not widely'),
+	// ric: createUnit('ric', 'relative', 'length', 'not widely'),
+	// rlh: createUnit('rlh', 'relative', 'length', 'not widely'),
+	// vb: createUnit('vb', 'relative', 'length', 'not widely'),
+	// vi: createUnit('vi', 'relative', 'length', 'not widely'),
+	// svh: createUnit('svh', 'relative', 'length', 'not widely'),
+	// svw: createUnit('svw', 'relative', 'length', 'not widely'),
+	// svmax: createUnit('svmax', 'relative', 'length', 'not widely'),
+	// svmin: createUnit('svmin', 'relative', 'length', 'not widely'),
+	// svb: createUnit('svb', 'relative', 'length', 'not widely'),
+	// svi: createUnit('svi', 'relative', 'length', 'not widely'),
+	// lvh: createUnit('lvh', 'relative', 'length', 'not widely'),
+	// lvw: createUnit('lvw', 'relative', 'length', 'not widely'),
+	// lvmax: createUnit('lvmax', 'relative', 'length', 'not widely'),
+	// lvmin: createUnit('lvmin', 'relative', 'length', 'not widely'),
+	// lvb: createUnit('lvb', 'relative', 'length', 'not widely'),
+	// lvi: createUnit('lvi', 'relative', 'length', 'not widely'),
+	// dvh: createUnit('dvh', 'relative', 'length', 'not widely'),
+	// dvw: createUnit('dvw', 'relative', 'length', 'not widely'),
+	// dvmax: createUnit('dvmax', 'relative', 'length', 'not widely'),
+	// dvmin: createUnit('dvmin', 'relative', 'length', 'not widely'),
+	// dvb: createUnit('dvb', 'relative', 'length', 'not widely'),
+	// dvi: createUnit('dvi', 'relative', 'length', 'not widely'),
+	// cqw: createUnit('cqw', 'relative', 'length', 'not widely'),
+	// cqh: createUnit('cqh', 'relative', 'length', 'not widely'),
+	// cqi: createUnit('cqi', 'relative', 'length', 'not widely'),
+	// cqb: createUnit('cqb', 'relative', 'length', 'not widely'),
+	// cqmin: createUnit('cqmin', 'relative', 'length', 'not widely'),
+	// cqmax: createUnit('cqmax', 'relative', 'length', 'not widely'),
+
+	px: createUnit('px', 'absolute', 'length', 'widely'),
+	// cm: createUnit('cm', 'absolute', 'length', 'not widely'),
+	// mm: createUnit('mm', 'absolute', 'length', 'not widely'),
+	// Q: createUnit('Q', 'absolute', 'length', 'not widely'),
+	// in: createUnit('in', 'absolute', 'length', 'not widely'),
+	// pt: createUnit('pt', 'absolute', 'length', 'not widely'),
+	// pc: createUnit('pc', 'absolute', 'length', 'not widely'),
+
+	deg: createUnit('deg', 'absolute', 'angle', 'widely'),
+	grad: createUnit('grad', 'absolute', 'angle', 'not widely'),
+	rad: createUnit('rad', 'absolute', 'angle', 'not widely'),
+	turn: createUnit('turn', 'absolute', 'angle', 'not widely'),
+
+	'%': createUnit('%', 'relative', 'percentage', 'widely'),
+
+	// s: createUnit('s', 'time', 'time', 'widely'),
+	// ms: createUnit('ms', 'time', 'time', 'not widely'),
+};
+
