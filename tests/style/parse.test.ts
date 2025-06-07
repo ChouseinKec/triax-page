@@ -7,7 +7,7 @@ describe('filterDataTypes', () => {
 	it('should allow known data types', () => {
 		expect(filterDataTypes(['<color>', '<number>'])).toEqual(['<color>', '<number>']);
 	});
-	it('should allow primitive types even if not in CSSDataTypeDefs', () => {
+	it('should allow primitive types even if not in CSSDataDefs', () => {
 		expect(filterDataTypes(['<length>', '<angle [1,5]>', '<percentage>'])).toEqual(['<length>', '<angle [1,5]>', '<percentage>']);
 	});
 	it('should filter out unknown data types', () => {

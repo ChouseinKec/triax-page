@@ -93,7 +93,7 @@ export interface CSSProperty {
 	syntaxRaw: string;
 
 	/**
-	 * Expanded CSS Value Definition Syntax string (all data-types expanded).
+	 * Expanded CSS Value Definition Syntax string (all datas expanded).
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
 	syntaxExpanded?: string;

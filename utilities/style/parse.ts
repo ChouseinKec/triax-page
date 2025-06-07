@@ -1,9 +1,9 @@
 // Constants
-import { CSSDataTypeDefs } from '@/constants/style/data-types';
+import { CSSDataDefs } from '@/constants/style/data';
 
 // Types
 import type { CSSCombinations } from '@/types/style/parse';
-import { CSSDataTypes } from '@/types/style/data-type';
+import { CSSDatas } from '@/types/style/data-type';
 
 // Utilities
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
@@ -11,7 +11,7 @@ import { splitTopLevel } from '@/utilities/string/string';
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
- * where the data type is not present in CSSDataTypeDefs. This ensures that only
+ * where the data type is not present in CSSDataDefs. This ensures that only
  * fully expanded, concrete values are included in the result.
  *
  * @param parsed - Array of parsed value strings (e.g., from syntax-parsed)
@@ -24,9 +24,9 @@ function filterDataTypes(parsed: string[]): string[] {
 		// If no matches, it's already a concrete value
 		if (!matches) return true;
 
-		// Exclude if any data type is not in CSSDataTypeDefs
+		// Exclude if any data type is not in CSSDataDefs
 		return matches.every((dt) => {
-			// List of primitive types that should always be allowed, even if not in CSSDataTypeDefs
+			// List of primitive types that should always be allowed, even if not in CSSDataDefs
 			const excludes = ['length', 'angle', 'percentage', 'number', 'integer', 'flex'];
 			// Extract the base type from the data type string (e.g., 'length' from '<length [1,5]>')
 			const baseTypeMatch = dt.match(/^<([a-zA-Z0-9-]+)/);
@@ -34,27 +34,27 @@ function filterDataTypes(parsed: string[]): string[] {
 			// If the base type is in the excludes list, do not filter it out
 			if (excludes.includes(baseType)) return true;
 
-			// Otherwise, only allow if the data type is defined in CSSDataTypeDefs
-			return dt in CSSDataTypeDefs;
+			// Otherwise, only allow if the data type is defined in CSSDataDefs
+			return dt in CSSDataDefs;
 		});
 	});
 }
 
 
 /**
- * Recursively expands all <data-type> references in a CSS syntax string using CSSDataTypeDefs.
+ * Recursively expands all <data-type> references in a CSS syntax string using CSSDataDefs.
  * If a data-type is not found, it is left as-is.
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
- * @param seen - (internal) Set of already expanded data-types to prevent infinite recursion
- * @returns The syntax string with all known data-types recursively expanded
+ * @param seen - (internal) Set of already expanded datas to prevent infinite recursion
+ * @returns The syntax string with all known datas recursively expanded
  */
 function expandDataTypes(syntax: string, seen = new Set<string>()): string {
 	// Regex to match <data-type [range]> or <data-type>
 	return syntax.replace(/<([a-zA-Z0-9-]+)(\s*\[[^>]+\])?>/g, (match: string, baseType: string, range: string) => {
-		const typeKey = `<${baseType}>` as CSSDataTypes;
+		const typeKey = `<${baseType}>` as CSSDatas;
 		if (seen.has(typeKey)) return match; // Prevent infinite recursion
 
-		const def = CSSDataTypeDefs[typeKey];
+		const def = CSSDataDefs[typeKey];
 		if (def?.syntax) {
 			seen.add(typeKey);
 

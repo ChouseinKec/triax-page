@@ -125,17 +125,17 @@ type SpecialTypes =
  * These correspond to the official CSS value definition data types from the CSS spec.
  * Used for type-safe parsing, expansion, and validation of CSS property values.
  */
-export type CSSDataTypes = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes;
+export type CSSDatas = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes;
 
 /**
  * Represents a single CSS data type definition, including its name and syntax.
  * Used for data type lookup, expansion, and validation.
  */
-export interface CSSDataType {
+export interface CSSData {
 	/**
 	 * The canonical name of the CSS data type (e.g. '<number>', '<length>').
 	 */
-	type: CSSDataTypes;
+	type: CSSDatas;
 
 	/**
 	 * The value definition syntax for this data type (may reference other data types).

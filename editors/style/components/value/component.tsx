@@ -19,7 +19,7 @@ import Error from './Error/component';
 const SEPARATORS = [' ', ',', '/'];
 
 
-function convertValueToTypes(values: string[]): string[] {
+function convertValuesToTypes(values: string[]): string[] {
     const types: string[] = values.map(value => {
         const type = matchValueType(value);
         return type ? type : 'unknown';
@@ -42,7 +42,7 @@ const Value: React.FC<ValueProps> = ({ property }: ValueProps): ReactElement => 
     const initialValue = propertyDefs.initialValue;
     const values = value ? splitTopLevel(value, SEPARATORS) : [initialValue];
 
-    const valueTypes = useMemo(() => convertValueToTypes(values), [values]);
+    const valueTypes = useMemo(() => convertValuesToTypes(values), [values]);
 
 
     console.log(valueTypes);

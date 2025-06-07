@@ -1,0 +1,122 @@
+// Types
+import { CSSData, CSSDatas } from '@/types/style/data-type';
+
+const createData = (type: CSSDatas, syntax: string): CSSData => {
+	return {
+		type,
+		syntax,
+	};
+};
+
+export const CSSDataDefs: Partial<Record<CSSDatas, CSSData>> = {
+	// === Numeric Types ===
+	'<number>': createData('<number>', '<number>'),
+	'<integer>': createData('<integer>', '<integer>'),
+	'<percentage>': createData('<percentage>', '<percentage>'),
+	// '<dimension>': createData('<dimension>', '<number><unit>'),
+	// '<alpha-value>': createData('<alpha-value>', '<number> | <percentage>'),
+
+	// === Unit Types ===
+	'<length>': createData('<length>', '<length>'),
+	'<angle>': createData('<angle>', '<angle>'),
+	// '<time>': createData('<time>', '<number><time-unit>'),
+	// '<frequency>': createData('<frequency>', '<number><frequency-unit>'),
+	// '<resolution>': createData('<resolution>', '<number><resolution-unit>'),
+	'<flex>': createData('<flex>', '<flex>'),
+
+	// === Composite Types ===
+	'<length-percentage>': createData('<length-percentage>', '<length> | <percentage>'),
+	// '<position>': createData('<position>', '[left | center | right] [top | center | bottom] | <length-percentage>{1,2}'),
+	'<color>': createData('<color>', '<named-color> | <hex> | rgb() | rgba() | hsl() | hsla() | lab() | lch() | oklab() | oklch()'),
+	'<image>': createData('<image>', '<url> | <gradient> | <image-function>'),
+	'<url>': createData('<url>', 'url(<string>)'),
+	'<string>': createData('<string>', '<string>'),
+	'<track-breadth>': createData('<track-breadth>', '<length> | <percentage> | <flex> | min-content | max-content | auto'),
+	// '<size-keyword>': createData('<size-keyword>', 'auto | max-content | min-content | fit-content(<length-percentage>?) | stretch'),
+	// '<display-keyword>': createData('<display-keyword>', 'block | inline | flex | grid | contents | none'),
+	'<line-style>': createData('<line-style>', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'<shadow>': createData('<shadow>', '[inset? <length>{2,4} <color>?]'),
+	'<transform-function>': createData('<transform-function>', 'matrix() | translate() | scale() | rotate() | skew() | perspective()'),
+	'<ratio>': createData('<ratio>', '<number [0,∞]> [ / <number [0,∞]> ]'),
+
+	// === Math Types ===
+	// '<calc()>': createData('<calc()>', 'calc(<calc-sum>)'),
+	'<min()>': createData('<min()>', 'min(<calc-sum>#{1,∞})'),
+	'<max()>': createData('<max()>', 'max(<calc-sum>#{1,∞})'),
+	'<clamp()>': createData('<clamp()>', 'clamp(<calc-sum>, <calc-sum>, <calc-sum>)'),
+	// '<calc-size()>': createData('<calc-size()>', 'calc-size(<size-keyword> | <calc-size()>, <calc-sum>)'),
+	// '<anchor-size()>': createData('<anchor-size()>', 'anchor-size([<anchor-name>,] <length-percentage>?)'),
+	// '<sin()>': createData('<sin()>', 'sin(<angle> | <number>)'),
+	// '<cos()>': createData('<cos()>', 'cos(<angle> | <number>)'),
+	// '<tan()>': createData('<tan()>', 'tan(<angle> | <number>)'),
+	// '<asin()>': createData('<asin()>', 'asin(<number>)'),
+	// '<acos()>': createData('<acos()>', 'acos(<number>)'),
+	// '<atan()>': createData('<atan()>', 'atan(<number>)'),
+	// '<atan2()>': createData('<atan2()>', 'atan2(<number>, <number>)'),
+	// '<pow()>': createData('<pow()>', 'pow(<number>, <number>)'),
+	// '<sqrt()>': createData('<sqrt()>', 'sqrt(<number>)'),
+	// '<hypot()>': createData('<hypot()>', 'hypot(<number>#{1,∞})'),
+	// '<log()>': createData('<log()>', 'log(<number>, <number>?)'),
+	// '<exp()>': createData('<exp()>', 'exp(<number>)'),
+	// '<abs()>': createData('<abs()>', 'abs(<number>)'),
+	// '<sign()>': createData('<sign()>', 'sign(<number>)'),
+	// '<mod()>': createData('<mod()>', 'mod(<number>, <number>)'),
+	// '<rem()>': createData('<rem()>', 'rem(<number>, <number>)'),
+	// '<round()>': createData('<round()>', 'round(<rounding-strategy>?, <number>, <number>)'),
+
+	// === Function Types ===
+	'<repeat()>': createData('<repeat()>', 'repeat(<repeat-count>, <track-list>)'),
+	'<minmax()>': createData('<minmax()>', 'minmax(<track-breadth>, <track-breadth>)'),
+	'<fit-content()>': createData('<fit-content()>', 'fit-content( <length-percentage [0,∞]> )'),
+	// '<var()>': createData('<var()>', 'var(--<custom-ident>, <declaration-value>?)'),
+	// '<linear-gradient()>': createData('<linear-gradient()>', 'linear-gradient([<angle> | to <side-or-corner>]?, <color-stop-list>)'),
+	// '<radial-gradient()>': createData('<radial-gradient()>', 'radial-gradient([<ending-shape> || <size>]? [at <position>]?, <color-stop-list>)'),
+	// '<conic-gradient()>': createData('<conic-gradient()>', 'conic-gradient([from <angle>]? [at <position>]?, <angular-color-stop-list>)'),
+	// '<repeating-linear-gradient()>': createData('<repeating-linear-gradient()>', 'repeating-linear-gradient([<angle> | to <side-or-corner>]?, <color-stop-list>)'),
+	// '<repeating-radial-gradient()>': createData('<repeating-radial-gradient()>', 'repeating-radial-gradient([<ending-shape> || <size>]? [at <position>]?, <color-stop-list>)'),
+	// '<repeating-conic-gradient()>': createData('<repeating-conic-gradient()>', 'repeating-conic-gradient([from <angle>]? [at <position>]?, <angular-color-stop-list>)'),
+	// '<matrix()>': createData('<matrix()>', 'matrix(<number>#{6})'),
+	// '<matrix3d()>': createData('<matrix3d()>', 'matrix3d(<number>#{16})'),
+	// '<perspective()>': createData('<perspective()>', 'perspective(<length>)'),
+	'<rotate()>': createData('<rotate()>', 'rotate(<angle>)'),
+	'<rotate3d()>': createData('<rotate3d()>', 'rotate3d(<number>, <number>, <number>, <angle>)'),
+	'<rotateX()>': createData('<rotateX()>', 'rotateX(<angle>)'),
+	'<rotateY()>': createData('<rotateY()>', 'rotateY(<angle>)'),
+	'<rotateZ()>': createData('<rotateZ()>', 'rotateZ(<angle>)'),
+	'<scale()>': createData('<scale()>', 'scale(<number>[, <number>]?)'),
+	'<scale3d()>': createData('<scale3d()>', 'scale3d(<number>, <number>, <number>)'),
+	'<scaleX()>': createData('<scaleX()>', 'scaleX(<number>)'),
+	'<scaleY()>': createData('<scaleY()>', 'scaleY(<number>)'),
+	'<scaleZ()>': createData('<scaleZ()>', 'scaleZ(<number>)'),
+	'<skew()>': createData('<skew()>', 'skew(<angle>[, <angle>]?)'),
+	'<skewX()>': createData('<skewX()>', 'skewX(<angle>)'),
+	'<skewY()>': createData('<skewY()>', 'skewY(<angle>)'),
+	'<translate()>': createData('<translate()>', 'translate(<length-percentage>[, <length-percentage>]?)'),
+	'<translate3d()>': createData('<translate3d()>', 'translate3d(<length-percentage>, <length-percentage>, <length>)'),
+	'<translateX()>': createData('<translateX()>', 'translateX(<length-percentage>)'),
+	'<translateY()>': createData('<translateY()>', 'translateY(<length-percentage>)'),
+	'<translateZ()>': createData('<translateZ()>', 'translateZ(<length>)'),
+	// '<steps()>': createData('<steps()>', 'steps(<integer>[, <step-position>]?)'),
+	'<cubic-bezier()>': createData('<cubic-bezier()>', 'cubic-bezier(<number>, <number>, <number>, <number>)'),
+	'<drop-shadow()>': createData('<drop-shadow()>', 'drop-shadow(<shadow>)'),
+	'<blur()>': createData('<blur()>', 'blur(<length>)'),
+	'<brightness()>': createData('<brightness()>', 'brightness(<percentage>)'),
+	'<contrast()>': createData('<contrast()>', 'contrast(<percentage>)'),
+	'<grayscale()>': createData('<grayscale()>', 'grayscale(<percentage>)'),
+	'<hue-rotate()>': createData('<hue-rotate()>', 'hue-rotate(<angle>)'),
+	'<invert()>': createData('<invert()>', 'invert(<percentage>)'),
+	'<opacity()>': createData('<opacity()>', 'opacity(<percentage>)'),
+	'<saturate()>': createData('<saturate()>', 'saturate(<percentage>)'),
+	'<sepia()>': createData('<sepia()>', 'sepia(<percentage>)'),
+	'<url()>': createData('<url()>', 'url(<string>)'),
+
+	// === Identifier Types ===
+	// '<ident>': createData('<ident>', '[a-zA-Z_][a-zA-Z0-9_-]*'),
+	// '<custom-ident>': createData('<custom-ident>', '<ident> excluding [initial, inherit, unset, revert]'),
+	// '<dashed-ident>': createData('<dashed-ident>', '--[a-zA-Z0-9-_]+'),
+	// '<family-name>': createData('<family-name>', '<string> | <custom-ident>+'),
+
+	// === Special/Const Types ===
+	'<calc-keyword>': createData('<calc-keyword>', 'e | pi | infinity | -infinity | NaN'),
+	'<global-keyword>': createData('<global-keyword>', 'initial | inherit | unset | revert'),
+};

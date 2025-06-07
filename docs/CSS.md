@@ -129,7 +129,7 @@ For the property:
 'rotate': createProperty('rotate', '<angle [0,180]>', 'Rotates the element by a given angle', 'transform'),
 ```
 - `<angle [0,180]>` is a component with a range restriction.
-- The parser will expand `<angle>` using `data-types.ts` and validate the numeric value using the range.
+- The parser will expand `<angle>` using `datas.ts` and validate the numeric value using the range.
 
 ---
 
@@ -138,12 +138,12 @@ These lookup tables and component definitions are the foundation for parsing, va
 
 # CSS Syntax Lookup Tables
 
-## property.ts, data-types.ts, units.ts
+## property.ts, datas.ts, units.ts
 
-The files `property.ts`, `data-types.ts`, and `units.ts` in this project serve as lookup tables for CSS Value Definition Syntax parsing and expansion:
+The files `property.ts`, `datas.ts`, and `units.ts` in this project serve as lookup tables for CSS Value Definition Syntax parsing and expansion:
 
 - **property.ts**: Maps CSS property names to their value definition syntax, descriptions, and categories. This allows the parser and UI to know what values are valid for each CSS property.
-- **data-types.ts**: Defines the expansion for each CSS data type (e.g., `<length>`, `<angle>`, `<color>`, etc.), mapping them to their syntax or possible values. This enables recursive expansion of data types in property definitions.
+- **datas.ts**: Defines the expansion for each CSS data type (e.g., `<length>`, `<angle>`, `<color>`, etc.), mapping them to their syntax or possible values. This enables recursive expansion of data types in property definitions.
 - **units.ts**: Lists all valid CSS units (e.g., `px`, `em`, `deg`, `s`, etc.), their categories (length, angle, time, etc.), and their support status. This is used to validate and suggest units for numeric values.
 
 These lookup tables are essential for:
