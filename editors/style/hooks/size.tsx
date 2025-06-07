@@ -1,5 +1,5 @@
 // Components
-import Value from '@/editors/style/components/value/value';
+import Value from '@/editors/style/components/value/component';
 
 // Types
 import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
@@ -21,7 +21,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         label: 'Width',
                         column: 'auto',
                         direction: 'column',
-                        component: () => <Value property="width" />,
+                        component: () => <Value property="aspect-ratio" />,
                     },
                 ],
             },

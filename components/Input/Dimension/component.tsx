@@ -143,8 +143,8 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 					options={options}
 					value={unit.replace(')', '')}
 					onChange={handleUnitChange}
-					hasSearch={true}
-					isGrouped={true}
+					searchable={true}
+					grouped={true}
 					placeholder="length"
 				/>
 			);
@@ -181,7 +181,7 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 					<Dropdown value={'VAR'} closeOnChange={false}>
 						{renderLengthSelect(extractedUnit)}
 						<OptionsSelect
-							hasSearch
+							searchable
 							onChange={handleUnitChange}
 							value={value}
 							options={getStyleVariables()}

@@ -79,23 +79,28 @@ export interface CSSProperty {
 	category: CSSPropertyCategories;
 
 	/**
+	 * The default value for this property.
+	 * This is used for initial rendering and validation.
+	 */
+	initialValue: string;
+
+	/**
 	 * CSS Value Definition Syntax string.
 	 * This is the raw syntax string that defines the valid values for this property.
 	 * It may contain data-type references like `<length>`, `<color>`, etc.
 	 * Taken from official CSS specifications.
 	 */
-	'syntax-raw': string;
+	syntaxRaw: string;
 
 	/**
 	 * Expanded CSS Value Definition Syntax string (all data-types expanded).
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	'syntax-expanded'?: string;
+	syntaxExpanded?: string;
 
 	/**
 	 * Parsed representation of the CSS Value Definition Syntax string.
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	'syntax-parsed'?: string[];
-
+	syntaxParsed?: string[];
 }

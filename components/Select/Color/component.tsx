@@ -42,7 +42,7 @@ const ColorSelect: React.FC<COLOR_SELECT> = ({ value, onChange, placeholder = 'P
     );
 
     return (
-        <Dropdown value={value} toggleStyle={{ backgroundColor: value }} closeOnChange={false} placeholder={placeholder} >
+        <Dropdown value={value} buttonStyle={{ backgroundColor: value }} closeOnChange={false} placeholder={placeholder} >
             <ChromePicker disableAlpha={false} color={value} onChange={handleChange} />
         </Dropdown>
 

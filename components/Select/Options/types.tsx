@@ -8,9 +8,9 @@ export interface OptionsSelectProps {
     /** List of available options */
     options: OptionData[];
     /** Enables search functionality within the dropdown (default: false) */
-    hasSearch?: boolean;
+    searchable?: boolean;
     /** Whether to display options in grouped sections (default: false) */
-    isGrouped?: boolean;
+    grouped?: boolean;
     /** Event handler triggered when the selected option changes */
     onChange: (value: string) => void;
 }

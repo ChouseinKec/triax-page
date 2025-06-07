@@ -23,12 +23,12 @@ import { useDebouncedValue } from '@/hooks/hooks';
  * @param {string} props.value - The currently selected value.
  * @param {Array<Option>} props.options - The list of options to display in the dropdown.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected or cleared.
- * @param {boolean} [props.hasSearch=false] - Whether the options should be searchable.
- * @param {boolean} [props.isGrouped=false] - Whether the options should be grouped by category.
+ * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
+ * @param {boolean} [props.grouped=false] - Whether the options should be grouped by category.
  * @returns {ReactElement} - The rendered options component.
  *
 */
-const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange, hasSearch, isGrouped }: OptionsSelectProps): ReactElement | ReactElement[] => {
+const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange, searchable, grouped }: OptionsSelectProps): ReactElement | ReactElement[] => {
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);
 
@@ -66,14 +66,14 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
      * @returns {Array<Option>} - The filtered list of options.
     */
     const filteredOptions = useMemo(() => {
-        if (!hasSearch) return options;
+        if (!searchable) return options;
 
         return options.filter((option) =>
             option.name && option.name.toLowerCase().includes(debouncedSearch.toString().toLowerCase())
         );
 
     },
-        [debouncedSearch, hasSearch, options]
+        [debouncedSearch, searchable, options]
     );
 
     /**
@@ -83,10 +83,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
      * @returns {Record<string, Option[]> | null} - The grouped options or null.
     */
     const groupedOptions = useMemo(() => {
-        return isGrouped
+        return grouped
             ? Object.groupBy(filteredOptions, ({ category }) => category || 'uncategorized')
             : null;
-    }, [filteredOptions, isGrouped]
+    }, [filteredOptions, grouped]
     );
 
 
@@ -98,7 +98,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
     * @returns {ReactElement | null} - The rendered search input element.
     */
     const renderSearchElement = useMemo((): ReactElement | null => {
-        if (!hasSearch || options.length < 10) return null;
+        if (!searchable || options.length < 10) return null;
         return (
             <input
                 className={CSS.OptionsSelect_Search}
@@ -106,7 +106,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
                 placeholder='SEARCH'
             />
         );
-    }, [handleSearch, hasSearch, options.length]
+    }, [handleSearch, searchable, options.length]
     );
 
 

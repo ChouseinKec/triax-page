@@ -1,18 +1,24 @@
 /**
  * Props for the DropdownReveal component.
- * 
- * @param {React.ReactNode} children - Content to be shown in the dropdown
- * @param {boolean} [closeOnChange] - If true, closes dropdown when children update
- * @param {string} [value] - Current display value for the dropdown
- * @param {React.CSSProperties} [toggleStyle] - Optional inline style for the toggle element
- * @param {string} [placeholder] - Placeholder text shown when value is empty
- * @param {boolean} [isDisabled] - If true, disables interaction with the dropdown
-*/
-export type DROPDOWN_REVEAL = {
+ *
+ * @property children - The content to display inside the dropdown.
+ * @property closeOnChange - If true, closes the dropdown when a selection is made.
+ * @property value - The currently selected value (if controlled).
+ * @property buttonStyle - Custom style for the dropdown trigger/button.
+ * @property placeholder - Placeholder text to display when no value is selected.
+ * @property isDisabled - If true, disables the dropdown interaction.
+ */
+export interface DropdownRevealProps {
+    /** The content to display inside the dropdown. */
     children: React.ReactNode;
+    /** If true, closes the dropdown when a selection is made. */
     closeOnChange?: boolean;
+    /** The currently selected value (if controlled). */
     value?: string;
-    toggleStyle?: React.CSSProperties;
+    /** Custom style for the dropdown trigger/button. */
+    buttonStyle?: React.CSSProperties;
+    /** Placeholder text to display when no value is selected. */
     placeholder?: string;
+    /** If true, disables the dropdown interaction. */
     isDisabled?: boolean;
 };

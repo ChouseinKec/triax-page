@@ -28,7 +28,7 @@ type CompositeTypes =
 	| '<line-style>' // e.g. solid, dotted, dashed
 	| '<shadow>' // e.g. 2px 2px 5px black
 	| '<transform-function>' // e.g. rotate(45deg), scale(1.2)
-	| '<ratio>' // e.g. 16/9, 1.5, 1/3
+	| '<ratio>'; // e.g. 16/9, 1.5, 1/3
 
 type MathTypes =
 	| '<calc()>' // e.g. calc(100% - 20px)
@@ -141,4 +141,19 @@ export interface CSSDataType {
 	 * The value definition syntax for this data type (may reference other data types).
 	 */
 	syntax: string;
+}
+
+/**
+ * Represents the parsed structure of a CSS data type string.
+ * Used for type-safe parsing and analysis of CSS value definitions.
+ */
+export interface ExplodedDataType {
+	/** The base name of the data type or keyword (e.g. 'number', 'auto'). */
+	base: string;
+	/** The canonical type string (e.g. '<number>', 'auto', 'fit-content()'). */
+	canonical: string;
+	/** Optional arguments for functions or dimensions (e.g. range, min/max, etc.). */
+	args?: Record<string, any> | string;
+	/** The kind of data type: 'keyword', 'dimension', or 'function'. */
+	type: 'keyword' | 'dimension' | 'function';
 }

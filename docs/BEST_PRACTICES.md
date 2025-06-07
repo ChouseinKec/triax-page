@@ -19,13 +19,13 @@ const createProperty = (name, syntax, description, category) => {
     name,
     description,
     category,
-    'syntax-raw': syntax,
-    get 'syntax-expanded'() {
+    syntaxRaw: syntax,
+    get syntaxExpanded() {
       if (_expanded === undefined) _expanded = expandDataTypes(syntax);
       return _expanded!;
     },
-    get 'syntax-parsed'() {
-      if (_parsed === undefined) _parsed = parse(this['syntax-expanded']!);
+    get syntaxParsed() {
+      if (_parsed === undefined) _parsed = parse(this[syntaxExpanded]!);
       return _parsed;
     },
   };

@@ -101,8 +101,8 @@ const InputGroup: React.FC<INPUT_GROUP> = ({ value = '', onChange, options }: IN
                     options={options}
                     value=""
                     onChange={(value: string) => { handleAdd(value, values) }}
-                    hasSearch={true}
-                    isGrouped={true}
+                    searchable={true}
+                    grouped={true}
                     placeholder="ADD"
                 />
             );

@@ -2,11 +2,12 @@
 import { CSSDataTypeDefs } from '@/constants/style/data-types';
 
 // Types
-import type { CSSCombinations, ValueComponents } from '@/types/style/parse';
+import type { CSSCombinations } from '@/types/style/parse';
 import { CSSDataTypes } from '@/types/style/data-type';
 
 // Utilities
-import { splitTopLevel, generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array';
+import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
+import { splitTopLevel } from '@/utilities/string/string';
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
@@ -38,6 +39,7 @@ function filterDataTypes(parsed: string[]): string[] {
 		});
 	});
 }
+
 
 /**
  * Recursively expands all <data-type> references in a CSS syntax string using CSSDataTypeDefs.
@@ -332,6 +334,4 @@ function parse(syntax: string): CSSCombinations {
 	return [s];
 }
 
-
-
-export { normalizeSyntax, expandDataTypes, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterDataTypes };
+export { normalizeSyntax, expandDataTypes,  parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterDataTypes };

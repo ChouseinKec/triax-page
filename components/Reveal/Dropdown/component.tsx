@@ -4,7 +4,7 @@ import React, { memo, ReactElement, useCallback, useEffect, useRef, useState } f
 import CSS from '@/components/Reveal/Dropdown/styles.module.css';
 
 // Types
-import { DROPDOWN_REVEAL } from '@/components/Reveal/Dropdown/types';
+import { DropdownRevealProps } from '@/components/Reveal/Dropdown/types';
 
 
 /**
@@ -12,23 +12,18 @@ import { DROPDOWN_REVEAL } from '@/components/Reveal/Dropdown/types';
  *
  * A reusable dropdown component that toggles visibility on button click
  * and closes when clicking outside or when the children element changes (optional).
- *
- * @component
- * @param {DROPDOWN_REVEAL} props - Component props
- * @param {React.ReactNode} props.value - The display label or toggle value
- * @param {React.CSSProperties} [props.toggleStyle] - Optional inline styles for the toggle button
- * @param {string} [props.placeholder="Toggle"] - Placeholder shown if value is not provided
- * @param {React.ReactNode} props.children - Content shown inside the dropdown window
- * @param {boolean} [props.closeOnChange=true] - Whether to auto-close when children update
- * @param {boolean} [props.isDisabled=false] - Whether the dropdown toggle is disabled
- * @returns {ReactElement}
- *
- * @example
- * <Dropdown value="Menu" closeOnChange>
- *   <p>Dropdown content</p>
- * </Dropdown>
  */
-const Dropdown: React.FC<DROPDOWN_REVEAL> = ({ value, toggleStyle, placeholder = 'Toggle', children, closeOnChange, isDisabled }: DROPDOWN_REVEAL): ReactElement => {
+const Dropdown: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): ReactElement => {
+    const {
+        value,
+        buttonStyle,
+        placeholder = 'Toggle',
+        children,
+        closeOnChange,
+        isDisabled
+    } = props;
+
+
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -79,7 +74,7 @@ const Dropdown: React.FC<DROPDOWN_REVEAL> = ({ value, toggleStyle, placeholder =
             {/* Toggle button to open/close the dropdown */}
             <button
                 className={CSS.DropdownReveal_Button}
-                style={toggleStyle}
+                style={buttonStyle}
                 onClick={handleToggle}
                 data-isopen={isOpen}
                 data-isdisabled={isDisabled}

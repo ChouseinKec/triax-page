@@ -1,39 +1,4 @@
-// General-purpose array and string helpers for use across the codebase.
-
-/**
- * Splits a string by a separator at the top level (not inside brackets).
- * Handles (), [], and <> as grouping symbols.
- * Example: splitTopLevel('a [b|c] d|e', '|') → ['a [b|c] d', 'e']
- * @param s - The string to split
- * @param sep - The separator string
- * @returns Array of split strings
- */
-export function splitTopLevel(s: string, sep: string): string[] {
-	const result: string[] = [];
-	let depthSquare = 0;
-	let depthRound = 0;
-	let depthAngle = 0;
-	let buf = '';
-	for (let i = 0; i < s.length; i++) {
-		const c = s[i];
-		if (c === '[') depthSquare++;
-		if (c === ']') depthSquare--;
-		if (c === '(') depthRound++;
-		if (c === ')') depthRound--;
-		if (c === '<') depthAngle++;
-		if (c === '>') depthAngle--;
-		// Only split if not inside any brackets
-		if (depthSquare === 0 && depthRound === 0 && depthAngle === 0 && s.slice(i, i + sep.length) === sep) {
-			result.push(buf.trim());
-			buf = '';
-			i += sep.length - 1;
-		} else {
-			buf += c;
-		}
-	}
-	if (buf.trim()) result.push(buf.trim());
-	return result;
-}
+import { splitTopLevel } from '@/utilities/string/string';
 
 /**
  * Returns the cross product of arrays.
@@ -97,4 +62,17 @@ export function generatePermutations(arr: string[]): string[][] {
 		}
 	}
 	return result;
+}
+
+/**
+ * Returns the maximum length of any subarray (after splitting each string by separators).
+ * Used for slot/column calculations in value helpers.
+ */
+export function countSubArrayLength(variations: string[], separators: string[] = [' ', ',', '/']): number {
+    let maxSlots = 0;
+    for (const variation of variations) {
+        const slots = splitTopLevel(variation, separators);
+        if (slots.length > maxSlots) maxSlots = slots.length;
+    }
+    return maxSlots;
 }
