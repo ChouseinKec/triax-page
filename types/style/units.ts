@@ -1,4 +1,4 @@
-import { CSSDimensions } from "@/types/style/data";
+import { CSSDimensionString, CSSDimensionGroups } from './dimension';
 
 type RelativeFontUnits = 'cap' | 'ch' | 'em' | 'ex' | 'ic' | 'lh'; // Only em is widely supported
 type RelativeRootFontUnits = 'rcap' | 'rch' | 'rem' | 'rex' | 'ric' | 'rlh'; // Only rem is widely supported
@@ -32,7 +32,6 @@ export type CSSUnitSupported = 'widely' | 'not widely' | 'experimental';
  */
 export type CSSUnitCategory = 'relative' | 'absolute' | 'angle' | 'grid' | 'percentage' | 'time';
 
-
 /**
  * Represents a single CSS unit definition, including its name, value, support status, and category.
  * Used for unit lookup, validation, and UI rendering.
@@ -53,7 +52,7 @@ export interface CSSUnit {
 	 * The value of the CSS unit (usually same as name).
 	 * Used for value comparisons and serialization.
 	 */
-	value: CSSUnits;
+	value: CSSDimensionString;
 
 	/**
 	 * Indicates how widely the unit is supported in browsers.
@@ -71,5 +70,5 @@ export interface CSSUnit {
 	 * The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex').
 	 * Used for functional grouping in the UI.
 	 */
-	group: CSSDimensions;
+	dimensionGroup: CSSDimensionGroups;
 }

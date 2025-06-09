@@ -1,5 +1,5 @@
 .Slots {
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(100px, 1fr));
 	gap: var(--size-lg);
 }

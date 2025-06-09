@@ -1,5 +1,5 @@
 import { CSSProperty, CSSProperties, CSSPropertyCategories } from '@/types/style/property';
-import { parse, expandDataTypes, filterDataTypes } from '@/utilities/style/parse';
+import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
 
 /**
  * Helper function to create a CSSProperty object.
@@ -20,13 +20,13 @@ const createProperty = (name: string, syntax: string, initialValue: string, desc
 
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
-			if (_expanded === undefined) _expanded = expandDataTypes(syntax);
+			if (_expanded === undefined) _expanded = expandTokens(syntax);
 			return _expanded!;
 		},
 		get syntaxParsed() {
 			if (_parsed === undefined) {
 				const parsed = parse(this.syntaxExpanded!);
-				_parsed = filterDataTypes(parsed);
+				_parsed = filterTokens(parsed);
 			}
 			return _parsed;
 		},

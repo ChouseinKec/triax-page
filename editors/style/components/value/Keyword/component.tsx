@@ -1,14 +1,25 @@
 import React from 'react';
 
-/**
- * Renders a simple keyword value as plain text.
- */
-export interface KeywordValueProps {
-    value: string;
-}
+// Compoenents
+import DropdownSelect from '@/components/Select/Dropdown/component';
 
-const KeywordValue: React.FC<KeywordValueProps> = ({ value }) => {
-    return <p>{value}</p>;
+// Types
+import { KeywordValueProps } from './types';
+
+const KeywordValue: React.FC<KeywordValueProps> = (props: KeywordValueProps) => {
+    const { value, options, onChange } = props;
+
+    return (
+        <DropdownSelect
+            value={value}
+            options={options}
+            placeholder="Select a keyword"
+            searchable={false}
+            grouped={false}
+            onChange={onChange}
+        />
+    )
+
 };
 
 export default KeywordValue;

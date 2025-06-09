@@ -8,26 +8,14 @@ import { CSSPropertyDefs } from '@/constants/style/property';
 
 // Utilities
 import { splitTopLevel } from '@/utilities/string/string';
-import { matchValueType } from '@/utilities/style/value';
+import { getValueTypes } from '@/utilities/style/value';
 
+// Constants
+import { ValueSeparators } from '@/constants/style/value';
 
 // Components
 import Slots from './Slots/component';
 import Error from './Error/component';
-
-
-const SEPARATORS = [' ', ',', '/'];
-
-
-function convertValuesToTypes(values: string[]): string[] {
-    const types: string[] = values.map(value => {
-        const type = matchValueType(value);
-        return type ? type : 'unknown';
-    }
-    );
-
-    return types;
-}
 
 
 /**
@@ -40,16 +28,27 @@ const Value: React.FC<ValueProps> = ({ property }: ValueProps): ReactElement => 
 
     if (!propertyDefs) return <Error message={`Unknown property: ${property}`} />;
     const initialValue = propertyDefs.initialValue;
-    const values = value ? splitTopLevel(value, SEPARATORS) : [initialValue];
-
-    const valueTypes = useMemo(() => convertValuesToTypes(values), [values]);
-
+    const values = value ? splitTopLevel(value, [...ValueSeparators]) : [initialValue];
+    const valueTypes = useMemo(() => getValueTypes(values), [values]);
 
     console.log(valueTypes);
 
-    const variations: string[] = useMemo(() => propertyDefs.syntaxParsed || [], [propertyDefs]);
+    // const variations = useMemo(() => propertyDefs.syntaxParsed, [propertyDefs]);
+    const variations = [
+        "auto",
+        "<number [0,∞]>",
+        "auto <number [0,∞]>",
+        "<number [0,∞]>  auto",
+        "<number [0,∞]> / <number [0,∞]>",
+        "auto <number [0,∞]> / <number [0,∞]>",
+        "<number [0,∞]> / <number [0,∞]> auto",
+        "<angle> <length> <percentage>"
+    ];
 
-    console.log(variations);
+
+    if (!variations || variations.length === 0) {
+        return <Error message={`No variations found for property: ${property}`} />;
+    }
 
 
     return <Slots values={values} variations={variations} onChange={setValue} />;

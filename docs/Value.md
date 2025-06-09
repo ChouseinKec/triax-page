@@ -42,6 +42,51 @@ This lookup table can be used to:
 - Validate user input incrementally.
 - Provide context-aware suggestions for each slot.
 
+## Value Editor Component Flow Diagram
+
+```mermaid
+graph TD
+    A[Value Component] -->|Splits input value| B[Slots Component]
+    B -->|Maps variations to slot options| C["Slot Components"]
+    C -->|Renders input by type| D1[KeywordValue]
+    C -->|Renders input by type| D2[FunctionValue]
+    C -->|Renders input by type| D3[DimensionValue]
+    C -->|Renders input by type| D4[NumberValue]
+    C -->|Shows dropdown| E[DropdownSelect]
+
+    subgraph Value Component
+        direction TB
+        A
+    end
+    subgraph Slots Component
+        direction TB
+        B
+    end
+    subgraph Slot Component
+        direction TB
+        C
+    end
+    subgraph Value Types
+        direction LR
+        D1
+        D2
+        D3
+        D4
+    end
+    subgraph Shared UI
+        direction TB
+        E
+    end
+```
+
+### Flow Description
+- **Value**: Top-level component, receives property, manages value state, splits value into slots, and passes to Slots.
+- **Slots**: Receives all slot values and variations, builds slot options, renders a Slot for each value and the next available slot.
+- **Slot**: Receives a single value and its options, determines its type, and renders the appropriate input component (KeywordValue, FunctionValue, DimensionValue, NumberValue). Also renders a DropdownSelect for available options.
+- **Input Components**: Render the actual input UI for each value type.
+
+This flow enables incremental, slot-wise editing of complex CSS property values, with context-aware UI for each slot.
+
 ---
 
 **Note:** The number of slots is determined by the maximum number of columns in any variation after splitting by top-level separators.

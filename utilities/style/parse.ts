@@ -1,9 +1,9 @@
 // Constants
-import { CSSDataDefs } from '@/constants/style/data';
+import { CSSTokenDefs } from '@/constants/style/token';
 
 // Types
 import type { CSSCombinations } from '@/types/style/parse';
-import { CSSDatas } from '@/types/style/data';
+import { CSSTokens } from '@/types/style/token';
 
 // Utilities
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
@@ -11,22 +11,22 @@ import { splitTopLevel } from '@/utilities/string/string';
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
- * where the data type is not present in CSSDataDefs. This ensures that only
+ * where the data type is not present in CSSTokenDefs. This ensures that only
  * fully expanded, concrete values are included in the result.
  *
  * @param parsed - Array of parsed value strings (e.g., from syntax-parsed)
  * @returns Array with only fully expanded values (no unknown/unexpanded data types)
  */
-function filterDataTypes(parsed: string[]): string[] {
+function filterTokens(parsed: string[]): string[] {
 	return parsed.filter((str) => {
 		// Match all <...> in the string (potential data types)
 		const matches = str.match(/<[^>]+>/g);
 		// If no matches, it's already a concrete value
 		if (!matches) return true;
 
-		// Exclude if any data type is not in CSSDataDefs
+		// Exclude if any data type is not in CSSTokenDefs
 		return matches.every((dt) => {
-			// List of primitive types that should always be allowed, even if not in CSSDataDefs
+			// List of primitive types that should always be allowed, even if not in CSSTokenDefs
 			const excludes = ['length', 'angle', 'percentage', 'number', 'integer', 'flex'];
 			// Extract the base type from the data type string (e.g., 'length' from '<length [1,5]>')
 			const baseTypeMatch = dt.match(/^<([a-zA-Z0-9-]+)/);
@@ -34,32 +34,31 @@ function filterDataTypes(parsed: string[]): string[] {
 			// If the base type is in the excludes list, do not filter it out
 			if (excludes.includes(baseType)) return true;
 
-			// Otherwise, only allow if the data type is defined in CSSDataDefs
-			return dt in CSSDataDefs;
+			// Otherwise, only allow if the data type is defined in CSSTokenDefs
+			return dt in CSSTokenDefs;
 		});
 	});
 }
 
-
 /**
- * Recursively expands all <data-type> references in a CSS syntax string using CSSDataDefs.
+ * Recursively expands all <data-type> references in a CSS syntax string using CSSTokenDefs.
  * If a data-type is not found, it is left as-is.
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
  * @param seen - (internal) Set of already expanded datas to prevent infinite recursion
  * @returns The syntax string with all known datas recursively expanded
  */
-function expandDataTypes(syntax: string, seen = new Set<string>()): string {
+function expandTokens(syntax: string, seen = new Set<string>()): string {
 	// Regex to match <data-type [range]> or <data-type>
 	return syntax.replace(/<([a-zA-Z0-9-]+)(\s*\[[^>]+\])?>/g, (match: string, baseType: string, range: string) => {
-		const typeKey = `<${baseType}>` as CSSDatas;
+		const typeKey = `<${baseType}>` as CSSTokens;
 		if (seen.has(typeKey)) return match; // Prevent infinite recursion
 
-		const def = CSSDataDefs[typeKey];
+		const def = CSSTokenDefs[typeKey];
 		if (def?.syntax) {
 			seen.add(typeKey);
 
 			// Recursively expand the definition
-			const expanded = expandDataTypes(def.syntax, seen);
+			const expanded = expandTokens(def.syntax, seen);
 			seen.delete(typeKey);
 
 			// If expanded contains combinators, wrap each expanded part with the range if present
@@ -334,4 +333,4 @@ function parse(syntax: string): CSSCombinations {
 	return [s];
 }
 
-export { normalizeSyntax, expandDataTypes,  parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterDataTypes };
+export { normalizeSyntax, expandTokens,  parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens };

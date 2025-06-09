@@ -1,69 +1,80 @@
 // Utilities
-import { splitTopLevel } from '@/utilities/string/string';
-import { countSubArrayLength } from '@/utilities/array/array';
-import { createOption } from '@/utilities/option';
+import { isTokenDimension } from '@/utilities/style/token';
+import { getDimensionType, isValueDimension } from '@/utilities/style/dimension';
 
 // Types
 import { ValueTypes } from '@/types/style/value';
-import { OptionData } from '@/types/option';
-
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
+ * @param input - The string to check.
+ * @returns True if the input is a valid keyword format, false otherwise.
+ * @example
+ * isValueKeyword('auto') → true
  */
-function isValueKeyword(value: string): boolean {
-	return /^[a-zA-Z-]+$/.test(value);
-}
-
-/**
- * Checks if a value is a CSS dimension (e.g., <length>, <percentage>).
- */
-function isValueDimension(value: string): boolean {
-	return /^<[^>]+>$/.test(value);
+function isValueKeyword(input: string): boolean {
+	return /^[a-zA-Z-]+$/.test(input);
 }
 
 /**
  * Checks if a value is a CSS function (e.g., functionName(args)).
+ * @param input - The string to check.
+ * @returns True if the input is a valid function format, false otherwise.
+ * @example
+ * isValueFunction('fit-content(10px)') → true
  */
-function isValueFunction(value: string): boolean {
-	return /^[a-zA-Z-]+\([^)]+\)$/.test(value);
+function isValueFunction(input: string): boolean {
+	return /^[a-zA-Z-]+\([^)]+\)$/.test(input);
 }
 
 /**
- * Matches a value string to its category based on CSS syntax.
+ * Checks if a value is a number (e.g., '10', '-5.5', '0.1').
+ * @param input - The string to check.
+ * @returns True if the input is a valid number format, false otherwise.
+ * @example
+ * isValueNumber('10') → true
  */
-function matchValueType(value: string): ValueTypes | undefined {
-	if (isValueDimension(value)) {
-		return 'dimension';
-	} else if (isValueKeyword(value)) {
-		return 'keyword';
-	} else if (isValueFunction(value)) {
-		return 'function';
-	}
+function isValueNumber(input: string): boolean {
+	return /^-?\d*\.?\d+$/.test(input);
+}
+
+/**
+ * Determines the type of a CSS value based on its format.
+ * @param input - The CSS value string to check.
+ * @returns The type of the value as a string, or undefined if not recognized.
+ * @example
+ * getValueType('<length>') → 'dimension'
+ * getValueType('auto') → 'keyword'
+ * getValueType('fit-content(10px)') → 'function'
+ * getValueType('10') → 'number'
+ */
+function getValueType(input: string): ValueTypes | undefined {
+	if (isValueDimension(input)) return 'dimension';
+	if (isValueKeyword(input)) return 'keyword';
+	if (isValueFunction(input)) return 'function';
+	if (isValueNumber(input)) return 'number';
+
 	return undefined;
 }
 
 /**
- * Builds a slot-wise lookup table of unique OptionData arrays for all variations.
- * Each slot (column) contains all unique options that appear in that position across all variations.
+ * Maps an array of value strings to their detected value type (kind).
+ * @param values - The array of value strings to classify.
+ * @returns An array of ValueTypes or 'unknown' for each value.
+ * @example
+ * getValueTypes(['<length>', 'auto', 'fit-content(10px)', '10']) → ['length', 'keyword', 'function', 'number']
  */
-function createSlotOptions(variations: string[], separators: string[] = [' ', ',', '/']): OptionData[][] {
-	const maxSlots = countSubArrayLength(variations, separators);
-	const slotSets: Array<Set<string>> = Array.from({ length: maxSlots }, () => new Set<string>());
-	const slotOptions: OptionData[][] = Array.from({ length: maxSlots }, () => []);
-	for (const variation of variations) {
-		const slots = splitTopLevel(variation, separators);
-		for (let i = 0; i < slots.length; i++) {
-			const slot = slots[i].trim();
-			if (!slot) continue;
-			if (!slotSets[i].has(slot)) {
-				slotSets[i].add(slot);
-				const category = matchValueType(slot) || 'unknown';
-				slotOptions[i].push(createOption(slot, slot, category));
-			}
+function getValueTypes(values: string[]): Array<string> {
+	return values.map((value) => {
+		if (isTokenDimension(value)) {
+			const dimensionType = getDimensionType(value);
+			if (dimensionType) return dimensionType;
 		}
-	}
-	return slotOptions;
+		if (isValueKeyword(value)) return 'keyword';
+		if (isValueFunction(value)) return 'function';
+		if (isValueNumber(value)) return 'number';
+		return 'unknown';
+	});
 }
 
-export { createSlotOptions, isValueKeyword, isValueDimension, isValueFunction, matchValueType };
+export { isValueKeyword, isTokenDimension, isValueFunction, isValueNumber, getValueType, getValueTypes };

@@ -8,7 +8,7 @@ import MultiInput from '@/components/Input/Multi/component';
 import { FUNCTION_INPUT } from '@/components/Input/Function/types';
 import { STYLE_OPTION_FUNCTION } from '@/editors/style/constants/types';
 // Utilities
-import { getOptionByValue, extractValue, extractFunction } from '@/utilities/style';
+import { getOptionByValue, extractNumber, extractFunction } from '@/utilities/style';
 import { devLog } from '@/utilities/dev';
 
 
@@ -25,7 +25,7 @@ const FunctionInput: React.FC<FUNCTION_INPUT> = (props: FUNCTION_INPUT): ReactEl
     const { value, onChange, options } = props;
 
     // Extract components from function string
-    const extractedValue = extractValue(value);
+    const extractedValue = extractNumber(value);
     const extractedFunc = extractFunction(value);
 
 

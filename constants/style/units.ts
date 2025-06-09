@@ -1,5 +1,7 @@
 import { CSSUnits, CSSUnit, CSSUnitCategory, CSSUnitSupported } from '@/types/style/units';
-import { CSSDimensions } from '@/types/style/data';
+import { CSSDimensionGroups } from '@/types/style/dimension';
+import { OptionData } from '@/types/option';
+
 /**
  * Helper function to create a CSSUnit object.
  * @param name - The canonical name of the unit (e.g. 'px', 'em').
@@ -7,14 +9,29 @@ import { CSSDimensions } from '@/types/style/data';
  * @param supported - The support status of the unit (e.g. 'widely', 'not widely').
  * @returns A CSSUnit object with all metadata fields populated.
  */
-function createUnit(name: CSSUnits, category: CSSUnitCategory, group: CSSDimensions, supported: CSSUnitSupported): CSSUnit {
+function createUnit(name: CSSUnits, category: CSSUnitCategory, dimensionGroup: CSSDimensionGroups, supported: CSSUnitSupported): CSSUnit {
 	return {
 		type: 'unit',
 		name,
-		value: name,
+		value: `0${name}`,
 		supported,
 		category,
-		group,
+		dimensionGroup,
+	};
+}
+
+/**
+ * Helper function to create an OptionData object for a CSS unit.
+ * Used for populating dropdowns, radio selects, etc. with dimension options.
+ *
+ * @param name - The canonical name of the unit (e.g. 'px', 'em').
+ * @returns An OptionData object with name, value, and category: 'dimension'.
+ */
+function createUnitOption(name: CSSUnits): OptionData {
+	return {
+		name,
+		value: `0${name}`,
+		category: 'dimension',
 	};
 }
 
@@ -87,3 +104,16 @@ export const CSSUnitDefs: Partial<Record<CSSUnits, CSSUnit>> = {
 	// ms: createUnit('ms', 'time', 'time', 'not widely'),
 };
 
+/**
+ * CSSUnitOptions: Maps each CSSDimensionGroups value to an array of OptionData objects for UI selection.
+ *
+ * This is used to group units by their dimension group (e.g., 'length', 'angle', 'percentage', 'flex').
+ * Each key is a CSSDimensionGroups value, and the value is an array of OptionData objects for that group.
+ */
+export const CSSUnitOptions: Record<CSSDimensionGroups, OptionData[]> = Object.entries(CSSUnitDefs).reduce((acc, [unit, def]) => {
+	if (def?.dimensionGroup) {
+		if (!acc[def.dimensionGroup]) acc[def.dimensionGroup] = [];
+		acc[def.dimensionGroup].push(createUnitOption(unit as CSSUnits));
+	}
+	return acc;
+}, {} as Record<CSSDimensionGroups, OptionData[]>);

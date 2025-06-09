@@ -1,29 +1,29 @@
-import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterDataTypes, expandDataTypes } from '@/utilities/style/parse';
+import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens, expandTokens } from '@/utilities/style/parse';
 
-describe('filterDataTypes', () => {
+describe('filterTokens', () => {
 	it('should allow concrete values', () => {
-		expect(filterDataTypes(['auto', 'block'])).toEqual(['auto', 'block']);
+		expect(filterTokens(['auto', 'block'])).toEqual(['auto', 'block']);
 	});
 	it('should allow known data types', () => {
-		expect(filterDataTypes(['<color>', '<number>'])).toEqual(['<color>', '<number>']);
+		expect(filterTokens(['<color>', '<number>'])).toEqual(['<color>', '<number>']);
 	});
-	it('should allow primitive types even if not in CSSDataDefs', () => {
-		expect(filterDataTypes(['<length>', '<angle [1,5]>', '<percentage>'])).toEqual(['<length>', '<angle [1,5]>', '<percentage>']);
+	it('should allow primitive types even if not in CSSTokenDefs', () => {
+		expect(filterTokens(['<length>', '<angle [1,5]>', '<percentage>'])).toEqual(['<length>', '<angle [1,5]>', '<percentage>']);
 	});
 	it('should filter out unknown data types', () => {
-		expect(filterDataTypes(['<foo>', 'bar', '<length>'])).toEqual(['bar', '<length>']);
+		expect(filterTokens(['<foo>', 'bar', '<length>'])).toEqual(['bar', '<length>']);
 	});
 });
 
-describe('expandDataTypes', () => {
+describe('expandTokens', () => {
 	it('should expand known data types', () => {
-		expect(expandDataTypes('<length-percentage>')).toMatch(/<length>|<percentage>/);
+		expect(expandTokens('<length-percentage>')).toMatch(/<length>|<percentage>/);
 	});
 	it('should preserve ranges on expansion', () => {
-		expect(expandDataTypes('<length-percentage [0,∞]>')).toMatch(/<length \[0,∞\]>\|<percentage \[0,∞\]>/);
+		expect(expandTokens('<length-percentage [0,∞]>')).toMatch(/<length \[0,∞\]>\|<percentage \[0,∞\]>/);
 	});
 	it('should not expand unknown data types', () => {
-		expect(expandDataTypes('<foo>')).toBe('<foo>');
+		expect(expandTokens('<foo>')).toBe('<foo>');
 	});
 });
 

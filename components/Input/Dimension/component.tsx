@@ -7,18 +7,11 @@ import CSS from '@/components/Input/Length/styles.module.css';
 // Components
 import InputNumber from '@/components/Input/Number/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
-import Dropdown from '@/components/Reveal/Dropdown/component';
-import OptionsSelect from '@/components/Select/Options/component';
-import FunctionInput from '@/components/Input/Function/component';
 
 // Types
-import { LENGTH_INPUT } from '@/components/Input/Dimension/types';
+import { DimensionInputProps } from '@/components/Input/Dimension/types';
 
-// Utilities
-import { extractNumber, extractLength, isValueScalable, isValueKeyword, isValueFunction, isFunctionVariable, isValueList, getStyleVariables, isKeywordValid } from '@/utilities/style';
 
-// Constants
-import { LENGTH } from '@/editors/style/constants/options';
 
 /**
  * LengthInput Component
@@ -28,7 +21,7 @@ import { LENGTH } from '@/editors/style/constants/options';
  * functions (calc()), expressions, and CSS variables.
  * 
  * @component
- * @param {LENGTH_INPUT} props - Component props
+ * @param {DimensionInputProps} props - Component props
  * @param {string} [props.value=""] - Current value (e.g., "10px", "auto", "calc(...)")
  * @param {(value: string) => void} props.onChange - Change handler
  * @param {string[]} [props.options=LENGTH] - Available length options
@@ -41,42 +34,26 @@ import { LENGTH } from '@/editors/style/constants/options';
  * <LengthInput value="10px" onChange={setValue} />
  * <LengthInput value="auto" isStrict onChange={setValue} />
  */
-const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement => {
+const LengthInput: React.FC<DimensionInputProps> = (props: DimensionInputProps): ReactElement => {
 
 	const {
 		value = '',
 		onChange = () => { },
-		options = LENGTH,
+		options = [],
 		minValue = -Infinity,
 		maxValue = Infinity,
 		isStrict = false,
 	} = props;
 
 	// Default unit is the first option's value, extracted for consistency
-	const DEFAULT_UNIT = useMemo(() => extractLength(options[0].value), [options]);
+	const DEFAULT_UNIT = useMemo(() => options[0].value, [options]);
 	// Default number is '0', used when no numeric value is provided
 	const DEFAULT_NUMBER = '0';
 
-	// Extract the numeric part and the unit from the value
 	const extractedNumber = extractNumber(value);
 	// Extract the unit from the value.
 	const extractedUnit = extractLength(value);
 
-	/**
-	 * Determines the input mode based on the value type.
-	 * @returns {'scalable' | 'keyword' | 'function' | 'var' | 'expression' | null}
-	 */
-	const calculatedState = (() => {
-		if (isValueScalable(value) || value === '') return 'scalable';
-		if (isValueKeyword(value)) return 'keyword';
-		if (isValueFunction(value)) {
-			if (isFunctionVariable(value)) return 'var';
-			return 'function';
-		}
-		if (isValueList(value)) return 'list';
-
-		return null;
-	})();
 
 	/**
 	 * Handles numeric value changes with appropriate parsing and fallback logic.
@@ -130,90 +107,24 @@ const LengthInput: React.FC<LENGTH_INPUT> = (props: LENGTH_INPUT): ReactElement 
 		[DEFAULT_UNIT, extractedNumber, isStrict, onChange, options]
 	);
 
-	/**
-	 * Renders the length select dropdown with the current unit.
-	 * Memoized to prevent unnecessary re-creations.
-	 * @param {string} unit - The current length unit
-	 * @returns {ReactElement} The rendered SelectDropdown component
-	*/
-	const renderLengthSelect = useMemo(() => {
-		return function RenderLengthSelect(unit: string) {
-			return (
-				<SelectDropdown
-					options={options}
-					value={unit.replace(')', '')}
-					onChange={handleUnitChange}
-					searchable={true}
-					grouped={true}
-					placeholder="length"
-				/>
-			);
-		};
-	}, [handleUnitChange, options]
-	);
-
-	/**
-	 * Renders the children elements based on the calculated state.
-	 * Uses a switch statement to determine the appropriate rendering logic.
-	 * @returns {ReactElement} The rendered children elements
-	 */
-	const childrenElements = (() => {
-		switch (calculatedState) {
-			case 'scalable':
-				return (
-					<>
-						<InputNumber
-							value={extractedNumber}
-							minValue={minValue}
-							maxValue={maxValue}
-							onChange={handleValueChange}
-							aria-label="Numeric value"
-						/>
-						{renderLengthSelect(extractedUnit)}
-					</>
-				);
-
-			case 'keyword':
-				return renderLengthSelect(extractedUnit);
-
-			case 'var':
-				return (
-					<Dropdown value={'VAR'} closeOnChange={false}>
-						{renderLengthSelect(extractedUnit)}
-						<OptionsSelect
-							searchable
-							onChange={handleUnitChange}
-							value={value}
-							options={getStyleVariables()}
-						/>
-					</Dropdown>
-				);
-
-			case 'function':
-				return (
-					<Dropdown value={value} closeOnChange={false}>
-						{renderLengthSelect(extractedUnit)}
-						<FunctionInput value={value} onChange={(value: string) => onChange(value)} options={options} />
-					</Dropdown>
-				);
-
-			case 'list':
-				return (
-					<Dropdown value={value} closeOnChange={false}>
-						<FunctionInput value={value} onChange={(value: string) => onChange(value)} options={options} />
-					</Dropdown>
-				);
-
-
-			default:
-				return <div>Invalid length value</div>
-		}
-	})();
-
-
 	return (
-		<div className={CSS.LengthInput} data-state={calculatedState} >
-			{childrenElements}
+		<div className={CSS.LengthInput} >
+			<InputNumber
+				value={extractedNumber}
+				minValue={minValue}
+				maxValue={maxValue}
+				onChange={handleValueChange}
+				aria-label="Numeric value"
+			/>
+			<SelectDropdown
+				options={options}
+				value={unit.replace(')', '')}
+				onChange={handleUnitChange}
+				searchable={true}
+				grouped={true}
+				placeholder="length"
+			/>
+
 		</div>
 	);
 };

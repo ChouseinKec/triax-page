@@ -1,14 +1,14 @@
 // Types
-import { CSSData, CSSDatas } from '@/types/style/data';
+import { CSSToken, CSSTokens } from '@/types/style/token';
 
-const createData = (type: CSSDatas, syntax: string): CSSData => {
+const createData = (type: CSSTokens, syntax: string): CSSToken => {
 	return {
 		type,
 		syntax,
 	};
 };
 
-export const CSSDataDefs: Partial<Record<CSSDatas, CSSData>> = {
+export const CSSTokenDefs: Partial<Record<CSSTokens, CSSToken>> = {
 	// === Numeric Types ===
 	'<number>': createData('<number>', '<number>'),
 	'<integer>': createData('<integer>', '<integer>'),
