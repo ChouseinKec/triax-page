@@ -17,48 +17,62 @@ import { ValueSeparators } from '@/constants/style/value';
 import { SlotsProps } from './types';
 
 /**
- * Renders a row of Slot components for each value slot, plus an extra for the next possible slot.
+ * Slots Component
+ * Renders a row of Slot components for each value slot, plus an extra dropdown for the next possible slot.
+ * Handles incremental slot-based value editing for a CSS property.
  *
- * @param values - The current values for each slot (e.g., ['10px', 'auto'])
- * @param variations - The array of all possible value definition strings
- * @param onChange - Callback fired when any slot value changes
+ * @param values - Array of current slot values (e.g., ['10px', 'auto'])
+ * @param variations - Array of all possible value definition strings for the property
+ * @param onChange - Callback fired when any slot value changes (returns the new value string)
+ * @returns ReactElement - The rendered slot editor UI
  */
 const Slots: React.FC<SlotsProps> = ({ values, variations, onChange }) => {
+    // Compute the possible slot variations for each slot (column) from all variations
+    const allSlotVariations = useMemo(
+        () => generateSlotVariations(variations, [...ValueSeparators]),
+        [variations]
+    );
 
-    // Compute the possible options for each slot using the value definition variations
-    const allSlotVariations = useMemo(() => generateSlotVariations(variations, [...ValueSeparators]), [variations]);
+
     // Handles a change in a single slot, updating the overall value string
     const handleSlotChange = useCallback((newValue: string, currentValues: string[], slotIndex: number) => {
+        // Create a new array with the updated slot value
         const updatedValues = [...currentValues];
         updatedValues[slotIndex] = newValue;
+        // Join all slot values into a single value string
         onChange(updatedValues.join(' '));
     }, [onChange]);
 
-    // Render Slot components for each current value
+
+    // Render Slot components for each current value slot
     const currentSlots = useMemo(() => (
         values.map((slotValue, slotIndex) => {
+            // Get the possible variations for this slot (column)
             const slotVariations = allSlotVariations[slotIndex] || [];
             return (
                 <Slot
                     key={slotIndex}
                     value={slotValue}
                     slotVariations={slotVariations}
-                    onChange={(val) => { handleSlotChange(val, values, slotIndex) }}
+                    onChange={(val) => { handleSlotChange(val, values, slotIndex); }}
                 />
             );
         })
     ), [values, allSlotVariations, handleSlotChange]);
 
-    // Render an extra Slot for the next possible slot (if any)
+    // Render an extra dropdown for the next possible slot (if any)
     const nextSlot = useMemo(() => {
         const nextIndex = values.length;
+        // If there are no more slot variations, return null
         if (nextIndex >= allSlotVariations.length) return null;
-        const slotVariations = allSlotVariations[nextIndex] || [];
+        // Get the variations for the next slot and generate options
+        const slotVariations = allSlotVariations[nextIndex];
+        // Generate options for the dropdown based on the slot variations
         const slotOptions = generateSlotOptions(slotVariations);
         const style: React.CSSProperties = {
             width: 'max-content',
             fontSize: 'var(--font-size-lg)',
-        }
+        };
         return (
             <DropdownSelect
                 key={nextIndex}
@@ -73,8 +87,9 @@ const Slots: React.FC<SlotsProps> = ({ values, variations, onChange }) => {
         );
     }, [values, allSlotVariations, handleSlotChange]);
 
+    // Render all current slots and the next slot dropdown
     return (
-        <div className={CSS.Slots} >
+        <div className={CSS.Slots}>
             {currentSlots}
             {nextSlot}
         </div>

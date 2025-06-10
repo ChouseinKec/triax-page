@@ -23,9 +23,11 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     // Generate slotOptions for this slot from its variations
     const slotOptions = useMemo(() => generateSlotOptions(slotVariations), [slotVariations]);
 
+    console.log(slotOptions);
+
+
     /**
      * Renders the appropriate value input based on the detected valueType.
-     * If no valueType is detected, show a dropdown of possible slot options.
      */
     const children = useMemo(() => {
         if (valueType === 'function') return <FunctionValue value={value} options={slotOptions} onChange={onChange} />;
