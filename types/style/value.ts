@@ -1,6 +1,6 @@
 export type ValueTypes = 'keyword' | 'dimension' | 'function' | 'number';
 
 export interface SlotVariation {
-	group: string;
+	type: string;
 	params?: Record<string, any>;
 }

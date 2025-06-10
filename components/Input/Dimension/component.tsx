@@ -9,7 +9,7 @@ import InputNumber from '@/components/Input/Number/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
-import { DimensionInputProps } from '@/components/Input/Dimension/types';
+import { DimensionValueProps } from '@/components/Input/Dimension/types';
 
 
 
@@ -21,7 +21,7 @@ import { DimensionInputProps } from '@/components/Input/Dimension/types';
  * functions (calc()), expressions, and CSS variables.
  * 
  * @component
- * @param {DimensionInputProps} props - Component props
+ * @param {DimensionValueProps} props - Component props
  * @param {string} [props.value=""] - Current value (e.g., "10px", "auto", "calc(...)")
  * @param {(value: string) => void} props.onChange - Change handler
  * @param {string[]} [props.options=LENGTH] - Available length options
@@ -34,7 +34,7 @@ import { DimensionInputProps } from '@/components/Input/Dimension/types';
  * <LengthInput value="10px" onChange={setValue} />
  * <LengthInput value="auto" isStrict onChange={setValue} />
  */
-const LengthInput: React.FC<DimensionInputProps> = (props: DimensionInputProps): ReactElement => {
+const LengthInput: React.FC<DimensionValueProps> = (props: DimensionValueProps): ReactElement => {
 
 	const {
 		value = '',

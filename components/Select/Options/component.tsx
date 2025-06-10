@@ -8,7 +8,7 @@ import Option from '@/components/Select/Options/Option/component';
 
 // Types
 import { OptionsSelectProps } from './types';
-import { OptionData } from '@/types/interface/option';
+import { OptionData } from '@/types/option';
 
 // Hooks
 import { useDebouncedValue } from '@/hooks/hooks';
@@ -28,7 +28,15 @@ import { useDebouncedValue } from '@/hooks/hooks';
  * @returns {ReactElement} - The rendered options component.
  *
 */
-const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange, searchable, grouped }: OptionsSelectProps): ReactElement | ReactElement[] => {
+const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps): ReactElement | ReactElement[] => {
+    const {
+        value,
+        options,
+        onChange,
+        searchable = false,
+        grouped = false
+    } = props;
+
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);
 
@@ -57,7 +65,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
         setSearch(input);
     }, []
     );
-
 
     /**
      * Filters the options based on the search term (if search is enabled).
@@ -89,8 +96,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
     }, [filteredOptions, grouped]
     );
 
-
-
     /**
     * Renders the search input element if search is enabled and there are more than 10 options.
     * Memoized to avoid unnecessary re-renders.
@@ -108,9 +113,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
         );
     }, [handleSearch, searchable, options.length]
     );
-
-
-
 
     /**
     * Renders the list of options or grouped options based on the filtered data.
@@ -140,7 +142,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
                                         <Option
                                             key={index}
                                             {...option}
-                                            isSelected={value.length > 0 && option.value.startsWith(value)}
+                                            isSelected={value.length > 0 && option.name.startsWith(value)}
                                             onChange={handleChange}
                                         />
                                     )
@@ -152,13 +154,15 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ value, options, onChange,
             );
         }
 
+
         // If options are basic
         return (filteredOptions.map((option: OptionData, index) => {
             return (
                 <Option
+                    name={option.name}
+                    value={option.value}
                     key={index}
-                    {...option}
-                    isSelected={value === option.value}
+                    isSelected={value === option.name}
                     onChange={handleChange}
                 />
             )

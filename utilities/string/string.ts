@@ -3,11 +3,14 @@ import { canCamelCase } from '@/utilities/string/validation';
 /**
  * Splits a string by one or more separators at the top level (not inside brackets).
  * Handles (), [], and <> as grouping symbols.
- * Example: splitTopLevel('a [b|c] d|e', ['|', ' ']) → ['a', '[b|c]', 'd', 'e']
  * @param s - The string to split
  * @param seps - The separator string or array of separator strings
  * @returns Array of split strings
- */
+ * @example
+ * splitTopLevel('a [b|c] d|e', ['|', ' ']); // ['a', '[b|c]', 'd', 'e']
+ * splitTopLevel('x(y z) a|b', [' ', '|']); // ['x(y z)', 'a', 'b']
+ * splitTopLevel('a <b> c|d', ['|', ' ']); // ['a', '<b>', 'c', 'd']
+*/
 function splitTopLevel(s: string, seps: string | string[]): string[] {
 	const separators = Array.isArray(seps) ? seps : [seps];
 	const result: string[] = [];

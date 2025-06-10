@@ -1,4 +1,4 @@
-import { OptionData } from "@/types/interface/option";
+import { OptionData } from "@/types/option";
 
 /**
  * Props for the DropdownSelect component.
@@ -11,12 +11,11 @@ import { OptionData } from "@/types/interface/option";
  * @property buttonStyle - Custom style for the dropdown trigger/button.
  * @property onChange - Callback function triggered when an option is selected.
  */
-export type DROPDOWN_SELECT = {
+export type DropdownSelectProps = {
   /** The currently selected value */
   value: string;
   /** The list of options to display in the dropdown */
   options: OptionData[];
-
   /** Placeholder text to display when no value is selected */
   placeholder?: string;
   /** Whether the dropdown supports searching options */
@@ -25,7 +24,6 @@ export type DROPDOWN_SELECT = {
   grouped?: boolean;
   /** Custom style for the dropdown trigger/button */
   buttonStyle?: React.CSSProperties;
-
   /** Callback function triggered when an option is selected */
   onChange: (value: string) => void;
 };

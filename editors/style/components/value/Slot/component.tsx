@@ -1,10 +1,9 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
 
 // Components
-import DropdownSelect from '@/components/Select/Dropdown/component';
 import DimensionValue from '../Dimension/component';
 import FunctionValue from '../Function/component';
 import KeywordValue from '../Keyword/component';
@@ -15,43 +14,25 @@ import { SlotProps } from './types';
 
 // Utilities
 import { getValueType } from '@/utilities/style/value';
-import { expandSlotOptions } from '@/utilities/style/slot';
+import { generateSlotOptions } from '@/utilities/style/slot';
 
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
-    const { value, slotOptions, onChange } = props;
-    const type = getValueType(value);
+    const { value, slotVariations, onChange } = props;
+    const valueType = getValueType(value);
 
-    // Expand slotOptions to OptionData[] for use in value components
-    const options = useMemo(() => expandSlotOptions(slotOptions), [slotOptions]);
-
-
-    const handleVariationChange = useCallback((input: string) => {
-        onChange(input);
-    }, [onChange]);
-
+    // Generate slotOptions for this slot from its variations
+    const slotOptions = useMemo(() => generateSlotOptions(slotVariations), [slotVariations]);
 
     /**
-     * Renders the appropriate value input based on the detected type.
-     * If no type is detected, show a dropdown of possible slot options.
+     * Renders the appropriate value input based on the detected valueType.
+     * If no valueType is detected, show a dropdown of possible slot options.
      */
     const children = useMemo(() => {
-        if (!type) {
-            return (
-                <DropdownSelect
-                    value={value}
-                    options={options}
-                    placeholder="Variation"
-                    searchable={false}
-                    grouped={true}
-                    onChange={handleVariationChange}
-                />
-            );
-        }
-        if (type === 'function') return <FunctionValue value={value} options={options} onChange={onChange} />;
-        if (type === 'keyword') return <KeywordValue value={value} options={options} onChange={onChange} />;
-        if (type === 'dimension') return <DimensionValue value={value} options={options} onChange={onChange} />;
-        if (type === 'number') return <NumberValue value={value} onChange={onChange} />;
-    }, [type, value, onChange, options, handleVariationChange]);
+        if (valueType === 'function') return <FunctionValue value={value} options={slotOptions} onChange={onChange} />;
+        if (valueType === 'keyword') return <KeywordValue value={value} options={slotOptions} onChange={onChange} />;
+        if (valueType === 'dimension') return <DimensionValue value={value} options={slotOptions} onChange={onChange} />;
+        if (valueType === 'number') return <NumberValue value={value} options={slotOptions} onChange={onChange} />;
+    }, [valueType, value, onChange, slotOptions]);
 
     return (
         <div className={CSS.Slot} >

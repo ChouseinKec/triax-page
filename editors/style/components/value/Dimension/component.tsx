@@ -5,11 +5,11 @@ import React, { useCallback, ReactElement, memo, useMemo } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import InputNumber from '@/components/Input/Number/component';
+import NumberInput from '@/components/Input/Number/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
-import { DimensionInputProps } from './types';
+import { DimensionValueProps } from './types';
 
 // Utilities
 import { extractNumber, extractUnit } from '@/utilities/style/dimension';
@@ -20,7 +20,7 @@ import { extractNumber, extractUnit } from '@/utilities/style/dimension';
  * A controlled input for CSS dimension values (e.g., '10px', '2rem').
  * Splits the value into number and unit, and allows editing both parts.
  * @component
- * @param {DimensionInputProps} props - The properties for the DimensionValue component.
+ * @param {DimensionValueProps} props - The properties for the DimensionValue component.
  * @param {string} [props.value=''] - The current value of the dimension input.
  * @param {function} [props.onChange=() => {}] - Callback function to handle value changes.
  * @param {Array<{ label: string, value: string }>} [props.options=[]] - List of unit options for the dropdown.
@@ -29,10 +29,10 @@ import { extractNumber, extractUnit } from '@/utilities/style/dimension';
  * @param {boolean} [props.isStrict=false] - If true, enforces a valid value format (number + unit).
  * @return {ReactElement} The rendered DimensionValue component.
  */
-const DimensionValue: React.FC<DimensionInputProps> = memo((props: DimensionInputProps): ReactElement => {
+const DimensionValue: React.FC<DimensionValueProps> = memo((props: DimensionValueProps): ReactElement => {
 	const {
 		value = '',
-		onChange = () => {},
+		onChange = () => { },
 		options = [],
 		minValue = -Infinity,
 		maxValue = Infinity,
@@ -40,7 +40,8 @@ const DimensionValue: React.FC<DimensionInputProps> = memo((props: DimensionInpu
 	} = props;
 
 	// Default unit is the first option's value (e.g., 'px'), fallback to empty string
-	const DEFAULT_UNIT = useMemo(() => options[0]?.value || '', [options]);
+	const DEFAULT_UNIT = 'px';
+
 	// Default number is '0', used when no numeric value is provided
 	const DEFAULT_NUMBER = '0';
 
@@ -49,46 +50,56 @@ const DimensionValue: React.FC<DimensionInputProps> = memo((props: DimensionInpu
 	const extractedUnit = extractUnit(value);
 
 	// Handle changes to the numeric input
-	const handleValueChange = useCallback((input: string): void => {
-		if (input === '') {
+	const handleValueChange = useCallback((number: string, unit: string): void => {
+		if (number === '') {
 			// If strict, always provide a valid value; otherwise allow empty
-			onChange(isStrict ? `${DEFAULT_NUMBER}${DEFAULT_UNIT}` : '');
+			onChange(isStrict ? `${number}${unit}` : '');
 			return;
 		}
-		
+
 		// Combine new number with current or default unit
-		onChange(`${input}${extractedUnit || DEFAULT_UNIT}`);
-	}, [onChange, extractedUnit, DEFAULT_UNIT, isStrict]);
+		onChange(`${number}${unit}`);
+	}, [onChange, isStrict]);
+
 
 	// Handle changes to the unit dropdown
-	const handleUnitChange = useCallback((input: string): void => {
-		if (input === '') {
-			onChange(isStrict ? `${DEFAULT_NUMBER}${DEFAULT_UNIT}` : '');
+	const handleOptionChange = useCallback((unit: string, number: string): void => {
+		// If the input is a keyword, just pass it through
+		const category = options.find(option => option.value === unit)?.category;
+		if (category === 'keyword' || category === 'number') {
+			onChange(unit);
 			return;
 		}
+
+		unit = extractUnit(unit) || '';
+
+		// If input is empty, reset to default number and unit
+		if (unit === '') {
+			onChange(isStrict ? `${number}${unit}` : '');
+			return;
+		}
+
 		// Combine current or default number with new unit
-		onChange(`${extractedNumber || DEFAULT_NUMBER}${input}`);
-	}, [DEFAULT_UNIT, extractedNumber, isStrict, onChange]);
+		onChange(`${number}${unit}`);
+	}, [isStrict, onChange]);
 
 	return (
-		<div className={CSS.LengthInput}>
+		<div className={CSS.DimensionValue}>
 			{/* Numeric input for the value part */}
-			<InputNumber
+			<NumberInput
 				value={extractedNumber || ''}
 				minValue={minValue}
 				maxValue={maxValue}
-				onChange={handleValueChange}
-				aria-label="Numeric value"
+				onChange={(number) => handleValueChange(number, extractedUnit || DEFAULT_UNIT)}
 			/>
 
 			{/* Dropdown for the unit part */}
 			<SelectDropdown
 				options={options}
-				value={extractedUnit || ''}
-				onChange={handleUnitChange}
+				value={extractedUnit || 'px'}
+				onChange={(unit) => handleOptionChange(unit, extractedNumber || DEFAULT_NUMBER)}
 				searchable={true}
 				grouped={true}
-				placeholder="length"
 			/>
 		</div>
 	);

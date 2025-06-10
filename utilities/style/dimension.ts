@@ -34,19 +34,23 @@ function extractUnit(input: string): string | undefined {
  *
  * @param input - The CSS value string to check (e.g., '10px', '2.5rem').
  * @returns True if the input is a valid dimension value, false otherwise.
- *
- * Internally, this function extracts the number and unit, and checks if the unit is in CSSUnitDefs.
+ * @example
+ * isValueDimension('10px') → true
+ * isValueDimension('25%') → true
+ * isValueDimension('180deg') → true
+ * isValueDimension('1fr') → true
+ * isValueDimension('auto') → false
+ * isValueDimension('10') → false
  */
 function isValueDimension(input: string): boolean {
 	const value = extractNumber(input); // Extract numeric part
-	const unit = extractUnit(input) as CSSUnits; // Extract unit part
+	const unit = extractUnit(input); // Extract unit part
 
 	// If no number or no unit, not a valid dimension
 	if (value === undefined || !unit) return false;
 
 	// Ensure unit is a valid CSSUnits value
 	if (!(unit in CSSUnitDefs)) return false;
-
 	return true;
 }
 

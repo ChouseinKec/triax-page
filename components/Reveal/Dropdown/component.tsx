@@ -13,7 +13,7 @@ import { DropdownRevealProps } from '@/components/Reveal/Dropdown/types';
  * A reusable dropdown component that toggles visibility on button click
  * and closes when clicking outside or when the children element changes (optional).
  */
-const Dropdown: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): ReactElement => {
+const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): ReactElement => {
     const {
         value,
         buttonStyle,
@@ -92,4 +92,4 @@ const Dropdown: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): Re
     );
 };
 
-export default memo(Dropdown);
+export default memo(DropdownReveal);

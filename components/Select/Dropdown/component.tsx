@@ -1,13 +1,13 @@
 import React, { memo, ReactElement, useCallback } from 'react';
 // Styles
-import CSS from '@/components/Select/Dropdown/styles.module.css';
+import CSS from './styles.module.css';
 
 // Types
-import { DROPDOWN_SELECT } from '@/components/Select/Dropdown/types';
+import { DropdownSelectProps } from '@/components/Select/Dropdown/types';
 
 
 // Components
-import Dropdown from '@/components/Reveal/Dropdown/component';
+import DropdownReveal from '@/components/Reveal/Dropdown/component';
 import Options from '@/components/Select/Options/component';
 
 /**
@@ -16,7 +16,7 @@ import Options from '@/components/Select/Options/component';
  * A reusable dropdown select component that allows users to select an option from a list.
  * It includes features such as search and grouping options for the dropdown content.
  * 
- * @param {DROPDOWN_SELECT} props - The component props.
+ * @param {DropdownSelectProps} props - The component props.
  * @param {Array<{ name: string, value: string }>} props.options - The list of options to display in the dropdown.
  * @param {string} props.value - The currently selected value.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected.
@@ -32,7 +32,7 @@ import Options from '@/components/Select/Options/component';
  *   onChange={(value) => setSelectedValue(value)}
  * />
  */
-const DropdownSelect: React.FC<DROPDOWN_SELECT> = ({ value, options, buttonStyle, onChange, placeholder = 'Select', grouped, searchable }: DROPDOWN_SELECT): ReactElement => {
+const DropdownSelect: React.FC<DropdownSelectProps> = ({ value, options, buttonStyle, onChange, placeholder = 'Select', grouped, searchable }: DropdownSelectProps): ReactElement => {
 
     /**
     * Handles the onChange event for when an option is selected from the dropdown.
@@ -42,12 +42,13 @@ const DropdownSelect: React.FC<DROPDOWN_SELECT> = ({ value, options, buttonStyle
         onChange(selectedValue);
     }, [onChange]);
 
+
     return (
-        <Dropdown value={value || placeholder} buttonStyle={buttonStyle}        >
+        <DropdownReveal value={value || placeholder} buttonStyle={buttonStyle}>
             <div className={CSS.DropdownSelect_Options}>
                 <Options searchable={searchable} grouped={grouped} value={value} options={options} onChange={handleOptionChange} />
             </div>
-        </Dropdown>
+        </DropdownReveal>
     );
 };
 

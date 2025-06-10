@@ -15,7 +15,7 @@ const KeywordValue: React.FC<KeywordValueProps> = (props: KeywordValueProps) => 
             options={options}
             placeholder="Select a keyword"
             searchable={false}
-            grouped={false}
+            grouped={true}
             onChange={onChange}
         />
     )

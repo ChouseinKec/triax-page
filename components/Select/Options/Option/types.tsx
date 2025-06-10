@@ -1,4 +1,4 @@
-import type { OptionData } from "@/types/interface/option";
+import type { OptionData } from "@/types/option";
 
 /**
  * Props for a single option item in a dropdown/select component.

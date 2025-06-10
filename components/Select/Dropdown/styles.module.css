@@ -1,1 +1,1 @@
-.DropdownSelect{text-align:center}.DropdownSelect_Options{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:var(--size-sm)}
+.DropdownSelect{text-align:center;width:-moz-max-content;width:max-content}.DropdownSelect_Options{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:var(--size-sm)}

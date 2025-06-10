@@ -1,7 +1,7 @@
 import { OptionData } from 'types/option'
 
 
-export type DimensionInputProps = {
+export type DimensionValueProps = {
   /**
    * The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)".
    * @type {string}
@@ -21,7 +21,8 @@ export type DimensionInputProps = {
   maxValue?: number;
 
   /**
-   * Available length options, default is LENGTH.
+   * Array of options for the unit dropdown, each option should have a value and category.
+
    * @type {STYLE_OPTION[]}
    */
   options?: OptionData[];

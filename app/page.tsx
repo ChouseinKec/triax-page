@@ -16,7 +16,6 @@ export default function Home() {
   const { generateBlockStyles } = useBlockEditor();
   const selectedBlock = useBlockStore(state => state.selectedBlock);
 
-  // console.log(DataTypesDef);
   return (
     <main className={pageStyles.main}>
       {/* Styles */}
@@ -55,5 +54,4 @@ export default function Home() {
 }
 
 
-// console.log(CSSPropertyDefs);
 
