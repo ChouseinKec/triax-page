@@ -9,11 +9,11 @@ import InputNumber from '@/components/Input/Number/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
-import { NumverValueProps } from './types';
+import { NumberValueProps } from './types';
 
 
 
-const NumberValue: React.FC<NumverValueProps> = memo((props: NumverValueProps): ReactElement => {
+const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): ReactElement => {
     const {
         value = '',
         onChange = () => { },

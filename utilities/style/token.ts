@@ -1,12 +1,6 @@
 // Type
 import { CSSTokenGroups } from '@/types/style/token';
 
-// Utilities
-import { splitTopLevel } from '@/utilities/string/string';
-
-// Constants
-import { ValueSeparators } from '@/constants/style/value';
-
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
  * @param input - The string to check.
@@ -102,9 +96,11 @@ function getTokenType(input: string): CSSTokenGroups | undefined {
  * @param input - The CSS data type string (e.g., 'fit-content(10px)', '<length [0,10]>').
  * @returns The canonical type string (e.g., 'fit-content()', '<length>') or undefined if not recognized.
  * @example
- * getTokenCanonical('fit-content(10px)') → 'fit-content()'
+ * getTokenCanonical('fit-content(<length> <percentage>)') → 'fit-content()'
  * getTokenCanonical('<length [0,10]>') → '<length>'
  * getTokenCanonical('auto') → 'auto'
+ * getTokenCanonical('10px') → undefined
+ * getTokenCanonical('10') → undefined
  */
 function getTokenCanonical(input: string): string | undefined {
 	if (!input) return undefined;
@@ -122,11 +118,23 @@ function getTokenCanonical(input: string): string | undefined {
 	return undefined;
 }
 
+/**
+ * Extracts the base token from a CSS data type string, removing any range or step part.
+ * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
+ * @returns The base token string (e.g., 'length', 'fit-content') or undefined if not recognized.
+ * @example
+ * getTokenBase('<length [0,10]>') → 'length'
+ * getTokenBase('fit-content(<length> <percentage>)') → 'fit-content'
+ * getTokenBase('auto') → 'auto'
+ *
+ */
 function getTokenBase(input: string): string | undefined {
 	const canonical = getTokenCanonical(input);
 	if (!canonical) return undefined;
 
-	return canonical.replace(/<|>/g, '').replace(/(\s*\[.*\])?$/, ''); // Remove <, > and any range or step part
+	return canonical
+		.replace(/<|>/g, '') // Remove < and >
+		.replace(/\(\)/g, ''); // Remove ()
 }
 
 /**
@@ -134,11 +142,10 @@ function getTokenBase(input: string): string | undefined {
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
  * @returns An object with the extracted arguments (e.g., { min: '0', max: '10', step: '1' } or { args: '<length> <percentage>' }) or undefined if not recognized.
  * @example
- * getTokenParam('<length [0,10,1]>') → { min: '0', max: '10', step: '1' }
- * getTokenParam('<percentage [0,100]>') → { min: '0', max: '100' }
- * getTokenParam('auto') → undefined
- * getTokenParam('<angle>') → undefined
- * getTokenParam('fit-content(<length> <percentage>)') → { args: '<length> <percentage>' }
+ * getTokenParam('<length [0,10]>') → { min: 0, max: 10 }
+ * getTokenParam('fit-content(<length> <percentage>)') → { syntax: '<length> <percentage>' }
+ * getTokenParam('<number [0,15]>') → { min: 0, max: 15 }
+ *
  */
 function getTokenParam(input: string): Record<string, any> | undefined {
 	// Determine the token group/type
@@ -151,7 +158,7 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 			if (fnMatch) {
 				const param = fnMatch[2].trim();
 				if (param) {
-					return { args: param };
+					return { syntax: param };
 				}
 			}
 			return undefined;
@@ -163,13 +170,11 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 			if (dimMatch?.[3]) {
 				const range = dimMatch[3].split(',').map((s: string) => s.trim());
 				if (range.length >= 2) {
-					// If both min and max are present
-					const param: Record<string, any> = { min: range[0], max: range[1] };
-					if (range[2]) param.step = range[2];
-					return param;
-				} else if (range.length === 1) {
-					// If only a single range value is present
-					return { range: dimMatch[3] };
+					// If both min and max are present, normalize them
+					return {
+						min: normalizeRange(range[0]),
+						max: normalizeRange(range[1]),
+					};
 				}
 			}
 			return undefined;
@@ -178,6 +183,24 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 		default:
 			return undefined;
 	}
+}
+
+/**
+ * Normalizes a range value from a string to a number.
+ * @param value - The range value as a string (e.g., '10', '∞', '-∞').
+ * @returns The normalized number or undefined if the value is not valid.
+ * @example
+ * normalizeRange('10') → 10
+ * normalizeRange('∞') → Infinity
+ * normalizeRange('-∞') → -Infinity
+ * normalizeRange('abc') → undefined
+ */
+function normalizeRange(value: string | undefined): number | undefined {
+	if (value === undefined) return undefined;
+	if (value === '∞') return Infinity;
+	if (value === '-∞') return -Infinity;
+	if (!isNaN(Number(value))) return Number(value);
+	return undefined;
 }
 
 export { getTokenBase, getTokenCanonical, getTokenParam, getTokenType, isTokenDimension };

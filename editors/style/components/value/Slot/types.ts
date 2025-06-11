@@ -1,4 +1,4 @@
-import { SlotVariation } from '@/types/style/value';
+import type { InputOptionData } from '@/types/option';
 
 /**
  * Props for the Slot component, representing a single value slot (column) in the editor UI.
@@ -11,7 +11,7 @@ export interface SlotProps {
     /** The current value for this slot. */
     value: string;
     /** The available options for this slot (for dropdowns, etc.). */
-    slotVariations: SlotVariation[];
+    options: InputOptionData[];
     /** Callback fired when the slot value changes. */
     onChange: (value: string) => void;
 }

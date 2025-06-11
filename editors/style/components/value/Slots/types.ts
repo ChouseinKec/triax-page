@@ -1,3 +1,5 @@
+import type { InputOptionData } from '@/types/option';
+
 /**
  * Props for the Slots component, which renders all slots (columns) for a CSS value,
  * including the next available slot for incremental input.
@@ -10,7 +12,7 @@ export interface SlotsProps {
     /** The current values for each slot (column). */
     values: string[];
     /** All possible value pattern variations for the property. */
-    variations: string[];
+    options: InputOptionData[][];
     /** Callback fired when the slot values change (joined as a string). */
     onChange: (value: string) => void;
 }

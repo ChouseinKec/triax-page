@@ -113,6 +113,19 @@ function getValueTokens(values: string[]): string[] {
 	});
 }
 
+function getSlotValueSets(variations: string[]): Array<Set<string>> {
+	const slotValueSets: Array<Set<string>> = [];
+	for (const variation of variations) {
+		const slots = splitTopLevel(variation, [...ValueSeparators]);
+		for (let i = 0; i < slots.length; i++) {
+			const canonical = getTokenCanonical(slots[i]);
+			if (!slotValueSets[i]) slotValueSets[i] = new Set();
+			if (canonical) slotValueSets[i].add(canonical);
+		}
+	}
+	return slotValueSets;
+}
+
 /**
  * Filters variations to those that match the prefix of the provided value tokens.
  * Each variation is split into slots, and each slot is canonicalized for comparison.
@@ -123,24 +136,24 @@ function getValueTokens(values: string[]): string[] {
  * @returns Array of variations that match the current value tokens as a prefix.
  */
 function filterVariations(variations: string[], values: string[]): string[] {
-    // Canonicalize the current value tokens for comparison
-    const valueTokens = getValueTokens(values);
+	// Canonicalize the current value tokens for comparison
+	const valueTokens = getValueTokens(values);
+	console.log(getSlotValueSets(variations));
+	return variations.filter((variation) => {
+		// Split the variation into slots (e.g., ['auto', '<number [0,∞]>'])
+		const variationSlots = splitTopLevel(variation, [...ValueSeparators]);
 
-    return variations.filter((variation) => {
-        // Split the variation into slots (e.g., ['auto', '<number [0,∞]>'])
-        const variationSlots = splitTopLevel(variation, [...ValueSeparators]);
+		// If the variation has fewer slots than the number of value tokens, it can't match
+		if (variationSlots.length < valueTokens.length) return false;
 
-        // If the variation has fewer slots than the number of value tokens, it can't match
-        if (variationSlots.length < valueTokens.length) return false;
-
-        // Compare each slot/token for prefix match
-        for (let i = 0; i < valueTokens.length; i++) {
-            // Canonicalize the slot for robust comparison
-            if (getTokenCanonical(variationSlots[i]) !== valueTokens[i]) return false;
-        }
-        // All slots matched the value tokens as a prefix
-        return true;
-    });
+		// Compare each slot/token for prefix match
+		for (let i = 0; i < valueTokens.length; i++) {
+			// Canonicalize the slot for robust comparison
+			if (getTokenCanonical(variationSlots[i]) !== valueTokens[i]) return false;
+		}
+		// All slots matched the value tokens as a prefix
+		return true;
+	});
 }
 
 export { filterVariations, isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes };

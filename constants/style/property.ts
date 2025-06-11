@@ -9,7 +9,7 @@ import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
  * @param category - The property category for grouping/filtering in the UI.
  * @returns A CSSProperty object with all metadata fields populated, including expanded and parsed syntax.
  */
-const createProperty = (name: string, syntax: string, initialValue: string, description: string, category: CSSPropertyCategories): CSSProperty => {
+export const createProperty = (name: string, syntax: string, initialValue: string, description: string, category: CSSPropertyCategories): CSSProperty => {
 	let _expanded: string | undefined;
 	let _parsed: ReturnType<typeof parse> | undefined;
 	return {
@@ -71,6 +71,8 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 
 	// -------------------------------- SIZE & OVERFLOW --------------------------------
 	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
+
+	// width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
 	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', '0', 'The minimum width of the element.', 'size'),
 	'max-width': createProperty('max-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'none', 'The maximum width of the element.', 'size'),
 	height: createProperty('height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The height of the element.', 'size'),

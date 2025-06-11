@@ -1,29 +1,48 @@
-import React from 'react';
-import { OptionData } from '@/types/option';
-import DropdownSelect from '@/components/Select/Dropdown/component';
+import React, { useCallback } from 'react';
+
+// Types
+import { FunctionValueProps } from './types';
+
+// Components
+import Value from '@/editors/style/components/value/component';
 import DropdownReveal from '@/components/Reveal/Dropdown/component';
+// Constants
+import { createProperty } from '@/constants/style/property';
 
-/**
- * Renders a dropdown for selecting a CSS function value.
- */
-export interface FunctionValueProps {
-    options: OptionData[];
-    value: string;
-    onChange: (value: string) => void;
-}
+// Utilities
+import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
 
-const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
+const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) => {
+    const { value, option, onChange } = props;
+    const property = createProperty(option.name, option.syntax, '', '', 'flex');
+
+    const safeValue = extractFunctionValue(value);
+    const safeName = extractFunctionName(value);
+
+    const handleChange = useCallback((newValue: string): void => {
+        // Ensure the new value is a valid function format
+        const newFunctionValue = `${safeName}(${newValue})`;
+
+        console.log(newFunctionValue);
+        onChange(newFunctionValue);
+    }, [value, onChange]
+    );
+
+
+    if (!safeValue || !safeName) {
+        return <div>Error: Invalid function value</div>;
+    }
+
+
     return (
-        <DropdownReveal value={value}>
-            <DropdownSelect
-                value={value}
-                options={options}
-                placeholder="Select a function"
-                searchable={true}
-                grouped={true}
-                onChange={onChange}
+        <DropdownReveal closeOnChange={false} placeholder={safeName}>
+            <Value
+                value={safeValue}
+                property={property}
+                onChange={handleChange}
             />
         </DropdownReveal>
+
     );
 };
 

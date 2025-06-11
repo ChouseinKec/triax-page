@@ -58,7 +58,7 @@ In `token.ts`, `<ratio>` expands as:
 2. It retrieves the property definition and expands the syntax to all possible variations (see above).
 3. As the user types, `filterVariations` narrows the list to only those variations matching the current input.
 4. The value string is split into slots (e.g., `['2', '/', '1']`).
-5. `generateSlotVariations` builds a lookup table of all unique options for each slot, based on the filtered variations.
+5. `createSlotVariations` builds a lookup table of all unique options for each slot, based on the filtered variations.
 6. The `Slots` component renders a `Slot` for each slot value, passing the relevant options.
 7. Each `Slot` determines its type (keyword, number, etc.) and renders the correct input component.
 8. The user can incrementally build or edit the value, with the UI updating contextually at each step.
@@ -94,7 +94,7 @@ The `editors/style/components/value/value.ts` component provides core logic for 
 The `editors/style/components/value/slot.ts` component is responsible for managing slot-wise logic:
 
 - **Gathering allSlotVariations:**
-  - The `generateSlotVariations` function takes the filtered variations and builds a lookup table of all unique options for each slot (column). This enables the editor to show only valid options for each slot, based on the current context.
+  - The `createSlotVariations` function takes the filtered variations and builds a lookup table of all unique options for each slot (column). This enables the editor to show only valid options for each slot, based on the current context.
 - **Rendering currentSlots:**
   - The `Slots` component maps over the current slot values and renders a `Slot` component for each, passing the relevant slot variations and change handlers.
 - **Rendering nextSlot:**
@@ -110,7 +110,7 @@ The `editors/style/components/value/slot.ts` component is responsible for managi
   - The `getValueType` function analyzes the current slot value and determines its type (e.g., keyword, function, dimension, number). This type is used to select the appropriate input component.
 
 - **Generating Slot Options:**
-  - The `generateSlotOptions` function creates the list of valid options for the slot, based on the slot's possible variations. These options are passed to the input component for dropdowns or suggestions.
+  - The `createOptionsTable` function creates the list of valid options for the slot, based on the slot's possible variations. These options are passed to the input component for dropdowns or suggestions.
 
 - **Rendering the Correct Component:**
   - Based on the detected value type, the `Slot` component renders the corresponding `Input` component: `Keyword`, `Function`, `Dimension`, or `Number`.
