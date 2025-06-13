@@ -7,19 +7,19 @@ import { canCamelCase } from '@/utilities/string/validation';
  * @param seps - The separator string or array of separator strings
  * @returns Array of split strings
  * @example
- * splitTopLevel('a [b|c] d|e', ['|', ' ']); // ['a', '[b|c]', 'd', 'e']
- * splitTopLevel('x(y z) a|b', [' ', '|']); // ['x(y z)', 'a', 'b']
- * splitTopLevel('a <b> c|d', ['|', ' ']); // ['a', '<b>', 'c', 'd']
-*/
-function splitTopLevel(s: string, seps: string | string[]): string[] {
-	const separators = Array.isArray(seps) ? seps : [seps];
+ * splitAdvanced('a [b|c] d|e', ['|', ' ']); // ['a', '[b|c]', 'd', 'e']
+ * splitAdvanced('x(y z) a|b', [' ', '|']); // ['x(y z)', 'a', 'b']
+ * splitAdvanced('a <b> c|d', ['|', ' ']); // ['a', '<b>', 'c', 'd']
+ */
+function splitAdvanced(input: string, separators: string | string[]): string[] {
+	const seps = Array.isArray(separators) ? separators : [separators];
 	const result: string[] = [];
 	let depthSquare = 0;
 	let depthRound = 0;
 	let depthAngle = 0;
 	let buf = '';
-	for (let i = 0; i < s.length; i++) {
-		const c = s[i];
+	for (let i = 0; i < input.length; i++) {
+		const c = input[i];
 		if (c === '[') depthSquare++;
 		if (c === ']') depthSquare--;
 		if (c === '(') depthRound++;
@@ -29,8 +29,8 @@ function splitTopLevel(s: string, seps: string | string[]): string[] {
 		// Only split if not inside any brackets and matches any separator
 		let matchedSep = null;
 		if (depthSquare === 0 && depthRound === 0 && depthAngle === 0) {
-			for (const sep of separators) {
-				if (sep && s.slice(i, i + sep.length) === sep) {
+			for (const sep of seps) {
+				if (sep && input.slice(i, i + sep.length) === sep) {
 					matchedSep = sep;
 					break;
 				}
@@ -45,6 +45,25 @@ function splitTopLevel(s: string, seps: string | string[]): string[] {
 		}
 	}
 	if (buf.trim()) result.push(buf.trim());
+	return result;
+}
+
+/**
+ * Joins an array of values with their corresponding separators.
+ * If no separators are provided, joins with a single space.
+ * @param vals - The array of values to join.
+ * @param seps - The array of separators to use between values.
+ * @returns A single string with values joined by their respective separators.
+ * @example
+ * joinAdvanced(['10px', 'auto'], [' ', '/']) → '10px auto'
+ */
+function joinAdvanced(inputs: string[], separators: string[]): string {
+	if (!separators.length) return inputs.join(' ');
+	let result = '';
+	for (let i = 0; i < inputs.length; i++) {
+		result += inputs[i];
+		if (separators[i]) result += separators[i];
+	}
 	return result;
 }
 
@@ -130,4 +149,4 @@ function toCamelCase(input: string): string {
 	return _input;
 }
 
-export { splitTopLevel, extractBetween, clearSpaces, toCamelCase };
+export { splitAdvanced, extractBetween, clearSpaces, toCamelCase, joinAdvanced };

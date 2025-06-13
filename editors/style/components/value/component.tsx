@@ -1,53 +1,64 @@
-import { memo, ReactElement, useMemo, useState } from 'react';
+import { memo, ReactElement, useMemo } from 'react';
 
 // Types
 import type { ValueProps } from './types';
 
 // Utilities
-import { splitTopLevel } from '@/utilities/string/string';
-import { filterVariations } from '@/utilities/style/value';
+import { splitAdvanced, joinAdvanced } from '@/utilities/string/string';
 import { createOptionsTable } from '@/utilities/style/option';
+import { extractSeparators, getValueTokens, getVariationIndex } from '@/utilities/style/value';
 
 // Constants
 import { ValueSeparators } from '@/constants/style/value';
 
 // Components
 import Slots from './Slots/component';
-import Error from './Error/component';
 
 /**
  * Value Component
  * Main entry for rendering a CSS property value editor.
  * Handles parsing, slotting, and incremental UI for property values.
  *
- * @param property - The CSS property name to edit (e.g., 'aspect-ratio', 'width').
+ * @param property - The CSS property definition (with syntaxSet and syntaxNormalized)
+ * @param value - The current value string for the property (e.g., 'auto 10px')
+ * @param onChange - Callback to update the value
  * @returns ReactElement - The rendered value editor UI for the property.
  */
 const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const { property, value, onChange } = props;
 
-    // Split the value string into slots (e.g., ['10px', 'auto'])
-    const values = splitTopLevel(value, [...ValueSeparators]);
+    // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
+    const syntaxSet = property.syntaxSet;
+    const syntaxNormalized = property.syntaxNormalized;
+    const syntaxParsed = property.syntaxParsed;
 
-    // Get all possible syntax variations for this property
-    const variations = useMemo(() => property.syntaxParsed, [property]);
-    if (!variations) {
-        return <Error message={`No variations found for property: ${property}`} />;
+    // Split the value string into slots (e.g., ['10px', 'auto'])
+    const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
+
+    // Extract all separators for each variation in syntaxParsed
+    const allSeparators = useMemo(() => extractSeparators(syntaxParsed), [syntaxParsed]);
+
+    // Compute the possible slot options for each slot, based on current values and property syntax
+    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
+        [syntaxNormalized, syntaxSet, values]
+    );
+
+    // Handler to update slot values and join with correct separators
+    function handleSlotsChange(updatedValues: string[]) {
+        const valueTokens = getValueTokens(updatedValues).join(' ');
+        const found = getVariationIndex(syntaxNormalized, valueTokens);
+        const separators = found === -1 ? [] : allSeparators[found];
+        // Join the values using the correct separators
+        const joinedValue = joinAdvanced(updatedValues, separators);
+        onChange(joinedValue);
     }
 
-    // Filter variations to only those matching the current input prefix
-    const filteredVariations = filterVariations(variations, values);
-
-    // Compute the possible slot variations for each slot (column) from all variations
-    const slotsOptions = useMemo(
-        () => createOptionsTable(filteredVariations),
-        [filteredVariations]
-    );
-
-    // Render the slot-based value editor
-    return (
-        <Slots values={values} options={slotsOptions} onChange={onChange} />
-    );
+    // Render the slot-based value editor, passing separators and new onChange
+    return <>
+        {value}
+        <br />
+        <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    </>;
 };
 
 export default memo(Value);

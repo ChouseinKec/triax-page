@@ -16,32 +16,47 @@ import type { FunctionOptionData } from '@/types/option';
 // Utilities
 import { getValueType } from '@/utilities/style/value';
 
-const Slot: React.FC<SlotProps> = (props: SlotProps) => {
-    const { value, options, onChange } = props;
+/**
+ * Slot Component
+ * Renders the appropriate input component for a single value slot based on its type.
+ * Handles function, keyword, dimension, and number value types.
+ *
+ * @param value - The current value for this slot (e.g., 'auto', '10px')
+ * @param options - The available options for this slot (from createOptionsTable)
+ * @param onChange - Callback fired when the slot value changes
+ * @returns ReactElement - The rendered input for the slot
+ */
+const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
+    // Determine the value type for this slot (e.g., function, keyword, dimension, number)
     const valueType = getValueType(value);
 
-    /**
-     * Renders the appropriate value input based on the detected valueType.
-     */
-    const children = useMemo(() => {
-        if (valueType === 'function') {
-            const functionOption = options.find(opt => opt.category === 'function') as FunctionOptionData | undefined;
-            if (functionOption) {
-                return <FunctionValue value={value} option={functionOption} onChange={onChange} />;
+    // Memoize the rendered input for this slot based on value type and options
+    const slotInput = useMemo(() => {
+        switch (valueType) {
+            case 'function': {
+                // Find the function option data for this slot
+                const functionOption = options.find(opt => opt.category === 'function') as FunctionOptionData | undefined;
+                if (functionOption) {
+                    return <FunctionValue value={value} option={functionOption} onChange={onChange} />;
+                }
+                return <div className={CSS.Error}>Function option not found for value: {value}</div>;
             }
-            return <div className={CSS.Error}>Function option not found for value: {value}</div>;
+            case 'keyword':
+                return <KeywordValue value={value} options={options} onChange={onChange} />;
+            case 'dimension':
+                return <DimensionValue value={value} options={options} onChange={onChange} />;
+            case 'number':
+                return <NumberValue value={value} options={options} onChange={onChange} />;
+            default:
+                return <div className={CSS.Error}>Unknown value type: {String(valueType)}</div>;
         }
-
-        if (valueType === 'keyword') return <KeywordValue value={value} options={options} onChange={onChange} />;
-        if (valueType === 'dimension') return <DimensionValue value={value} options={options} onChange={onChange} />;
-        if (valueType === 'number') return <NumberValue value={value} options={options} onChange={onChange} />;
     }, [valueType, value, onChange, options]);
 
     return (
-        <div className={CSS.Slot} >
-            {children}
+        <div className={CSS.Slot}>
+            {slotInput}
         </div>
     );
 };
 
-export default Slot;
+export default React.memo(Slot);

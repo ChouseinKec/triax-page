@@ -40,7 +40,7 @@ export const useStyleFactory = (): STYLE_FACTORY => {
 	const Syntax = useCallback<STYLE_FACTORY['Syntax']>((property) => {
 
 		console.log("HOLA");
-		// console.log(splitTopLevel(syntax || '', '|'));
+		// console.log(splitAdvanced(syntax || '', '|'));
 
 		return <p>asdasd</p>;
 

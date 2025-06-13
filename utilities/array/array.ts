@@ -1,4 +1,4 @@
-import { splitTopLevel } from '@/utilities/string/string';
+import { splitAdvanced } from '@/utilities/string/string';
 
 /**
  * Returns the cross product of arrays.
@@ -10,7 +10,7 @@ import { splitTopLevel } from '@/utilities/string/string';
  * @param arrays - Array of arrays
  * @returns Array of arrays (cross product)
  */
-export function generateCrossProduct<T>(arrays: T[][]): T[][] {
+function generateCrossProduct<T>(arrays: T[][]): T[][] {
 	if (!arrays.length) return [[]];
 	const [first, ...rest] = arrays;
 	const restProduct = generateCrossProduct(rest);
@@ -31,7 +31,7 @@ export function generateCrossProduct<T>(arrays: T[][]): T[][] {
  * @param arr - The input array
  * @returns Array of subsets (combinations)
  */
-export function generateAllSubsets<T>(arr: T[]): T[][] {
+function generateAllSubsets<T>(arr: T[]): T[][] {
 	const result: T[][] = [];
 	const total = 1 << arr.length;
 	for (let i = 0; i < total; i++) {
@@ -50,7 +50,7 @@ export function generateAllSubsets<T>(arr: T[]): T[][] {
  * @param arr - Array of elements
  * @returns Array of permutations (arrays)
  */
-export function generatePermutations(arr: string[]): string[][] {
+function generatePermutations(arr: string[]): string[][] {
 	if (arr.length === 0) return [[]];
 	const result: string[][] = [];
 	for (let i = 0; i < arr.length; i++) {
@@ -68,11 +68,42 @@ export function generatePermutations(arr: string[]): string[][] {
  * Returns the maximum length of any subarray (after splitting each string by separators).
  * Used for slot/column calculations in value helpers.
  */
-export function countSubArrayLength(variations: string[], separators: string[] = [' ', ',', '/']): number {
-    let maxSlots = 0;
-    for (const variation of variations) {
-        const slots = splitTopLevel(variation, separators);
-        if (slots.length > maxSlots) maxSlots = slots.length;
-    }
-    return maxSlots;
+function countSubArrayLength(variations: string[][]): number {
+	let maxSlots = 0;
+
+	for (const variation of variations) {
+		if (variation.length > maxSlots) {
+			maxSlots = variation.length;
+		}
+	}
+	return maxSlots;
 }
+
+/**
+ * Returns an array of arrays, where each inner array contains the unique values found in that column
+ * across all rows of the input 2D array.
+ *
+ * @param rows - A 2D array (array of arrays) of values.
+ * @returns Array of arrays, one for each column.
+ * @example
+ * getColumnValueSets([
+ *   ['a', 'b'],
+ *   ['a', 'c'],
+ *   ['d', 'b']
+ * ]) // [['a', 'd'], ['b', 'c']]
+ */
+function getColumnSets<T>(rows: T[][]): T[][] {
+	if (!rows.length) return [];
+	const maxCols = Math.max(...rows.map((row) => row.length));
+	const columns: T[][] = Array.from({ length: maxCols }, () => []);
+	for (const row of rows) {
+		for (let i = 0; i < row.length; i++) {
+			if (!columns[i].includes(row[i])) {
+				columns[i].push(row[i]);
+			}
+		}
+	}
+	return columns;
+}
+
+export { generateCrossProduct, generateAllSubsets, generatePermutations, countSubArrayLength, getColumnSets };

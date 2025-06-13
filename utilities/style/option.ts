@@ -1,12 +1,11 @@
 // Constants
 import { CSSUnitOptions } from '@/constants/style/units';
-import { ValueSeparators, DimensionGroups } from '@/constants/style/value';
+import { DimensionGroups } from '@/constants/style/value';
 
 // Utilities
-import { splitTopLevel } from '@/utilities/string/string';
-import { countSubArrayLength } from '@/utilities/array/array';
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
 import { getTokenBase } from '@/utilities/style/token';
+import { getValueTokens } from '@/utilities/style/value';
 
 // Types
 import type { InputOptionData, NumberOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
@@ -115,78 +114,91 @@ function createNumberOption(token: string): NumberOptionData | undefined {
 }
 
 /**
- * Creates a table of slot options based on the provided variations.
- * Each column corresponds to a slot, and each row contains unique options for that slot.
- *
- * @param variations - Array of CSS property value variations (e.g., ['<length>', 'auto', 'fit-content(<length> <percentage>)'])
- * @returns InputOptionData[][] - A 2D array where each sub-array contains options for a specific slot.
- * @example
- * createOptionsTable(['<length>', 'auto', 'fit-content(<length>)'])
- * → [
- *   [{ name: 'px', value: '0px', type: 'length', min: 0, max: 100 }, ...],
- *   [{ name: 'auto', value: 'auto', category: 'keyword' }],
- *   [{ name: 'fit-content(<length>)', value: 'fit-content(0px)', syntax: '<length>', category: 'function' }]
- * ]
+ * Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
+ * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
+ * @returns InputOptionData | InputOptionData[] | undefined
  */
-function createOptionsTable(variations: string[]): InputOptionData[][] {
-	// Determine the maximum number of slots (columns) across all variations
-	const maxSlots = countSubArrayLength(variations, [...ValueSeparators]);
-	// For each slot, track unique slot tokens to avoid duplicates
-	const slotSets: Array<Set<string>> = Array.from({ length: maxSlots }, () => new Set<string>());
-	// For each slot, collect OptionData objects
-	const slotOptions: InputOptionData[][] = Array.from({ length: maxSlots }, () => []);
-
-	// Iterate over each variation string
-	for (const variation of variations) {
-		// Split the variation into slot tokens (e.g., ['<length>', 'auto'])
-		const slotTokens = splitTopLevel(variation, [...ValueSeparators]);
-
-		// For each slot, determine its index and add to the corresponding slotSets and slotOptions
-		for (let i = 0; i < slotTokens.length; i++) {
-			const slotToken = slotTokens[i].trim();
-
-			// Skip empty slots or duplicates for this column
-			if (!slotToken || slotSets[i].has(slotToken)) continue;
-			slotSets[i].add(slotToken);
-
-			const tokenType = getTokenType(slotToken);
-
-			switch (tokenType) {
-				case 'function': {
-					const functionOption = createFunctionOption(slotToken);
-					if (functionOption) {
-						slotOptions[i].push(functionOption);
-					}
-					break;
-				}
-
-				case 'dimension': {
-					const dimensionOptions = createDimensionOptions(slotToken);
-					if (dimensionOptions) {
-						slotOptions[i].push(...dimensionOptions);
-					}
-					break;
-				}
-
-				case 'keyword': {
-					const keywordOption = createKeywordOption(slotToken);
-					if (keywordOption) {
-						slotOptions[i].push(keywordOption);
-					}
-					break;
-				}
-
-				case 'number': {
-					const numberOption = createNumberOption(slotToken);
-					if (numberOption) {
-						slotOptions[i].push(numberOption);
-					}
-					break;
-				}
-			}
+function createOption(token: string): InputOptionData | InputOptionData[] | undefined {
+	const type = getTokenType(token);
+	switch (type) {
+		case 'keyword': {
+			return createKeywordOption(token);
 		}
+		case 'number': {
+			return createNumberOption(token);
+		}
+		case 'dimension': {
+			return createDimensionOptions(token);
+		}
+		case 'function': {
+			return createFunctionOption(token);
+		}
+		default:
+			return undefined;
 	}
-	return slotOptions;
+}
+
+/**
+ * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
+ *
+ * @param token - The candidate token for the slot (e.g., 'auto', '<number>')
+ * @param slotIndex - The index of the slot being checked
+ * @param validValueSet - Set of all valid value strings (normalized)
+ * @param currentTokens - The current value tokens for all slots (canonicalized)
+ * @returns True if the token is valid for this slot in the current context
+ * @example
+ * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
+ */
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<string>, currentTokens: string[]): boolean {
+	const tokenCanonical = getTokenCanonical(token);
+	if (!tokenCanonical) return false;
+
+	// If the current value for this slot is already set to this token, it's always valid
+	if (currentTokens[slotIndex] === tokenCanonical) return true;
+
+	// Create a copy of the current tokens and set this slot to the candidate token
+	const testTokens = [...currentTokens];
+	testTokens[slotIndex] = tokenCanonical;
+	const testString = testTokens.join(' ');
+
+	// Check if this combination is a valid variation using the Set for lookup
+	return validValueSet.has(testString);
+}
+
+/**
+ * Builds a 2D options table for slot-based value editors.
+ * Each slot (column) contains only the valid options for the current context.
+ * Optimized to use a Set for valid value strings.
+ *
+ * @param syntaxNormalized - All valid variations, normalized and joined as strings
+ * @param slotTokenSets - Array of arrays, each containing all possible tokens for that slot
+ * @param values - The current value tokens for all slots (user input, not yet canonicalized)
+ * @returns 2D array of InputOptionData for each slot
+ */
+function createOptionsTable(syntaxNormalized: string[], slotTokenSets: string[][], values: string[]): InputOptionData[][] {
+	// Canonicalize the current values for robust comparison
+	const valueTokens = getValueTokens(values);
+	// Precompute a Set of all valid value strings for O(1) lookup
+	const validValueSet = new Set(syntaxNormalized);
+
+	// Build the options table for each slot
+	return slotTokenSets.map((tokenSet, slotIndex) => {
+		if (!tokenSet || tokenSet.length === 0) return [];
+
+		// Use flatMap for concise option flattening
+		return tokenSet.flatMap((token) => {
+			const tokenCanonical = getTokenCanonical(token);
+			if (!tokenCanonical) return [];
+
+			// If the token matches the current value for this slot, or is a valid option
+			// for this slot in the context of the current values, create the option
+			if (valueTokens[slotIndex] === tokenCanonical || isSlotOptionValid(token, slotIndex, validValueSet, valueTokens)) {
+				const option = createOption(token);
+				return Array.isArray(option) ? option : option ? [option] : [];
+			}
+			return [];
+		});
+	});
 }
 
 export { createOptionsTable };

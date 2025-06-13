@@ -7,7 +7,7 @@ import { CSSTokens } from '@/types/style/token';
 
 // Utilities
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
-import { splitTopLevel } from '@/utilities/string/string';
+import { splitAdvanced } from '@/utilities/string/string';
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
@@ -64,7 +64,7 @@ function expandTokens(syntax: string, seen = new Set<string>()): string {
 			// If expanded contains combinators, wrap each expanded part with the range if present
 			if (range) {
 				// Split by '|' at top level to attach range to each option
-				const parts = splitTopLevel(expanded, '|');
+				const parts = splitAdvanced(expanded, '|');
 				return parts
 					.map((part) => {
 						const trimmed = part.trim();
@@ -123,7 +123,7 @@ function normalizeSyntax(s: string): string {
  * @example parseDoubleBar('a || b && c') → ['a', 'b && c', 'a b && c', 'b && c a']
  */
 function parseDoubleBar(s: string): string[] {
-	const parts = splitTopLevel(s, '||');
+	const parts = splitAdvanced(s, '||');
 	if (parts.length > 1) {
 		const combos: string[] = [];
 		const subsets = generateAllSubsets(parts).filter((subset) => subset.length > 0);
@@ -147,7 +147,7 @@ function parseDoubleBar(s: string): string[] {
  * @example parseDoubleAmp('a && b && c') → ['a b c', 'a c b', ...]
  */
 function parseDoubleAmp(s: string): string[] {
-	const parts = splitTopLevel(s, '&&');
+	const parts = splitAdvanced(s, '&&');
 	if (parts.length > 1) {
 		return generatePermutations(parts).map((perm) => perm.join(' '));
 	}
@@ -163,7 +163,7 @@ function parseDoubleAmp(s: string): string[] {
  * @example parseSingleBar('a | b | c') → ['a', 'b', 'c']
  */
 function parseSingleBar(s: string): string[] {
-	const parts = splitTopLevel(s, '|');
+	const parts = splitAdvanced(s, '|');
 	if (parts.length > 1) {
 		return parts.map((part) => part.trim());
 	}
@@ -179,7 +179,7 @@ function parseSingleBar(s: string): string[] {
  * @example parseSequence('a b c') → ['a b c']
  */
 function parseSequence(s: string): string[] {
-	const seq = splitTopLevel(s, ' ');
+	const seq = splitAdvanced(s, ' ');
 	if (seq.length > 1) {
 		return [seq.join(' ')];
 	}
@@ -254,14 +254,14 @@ function parse(syntax: string): CSSCombinations {
 	const s = normalizeSyntax(syntax.trim());
 
 	// Handle '||' (double bar) first (lowest precedence)
-	if (splitTopLevel(s, '||').length > 1) {
+	if (splitAdvanced(s, '||').length > 1) {
 		const combos = parseDoubleBar(s);
 		// For each combo (subset/permutation), split by spaces and recursively parse each part
 		const results: string[] = [];
 
 		for (const combo of combos) {
 			// Split the combo by spaces at the top level (e.g., 'a b && c' -> ['a', 'b && c'])
-			const parts = splitTopLevel(combo, ' ');
+			const parts = splitAdvanced(combo, ' ');
 
 			// Recursively parse each part to get all possible combinations for that part
 			const parsedParts = parts.map((part) => parse(part));
@@ -280,13 +280,13 @@ function parse(syntax: string): CSSCombinations {
 	}
 
 	// Handle '&&' (double ampersand)
-	if (splitTopLevel(s, '&&').length > 1) {
+	if (splitAdvanced(s, '&&').length > 1) {
 		const combos = parseDoubleAmp(s);
 		// For each permutation combo, split by spaces and recursively parse each part
 		const results: string[] = [];
 		for (const combo of combos) {
 			// Split the combo by spaces at the top level
-			const parts = splitTopLevel(combo, ' ');
+			const parts = splitAdvanced(combo, ' ');
 			// Recursively parse each part to get all possible combinations for that part
 			const parsedParts = parts.map((part) => parse(part));
 			// Generate the cross product of all parsed parts to get all possible combinations
@@ -303,17 +303,17 @@ function parse(syntax: string): CSSCombinations {
 	}
 
 	// Handle '|' (single bar)
-	if (splitTopLevel(s, '|').length > 1) {
+	if (splitAdvanced(s, '|').length > 1) {
 		const combos = parseSingleBar(s);
 		return combos.flatMap((combo) => parse(combo)).sort((a, b) => a.length - b.length);
 	}
 
 	// Handle space-separated sequence
-	if (splitTopLevel(s, ' ').length > 1) {
+	if (splitAdvanced(s, ' ').length > 1) {
 		const combos = parseSequence(s);
 		return combos
 			.flatMap((combo) => {
-				const parts = splitTopLevel(combo, ' ');
+				const parts = splitAdvanced(combo, ' ');
 				return generateCrossProduct(parts.map((part) => parse(part))).map((arr) => arr.join(' '));
 			})
 			.sort((a, b) => a.length - b.length);

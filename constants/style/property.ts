@@ -1,4 +1,13 @@
-import { CSSProperty, CSSProperties, CSSPropertyCategories } from '@/types/style/property';
+// Types
+import type { CSSProperty, CSSProperties, CSSPropertyCategories } from '@/types/style/property';
+
+// Constants
+import { ValueSeparators } from './value';
+
+// Utilities
+import { getColumnSets } from '@/utilities/array/array';
+import { splitAdvanced } from '@/utilities/string/string';
+import { getTokenCanonical } from '@/utilities/style/token';
 import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
 
 /**
@@ -12,6 +21,9 @@ import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
 export const createProperty = (name: string, syntax: string, initialValue: string, description: string, category: CSSPropertyCategories): CSSProperty => {
 	let _expanded: string | undefined;
 	let _parsed: ReturnType<typeof parse> | undefined;
+	let _set: string[][] | undefined;
+	let _normalized: string[] | undefined;
+
 	return {
 		name,
 		description,
@@ -23,12 +35,39 @@ export const createProperty = (name: string, syntax: string, initialValue: strin
 			if (_expanded === undefined) _expanded = expandTokens(syntax);
 			return _expanded!;
 		},
+
 		get syntaxParsed() {
 			if (_parsed === undefined) {
 				const parsed = parse(this.syntaxExpanded!);
 				_parsed = filterTokens(parsed);
 			}
 			return _parsed;
+		},
+
+		get syntaxSet() {
+			if (_set === undefined) {
+				const parsed = this.syntaxParsed;
+
+				// Split each variation into top-level tokens
+				const tokens = parsed.map((variation) => {
+					return splitAdvanced(variation, [...ValueSeparators]);
+				});
+
+				const columnSets = getColumnSets(tokens);
+				_set = columnSets;
+			}
+			return _set;
+		},
+
+		get syntaxNormalized() {
+			if (_normalized === undefined) {
+				_normalized = this.syntaxParsed.map((variation) =>
+					splitAdvanced(variation, [...ValueSeparators])
+						.map((token) => getTokenCanonical(token))
+						.join(' ')
+				);
+			}
+			return _normalized;
 		},
 	};
 };

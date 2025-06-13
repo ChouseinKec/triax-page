@@ -1,13 +1,10 @@
 // Utilities
 import { getTokenCanonical } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
-import { splitTopLevel } from '@/utilities/string/string';
 
 // Types
-import { ValueTypes } from '@/types/style/value';
-
-// Constants
-import { ValueSeparators } from '@/constants/style/value';
+import type { ValueTypes } from '@/types/style/value';
+import type { ValueSeparators } from '@/types/style/value';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -113,47 +110,85 @@ function getValueTokens(values: string[]): string[] {
 	});
 }
 
-function getSlotValueSets(variations: string[]): Array<Set<string>> {
-	const slotValueSets: Array<Set<string>> = [];
-	for (const variation of variations) {
-		const slots = splitTopLevel(variation, [...ValueSeparators]);
-		for (let i = 0; i < slots.length; i++) {
-			const canonical = getTokenCanonical(slots[i]);
-			if (!slotValueSets[i]) slotValueSets[i] = new Set();
-			if (canonical) slotValueSets[i].add(canonical);
-		}
-	}
-	return slotValueSets;
-}
-
 /**
- * Filters variations to those that match the prefix of the provided value tokens.
- * Each variation is split into slots, and each slot is canonicalized for comparison.
- * Only variations whose slots match the value tokens as a prefix are included.
+ * Extracts separators between tokens for each variation in syntaxParsed.
+ * Returns a 2D array: one array of separators per variation.
+ * @param variations - An array of CSS value variations (e.g., ['a b / c', 'd e / f']).
+ * @return A 2D array of separators for each variation.
  *
- * @param variations - Array of value definition strings (e.g., ['auto <number [0,∞]>'])
- * @param values - Array of current value strings (e.g., ['auto', '10'])
- * @returns Array of variations that match the current value tokens as a prefix.
+ * @example
+ * extractSeparators(['a b / c', 'd / e f']) → [[' ', '/'], ['/', ' ']]
  */
-function filterVariations(variations: string[], values: string[]): string[] {
-	// Canonicalize the current value tokens for comparison
-	const valueTokens = getValueTokens(values);
-	console.log(getSlotValueSets(variations));
-	return variations.filter((variation) => {
-		// Split the variation into slots (e.g., ['auto', '<number [0,∞]>'])
-		const variationSlots = splitTopLevel(variation, [...ValueSeparators]);
+function extractSeparators(variations: string[]): ValueSeparators[][] {
+	/**
+	 * Preprocesses variations by:
+	 * 1. Removing anything between < and > (including the brackets themselves), e.g. '<number [10,100]>' → ''
+	 * 2. Removing spaces before and after '/' or ',',
+	 * 3. Trimming the result and filtering out empty strings
+	 *
+	 * @param variations - Array of CSS value variations
+	 * @returns Array of cleaned variations
+	 */
+	const safeVariations = variations
+		.map((v) =>
+			v
+				.replace(/\s+/g, ' ')
+				// Remove anything between < and > (including brackets)
+				.replace(/<[^>]*>/g, 'token')
+				// Remove spaces before and after '/' or ',',
+				.replace(/\s*([/,])\s*/g, '$1')
+				// Remove functions and their arguments, e.g., 'fit-content(10px)' → ''
+				.replace(/\b\S*\([^)]*\)/g, 'token')
+				.trim()
+		)
+		.filter((v) => v.length > 0);
 
-		// If the variation has fewer slots than the number of value tokens, it can't match
-		if (variationSlots.length < valueTokens.length) return false;
-
-		// Compare each slot/token for prefix match
-		for (let i = 0; i < valueTokens.length; i++) {
-			// Canonicalize the slot for robust comparison
-			if (getTokenCanonical(variationSlots[i]) !== valueTokens[i]) return false;
+	return safeVariations.map((variation) => {
+		// Match separators: either '/' or one or more spaces
+		const regex = /([\/]|\s+)/g;
+		const separators: ValueSeparators[] = [];
+		let match;
+		while ((match = regex.exec(variation)) !== null) {
+			separators.push(match[0] as ValueSeparators);
 		}
-		// All slots matched the value tokens as a prefix
-		return true;
+		return separators;
 	});
 }
 
-export { filterVariations, isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes };
+/**
+ * Matches a value against the variations and returns the index of the first match.
+ * If no match is found, returns -1.
+ * @param variations - An array of CSS value variations to match against.
+ * @param values - The CSS value string to match.
+ * @return The index of the matching variation, or -1 if not found.
+ * @example
+ * getVariationIndex(['10px', 'auto'], '10px') → 0
+ * getVariationIndex(['10px', 'auto'], '20px') → -1
+ */
+function getVariationIndex(variations: string[], values: string): number {
+	return variations.findIndex((variation) => variation === values);
+}
+
+/**
+ * Joins slot values into a single CSS value string using the correct separators.
+ *
+ * This function is used in the Value component to join slot values after editing, ensuring the result matches the CSS syntax for the matched variation.
+ *
+ * - The correct separator array is determined by matching the current slot tokens to the allowed variations.
+ * - The slot values are joined using the separators (space, slash, comma, etc.) in the correct order.
+ * - This guarantees that values like `10px / 2` or `auto 1 / 2` are always joined with the right syntax, matching the CSS property definition.
+ *
+ * Example usage:
+ *   const valueTokens = getValueTokens(updatedValues).join(' ');
+ *   const found = getVariationIndex(syntaxNormalized, valueTokens);
+ *   const separators = found === -1 ? [] : allSeparators[found];
+ *   const joinedValue = joinAdvanced(updatedValues, separators);
+ *
+ * See also: extractSeparators, joinAdvanced, createOptionsTable
+ */
+
+/**
+ * Note: The old strict variationFilter logic has been removed. All filtering and matching is now handled inside createOptionsTable, which is more flexible and context-aware, supporting partial and incremental editing.
+ */
+
+export { isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes, getValueTokens, getValueToken, extractSeparators, getVariationIndex };

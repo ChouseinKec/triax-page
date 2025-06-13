@@ -96,11 +96,24 @@ export interface CSSProperty {
 	 * Expanded CSS Value Definition Syntax string (all datas expanded).
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	syntaxExpanded?: string;
+	syntaxExpanded: string;
 
 	/**
 	 * Parsed representation of the CSS Value Definition Syntax string.
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	syntaxParsed?: string[];
+	syntaxParsed: string[];
+
+	/**
+	 * Set of each token available in each slot of the syntax.
+	 * Generated at runtime by the style parser for UI/validation logic.
+	 */
+	syntaxSet: string[][];
+
+	/**
+	 * Normalized syntax representation for easier comparison and validation.
+	 * This is a simplified version of the syntax that removes unnecessary separators, ranges,
+	 * and normalizes function calls.
+	 */
+	syntaxNormalized: string[];
 }
