@@ -1,4 +1,4 @@
-import { FunctionOptionData } from '@/types/option';
+import { InputOptionData } from '@/types/option';
 
 /**
  * Props for the FunctionValue component.
@@ -8,7 +8,7 @@ export interface FunctionValueProps {
 	/**
 	 * The option for the function parameter(s).
 	 */
-	option: FunctionOptionData;
+	options: InputOptionData[];
 	/**
 	 * The current value of the function input as a string.
 	 */

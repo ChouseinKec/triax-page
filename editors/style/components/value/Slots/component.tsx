@@ -4,7 +4,7 @@ import React from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import Slot from '../Slot/component';
+import Slot from '../slot/component';
 import DropdownSelect from '@/components/Select/Dropdown/component';
 
 // Types
@@ -45,7 +45,6 @@ const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
         const nextIndex = values.length;
         if (nextIndex < options.length && options[nextIndex] && options[nextIndex].length > 0) {
             const style: React.CSSProperties = {
-                width: 'max-content',
                 fontSize: 'var(--font-size-lg)',
             };
             return (
@@ -57,6 +56,7 @@ const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
                     searchable={false}
                     grouped={true}
                     buttonStyle={style}
+                    buttonTitle='Select next slot'
                     onChange={(val: string) => handleSlotChange(val, nextIndex)}
                 />
             );
@@ -64,9 +64,17 @@ const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
         return null;
     }
 
+
+
+
+
     // Render all current slots and the next slot dropdown
     return (
-        <div className={CSS.Slots}>
+        <div
+            className={CSS.Slots}
+            style={{ '--slots-count': values.length } as React.CSSProperties}
+
+        >
             {renderCurrentSlots()}
             {renderNextSlot()}
         </div>

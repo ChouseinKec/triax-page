@@ -22,8 +22,10 @@ export type DropdownSelectProps = {
   searchable?: boolean;
   /** Whether the options should be displayed in grouped sections */
   grouped?: boolean;
-  /** Custom style for the dropdown trigger/button */
+  /** Custom style for the dropdown button */
   buttonStyle?: React.CSSProperties;
+  /** Optional title for the dropdown button */
+  buttonTitle?: string;
   /** Callback function triggered when an option is selected */
   onChange: (value: string) => void;
 };

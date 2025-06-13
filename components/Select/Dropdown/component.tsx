@@ -32,7 +32,18 @@ import Options from '@/components/Select/Options/component';
  *   onChange={(value) => setSelectedValue(value)}
  * />
  */
-const DropdownSelect: React.FC<DropdownSelectProps> = ({ value, options, buttonStyle, onChange, placeholder = 'Select', grouped, searchable }: DropdownSelectProps): ReactElement => {
+const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps): ReactElement => {
+
+    const {
+        value,
+        options,
+        onChange,
+        placeholder = 'Select an option',
+        grouped = false,
+        searchable = false,
+        buttonStyle = {},
+        buttonTitle = 'Toggle Dropdown',
+    } = props;
 
     /**
     * Handles the onChange event for when an option is selected from the dropdown.
@@ -44,7 +55,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({ value, options, buttonS
 
 
     return (
-        <DropdownReveal value={value || placeholder} buttonStyle={buttonStyle}>
+        <DropdownReveal value={value || placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
             <div className={CSS.DropdownSelect_Options}>
                 <Options searchable={searchable} grouped={grouped} value={value} options={options} onChange={handleOptionChange} />
             </div>

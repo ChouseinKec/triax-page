@@ -21,4 +21,6 @@ export interface DropdownRevealProps {
     placeholder?: string;
     /** If true, disables the dropdown interaction. */
     isDisabled?: boolean;
+    /** Optional title for the dropdown button. */
+    buttonTitle?: string;
 };

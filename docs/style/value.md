@@ -5,12 +5,12 @@ A CSS value represents the data assigned to a CSS property—such as a keyword, 
 ## Value Splitting and Joining with Separators
 
 - **Splitting:**
-  - Value strings are split into slots using top-level separators (space, comma, slash) via `splitAdvanced` (or `advancedSplit`).
+  - Value strings are split into slots using top-level separators (space, comma, slash) via `splitAdvanced`.
   - This ensures that only separators at the top level (not inside brackets or functions) are considered, so complex values like `minmax(10px, 1fr)` are handled correctly.
 
 - **Joining:**
   - When the user edits a slot, the updated slot values are joined back into a single value string using the correct separators for the matched variation.
-  - This is handled by `joinAdvanced` (or `advancedJoin`), which takes the slot values and the corresponding separator array (extracted from the matched variation) and joins them in the correct order.
+  - This is handled by `joinAdvanced`, which takes the slot values and the corresponding separator array (extracted from the matched variation) and joins them in the correct order.
   - This guarantees that values like `10px / 2` or `auto 1 / 2` are always joined with the right syntax, matching the CSS property definition.
 
 - **Separator Extraction:**

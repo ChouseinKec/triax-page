@@ -169,26 +169,6 @@ function getVariationIndex(variations: string[], values: string): number {
 	return variations.findIndex((variation) => variation === values);
 }
 
-/**
- * Joins slot values into a single CSS value string using the correct separators.
- *
- * This function is used in the Value component to join slot values after editing, ensuring the result matches the CSS syntax for the matched variation.
- *
- * - The correct separator array is determined by matching the current slot tokens to the allowed variations.
- * - The slot values are joined using the separators (space, slash, comma, etc.) in the correct order.
- * - This guarantees that values like `10px / 2` or `auto 1 / 2` are always joined with the right syntax, matching the CSS property definition.
- *
- * Example usage:
- *   const valueTokens = getValueTokens(updatedValues).join(' ');
- *   const found = getVariationIndex(syntaxNormalized, valueTokens);
- *   const separators = found === -1 ? [] : allSeparators[found];
- *   const joinedValue = joinAdvanced(updatedValues, separators);
- *
- * See also: extractSeparators, joinAdvanced, createOptionsTable
- */
 
-/**
- * Note: The old strict variationFilter logic has been removed. All filtering and matching is now handled inside createOptionsTable, which is more flexible and context-aware, supporting partial and incremental editing.
- */
 
 export { isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes, getValueTokens, getValueToken, extractSeparators, getVariationIndex };

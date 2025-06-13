@@ -109,7 +109,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	gap: createProperty('gap', '<row-gap> <column-gap>', 'normal', 'Shorthand for row-gap and column-gap', 'grid'),
 
 	// -------------------------------- SIZE & OVERFLOW --------------------------------
-	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
+	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content([<length-percentage [0,∞]>]*) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
 
 	// width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
 	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', '0', 'The minimum width of the element.', 'size'),

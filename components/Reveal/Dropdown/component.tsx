@@ -20,7 +20,8 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         placeholder = 'Toggle',
         children,
         closeOnChange,
-        isDisabled
+        isDisabled,
+        buttonTitle = 'Toggle Dropdown',
     } = props;
 
 
@@ -78,6 +79,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                 onClick={handleToggle}
                 data-isopen={isOpen}
                 data-isdisabled={isDisabled}
+                title={buttonTitle}
             >
                 {value || placeholder}
             </button>

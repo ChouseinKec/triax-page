@@ -29,7 +29,7 @@ export const useSizeLayout = (): STYLE_LAYOUT => {
                         column: 'auto',
                         direction: 'column',
                         component: () => {
-                            const property = CSSPropertyDefs['aspect-ratio'];
+                            const property = CSSPropertyDefs['width'];
                             if (!property) {
                                 // Fallback: render nothing, an error, or a default Value
                                 return <div>Property not found</div>;

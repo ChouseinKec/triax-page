@@ -4,10 +4,10 @@ import React, { useMemo } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import DimensionValue from '../Dimension/component';
-import FunctionValue from '../Function/component';
-import KeywordValue from '../Keyword/component';
-import NumberValue from '../Number/component';
+import DimensionValue from '../dimension/component';
+import FunctionValue from '../function/component';
+import KeywordValue from '../keyword/component';
+import NumberValue from '../number/component';
 
 // Types
 import type { SlotProps } from './types';
@@ -34,12 +34,7 @@ const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
     const slotInput = useMemo(() => {
         switch (valueType) {
             case 'function': {
-                // Find the function option data for this slot
-                const functionOption = options.find(opt => opt.category === 'function') as FunctionOptionData | undefined;
-                if (functionOption) {
-                    return <FunctionValue value={value} option={functionOption} onChange={onChange} />;
-                }
-                return <div className={CSS.Error}>Function option not found for value: {value}</div>;
+                return <FunctionValue value={value} options={options} onChange={onChange} />;
             }
             case 'keyword':
                 return <KeywordValue value={value} options={options} onChange={onChange} />;

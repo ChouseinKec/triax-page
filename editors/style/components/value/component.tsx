@@ -12,7 +12,7 @@ import { extractSeparators, getValueTokens, getVariationIndex } from '@/utilitie
 import { ValueSeparators } from '@/constants/style/value';
 
 // Components
-import Slots from './Slots/component';
+import Slots from './slots/component';
 
 /**
  * Value Component
