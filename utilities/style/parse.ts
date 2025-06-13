@@ -9,6 +9,8 @@ import { CSSTokens } from '@/types/style/token';
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
 import { splitAdvanced } from '@/utilities/string/string';
 
+const MAX_MULTIPLIER_DEPTH = 2; // Prevent infinite recursion in expandTokens
+
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
  * where the data type is not present in CSSTokenDefs. This ensures that only
@@ -114,6 +116,23 @@ function normalizeSyntax(s: string): string {
 }
 
 /**
+ * Duplicates a token up to a maximum depth, separating duplicates with spaces.
+ * @param token - The base token to duplicate
+ * @param maxDepth - The maximum depth for duplication
+ * @returns An array of strings, each representing a level of duplication
+ * @example duplicateToken('a', 3) → ['a', 'a a', 'a a a']
+ */
+function duplicateToken(token: string, maxDepth: number): string[] {
+	const result: string[] = [];
+	let current = token;
+	for (let i = 1; i <= maxDepth; i++) {
+		result.push(current);
+		current += ` ${token}`;
+	}
+	return result;
+}
+
+/**
  * Parses a double bar `||` combinator.
  * Splits the input by '||' at the top level and returns all non-empty subsets and their permutations,
  * flattened as strings joined by spaces.
@@ -214,20 +233,69 @@ function parseBrackets(s: string): CSSCombinations {
  * @example parseMultiplier('a*') → ['', 'a', 'a a']
  * @example parseMultiplier('a{2,3}') → ['a a', 'a a a']
  */
+function parseMultiplierQuestion(base: string): string[] {
+	return ['', base];
+}
+
+function parseMultiplierPlus(base: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
+	return duplicateToken(base, maxDepth);
+}
+
+function parseMultiplierStar(base: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
+	return ['', ...duplicateToken(base, maxDepth)];
+}
+
 function parseMultiplier(s: string): CSSCombinations {
+	// Handle bracketed group with multiplier, e.g. [a | b]*
+	const bracketGroupMatch = s.match(/^\[(.*)\]([*+?]|\{\d+,\d+\})$/);
+	if (bracketGroupMatch) {
+		const groupContent = bracketGroupMatch[1];
+		const multiplier = bracketGroupMatch[2];
+		const parsedGroup = parse(groupContent);
+		if (multiplier === '?') {
+			return ['', ...parsedGroup];
+		}
+		if (multiplier === '+') {
+			const results: string[] = [];
+			for (const combo of parsedGroup) {
+				results.push(...parseMultiplierPlus(combo, MAX_MULTIPLIER_DEPTH));
+			}
+			return Array.from(new Set(results)).filter(Boolean);
+		}
+		if (multiplier === '*') {
+			const results: string[] = [''];
+			for (const combo of parsedGroup) {
+				results.push(...parseMultiplierStar(combo, MAX_MULTIPLIER_DEPTH));
+			}
+			return Array.from(new Set(results));
+		}
+		// {m,n}
+		const rangeMatch = multiplier.match(/^\{(\d+),(\d+)\}$/);
+		if (rangeMatch) {
+			const n = parseInt(rangeMatch[1], 10);
+			const m = Math.min(parseInt(rangeMatch[2], 10), MAX_MULTIPLIER_DEPTH);
+			const results: string[] = [];
+			for (const combo of parsedGroup) {
+				for (let i = n; i <= m; i++) {
+					results.push(Array(i).fill(combo).join(' '));
+				}
+			}
+			return Array.from(new Set(results)).filter(Boolean);
+		}
+		return parsedGroup;
+	}
 	if (s.endsWith('?')) {
 		const base = s.slice(0, -1).trim();
-		return ['', base];
+		return parseMultiplierQuestion(base);
 	}
 	if (s.endsWith('+')) {
 		const base = s.slice(0, -1).trim();
-		return [base, `${base} ${base}`]; // up to 2 for brevity
+		return parseMultiplierPlus(base, MAX_MULTIPLIER_DEPTH);
 	}
 	if (s.endsWith('*')) {
 		const base = s.slice(0, -1).trim();
-		return ['', base, `${base} ${base}`]; // up to 2 for brevity
+		return parseMultiplierStar(base, MAX_MULTIPLIER_DEPTH);
 	}
-
 	// {m,n}
 	const match = s.match(/^(.*)\{(\d+),(\d+)\}$/);
 	if (match) {
@@ -235,6 +303,7 @@ function parseMultiplier(s: string): CSSCombinations {
 		const n = parseInt(match[2], 10);
 		const m = parseInt(match[3], 10);
 		const arr: string[] = [];
+
 		for (let i = n; i <= m; i++) {
 			arr.push(Array(i).fill(base).join(' '));
 		}
@@ -324,6 +393,8 @@ function parse(syntax: string): CSSCombinations {
 		return parseBrackets(s).sort((a, b) => a.length - b.length);
 	}
 
+	// Handle group in parentheses (not specified in the original code, but useful for completeness)
+
 	// Handle multipliers (?, +, *, {m,n})
 	if (/[?+*]|\{\d+,\d+\}$/.test(s)) {
 		return parseMultiplier(s).sort((a, b) => a.length - b.length);
@@ -333,4 +404,10 @@ function parse(syntax: string): CSSCombinations {
 	return [s];
 }
 
-export { normalizeSyntax, expandTokens,  parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens };
+function test() {
+	const parsed = parse('a{2,3}');
+
+	console.log('Parsed syntax:', parsed);
+}
+
+export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens };

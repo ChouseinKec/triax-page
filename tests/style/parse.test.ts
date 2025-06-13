@@ -210,6 +210,18 @@ describe('parse', () => {
 		expect(result).toEqual(expected);
 	});
 
+	it('parses []', () => {
+		const result = parse('[a b]');
+		const expected = ['', 'a b'];
+		expect(result).toEqual(expected);
+	});
+
+	it('parses [] and |', () => {
+		const result = parse('[a | b]');
+		const expected = ['', 'a', 'b'];
+		expect(result).toEqual(expected);
+	});
+
 	it('parses complex expressions', () => {
 		const result = parse('a || d+ e? f*');
 		const expected = ['a', 'd', 'd e', 'd d', 'a d', 'd  f', 'd e f', 'd d e', 'a d e', 'a d d', 'd   a', 'd  f f', 'd d  f', 'a d  f', 'd  f a', 'd e  a', 'd e f f', 'd d e f', 'a d e f', 'a d d e', 'd e f a', 'd d   a', 'd d  f f', 'a d  f f', 'a d d  f', 'd  f f a', 'd d  f a', 'd d e  a', 'd d e f f', 'a d e f f', 'a d d e f', 'd e f f a', 'd d e f a', 'a d d  f f', 'd d  f f a', 'a d d e f f', 'd d e f f a'];

@@ -11,10 +11,14 @@ import { useBlockEditor } from "@/editors/block/hooks/state";
 // Stores
 import useBlockStore from "@/stores/block/store";
 
+
+import { test } from '@/utilities/style/parse';
+
 export default function Home() {
   const { setSelected } = useBlockStore();
   const { generateBlockStyles } = useBlockEditor();
   const selectedBlock = useBlockStore(state => state.selectedBlock);
+  test();
 
   return (
     <main className={pageStyles.main}>
@@ -50,8 +54,11 @@ export default function Home() {
 
     </main>
 
-  );
-}
 
+
+  );
+
+
+}
 
 
