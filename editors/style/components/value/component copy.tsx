@@ -13,6 +13,7 @@ import { ValueSeparators } from '@/constants/style/value';
 
 // Components
 import Slots from './slots/component';
+import RadioSelect from '@/components/Select/Radio/component'
 
 
 /**
@@ -32,10 +33,9 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxSet = property.syntaxSet;
     const syntaxNormalized = property.syntaxNormalized;
     const syntaxParsed = property.syntaxParsed;
-    const syntaxRaw = property.syntaxRaw;
 
-    console.log('Syntax Raw: ', syntaxRaw);
-    console.log('Syntax Parsed: ', syntaxParsed);
+
+    // console.log('Syntax Parsed: ', syntaxParsed);
     // console.log('Syntax Normalized: ', syntaxNormalized);
     // console.log('Syntax Set: ', syntaxSet);
 
@@ -46,14 +46,10 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const allSeparators = useMemo(() => extractSeparators(syntaxParsed), [syntaxParsed]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
-        const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
+    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
         [syntaxNormalized, syntaxSet, values]
     );
 
-
-    console.log(slotsOptions);
-
-    
     // Handler to update slot values and join with correct separators
     function handleSlotsChange(updatedValues: string[]) {
         const valueTokens = getValueTokens(updatedValues).join(' ');

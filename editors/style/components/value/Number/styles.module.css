@@ -1,1 +1,10 @@
-.NumberValue{width:100%;display:grid;min-height:25px;position:relative}.NumberValue [class$=DropdownReveal]{position:absolute;right:0}
+.NumberValue {
+  width: 100%;
+  display: grid;
+  min-height: 25px;
+  position: relative;
+}
+.NumberValue [class$=DropdownReveal] {
+  position: absolute;
+  right: 0;
+}/*# sourceMappingURL=styles.module.css.map */

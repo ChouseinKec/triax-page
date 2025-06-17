@@ -1,6 +1,6 @@
 .Slots {
 	display: grid;
-	grid-template-columns: repeat(var(--slots-count), minmax(100px, 1fr));
+	grid-template-columns: repeat(var(--slots-count), minmax(0, 1fr));
 	gap: var(--size-lg);
 }
 

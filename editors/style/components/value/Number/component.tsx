@@ -42,6 +42,20 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
         onChange(input);
     }, [onChange]);
 
+
+    const renderOptionSelect = () => {
+        if (options.length <= 1) return null;
+        return (
+            <SelectDropdown
+                options={options}
+                value={'number'}
+                onChange={(handleOptionChange)}
+                searchable={true}
+                grouped={true}
+            />
+        )
+    }
+
     return (
         <div className={CSS.NumberValue}>
             {/* Numeric input for the value part */}
@@ -53,13 +67,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
             />
 
             {/* Dropdown for the option part */}
-            <SelectDropdown
-                options={options}
-                value={'number'}
-                onChange={(handleOptionChange)}
-                searchable={true}
-                grouped={true}
-            />
+            {renderOptionSelect()}
         </div>
     );
 });

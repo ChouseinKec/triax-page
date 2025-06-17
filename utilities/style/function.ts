@@ -24,7 +24,6 @@ function extractFunctionValue(input: string): string | undefined {
 	return match ? match[2] : undefined;
 }
 
-
 export {
     extractFunctionName,
     extractFunctionValue

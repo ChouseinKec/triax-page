@@ -38,7 +38,8 @@ export const createProperty = (name: string, syntax: string, initialValue: strin
 
 		get syntaxParsed() {
 			if (_parsed === undefined) {
-				const parsed = parse(this.syntaxExpanded!);
+				const parsed = parse(this.syntaxExpanded);
+				// const parsed = parse(syntax);
 				_parsed = filterTokens(parsed);
 			}
 			return _parsed;
@@ -95,12 +96,15 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'flex-shrink': createProperty('flex-shrink', '<number>', '1', 'Specifies how much a flex item will shrink relative to others', 'flex'),
 	'flex-basis': createProperty('flex-basis', 'content | <width>', 'auto', 'Specifies the initial size of a flex item', 'flex'),
 	'justify-content': createProperty('justify-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly', 'flex-start', 'Aligns flex items along the main axis', 'flex'),
+
 	'align-items': createProperty('align-items', 'flex-start | flex-end | center | baseline | stretch', 'stretch', 'Aligns flex items along the cross axis', 'flex'),
 	'align-content': createProperty('align-content', 'flex-start | flex-end | center | space-between | space-around | stretch', 'stretch', "Aligns flex lines when there's extra space on cross axis", 'flex'),
 
 	// -------------------------------- GRID --------------------------------
+	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch', 'stretch', 'Aligns flex items along the main axis in a single line', 'flex'),
 	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense', 'row', 'Controls how auto-placed items are inserted in the grid', 'grid'),
-	'grid-template-columns': createProperty('grid-template-columns', 'none | <track-list> | <auto-track-list>', 'none', 'Defines the columns of the grid', 'grid'),
+	'grid-template-columns': createProperty('grid-template-columns', 'none|<track-list>|<auto-track-list>|subgrid', 'none', 'Defines the columns of the grid', 'grid'),
+
 	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>', 'none', 'Defines the rows of the grid', 'grid'),
 	'grid-auto-columns': createProperty('grid-auto-columns', '<track-size>', 'auto', 'Specifies the size of implicitly-created grid columns', 'grid'),
 	'grid-auto-rows': createProperty('grid-auto-rows', '<track-size>', 'auto', 'Specifies the size of implicitly-created grid rows', 'grid'),
@@ -109,9 +113,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	gap: createProperty('gap', '<row-gap> <column-gap>', 'normal', 'Shorthand for row-gap and column-gap', 'grid'),
 
 	// -------------------------------- SIZE & OVERFLOW --------------------------------
-	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content([<length-percentage [0,∞]>]*) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
-
-	// width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
+	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The width of the element.', 'size'),
 	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', '0', 'The minimum width of the element.', 'size'),
 	'max-width': createProperty('max-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'none', 'The maximum width of the element.', 'size'),
 	height: createProperty('height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'auto', 'The height of the element.', 'size'),
@@ -218,8 +220,3 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	// -------------------------------- SCROLL --------------------------------
 	'scroll-behavior': createProperty('scroll-behavior', 'auto | smooth', 'auto', 'Specifies scrolling behavior', 'scroll'),
 };
-
-/**
- * Utility type for extracting all valid property keys from CSSPropertyDefs.
- */
-export type PropertyKeys = keyof typeof CSSPropertyDefs & string;

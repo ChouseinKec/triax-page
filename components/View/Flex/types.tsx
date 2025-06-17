@@ -6,8 +6,8 @@ type Style = { [key: string]: string };
  * 
  * @param {Style} styles - The styles object containing key-value pairs for CSS properties.
 */
-interface FLEX_VIEW {
+interface FlexViewProps {
     styles: Style;
 }
 
-export type { FLEX_VIEW };
+export type { FlexViewProps };

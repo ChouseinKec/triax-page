@@ -5,7 +5,7 @@ import Group from '@/editors/style/components/group/component';
 import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Types
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import { LayoutProps } from '@/editors/style/components/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
 
 // Hooks
@@ -15,9 +15,9 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
  * 
- * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
+ * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
-export const useBackgroundLayout = (): STYLE_LAYOUT => {
+export const useBackgroundLayout = (): LayoutProps => {
     const { VariantInput, UrlInput, renderPositionSelect, ColorSelect, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);

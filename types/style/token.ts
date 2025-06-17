@@ -22,7 +22,19 @@ type CompositeTypes =
 	| '<color>' // e.g. rgb(255, 0, 0), #ff0000
 	| '<url>' // e.g. url('image.png')
 	| '<string>' // e.g. 'hello', "world"
+
+	
 	| '<track-breadth>' // e.g. 100px, 50%, 1fr, min-content, max-content, auto
+	| '<track-list>' // e.g. 100px, 50% / 1fr, min-content, max-content, auto
+	| '<auto-track-list>' // e.g. auto-fill, auto-fit
+	| '<track-size>' // e.g. 100px, 50% / minmax(100px, 1fr), fit-content(50%)
+	| '<track-repeat>' // e.g. repeat(3, 1fr), repeat(auto-fill, minmax(100px, 1fr))
+	| '<inflexible-breadth>' // e.g. 100px, 50% / minmax(100px, 1fr), fit-content(50%)
+	| '<auto-track-list>' // e.g. auto-fill, auto-fit
+	| '<fixed-size>' // e.g. 100px, 50% / minmax(100px, 1fr), fit-content(50%)
+	| '<fixed-repeat>' // e.g. repeat(3, 1fr), repeat(auto-fill, minmax(100px, 1fr))
+	| '<auto-repeat>' // e.g. repeat(auto-fill, minmax(100px, 1fr))
+	| '<name-repeat>'
 	| '<size-keyword>' // e.g. auto, max-content, min-content, fit-content(), stretch
 	| '<display-keyword>' // e.g. block, inline, flex, grid, contents, none
 	| '<line-style>' // e.g. solid, dotted, dashed
@@ -144,4 +156,10 @@ export interface CSSToken {
 	 * The value definition syntax for this data type (may reference other data types).
 	 */
 	syntax: string;
+
+
+	/**
+	 * Initial value for this token, if applicable.
+	 */
+	initialValue?: string; 
 }

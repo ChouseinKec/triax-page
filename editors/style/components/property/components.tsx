@@ -67,7 +67,7 @@ const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERT
     return (
         <>
             {/* Render the label if provided */}
-            {/* {label && (
+            {label && (
                 <>
                     <label className={CSS.Property_Label} ref={labelRef}>
                         {label}
@@ -91,7 +91,7 @@ const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERT
 
                     </FloatReveal>
                 </>
-            )} */}
+            )}
 
             {component()}
 

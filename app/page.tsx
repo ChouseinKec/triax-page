@@ -11,7 +11,6 @@ import { useBlockEditor } from "@/editors/block/hooks/state";
 // Stores
 import useBlockStore from "@/stores/block/store";
 
-
 import { test } from '@/utilities/style/parse';
 
 export default function Home() {
@@ -19,7 +18,6 @@ export default function Home() {
   const { generateBlockStyles } = useBlockEditor();
   const selectedBlock = useBlockStore(state => state.selectedBlock);
   test();
-
   return (
     <main className={pageStyles.main}>
       {/* Styles */}

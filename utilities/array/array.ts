@@ -1,14 +1,13 @@
-import { splitAdvanced } from '@/utilities/string/string';
-
 /**
  * Returns the cross product of arrays.
  * For a list of arrays, this generates all possible ways to pick one item from each array,
  * combining them into a new array. The result is an array of arrays, where each inner array
  * contains one element from each input array, in order.
  *
- * Example: generateCrossProduct([[1, 2], ['a', 'b']]) → [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
  * @param arrays - Array of arrays
  * @returns Array of arrays (cross product)
+ * @example
+ * generateCrossProduct([[1, 2], ['a', 'b']]) → [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
  */
 function generateCrossProduct<T>(arrays: T[][]): T[][] {
 	if (!arrays.length) return [[]];
@@ -27,9 +26,11 @@ function generateCrossProduct<T>(arrays: T[][]): T[][] {
 /**
  * Returns all subsets of an array (the power set).
  * Uses bitwise operations to efficiently generate every possible subset.
- * Example: generateAllSubsets(['a', 'b']) → [[], ['a'], ['b'], ['a', 'b']]
  * @param arr - The input array
  * @returns Array of subsets (combinations)
+ * @example
+ * generateAllSubsets(['a', 'b']) → [[], ['a'], ['b'], ['a', 'b']]
+ * 
  */
 function generateAllSubsets<T>(arr: T[]): T[][] {
 	const result: T[][] = [];
@@ -46,9 +47,10 @@ function generateAllSubsets<T>(arr: T[]): T[][] {
 
 /**
  * Generates all possible permutations of the input array.
- * Example: generatePermutations(['a','b']) → [['a','b'], ['b','a']]
  * @param arr - Array of elements
  * @returns Array of permutations (arrays)
+ * @example
+ * generatePermutations(['a', 'b']) → [['a', 'b'], ['b', 'a']]
  */
 function generatePermutations(arr: string[]): string[][] {
 	if (arr.length === 0) return [[]];
@@ -65,21 +67,6 @@ function generatePermutations(arr: string[]): string[][] {
 }
 
 /**
- * Returns the maximum length of any subarray (after splitting each string by separators).
- * Used for slot/column calculations in value helpers.
- */
-function countSubArrayLength(variations: string[][]): number {
-	let maxSlots = 0;
-
-	for (const variation of variations) {
-		if (variation.length > maxSlots) {
-			maxSlots = variation.length;
-		}
-	}
-	return maxSlots;
-}
-
-/**
  * Returns an array of arrays, where each inner array contains the unique values found in that column
  * across all rows of the input 2D array.
  *
@@ -91,6 +78,7 @@ function countSubArrayLength(variations: string[][]): number {
  *   ['a', 'c'],
  *   ['d', 'b']
  * ]) // [['a', 'd'], ['b', 'c']]
+ * → [['a', 'd'], ['b', 'c']]
  */
 function getColumnSets<T>(rows: T[][]): T[][] {
 	if (!rows.length) return [];
@@ -106,4 +94,22 @@ function getColumnSets<T>(rows: T[][]): T[][] {
 	return columns;
 }
 
-export { generateCrossProduct, generateAllSubsets, generatePermutations, countSubArrayLength, getColumnSets };
+/**
+ * Groups an array of objects by a given property.
+ * @param arr - The array of objects to group
+ * @param prop - The property name to group by
+ * @returns An object where keys are property values and values are arrays of objects with that property
+ * @example
+ * groupBy([{type: 'a'}, {type: 'b'}, {type: 'a'}], 'type')
+ * → { a: [{type: 'a'}, {type: 'a'}], b: [{type: 'b'}] }
+ */
+export function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
+    return arr.reduce((acc, item) => {
+        const key = String(item[prop]);
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(item);
+        return acc;
+    }, {} as Record<string, T[]>);
+}
+
+export { generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets };

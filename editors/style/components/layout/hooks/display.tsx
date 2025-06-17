@@ -1,18 +1,19 @@
 // Types
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import type { LayoutProps } from '@/editors/style/components/layout/types';
 
-// HOOKS
+// Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
 import { useStyleManager } from '@/hooks/style/manager';
+
 
 /**
  * Custom hook to render the layout for the "Display & Layout" section.
  * This hook dynamically renders display properties (e.g., flex, grid) based on the selected display type.
  * 
- * @returns {STYLE_LAYOUT} The layout configuration for display and layout settings.
+ * @returns {LayoutProps} The layout configuration for display and layout settings.
  */
-export const useDisplayLayout = (): STYLE_LAYOUT => {
-    const { renderFlexView, renderGridView, RadioSelect, DropdownSelect, LengthInput, InputGroup } = useStyleFactory();
+export const useDisplayLayout = (): LayoutProps => {
+    const { renderValue, renderFlexView, renderGridView } = useStyleFactory();
     const { getStyle } = useStyleManager();
 
     return {
@@ -26,7 +27,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                     {
                         label: null,
                         column: '1/-1',
-                        component: () => RadioSelect('display')
+                        component: () => renderValue('display')
                     },
                 ],
             },
@@ -48,56 +49,49 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                     {
                         label: 'Direction',
                         direction: 'column',
-                        column: '2',
-                        component: () => DropdownSelect('flexDirection'),
+                        component: () => renderValue('flex-direction'),
                     },
 
                     // Flex Wrap (wrap, no-wrap, etc.)
                     {
                         label: 'Wrap',
                         direction: 'column',
-                        column: '3',
-                        component: () => DropdownSelect('flexWrap'),
+                        component: () => renderValue('flex-wrap'),
                     },
 
                     // Align Items (flex-start, center, etc.)
                     {
                         label: 'Align Items',
                         direction: 'column',
-                        column: '2',
-                        component: () => DropdownSelect('alignItems'),
+                        component: () => renderValue('align-items'),
                     },
 
                     // Align Content (flex-start, center, etc.)
                     {
                         label: 'Align Content',
                         direction: 'column',
-                        column: '3',
-                        component: () => DropdownSelect('alignContent'),
+                        component: () => renderValue('align-content'),
                     },
 
                     // Justify Content (flex-start, center, etc.)
                     {
                         label: 'Justify Content',
-                        column: '1',
                         direction: 'column',
-                        component: () => DropdownSelect('justifyContent'),
+                        component: () => renderValue('justify-content'),
                     },
 
                     // Row Gap for flex container
                     {
                         label: 'Row Gap',
-                        column: '2',
                         direction: 'column',
-                        component: () => LengthInput('rowGap')
+                        component: () => renderValue('row-gap')
                     },
 
                     // Column Gap for flex container
                     {
                         label: 'Column Gap',
-                        column: '3',
                         direction: 'column',
-                        component: () => LengthInput('columnGap')
+                        component: () => renderValue('column-gap')
                     },
                 ],
             },
@@ -120,7 +114,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Justify Content',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('justifyContent'),
+                        component: () => renderValue('justify-content'),
                     },
 
                     // Justify Items (grid-specific)
@@ -128,7 +122,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Justify Items',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('justifyItems'),
+                        component: () => renderValue('justify-items'),
                     },
 
                     // Align Items (grid-specific)
@@ -136,7 +130,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Align Items',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('alignItems'),
+                        component: () => renderValue('align-items'),
                     },
 
                     // Align Content (grid-specific)
@@ -144,7 +138,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Align Content',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('alignContent'),
+                        component: () => renderValue('align-content'),
                     },
 
                     // Auto Flow (grid-specific)
@@ -152,7 +146,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Auto Flow',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('gridAutoFlow'),
+                        component: () => renderValue('grid-auto-flow'),
                     },
 
                     // Auto Columns (grid-specific)
@@ -160,7 +154,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Auto Columns',
                         column: 'auto',
                         direction: 'column',
-                        component: () => InputGroup('gridAutoColumns', ' '),
+                        component: () => renderValue('grid-auto-columns'),
                     },
 
                     // Auto Rows (grid-specific)
@@ -168,15 +162,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Auto Rows',
                         column: 'auto',
                         direction: 'column',
-                        component: () => InputGroup('gridAutoRows', ' '),
-                    },
-
-                    // Areas dropdown (grid-specific)
-                    {
-                        label: 'Areas',
-                        column: 'auto',
-                        direction: 'column',
-                        component: () => DropdownSelect('gridAutoFlow'),
+                        component: () => renderValue('grid-auto-rows'),
                     },
 
                     // Template Columns (grid-specific)
@@ -184,7 +170,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Template Columns',
                         column: 'auto',
                         direction: 'column',
-                        component: () => InputGroup('gridTemplateColumns', ' '),
+                        component: () => renderValue('grid-template-columns'),
                     },
 
                     // Template Rows (grid-specific)
@@ -192,7 +178,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Template Rows',
                         column: 'auto',
                         direction: 'column',
-                        component: () => InputGroup('gridTemplateRows', ' '),
+                        component: () => renderValue('grid-template-rows'),
                     },
 
                     // Row Gap for grid container
@@ -200,7 +186,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Row Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => LengthInput('rowGap')
+                        component: () => renderValue('row-gap')
                     },
 
                     // Column Gap for grid container
@@ -208,7 +194,7 @@ export const useDisplayLayout = (): STYLE_LAYOUT => {
                         label: 'Column Gap',
                         column: 'auto',
                         direction: 'column',
-                        component: () => LengthInput('columnGap')
+                        component: () => renderValue('column-gap')
                     },
                 ],
             },

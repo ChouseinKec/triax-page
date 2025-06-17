@@ -7,7 +7,7 @@ import { LAYOUT_GROUP } from '@/editors/style/components/group/types';
  * @param {string} label - The display name of the layout section.
  * @param {LAYOUT_GROUP[]} groups - An array of style groups included in this layout.
  */
-export type STYLE_LAYOUT = {
+export type LayoutProps = {
 	label: string;
 	groups: LAYOUT_GROUP[];
 };

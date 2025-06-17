@@ -1,1 +1,14 @@
-.FloatReveal{max-width:250px;padding:var(--size-md);display:flex;flex-direction:column;gap:var(--size-md);z-index:9999;border:none;outline:none;border-radius:var(--size-sm);box-shadow:var(--shadow-outset);cursor:default;background:var(--color-white)}
+.FloatReveal {
+  max-width: 250px;
+  padding: var(--size-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-md);
+  z-index: 9999;
+  border: none;
+  outline: none;
+  border-radius: var(--size-sm);
+  box-shadow: var(--shadow-outset);
+  cursor: default;
+  background: var(--color-white);
+}/*# sourceMappingURL=styles.module.css.map */

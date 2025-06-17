@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // Types
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import { LayoutProps } from '@/editors/style/components/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
 
 // Hooks
@@ -11,9 +11,9 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
  * 
- * @returns {STYLE_LAYOUT} The layout configuration for border and shadow settings.
+ * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
-export const useEffectLayout = (): STYLE_LAYOUT => {
+export const useEffectLayout = (): LayoutProps => {
     const { renderPositionSelect, ColorSelect, InputGroup, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
     const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);

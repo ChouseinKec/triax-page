@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 // Types
 import { STYLE_PROPERTIES } from '@/editors/style/constants/styles'; 
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import { LayoutProps } from '@/editors/style/components/layout/types';
 import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types'; 
 
 // Hooks
@@ -13,9 +13,9 @@ import { useStyleManager } from '@/hooks/style/manager';
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
  *
- * @returns {STYLE_LAYOUT} Configuration for the position and spacing properties in the style editor.
+ * @returns {LayoutProps} Configuration for the position and spacing properties in the style editor.
  */
-export const usePositionLayout = (): STYLE_LAYOUT => {
+export const usePositionLayout = (): LayoutProps => {
     const { InputGroup, RadioSelect, DropdownSelect, LengthInput, renderPositionSelect } = useStyleFactory();
     const { getStyle } = useStyleManager();
     const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');

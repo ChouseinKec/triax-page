@@ -1,4 +1,4 @@
-import { Option } from '@/components/Select/Options/types';
+import type { OptionData } from '@/types/option';
 
 /**
  * Props for the RadioSelect component.
@@ -8,10 +8,9 @@ import { Option } from '@/components/Select/Options/types';
  * @param {Option[]} options - An array of available options to display in the radio button group.
  * @param {(value: string) => void} onChange - Callback triggered when the selected radio button changes.
 */
-export type RADIO_SELECT = {
+export type RadioSelectProps = {
     value: string;
-    options: Option[];
+    options: OptionData[];
     onChange: (value: string) => void;
 };
 
-export type { Option };

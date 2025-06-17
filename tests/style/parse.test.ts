@@ -1,4 +1,7 @@
-import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens, expandTokens } from '@/utilities/style/parse';
+import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, expandTokens } from '@/utilities/style/parse';
+
+import { parseSequence } from '@/utilities/style/parse-combinator';
+import { parseMultiplier } from '@/utilities/style/parse-multiplier';
 
 describe('filterTokens', () => {
 	it('should allow concrete values', () => {
@@ -20,7 +23,7 @@ describe('expandTokens', () => {
 		expect(expandTokens('<length-percentage>')).toMatch(/<length>|<percentage>/);
 	});
 	it('should preserve ranges on expansion', () => {
-		expect(expandTokens('<length-percentage [0,∞]>')).toMatch(/<length \[0,∞\]>\|<percentage \[0,∞\]>/);
+		expect(expandTokens('<length-percentage [0,∞]>')).toMatch('<length [0,∞]> | <percentage [0,∞]>');
 	});
 	it('should not expand unknown data types', () => {
 		expect(expandTokens('<foo>')).toBe('<foo>');
@@ -218,6 +221,24 @@ describe('parse', () => {
 
 	it('parses [] and |', () => {
 		const result = parse('[a | b]');
+		const expected = ['', 'a', 'b'];
+		expect(result).toEqual(expected);
+	});
+
+	it('parses [] and *', () => {
+		const result = parse('[a | b]*');
+		const expected = ['', 'a', 'b', 'a a', 'a b', 'b a', 'b b'];
+		expect(result).toEqual(expected);
+	});
+
+	it('parses [] and +', () => {
+		const result = parse('[a | b]+');
+		const expected = ['a', 'b', 'a a', 'a b', 'b a', 'b b'];
+		expect(result).toEqual(expected);
+	});
+
+	it('parses [] and ?', () => {
+		const result = parse('[a | b]?');
 		const expected = ['', 'a', 'b'];
 		expect(result).toEqual(expected);
 	});

@@ -3,7 +3,7 @@ import ExpandReveal from '@/components/Reveal/Expand/component';
 import Group from '@/editors/style/components/group/component';
 
 // Types
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import { LayoutProps } from '@/editors/style/components/layout/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
@@ -11,9 +11,9 @@ import { useStyleFactory } from '@/hooks/style/factory';
 /**
  * Custom hook for managing the "Size & Overflow" section layout in the style editor.
  *
- * @returns {STYLE_LAYOUT} Configuration for size and overflow properties in the style editor.
+ * @returns {LayoutProps} Configuration for size and overflow properties in the style editor.
 */
-export const useSizeLayout = (): STYLE_LAYOUT => {
+export const useSizeLayout = (): LayoutProps => {
     const { VariantInput, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
     return {
         label: 'Size & Overflow',

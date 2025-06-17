@@ -1,6 +1,7 @@
 // Constants
-import { CSSUnitOptions } from '@/constants/style/units';
+import { CSSTokenDefs } from '@/constants/style/token';
 import { DimensionGroups } from '@/constants/style/value';
+import { CSSUnitOptions } from '@/constants/style/units';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
@@ -10,6 +11,7 @@ import { getValueTokens } from '@/utilities/style/value';
 // Types
 import type { InputOptionData, NumberOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
 import type { CSSDimensionGroups } from '@/types/style/dimension';
+import type { CSSTokens } from '@/types/style/token';
 
 /**
  * Creates a FunctionOptionData object for a given function token.
@@ -31,10 +33,12 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If any of these are undefined or empty, return undefined
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
+	const initialValue = CSSTokenDefs?.[`<${canonicalName}>` as CSSTokens]?.initialValue || '0px';
+
 	// Create and return the FunctionOptionData object
 	return {
 		name: canonicalName,
-		value: `${baseName}(0px)`,
+		value: `${baseName}(${initialValue})`,
 		syntax,
 		category: 'function',
 	};
@@ -181,6 +185,7 @@ function createOptionsTable(syntaxNormalized: string[], slotTokenSets: string[][
 	// Precompute a Set of all valid value strings for O(1) lookup
 	const validValueSet = new Set(syntaxNormalized);
 
+
 	// Build the options table for each slot
 	return slotTokenSets.map((tokenSet, slotIndex) => {
 		if (!tokenSet || tokenSet.length === 0) return [];
@@ -192,7 +197,7 @@ function createOptionsTable(syntaxNormalized: string[], slotTokenSets: string[][
 
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (valueTokens[slotIndex] === tokenCanonical || isSlotOptionValid(token, slotIndex, validValueSet, valueTokens)) {
+			if (isSlotOptionValid(token, slotIndex, validValueSet, valueTokens)) {
 				const option = createOption(token);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}

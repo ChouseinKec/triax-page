@@ -4,7 +4,7 @@ import React, { memo, ReactElement, useMemo } from 'react';
 import CSS from '@/components/View/Flex/styles.module.css';
 
 // Types
-import { FLEX_VIEW } from '@/components/View/Flex/types';
+import { FlexViewProps } from '@/components/View/Flex/types';
 
 /**
  * FlexView Component
@@ -12,11 +12,11 @@ import { FLEX_VIEW } from '@/components/View/Flex/types';
  * A reusable component that displays a flex layout with dots and boxes.
  * It accepts custom styles to modify the layout of the component.
  * 
- * @param {FLEX_VIEW} props - The component props.
+ * @param {FlexViewProps} props - The component props.
  * @param {React.CSSProperties} props.styles - Custom inline styles to apply to the container.
  * @returns {ReactElement} - The rendered FlexView component.
 */
-const FlexView: React.FC<FLEX_VIEW> = ({ styles }: FLEX_VIEW): ReactElement => {
+const FlexView: React.FC<FlexViewProps> = ({ styles }: FlexViewProps): ReactElement => {
 
     const renderedDots = useMemo(() => {
         return Array(9).fill(0).map((_, index) => (

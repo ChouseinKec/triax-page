@@ -26,21 +26,23 @@ import { getValueType } from '@/utilities/style/value';
  * @param onChange - Callback fired when the slot value changes
  * @returns ReactElement - The rendered input for the slot
  */
-const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
+const Slot: React.FC<SlotProps> = (props: SlotProps) => {
+    const { value, options, onChange } = props;
+
     // Determine the value type for this slot (e.g., function, keyword, dimension, number)
     const valueType = getValueType(value);
 
     // Memoize the rendered input for this slot based on value type and options
     const slotInput = useMemo(() => {
         switch (valueType) {
-            case 'function': {
+            case 'function':
                 return <FunctionValue value={value} options={options} onChange={onChange} />;
-            }
             case 'keyword':
                 return <KeywordValue value={value} options={options} onChange={onChange} />;
             case 'dimension':
                 return <DimensionValue value={value} options={options} onChange={onChange} />;
             case 'number':
+            case 'integer':
                 return <NumberValue value={value} options={options} onChange={onChange} />;
             default:
                 return <div className={CSS.Error}>Unknown value type: {String(valueType)}</div>;

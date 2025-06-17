@@ -1,3 +1,5 @@
+import {ValueSeparators as ValueSeparatorConst} from '@/constants/style/value';
+
 // Utilities
 import { getTokenCanonical } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
@@ -144,12 +146,12 @@ function extractSeparators(variations: string[]): ValueSeparators[][] {
 		.filter((v) => v.length > 0);
 
 	return safeVariations.map((variation) => {
-		// Match separators: either '/' or one or more spaces
-		const regex = /([\/]|\s+)/g;
+		// Remove any space before and after any separator in ValueSeparatorConst
+		const regex = new RegExp(`\s*(${ValueSeparatorConst.map(s => s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\s*`, 'g');
 		const separators: ValueSeparators[] = [];
 		let match;
 		while ((match = regex.exec(variation)) !== null) {
-			separators.push(match[0] as ValueSeparators);
+			separators.push(match[1] as ValueSeparators);
 		}
 		return separators;
 	});

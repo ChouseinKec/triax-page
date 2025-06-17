@@ -2,14 +2,16 @@
 import { CSSTokenDefs } from '@/constants/style/token';
 
 // Types
-import type { CSSCombinations } from '@/types/style/parse';
 import { CSSTokens } from '@/types/style/token';
 
 // Utilities
-import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
-import { splitAdvanced } from '@/utilities/string/string';
+import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
 
-const MAX_MULTIPLIER_DEPTH = 2; // Prevent infinite recursion in expandTokens
+// Remove combinator and multiplier logic, and import from new files
+import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSpace, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence } from './parse-combinator';
+import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
+
+export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
@@ -19,71 +21,77 @@ const MAX_MULTIPLIER_DEPTH = 2; // Prevent infinite recursion in expandTokens
  * @param parsed - Array of parsed value strings (e.g., from syntax-parsed)
  * @returns Array with only fully expanded values (no unknown/unexpanded data types)
  */
-function filterTokens(parsed: string[]): string[] {
-	return parsed.filter((str) => {
+function filterTokens(variations: string[]): string[] {
+	return variations.filter((variation) => {
 		// Match all <...> in the string (potential data types)
-		const matches = str.match(/<[^>]+>/g);
+		const matches = variation.match(/<[^>]+>/g);
 		// If no matches, it's already a concrete value
 		if (!matches) return true;
 
 		// Exclude if any data type is not in CSSTokenDefs
-		return matches.every((dt) => {
+		return matches.every((token) => {
 			// List of primitive types that should always be allowed, even if not in CSSTokenDefs
 			const excludes = ['length', 'angle', 'percentage', 'number', 'integer', 'flex'];
 			// Extract the base type from the data type string (e.g., 'length' from '<length [1,5]>')
-			const baseTypeMatch = dt.match(/^<([a-zA-Z0-9-]+)/);
-			const baseType = baseTypeMatch ? baseTypeMatch[1] : '';
+			const tokenBase = getTokenBase(token);
+			// If no base type, skip this token
+			if (!tokenBase) return false;
 			// If the base type is in the excludes list, do not filter it out
-			if (excludes.includes(baseType)) return true;
-
-			// Otherwise, only allow if the data type is defined in CSSTokenDefs
-			return dt in CSSTokenDefs;
+			if (excludes.includes(tokenBase)) return true;
+			// Get the canonical form of the token (e.g., '<length [1,5]>' -> '<length>')
+			const tokenCanonical = getTokenCanonical(token);
+			// If no canonical form, skip this token
+			if (!tokenCanonical) return false;
+			// Check if the canonical token is defined in CSSTokenDefs
+			return tokenCanonical in CSSTokenDefs;
 		});
 	});
 }
 
 /**
- * Recursively expands all <data-type> references in a CSS syntax string using CSSTokenDefs.
- * If a data-type is not found, it is left as-is.
+ * Recursively expands all <token> references in a CSS syntax string using CSSTokenDefs.
+ * If a token is not found, it is left as-is.
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
- * @param seen - (internal) Set of already expanded datas to prevent infinite recursion
- * @returns The syntax string with all known datas recursively expanded
+ * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
+ * @returns The syntax string with all known tokens recursively expanded
  */
 function expandTokens(syntax: string, seen = new Set<string>()): string {
-	// Regex to match <data-type [range]> or <data-type>
-	return syntax.replace(/<([a-zA-Z0-9-]+)(\s*\[[^>]+\])?>/g, (match: string, baseType: string, range: string) => {
-		const typeKey = `<${baseType}>` as CSSTokens;
-		if (seen.has(typeKey)) return match; // Prevent infinite recursion
+	// Start with the input syntax string
+	let result = syntax;
+	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
+	const tokens = result.match(/<[^>]+>/g);
 
-		const def = CSSTokenDefs[typeKey];
+	// Iterate over each matched token
+	for (const token of tokens || []) {
+		// Extract the base type from the token (e.g., 'length' from '<length>')
+		const tokenBase = getTokenBase(token);
+		if (!tokenBase) continue; // Skip if no base type
+
+		// Get the canonical form of the token (e.g., '<length>')
+		const tokenCanonical = getTokenCanonical(token);
+		if (!tokenCanonical) continue; // Skip if no canonical form
+		if (seen.has(tokenCanonical)) continue; // Prevent infinite recursion (circular references)
+
+		// Extract range/constraint (e.g., [0,100]) if present
+		const range = getTokenRange(token);
+
+		// Look up the token definition in CSSTokenDefs
+		const def = CSSTokenDefs[tokenCanonical as CSSTokens];
 		if (def?.syntax) {
-			seen.add(typeKey);
-
-			// Recursively expand the definition
-			const expanded = expandTokens(def.syntax, seen);
-			seen.delete(typeKey);
-
-			// If expanded contains combinators, wrap each expanded part with the range if present
-			if (range) {
-				// Split by '|' at top level to attach range to each option
-				const parts = splitAdvanced(expanded, '|');
-				return parts
-					.map((part) => {
-						const trimmed = part.trim();
-						// Only attach range to <...> types, not keywords
-						if (/^<[^>]+>$/.test(trimmed)) {
-							// Insert the range before the closing '>' of the data type
-							return trimmed.replace(/>$/, `${range}>`);
-						}
-						return trimmed;
-					})
-					.join('|');
-			} else {
-				return expanded;
-			}
+			// Mark this token as seen to prevent recursion
+			seen.add(tokenCanonical);
+			// Recursively expand the definition's syntax
+			let expanded = expandTokens(def.syntax, seen);
+			// If the original token had a range, propagate it to all <...> tokens in the expanded string
+			if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
+			// Replace the token in the result string with its expanded form
+			result = result.replace(token, expanded);
+			// Remove from seen set after expansion
+			seen.delete(tokenCanonical);
 		}
-		return match;
-	});
+	}
+	// Return the fully expanded syntax string
+	return result;
 }
 
 /**
@@ -109,6 +117,12 @@ function normalizeSyntax(s: string): string {
 	// Remove spaces before *, +, ?
 	s = s.replace(/\s+([*+?])/g, '$1');
 
+	// Normalize ∞ to MAX_MULTIPLIER_DEPTH
+	s = s.replace(/∞/g, MAX_MULTIPLIER_DEPTH.toString());
+
+	// Normalize # to be ,
+	s = s.replace(/#/g, ',');
+
 	// Remove multiple spaces
 	s = s.replace(/\s{2,}/g, ' ');
 
@@ -116,93 +130,29 @@ function normalizeSyntax(s: string): string {
 }
 
 /**
- * Duplicates a token up to a maximum depth, separating duplicates with spaces.
- * @param token - The base token to duplicate
- * @param maxDepth - The maximum depth for duplication
- * @returns An array of strings, each representing a level of duplication
- * @example duplicateToken('a', 3) → ['a', 'a a', 'a a a']
+ * Checks if the input starts and ends with brackets ([a b]).
+ * This is used to determine if the input is a bracketed group.
+ * @param input - The input string to check for brackets.
+ * @return boolean - Returns true if the input is a bracketed group, false otherwise.
+ * @example
+ * hasBrackets('[a b]') → true
+ * hasBrackets('a b') → false
  */
-function duplicateToken(token: string, maxDepth: number): string[] {
-	const result: string[] = [];
-	let current = token;
-	for (let i = 1; i <= maxDepth; i++) {
-		result.push(current);
-		current += ` ${token}`;
-	}
-	return result;
+function hasBrackets(input: string): boolean {
+	return input.startsWith('[') && input.endsWith(']');
 }
 
 /**
- * Parses a double bar `||` combinator.
- * Splits the input by '||' at the top level and returns all non-empty subsets and their permutations,
- * flattened as strings joined by spaces.
- * Does NOT recursively parse the parts—just returns the combinations as strings.
- * @param s - The syntax string
- * @returns Array of strings, each representing a combination of parts
- * @example parseDoubleBar('a || b && c') → ['a', 'b && c', 'a b && c', 'b && c a']
+ * Checks if the input is a bracketed group with a multiplier ([a b]+).
+ * This is used to determine if the input is a bracketed group that can be repeated.
+ * @param input - The input string to check for a bracketed group with a multiplier.
+ * @return boolean - Returns true if the input is a bracketed group with a multiplier, false otherwise.
+ * @example
+ * hasBracketsGroup('[a b]+') → true
+ * hasBracketsGroup('[a b]') → false
  */
-function parseDoubleBar(s: string): string[] {
-	const parts = splitAdvanced(s, '||');
-	if (parts.length > 1) {
-		const combos: string[] = [];
-		const subsets = generateAllSubsets(parts).filter((subset) => subset.length > 0);
-		for (const subset of subsets) {
-			for (const perm of generatePermutations(subset)) {
-				combos.push(perm.join(' '));
-			}
-		}
-		return combos.sort((a, b) => a.length - b.length); // Sort for consistency
-	}
-	return [parts.join(' ')];
-}
-
-/**
- * Parses a double ampersand (&&) combinator.
- * Splits the input by '&&' at the top level and returns all permutations of the parts,
- * flattened as strings joined by spaces.
- * Does NOT recursively parse the parts—just returns the permutations as strings.
- * @param s - The syntax string
- * @returns Array of strings, each representing a permutation of parts
- * @example parseDoubleAmp('a && b && c') → ['a b c', 'a c b', ...]
- */
-function parseDoubleAmp(s: string): string[] {
-	const parts = splitAdvanced(s, '&&');
-	if (parts.length > 1) {
-		return generatePermutations(parts).map((perm) => perm.join(' '));
-	}
-	return [parts.join(' ')];
-}
-
-/**
- * Parses a single bar (|) combinator.
- * Splits the input by '|' at the top level and returns each part as a string.
- * Does NOT recursively parse the parts—just returns the options as strings.
- * @param s - The syntax string
- * @returns Array of strings, each representing a single option
- * @example parseSingleBar('a | b | c') → ['a', 'b', 'c']
- */
-function parseSingleBar(s: string): string[] {
-	const parts = splitAdvanced(s, '|');
-	if (parts.length > 1) {
-		return parts.map((part) => part.trim());
-	}
-	return [parts.join(' ')];
-}
-
-/**
- * Parses a space-separated sequence.
- * Splits the input by spaces at the top level and returns the sequence as a single string.
- * Does NOT recursively parse the parts—just returns the sequence as a string.
- * @param s - The syntax string
- * @returns Array with a single string representing the sequence
- * @example parseSequence('a b c') → ['a b c']
- */
-function parseSequence(s: string): string[] {
-	const seq = splitAdvanced(s, ' ');
-	if (seq.length > 1) {
-		return [seq.join(' ')];
-	}
-	return [seq.join(' ')];
+function hasBracketsGroup(input: string): boolean {
+	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\})$/.test(input);
 }
 
 /**
@@ -211,8 +161,8 @@ function parseSequence(s: string): string[] {
  * @returns All possible combinations (with and without the group)
  * @example parseBrackets('[a b]') → ['', 'a b']
  */
-function parseBrackets(s: string): CSSCombinations {
-	const inner = s.slice(1, -1);
+function parseBrackets(input: string): string[] {
+	const inner = input.slice(1, -1);
 	const parsed = parse(inner);
 
 	// If the parsed result is only an empty string, return ['']
@@ -225,189 +175,63 @@ function parseBrackets(s: string): CSSCombinations {
 }
 
 /**
- * Parses multipliers (?, +, *, {m,n}).
- * @param s - The syntax string
- * @returns All possible combinations
- * @example parseMultiplier('a?') → ['', 'a']
- * @example parseMultiplier('a+') → ['a', 'a a']
- * @example parseMultiplier('a*') → ['', 'a', 'a a']
- * @example parseMultiplier('a{2,3}') → ['a a', 'a a a']
- */
-function parseMultiplierQuestion(base: string): string[] {
-	return ['', base];
-}
-
-function parseMultiplierPlus(base: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
-	return duplicateToken(base, maxDepth);
-}
-
-function parseMultiplierStar(base: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
-	return ['', ...duplicateToken(base, maxDepth)];
-}
-
-function parseMultiplier(s: string): CSSCombinations {
-	// Handle bracketed group with multiplier, e.g. [a | b]*
-	const bracketGroupMatch = s.match(/^\[(.*)\]([*+?]|\{\d+,\d+\})$/);
-	if (bracketGroupMatch) {
-		const groupContent = bracketGroupMatch[1];
-		const multiplier = bracketGroupMatch[2];
-		const parsedGroup = parse(groupContent);
-		if (multiplier === '?') {
-			return ['', ...parsedGroup];
-		}
-		if (multiplier === '+') {
-			const results: string[] = [];
-			for (const combo of parsedGroup) {
-				results.push(...parseMultiplierPlus(combo, MAX_MULTIPLIER_DEPTH));
-			}
-			return Array.from(new Set(results)).filter(Boolean);
-		}
-		if (multiplier === '*') {
-			const results: string[] = [''];
-			for (const combo of parsedGroup) {
-				results.push(...parseMultiplierStar(combo, MAX_MULTIPLIER_DEPTH));
-			}
-			return Array.from(new Set(results));
-		}
-		// {m,n}
-		const rangeMatch = multiplier.match(/^\{(\d+),(\d+)\}$/);
-		if (rangeMatch) {
-			const n = parseInt(rangeMatch[1], 10);
-			const m = Math.min(parseInt(rangeMatch[2], 10), MAX_MULTIPLIER_DEPTH);
-			const results: string[] = [];
-			for (const combo of parsedGroup) {
-				for (let i = n; i <= m; i++) {
-					results.push(Array(i).fill(combo).join(' '));
-				}
-			}
-			return Array.from(new Set(results)).filter(Boolean);
-		}
-		return parsedGroup;
-	}
-	if (s.endsWith('?')) {
-		const base = s.slice(0, -1).trim();
-		return parseMultiplierQuestion(base);
-	}
-	if (s.endsWith('+')) {
-		const base = s.slice(0, -1).trim();
-		return parseMultiplierPlus(base, MAX_MULTIPLIER_DEPTH);
-	}
-	if (s.endsWith('*')) {
-		const base = s.slice(0, -1).trim();
-		return parseMultiplierStar(base, MAX_MULTIPLIER_DEPTH);
-	}
-	// {m,n}
-	const match = s.match(/^(.*)\{(\d+),(\d+)\}$/);
-	if (match) {
-		const base = match[1].trim();
-		const n = parseInt(match[2], 10);
-		const m = parseInt(match[3], 10);
-		const arr: string[] = [];
-
-		for (let i = n; i <= m; i++) {
-			arr.push(Array(i).fill(base).join(' '));
-		}
-		return arr;
-	}
-	return [s];
-}
-
-/**
  * Main parser for CSS Value Definition Syntax.
  * Recursively parses the syntax string, handling combinators in precedence order.
  * @param syntax - The syntax string
  * @returns All possible combinations as strings
  * @example parse('a || b && c') → ['a', 'b c', 'c b', 'a b c', 'a c b', 'b c a', 'c b a']
  */
-function parse(syntax: string): CSSCombinations {
-	const s = normalizeSyntax(syntax.trim());
+function parse(syntax: string): string[] {
+	const normalizedSyntax = normalizeSyntax(syntax.trim());
 
 	// Handle '||' (double bar) first (lowest precedence)
-	if (splitAdvanced(s, '||').length > 1) {
-		const combos = parseDoubleBar(s);
-		// For each combo (subset/permutation), split by spaces and recursively parse each part
-		const results: string[] = [];
-
-		for (const combo of combos) {
-			// Split the combo by spaces at the top level (e.g., 'a b && c' -> ['a', 'b && c'])
-			const parts = splitAdvanced(combo, ' ');
-
-			// Recursively parse each part to get all possible combinations for that part
-			const parsedParts = parts.map((part) => parse(part));
-
-			// Generate the cross product of all parsed parts to get all possible combinations
-			const crossProduct = generateCrossProduct(parsedParts);
-
-			// Join each combination into a string and add to results
-			for (const arr of crossProduct) {
-				results.push(arr.join(' ').trim());
-			}
-		}
-
-		// Remove duplicates and sort the results by string length for consistency
-		return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
+	if (hasDoubleBar(normalizedSyntax)) {
+		return parseDoubleBar(normalizedSyntax);
 	}
 
 	// Handle '&&' (double ampersand)
-	if (splitAdvanced(s, '&&').length > 1) {
-		const combos = parseDoubleAmp(s);
-		// For each permutation combo, split by spaces and recursively parse each part
-		const results: string[] = [];
-		for (const combo of combos) {
-			// Split the combo by spaces at the top level
-			const parts = splitAdvanced(combo, ' ');
-			// Recursively parse each part to get all possible combinations for that part
-			const parsedParts = parts.map((part) => parse(part));
-			// Generate the cross product of all parsed parts to get all possible combinations
-			const crossProduct = generateCrossProduct(parsedParts);
-			// Join each combination into a string and add to results
-			for (const arr of crossProduct) {
-				results.push(arr.join(' ').trim());
-			}
-		}
-
-		// Sort the results by string length for consistency
-		// Remove duplicates before sorting
-		return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
+	if (hasDoubleAmp(normalizedSyntax)) {
+		return parseDoubleAmp(normalizedSyntax);
 	}
 
 	// Handle '|' (single bar)
-	if (splitAdvanced(s, '|').length > 1) {
-		const combos = parseSingleBar(s);
-		return combos.flatMap((combo) => parse(combo)).sort((a, b) => a.length - b.length);
+	if (hasSingleBar(normalizedSyntax)) {
+		return parseSingleBar(normalizedSyntax);
 	}
 
 	// Handle space-separated sequence
-	if (splitAdvanced(s, ' ').length > 1) {
-		const combos = parseSequence(s);
-		return combos
-			.flatMap((combo) => {
-				const parts = splitAdvanced(combo, ' ');
-				return generateCrossProduct(parts.map((part) => parse(part))).map((arr) => arr.join(' '));
-			})
-			.sort((a, b) => a.length - b.length);
+	if (hasSpace(normalizedSyntax)) {
+		const combos = parseSequence(normalizedSyntax);
+		return combos;
 	}
 
-	// Handle optional group in brackets
-	if (s.startsWith('[') && s.endsWith(']')) {
-		return parseBrackets(s).sort((a, b) => a.length - b.length);
+	// Handle '[]' (optional group)
+	if (hasBrackets(normalizedSyntax)) {
+		return parseBrackets(normalizedSyntax);
 	}
 
-	// Handle group in parentheses (not specified in the original code, but useful for completeness)
+	// Handle optional group in brackets or brackets with multipliers
+	if (hasBracketsGroup(normalizedSyntax)) {
+		return parseMultiplierWithGroup(normalizedSyntax);
+	}
 
 	// Handle multipliers (?, +, *, {m,n})
-	if (/[?+*]|\{\d+,\d+\}$/.test(s)) {
-		return parseMultiplier(s).sort((a, b) => a.length - b.length);
+	if (hasMultiplier(normalizedSyntax)) {
+		return parseMultiplier(normalizedSyntax).sort((a, b) => a.length - b.length);
 	}
 
 	// Base case: atomic value
-	return [s];
+	return [normalizedSyntax];
 }
 
 function test() {
-	const parsed = parse('a{2,3}');
+	// const syntax = '[a|b]+';
+	const syntax = '[a b]';
 
-	console.log('Parsed syntax:', parsed);
+	const parsed = parse(syntax);
+
+	console.log(parsed);
 }
 
-export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence, parseBrackets, parseMultiplier, parse, filterTokens };
+// Export all functions and types
+export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSpace };

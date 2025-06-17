@@ -1,1 +1,52 @@
-.Input{width:100%;text-align:left;-moz-appearance:textfield;-webkit-appearance:textfield;appearance:textfield;min-height:25px;padding:var(--size-sm) var(--size-md);border:none;outline:none;border-radius:var(--size-sm);background:var(--color-white);box-shadow:var(--shadow-inset);font-size:var(--font-size-md)}.Input::-webkit-outer-spin-button,.Input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.Input:hover{background:var(--color-hover)}.Input:focus{background:var(--color-focus);color:var(--color-white)}.Input:active{background:var(--color-active);color:var(--color-white)}.Input[data-selected=true]{color:var(--color-white);background:var(--color-selected);box-shadow:inset 0px .5px 2px 1px rgba(0,0,0,.4)}.Input[data-iserror=true]{border-bottom:3px solid var(--color-error)}.ErrorMessage{width:-moz-max-content;width:max-content;font-size:var(--size-md);word-break:keep-all;text-wrap:nowrap}.ErrorIcon{color:var(--color-error);padding-right:var(--size-sm);font-size:var(--font-size-md)}
+.Input {
+  width: 100%;
+  text-align: left;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+          appearance: textfield;
+  min-height: 25px;
+  padding: var(--size-sm) var(--size-md);
+  border: none;
+  outline: none;
+  border-radius: var(--size-sm);
+  background: var(--color-white);
+  box-shadow: var(--shadow-inset);
+  font-size: var(--font-size-md);
+}
+.Input::-webkit-outer-spin-button, .Input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.Input:hover {
+  background: var(--color-hover);
+}
+.Input:focus {
+  background: var(--color-focus);
+  color: var(--color-white);
+}
+.Input:active {
+  background: var(--color-active);
+  color: var(--color-white);
+}
+.Input[data-selected=true] {
+  color: var(--color-white);
+  background: var(--color-selected);
+  box-shadow: inset 0px 0.5px 2px 1px rgba(0, 0, 0, 0.4);
+}
+.Input[data-iserror=true] {
+  border-bottom: 3px solid var(--color-error);
+}
+
+.ErrorMessage {
+  width: -moz-max-content;
+  width: max-content;
+  font-size: var(--size-md);
+  word-break: keep-all;
+  text-wrap: nowrap;
+}
+
+.ErrorIcon {
+  color: var(--color-error);
+  padding-right: var(--size-sm);
+  font-size: var(--font-size-md);
+}/*# sourceMappingURL=styles.module.css.map */

@@ -7,7 +7,7 @@ import CSS from '@/components/Select/Radio/styles.module.css';
 import Options from '@/components/Select/Options/component';
 
 // Types
-import { RADIO_SELECT } from '@/components/Select/Radio/types';
+import { RadioSelectProps } from '@/components/Select/Radio/types';
 
 
 /**
@@ -16,13 +16,13 @@ import { RADIO_SELECT } from '@/components/Select/Radio/types';
  * A reusable radio select component that allows users to select a single option from a list.
  * It uses the `Options` component to render the available options and triggers an `onChange` callback when a selection is made.
  * 
- * @param {RADIO_SELECT} props - The component props.
+ * @param {RadioSelectProps} props - The component props.
  * @param {string} props.value - The currently selected value.
  * @param {Array<{ name: string, value: string }>} props.options - The list of options to display in the radio select.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected.
  * @returns {ReactElement} - The rendered radio select component.
  */
-const RadioSelect: React.FC<RADIO_SELECT> = ({ value, options, onChange }): ReactElement => {
+const RadioSelect: React.FC<RadioSelectProps> = ({ value, options, onChange }: RadioSelectProps): ReactElement => {
     return (
         <div className={CSS.RadioSelect}  >
             <Options value={value} options={options} onChange={onChange} />

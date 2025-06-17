@@ -7,8 +7,8 @@ import CSS from './styles.module.css';
 import Option from '@/components/Select/Options/Option/component';
 
 // Types
-import { OptionsSelectProps } from './types';
-import { OptionData } from '@/types/option';
+import type { OptionsSelectProps } from './types';
+import type { OptionData } from '@/types/option';
 
 // Hooks
 import { useDebouncedValue } from '@/hooks/hooks';
@@ -127,14 +127,20 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
 
         // If options are grouped
         if (groupedOptions) {
+            // Count the number of categories
+            const categoryCount = Object.keys(groupedOptions).length;
+            // Calculate the number of columns based on the number of categories
             const columns = Object.keys(groupedOptions).map(() => 'auto').join(' ');
+            // Create a style object for CSS variables
             const style = { "--category-columns": columns } as React.CSSProperties;
-
             return (
                 <div className={CSS.OptionsSelect_Categories} style={style}>
                     {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
                         <div key={category} className={CSS.OptionsSelect_Category}>
-                            <span className={CSS.OptionsSelect_CategoryTitle}>{category}</span>
+
+                            {categoryCount > 1 &&
+                                <span className={CSS.OptionsSelect_CategoryTitle}>{category}</span>
+                            }
 
                             <div className={CSS.OptionsSelect_CategoryItems}>
                                 {categoryOptions?.map((option: OptionData, index) => {
@@ -142,7 +148,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                                         <Option
                                             key={index}
                                             {...option}
-                                            isSelected={value.length > 0 && option.name.startsWith(value)}
+                                            isSelected={value.length > 0 && option.name === value}
                                             onChange={handleChange}
                                         />
                                     )

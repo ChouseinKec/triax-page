@@ -138,6 +138,23 @@ function getTokenBase(input: string): string | undefined {
 }
 
 /**
+ * Extracts the range part from a CSS data type string, if present.
+ * @param input - The CSS data type string (e.g., '<length [0,10]>').
+ * @returns The range string (e.g., '[0,10]') or undefined if not present.
+ * @example
+ * getTokenRange('<length [0,10]>') → '[0,10]'
+ * getTokenRange('fit-content(<length> <percentage>)') → undefined
+ */
+function getTokenRange(input: string): string | undefined {
+	// Match the range part in square brackets
+	const rangeMatch = input.match(/\[([^\]]+)\]/);
+	if (rangeMatch) {
+		return rangeMatch[0].trim(); // Return the content inside the brackets
+	}
+	return undefined; // No range found
+}
+
+/**
  * Extracts the type arguments (e.g. range, min/max, step) from a CSS data type string.
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
  * @returns An object with the extracted arguments (e.g., { min: '0', max: '10', step: '1' } or { args: '<length> <percentage>' }) or undefined if not recognized.
@@ -203,4 +220,4 @@ function normalizeRange(value: string | undefined): number | undefined {
 	return undefined;
 }
 
-export { getTokenBase, getTokenCanonical, getTokenParam, getTokenType, isTokenDimension };
+export { getTokenRange, getTokenBase, getTokenCanonical, getTokenParam, getTokenType, isTokenDimension };

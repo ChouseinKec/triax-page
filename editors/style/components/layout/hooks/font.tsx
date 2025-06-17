@@ -4,13 +4,13 @@ import Dropdown from '@/components/Reveal/Dropdown/component';
 import Group from '@/editors/style/components/group/component';
 
 // Types
-import { STYLE_LAYOUT } from '@/editors/style/components/layout/types';
+import { LayoutProps } from '@/editors/style/components/layout/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
 
 
-export const useFontLayout = (): STYLE_LAYOUT => {
+export const useFontLayout = (): LayoutProps => {
 
     const { ColorSelect, NumberInput, InputGroup, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
 
