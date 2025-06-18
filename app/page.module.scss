@@ -7,8 +7,8 @@ body {
 
 .main {
 	display: grid;
-	grid-template-columns: 500px auto;
-	// grid-template-columns: 3fr 3fr;
+	// grid-template-columns: 500px auto;
+	grid-template-columns: 3fr 3fr;
 	gap: 25px;
 }
 

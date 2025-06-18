@@ -140,7 +140,7 @@ type SpecialTypes =
 export type CSSTokens = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes;
 
 
-export type CSSTokenGroups = 'keyword' | 'function' | 'dimension' | 'number';
+export type CSSTokenGroups = 'keyword' | 'function' | 'dimension' | 'number' | 'integer';
 
 /**
  * Represents a single CSS data type definition, including its name and syntax.

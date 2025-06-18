@@ -130,16 +130,16 @@ export function parseMultiplierWithGroup(syntax: string): string[] {
 	const groupResults = require('./parse').parse(group);
 
 	let min = 0,
-		max = 1;
+		max = MAX_MULTIPLIER_DEPTH;
 	if (multiplier === '*') {
 		min = 0;
-		max = 2;
+		// max = 2;
 	} else if (multiplier === '+') {
 		min = 1;
-		max = 2;
+		// max = 2;
 	} else if (multiplier === '?') {
 		min = 0;
-		max = 1;
+		// max = 1;
 	} else {
 		const m = multiplier.match(/\{(\d+)(,(\d+))?\}/);
 		if (m) {

@@ -34,16 +34,19 @@ export const CSSTokenDefs: Partial<Record<CSSTokens, CSSToken>> = {
 	'<string>': createToken('<string>', '<string>'),
 
 	'<track-list>': createToken('<track-list>', '[<track-size>|<track-repeat>]+'),
-	'<track-size>': createToken('<track-size>', '<track-breadth>|minmax(<inflexible-breadth>,<track-breadth>)|fit-content(<length-percentage [0,∞]>)'),
+	// '<track-list>': createToken('<track-list>', '<track-repeat>'),
 
-	'<auto-track-list>': createToken('<auto-track-list>', '[<fixed-size>|<fixed-repeat>]* <auto-repeat> [<fixed-size>|<fixed-repeat>]*'),
-	'<track-repeat>': createToken('<track-repeat>', 'repeat(<integer [1,∞]>,<track-size>+)'),
-	'<fixed-size>': createToken('<fixed-size>', '<fixed-breadth>|minmax(<fixed-breadth>,<track-breadth>)|minmax(<inflexible-breadth>,<fixed-breadth>)'),
-	'<fixed-repeat>': createToken('<fixed-repeat>', 'repeat([<integer [1,∞]>],<fixed-size>+)'),
-	'<auto-repeat>': createToken('<auto-repeat>', 'repeat([auto-fill|auto-fit],<fixed-size>+)'),
-	
+	'<track-size>': createToken('<track-size>', '[<track-breadth>|minmax(<inflexible-breadth>,<track-breadth>)|fit-content(<length-percentage [0,∞]>)]'),
 	'<track-breadth>': createToken('<track-breadth>', '<length-percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto'),
 	'<inflexible-breadth>': createToken('<inflexible-breadth>', '<length-percentage [0,∞]>|min-content|max-content|auto'),
+	'<track-repeat>': createToken('<track-repeat>', 'repeat(<integer [1,∞]>,<track-size>+)'),
+
+
+	// '<auto-track-list>': createToken('<auto-track-list>', '[<fixed-size>|<fixed-repeat>]* <auto-repeat> [<fixed-size>|<fixed-repeat>]*'),
+	// '<fixed-size>': createToken('<fixed-size>', '<fixed-breadth>|minmax(<fixed-breadth>,<track-breadth>)|minmax(<inflexible-breadth>,<fixed-breadth>)'),
+	// '<fixed-repeat>': createToken('<fixed-repeat>', 'repeat([<integer [1,∞]>],<fixed-size>+)'),
+	// '<auto-repeat>': createToken('<auto-repeat>', 'repeat([auto-fill|auto-fit],<fixed-size>+)'),
+	
 	
 	
 	

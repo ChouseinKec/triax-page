@@ -1,4 +1,4 @@
-import {ValueSeparators as ValueSeparatorConst} from '@/constants/style/value';
+import { ValueSeparators as ValueSeparatorConst } from '@/constants/style/value';
 
 // Utilities
 import { getTokenCanonical } from '@/utilities/style/token';
@@ -27,7 +27,7 @@ function isValueKeyword(input: string): boolean {
  * isValueFunction('fit-content(10px)') → true
  */
 function isValueFunction(input: string): boolean {
-	return /^[a-zA-Z-]+\([^)]+\)$/.test(input);
+	return /^[a-zA-Z-]+\(.+\)$/.test(input);
 }
 
 /**
@@ -89,10 +89,15 @@ function getValueTypes(values: string[]): string[] {
  */
 function getValueToken(value: string): string | undefined {
 	const type = getValueType(value);
+
 	if (!type) return undefined;
 
 	if (type === 'keyword') return value;
-	if (type === 'number') return '<number>';
+	if (type === 'number') {
+		const num = Number(value);
+		if (Number.isInteger(num)) return '<integer>';
+		return '<number>';
+	}
 	if (type === 'dimension') return `<${getDimensionType(value)}>`;
 
 	return getTokenCanonical(value);
@@ -147,7 +152,7 @@ function extractSeparators(variations: string[]): ValueSeparators[][] {
 
 	return safeVariations.map((variation) => {
 		// Remove any space before and after any separator in ValueSeparatorConst
-		const regex = new RegExp(`\s*(${ValueSeparatorConst.map(s => s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\s*`, 'g');
+		const regex = new RegExp(`\s*(${ValueSeparatorConst.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|')})\s*`, 'g');
 		const separators: ValueSeparators[] = [];
 		let match;
 		while ((match = regex.exec(variation)) !== null) {
@@ -170,7 +175,5 @@ function extractSeparators(variations: string[]): ValueSeparators[][] {
 function getVariationIndex(variations: string[], values: string): number {
 	return variations.findIndex((variation) => variation === values);
 }
-
-
 
 export { isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes, getValueTokens, getValueToken, extractSeparators, getVariationIndex };

@@ -33,6 +33,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
     // Render Slot components for each current value slot
     const renderCurrentSlots = () => {
         return values.map((slotValue, slotIndex) => (
+            // console.log(options),
             <Slot
                 key={slotIndex}
                 value={slotValue}

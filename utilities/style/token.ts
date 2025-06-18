@@ -36,22 +36,29 @@ function isTokenDimension(input: string): boolean {
 }
 
 /**
- * Checks if the input string i a valid CSS data number (e.g., '<number>', '<integer>').
+ * Checks if the input string is a valid CSS data integer (e.g., '<integer>').
+ * @param input - The string to check.
+ * @returns True if the input is a valid CSS data integer, false otherwise.
+ * @example
+ * isTokenInteger('<integer>') → true
+ * isTokenInteger('<number>') → false
+ */
+function isTokenInteger(input: string): boolean {
+	const canonical = getTokenCanonical(input);
+	return canonical === '<integer>';
+}
+
+/**
+ * Checks if the input string is a valid CSS data number (e.g., '<number>').
  * @param input - The string to check.
  * @returns True if the input is a valid CSS data number, false otherwise.
  * @example
  * isTokenNumber('<number>') → true
- * isTokenNumber('<integer>') → true
- * isTokenNumber('10') → false
- * isTokenNumber('10px') → false
- * isTokenNumber('auto') → false
+ * isTokenNumber('<integer>') → false
  */
 function isTokenNumber(input: string): boolean {
 	const canonical = getTokenCanonical(input);
-
-	if (canonical === '<number>' || canonical === '<integer>') return true;
-
-	return false;
+	return canonical === '<number>';
 }
 
 /**
@@ -76,17 +83,19 @@ function isTokenFunction(input: string): boolean {
 /**
  * Determines the group of a CSS data token based on its format.
  * @param input - The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
- * @returns The group of the token as a string ('keyword', 'dimension', 'function', 'number') or undefined if not recognized.
+ * @returns The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
  * @example
  * getTokenType('auto') → 'keyword'
  * getTokenType('<length>') → 'dimension'
  * getTokenType('fit-content(10px)') → 'function'
- * getTokenType('10') → 'number'
+ * getTokenType('<integer>') → 'integer'
+ * getTokenType('<number>') → 'number'
  */
 function getTokenType(input: string): CSSTokenGroups | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
 	if (isTokenDimension(input)) return 'dimension';
 	if (isTokenFunction(input)) return 'function';
+	if (isTokenInteger(input)) return 'integer';
 	if (isTokenNumber(input)) return 'number';
 	return undefined;
 }
@@ -186,38 +195,29 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 			const dimMatch = input.match(/^<([a-zA-Z0-9-]+)(\s*\[([^\]]+)\])?>$/);
 			if (dimMatch?.[3]) {
 				const range = dimMatch[3].split(',').map((s: string) => s.trim());
-				if (range.length >= 2) {
-					// If both min and max are present, normalize them
-					return {
-						min: normalizeRange(range[0]),
-						max: normalizeRange(range[1]),
-					};
+				if (range.length === 2) {
+					const [min, max] = range;
+					return { min: parseFloat(min), max: parseFloat(max) };
 				}
 			}
 			return undefined;
 		}
-		// For keywords and unrecognized types, return undefined
+		case 'integer': {
+			// For integer, extract range if present
+			const intMatch = input.match(/^<integer>(\s*\[([^\]]+)\])?$/);
+			if (intMatch?.[2]) {
+				const range = intMatch[2].split(',').map((s: string) => s.trim());
+				if (range.length === 2) {
+					const [min, max] = range;
+					return { min: parseInt(min, 10), max: parseInt(max, 10) };
+				}
+			}
+			return undefined;
+		}
 		default:
 			return undefined;
 	}
 }
 
-/**
- * Normalizes a range value from a string to a number.
- * @param value - The range value as a string (e.g., '10', '∞', '-∞').
- * @returns The normalized number or undefined if the value is not valid.
- * @example
- * normalizeRange('10') → 10
- * normalizeRange('∞') → Infinity
- * normalizeRange('-∞') → -Infinity
- * normalizeRange('abc') → undefined
- */
-function normalizeRange(value: string | undefined): number | undefined {
-	if (value === undefined) return undefined;
-	if (value === '∞') return Infinity;
-	if (value === '-∞') return -Infinity;
-	if (!isNaN(Number(value))) return Number(value);
-	return undefined;
-}
-
-export { getTokenRange, getTokenBase, getTokenCanonical, getTokenParam, getTokenType, isTokenDimension };
+// Export the new helpers
+export { isTokenKeyword, isTokenDimension, isTokenFunction, isTokenInteger, isTokenNumber, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };

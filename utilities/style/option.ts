@@ -128,7 +128,8 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
 		case 'keyword': {
 			return createKeywordOption(token);
 		}
-		case 'number': {
+		case 'number':
+		case 'integer': {
 			return createNumberOption(token);
 		}
 		case 'dimension': {
@@ -155,6 +156,7 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
  */
 function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<string>, currentTokens: string[]): boolean {
 	const tokenCanonical = getTokenCanonical(token);
+
 	if (!tokenCanonical) return false;
 
 	// If the current value for this slot is already set to this token, it's always valid
@@ -163,7 +165,8 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<
 	// Create a copy of the current tokens and set this slot to the candidate token
 	const testTokens = [...currentTokens];
 	testTokens[slotIndex] = tokenCanonical;
-	const testString = testTokens.join(' ');
+	const testString = testTokens.join(' ').trim();
+	// console.log(`${slotIndex}. ${tokenCanonical} ? ${testString} = ${validValueSet.has(testString)}`);
 
 	// Check if this combination is a valid variation using the Set for lookup
 	return validValueSet.has(testString);
@@ -184,7 +187,6 @@ function createOptionsTable(syntaxNormalized: string[], slotTokenSets: string[][
 	const valueTokens = getValueTokens(values);
 	// Precompute a Set of all valid value strings for O(1) lookup
 	const validValueSet = new Set(syntaxNormalized);
-
 
 	// Build the options table for each slot
 	return slotTokenSets.map((tokenSet, slotIndex) => {

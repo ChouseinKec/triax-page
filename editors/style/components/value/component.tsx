@@ -33,10 +33,10 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxNormalized = property.syntaxNormalized;
     const syntaxParsed = property.syntaxParsed;
     const syntaxRaw = property.syntaxRaw;
-
+    // console.log(property);
     console.log('Syntax Raw: ', syntaxRaw);
-    console.log('Syntax Parsed: ', syntaxParsed);
-    // console.log('Syntax Normalized: ', syntaxNormalized);
+    // console.log('Syntax Parsed: ', syntaxParsed);
+    console.log('Syntax Normalized: ', syntaxNormalized);
     // console.log('Syntax Set: ', syntaxSet);
 
     // Split the value string into slots (e.g., ['10px', 'auto'])
@@ -46,17 +46,18 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const allSeparators = useMemo(() => extractSeparators(syntaxParsed), [syntaxParsed]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
-        const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
+    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
         [syntaxNormalized, syntaxSet, values]
     );
 
+    // console.log(slotsOptions);
 
-    console.log(slotsOptions);
-
-    
     // Handler to update slot values and join with correct separators
     function handleSlotsChange(updatedValues: string[]) {
+
         const valueTokens = getValueTokens(updatedValues).join(' ');
+        // console.log(updatedValues, valueTokens);
+
         const found = getVariationIndex(syntaxNormalized, valueTokens);
 
         const separators = found === -1 ? [] : allSeparators[found];

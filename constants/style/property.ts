@@ -38,9 +38,9 @@ export const createProperty = (name: string, syntax: string, initialValue: strin
 
 		get syntaxParsed() {
 			if (_parsed === undefined) {
-				const parsed = parse(this.syntaxExpanded);
+				_parsed = parse(this.syntaxExpanded);
 				// const parsed = parse(syntax);
-				_parsed = filterTokens(parsed);
+				// _parsed = filterTokens(parsed);
 			}
 			return _parsed;
 		},
@@ -103,7 +103,8 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	// -------------------------------- GRID --------------------------------
 	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch', 'stretch', 'Aligns flex items along the main axis in a single line', 'flex'),
 	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense', 'row', 'Controls how auto-placed items are inserted in the grid', 'grid'),
-	'grid-template-columns': createProperty('grid-template-columns', 'none|<track-list>|<auto-track-list>|subgrid', 'none', 'Defines the columns of the grid', 'grid'),
+	// 'grid-template-columns': createProperty('grid-template-columns', 'none|<track-list>|<auto-track-list>|subgrid', 'none', 'Defines the columns of the grid', 'grid'),
+	'grid-template-columns': createProperty('grid-template-columns', '<track-list>', 'none', 'Defines the columns of the grid', 'grid'),
 
 	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>', 'none', 'Defines the rows of the grid', 'grid'),
 	'grid-auto-columns': createProperty('grid-auto-columns', '<track-size>', 'auto', 'Specifies the size of implicitly-created grid columns', 'grid'),

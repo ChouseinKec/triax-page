@@ -29,6 +29,8 @@ import { getValueType } from '@/utilities/style/value';
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
 
+    // console.log(value, options);
+
     // Determine the value type for this slot (e.g., function, keyword, dimension, number)
     const valueType = getValueType(value);
 

@@ -8,10 +8,10 @@ import { CSSTokens } from '@/types/style/token';
 import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
 
 // Remove combinator and multiplier logic, and import from new files
-import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSpace, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence } from './parse-combinator';
+import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
 
-export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
+export const MAX_MULTIPLIER_DEPTH = 3; // Default max depth for multipliers
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
@@ -56,7 +56,7 @@ function filterTokens(variations: string[]): string[] {
  * @returns The syntax string with all known tokens recursively expanded
  */
 function expandTokens(syntax: string, seen = new Set<string>()): string {
-	// Start with the input syntax string
+		// Start with the input syntax string
 	let result = syntax;
 	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
 	const tokens = result.match(/<[^>]+>/g);
@@ -103,30 +103,30 @@ function expandTokens(syntax: string, seen = new Set<string>()): string {
  * @param s - The syntax string
  * @returns The normalized syntax string
  */
-function normalizeSyntax(s: string): string {
+function normalizeSyntax(input: string): string {
 	// Normalize '||' to have spaces before and after
-	s = s.replace(/\s*\|\|\s*/g, ' || ');
+	input = input.replace(/\s*\|\|\s*/g, ' || ');
 
 	// Normalize '&&' to have no spaces before or after
-	s = s.replace(/\s*&&\s*/g, '&&');
+	input = input.replace(/\s*&&\s*/g, '&&');
 
 	// Normalize '|' to have no spaces before or after (but not '||')
 	// Use negative lookbehind and lookahead to avoid '||'
-	s = s.replace(/(?<!\|)\s*\|\s*(?!\|)/g, '|');
+	input = input.replace(/(?<!\|)\s*\|\s*(?!\|)/g, '|');
 
 	// Remove spaces before *, +, ?
-	s = s.replace(/\s+([*+?])/g, '$1');
+	input = input.replace(/\s+([*+?])/g, '$1');
 
 	// Normalize ∞ to MAX_MULTIPLIER_DEPTH
-	s = s.replace(/∞/g, MAX_MULTIPLIER_DEPTH.toString());
+	// input = input.replace(/∞/g, MAX_MULTIPLIER_DEPTH.toString());
 
 	// Normalize # to be ,
-	s = s.replace(/#/g, ',');
+	input = input.replace(/#/g, ',');
 
 	// Remove multiple spaces
-	s = s.replace(/\s{2,}/g, ' ');
+	input = input.replace(/\s{2,}/g, ' ');
 
-	return s.trim();
+	return input.trim();
 }
 
 /**
@@ -184,6 +184,11 @@ function parseBrackets(input: string): string[] {
 function parse(syntax: string): string[] {
 	const normalizedSyntax = normalizeSyntax(syntax.trim());
 
+	// Handle comma-separated list (lowest precedence)
+	if (hasComma(normalizedSyntax)) {
+		return parseComma(normalizedSyntax);
+	}
+
 	// Handle '||' (double bar) first (lowest precedence)
 	if (hasDoubleBar(normalizedSyntax)) {
 		return parseDoubleBar(normalizedSyntax);
@@ -200,9 +205,8 @@ function parse(syntax: string): string[] {
 	}
 
 	// Handle space-separated sequence
-	if (hasSpace(normalizedSyntax)) {
-		const combos = parseSequence(normalizedSyntax);
-		return combos;
+	if (hasSequence(normalizedSyntax)) {
+		return parseSequence(normalizedSyntax);
 	}
 
 	// Handle '[]' (optional group)
@@ -226,12 +230,12 @@ function parse(syntax: string): string[] {
 
 function test() {
 	// const syntax = '[a|b]+';
-	const syntax = '[a b]';
+	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 
-	const parsed = parse(syntax);
+	// const parsed = parse(syntax);
 
-	console.log(parsed);
+	// console.log(parsed);
 }
 
 // Export all functions and types
-export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSpace };
+export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };

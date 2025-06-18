@@ -42,16 +42,42 @@ export function hasSingleBar(input: string): boolean {
 }
 
 /**
- * Checks if the input contains a space combinator at the top level.
- * This is used to determine if the input has multiple parts that can be combined in a sequence.
- * @param input - The input string to check for space combinators.
- * @return boolean - Returns true if the input contains a space combinator, false otherwise.
- * @example
- * hasSpace('a b') → true
- * hasSpace('a||b') → false
+ * Checks if the input contains a top-level comma (,) separator.
+ * @param input - The input string to check for comma separators.
+ * @return boolean - Returns true if the input contains a comma separator, false otherwise.
  */
-export function hasSpace(input: string): boolean {
-	return splitAdvanced(input, ' ').length > 1;
+export function hasComma(input: string): boolean {
+	return splitAdvanced(input, ',').length > 1;
+}
+
+/**
+ * Parses a comma-separated list at the top level.
+ * Recursively parses each part and generates the cross product of all possible combinations,
+ * then joins each combination with a comma.
+ * @param input - The input string to parse.
+ * @return string[] - Returns all possible combinations as strings.
+ * @example
+ * parseComma('a,b+') → ['a,b', 'a,b b', 'a,b b b']
+ */
+export function parseComma(input: string): string[] {
+	const parts = splitAdvanced(input, ',');
+	if (parts.length > 1) {
+		const parsedParts = parts.map((part) => parse(part.trim()));
+		return generateCrossProduct(parsedParts).map((arr) => arr.join(','));
+	}
+	return [input];
+}
+
+/**
+ * Checks if the input contains a sequence combinator (space, comma, or slash) at the top level.
+ * @param input - The input string to check for sequence combinators.
+ * @return boolean - Returns true if the input contains a sequence combinator, false otherwise.
+ */
+export function hasSequence(input: string): boolean {
+	return (
+		splitAdvanced(input, ' ').length > 1 ||
+		splitAdvanced(input, '/').length > 1
+	);
 }
 
 /**
@@ -124,19 +150,24 @@ export function parseSingleBar(input: string): string[] {
 }
 
 /**
- * Parses a space-separated sequence.
- * Returns the sequence as a single string (does not recursively parse parts).
- * This handles cases like 'a b c' where the sequence is treated as a single unit.
+ * Parses a sequence separated by space, comma, or slash.
+ * Recursively parses each part and generates the cross product of all possible combinations,
+ * then joins each combination with the original separator.
+ * This ensures that multipliers and nested syntax are expanded for each part.
  * @param input - The input string to parse.
- * @return string[] - Returns an array containing the sequence as a single string.
+ * @return string[] - Returns all possible combinations as strings.
  * @example
- * parseSequence('a b c') → ['a b c']
- * parseSequence('a b') → ['a b']
+ * parseSequence('a b+') → ['a', 'a b', 'a b b']
+ * parseSequence('a/b+') → ['a/b', 'a/b b', 'a/b b b']
  */
 export function parseSequence(input: string): string[] {
-	const seq = splitAdvanced(input, ' ');
-	if (seq.length > 1) {
-		return [seq.join(' ')];
+	let sep = null;
+	if (splitAdvanced(input, ' ').length > 1) sep = ' ';
+	else if (splitAdvanced(input, '/').length > 1) sep = '/';
+	if (sep) {
+		const parts = splitAdvanced(input, sep);
+		const parsedParts = parts.map((part) => parse(part.trim()));
+		return generateCrossProduct(parsedParts).map((arr) => arr.join(sep).replace(new RegExp(`\\s*${sep}\\s*`, 'g'), sep).trim());
 	}
-	return [seq.join(' ')];
+	return [input];
 }
