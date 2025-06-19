@@ -156,19 +156,16 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
  */
 function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<string>, currentTokens: string[]): boolean {
 	const tokenCanonical = getTokenCanonical(token);
-
 	if (!tokenCanonical) return false;
 
-	// If the current value for this slot is already set to this token, it's always valid
+	// Always allow if the current value for this slot matches the candidate token
 	if (currentTokens[slotIndex] === tokenCanonical) return true;
 
-	// Create a copy of the current tokens and set this slot to the candidate token
-	const testTokens = [...currentTokens];
+	// Replace only the relevant slot and check validity
+	const testTokens = currentTokens.slice();
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
-	// console.log(`${slotIndex}. ${tokenCanonical} ? ${testString} = ${validValueSet.has(testString)}`);
 
-	// Check if this combination is a valid variation using the Set for lookup
 	return validValueSet.has(testString);
 }
 
@@ -182,24 +179,22 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @returns 2D array of InputOptionData for each slot
  */
-function createOptionsTable(syntaxNormalized: string[], slotTokenSets: string[][], values: string[]): InputOptionData[][] {
-	// Canonicalize the current values for robust comparison
+function createOptionsTable(syntaxNormalized: Set<string>, syntaxSet: Set<string>[], values: string[]): InputOptionData[][] {
+	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
-	// Precompute a Set of all valid value strings for O(1) lookup
-	const validValueSet = new Set(syntaxNormalized);
 
 	// Build the options table for each slot
-	return slotTokenSets.map((tokenSet, slotIndex) => {
-		if (!tokenSet || tokenSet.length === 0) return [];
+	return syntaxSet.map((tokenSet, setIndex) => {
+		if (!tokenSet || tokenSet.size === 0) return [];
 
 		// Use flatMap for concise option flattening
-		return tokenSet.flatMap((token) => {
+		return [...tokenSet].flatMap((token) => {
 			const tokenCanonical = getTokenCanonical(token);
 			if (!tokenCanonical) return [];
 
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (isSlotOptionValid(token, slotIndex, validValueSet, valueTokens)) {
+			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
 				const option = createOption(token);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}

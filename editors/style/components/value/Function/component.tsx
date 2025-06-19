@@ -19,6 +19,8 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     const safeName = extractFunctionName(value);
     const safeValue = extractFunctionValue(value);
 
+    // console.log(`${safeName}    (${safeValue})`);
+
     const functionOptions = useMemo(() =>
         options.filter(opt => opt.category === 'function'),
         [options]

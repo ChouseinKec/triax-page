@@ -139,7 +139,7 @@ export function parseMultiplierWithGroup(syntax: string): string[] {
 		// max = 2;
 	} else if (multiplier === '?') {
 		min = 0;
-		// max = 1;
+		max = 1;
 	} else {
 		const m = multiplier.match(/\{(\d+)(,(\d+))?\}/);
 		if (m) {

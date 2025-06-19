@@ -31,43 +31,39 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
     const syntaxSet = property.syntaxSet;
     const syntaxNormalized = property.syntaxNormalized;
-    const syntaxParsed = property.syntaxParsed;
-    const syntaxRaw = property.syntaxRaw;
+    const syntaxSeparators = property.syntaxSeparators;
+
     // console.log(property);
-    console.log('Syntax Raw: ', syntaxRaw);
+    // console.log('Syntax Raw: ', syntaxRaw);
     // console.log('Syntax Parsed: ', syntaxParsed);
-    console.log('Syntax Normalized: ', syntaxNormalized);
+    // console.log('Syntax Normalized: ', syntaxNormalized);
     // console.log('Syntax Set: ', syntaxSet);
 
     // Split the value string into slots (e.g., ['10px', 'auto'])
     const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
-
-    // Extract all separators for each variation in syntaxParsed
-    const allSeparators = useMemo(() => extractSeparators(syntaxParsed), [syntaxParsed]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
     const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
         [syntaxNormalized, syntaxSet, values]
     );
 
-    // console.log(slotsOptions);
-
     // Handler to update slot values and join with correct separators
     function handleSlotsChange(updatedValues: string[]) {
-
+        // Normalize the updated values to canonical tokens
         const valueTokens = getValueTokens(updatedValues).join(' ');
-        // console.log(updatedValues, valueTokens);
+        // Find the index of the variation that matches the current value tokens             
+        const found = getVariationIndex([...syntaxNormalized], valueTokens);
+        
+        const separators = found === -1 ? [] : syntaxSeparators[found];
 
-        const found = getVariationIndex(syntaxNormalized, valueTokens);
 
-        const separators = found === -1 ? [] : allSeparators[found];
         // Join the values using the correct separators
-        const joinedValue = joinAdvanced(updatedValues, separators);
+        const joinedValue = joinAdvanced(updatedValues, [...separators]);
         onChange(joinedValue);
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />;
+    return <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
 export default memo(Value);

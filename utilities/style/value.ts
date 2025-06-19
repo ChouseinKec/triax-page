@@ -70,9 +70,7 @@ function getValueType(input: string): ValueTypes | undefined {
  * getValueTypes(['10px', 'auto', 'fit-content(10px)', '10']) → ['dimension', 'keyword', 'function', 'number']
  */
 function getValueTypes(values: string[]): string[] {
-	return values.map((value) => {
-		return getValueType(value) || 'unknown';
-	});
+	return values.map((value) => getValueType(value) || 'unknown');
 }
 
 /**
@@ -90,17 +88,16 @@ function getValueTypes(values: string[]): string[] {
 function getValueToken(value: string): string | undefined {
 	const type = getValueType(value);
 
-	if (!type) return undefined;
-
-	if (type === 'keyword') return value;
-	if (type === 'number') {
-		const num = Number(value);
-		if (Number.isInteger(num)) return '<integer>';
-		return '<number>';
+	switch (type) {
+		case 'keyword':
+			return value;
+		case 'number':
+			return Number.isInteger(Number(value)) ? '<integer>' : '<number>';
+		case 'dimension':
+			return `<${getDimensionType(value)}>`;
+		default:
+			return getTokenCanonical(value);
 	}
-	if (type === 'dimension') return `<${getDimensionType(value)}>`;
-
-	return getTokenCanonical(value);
 }
 
 /**
@@ -112,51 +109,57 @@ function getValueToken(value: string): string | undefined {
  * getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']
  */
 function getValueTokens(values: string[]): string[] {
-	return values.map((value) => {
-		return getValueToken(value) || 'unknown';
-	});
+	return values.map((value) => getValueToken(value) || 'unknown');
 }
 
 /**
  * Extracts separators between tokens for each variation in syntaxParsed.
- * Returns a 2D array: one array of separators per variation.
- * @param variations - An array of CSS value variations (e.g., ['a b / c', 'd e / f']).
- * @return A 2D array of separators for each variation.
+ * Returns an array of sets: one set of separators per variation.
+ * @param variations - A set of CSS value variations (e.g., Set(['a b / c', 'd e / f'])).
+ * @return An array of sets of separators for each variation.
  *
  * @example
- * extractSeparators(['a b / c', 'd / e f']) → [[' ', '/'], ['/', ' ']]
+ * extractSeparators(new Set(['a b / c', 'd / e f'])) → [Set([' ', '/']), Set(['/', ' '])]
  */
-function extractSeparators(variations: string[]): ValueSeparators[][] {
-	/**
-	 * Preprocesses variations by:
-	 * 1. Removing anything between < and > (including the brackets themselves), e.g. '<number [10,100]>' → ''
-	 * 2. Removing spaces before and after '/' or ',',
-	 * 3. Trimming the result and filtering out empty strings
-	 *
-	 * @param variations - Array of CSS value variations
-	 * @returns Array of cleaned variations
-	 */
-	const safeVariations = variations
-		.map((v) =>
-			v
-				.replace(/\s+/g, ' ')
-				// Remove anything between < and > (including brackets)
-				.replace(/<[^>]*>/g, 'token')
-				// Remove spaces before and after '/' or ',',
-				.replace(/\s*([/,])\s*/g, '$1')
-				// Remove functions and their arguments, e.g., 'fit-content(10px)' → ''
-				.replace(/\b\S*\([^)]*\)/g, 'token')
+function extractSeparators(variations: string[]): Set<ValueSeparators>[] {
+	// Clean and normalize each variation string for consistent separator extraction
+	const cleanedVariations = variations
+		.map((variation) =>
+			variation
+				.replace(/\s+/g, ' ') // Normalize whitespace
+				.replace(/<[^>]*>/g, 'token') // Replace angle-bracketed tokens
+				// Remove spaces around '/' and ','
+				// Replace functions (including nested) and their arguments with 'token'
+				.replace(/([a-zA-Z-]+\([^()]*\))/g, function replacer(match) {
+					let depth = 0;
+					for (let i = 0; i < match.length; i++) {
+						if (match[i] === '(') depth++;
+						else if (match[i] === ')') depth--;
+						if (depth === 0 && match[i] === ')') {
+							return `token${match.slice(i + 1)}`;
+						}
+					}
+					return 'token';
+				})
+				.replace(/([a-zA-Z-]+\((?:[^()]|token)*\))/g, 'token')
 				.trim()
 		)
-		.filter((v) => v.length > 0);
+		.filter(Boolean); // Remove empty strings
 
-	return safeVariations.map((variation) => {
-		// Remove any space before and after any separator in ValueSeparatorConst
-		const regex = new RegExp(`\s*(${ValueSeparatorConst.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|')})\s*`, 'g');
-		const separators: ValueSeparators[] = [];
+		console.log(cleanedVariations)
+
+	// Build a regex to match all possible separators
+	const separatorPattern = ValueSeparatorConst
+		.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+		.join('|');
+	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
+
+	// Extract separators for each cleaned variation
+	return cleanedVariations.map((variation) => {
+		const separators: Set<ValueSeparators> = new Set();
 		let match;
-		while ((match = regex.exec(variation)) !== null) {
-			separators.push(match[1] as ValueSeparators);
+		while ((match = separatorRegex.exec(variation)) !== null) {
+			separators.add(match[1] as ValueSeparators);
 		}
 		return separators;
 	});
@@ -165,7 +168,7 @@ function extractSeparators(variations: string[]): ValueSeparators[][] {
 /**
  * Matches a value against the variations and returns the index of the first match.
  * If no match is found, returns -1.
- * @param variations - An array of CSS value variations to match against.
+ * @param variations - A set of CSS value variations to match against.
  * @param values - The CSS value string to match.
  * @return The index of the matching variation, or -1 if not found.
  * @example

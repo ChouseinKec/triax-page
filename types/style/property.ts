@@ -1,3 +1,5 @@
+import type { ValueSeparators } from '@/types/style/value';
+
 // Core display properties
 type DisplayProperties = 'display' | 'visibility' | 'opacity' | 'box-sizing' | 'aspect-ratio' | 'float' | 'clear';
 
@@ -102,18 +104,24 @@ export interface CSSProperty {
 	 * Parsed representation of the CSS Value Definition Syntax string.
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	syntaxParsed: string[];
+	syntaxParsed: Set<string>;
 
 	/**
 	 * Set of each token available in each slot of the syntax.
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	syntaxSet: string[][];
+	syntaxSet: Set<string>[];
 
 	/**
 	 * Normalized syntax representation for easier comparison and validation.
 	 * This is a simplified version of the syntax that removes unnecessary separators, ranges,
 	 * and normalizes function calls.
 	 */
-	syntaxNormalized: string[];
+	syntaxNormalized: Set<string>;
+
+	/**
+	 * Extracted separators for each variation in the syntax.
+	 * This is used to determine how to join values correctly based on the syntax.
+	 */
+	syntaxSeparators: Set<ValueSeparators>[];
 }

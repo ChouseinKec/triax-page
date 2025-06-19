@@ -11,7 +11,7 @@ import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/styl
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
 
-export const MAX_MULTIPLIER_DEPTH = 3; // Default max depth for multipliers
+export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
 
 /**
  * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
@@ -183,7 +183,6 @@ function parseBrackets(input: string): string[] {
  */
 function parse(syntax: string): string[] {
 	const normalizedSyntax = normalizeSyntax(syntax.trim());
-
 	// Handle comma-separated list (lowest precedence)
 	if (hasComma(normalizedSyntax)) {
 		return parseComma(normalizedSyntax);
@@ -229,7 +228,7 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = '[a|b]+';
+	// const syntax = '[a| b]?';
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 
 	// const parsed = parse(syntax);

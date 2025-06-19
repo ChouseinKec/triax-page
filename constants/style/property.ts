@@ -9,6 +9,7 @@ import { getColumnSets } from '@/utilities/array/array';
 import { splitAdvanced } from '@/utilities/string/string';
 import { getTokenCanonical } from '@/utilities/style/token';
 import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
+import { extractSeparators } from '@/utilities/style/value';
 
 /**
  * Helper function to create a CSSProperty object.
@@ -20,9 +21,9 @@ import { parse, expandTokens, filterTokens } from '@/utilities/style/parse';
  */
 export const createProperty = (name: string, syntax: string, initialValue: string, description: string, category: CSSPropertyCategories): CSSProperty => {
 	let _expanded: string | undefined;
-	let _parsed: ReturnType<typeof parse> | undefined;
-	let _set: string[][] | undefined;
-	let _normalized: string[] | undefined;
+	let _parsed: Set<string> | undefined;
+	let _set: Set<string>[] | undefined;
+	let _normalized: Set<string> | undefined;
 
 	return {
 		name,
@@ -38,9 +39,7 @@ export const createProperty = (name: string, syntax: string, initialValue: strin
 
 		get syntaxParsed() {
 			if (_parsed === undefined) {
-				_parsed = parse(this.syntaxExpanded);
-				// const parsed = parse(syntax);
-				// _parsed = filterTokens(parsed);
+				_parsed = new Set(parse(this.syntaxExpanded));
 			}
 			return _parsed;
 		},
@@ -48,27 +47,23 @@ export const createProperty = (name: string, syntax: string, initialValue: strin
 		get syntaxSet() {
 			if (_set === undefined) {
 				const parsed = this.syntaxParsed;
-
-				// Split each variation into top-level tokens
-				const tokens = parsed.map((variation) => {
-					return splitAdvanced(variation, [...ValueSeparators]);
-				});
-
-				const columnSets = getColumnSets(tokens);
-				_set = columnSets;
+				const tokens = [...parsed].map((variation) => [...splitAdvanced(variation, [...ValueSeparators])]);
+				const columnArrays = getColumnSets(tokens);
+				_set = columnArrays.map((col) => new Set(col));
 			}
 			return _set;
 		},
 
 		get syntaxNormalized() {
 			if (_normalized === undefined) {
-				_normalized = this.syntaxParsed.map((variation) =>
-					splitAdvanced(variation, [...ValueSeparators])
-						.map((token) => getTokenCanonical(token))
-						.join(' ')
-				);
+				_normalized = new Set([...this.syntaxParsed].map((variation) => [...splitAdvanced(variation, [...ValueSeparators])].map((token) => getTokenCanonical(token)).join(' ')));
 			}
-			return _normalized;
+			return _normalized!;
+		},
+
+		get syntaxSeparators() {
+			const variations = [...this.syntaxParsed];
+			return extractSeparators(variations);
 		},
 	};
 };
