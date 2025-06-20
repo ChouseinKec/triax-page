@@ -5,7 +5,7 @@ import { getTokenCanonical } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
 
 // Types
-import type { ValueTypes } from '@/types/style/value';
+import type { CSSTokenGroups } from '@/types/style/token';
 import type { ValueSeparators } from '@/types/style/value';
 
 /**
@@ -42,22 +42,49 @@ function isValueNumber(input: string): boolean {
 }
 
 /**
+ * Checks if a value is a CSS dimension (e.g., '10px', '5em', '100%').
+ * @param input - The string to check.
+ * @returns True if the input is a valid dimension format, false otherwise.
+ * @example
+ * isValueDimension('10px') → true
+ * isValueDimension('5em') → true
+ * isValueDimension('100%') → true
+ */
+function isValueInteger(input: string): boolean {
+	return /^-?\d+$/.test(input);
+}
+
+/**
+ * Checks if a value is a CSS color (e.g., '#fff', 'rgba(255, 0, 0)', 'hsl(120, 100%, 50%)').
+ * @param input - The string to check.
+ * @returns True if the input is a valid color format, false otherwise.
+ * @example
+ * isValueColor('#fff') → true
+ * isValueColor('rgba(255, 0, 0)') → true
+ */
+function isValueColor(input: string): boolean {
+	return /^#[0-9a-fA-F]{3,6}$|^rgba?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(,\s*[\d.]+)?\)$|^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%\s*(,\s*[\d.]+)?\)$/.test(input);
+}
+
+/**
  * Determines the type of a CSS value based on its format.
  * Uses specific checks for dimension, keyword, function, and number.
  * @param input - The CSS value string to classify.
- * @returns The detected value type as a ValueTypes or undefined if not recognized.
+ * @returns The detected value type as a CSSTokenGroups or undefined if not recognized.
  * @example
  * getValueType('10px') → 'dimension'
  * getValueType('auto') → 'keyword'
  * getValueType('fit-content(10px)') → 'function'
- * getValueType('10') → 'number'
+ * getValueType('10') → 'integer'
+ * getValueType('10.5') → 'number'
  */
-function getValueType(input: string): ValueTypes | undefined {
+function getValueType(input: string): CSSTokenGroups | undefined {
 	if (isValueDimension(input)) return 'dimension';
 	if (isValueKeyword(input)) return 'keyword';
 	if (isValueFunction(input)) return 'function';
+	if (isValueInteger(input)) return 'integer';
 	if (isValueNumber(input)) return 'number';
-
+	if (isValueColor(input)) return 'color';
 	return undefined;
 }
 
@@ -67,9 +94,9 @@ function getValueType(input: string): ValueTypes | undefined {
  * @param values - An array of CSS value strings to classify.
  * @returns An array of value types corresponding to the input values.
  * @example
- * getValueTypes(['10px', 'auto', 'fit-content(10px)', '10']) → ['dimension', 'keyword', 'function', 'number']
+ * getCSSTokenGroups(['10px', 'auto', 'fit-content(10px)', '10']) → ['dimension', 'keyword', 'function', 'number']
  */
-function getValueTypes(values: string[]): string[] {
+function getCSSTokenGroups(values: string[]): string[] {
 	return values.map((value) => getValueType(value) || 'unknown');
 }
 
@@ -91,10 +118,14 @@ function getValueToken(value: string): string | undefined {
 	switch (type) {
 		case 'keyword':
 			return value;
+		case 'integer':
+			return '<integer>';
 		case 'number':
-			return Number.isInteger(Number(value)) ? '<integer>' : '<number>';
+			return '<number>';
 		case 'dimension':
 			return `<${getDimensionType(value)}>`;
+		case 'color':
+			return '<color>';
 		default:
 			return getTokenCanonical(value);
 	}
@@ -113,6 +144,45 @@ function getValueTokens(values: string[]): string[] {
 }
 
 /**
+ * Extracts separators from a single variation string.
+ * @param variation - The variation string to extract separators from.
+ * @returns An array of separators found in the string.
+ */
+function extractSeparator(variation: string): string[] {
+	// Clean and normalize the variation string for consistent separator extraction
+	const cleaned = variation
+		.replace(/\s+/g, ' ') // Normalize whitespace
+		.replace(/<[^>]*>/g, 'token') // Replace angle-bracketed tokens
+		// Remove spaces around '/' and ','
+		// Replace functions (including nested) and their arguments with 'token'
+		.replace(/([a-zA-Z-]+\([^()]*\))/g, function replacer(match) {
+			let depth = 0;
+			for (let i = 0; i < match.length; i++) {
+				if (match[i] === '(') depth++;
+				else if (match[i] === ')') depth--;
+				if (depth === 0 && match[i] === ')') {
+					return `token${match.slice(i + 1)}`;
+				}
+			}
+			return 'token';
+		})
+		.replace(/([a-zA-Z-]+\((?:[^()]|token)*\))/g, 'token')
+		.trim();
+
+	// Build a regex to match all possible separators
+	const separatorPattern = ValueSeparatorConst.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
+	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
+
+	// Extract separators
+	const separators: string[] = [];
+	let match;
+	while ((match = separatorRegex.exec(cleaned)) !== null) {
+		separators.push(match[1] as ValueSeparators);
+	}
+	return separators;
+}
+
+/**
  * Extracts separators between tokens for each variation in syntaxParsed.
  * Returns an array of sets: one set of separators per variation.
  * @param variations - A set of CSS value variations (e.g., Set(['a b / c', 'd e / f'])).
@@ -121,48 +191,9 @@ function getValueTokens(values: string[]): string[] {
  * @example
  * extractSeparators(new Set(['a b / c', 'd / e f'])) → [Set([' ', '/']), Set(['/', ' '])]
  */
-function extractSeparators(variations: string[]): Set<ValueSeparators>[] {
-	// Clean and normalize each variation string for consistent separator extraction
-	const cleanedVariations = variations
-		.map((variation) =>
-			variation
-				.replace(/\s+/g, ' ') // Normalize whitespace
-				.replace(/<[^>]*>/g, 'token') // Replace angle-bracketed tokens
-				// Remove spaces around '/' and ','
-				// Replace functions (including nested) and their arguments with 'token'
-				.replace(/([a-zA-Z-]+\([^()]*\))/g, function replacer(match) {
-					let depth = 0;
-					for (let i = 0; i < match.length; i++) {
-						if (match[i] === '(') depth++;
-						else if (match[i] === ')') depth--;
-						if (depth === 0 && match[i] === ')') {
-							return `token${match.slice(i + 1)}`;
-						}
-					}
-					return 'token';
-				})
-				.replace(/([a-zA-Z-]+\((?:[^()]|token)*\))/g, 'token')
-				.trim()
-		)
-		.filter(Boolean); // Remove empty strings
-
-		console.log(cleanedVariations)
-
-	// Build a regex to match all possible separators
-	const separatorPattern = ValueSeparatorConst
-		.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
-		.join('|');
-	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
-
-	// Extract separators for each cleaned variation
-	return cleanedVariations.map((variation) => {
-		const separators: Set<ValueSeparators> = new Set();
-		let match;
-		while ((match = separatorRegex.exec(variation)) !== null) {
-			separators.add(match[1] as ValueSeparators);
-		}
-		return separators;
-	});
+function extractSeparators(variations: string[]): string[][] {
+	const arr = Array.isArray(variations) ? variations : [...variations];
+	return arr.map(extractSeparator);
 }
 
 /**
@@ -179,4 +210,4 @@ function getVariationIndex(variations: string[], values: string): number {
 	return variations.findIndex((variation) => variation === values);
 }
 
-export { isValueKeyword, isValueFunction, isValueNumber, getValueType, getValueTypes, getValueTokens, getValueToken, extractSeparators, getVariationIndex };
+export { extractSeparator, isValueKeyword, isValueFunction, isValueNumber, getValueType, getCSSTokenGroups, getValueTokens, getValueToken, extractSeparators, getVariationIndex };

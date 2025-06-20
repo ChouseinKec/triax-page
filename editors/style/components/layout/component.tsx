@@ -25,15 +25,15 @@ const Layout: React.FC = ({ }): ReactElement => {
     const displayLayout = useDisplayLayout();
     const sizeLayout = useSizeLayout();
     // const positionLayout = usePositionLayout();
-    // const fontLayout = useFontLayout();
+    const fontLayout = useFontLayout();
     // const backgroundLayout = useBackgroundLayout();
     // const effectLayout = useEffectLayout();
 
     const layouts: LayoutProps[] = [
-        // displayLayout,
+        displayLayout,
         sizeLayout,
         // positionLayout,
-        // fontLayout,
+        fontLayout,
         // backgroundLayout,
         // effectLayout,
     ];

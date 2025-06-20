@@ -1,22 +1,7 @@
-import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, expandTokens } from '@/utilities/style/parse';
+import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, expandTokens } from '@/utilities/style/parse';
 
 import { parseSequence } from '@/utilities/style/parse-combinator';
 import { parseMultiplier } from '@/utilities/style/parse-multiplier';
-
-describe('filterTokens', () => {
-	it('should allow concrete values', () => {
-		expect(filterTokens(['auto', 'block'])).toEqual(['auto', 'block']);
-	});
-	it('should allow known data types', () => {
-		expect(filterTokens(['<color>', '<number>'])).toEqual(['<color>', '<number>']);
-	});
-	it('should allow primitive types even if not in CSSTokenDefs', () => {
-		expect(filterTokens(['<length>', '<angle [1,5]>', '<percentage>'])).toEqual(['<length>', '<angle [1,5]>', '<percentage>']);
-	});
-	it('should filter out unknown data types', () => {
-		expect(filterTokens(['<foo>', 'bar', '<length>'])).toEqual(['bar', '<length>']);
-	});
-});
 
 describe('expandTokens', () => {
 	it('should expand known data types', () => {

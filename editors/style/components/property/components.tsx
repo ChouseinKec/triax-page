@@ -1,4 +1,4 @@
-import { memo, ReactElement, useRef, useState, ReactNode, useMemo, Fragment, useContext } from 'react';
+import { memo, ReactElement, useRef } from 'react';
 
 // Styles
 import CSS from '@/editors/style/components/property/styles.module.css';
@@ -8,18 +8,18 @@ import FloatReveal from '@/components/Reveal/Float/component';
 import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Types
-import { LAYOUT_PROPERTY } from '@/editors/style/components/property/types';
+import type { LayoutProps, LayoutContentProps } from '@/editors/style/components/property/types';
 
+// Constants
+import { CSSPropertyDefs } from '@/constants/style/property';
 
-// Contexts
-import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
 
 
 /**
  * Property component represents an individual style input field within a group.
  * It includes a label and a component (e.g., input, dropdown) for user interaction.
  * 
- * @param {LAYOUT_PROPERTY} props - The props for the Property component.
+ * @param {LayoutProps} props - The props for the Property component.
  * @param {React.ReactNode} props.component - The component to render (e.g., input, dropdown, etc.).
  * @param {string} [props.column='auto'] - The column layout for the property.
  * @param {string} [props.row='auto'] - The row layout for the property.
@@ -30,10 +30,23 @@ import { useToolbar, ToolbarProvider } from '@/contexts/ToolbarContext';
  * @param {boolean} [props.disabled] - Flag to disable the property input.
  * @returns {ReactElement} The rendered Property component.
 */
-const Property: React.FC<LAYOUT_PROPERTY> = ({ component, column = 'auto', row = 'auto', label, labelAlign = 'center', direction, hidden, disabled }: LAYOUT_PROPERTY): ReactElement => {
+const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
+    const {
+        component,
+        column = 'auto',
+        row = 'auto',
+        label = null,
+        labelAlign = 'center',
+        direction = 'ltr',
+        hidden = false,
+        disabled = false,
+        property,
+    } = props;
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the property)
     if (hidden === true) return <></>;
+
+
 
     // Define the CSS styles for the property using CSS variables
     const _style: React.CSSProperties = {
@@ -43,27 +56,27 @@ const Property: React.FC<LAYOUT_PROPERTY> = ({ component, column = 'auto', row =
     };
 
     return (
-        <ToolbarProvider>
-            <div
-                className={CSS.Property}
-                style={_style}
-                data-label={label?.toLocaleLowerCase()}
-                data-direction={direction}
-                data-disabled={disabled}
-            >
+        <div
+            className={CSS.Property}
+            style={_style}
+            data-label={label?.toLocaleLowerCase()}
+            data-direction={direction}
+            data-disabled={disabled}
+        >
 
-                <Content component={component} label={label} />
+            <Content component={component} label={label} property={property} />
 
-            </div>
-        </ToolbarProvider>
+        </div>
     );
 };
 
 
-const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERTY): ReactElement => {
+const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): ReactElement => {
+    const { component, label, property } = props;
     const labelRef = useRef<HTMLLabelElement>(null);
-    const { buttons, title, description } = useToolbar();
 
+    const propertyName = property ? CSSPropertyDefs[property]?.name : 'N/A';
+    const propertyDescription = property ? CSSPropertyDefs[property]?.description : 'N/A';
     return (
         <>
             {/* Render the label if provided */}
@@ -76,18 +89,13 @@ const Content: React.FC<LAYOUT_PROPERTY> = ({ component, label }: LAYOUT_PROPERT
                     <FloatReveal targetRef={labelRef} position='top'>
 
                         <div className={CSS.Property_Float__Title}>
-                            {title}
+                            {propertyName}
                         </div>
 
-                        <div className={CSS.Property__Float__Description}>
-                            {description}
+                        <div className={CSS.Property_Float__Description}>
+                            {propertyDescription}
                         </div>
 
-                        {buttons.length > 0 && <HorizontalDivider className={CSS.Property_Float__Divider} />}
-
-                        <div className={CSS.Property_Float__Tools}>
-                            {buttons}
-                        </div>
 
                     </FloatReveal>
                 </>

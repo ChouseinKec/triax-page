@@ -8,10 +8,11 @@ import DimensionValue from '../dimension/component';
 import FunctionValue from '../function/component';
 import KeywordValue from '../keyword/component';
 import NumberValue from '../number/component';
+import IntegerValue from '../integer/component';
+import ColorSelect from '@/components/Select/Color/component';
 
 // Types
 import type { SlotProps } from './types';
-import type { FunctionOptionData } from '@/types/option';
 
 // Utilities
 import { getValueType } from '@/utilities/style/value';
@@ -29,8 +30,6 @@ import { getValueType } from '@/utilities/style/value';
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
 
-    // console.log(value, options);
-
     // Determine the value type for this slot (e.g., function, keyword, dimension, number)
     const valueType = getValueType(value);
 
@@ -43,9 +42,12 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                 return <KeywordValue value={value} options={options} onChange={onChange} />;
             case 'dimension':
                 return <DimensionValue value={value} options={options} onChange={onChange} />;
-            case 'number':
             case 'integer':
+                return <IntegerValue value={value} options={options} onChange={onChange} />;
+            case 'number':
                 return <NumberValue value={value} options={options} onChange={onChange} />;
+            case 'color':
+                return <ColorSelect value={value} onChange={onChange} />;
             default:
                 return <div className={CSS.Error}>Unknown value type: {String(valueType)}</div>;
         }

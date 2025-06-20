@@ -9,7 +9,7 @@ import { getTokenBase } from '@/utilities/style/token';
 import { getValueTokens } from '@/utilities/style/value';
 
 // Types
-import type { InputOptionData, NumberOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
+import type { InputOptionData, OtherOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
 import type { CSSDimensionGroups } from '@/types/style/dimension';
 import type { CSSTokens } from '@/types/style/token';
 
@@ -104,16 +104,44 @@ function createKeywordOption(token: string): KeywordOptionData | undefined {
  * @example
  * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'number' }
  */
-function createNumberOption(token: string): NumberOptionData | undefined {
+function createNumberOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
 	const range = getTokenParam(token);
 
 	return {
 		name: 'number',
-		value: '0',
-		category: 'number',
+		value: '0.0',
+		category: 'other',
 		min: range?.min,
 		max: range?.max,
+	};
+}
+
+/**
+ * Creates an IntegerOptionData object for a given integer token (e.g., '<integer [0,100]>').
+ * @param token - The integer token string (e.g., '<integer [0,100]>')
+ * @returns NumberOptionData | undefined - The created integer option or undefined if invalid.
+ * @example
+ * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'number' }
+ */
+function createIntegerOption(token: string): OtherOptionData | undefined {
+	if (!token) return undefined;
+	const range = getTokenParam(token);
+	return {
+		name: 'integer',
+		value: '0',
+		category: 'other',
+		min: range?.min,
+		max: range?.max,
+	};
+}
+
+function createColorOption(token: string): OtherOptionData | undefined {
+	if (!token) return undefined;
+	return {
+		name: 'color',
+		value: '#000000',
+		category: 'other',
 	};
 }
 
@@ -125,19 +153,19 @@ function createNumberOption(token: string): NumberOptionData | undefined {
 function createOption(token: string): InputOptionData | InputOptionData[] | undefined {
 	const type = getTokenType(token);
 	switch (type) {
-		case 'keyword': {
+		case 'color':
+			return createColorOption(token);
+		case 'keyword':
 			return createKeywordOption(token);
-		}
 		case 'number':
-		case 'integer': {
 			return createNumberOption(token);
-		}
-		case 'dimension': {
+		case 'integer':
+			return createIntegerOption(token);
+		case 'dimension':
 			return createDimensionOptions(token);
-		}
-		case 'function': {
+		case 'function':
 			return createFunctionOption(token);
-		}
+
 		default:
 			return undefined;
 	}
@@ -154,7 +182,7 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
  * @example
  * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
  */
-function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<string>, currentTokens: string[]): boolean {
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return false;
 
@@ -166,7 +194,8 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
 
-	return validValueSet.has(testString);
+	// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${validValueSet.has(testString)}`);
+	return new Set(validValueSet).has(testString);
 }
 
 /**
@@ -179,10 +208,9 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: Set<
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @returns 2D array of InputOptionData for each slot
  */
-function createOptionsTable(syntaxNormalized: Set<string>, syntaxSet: Set<string>[], values: string[]): InputOptionData[][] {
+function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[]): InputOptionData[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
-
 	// Build the options table for each slot
 	return syntaxSet.map((tokenSet, setIndex) => {
 		if (!tokenSet || tokenSet.size === 0) return [];

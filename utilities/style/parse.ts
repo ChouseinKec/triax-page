@@ -10,43 +10,9 @@ import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/styl
 // Remove combinator and multiplier logic, and import from new files
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
+import { extractSeparators } from './value';
 
 export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
-
-/**
- * Filters out any parsed values that contain unexpanded data types (e.g., <calc()>),
- * where the data type is not present in CSSTokenDefs. This ensures that only
- * fully expanded, concrete values are included in the result.
- *
- * @param parsed - Array of parsed value strings (e.g., from syntax-parsed)
- * @returns Array with only fully expanded values (no unknown/unexpanded data types)
- */
-function filterTokens(variations: string[]): string[] {
-	return variations.filter((variation) => {
-		// Match all <...> in the string (potential data types)
-		const matches = variation.match(/<[^>]+>/g);
-		// If no matches, it's already a concrete value
-		if (!matches) return true;
-
-		// Exclude if any data type is not in CSSTokenDefs
-		return matches.every((token) => {
-			// List of primitive types that should always be allowed, even if not in CSSTokenDefs
-			const excludes = ['length', 'angle', 'percentage', 'number', 'integer', 'flex'];
-			// Extract the base type from the data type string (e.g., 'length' from '<length [1,5]>')
-			const tokenBase = getTokenBase(token);
-			// If no base type, skip this token
-			if (!tokenBase) return false;
-			// If the base type is in the excludes list, do not filter it out
-			if (excludes.includes(tokenBase)) return true;
-			// Get the canonical form of the token (e.g., '<length [1,5]>' -> '<length>')
-			const tokenCanonical = getTokenCanonical(token);
-			// If no canonical form, skip this token
-			if (!tokenCanonical) return false;
-			// Check if the canonical token is defined in CSSTokenDefs
-			return tokenCanonical in CSSTokenDefs;
-		});
-	});
-}
 
 /**
  * Recursively expands all <token> references in a CSS syntax string using CSSTokenDefs.
@@ -56,7 +22,7 @@ function filterTokens(variations: string[]): string[] {
  * @returns The syntax string with all known tokens recursively expanded
  */
 function expandTokens(syntax: string, seen = new Set<string>()): string {
-		// Start with the input syntax string
+	// Start with the input syntax string
 	let result = syntax;
 	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
 	const tokens = result.match(/<[^>]+>/g);
@@ -120,9 +86,6 @@ function normalizeSyntax(input: string): string {
 	// Normalize ∞ to MAX_MULTIPLIER_DEPTH
 	// input = input.replace(/∞/g, MAX_MULTIPLIER_DEPTH.toString());
 
-	// Normalize # to be ,
-	input = input.replace(/#/g, ',');
-
 	// Remove multiple spaces
 	input = input.replace(/\s{2,}/g, ' ');
 
@@ -152,7 +115,7 @@ function hasBrackets(input: string): boolean {
  * hasBracketsGroup('[a b]') → false
  */
 function hasBracketsGroup(input: string): boolean {
-	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\})$/.test(input);
+	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(input);
 }
 
 /**
@@ -207,7 +170,6 @@ function parse(syntax: string): string[] {
 	if (hasSequence(normalizedSyntax)) {
 		return parseSequence(normalizedSyntax);
 	}
-
 	// Handle '[]' (optional group)
 	if (hasBrackets(normalizedSyntax)) {
 		return parseBrackets(normalizedSyntax);
@@ -228,13 +190,12 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = '[a| b]?';
+	// const syntax = 'line-through solid #000000';
+
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
-
 	// const parsed = parse(syntax);
-
 	// console.log(parsed);
 }
 
 // Export all functions and types
-export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, filterTokens, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };
+export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };

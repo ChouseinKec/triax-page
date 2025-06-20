@@ -1,25 +1,37 @@
-import { ReactElement } from "react";
+import type { CSSProperties } from '@/types/style/property';
 
 /**
- * Represents a single style property within a layout group.
- * Defines UI rendering details and display behavior for a style input component.
- *
- * @param {string | null} label - The label to display for the property, or null for no label.
- * @param {string} [labelAlign] - Optional alignment of the label (e.g., 'left', 'right', 'center').
- * @param {string} [column] - Optional CSS grid column placement for the property component.
- * @param {string} [row] - Optional CSS grid row placement for the property component.
- * @param {string} [direction] - Optional layout direction for internal elements (e.g., 'row', 'column').
- * @param {boolean} [hidden] - Optional flag to conditionally hide the property in the UI.
- * @param {boolean} [disabled] - Optional flag to disable interaction with the property.
- * @param {function} component - A function that returns the React component for rendering the style input.
+ * Represents a single layout property within the style editor.
+ * This type defines the structure of a layout property, including its label,
+ * alignment, grid position, visibility, and the component used to render it.
+ * It is used to create a consistent interface for layout properties in the style editor.
  */
-export type LAYOUT_PROPERTY = {
-    label: string | null;
-    labelAlign?: string;
-    column?: string;
-    row?: string;
-    direction?: string;
-    hidden?: boolean;
-    disabled?: boolean;
-    component: () => React.ReactNode;
-};
+export interface LayoutProps {
+	/** The label for the property, displayed in the UI */
+	label: string | null;
+	/** The alignment of the label in the UI */
+	labelAlign?: string;
+	/** The grid column position for the property in the layout */
+	column?: string;
+	/** The grid row position for the property in the layout */
+	row?: string;
+	/** The direction of the property in the layout (e.g., 'horizontal', 'vertical') */
+	direction?: string;
+	/** Whether the property is hidden in the UI */
+	hidden?: boolean;
+	/** Whether the property is disabled in the UI */
+	disabled?: boolean;
+	/** The CSS property associated with this layout property */
+	property?: CSSProperties;
+	/** The component that renders the property in the UI */
+	component: () => React.ReactNode;
+}
+
+export interface LayoutContentProps {
+	/** The component to render within the layout */
+	component: () => React.ReactNode;
+	/** The label for the property, displayed in the UI */
+	label: string | null;
+	/** The CSS property associated with this layout property */
+    property?: CSSProperties;
+}

@@ -23,7 +23,7 @@ type OutlineProperties = 'outline' | 'outline-width' | 'outline-style' | 'outlin
 
 // Text & font properties
 type FontProperties = 'font-family' | 'font-size' | 'font-weight' | 'font-style' | 'font-variant' | 'font-stretch' | 'line-height' | 'letter-spacing' | 'word-spacing';
-type TextProperties = 'color' | 'text-align' | 'text-decoration' | 'text-decoration-line' | 'text-decoration-color' | 'text-decoration-style' | 'text-decoration-thickness' | 'text-transform' | 'text-indent' | 'text-shadow' | 'text-overflow' | 'white-space' | 'word-break' | 'line-break' | 'writing-mode' | 'text-orientation' | 'direction';
+type TextProperties = 'direction' | 'color' | 'text-align' | 'text-decoration' | 'text-decoration-line' | 'text-decoration-color' | 'text-decoration-style' | 'text-decoration-thickness' | 'text-transform' | 'text-indent' | 'text-shadow' | 'text-overflow' | 'white-space' | 'word-break' | 'line-break' | 'writing-mode' | 'text-orientation' | 'direction';
 
 // Column properties
 type ColumnProperties = 'column-count' | 'column-width' | 'column-gap' | 'column-rule' | 'column-rule-width' | 'column-rule-style' | 'column-rule-color' | 'column-span' | 'column-fill' | 'break-before' | 'break-inside' | 'break-after';
@@ -80,11 +80,6 @@ export interface CSSProperty {
 	 */
 	category: CSSPropertyCategories;
 
-	/**
-	 * The default value for this property.
-	 * This is used for initial rendering and validation.
-	 */
-	initialValue: string;
 
 	/**
 	 * CSS Value Definition Syntax string.
@@ -104,7 +99,7 @@ export interface CSSProperty {
 	 * Parsed representation of the CSS Value Definition Syntax string.
 	 * Generated at runtime by the style parser for UI/validation logic.
 	 */
-	syntaxParsed: Set<string>;
+	syntaxParsed: string[];
 
 	/**
 	 * Set of each token available in each slot of the syntax.
@@ -117,11 +112,11 @@ export interface CSSProperty {
 	 * This is a simplified version of the syntax that removes unnecessary separators, ranges,
 	 * and normalizes function calls.
 	 */
-	syntaxNormalized: Set<string>;
+	syntaxNormalized: string[];
 
 	/**
 	 * Extracted separators for each variation in the syntax.
 	 * This is used to determine how to join values correctly based on the syntax.
 	 */
-	syntaxSeparators: Set<ValueSeparators>[];
+	syntaxSeparators: string[][];
 }

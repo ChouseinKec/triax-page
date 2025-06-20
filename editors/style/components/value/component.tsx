@@ -6,7 +6,7 @@ import type { ValueProps } from './types';
 // Utilities
 import { splitAdvanced, joinAdvanced } from '@/utilities/string/string';
 import { createOptionsTable } from '@/utilities/style/option';
-import { extractSeparators, getValueTokens, getVariationIndex } from '@/utilities/style/value';
+import { getValueTokens, getVariationIndex } from '@/utilities/style/value';
 
 // Constants
 import { ValueSeparators } from '@/constants/style/value';
@@ -33,11 +33,9 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxNormalized = property.syntaxNormalized;
     const syntaxSeparators = property.syntaxSeparators;
 
-    // console.log(property);
-    // console.log('Syntax Raw: ', syntaxRaw);
-    // console.log('Syntax Parsed: ', syntaxParsed);
-    // console.log('Syntax Normalized: ', syntaxNormalized);
-    // console.log('Syntax Set: ', syntaxSet);
+    // console.log(property.syntaxNormalized)
+    // console.log(property.syntaxParsed);
+    // console.log(syntaxSeparators);
 
     // Split the value string into slots (e.g., ['10px', 'auto'])
     const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
@@ -49,21 +47,36 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
 
     // Handler to update slot values and join with correct separators
     function handleSlotsChange(updatedValues: string[]) {
-        // Normalize the updated values to canonical tokens
+        // Normalize updated values to canonical tokens
         const valueTokens = getValueTokens(updatedValues).join(' ');
-        // Find the index of the variation that matches the current value tokens             
-        const found = getVariationIndex([...syntaxNormalized], valueTokens);
-        
-        const separators = found === -1 ? [] : syntaxSeparators[found];
+
+        // Find the index of the matching variation
+        const separatorIndex = getVariationIndex(syntaxNormalized, valueTokens);
+
+        // Get separators for this variation, or fallback to spaces
+        let separators = syntaxSeparators[separatorIndex]
+            ? syntaxSeparators[separatorIndex]
+            : [];
 
 
-        // Join the values using the correct separators
-        const joinedValue = joinAdvanced(updatedValues, [...separators]);
+        // If separators are missing or don't match the number of slots, fallback to spaces
+        if (!separators || separators.length - 1 !== updatedValues.length) {
+            separators = Array(updatedValues.length).fill(' ');
+        }
+
+        // Join values with the determined separators
+        const joinedValue = joinAdvanced(updatedValues, separators);
+
+        // Trigger the change callback
         onChange(joinedValue);
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <>
+        {/* {values.join(' ')}
+        <br /> */}
+        <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    </>
 };
 
 export default memo(Value);

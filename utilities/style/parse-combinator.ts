@@ -75,8 +75,7 @@ export function parseComma(input: string): string[] {
  */
 export function hasSequence(input: string): boolean {
 	return (
-		splitAdvanced(input, ' ').length > 1 ||
-		splitAdvanced(input, '/').length > 1
+		splitAdvanced(input, ' ').length > 1 
 	);
 }
 

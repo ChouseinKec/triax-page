@@ -23,6 +23,7 @@ import type { SlotsProps } from './types';
  */
 const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
     const { values, options, onChange } = props;
+
     // Handles a change in a single slot, updating the overall slot values array
     const handleSlotChange = (newValue: string, slotIndex: number) => {
         const updatedValues = [...values];
@@ -69,7 +70,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
     // Calculate the total number of slots to render, including the next slot dropdown
     const calculateSlotCount = () => {
-        const maxSlots = options.length
+        const maxSlots = options.filter(opt => opt && opt.length > 0).length;
         const hasNext = values.length < maxSlots;
 
         // If there are more options than current values,

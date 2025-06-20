@@ -1,31 +1,4 @@
 import { MAX_MULTIPLIER_DEPTH } from './parse';
-
-/**
- * Checks if the input ends with a multiplier (?, +, *, {m,n}).
- * This is used to determine if the input has a multiplier that affects how many times the preceding token can occur.
- * @param input - The input string to check for a multiplier.
- * @return boolean - Returns true if the input has a multiplier, false otherwise.
- * @example
- * hasMultiplier('a?') → true
- * hasMultiplier('a b') → false
- */
-export function hasMultiplier(input: string): boolean {
-	return /[?+*]|\{\d+(,\d+)?\}$/.test(input);
-}
-
-/**
- * Returns ['', input] for the ? multiplier (zero or one occurrence).
- * This is used to handle cases where the preceding token can occur zero or one time.
- * @param input - The input string to parse.
- * @return string[] - Returns an array with an empty string and the input.
- * @example
- * parseMultiplierQuestion('a?') → ['', 'a']
- * parseMultiplierQuestion('b') → ['', 'b']
- */
-export function parseMultiplierQuestion(input: string): string[] {
-	return ['', input];
-}
-
 /**
  * Duplicates a token up to maxDepth times, joining with spaces (for + and * multipliers).
  * This is used to generate all possible combinations for multipliers that allow one or more occurrences.
@@ -45,6 +18,34 @@ export function duplicateToken(input: string, maxDepth: number): string[] {
 }
 
 /**
+ * Checks if the input ends with a multiplier (?, +, *, {m,n}).
+ * This is used to determine if the input has a multiplier that affects how many times the preceding token can occur.
+ * @param input - The input string to check for a multiplier.
+ * @return boolean - Returns true if the input has a multiplier, false otherwise.
+ * @example
+ * hasMultiplier('a?') → true
+ * hasMultiplier('a b') → false
+ * hasMultiplier('c*') → true
+ * hasMultiplier('d{2,4}') → true
+ */
+export function hasMultiplier(input: string): boolean {
+	return /[?+*]|\{\d+(,\d+)?\}$/.test(input);
+}
+
+/**
+ * Returns ['', input] for the ? multiplier (zero or one occurrence).
+ * This is used to handle cases where the preceding token can occur zero or one time.
+ * @param input - The input string to parse.
+ * @return string[] - Returns an array with an empty string and the input.
+ * @example
+ * parseMultiplierQuestion('a?') → ['', 'a']
+ * parseMultiplierQuestion('b') → ['', 'b']
+ */
+export function parseMultiplierQuestion(input: string): string[] {
+	return ['', input];
+}
+
+/**
  * Handles the + multiplier (one or more occurrences).
  * This is used to generate all possible combinations for multipliers that require at least one occurrence.
  * @param input - The input string to parse.
@@ -57,6 +58,7 @@ export function duplicateToken(input: string, maxDepth: number): string[] {
 export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
 	return duplicateToken(input, maxDepth);
 }
+
 
 /**
  * Handles the * multiplier (zero or more occurrences).
@@ -122,7 +124,7 @@ export function parseMultiplier(input: string): string[] {
  */
 export function parseMultiplierWithGroup(syntax: string): string[] {
 	// syntax is expected to be something like: [group]multiplier
-	const match = syntax.match(/^(\[.*\])(\*|\+|\?|\{\d+(,\d+)?\})$/);
+	const match = syntax.match(/^(\[.*\])(\*|\+|\?|#|\{\d+(,\d+)?\})$/);
 	if (!match) return [syntax];
 	const group = match[1].slice(1, -1); // remove [ and ]
 	const multiplier = match[2];
@@ -131,15 +133,17 @@ export function parseMultiplierWithGroup(syntax: string): string[] {
 
 	let min = 0,
 		max = MAX_MULTIPLIER_DEPTH;
+	let joiner = ' ';
 	if (multiplier === '*') {
 		min = 0;
-		// max = 2;
 	} else if (multiplier === '+') {
 		min = 1;
-		// max = 2;
 	} else if (multiplier === '?') {
 		min = 0;
 		max = 1;
+	} else if (multiplier === '#') {
+		min = 1;
+		joiner = ',';
 	} else {
 		const m = multiplier.match(/\{(\d+)(,(\d+))?\}/);
 		if (m) {
@@ -157,7 +161,7 @@ export function parseMultiplierWithGroup(syntax: string): string[] {
 				const newCombos: string[] = [];
 				for (const left of combos) {
 					for (const right of groupResults) {
-						newCombos.push((left + ' ' + right).trim());
+						newCombos.push((left + joiner + right).trim());
 					}
 				}
 				combos = newCombos;

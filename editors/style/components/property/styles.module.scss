@@ -1,4 +1,4 @@
-@use '../../../../../mixins//mixins.module.scss' as inputMixins;
+@use '../../../../mixins//mixins.module.scss' as inputMixins;
 
 .Property {
 	display: grid;
@@ -78,4 +78,16 @@
 
 .Property_Float__Divider {
 	margin-top: 0 !important;
+}
+
+
+.Property_Float__Title{
+	text-transform: capitalize;
+	font-size: var(--font-size-lg);
+	font-weight: 600;
+}
+
+.Property_Float__Description{
+	font-size: var(--font-size-md);
+	line-height: var(--size-xl);
 }

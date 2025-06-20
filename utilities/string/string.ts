@@ -17,6 +17,7 @@ function splitAdvanced(input: string, separators: string | string[]): string[] {
 	let depthSquare = 0;
 	let depthRound = 0;
 	let depthAngle = 0;
+	let depthCurly = 0;
 	let buf = '';
 	for (let i = 0; i < input.length; i++) {
 		const c = input[i];
@@ -26,9 +27,16 @@ function splitAdvanced(input: string, separators: string | string[]): string[] {
 		if (c === ')') depthRound--;
 		if (c === '<') depthAngle++;
 		if (c === '>') depthAngle--;
+		if (c === '{') depthCurly++;
+		if (c === '}') depthCurly--;
 		// Only split if not inside any brackets and matches any separator
 		let matchedSep = null;
-		if (depthSquare === 0 && depthRound === 0 && depthAngle === 0) {
+		if (
+			depthSquare === 0 &&
+			depthRound === 0 &&
+			depthAngle === 0 &&
+			depthCurly === 0
+		) {
 			for (const sep of seps) {
 				if (sep && input.slice(i, i + sep.length) === sep) {
 					matchedSep = sep;

@@ -35,10 +35,10 @@ export interface DimensionOptionData extends OptionData {
 	max?: number;
 }
 
-export interface NumberOptionData extends OptionData {
-	category: 'number';
+export interface OtherOptionData extends OptionData {
+	category: 'other';
 	min?: number;
 	max?: number;
 }
 
-export type InputOptionData = NumberOptionData | KeywordOptionData | FunctionOptionData | DimensionOptionData;
+export type InputOptionData = OtherOptionData | KeywordOptionData | FunctionOptionData | DimensionOptionData;

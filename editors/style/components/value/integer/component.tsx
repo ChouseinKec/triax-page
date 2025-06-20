@@ -9,11 +9,11 @@ import InputNumber from '@/components/Input/Number/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
-import { NumberValueProps } from './types';
+import { IntegerValueProps } from './types';
 
 
 
-const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): ReactElement => {
+const IntegerValue: React.FC<IntegerValueProps> = memo((props: IntegerValueProps): ReactElement => {
     const {
         value = '',
         onChange = () => { },
@@ -23,8 +23,9 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
         isStrict = false,
     } = props;
 
+
     // Default number is '0', used when no numeric value is provided
-    const DEFAULT_NUMBER = '0.0';
+    const DEFAULT_NUMBER = '0';
 
     // Handle changes to the numeric input
     const handleValueChange = useCallback((input: string): void => {
@@ -32,12 +33,8 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
             onChange(isStrict ? DEFAULT_NUMBER : '');
         }
 
-        // Convert input to float and ensure it has a decimal if it's an integer
-        const num = parseFloat(input);
-        // If input is integer, add .0
-        const formatted = Number.isInteger(num) ? num.toFixed(1) : input;
-
-        onChange(formatted);
+        const intValue = String(parseInt(input, 10));
+        onChange(intValue);
     }, [onChange, isStrict]);
 
 
@@ -76,4 +73,4 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
     );
 });
 
-export default NumberValue;
+export default IntegerValue;

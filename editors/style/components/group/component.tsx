@@ -7,20 +7,20 @@ import CSS from '@/editors/style/components/group/styles.module.css';
 import Property from '@/editors/style/components/property/components';
 
 // Types
-import { LAYOUT_GROUP } from '@/editors/style/components/group/types';
+import { LayoutGroup } from '@/editors/style/components/group/types';
 
 /**
  * Group component renders a grid layout of properties within a style editor.
  * Each property is rendered as a separate component within the grid structure.
  * 
- * @param {LAYOUT_GROUP} props - The props for the Group component.
- * @param {LAYOUT_PROPERTY[]} props.properties - The properties to render in the group.
+ * @param {LayoutGroup} props - The props for the Group component.
+ * @param {LayoutProps[]} props.properties - The properties to render in the group.
  * @param {string} [props.columns='1fr 1fr'] - The grid column layout.
  * @param {string} [props.rows='auto'] - The grid row layout.
  * @param {boolean} [props.hidden] - Flag to determine if the group should be visible.
  * @returns {ReactElement} The rendered Group component.
 */
-const Group: React.FC<LAYOUT_GROUP> = ({ properties, columns = '1fr 1fr', rows = 'auto', hidden }: LAYOUT_GROUP): ReactElement => {
+const Group: React.FC<LayoutGroup> = ({ properties, columns = '1fr 1fr', rows = 'auto', hidden }: LayoutGroup): ReactElement => {
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
     if (hidden === true) return <></>;
 

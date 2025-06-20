@@ -12,7 +12,7 @@ import { LAYOUT_CATEGORY } from '@/editors/style/components/category/type';
  * Each group represents a set of properties that define the layout structure.
  * 
  * @param {LAYOUT_CATEGORY} props - The props for the Category component.
- * @param {LAYOUT_GROUP[]} props.groups - The groups to render in the category.
+ * @param {LayoutGroup[]} props.groups - The groups to render in the category.
  * @returns {ReactElement} The rendered Category component.
  */
 const Category: React.FC<LAYOUT_CATEGORY> = ({ groups }): ReactElement => {

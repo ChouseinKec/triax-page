@@ -22,8 +22,6 @@ type CompositeTypes =
 	| '<color>' // e.g. rgb(255, 0, 0), #ff0000
 	| '<url>' // e.g. url('image.png')
 	| '<string>' // e.g. 'hello', "world"
-
-	
 	| '<track-breadth>' // e.g. 100px, 50%, 1fr, min-content, max-content, auto
 	| '<track-list>' // e.g. 100px, 50% / 1fr, min-content, max-content, auto
 	| '<auto-track-list>' // e.g. auto-fill, auto-fit
@@ -130,17 +128,23 @@ type SpecialTypes =
 	| '<supports-condition>' // e.g. (display: flex)
 	| '<media-query>' // e.g. (min-width: 600px)
 	| '<selector>' // e.g. div > p, .class, #id
-	| '<feature-query>'; // e.g. @supports (display: grid)
+	| '<feature-query>' // e.g. @supports (display: grid)
+	| '<overflow-block>';
 
+type FontTypes =
+	| '<generic-family>'
+	| '<generic-complete>' // e.g. serif, sans-serif, monospace
+	| '<generic-incomplete>'; // e.g. cursive, fantasy, system-ui, math
+
+type TextTypes = '<text-decoration-line>' | '<text-decoration-style>' | '<text-decoration-color>';
 /**
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').
  * These correspond to the official CSS value definition data types from the CSS spec.
  * Used for type-safe parsing, expansion, and validation of CSS property values.
  */
-export type CSSTokens = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes;
+export type CSSTokens = NumericTypes | UnitTypes | CompositeTypes | MathTypes | FunctionTypes | IdentTypes | SpecialTypes | FontTypes | TextTypes;
 
-
-export type CSSTokenGroups = 'keyword' | 'function' | 'dimension' | 'number' | 'integer';
+export type CSSTokenGroups = 'keyword' | 'function' | 'dimension' | 'number' | 'integer' | 'color';
 
 /**
  * Represents a single CSS data type definition, including its name and syntax.
@@ -157,9 +161,8 @@ export interface CSSToken {
 	 */
 	syntax: string;
 
-
 	/**
 	 * Initial value for this token, if applicable.
 	 */
-	initialValue?: string; 
+	initialValue?: string;
 }

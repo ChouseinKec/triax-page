@@ -27,6 +27,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: null,
                         column: '1/-1',
+                        property: 'display',
                         component: () => renderValue('display')
                     },
                 ],
@@ -49,6 +50,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Direction',
                         direction: 'column',
+                        property: 'flex-direction',
                         component: () => renderValue('flex-direction'),
                     },
 
@@ -56,6 +58,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Wrap',
                         direction: 'column',
+                        property: 'flex-wrap',
                         component: () => renderValue('flex-wrap'),
                     },
 
@@ -63,6 +66,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Align Items',
                         direction: 'column',
+                        property: 'align-items',
                         component: () => renderValue('align-items'),
                     },
 
@@ -70,6 +74,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Align Content',
                         direction: 'column',
+                        property: 'align-content',
                         component: () => renderValue('align-content'),
                     },
 
@@ -77,6 +82,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Justify Content',
                         direction: 'column',
+                        property: 'justify-content',
                         component: () => renderValue('justify-content'),
                     },
 
@@ -84,6 +90,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Row Gap',
                         direction: 'column',
+                        property: 'row-gap',
                         component: () => renderValue('row-gap')
                     },
 
@@ -91,6 +98,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: 'Column Gap',
                         direction: 'column',
+                        property: 'column-gap',
                         component: () => renderValue('column-gap')
                     },
                 ],
@@ -114,6 +122,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Justify Content',
                         column: 'auto',
                         direction: 'column',
+                        property: 'justify-content',
                         component: () => renderValue('justify-content'),
                     },
 
@@ -122,6 +131,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Justify Items',
                         column: 'auto',
                         direction: 'column',
+                        property: 'justify-items',
                         component: () => renderValue('justify-items'),
                     },
 
@@ -130,6 +140,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Align Items',
                         column: 'auto',
                         direction: 'column',
+                        property: 'align-items',
                         component: () => renderValue('align-items'),
                     },
 
@@ -138,6 +149,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Align Content',
                         column: 'auto',
                         direction: 'column',
+                        property: 'align-content',
                         component: () => renderValue('align-content'),
                     },
 
@@ -146,6 +158,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Auto Flow',
                         column: 'auto',
                         direction: 'column',
+                        property: 'grid-auto-flow',
                         component: () => renderValue('grid-auto-flow'),
                     },
 
@@ -154,6 +167,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Auto Columns',
                         column: 'auto',
                         direction: 'column',
+                        property: 'grid-auto-columns',
                         component: () => renderValue('grid-auto-columns'),
                     },
 
@@ -162,23 +176,8 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Auto Rows',
                         column: 'auto',
                         direction: 'column',
+                        property: 'grid-auto-rows',
                         component: () => renderValue('grid-auto-rows'),
-                    },
-
-                    // Template Columns (grid-specific)
-                    {
-                        label: 'Template Columns',
-                        column: 'auto',
-                        direction: 'column',
-                        component: () => renderValue('grid-template-columns'),
-                    },
-
-                    // Template Rows (grid-specific)
-                    {
-                        label: 'Template Rows',
-                        column: 'auto',
-                        direction: 'column',
-                        component: () => renderValue('grid-template-rows'),
                     },
 
                     // Row Gap for grid container
@@ -186,14 +185,34 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: 'Row Gap',
                         column: 'auto',
                         direction: 'column',
+                        property: 'row-gap',
                         component: () => renderValue('row-gap')
                     },
 
+                    // Template Rows (grid-specific)
+                    {
+                        label: 'Template Rows',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'grid-template-rows',
+                        component: () => renderValue('grid-template-rows'),
+                    },
+
+                    // Template Columns (grid-specific)
+                    {
+                        label: 'Template Columns',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'grid-template-columns',
+                        component: () => renderValue('grid-template-columns'),
+                    },
+                    
                     // Column Gap for grid container
                     {
                         label: 'Column Gap',
                         column: 'auto',
                         direction: 'column',
+                        property: 'column-gap',
                         component: () => renderValue('column-gap')
                     },
                 ],

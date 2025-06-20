@@ -1,5 +1,5 @@
 import type { CSSProperty } from '@/types/style/property';
-import type { ValueRenderTypes } from '@/types/style/value';
+
 /**
  * Props for the Value component in the style editor.
  */
