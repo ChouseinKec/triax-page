@@ -5,7 +5,6 @@ import CSS from '@/editors/style/components/property/styles.module.css';
 
 // Components
 import FloatReveal from '@/components/Reveal/Float/component';
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Types
 import type { LayoutProps, LayoutContentProps } from '@/editors/style/components/property/types';

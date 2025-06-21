@@ -35,7 +35,7 @@
 			background: var(--color-selected);
 			box-shadow: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
 			@if $svg {
-				svg path {
+				svg * {
 					fill: var(--color-white);
 				}
 			}
@@ -135,11 +135,11 @@
 	text-transform: uppercase;
 
 	cursor: pointer;
-	@include states($selected: true);
+	@include states($selected: true, $svg: true);
 
 	svg {
-		width: 15px;
-		height: 15px;
+		width: 100%;
+		height: auto;
 	}
 }
 

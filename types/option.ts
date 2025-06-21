@@ -1,7 +1,6 @@
-// types/option.ts
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactElement } from 'react';
 import type { CSSDimensionGroups } from './style/dimension';
-
+import type { CSSIcons } from '@/constants/style/icon';
 /** Represents a single option in a select/radio/dropdown component. */
 export interface OptionData {
 	/** The display name of the option */
@@ -11,7 +10,7 @@ export interface OptionData {
 	/** Optional category to group the option under */
 	category?: string;
 	/** Optional icon for the option (SVG element) */
-	icon?: React.ReactNode;
+	icon?: ReactElement;
 	/** Optional inline style for the option */
 	style?: CSSProperties;
 }

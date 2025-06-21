@@ -80,6 +80,12 @@ export interface CSSProperty {
 	 */
 	category: CSSPropertyCategories;
 
+	/**
+	 * The icon name for the CSS property.
+	 * This is used for UI representation, typically as an icon in the property editor.
+	 * It should correspond to an icon in the icon set used by the UI library.
+	 */
+	icon?: string;
 
 	/**
 	 * CSS Value Definition Syntax string.

@@ -21,6 +21,7 @@ import { LayoutGroup } from '@/editors/style/components/group/types';
  * @returns {ReactElement} The rendered Group component.
 */
 const Group: React.FC<LayoutGroup> = ({ properties, columns = '1fr 1fr', rows = 'auto', hidden }: LayoutGroup): ReactElement => {
+  
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
     if (hidden === true) return <></>;
 

@@ -1,4 +1,4 @@
-import { memo, ReactElement, useMemo } from 'react';
+import { memo, ReactElement, useCallback, useMemo } from 'react';
 
 // Types
 import type { ValueProps } from './types';
@@ -29,9 +29,9 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const { property, value, onChange } = props;
 
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
-    const syntaxSet = property.syntaxSet;
-    const syntaxNormalized = property.syntaxNormalized;
-    const syntaxSeparators = property.syntaxSeparators;
+    const syntaxSet = useMemo(() => property.syntaxSet, [property.syntaxSet]);
+    const syntaxNormalized = useMemo(() => property.syntaxNormalized, [property.syntaxNormalized]);
+    const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
 
     // console.log(property.syntaxNormalized)
     // console.log(property.syntaxParsed);
@@ -46,7 +46,9 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     );
 
     // Handler to update slot values and join with correct separators
-    function handleSlotsChange(updatedValues: string[]) {
+    const handleSlotsChange = useCallback((updatedValues: string[]) => {
+        // console.log(updatedValues);
+
         // Normalize updated values to canonical tokens
         const valueTokens = getValueTokens(updatedValues).join(' ');
 
@@ -58,9 +60,8 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
             ? syntaxSeparators[separatorIndex]
             : [];
 
-
         // If separators are missing or don't match the number of slots, fallback to spaces
-        if (!separators || separators.length - 1 !== updatedValues.length) {
+        if (values.length > 1 && (!separators || separators.length - 1 !== updatedValues.length)) {
             separators = Array(updatedValues.length).fill(' ');
         }
 
@@ -69,7 +70,7 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
 
         // Trigger the change callback
         onChange(joinedValue);
-    }
+    }, [onChange, syntaxNormalized, syntaxSeparators]);
 
     // Render the slot-based value editor, passing separators and new onChange
     return <>

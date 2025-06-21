@@ -2,7 +2,7 @@
 import { CSSTokenDefs } from '@/constants/style/token';
 import { DimensionGroups } from '@/constants/style/value';
 import { CSSUnitOptions } from '@/constants/style/units';
-
+import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
 import { getTokenBase } from '@/utilities/style/token';
@@ -89,11 +89,14 @@ function createKeywordOption(token: string): KeywordOptionData | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
+	const icon = CSSIconDefs?.[token as CSSIcons];
+
 	// Create and return the KeywordOptionData object for the keyword
 	return {
 		name: token,
 		value: token,
 		category: 'keyword',
+		icon
 	};
 }
 

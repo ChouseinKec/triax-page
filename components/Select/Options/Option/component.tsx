@@ -40,6 +40,7 @@ const Option: React.FC<OptionProps> = (props): ReactElement => {
     }, [isSelected, onChange]
     );
 
+
     return (
         <i
             className={CSS.Option}
@@ -47,6 +48,7 @@ const Option: React.FC<OptionProps> = (props): ReactElement => {
             data-selected={isSelected}
             style={style}
         >
+            
             {icon}
             {!icon && name}
         </i>

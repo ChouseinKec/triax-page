@@ -79,12 +79,17 @@ function isValueColor(input: string): boolean {
  * getValueType('10.5') → 'number'
  */
 function getValueType(input: string): CSSTokenGroups | undefined {
+	// IMPORTANT: The order of these checks matters!
 	if (isValueDimension(input)) return 'dimension';
 	if (isValueKeyword(input)) return 'keyword';
+	// - 'color' must come before 'function' because function matches any name(...),
+	//   including color functions like rgba(...).
+	if (isValueColor(input)) return 'color';
 	if (isValueFunction(input)) return 'function';
+	// - 'integer' must come before 'number' because all integers are numbers,
+	//   but not all numbers are integers.
 	if (isValueInteger(input)) return 'integer';
 	if (isValueNumber(input)) return 'number';
-	if (isValueColor(input)) return 'color';
 	return undefined;
 }
 
@@ -210,4 +215,4 @@ function getVariationIndex(variations: string[], values: string): number {
 	return variations.findIndex((variation) => variation === values);
 }
 
-export { extractSeparator, isValueKeyword, isValueFunction, isValueNumber, getValueType, getCSSTokenGroups, getValueTokens, getValueToken, extractSeparators, getVariationIndex };
+export { isValueColor, extractSeparator, isValueKeyword, isValueFunction, isValueNumber, getValueType, getCSSTokenGroups, getValueTokens, getValueToken, extractSeparators, getVariationIndex };

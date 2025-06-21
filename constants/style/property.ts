@@ -220,7 +220,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'min-height': createProperty('min-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
 	'max-height': createProperty('max-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
 	overflow: createProperty('overflow', 'visible | hidden | clip | scroll | auto', 'overflow'),
-	'object-fit': createProperty('object-fit', 'fill | contain | cover | none | scale-down', 'size'),
+	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down', 'size'),
 	'box-sizing': createProperty('box-sizing', 'content-box | border-box', 'size'),
 	'aspect-ratio': createProperty('aspect-ratio', 'auto || <ratio>', 'size'),
 	float: createProperty('float', 'left | right | none', 'size'),

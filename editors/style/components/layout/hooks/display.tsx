@@ -206,7 +206,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         property: 'grid-template-columns',
                         component: () => renderValue('grid-template-columns'),
                     },
-                    
+
                     // Column Gap for grid container
                     {
                         label: 'Column Gap',

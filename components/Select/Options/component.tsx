@@ -147,7 +147,8 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                                     return (
                                         <Option
                                             key={index}
-                                            {...option}
+                                            name={option.name}
+                                            value={option.value}
                                             isSelected={value.length > 0 && option.name === value}
                                             onChange={handleChange}
                                         />
@@ -167,6 +168,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                 <Option
                     name={option.name}
                     value={option.value}
+                    icon={option.icon}
                     key={index}
                     isSelected={value === option.name}
                     onChange={handleChange}
