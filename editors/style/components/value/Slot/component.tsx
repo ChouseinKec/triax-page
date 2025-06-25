@@ -10,7 +10,7 @@ import KeywordValue from '../keyword/component';
 import NumberValue from '../number/component';
 import IntegerValue from '../integer/component';
 import LinkValue from '../link/component';
-import ColorSelect from '@/components/Select/Color/component';
+import ColorSelect from '@/components/select/color/component';
 import Error from '../error/component';
 
 // Types

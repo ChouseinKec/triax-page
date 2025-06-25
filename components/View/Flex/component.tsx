@@ -4,7 +4,7 @@ import React, { memo, ReactElement, useMemo } from 'react';
 import CSS from '@/components/View/Flex/styles.module.css';
 
 // Types
-import { FlexViewProps } from '@/components/View/Flex/types';
+import { FlexViewProps } from '@/components/view/flex/types';
 
 /**
  * FlexView Component
@@ -20,24 +20,24 @@ const FlexView: React.FC<FlexViewProps> = ({ styles }: FlexViewProps): ReactElem
 
     const renderedDots = useMemo(() => {
         return Array(9).fill(0).map((_, index) => (
-            <i key={index} className={CSS.dot} />
+            <i key={index} className={CSS.FlexView_Dot} />
         ))
 
     }, []
     );
 
     return (
-        <div className={CSS.component} style={styles}>
-          
-            <div className={CSS.dots}>
+        <div className={CSS.FlexView} style={styles}>
+
+            <div className={CSS.FlexView_Dots}>
                 {renderedDots}
             </div>
 
-            <div className={CSS.box} data-index={1} />
-            <div className={CSS.box} data-index={2} />
-            <div className={CSS.box} data-index={3} />
+            <div className={CSS.FlexView_Box} data-index={1} />
+            <div className={CSS.FlexView_Box} data-index={2} />
+            <div className={CSS.FlexView_Box} data-index={3} />
         </div>
     );
 };
 
-export default memo(FlexView);
+export default FlexView;

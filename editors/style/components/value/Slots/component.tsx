@@ -5,8 +5,8 @@ import CSS from './styles.module.css';
 
 // Components
 import Slot from '../slot/component';
-import DropdownSelect from '@/components/Select/Dropdown/component';
-import DropdownReveal from '@/components/Reveal/Dropdown/component';
+import DropdownSelect from '@/components/select/dropdown/component';
+import DropdownReveal from '@/components/reveal/dropdown/component';
 
 // Types
 import type { SlotsProps } from './types';

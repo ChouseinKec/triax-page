@@ -7,7 +7,7 @@ import type { ErrorProps } from './types';
 import CSS from './styles.module.css';
 
 // Component
-import FloatReveal from '@/components/Reveal/Float/component';
+import FloatReveal from '@/components/reveal/float/component';
 
 const Error: React.FC<ErrorProps> = ({ message }) => {
     const targetRef = useRef(null);

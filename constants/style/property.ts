@@ -279,8 +279,9 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'border-bottom-right-radius': createProperty('border-bottom-right-radius', '<length-percentage>'),
 	'border-bottom-left-radius': createProperty('border-bottom-left-radius', '<length-percentage>'),
 
-	outline: createProperty('outline', '<outline-width> || <outline-style> || <outline-color>'),
-
+	'outline-width': createProperty('outline-width', '<length [0,∞]>'),
+	'outline-style': createProperty('outline-style', 'auto|none|dotted|dashed|solid|double|groove|ridge|inset|outset'),
+	'outline-color': createProperty('outline-color', '<color>'),
 
 	// ============ Font & Text =============
 	'font-family': createProperty('font-family', '<generic-family>'),

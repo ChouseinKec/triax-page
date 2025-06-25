@@ -4,10 +4,10 @@ import React, { memo, ReactElement } from 'react';
 import CSS from '@/components/Select/Radio/styles.module.css';
 
 // Components
-import Options from '@/components/Select/Options/component';
+import Options from '@/components/select/options/component';
 
 // Types
-import { RadioSelectProps } from '@/components/Select/Radio/types';
+import { RadioSelectProps } from '@/components/select/radio/types';
 
 
 /**

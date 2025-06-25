@@ -4,7 +4,7 @@ import { memo, ReactElement, useRef } from 'react';
 import CSS from '@/editors/style/components/property/styles.module.css';
 
 // Components
-import FloatReveal from '@/components/Reveal/Float/component';
+import FloatReveal from '@/components/reveal/float/component';
 
 // Types
 import type { LayoutProps, LayoutContentProps } from '@/editors/style/components/property/types';

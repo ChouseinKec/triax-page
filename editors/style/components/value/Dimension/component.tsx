@@ -5,8 +5,8 @@ import React, { ReactElement } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import GenericInput from '@/components/Input/Generic/component';
-import SelectDropdown from '@/components/Select/Dropdown/component';
+import GenericInput from '@/components/input/generic/component';
+import SelectDropdown from '@/components/select/dropdown/component';
 
 // Types
 import { DimensionValueProps } from './types';

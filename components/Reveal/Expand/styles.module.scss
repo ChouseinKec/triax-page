@@ -3,7 +3,7 @@
 
 	&[data-isopen='true'] {
 		.ExpandReveal_Button::after {
-			content: '| - |';
+			content: '| Collapse |';
 		}
 	}
 }
@@ -22,7 +22,7 @@
 	cursor: pointer;
 
 	&::after {
-		content: '| + |';
+		content: '| Expand |';
 		width: max-content;
 		display: block;
 
@@ -31,7 +31,7 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 
-		font-size: var(--size-lg);
+		font-size: calc(var(--size-lg) * 0.8);
 
 		color: var(--color-white--darker);
 		background: var(--color-white);

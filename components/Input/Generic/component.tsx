@@ -4,7 +4,7 @@ import React, { useCallback, ReactElement, memo, useState, useRef } from 'react'
 import CSS from './styles.module.css';
 
 // Components
-import FloatReveal from '@/components/Reveal/Float/component';
+import FloatReveal from '@/components/reveal/float/component';
 
 // Types
 import type { GenericInputProps } from './types';

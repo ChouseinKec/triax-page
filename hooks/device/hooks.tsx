@@ -1,7 +1,7 @@
 import { useCallback, ReactElement, useMemo } from 'react';
 
 // Components
-import DropdownSelect from '@/components/Select/Dropdown/component';
+import DropdownSelect from '@/components/select/dropdown/component';
 
 // Store
 import useDeviceStore from '@/stores/device/store';

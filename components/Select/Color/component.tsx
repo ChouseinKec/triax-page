@@ -2,10 +2,10 @@ import React, { memo, ReactElement, useCallback } from 'react';
 import { ChromePicker, ColorResult } from 'react-color';
 
 // Components
-import Dropdown from '@/components/Reveal/Dropdown/component';
+import Dropdown from '@/components/reveal/dropdown/component';
 
 // Types
-import { COLOR_SELECT } from '@/components/Select/Color/types';
+import { COLOR_SELECT } from '@/components/select/color/types';
 
 // Utilities
 import { clearSpaces } from '@/utilities/string/string';

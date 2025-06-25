@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
-import { PositionSelectProps, Positions, Side, Corner } from '@/components/Select/Position/types';
+import { PositionSelectProps, Positions, Side, Corner } from '@/components/select/position/types';
 import CSS from '@/components/Select/Position/styles.module.css';
 
 const POSITIONS: Positions[] = [

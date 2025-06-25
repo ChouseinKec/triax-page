@@ -4,7 +4,7 @@ import React, { useRef, useEffect, memo } from "react";
 import CSS from "@/components/Reveal/Float/styles.module.css";
 
 // Types
-import { FloatRevealProps } from "@/components/Reveal/Float/types";
+import { FloatRevealProps } from "@/components/reveal/float/types";
 
 // Hooks
 import useHover from "@/hooks/interaction/useHover";

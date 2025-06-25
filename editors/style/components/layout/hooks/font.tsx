@@ -1,7 +1,5 @@
 // Components
-import Dropdown from '@/components/Reveal/Dropdown/component';
-import Group from '@/editors/style/components/group/component';
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
@@ -10,7 +8,7 @@ import type { LayoutProps } from '@/editors/style/components/layout/types';
 import { useStyleFactory } from '@/hooks/style/factory';
 
 export const useFontLayout = (): LayoutProps => {
-    const { renderValue } = useStyleFactory();
+    const { renderValue, renderTextView } = useStyleFactory();
 
     return {
         label: 'Font & Text',
@@ -18,6 +16,13 @@ export const useFontLayout = (): LayoutProps => {
             {
                 columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
+                    // Text View
+                    {
+                        label: null,
+                        column: '1/-1',
+                        direction: 'column',
+                        component: () => renderTextView()
+                    },
 
                     // Size
                     {
@@ -106,21 +111,9 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                properties: [
-                    // Horizontal Divider
-                    {
-                        label: '',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => <HorizontalDivider type='bracket' />,
-                    },
-                ]
-            },
-
-            {
+                isExpandable: true,
                 columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
-
                     // Letter Spacing
                     {
                         label: 'Letter Spacing',
@@ -192,11 +185,7 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'text-orientation',
                         component: () => renderValue('text-orientation'),
                     },
-                ],
-            },
 
-            {
-                properties: [
                     // Horizontal Divider
                     {
                         label: '',
@@ -204,12 +193,8 @@ export const useFontLayout = (): LayoutProps => {
                         direction: 'column',
                         component: () => <HorizontalDivider type='bracket' />,
                     },
-                ]
-            },
 
-            {
-                columns: 'repeat(3,minmax(0, 1fr))',
-                properties: [
+
                     // Column Count
                     {
                         label: 'Count',
@@ -323,7 +308,6 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'column-fill',
                         component: () => renderValue('column-fill'),
                     },
-
                 ],
             },
         ],

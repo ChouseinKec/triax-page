@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // Types
 import { LayoutProps } from '@/editors/style/components/layout/types';
-import { Side, Corner } from '@/components/Select/Position/types';
+import { Side, Corner } from '@/components/select/position/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';

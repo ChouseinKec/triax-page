@@ -1,15 +1,15 @@
-import React, { memo, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 // Style
 import CSS from '@/components/Divider/Horizontal/styles.module.css';
 
 // Types
-import { HORIZONTAL_DIVIDER } from '@/components/Divider/Horizontal/types';
+import { HorizontalDividerProps } from '@/components/divider/horizontal/types';
 
 
-const HorizontalDivider: React.FC<HORIZONTAL_DIVIDER> = ({ type = 'straight', className }: HORIZONTAL_DIVIDER): ReactElement => {
+const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ type = 'straight' }: HorizontalDividerProps): ReactElement => {
     return (
-        <div className={` ${className} ${CSS.HorizontalDivider}`} data-type={type} />
+        <div className={CSS.HorizontalDivider} data-type={type} />
     );
 };
 
-export default memo(HorizontalDivider);
+export default HorizontalDivider;

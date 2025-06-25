@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 
 // Components
 import Category from '@/editors/style/components/category/component';
-import AccordionGroup from '@/components/Group/Accordion/component';
+import AccordionGroup from '@/components/group/accordion/component';
 
 // Types 
 import { LayoutProps } from '@/editors/style/components/layout/types';

@@ -3,12 +3,12 @@ import React, { memo, ReactElement, useCallback } from 'react';
 import CSS from './styles.module.css';
 
 // Types
-import { DropdownSelectProps } from '@/components/Select/Dropdown/types';
+import { DropdownSelectProps } from '@/components/select/dropdown/types';
 
 
 // Components
-import DropdownReveal from '@/components/Reveal/Dropdown/component';
-import Options from '@/components/Select/Options/component';
+import DropdownReveal from '@/components/reveal/dropdown/component';
+import Options from '@/components/select/options/component';
 
 /**
  * DropdownSelect Component

@@ -6,7 +6,7 @@ import { useStyleFactory } from '@/hooks/style/factory';
 import { useStyleManager } from '@/hooks/style/manager';
 
 // Components
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 
 /**
@@ -246,19 +246,7 @@ export const useDisplayLayout = (): LayoutProps => {
             },
 
             {
-                properties: [
-                    // Horizontal Divider
-                    {
-                        label: '',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => <HorizontalDivider type='bracket' />,
-                    },
-                ]
-            },
-
-
-            {
+                isExpandable: true,
                 properties: [
     
                     // Direction

@@ -64,9 +64,7 @@ export const CSSTokenDefs: Partial<Record<CSSTokens, CSSToken>> = {
 	'<text-decoration-color>': createToken('<text-decoration-color>', '<color>'),
 	'<text-decoration-thickness>': createToken('<text-decoration-thickness>', 'auto|from-font|<length-percentage>'),
 
-	'<outline-width>': createToken('<outline-width>', '<length [0,∞]>'),
-	'<outline-style>': createToken('<outline-style>', 'auto|none|dotted|dashed|solid|double|groove|ridge|inset|outset'),
-	'<outline-color>': createToken('<outline-color>', '<color>'),
+
 
 	// === Background Types ===
 	'<bg-size>': createToken('<bg-size>', '<length-percentage [0,∞]>|auto|cover|contain'),

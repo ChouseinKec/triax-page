@@ -4,10 +4,10 @@ import React, { memo, ReactElement, useCallback, useEffect, useRef, useState } f
 import CSS from '@/components/Reveal/Dropdown/styles.module.css';
 
 // Types
-import { DropdownRevealProps } from '@/components/Reveal/Dropdown/types';
+import { DropdownRevealProps } from '@/components/reveal/dropdown/types';
 
 // Components
-import FloatReveal from '@/components/Reveal/Float/component'
+import FloatReveal from '@/components/reveal/float/component'
 
 /**
  * Dropdown Component

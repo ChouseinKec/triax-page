@@ -8,8 +8,8 @@ import type { FunctionValueProps } from './types';
 
 // Components
 import Value from '@/editors/style/components/value/component';
-import DropdownReveal from '@/components/Reveal/Dropdown/component';
-import DropdownSelect from '@/components/Select/Dropdown/component';
+import DropdownReveal from '@/components/reveal/dropdown/component';
+import DropdownSelect from '@/components/select/dropdown/component';
 import Error from '@/editors/style/components/value/error/component';
 
 // Constants

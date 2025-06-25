@@ -5,8 +5,7 @@ import React, { useCallback, ReactElement, memo, useMemo } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import GenericInput from '@/components/Input/Generic/component';
-import SelectDropdown from '@/components/Select/Dropdown/component';
+import GenericInput from '@/components/input/generic/component';
 
 // Types
 import { IntegerValueProps } from './types';
@@ -29,11 +28,9 @@ const LinkValue: React.FC<IntegerValueProps> = memo((props: IntegerValueProps): 
             return;
         }
 
-        let sanitizedInput = input.replaceAll('"', '');
-        if (sanitizedInput.startsWith('https://')) {
-            sanitizedInput = sanitizedInput.slice(8);
-        }
-        onChange(`"https://${input}"`);
+        const sanitizedInput = input.replaceAll('"', '').replaceAll('https://', '');
+
+        onChange(`"https://${sanitizedInput}"`);
     }, [onChange]);
 
 

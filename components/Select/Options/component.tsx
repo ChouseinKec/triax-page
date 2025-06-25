@@ -4,7 +4,7 @@ import { memo, ReactElement, useState, useMemo, useCallback } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import Option from '@/components/Select/Options/Option/component';
+import Option from '@/components/select/options/Option/component';
 
 // Types
 import type { OptionsSelectProps } from './types';

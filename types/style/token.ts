@@ -65,7 +65,7 @@ type FontTypes =
 	| '<line-style>'
 	| '<repeat-line-style>';
 
-type TextTypes = '<outline-width>' | '<outline-style>' | '<outline-color>' | '<text-decoration-line>' | '<text-decoration-style>' | '<text-decoration-color>' | '<text-decoration-thickness>';
+type TextTypes =  '<text-decoration-line>' | '<text-decoration-style>' | '<text-decoration-color>' | '<text-decoration-thickness>';
 type BackgroundTypes = '<bg-size>' | '<bg-position>' | '<bg-image>';
 /**
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').

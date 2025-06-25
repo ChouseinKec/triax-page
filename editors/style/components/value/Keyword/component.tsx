@@ -1,8 +1,8 @@
 import React from 'react';
 
 // Components
-import DropdownSelect from '@/components/Select/Dropdown/component';
-import RadioSelect from '@/components/Select/Radio/component';
+import DropdownSelect from '@/components/select/dropdown/component';
+import RadioSelect from '@/components/select/radio/component';
 
 // Types
 import { KeywordValueProps } from './types';

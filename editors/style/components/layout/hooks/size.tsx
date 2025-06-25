@@ -1,5 +1,5 @@
 // Components
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
+import HorizontalDivider from '@/components/divider/horizontal/component';
 // Types
 import { LayoutProps } from '@/editors/style/components/layout/types';
 
@@ -77,17 +77,9 @@ export const useSizeLayout = (): LayoutProps => {
                 ],
 
             },
+
             {
-                properties: [
-                    {
-                        label: '',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => <HorizontalDivider type='bracket' />,
-                    },
-                ]
-            },
-            {
+                isExpandable: true,
                 columns: 'repeat(4,minmax(0, 1fr))',
                 properties: [
 

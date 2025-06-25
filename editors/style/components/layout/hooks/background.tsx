@@ -1,16 +1,15 @@
 import { useState } from 'react';
 
 // Components
-import Group from '@/editors/style/components/group/component';
-import HorizontalDivider from '@/components/Divider/Horizontal/component';
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 // Types
 import { LayoutProps } from '@/editors/style/components/layout/types';
-import { Side, Corner } from '@/components/Select/Position/types';
+import { Side, Corner } from '@/components/select/position/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
-import { useStyleManager } from '@/hooks/style/manager';
+
 /**
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
@@ -18,8 +17,7 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
 export const useBackgroundLayout = (): LayoutProps => {
-    const { renderValue, renderPositionSelect } = useStyleFactory();
-    const { getStyle } = useStyleManager();
+    const { renderValue, renderPositionSelect, renderBackgroundView } = useStyleFactory();
 
     const [currentSide, setCurrentSide] = useState<Side>('top');
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
@@ -39,9 +37,18 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true),
                     },
 
+                    // Position selector for the border side (Top, Bottom, Left, Right)
+                    {
+                        label: null,
+                        column: '2/-1',
+                        row: '1',
+                        component: () => renderBackgroundView(),
+                    },
+
+
                     // Border Width
                     {
-                        label: 'Border-Width',
+                        label: 'Border Width',
                         column: '1',
                         row: '2',
                         direction: 'column',
@@ -52,7 +59,7 @@ export const useBackgroundLayout = (): LayoutProps => {
 
                     // Border Style (solid, dashed, etc.)
                     {
-                        label: 'Border-Style',
+                        label: 'Border Style',
                         column: '2',
                         row: '2',
                         direction: 'column',
@@ -63,7 +70,7 @@ export const useBackgroundLayout = (): LayoutProps => {
 
                     // Border Color picker
                     {
-                        label: 'Border-Color',
+                        label: 'Border Color',
                         column: '3',
                         row: '2',
                         direction: 'column',
@@ -74,7 +81,7 @@ export const useBackgroundLayout = (): LayoutProps => {
 
                     // Border Radius
                     {
-                        label: 'Border-Radius',
+                        label: 'Border Radius',
                         direction: 'column',
                         property: 'border-radius',
                         row: '2',
@@ -83,32 +90,41 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderValue(`border-${currentCorner || 'top-left'}-radius`), // Dynamic length input based on selected corner
                     },
 
-                    // Outline
+                    // Outline Width
                     {
-                        label: 'Outline',
+                        label: 'Outline Width',
                         direction: 'column',
-                        property: 'outline',
+                        property: 'outline-width',
                         row: '3',
-                        column: '1/-1',
-                        component: () => renderValue('outline'),
+                        column: '1',
+                        component: () => renderValue('outline-width'),
+                    },
+
+                    // Outline Style
+                    {
+                        label: 'Outline Style',
+                        direction: 'column',
+                        property: 'outline-style',
+                        row: '3',
+                        column: '2',
+                        component: () => renderValue('outline-style'),
+                    },
+
+                    // Outline Color
+                    {
+                        label: 'Outline Color',
+                        direction: 'column',
+                        property: 'outline-color',
+                        row: '3',
+                        column: '3',
+                        component: () => renderValue('outline-color'),
                     },
                 ],
             },
 
             {
-                properties: [
-                    // Horizontal Divider
-                    {
-                        label: '',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => <HorizontalDivider type='bracket' />,
-                    },
-                ]
-            },
-
-            {
                 columns: '0.2fr 1fr 1fr',
+                isExpandable: true,
                 properties: [
                     // Background-Image
                     {
