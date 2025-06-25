@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // Types
 import { LayoutProps } from '@/editors/style/components/layout/types';
-import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
+import { Side, Corner } from '@/components/Select/Position/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
@@ -15,8 +15,8 @@ import { useStyleFactory } from '@/hooks/style/factory';
  */
 export const useEffectLayout = (): LayoutProps => {
     const { renderPositionSelect, ColorSelect, InputGroup, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
-    const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
-    const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
+    const [currentSide, setCurrentSide] = useState<Side>('Top');
+    const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 
     return {
         label: 'Shadow & Effects',

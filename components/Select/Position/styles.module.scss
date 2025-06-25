@@ -19,10 +19,10 @@
 	gap: var(--size-md);
 
 	&[data-corners='false'] {
-		[data-value*='TopLeft'],
-		[data-value*='TopRight'],
-		[data-value*='BottomLeft'],
-		[data-value*='BottomRight'] {
+		[data-value*='top-left'],
+		[data-value*='top-right'],
+		[data-value*='bottom-left'],
+		[data-value*='bottom-right'] {
 			opacity: 0.3;
 			pointer-events: none;
 		}
@@ -50,7 +50,7 @@
 		border-radius: 50%;
 	}
 
-	&[data-value='Center'] {
+	&[data-value='center'] {
 		opacity: 0.3;
 		pointer-events: none;
 	}

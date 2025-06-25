@@ -2,13 +2,13 @@
 import { useState } from 'react';
 
 // Types
-import { STYLE_PROPERTIES } from '@/editors/style/constants/styles'; 
-import { LayoutProps } from '@/editors/style/components/layout/types';
-import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types'; 
+import type { LayoutProps } from '@/editors/style/components/layout/types';
+import type { Side, Corner } from '@/components/Select/Position/types';
+import type { CSSProperties } from '@/types/style/property';
 
 // Hooks
-import { useStyleFactory } from '@/hooks/style/factory'; 
-import { useStyleManager } from '@/hooks/style/manager'; 
+import { useStyleFactory } from '@/hooks/style/factory';
+import { useStyleManager } from '@/hooks/style/manager';
 
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
@@ -16,85 +16,74 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @returns {LayoutProps} Configuration for the position and spacing properties in the style editor.
  */
 export const usePositionLayout = (): LayoutProps => {
-    const { InputGroup, RadioSelect, DropdownSelect, LengthInput, renderPositionSelect } = useStyleFactory();
+    const { renderValue, renderPositionSelect } = useStyleFactory();
     const { getStyle } = useStyleManager();
-    const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
-    const [, setCurrentCorner] = useState<POSITION_SELECT_CORNER>('TopLeft');
+
+    const [currentSide, setCurrentSide] = useState<Side>('top');
+    const [, setCurrentCorner] = useState<Corner>('top-left');
 
     return {
         label: 'Position & Spacing',
         groups: [
             {
                 columns: '0.2fr 1fr 1fr',
-                rows: 'auto auto', 
+                rows: 'auto auto',
                 properties: [
                     // Position Select (side and corner)
                     {
-                        label: null, 
-                        column: '1', 
-                        row: '1/-1', 
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, false), 
+                        label: null,
+                        column: '1',
+                        row: '1/-1',
+                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, false),
                     },
 
                     // Position (e.g., absolute, relative).
                     {
-                        label: 'Position', 
-                        column: '2', 
-                        direction: 'column', 
-                        component: () => DropdownSelect('position'), 
+                        label: 'Position',
+                        column: '2',
+                        direction: 'column',
+                        component: () => renderValue('position'),
                     },
 
                     // Top-Right-Bottom-Left
                     {
                         label: currentSide, // Label dynamic based on selected side (e.g., 'Top')
-                        column: '3', 
-                        direction: 'column', 
+                        column: '3',
+                        direction: 'column',
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')), // Disable if position is not absolute, fixed, or sticky
-                        component: () => LengthInput(currentSide?.toLowerCase() as STYLE_PROPERTIES || 'top'), 
+                        component: () => renderValue(currentSide?.toLowerCase() as CSSProperties || 'top'),
                     },
 
                     // Padding dynamic based on current side selected.
                     {
-                        label: 'Padding', 
-                        column: '2', 
-                        direction: 'column', 
-                        component: () => LengthInput(`padding${currentSide || 'Top'}`), 
+                        label: 'Padding',
+                        column: '2',
+                        direction: 'column',
+                        component: () => renderValue(`padding-${currentSide || 'top'}`),
                     },
 
                     // Margin dynamic based on current side selected.
                     {
-                        label: 'Margin', 
-                        column: '3', 
-                        direction: 'column', 
-                        component: () => LengthInput(`margin${currentSide || 'Top'}`), 
+                        label: 'Margin',
+                        column: '3',
+                        direction: 'column',
+                        component: () => renderValue(`margin-${currentSide || 'top'}`),
                     },
                 ],
             },
 
             {
-                columns: '1fr', 
-                rows: 'auto auto', 
+                columns: '1fr',
+                rows: 'auto auto',
                 properties: [
-                    // Float (left/right).
-                    {
-                        label: 'Float', 
-                        column: '1/-1', 
-                        component: () => RadioSelect('float'), 
-                    },
-
-                    // Clear
-                    {
-                        label: 'Clear', 
-                        column: '1/-1', 
-                        component: () => RadioSelect('clear'),
-                    },
+      
 
                     // Transform (e.g., translate, rotate).
                     {
-                        label: 'Transform', 
-                        column: '1/-1', 
-                        labelAlign: 'flex-start', 
-                        component: () => InputGroup('transform', ' '), 
+                        label: 'Transform',
+                        column: '1/-1',
+                        labelAlign: 'flex-start',
+                        component: () => renderValue('transform'),
                     },
                 ],
             },

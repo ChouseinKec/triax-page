@@ -1,33 +1,33 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
-import { POSITION_SELECT, POSITION_SELECT_POSITION, POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
+import { PositionSelectProps, Positions, Side, Corner } from '@/components/Select/Position/types';
 import CSS from '@/components/Select/Position/styles.module.css';
 
-const POSITIONS: POSITION_SELECT_POSITION[] = [
-    'TopLeft',
-    'Top',
-    'TopRight',
+const POSITIONS: Positions[] = [
+    'top-left',
+    'top',
+    'top-right',
 
-    'Left',
-    'Center',
-    'Right',
+    'left',
+    'center',
+    'right',
 
-    'BottomLeft',
-    'Bottom',
-    'BottomRight',
+    'bottom-left',
+    'bottom',
+    'bottom-right',
 ]
 
-const SIDES: POSITION_SELECT_SIDE[] = [
-    'Top',
-    'Right',
-    'Bottom',
-    'Left',
+const SIDES: Side[] = [
+    'top',
+    'right',
+    'bottom',
+    'left',
 ]
 
-const CORNERS: POSITION_SELECT_CORNER[] = [
-    'TopLeft',
-    'TopRight',
-    'BottomLeft',
-    'BottomRight',
+const CORNERS: Corner[] = [
+    'top-left',
+    'top-right',
+    'bottom-left',
+    'bottom-right',
 ]
 
 
@@ -38,27 +38,25 @@ const CORNERS: POSITION_SELECT_CORNER[] = [
  * A reusable component that allows the user to select a position from a list.
  * It handles the selection of sides and corners separately, with callbacks for both.
  * 
- * @param {POSITION_SELECT} props - The component props.
+ * @param {PositionSelectProps} props - The component props.
  * @param {function} props.onChangeSide - Callback for when a side position is selected.
  * @param {function} props.onChangeCorner - Callback for when a corner position is selected.
- * @param {string} [props.defaultValue='Top'] - The default selected position.
+ * @param {string} [props.defaultValue='top'] - The default selected position.
  * @param {boolean} [props.areCornersVisible=true] - Flag to control whether corners should be visible.
  * @returns {ReactElement} - The rendered position select component.
 */
-const Position: React.FC<POSITION_SELECT> = ({ onChangeSide, onChangeCorner, defaultValue = 'Top', areCornersVisible = false }: POSITION_SELECT): ReactElement => {
+const Position: React.FC<PositionSelectProps> = ({ onChangeSide, onChangeCorner, defaultValue = 'top', areCornersVisible = false }: PositionSelectProps): ReactElement => {
     const [currentPosition, setCurrentPosition] = useState(defaultValue);
 
-
-
-    const isPositionSide = useCallback((value: POSITION_SELECT_POSITION): value is POSITION_SELECT_SIDE => {
+    const isPositionSide = useCallback((value: Positions): value is Side => {
         return SIDES.includes(value as never);
     }, []);
 
-    const isPositionCorner = useCallback((value: POSITION_SELECT_POSITION): value is POSITION_SELECT_CORNER => {
+    const isPositionCorner = useCallback((value: Positions): value is Corner => {
         return CORNERS.includes(value as never);
     }, []);
 
-    const isPositionSelected = useCallback((value: POSITION_SELECT_POSITION, currentPosition: POSITION_SELECT_POSITION) => {
+    const isPositionSelected = useCallback((value: Positions, currentPosition: Positions) => {
         return value === currentPosition;
     }, []);
 
@@ -69,9 +67,9 @@ const Position: React.FC<POSITION_SELECT> = ({ onChangeSide, onChangeCorner, def
      * If a side is selected, it updates the side and resets the corner.
      * If a corner is selected, it updates the corner and resets the side.
      * 
-     * @param {POSITION_SELECT_POSITION} value - The position value that was selected.
+     * @param {Positions} value - The position value that was selected.
      */
-    const handleChange = useCallback((value: POSITION_SELECT_POSITION): void => {
+    const handleChange = useCallback((value: Positions): void => {
         // Ensure callbacks are defined
         if (isPositionSide(value)) {
             onChangeSide(value); // Update the side if it's a side position
@@ -87,7 +85,7 @@ const Position: React.FC<POSITION_SELECT> = ({ onChangeSide, onChangeCorner, def
 
 
 
-    const renderDots = useCallback((currentPosition: POSITION_SELECT_POSITION) => {
+    const renderDots = useCallback((currentPosition: Positions) => {
         return POSITIONS.map((value) => (
             <i
                 key={value}

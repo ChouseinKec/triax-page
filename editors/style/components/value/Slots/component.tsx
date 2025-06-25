@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -6,33 +6,45 @@ import CSS from './styles.module.css';
 // Components
 import Slot from '../slot/component';
 import DropdownSelect from '@/components/Select/Dropdown/component';
+import DropdownReveal from '@/components/Reveal/Dropdown/component';
 
 // Types
 import type { SlotsProps } from './types';
-
 
 /**
  * Slots Component
  * Renders a row of Slot components for each value slot, plus an extra dropdown for the next possible slot.
  * Handles incremental slot-based value editing for a CSS property.
  *
- * @param values - Array of current slot values (e.g., ['10px', 'auto'])
- * @param options - 2D array of options for each slot (from createOptionsTable)
- * @param onChange - Callback fired when any slot value changes (returns the new slot values array)
+ * @param props - SlotsProps containing values, options, and onChange callback
  * @returns ReactElement - The rendered slot editor UI
  */
-const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
-    const { values, options, onChange } = props;
-
-    // Handles a change in a single slot, updating the overall slot values array
-    const handleSlotChange = (newValue: string, slotIndex: number) => {
+const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
+    /**
+     * Handles a change in a single slot, updating the overall slot values array.
+     */
+    const handleSlotChange = useCallback((newValue: string, slotIndex: number) => {
         const updatedValues = [...values];
         updatedValues[slotIndex] = newValue;
         onChange(updatedValues);
-    }
+    }, [values, onChange]
+    );
 
-    // Render Slot components for each current value slot
-    const renderCurrentSlots = () => {
+    /**
+     * Renders Slot components for each current value slot.
+     */
+    const renderCurrentSlots = useCallback(() => {
+        if (!values || values.length === 0) {
+            return (
+                <Slot
+                    key={0}
+                    value={''}
+                    options={options[0]}
+                    onChange={val => handleSlotChange(val, 0)}
+                />
+            );
+        }
+
         return values.map((slotValue, slotIndex) => (
             <Slot
                 key={slotIndex}
@@ -41,55 +53,70 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
                 onChange={val => handleSlotChange(val, slotIndex)}
             />
         ));
-    }
+    }, [values, options, handleSlotChange]
+    );
 
-    // Render an extra dropdown for the next possible slot (if any)
-    const renderNextSlot = () => {
+    /**
+     * Renders an extra dropdown for the next possible slot (if any).
+     */
+    const renderNextSlot = useCallback(() => {
+        if (!values || values.length === 0) return null;
+
         const nextIndex = values.length;
-        if (nextIndex < options.length && options[nextIndex] && options[nextIndex].length > 0) {
-            const style: React.CSSProperties = {
-                fontSize: 'var(--font-size-lg)',
-            };
+        const hasNext = nextIndex < options.length && options[nextIndex] && options[nextIndex].length > 0;
+        if (!hasNext) return null;
+
+        return (
+            <DropdownSelect
+                key={nextIndex}
+                value={''}
+                options={options[nextIndex]}
+                placeholder="⋯"
+                searchable={false}
+                grouped={true}
+                buttonStyle={{ fontSize: 'var(--font-size-lg)' }}
+                buttonTitle="Select next slot"
+                onChange={(val: string) => handleSlotChange(val, nextIndex)}
+            />
+        );
+    }, [values, options, handleSlotChange]
+    );
+
+    /**
+     * Calculates the maximum number of slots available.
+     */
+    const maxSlots = useMemo(
+        () => options.filter(opt => opt && opt.length > 0).length,
+        [options]
+    );
+
+    /**
+     * Renders all current slots and the next slot dropdown, optionally inside a dropdown reveal.
+     */
+    const render = useCallback(() => {
+        if (maxSlots > 1 && values.length > 0) {
             return (
-                <DropdownSelect
-                    key={nextIndex}
-                    value={''}
-                    options={options[nextIndex]}
-                    placeholder="⋯"
-                    searchable={false}
-                    grouped={true}
-                    buttonStyle={style}
-                    buttonTitle='Select next slot'
-                    onChange={(val: string) => handleSlotChange(val, nextIndex)}
-                />
+                <DropdownReveal closeOnChange={false} placeholder={values.join(' ')}>
+                    <div className={CSS.DropdownContainer}>
+                        {renderCurrentSlots()}
+                        {renderNextSlot()}
+                    </div>
+                </DropdownReveal>
             );
         }
-        return null;
-    }
 
-    // Calculate the total number of slots to render, including the next slot dropdown
-    const calculateSlotCount = () => {
-        const maxSlots = options.filter(opt => opt && opt.length > 0).length;
-        const hasNext = values.length < maxSlots;
+        return (
+            <>
+                {renderCurrentSlots()}
+                {renderNextSlot()}
+            </>
+        );
+    }, [maxSlots, values, renderCurrentSlots, renderNextSlot]
+    );
 
-        // If there are more options than current values,
-        // we need to account for the next slot dropdown
-        if (hasNext) {
-            return values.length + 1;
-        }
-
-        // Otherwise, just return the current slot count
-        return values.length;
-    }
-
-    // Render all current slots and the next slot dropdown
     return (
-        <div
-            className={CSS.Slots}
-            style={{ '--slots-count': calculateSlotCount() } as React.CSSProperties}
-        >
-            {renderCurrentSlots()}
-            {renderNextSlot()}
+        <div className={CSS.Slots}>
+            {render()}
         </div>
     );
 };

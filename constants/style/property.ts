@@ -1,5 +1,5 @@
 // Types
-import type { CSSProperty, CSSProperties, CSSPropertyCategories } from '@/types/style/property';
+import type { CSSProperty, CSSProperties } from '@/types/style/property';
 
 // Constants
 import { ValueSeparators } from './value';
@@ -18,7 +18,7 @@ import { extractSeparators } from '@/utilities/style/value';
  * @param category - The property category for grouping/filtering in the UI.
  * @returns A CSSProperty object with all metadata fields populated, including expanded and parsed syntax.
  */
-export const createProperty = (name: string, syntax: string, category: CSSPropertyCategories): CSSProperty => {
+export const createProperty = (name: string, syntax: string): CSSProperty => {
 	let _expanded: string | undefined;
 	let _parsed: string[] | undefined;
 	let _set: Set<string>[] | undefined;
@@ -28,7 +28,6 @@ export const createProperty = (name: string, syntax: string, category: CSSProper
 	return {
 		name,
 		description: CSSPropertyDesc[name as keyof typeof CSSPropertyDefs] ?? '',
-		category,
 
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
@@ -188,140 +187,139 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
  */
 export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	// ============ Display & Visibility =============
-	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...', 'display'),
-	visibility: createProperty('visibility', 'visible | hidden | collapse', 'display'),
-	opacity: createProperty('opacity', '<number [0,1]> | <percentage [0%,100%]>', 'display'),
+	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
+	visibility: createProperty('visibility', 'visible | hidden | collapse'),
+	opacity: createProperty('opacity', '<number [0,1]> | <percentage [0%,100%]>'),
 
-	'flex-direction': createProperty('flex-direction', 'row | row-reverse | column | column-reverse', 'flex'),
-	'flex-wrap': createProperty('flex-wrap', 'nowrap | wrap | wrap-reverse', 'flex'),
-	'flex-flow': createProperty('flex-flow', '<flex-direction> <flex-wrap>', 'flex'),
-	'flex-grow': createProperty('flex-grow', '<number>', 'flex'),
-	'flex-shrink': createProperty('flex-shrink', '<number>', 'flex'),
-	'flex-basis': createProperty('flex-basis', 'content | <width>', 'flex'),
-	'justify-content': createProperty('justify-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly', 'flex'),
-	'align-items': createProperty('align-items', 'flex-start | flex-end | center | baseline | stretch', 'flex'),
-	'align-content': createProperty('align-content', 'flex-start | flex-end | center | space-between | space-around | stretch', 'flex'),
+	'flex-direction': createProperty('flex-direction', 'row | row-reverse | column | column-reverse'),
+	'flex-wrap': createProperty('flex-wrap', 'nowrap | wrap | wrap-reverse'),
+	'flex-flow': createProperty('flex-flow', '<flex-direction> <flex-wrap>'),
+	'flex-grow': createProperty('flex-grow', '<number>'),
+	'flex-shrink': createProperty('flex-shrink', '<number>'),
+	'flex-basis': createProperty('flex-basis', 'content | <width>'),
+	'justify-content': createProperty('justify-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly'),
+	'align-items': createProperty('align-items', 'flex-start | flex-end | center | baseline | stretch'),
+	'align-content': createProperty('align-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch'),
 
-	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch', 'flex'),
-	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense', 'grid'),
-	'grid-template-columns': createProperty('grid-template-columns', '<track-list>', 'grid'),
-	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>', 'grid'),
-	'grid-auto-columns': createProperty('grid-auto-columns', '<track-size>', 'grid'),
-	'grid-auto-rows': createProperty('grid-auto-rows', '<track-size>', 'grid'),
-	'row-gap': createProperty('row-gap', '<length-percentage>', 'grid'),
-	'column-gap': createProperty('column-gap', '<length-percentage>', 'grid'),
-	gap: createProperty('gap', '<row-gap> <column-gap>', 'grid'),
+	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch'),
+	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense'),
+	'grid-template-columns': createProperty('grid-template-columns', '<track-list>'),
+	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>'),
+	'grid-auto-columns': createProperty('grid-auto-columns', '<track-size>+'),
+	'grid-auto-rows': createProperty('grid-auto-rows', '<track-size>+'),
+	'row-gap': createProperty('row-gap', '<length-percentage>'),
+	'column-gap': createProperty('column-gap', '<length-percentage>'),
+	gap: createProperty('gap', '<row-gap> <column-gap>'),
 
 	// ============ Size & Dimension =============
-	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	'max-width': createProperty('max-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	height: createProperty('height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	'min-height': createProperty('min-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	'max-height': createProperty('max-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>', 'size'),
-	overflow: createProperty('overflow', 'visible | hidden | clip | scroll | auto', 'overflow'),
-	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down', 'size'),
-	'box-sizing': createProperty('box-sizing', 'content-box | border-box', 'size'),
-	'aspect-ratio': createProperty('aspect-ratio', 'auto || <ratio>', 'size'),
-	float: createProperty('float', 'left | right | none', 'size'),
-	clear: createProperty('clear', 'none | left | right | both', 'size'),
+	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	'max-width': createProperty('max-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	height: createProperty('height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	'min-height': createProperty('min-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	'max-height': createProperty('max-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content(<length-percentage [0,∞]>) | <calc-size()> | <anchor-size()>'),
+	overflow: createProperty('overflow', '[<overflow-block>]{1,2}'),
+	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down'),
+	'box-sizing': createProperty('box-sizing', 'content-box | border-box'),
+	'aspect-ratio': createProperty('aspect-ratio', 'auto || <ratio>'),
+	float: createProperty('float', 'left | right | none'),
+	clear: createProperty('clear', 'none | left | right | both'),
 
 	// ============ Position & Spacing =============
-	position: createProperty('position', 'static | relative | absolute | fixed | sticky', 'position'),
-	top: createProperty('top', 'auto | <length-percentage>', 'position'),
-	right: createProperty('right', 'auto | <length-percentage>', 'position'),
-	bottom: createProperty('bottom', 'auto | <length-percentage>', 'position'),
-	left: createProperty('left', 'auto | <length-percentage>', 'position'),
-	'z-index': createProperty('z-index', 'auto | <integer>', 'position'),
+	position: createProperty('position', 'static | relative | absolute | fixed | sticky'),
+	top: createProperty('top', 'auto | <length-percentage>'),
+	right: createProperty('right', 'auto | <length-percentage>'),
+	bottom: createProperty('bottom', 'auto | <length-percentage>'),
+	left: createProperty('left', 'auto | <length-percentage>'),
+	'z-index': createProperty('z-index', 'auto | <integer>'),
 
-	'padding-top': createProperty('padding-top', '<length-percentage [0,∞]>', 'spacing'),
-	'padding-right': createProperty('padding-right', '<length-percentage [0,∞]>', 'spacing'),
-	'padding-bottom': createProperty('padding-bottom', '<length-percentage [0,∞]>', 'spacing'),
-	'padding-left': createProperty('padding-left', '<length-percentage [0,∞]>', 'spacing'),
-	padding: createProperty('padding', '<length-percentage [0,∞]>{1,4}', 'spacing'),
+	'padding-top': createProperty('padding-top', '<length-percentage [0,∞]>'),
+	'padding-right': createProperty('padding-right', '<length-percentage [0,∞]>'),
+	'padding-bottom': createProperty('padding-bottom', '<length-percentage [0,∞]>'),
+	'padding-left': createProperty('padding-left', '<length-percentage [0,∞]>'),
+	padding: createProperty('padding', '<length-percentage [0,∞]>{1,4}'),
 
-	'margin-top': createProperty('margin-top', 'auto | <length-percentage>', 'spacing'),
-	'margin-right': createProperty('margin-right', 'auto | <length-percentage>', 'spacing'),
-	'margin-bottom': createProperty('margin-bottom', 'auto | <length-percentage>', 'spacing'),
-	'margin-left': createProperty('margin-left', 'auto | <length-percentage>', 'spacing'),
-	margin: createProperty('margin', 'auto | <length-percentage>{1,4}', 'spacing'),
+	'margin-top': createProperty('margin-top', 'auto | <length-percentage>'),
+	'margin-right': createProperty('margin-right', 'auto | <length-percentage>'),
+	'margin-bottom': createProperty('margin-bottom', 'auto | <length-percentage>'),
+	'margin-left': createProperty('margin-left', 'auto | <length-percentage>'),
+	margin: createProperty('margin', 'auto | <length-percentage>{1,4}'),
+
+	transform: createProperty('transform', 'none | [<transform-function>]+'),
 
 	// ============ Background & Border =============
-	'background-color': createProperty('background-color', '<color> | transparent', 'background'),
-	'background-image': createProperty('background-image', 'none | <image>', 'background'),
-	'background-position': createProperty('background-position', '<position>', 'background'),
-	'background-size': createProperty('background-size', 'auto | <length-percentage> | cover | contain', 'background'),
-	'background-repeat': createProperty('background-repeat', 'repeat-x | repeat-y | repeat | space | round | no-repeat', 'background'),
-	'background-attachment': createProperty('background-attachment', 'scroll | fixed | local', 'background'),
-	'background-clip': createProperty('background-clip', 'border-box | padding-box | content-box | text', 'background'),
-	'background-origin': createProperty('background-origin', 'border-box | padding-box | content-box', 'background'),
+	'background-color': createProperty('background-color', '<color>'),
+	'background-position': createProperty('background-position', '<bg-position>'),
+	'background-size': createProperty('background-size', '<bg-size>'),
+	'background-repeat': createProperty('background-repeat', 'repeat-x | repeat-y | repeat | space | round | no-repeat'),
 
-	'border-top-width': createProperty('border-top-width', '<line-width>', 'border'),
-	'border-right-width': createProperty('border-right-width', '<line-width>', 'border'),
-	'border-bottom-width': createProperty('border-bottom-width', '<line-width>', 'border'),
-	'border-left-width': createProperty('border-left-width', '<line-width>', 'border'),
-	'border-width': createProperty('border-width', '<line-width>{1,4}', 'border'),
+	'background-image': createProperty('background-image', '<bg-image>'),
+	'background-attachment': createProperty('background-attachment', 'scroll | fixed | local'),
+	'background-clip': createProperty('background-clip', 'border-box | padding-box | content-box | text'),
+	'background-origin': createProperty('background-origin', 'border-box | padding-box | content-box'),
 
-	'border-top-style': createProperty('border-top-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset', 'border'),
-	'border-right-style': createProperty('border-right-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset', 'border'),
-	'border-bottom-style': createProperty('border-bottom-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset', 'border'),
-	'border-left-style': createProperty('border-left-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset', 'border'),
-	'border-style': createProperty('border-style', '<border-style>{1,4}', 'border'),
+	'border-top-width': createProperty('border-top-width', '<length [0,∞]>'),
+	'border-right-width': createProperty('border-right-width', '<length [0,∞]>'),
+	'border-bottom-width': createProperty('border-bottom-width', '<length [0,∞]>'),
+	'border-left-width': createProperty('border-left-width', '<length [0,∞]>'),
 
-	'border-top-color': createProperty('border-top-color', '<color>', 'border'),
-	'border-right-color': createProperty('border-right-color', '<color>', 'border'),
-	'border-bottom-color': createProperty('border-bottom-color', '<color>', 'border'),
-	'border-left-color': createProperty('border-left-color', '<color>', 'border'),
-	'border-color': createProperty('border-color', '<color>{1,4}', 'border'),
+	'border-top-style': createProperty('border-top-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'border-right-style': createProperty('border-right-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'border-bottom-style': createProperty('border-bottom-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'border-left-style': createProperty('border-left-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
 
-	'border-radius': createProperty('border-radius', '<length-percentage>{1,4} [/ <length-percentage>{1,4}]?', 'border'),
-	'border-top-left-radius': createProperty('border-top-left-radius', '<length-percentage>', 'border'),
-	'border-top-right-radius': createProperty('border-top-right-radius', '<length-percentage>', 'border'),
-	'border-bottom-right-radius': createProperty('border-bottom-right-radius', '<length-percentage>', 'border'),
-	'border-bottom-left-radius': createProperty('border-bottom-left-radius', '<length-percentage>', 'border'),
+	'border-top-color': createProperty('border-top-color', '<color>'),
+	'border-right-color': createProperty('border-right-color', '<color>'),
+	'border-bottom-color': createProperty('border-bottom-color', '<color>'),
+	'border-left-color': createProperty('border-left-color', '<color>'),
 
-	'outline-width': createProperty('outline-width', '<line-width>', 'outline'),
-	'outline-style': createProperty('outline-style', 'auto | none | dotted | dashed | solid | double | groove | ridge | inset | outset', 'outline'),
-	'outline-color': createProperty('outline-color', '<color> | invert', 'outline'),
-	'outline-offset': createProperty('outline-offset', '<length>', 'outline'),
-	outline: createProperty('outline', '<outline-width> <outline-style> <outline-color>', 'outline'),
+	'border-radius': createProperty('border-radius', '<length-percentage>{1,4} [/ <length-percentage>{1,4}]?'),
+	'border-top-left-radius': createProperty('border-top-left-radius', '<length-percentage>'),
+	'border-top-right-radius': createProperty('border-top-right-radius', '<length-percentage>'),
+	'border-bottom-right-radius': createProperty('border-bottom-right-radius', '<length-percentage>'),
+	'border-bottom-left-radius': createProperty('border-bottom-left-radius', '<length-percentage>'),
+
+	outline: createProperty('outline', '<outline-width> || <outline-style> || <outline-color>'),
+
+
 	// ============ Font & Text =============
-	'font-family': createProperty('font-family', '[ <family-name> | <generic-family> ]#', 'font'),
-	'font-size': createProperty('font-size', '<absolute-size> | <relative-size> | <length-percentage>', 'font'),
-	'font-weight': createProperty('font-weight', 'normal | bold | bolder | lighter | 100 | 200 | ... | 900', 'font'),
-	'line-height': createProperty('line-height', 'normal | <number> | <length-percentage>', 'font'),
-	color: createProperty('color', '<color>', 'text'),
+	'font-family': createProperty('font-family', '<generic-family>'),
+	'font-size': createProperty('font-size', '<absolute-size> | <relative-size> | <length-percentage>'),
+	'font-weight': createProperty('font-weight', 'normal | bold | bolder | lighter | 100 | 200 '),
+	'line-height': createProperty('line-height', 'normal | <number> | <length-percentage>'),
+	color: createProperty('color', '<color>'),
 
-	'font-style': createProperty('font-style', 'normal | italic | oblique <angle>?', 'font'),
+	'font-style': createProperty('font-style', 'normal | italic'),
 
-	direction: createProperty('direction', 'ltr | rtl', 'text'),
-	'text-align': createProperty('text-align', 'left | right | center | justify | start | end', 'text'),
+	direction: createProperty('direction', 'ltr | rtl'),
+	'text-align': createProperty('text-align', 'left | right | center | justify | start | end'),
 
-	'text-decoration': createProperty('text-decoration', '[<text-decoration-line>] [<text-decoration-style>] [<text-decoration-color>]', 'text'),
-	// 'text-decoration-line': createProperty('text-decoration-line', 'none | underline | overline | line-through', 'text'),
-	// 'text-decoration-color': createProperty('text-decoration-color', '<color>', 'text'),
-	// 'text-decoration-style': createProperty('text-decoration-style', 'solid | double | dotted | dashed | wavy', 'text'),
-	// 'text-decoration-thickness': createProperty('text-decoration-thickness', 'auto | <length>', 'text'),
+	'text-decoration': createProperty('text-decoration', '<text-decoration-line> || <text-decoration-style> || <text-decoration-color> || <text-decoration-thickness>'),
 
-	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase', 'text'),
-	'text-indent': createProperty('text-indent', '<length-percentage>', 'text'),
-	'text-shadow': createProperty('text-shadow', 'none | <shadow>#', 'text'),
-	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>', 'text'),
-	'white-space': createProperty('white-space', 'normal | pre | nowrap | pre-wrap | pre-line | break-spaces', 'text'),
-	'word-break': createProperty('word-break', 'normal | break-all | keep-all | break-word', 'text'),
-	'writing-mode': createProperty('writing-mode', 'horizontal-tb | vertical-rl | vertical-lr', 'text'),
-	'letter-spacing': createProperty('letter-spacing', 'normal | <length>', 'text'),
-	'line-break': createProperty('line-break', 'auto | loose | normal | strict | anywhere', 'text'),
-	'text-orientation': createProperty('text-orientation', 'mixed | upright | sideways', 'text'),
+	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase'),
+	'text-indent': createProperty('text-indent', '<length-percentage>'),
+	'text-shadow': createProperty('text-shadow', 'none | <shadow>#'),
+	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
+	'white-space': createProperty('white-space', 'normal | pre | nowrap | pre-wrap | pre-line | break-spaces'),
+	'word-break': createProperty('word-break', 'normal | break-all | keep-all | break-word'),
+	'writing-mode': createProperty('writing-mode', 'horizontal-tb | vertical-rl | vertical-lr'),
+	'letter-spacing': createProperty('letter-spacing', 'normal | <length>'),
+	'line-break': createProperty('line-break', 'auto | loose | normal | strict | anywhere'),
+	'text-orientation': createProperty('text-orientation', 'mixed | upright | sideways'),
+
+	'column-count': createProperty('column-count', 'auto|<integer [1,∞]>'),
+	'column-width': createProperty('column-width', 'auto|<length [0,∞]>'),
+	'column-rule-width': createProperty('column-rule-width', '<length [0,∞]>|medium|thick|thin'),
+	'column-rule-style': createProperty('column-rule-style', 'none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset'),
+	'column-rule-color': createProperty('column-rule-color', '<color>'),
+	'break-before': createProperty('break-before', 'auto|avoid|always|all|avoid-page|page|left|right|recto|verso|avoid-column|column|avoid-region|region'),
+	'break-inside': createProperty('break-inside', 'auto|avoid|avoid-page|avoid-column|avoid-region'),
+	'break-after': createProperty('break-after', 'auto|avoid|always|all|avoid-page|page|left|right|recto|verso|avoid-column|column|avoid-region|region'),
+	'column-span': createProperty('column-span', 'none|<integer [1,∞]>|all|auto'),
+	'column-fill': createProperty('column-fill', 'auto|balance|balance-all'),
+
 	// -------------------------------- EFFECTS --------------------------------
-	'box-shadow': createProperty('box-shadow', 'none | <shadow>#', 'effect'),
-	transform: createProperty('transform', 'none | <transform-function>+', 'effect'),
-	filter: createProperty('filter', 'none | <filter-function>+', 'effect'),
-	'backdrop-filter': createProperty('backdrop-filter', 'none | <filter-function>+', 'effect'),
-
-	// -------------------------------- CURSOR --------------------------------
-	cursor: createProperty('cursor', 'auto | default | none | context-menu | help | pointer | progress | wait | cell | crosshair | text | vertical-text | alias | copy | move | no-drop | not-allowed | grab | grabbing | e-resize | n-resize | ne-resize | nw-resize | s-resize | se-resize | sw-resize | w-resize | ew-resize | ns-resize | nesw-resize | nwse-resize | col-resize | row-resize | all-scroll | zoom-in | zoom-out', 'cursor'),
-
-	// -------------------------------- SCROLL --------------------------------
-	'scroll-behavior': createProperty('scroll-behavior', 'auto | smooth', 'scroll'),
+	'box-shadow': createProperty('box-shadow', 'none | <shadow>#'),
+	filter: createProperty('filter', 'none | <filter-function>+'),
+	'backdrop-filter': createProperty('backdrop-filter', 'none | <filter-function>+'),
 };

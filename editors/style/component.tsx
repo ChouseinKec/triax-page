@@ -12,7 +12,7 @@ import { useDeviceRender } from '@/hooks/device/hooks';
 import { useOrientationRender } from '@/hooks/orientation/hooks';
 import { usePseudoRender } from '@/hooks/pseudo/hooks';
 
-const StyleEditor: React.FC<STYLE_EDITOR> = ({ }): ReactElement => {
+const StyleEditor: React.FC<STYLE_EDITOR> = ({ className }): ReactElement => {
     const { renderDeviceSelect } = useDeviceRender();
     const { renderOrientationSelect } = useOrientationRender();
     const { renderPseudoSelect } = usePseudoRender();
@@ -22,7 +22,7 @@ const StyleEditor: React.FC<STYLE_EDITOR> = ({ }): ReactElement => {
     const pseudoSelect = useMemo(() => renderPseudoSelect(), [renderPseudoSelect]);
 
     return (
-        <div className={CSS.Styles}>
+        <div className={`${CSS.Styles} ${className}`}>
 
             <div className={CSS.Styles_Controls}>
                 {deviceSelect}

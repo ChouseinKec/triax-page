@@ -5,7 +5,7 @@ import React, { useCallback, ReactElement, memo, useMemo } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import InputNumber from '@/components/Input/Number/component';
+import GenericInput from '@/components/Input/Generic/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
@@ -63,10 +63,11 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
     return (
         <div className={CSS.NumberValue}>
             {/* Numeric input for the value part */}
-            <InputNumber
+            <GenericInput
                 value={value}
-                minValue={minValue}
-                maxValue={maxValue}
+                min={minValue}
+                max={maxValue}
+                type='number'
                 onChange={handleValueChange}
             />
 

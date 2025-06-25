@@ -35,8 +35,8 @@ When parsing a CSS Value Definition Syntax string, always split by the **lowest-
 |------------|----------------------|---------------------------------------------|
 | 1 (lowest) | <code>&#124;&#124;</code>       | Any order, one or more                      |
 | 2          | `&&`                 | All, any order                              |
-| 3          | <code>&#124;</code>        | Exactly one                                 |
-| 4          | (space)              | Sequence, in order                          |
+| 3          | <code>' '</code>              | Sequence, in order                          |
+| 4          | <code>&#124;</code>        | Exactly one                                 |
 | 5          | `[]`                 | Brackets (optional group, zero or one)      |
 | 6 (highest)| Multipliers (`*`, `+`, `?`, `{m,n}`) | Repetition, optionality, range of previous item or group |
 

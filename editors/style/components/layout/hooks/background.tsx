@@ -6,11 +6,11 @@ import HorizontalDivider from '@/components/Divider/Horizontal/component';
 
 // Types
 import { LayoutProps } from '@/editors/style/components/layout/types';
-import { POSITION_SELECT_SIDE, POSITION_SELECT_CORNER } from '@/components/Select/Position/types';
+import { Side, Corner } from '@/components/Select/Position/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
-
+import { useStyleManager } from '@/hooks/style/manager';
 /**
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
@@ -18,101 +18,105 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
 export const useBackgroundLayout = (): LayoutProps => {
-    const { VariantInput, UrlInput, renderPositionSelect, ColorSelect, RadioSelect, DropdownSelect, LengthInput } = useStyleFactory();
-    const [currentSide, setCurrentSide] = useState<POSITION_SELECT_SIDE>('Top');
-    const [currentCorner, setCurrentCorner] = useState<POSITION_SELECT_CORNER>(null);
+    const { renderValue, renderPositionSelect } = useStyleFactory();
+    const { getStyle } = useStyleManager();
+
+    const [currentSide, setCurrentSide] = useState<Side>('top');
+    const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 
     return {
         label: 'Background & Border',
         groups: [
             {
                 columns: '0.2fr 1fr 1fr',
-                rows: 'auto',
                 properties: [
 
                     // Position selector for the border side (Top, Bottom, Left, Right)
                     {
                         label: null,
                         column: '1',
-                        row: '1/3',
+                        row: '1',
                         component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true),
                     },
 
                     // Border Width
                     {
-                        label: 'Width',
-                        column: '2',
+                        label: 'Border-Width',
+                        column: '1',
+                        row: '2',
                         direction: 'column',
-                        disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => LengthInput(`border${currentSide || 'Top'}Width`), // Dynamic length input based on selected side
-                    },
-
-                    // Border Radius
-                    {
-                        label: 'Radius',
-                        column: '3',
-                        direction: 'column',
-                        disabled: currentCorner === null, // Disabled if no corner is selected
-                        component: () => LengthInput(`border${currentCorner || 'TopLeft'}Radius`), // Dynamic length input based on selected corner
+                        property: 'border-width',
+                        hidden: currentSide === null, // Disabled if no side is selected
+                        component: () => renderValue(`border-${currentSide || 'top'}-width`), // Dynamic length input based on selected side
                     },
 
                     // Border Style (solid, dashed, etc.)
                     {
-                        label: 'Style',
+                        label: 'Border-Style',
                         column: '2',
+                        row: '2',
                         direction: 'column',
-                        disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => RadioSelect(`border${currentSide || 'Top'}Style`), // Dynamic radio selector based on selected side
+                        property: 'border-style',
+                        hidden: currentSide === null, // Disabled if no side is selected
+                        component: () => renderValue(`border-${currentSide || 'top'}-style`), // Dynamic radio selector based on selected side
                     },
 
                     // Border Color picker
                     {
-                        label: 'Color',
+                        label: 'Border-Color',
                         column: '3',
+                        row: '2',
                         direction: 'column',
-                        disabled: currentSide === null, // Disabled if no side is selected
-                        component: () => ColorSelect(`border${currentSide || 'Top'}Color`), // Dynamic color selector based on selected side
+                        property: 'border-color',
+                        hidden: currentSide === null, // Disabled if no side is selected
+                        component: () => renderValue(`border-${currentSide || 'top'}-color`), // Dynamic color selector based on selected side
                     },
 
-                    // Outline Style
+                    // Border Radius
                     {
-                        label: 'Outline Style',
-                        column: 'auto',
+                        label: 'Border-Radius',
                         direction: 'column',
-                        component: () => DropdownSelect('outlineStyle'),
+                        property: 'border-radius',
+                        row: '2',
+                        column: '1/-1',
+                        hidden: currentCorner === null, // Disabled if no corner is selected
+                        component: () => renderValue(`border-${currentCorner || 'top-left'}-radius`), // Dynamic length input based on selected corner
                     },
 
-                    // Outline Width
+                    // Outline
                     {
-                        label: 'Outline Width',
-                        column: 'auto',
+                        label: 'Outline',
                         direction: 'column',
-                        component: () => LengthInput('outlineWidth'),
+                        property: 'outline',
+                        row: '3',
+                        column: '1/-1',
+                        component: () => renderValue('outline'),
                     },
+                ],
+            },
 
-                    // Outline Color picker
-                    {
-                        label: 'Outline Color',
-                        column: 'auto',
-                        direction: 'column',
-                        component: () => ColorSelect('outlineColor'),
-                    },
-
+            {
+                properties: [
+                    // Horizontal Divider
                     {
                         label: '',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => <HorizontalDivider type={'bracket'} />,
+                        component: () => <HorizontalDivider type='bracket' />,
                     },
+                ]
+            },
 
-
+            {
+                columns: '0.2fr 1fr 1fr',
+                properties: [
                     // Background-Image
                     {
                         label: 'Image',
                         column: '1/3',
                         direction: 'column',
-                        component: () => UrlInput('backgroundImage', 'url("', '")'),
-
+                        property: 'background-image',
+                        component: () => renderValue('background-image'),
                     },
 
                     // Background-Color
@@ -120,45 +124,34 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Color',
                         column: 'auto',
                         direction: 'column',
-                        component: () => ColorSelect('backgroundColor'),
+                        property: 'background-color',
+                        component: () => renderValue('background-color'),
                     },
 
                     {
-                        label: '',
-                        column: '1/-1',
+                        label: 'Size',
+                        column: 'auto',
                         direction: 'column',
-                        component: () =>
-                            <Group
-                                columns="minmax(0,1fr) minmax(0,1fr)"
-                                properties={[
-                                    // Background-Size
-                                    {
-                                        label: 'Size',
-                                        column: 'auto',
-                                        direction: 'column',
-                                        component: () => VariantInput('backgroundSize', ' '),
-
-                                    },
-
-                                    // Background-Position
-                                    {
-                                        label: 'Position',
-                                        column: 'auto',
-                                        direction: 'column',
-                                        component: () => VariantInput('backgroundPosition', ' '),
-                                    },
-
-                                ]}
-                            />,
+                        property: 'background-size',
+                        component: () => renderValue('background-size'),
                     },
 
+                    // Background-Position
+                    {
+                        label: 'Position',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'background-position',
+                        component: () => renderValue('background-position'),
+                    },
 
                     // Background-Repeat
                     {
                         label: 'Repeat',
-                        column: '1/-1',
+                        column: 'auto',
                         direction: 'column',
-                        component: () => VariantInput('backgroundRepeat', ' '),
+                        property: 'background-repeat',
+                        component: () => renderValue('background-repeat'),
                     },
 
                     // Background-Attachment
@@ -166,7 +159,8 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Attachment',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('backgroundAttachment'),
+                        property: 'background-attachment',
+                        component: () => renderValue('background-attachment'),
                     },
 
                     // Background-Clip
@@ -174,7 +168,8 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Clip',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('backgroundClip'),
+                        property: 'background-clip',
+                        component: () => renderValue('background-clip'),
                     },
 
                     // Background-Origin
@@ -182,11 +177,12 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Origin',
                         column: 'auto',
                         direction: 'column',
-                        component: () => DropdownSelect('backgroundOrigin'),
+                        property: 'background-origin',
+                        component: () => renderValue('background-origin'),
                     },
 
-                ],
-            },
+                ]
+            }
         ],
     };
 };

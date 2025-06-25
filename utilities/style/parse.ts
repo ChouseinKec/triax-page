@@ -7,10 +7,9 @@ import { CSSTokens } from '@/types/style/token';
 // Utilities
 import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
 
-// Remove combinator and multiplier logic, and import from new files
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
-import { isValueColor } from './value';
+import { hasBrackets, parseBrackets, hasBracketsGroup } from './parse-bracket';
 
 export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
 
@@ -83,58 +82,31 @@ function normalizeSyntax(input: string): string {
 	// Remove spaces before *, +, ?
 	input = input.replace(/\s+([*+?])/g, '$1');
 
-	// Normalize ∞ to MAX_MULTIPLIER_DEPTH
-	// input = input.replace(/∞/g, MAX_MULTIPLIER_DEPTH.toString());
-
 	// Remove multiple spaces
 	input = input.replace(/\s{2,}/g, ' ');
 
 	return input.trim();
 }
 
-/**
- * Checks if the input starts and ends with brackets ([a b]).
- * This is used to determine if the input is a bracketed group.
- * @param input - The input string to check for brackets.
- * @return boolean - Returns true if the input is a bracketed group, false otherwise.
- * @example
- * hasBrackets('[a b]') → true
- * hasBrackets('a b') → false
- */
-function hasBrackets(input: string): boolean {
-	return input.startsWith('[') && input.endsWith(']');
-}
+function convertSyntax(syntax: string): string {
+	// Normalize the syntax first
+	syntax = normalizeSyntax(syntax);
 
-/**
- * Checks if the input is a bracketed group with a multiplier ([a b]+).
- * This is used to determine if the input is a bracketed group that can be repeated.
- * @param input - The input string to check for a bracketed group with a multiplier.
- * @return boolean - Returns true if the input is a bracketed group with a multiplier, false otherwise.
- * @example
- * hasBracketsGroup('[a b]+') → true
- * hasBracketsGroup('[a b]') → false
- */
-function hasBracketsGroup(input: string): boolean {
-	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(input);
-}
+	const valueMap: Record<string, string> = {
+		'length': '0px',
+		'percentage': '0%',
+		'color': '#ffffff',
+		'number': '0.0',
+		'integer': '0',
+		'flex': '1fr',
+		'ratio': '1/1',
+		'link': '"https://example.com/image.png"',
+	};
 
-/**
- * Parses an optional group in brackets.
- * @param s - The syntax string (e.g. '[a b]')
- * @returns All possible combinations (with and without the group)
- * @example parseBrackets('[a b]') → ['', 'a b']
- */
-function parseBrackets(input: string): string[] {
-	const inner = input.slice(1, -1);
-	const parsed = parse(inner);
-
-	// If the parsed result is only an empty string, return ['']
-	if (parsed.length === 1 && parsed[0] === '') {
-		return [];
-	}
-
-	// Otherwise, return ['', ...parsed] but filter out empty strings from parsed
-	return ['', ...parsed.filter((v) => v.trim() !== '')];
+	// Replace all <token ...> with their default values, ignoring ranges/constraints
+	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
+		return valueMap[token] ?? `<${token}>`;
+	});
 }
 
 /**
@@ -170,6 +142,7 @@ function parse(syntax: string): string[] {
 	if (hasSequence(normalizedSyntax)) {
 		return parseSequence(normalizedSyntax);
 	}
+
 	// Handle '[]' (optional group)
 	if (hasBrackets(normalizedSyntax)) {
 		return parseBrackets(normalizedSyntax);
@@ -190,7 +163,7 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = "rgba(197,29,29,1)";
+	// const syntax = "a|b 1|2";
 	// console.log(isValueColor(syntax));
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 	// const parsed = parse(syntax);
@@ -198,4 +171,4 @@ function test() {
 }
 
 // Export all functions and types
-export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };
+export { convertSyntax, test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };

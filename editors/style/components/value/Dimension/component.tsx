@@ -5,7 +5,7 @@ import React, { ReactElement } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import NumberInput from '@/components/Input/Number/component';
+import GenericInput from '@/components/Input/Generic/component';
 import SelectDropdown from '@/components/Select/Dropdown/component';
 
 // Types
@@ -39,7 +39,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		isStrict = false,
 	} = props;
 
-	const DEFAULT_UNIT = 'px';
+	const DEFAULT_UNIT = options.find(option => option.category === 'dimension')?.name || 'px';
 	const DEFAULT_NUMBER = '0';
 
 	const extractedNumber = extractNumber(value);
@@ -76,10 +76,12 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	return (
 		<div className={CSS.DimensionValue}>
 			{/* Numeric input for the value part */}
-			<NumberInput
-				value={extractedNumber || DEFAULT_NUMBER}
-				minValue={minValue}
-				maxValue={maxValue}
+			<GenericInput
+				value={extractedNumber}
+				min={minValue}
+				max={maxValue}
+				type='number'
+				placeholder='0'
 				onChange={handleValueChange}
 			/>
 

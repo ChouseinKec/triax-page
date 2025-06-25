@@ -32,6 +32,7 @@ function createUnitOption(name: CSSUnits): OptionData {
 		name,
 		value: `0${name}`,
 		category: 'dimension',
+		type: 'dimension',
 	};
 }
 

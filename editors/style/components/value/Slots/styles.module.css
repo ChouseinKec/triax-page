@@ -1,10 +1,1 @@
-.Slots {
-  display: grid;
-  grid-template-columns: repeat(var(--slots-count), minmax(0, 1fr));
-  gap: var(--size-lg);
-}
-
-.DropdownSelect_Button {
-  width: -moz-max-content;
-  width: max-content;
-}/*# sourceMappingURL=styles.module.css.map */
+.Slots{display:flex;flex:1;width:100%}.Slots>*{width:100%}.DropdownSelect_Button{width:-moz-max-content;width:max-content}.DropdownContainer{display:flex;flex-direction:row;gap:var(--size-lg)}

@@ -5,10 +5,12 @@ import { CSSPropertyDefs } from '@/constants/style/property'
 
 // Types
 import type { CSSProperties } from '@/types/style/property';
+import type { Side, Corner } from '@/components/Select/Position/types';
 
 // Components
 import Value from '@/editors/style/components/value/component';
 import FlexView from '@/components/View/Flex/component';
+import PositionSelect from '@/components/Select/Position/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
@@ -17,6 +19,7 @@ interface StyleFactoryProps {
 	renderValue: (propertyName: CSSProperties) => ReactElement | null;
 	renderFlexView: () => ReactElement;
 	renderGridView: () => ReactElement;
+	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, areCornersVisible: boolean) => ReactElement;
 }
 
 
@@ -70,6 +73,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				justifyContent: getStyle('justify-content'),
 				alignItems: getStyle('align-items'),
 				alignContent: getStyle('align-content'),
+				direction: getStyle('direction'),
 			}}
 
 		/>;
@@ -90,14 +94,29 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				gridTemplateRows: getStyle('grid-template-rows'),
 				gridAutoColumns: getStyle('grid-auto-columns'),
 				gridAutoRows: getStyle('grid-auto-rows'),
+				direction: getStyle('direction'),
 			}}
 		/>;
 	}, [getStyle]);
+
+	const renderPositionSelect = useCallback<StyleFactoryProps['renderPositionSelect']>((setCurrentSide, setCurrentCorner, areCornersVisible) => {
+		return (
+			<PositionSelect
+				onChangeSide={setCurrentSide}
+				onChangeCorner={setCurrentCorner}
+				areCornersVisible={areCornersVisible}
+			/>
+		);
+	},
+		[handleValueChange]
+	);
+
 
 	return {
 		renderValue,
 		renderFlexView,
 		renderGridView,
+		renderPositionSelect,
 	};
 
 

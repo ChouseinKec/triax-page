@@ -3,6 +3,7 @@ import { CSSTokenDefs } from '@/constants/style/token';
 import { DimensionGroups } from '@/constants/style/value';
 import { CSSUnitOptions } from '@/constants/style/units';
 import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';
+
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
 import { getTokenBase } from '@/utilities/style/token';
@@ -11,7 +12,6 @@ import { getValueTokens } from '@/utilities/style/value';
 // Types
 import type { InputOptionData, OtherOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
 import type { CSSDimensionGroups } from '@/types/style/dimension';
-import type { CSSTokens } from '@/types/style/token';
 
 /**
  * Creates a FunctionOptionData object for a given function token.
@@ -33,14 +33,14 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If any of these are undefined or empty, return undefined
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
-	const initialValue = CSSTokenDefs?.[`<${canonicalName}>` as CSSTokens]?.initialValue || '0px';
 
 	// Create and return the FunctionOptionData object
 	return {
 		name: canonicalName,
-		value: `${baseName}(${initialValue})`,
+		value: `${baseName}()`, // Use the syntax as the initial value
 		syntax,
 		category: 'function',
+		type: 'function',
 	};
 }
 
@@ -81,27 +81,30 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
  * Creates a keyword option for a given token.
  *
  * @param token - The keyword token string (e.g., 'auto')
+ * @param propertyName - The name of the CSS property being edited (for keyword options)
  * @returns KeywordOptionData | undefined - The created keyword option or undefined if empty.
  * @example
  * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword' }
  */
-function createKeywordOption(token: string): KeywordOptionData | undefined {
+function createKeywordOption(token: string, propertyName: string): KeywordOptionData | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
-	const icon = CSSIconDefs?.[token as CSSIcons];
+	const icon = CSSIconDefs?.[`${propertyName}-${token}` as CSSIcons];
 
 	// Create and return the KeywordOptionData object for the keyword
 	return {
 		name: token,
 		value: token,
 		category: 'keyword',
-		icon
+		icon,
+		type: 'keyword',
 	};
 }
 
 /**
  * Creates a NumberOptionData object for a given number token (e.g., '<number [0,25]>').
+ *
  * @param token - The number token string (e.g., '<number [0,25]>')
  * @returns NumberOptionData | undefined - The created number option or undefined if invalid.
  * @example
@@ -117,11 +120,13 @@ function createNumberOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		type: 'number',
 	};
 }
 
 /**
  * Creates an IntegerOptionData object for a given integer token (e.g., '<integer [0,100]>').
+ *
  * @param token - The integer token string (e.g., '<integer [0,100]>')
  * @returns NumberOptionData | undefined - The created integer option or undefined if invalid.
  * @example
@@ -136,6 +141,7 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		type: 'integer',
 	};
 }
 
@@ -145,21 +151,34 @@ function createColorOption(token: string): OtherOptionData | undefined {
 		name: 'color',
 		value: '#000000',
 		category: 'other',
+		type: 'color',
+	};
+}
+
+function createLinkOption(token: string): OtherOptionData | undefined {
+	if (!token) return undefined;
+	return {
+		name: 'link',
+		value: 'https://example.com',
+		category: 'other',
+		type: 'link',
 	};
 }
 
 /**
  * Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
+ *
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
+ * @param propertyName - The name of the CSS property being edited (for keyword options)
  * @returns InputOptionData | InputOptionData[] | undefined
  */
-function createOption(token: string): InputOptionData | InputOptionData[] | undefined {
+function createOption(token: string, propertyName: string): InputOptionData | InputOptionData[] | undefined {
 	const type = getTokenType(token);
 	switch (type) {
 		case 'color':
 			return createColorOption(token);
 		case 'keyword':
-			return createKeywordOption(token);
+			return createKeywordOption(token, propertyName);
 		case 'number':
 			return createNumberOption(token);
 		case 'integer':
@@ -168,7 +187,8 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
 			return createDimensionOptions(token);
 		case 'function':
 			return createFunctionOption(token);
-
+		case 'link':
+			return createLinkOption(token);
 		default:
 			return undefined;
 	}
@@ -185,7 +205,8 @@ function createOption(token: string): InputOptionData | InputOptionData[] | unde
  * @example
  * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
  */
-function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[], propertyName: string): boolean {
+	// console.log(validValueSet);
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return false;
 
@@ -197,7 +218,12 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
 
-	// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${validValueSet.has(testString)}`);
+	// if (propertyName === 'column-rule-width') {
+	// 	console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
+	// }
+
+	// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
+
 	return new Set(validValueSet).has(testString);
 }
 
@@ -209,11 +235,13 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
  * @param syntaxNormalized - All valid variations, normalized and joined as strings
  * @param slotTokenSets - Array of arrays, each containing all possible tokens for that slot
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
+ * @param propertyName - The name of the CSS property being edited (for keyword options)
  * @returns 2D array of InputOptionData for each slot
  */
-function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[]): InputOptionData[][] {
+function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], propertyName: string): InputOptionData[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
+
 	// Build the options table for each slot
 	return syntaxSet.map((tokenSet, setIndex) => {
 		if (!tokenSet || tokenSet.size === 0) return [];
@@ -222,11 +250,10 @@ function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[]
 		return [...tokenSet].flatMap((token) => {
 			const tokenCanonical = getTokenCanonical(token);
 			if (!tokenCanonical) return [];
-
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
-				const option = createOption(token);
+			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens, propertyName)) {
+				const option = createOption(token, propertyName);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}
 			return [];

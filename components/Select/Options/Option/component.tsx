@@ -47,6 +47,7 @@ const Option: React.FC<OptionProps> = (props): ReactElement => {
             onClick={() => handleChange(value)}
             data-selected={isSelected}
             style={style}
+            title={name}
         >
             
             {icon}

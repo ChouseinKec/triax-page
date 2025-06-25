@@ -36,7 +36,7 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
         row = 'auto',
         label = null,
         labelAlign = 'center',
-        direction = 'ltr',
+        direction = 'row',
         hidden = false,
         disabled = false,
         property,
@@ -51,6 +51,7 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
     const _style: React.CSSProperties = {
         ['--property-column' as string]: column,
         ['--property-row' as string]: row,
+        ['--property-direction' as string]: direction,
         ['--property-label--align' as string]: labelAlign,
     };
 
@@ -59,8 +60,8 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
             className={CSS.Property}
             style={_style}
             data-label={label?.toLocaleLowerCase()}
-            data-direction={direction}
             data-disabled={disabled}
+            data-direction={direction}
         >
 
             <Content component={component} label={label} property={property} />
@@ -101,8 +102,6 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
             )}
 
             {component()}
-
-
         </>
     )
 

@@ -1,24 +1,16 @@
 @use '../../../../mixins//mixins.module.scss' as inputMixins;
 
 .Property {
-	display: grid;
-	grid-column: auto;
+	display: flex;
+	flex-direction: var(--property-direction);
+	justify-content: flex-start;
+	align-items: flex-start;
 	gap: var(--size-sm);
 	grid-column: var(--property-column);
 	grid-row: var(--property-row);
-
-	&:not([data-direction='column']) {
-		grid-template-rows: auto;
-		&[data-label] {
-			grid-template-columns: 55px auto;
-		}
-	}
-
 	&[data-direction='column'] {
-		grid-template-columns: auto;
-
-		&[data-label] {
-			grid-template-rows: auto auto;
+		.Property_Label {
+			width: 100%;
 		}
 	}
 
@@ -29,13 +21,7 @@
 }
 
 .Property_Label {
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	gap: var(--size-sm);
-	align-self: var(--property-label--align);
-
-	position: relative;
+	width: 55px;
 
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -80,14 +66,13 @@
 	margin-top: 0 !important;
 }
 
-
-.Property_Float__Title{
+.Property_Float__Title {
 	text-transform: capitalize;
 	font-size: var(--font-size-lg);
 	font-weight: 600;
 }
 
-.Property_Float__Description{
+.Property_Float__Description {
 	font-size: var(--font-size-md);
 	line-height: var(--size-xl);
 }

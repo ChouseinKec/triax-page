@@ -21,10 +21,7 @@ export default function Home() {
   return (
     <main className={pageStyles.main}>
       {/* Styles */}
-      <fieldset className={pageStyles.fieldset}>
-        <legend>Styles</legend>
-        <StyleEditor />
-      </fieldset>
+      <StyleEditor className='CSS' />
 
       <fieldset className={pageStyles.fieldset}>
         <legend>Blocks</legend>

@@ -1,4 +1,5 @@
 import type { InputOptionData } from '@/types/option';
+import type { CSSTokenGroups } from '@/types/style/token';
 
 
 

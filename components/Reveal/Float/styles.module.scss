@@ -1,12 +1,13 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
 
 .FloatReveal {
-	max-width: 250px;
+	max-width: 350px;
 	padding: var(--size-md);
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-md);
 
+	position: fixed;
 	z-index: 9999;
 
 	@include inputMixins.components--container;

@@ -14,13 +14,12 @@ import { useStyleManager } from '@/hooks/style/manager';
 */
 export const useSizeLayout = (): LayoutProps => {
     const { renderValue } = useStyleFactory();
-    const { getStyle } = useStyleManager();
 
     return {
         label: 'Size & Overflow',
         groups: [
             {
-                columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+                columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
                     // Width
                     {
@@ -75,51 +74,62 @@ export const useSizeLayout = (): LayoutProps => {
                         property: 'max-height',
                         component: () => renderValue('max-height'),
                     },
+                ],
 
-                    // Flex
+            },
+            {
+                properties: [
                     {
                         label: '',
                         column: '1/-1',
                         direction: 'column',
-                        component: () => <HorizontalDivider type='bracket'/>,
+                        component: () => <HorizontalDivider type='bracket' />,
+                    },
+                ]
+            },
+            {
+                columns: 'repeat(4,minmax(0, 1fr))',
+                properties: [
+
+                    // Aspect-Ratio(width / height).
+                    {
+                        label: 'Aspect-Ratio',
+                        column: '1/3',
+                        direction: 'column',
+                        property: 'aspect-ratio',
+                        component: () => renderValue('aspect-ratio'),
                     },
 
                     // Overflow
                     {
                         label: 'Overflow',
-                        column: '1/-1',
+                        column: '3/-1',
                         direction: 'column',
                         property: 'overflow',
                         component: () => renderValue('overflow'),
                     },
 
-                    // Aspect-Ratio(width / height).
-                    {
-                        label: 'Aspect-Ratio',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => renderValue('aspect-ratio'),
-                    },
-
                     // Object-Fit (e.g., cover, contain).
                     {
                         label: 'Object-Fit',
-                        column: 'auto',
+                        column: '1/4',
                         direction: 'column',
+                        property: 'object-fit',
                         component: () => renderValue('object-fit'),
                     },
 
                     // Box-Sizing(e.g., border-box, content-box).
                     {
                         label: 'Box-Sizing',
-                        column: 'auto',
+                        column: '4/-1',
                         direction: 'column',
+                        property: 'box-sizing',
                         component: () => renderValue('box-sizing'),
                     },
 
 
-                ],
-            },
+                ]
+            }
         ],
     };
 };

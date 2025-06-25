@@ -1,15 +1,21 @@
 .Styles {
-	// width: 350px;
 	display: flex;
 	flex-direction: column;
 	background: var(--color-white);
+	box-shadow: var(--shadow-outset);
 }
 
 .Styles_Controls {
-	padding: var(--size-md);
+	position: sticky;
+	top: 0;
 
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: var(--size-lg);
-}
+	padding: var(--size-md);
 
+	background: var(--color-white);
+	z-index: 10;
+
+	box-shadow: var(--shadow-outset);
+}

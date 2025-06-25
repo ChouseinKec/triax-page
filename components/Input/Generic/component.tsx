@@ -7,28 +7,15 @@ import CSS from './styles.module.css';
 import FloatReveal from '@/components/Reveal/Float/component';
 
 // Types
-export interface GENERIC_INPUT {
-    value: string;
-    min?: number;
-    max?: number;
-    type?: 'text' | 'number';
-    placeholder?: string;
-    validate?: (value: string) => {
-        status: boolean;
-        message: string;
-    };
-    onChange: (value: string) => void;
-    onFocus?: () => void;
-    onBlur?: () => void;
-}
+import type { GenericInputProps } from './types';
 
 /**
  * GenericInput Component - Base component for input fields with validation
  * 
- * @param {GENERIC_INPUT} props - Component props
+ * @param {GenericInputProps} props - Component props
  * @returns {ReactElement} - Input element with validation
  */
-const GenericInput: React.FC<GENERIC_INPUT> = (props: GENERIC_INPUT): ReactElement => {
+const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): ReactElement => {
     const {
         value = '',
         min = -Infinity,
@@ -39,6 +26,8 @@ const GenericInput: React.FC<GENERIC_INPUT> = (props: GENERIC_INPUT): ReactEleme
         onChange = () => { },
         onFocus = () => { },
         onBlur = () => { },
+        prefix = '',
+        suffix = '',
     } = props;
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -132,7 +121,13 @@ const GenericInput: React.FC<GENERIC_INPUT> = (props: GENERIC_INPUT): ReactEleme
 
 
     return (
-        <>
+        <div className={CSS.GenericInput}>
+
+            {prefix &&
+                <span className={CSS.Prefix}>
+                    {prefix}
+                </span>
+            }
 
             <input
                 type={type}
@@ -154,13 +149,19 @@ const GenericInput: React.FC<GENERIC_INPUT> = (props: GENERIC_INPUT): ReactEleme
                 onKeyDown={handleKeyDown}
             />
 
+            {suffix &&
+                <span className={CSS.Suffix}>
+                    {suffix}
+                </span>
+            }
+
 
             {/* Render error message if input is in error state */}
             <FloatReveal position='bottom' targetRef={inputRef} isOpen={isError}>
                 <p className={CSS.ErrorMessage}><i className={CSS.ErrorIcon}>✖</i>{errorMessage}</p>
             </FloatReveal>
 
-        </>
+        </div>
 
     );
 };

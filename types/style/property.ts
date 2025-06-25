@@ -51,11 +51,6 @@ type ScrollProperties = 'scroll-behavior' | 'scroll-margin' | 'scroll-padding' |
  */
 export type CSSProperties = SizeProperties | FlexProperties | FlexAlignmentProperties | DisplayProperties | GridProperties | OverflowProperties | PositionProperties | SpacingProperties | BackgroundProperties | BorderProperties | OutlineProperties | FontProperties | TextProperties | ColumnProperties | EffectProperties | TransformProperties | TransitionProperties | AnimationProperties | ObjectProperties | ListProperties | CursorProperties | ScrollProperties;
 
-/**
- * All valid CSS property categories for grouping and filtering in the UI.
- * These correspond to logical groupings of CSS properties (e.g. 'display', 'size', 'font').
- */
-export type CSSPropertyCategories = 'display' | 'size' | 'overflow' | 'flex' | 'grid' | 'position' | 'spacing' | 'background' | 'border' | 'outline' | 'font' | 'text' | 'column' | 'effect' | 'transform' | 'transition' | 'animation' | 'object' | 'list' | 'cursor' | 'scroll';
 
 /**
  * Represents a single CSS property definition, including its name, description, category,
@@ -73,12 +68,6 @@ export interface CSSProperty {
 	 * A brief description of the CSS property.
 	 */
 	description: string;
-
-	/**
-	 * The CSS property category.
-	 * This is used for grouping properties in the UI and for validation logic.
-	 */
-	category: CSSPropertyCategories;
 
 	/**
 	 * The icon name for the CSS property.

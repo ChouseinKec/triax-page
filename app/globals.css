@@ -8,9 +8,13 @@
 
 
   --color-warning: rgb(255, 141, 2);
-  --color-error: rgb(219, 2, 2);
+  
+  --color-error--light: rgb(190, 0, 0);
+  --color-error: rgb(144, 0, 0);
+  --color-error--dark: rgb(86, 0, 0);
+
   --color-success: rgb(0, 108, 0);
-  --color-info: rgb(0, 108, 174);
+  --color-info: rgb(0, 82, 133);
 
   --color-white: rgb(255, 255, 255);
   --color-white--darker: rgb(200 200 200);
@@ -76,6 +80,18 @@ a {
 }
 
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: var(--color-white)
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-white--darker);
+}​
+
+
 *[class *='block-'] {
 
   width: max-content;
@@ -104,3 +120,18 @@ a {
 *[class *='block-'][data-selected='true'] {
   opacity: 1 !important;
 }
+
+
+
+
+
+.CSS{
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  overflow: clip auto;
+}
+
+

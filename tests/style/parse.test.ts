@@ -101,7 +101,6 @@ describe('parseSequence', () => {
 	it('parses sequence (1 part)', () => {
 		expect(parseSequence('a')).toEqual(['a']); // → ['a']
 	});
-
 	it('parses sequence (2 parts)', () => {
 		expect(parseSequence('a b')).toEqual(['a b']); // → ['a b']
 	});
@@ -227,6 +226,12 @@ describe('parse', () => {
 		const expected = ['', 'a', 'b'];
 		expect(result).toEqual(expected);
 	});
+
+	// it('parses " " and |', () => {
+	// 	const result = parse('a|b 1|2');
+	// 	const expected = ['a 1', 'a 2', 'b 1', 'b 2'];
+	// 	expect(result).toEqual(expected);
+	// });
 
 	it('parses complex expressions', () => {
 		const result = parse('a || d+ e? f*');

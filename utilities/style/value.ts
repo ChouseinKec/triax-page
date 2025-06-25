@@ -27,7 +27,7 @@ function isValueKeyword(input: string): boolean {
  * isValueFunction('fit-content(10px)') → true
  */
 function isValueFunction(input: string): boolean {
-	return /^[a-zA-Z-]+\(.+\)$/.test(input);
+	return /^[a-zA-Z-]+\(.*\)$/.test(input);
 }
 
 /**
@@ -67,6 +67,18 @@ function isValueColor(input: string): boolean {
 }
 
 /**
+ * Checks if a value is a link (e.g., 'https://example.com', '/path/to/resource').
+ * @param input - The string to check.
+ * @returns True if the input is a valid link format, false otherwise.
+ * @example
+ * isValueLink('"https://example.com"') → true
+ * isValueLink('"./path/to/resource"') → true
+ */
+function isValueLink(input: string): boolean {
+	return /^"?https?:\/\/[^\s"]+"?$/.test(input) || /^"?\/[^\s"]+"?$/.test(input);
+}
+
+/**
  * Determines the type of a CSS value based on its format.
  * Uses specific checks for dimension, keyword, function, and number.
  * @param input - The CSS value string to classify.
@@ -77,9 +89,11 @@ function isValueColor(input: string): boolean {
  * getValueType('fit-content(10px)') → 'function'
  * getValueType('10') → 'integer'
  * getValueType('10.5') → 'number'
+ * getValueType('#fff') → 'color'
  */
 function getValueType(input: string): CSSTokenGroups | undefined {
 	// IMPORTANT: The order of these checks matters!
+	if (isValueLink(input)) return 'link';
 	if (isValueDimension(input)) return 'dimension';
 	if (isValueKeyword(input)) return 'keyword';
 	// - 'color' must come before 'function' because function matches any name(...),

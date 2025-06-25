@@ -6,10 +6,10 @@
 export type Position = "top" | "bottom" | "left" | "right";
 
 
-export interface FLOAT_REVEAL {
+export interface FloatRevealProps {
     targetRef: React.RefObject<HTMLElement | null>;
     position?: Position;
     children: React.ReactNode;
-
+    style?: React.CSSProperties;
     isOpen?: boolean; // Parent-controlled state
 }

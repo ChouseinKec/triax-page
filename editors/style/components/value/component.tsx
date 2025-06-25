@@ -33,21 +33,16 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxNormalized = useMemo(() => property.syntaxNormalized, [property.syntaxNormalized]);
     const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
 
-    // console.log(property.syntaxNormalized)
-    // console.log(property.syntaxParsed);
-    // console.log(syntaxSeparators);
-
     // Split the value string into slots (e.g., ['10px', 'auto'])
     const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
-    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values),
-        [syntaxNormalized, syntaxSet, values]
+    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values, property.name),
+        [syntaxNormalized, syntaxSet, values, property.name]
     );
 
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = useCallback((updatedValues: string[]) => {
-        // console.log(updatedValues);
 
         // Normalize updated values to canonical tokens
         const valueTokens = getValueTokens(updatedValues).join(' ');
@@ -70,14 +65,11 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
 
         // Trigger the change callback
         onChange(joinedValue);
-    }, [onChange, syntaxNormalized, syntaxSeparators]);
+    }, [onChange, syntaxNormalized, syntaxSeparators]
+    );
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <>
-        {/* {values.join(' ')}
-        <br /> */}
-        <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
-    </>
+    return <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
 export default memo(Value);

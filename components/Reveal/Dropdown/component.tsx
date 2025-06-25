@@ -6,6 +6,8 @@ import CSS from '@/components/Reveal/Dropdown/styles.module.css';
 // Types
 import { DropdownRevealProps } from '@/components/Reveal/Dropdown/types';
 
+// Components
+import FloatReveal from '@/components/Reveal/Float/component'
 
 /**
  * Dropdown Component
@@ -85,10 +87,15 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
             </button>
 
             {/* Conditionally render the dropdown content */}
-            {isOpen && isDisabled !== true && (
-                <div className={CSS.DropdownReveal_Window}>
+            {isDisabled !== true && (
+                <FloatReveal
+                    targetRef={dropdownRef}
+                    position='bottom'
+                    isOpen={isOpen}
+                    style={{ minWidth: dropdownRef.current?.offsetWidth, borderTop: '4px solid var(--color-black--lighter)' }}
+                >
                     {children}
-                </div>
+                </FloatReveal>
             )}
         </div>
     );

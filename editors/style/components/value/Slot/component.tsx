@@ -9,7 +9,9 @@ import FunctionValue from '../function/component';
 import KeywordValue from '../keyword/component';
 import NumberValue from '../number/component';
 import IntegerValue from '../integer/component';
+import LinkValue from '../link/component';
 import ColorSelect from '@/components/Select/Color/component';
+import Error from '../error/component';
 
 // Types
 import type { SlotProps } from './types';
@@ -20,36 +22,76 @@ import { getValueType } from '@/utilities/style/value';
 /**
  * Slot Component
  * Renders the appropriate input component for a single value slot based on its type.
- * Handles function, keyword, dimension, and number value types.
+ * Handles function, keyword, dimension, number, integer, color, and link value types.
  *
- * @param value - The current value for this slot (e.g., 'auto', '10px')
- * @param options - The available options for this slot (from createOptionsTable)
- * @param onChange - Callback fired when the slot value changes
+ * @param props - SlotProps containing value, options, and onChange callback
  * @returns ReactElement - The rendered input for the slot
  */
-const Slot: React.FC<SlotProps> = (props: SlotProps) => {
-    const { value, options, onChange } = props;
+const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
+    /**
+     * Compute all unique types available in the options.
+     */
+    const allTypes = useMemo(() => {
+        return new Set(options.flat().map(option => option.type))
+    }, [options]
+    );
 
-    // Determine the value type for this slot (e.g., function, keyword, dimension, number)
-    const valueType = getValueType(value);
+    /**
+     * Determine the default type to use when value is empty.
+     * Priority: dimension > keyword > function > color > first available type.
+     */
+    const defaultType = useMemo(() => {
+        if (allTypes.has('dimension')) return 'dimension';
+        if (allTypes.has('keyword')) return 'keyword';
+        if (allTypes.has('function')) return 'function';
+        if (allTypes.has('color')) return 'color';
+        return options[0]?.type;
+    }, [allTypes, options]
+    );
 
-    // Memoize the rendered input for this slot based on value type and options
+    /**
+     * Determine the value type for this slot.
+     * If value is empty, use the default type.
+     */
+    const valueType = value.length === 0 ? defaultType : getValueType(value);
+
+    /**
+     * Render the appropriate input component based on the value type.
+     */
     const slotInput = useMemo(() => {
         switch (valueType) {
             case 'function':
-                return <FunctionValue value={value} options={options} onChange={onChange} />;
+                return (
+                    <FunctionValue value={value} options={options} onChange={onChange} />
+                );
             case 'keyword':
-                return <KeywordValue value={value} options={options} onChange={onChange} />;
+                return (
+                    <KeywordValue value={value} options={options} onChange={onChange} />
+                );
             case 'dimension':
-                return <DimensionValue value={value} options={options} onChange={onChange} />;
+                return (
+                    <DimensionValue value={value} options={options} onChange={onChange} />
+                );
             case 'integer':
-                return <IntegerValue value={value} options={options} onChange={onChange} />;
+                return (
+                    <IntegerValue value={value} options={options} onChange={onChange} />
+                );
             case 'number':
-                return <NumberValue value={value} options={options} onChange={onChange} />;
+                return (
+                    <NumberValue value={value} options={options} onChange={onChange} />
+                );
             case 'color':
-                return <ColorSelect value={value} onChange={onChange} />;
+                return (
+                    <ColorSelect value={value} onChange={onChange} />
+                );
+            case 'link':
+                return (
+                    <LinkValue value={value} onChange={onChange} />
+                );
             default:
-                return <div className={CSS.Error}>Unknown value type: {String(valueType)}</div>;
+                return (
+                    <Error message={`[Slot] Unknown value type: ${String(valueType)}`} />
+                );
         }
     }, [valueType, value, onChange, options]);
 
@@ -60,4 +102,4 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     );
 };
 
-export default React.memo(Slot);
+export default Slot;

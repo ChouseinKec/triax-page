@@ -85,6 +85,11 @@ function isTokenColor(input: string): boolean {
 	return canonical === '<color>';
 }
 
+function isTokenLink(input: string): boolean {
+	const canonical = getTokenCanonical(input);
+	return canonical === '<link>';
+}
+
 /**
  * Determines the group of a CSS data token based on its format.
  * @param input - The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
@@ -99,10 +104,11 @@ function isTokenColor(input: string): boolean {
 function getTokenType(input: string): CSSTokenGroups | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
 	if (isTokenDimension(input)) return 'dimension';
+	if (isTokenColor(input)) return 'color';
 	if (isTokenFunction(input)) return 'function';
 	if (isTokenInteger(input)) return 'integer';
 	if (isTokenNumber(input)) return 'number';
-	 if (isTokenColor(input)) return 'color';
+	if (isTokenLink(input)) return 'link';
 	return undefined;
 }
 

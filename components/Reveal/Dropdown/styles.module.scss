@@ -7,12 +7,12 @@
 .DropdownReveal_Button {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
 
 	height: 100%;
 	width: 100%;
-	min-width: 40px;
+	min-width: 30px;
 
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -26,6 +26,7 @@
 	@include inputMixins.icon-arrow;
 	@include inputMixins.components--button;
 
+	padding-right: var(--size-lg);
 	&[data-isdisabled='true'] {
 		pointer-events: none;
 		opacity: 0.5;
@@ -36,20 +37,4 @@
 			width: 0;
 		}
 	}
-}
-
-.DropdownReveal_Window {
-	height: auto;
-	width: max-content;
-	min-width: 99%;
-	padding: var(--size-md);
-
-	position: absolute;
-	top: 120%;
-	left: 0%;
-	z-index: 1;
-
-	@include inputMixins.components--container;
-
-	border-top: 4px solid var(--color-black--lighter);
 }

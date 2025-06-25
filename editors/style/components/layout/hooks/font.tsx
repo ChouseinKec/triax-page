@@ -2,12 +2,12 @@
 import Dropdown from '@/components/Reveal/Dropdown/component';
 import Group from '@/editors/style/components/group/component';
 import HorizontalDivider from '@/components/Divider/Horizontal/component';
+
 // Types
-import { LayoutProps } from '@/editors/style/components/layout/types';
+import type { LayoutProps } from '@/editors/style/components/layout/types';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
-import { useStyleManager } from '@/hooks/style/manager';
 
 export const useFontLayout = (): LayoutProps => {
     const { renderValue } = useStyleFactory();
@@ -16,43 +16,45 @@ export const useFontLayout = (): LayoutProps => {
         label: 'Font & Text',
         groups: [
             {
+                columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
-                    // Family
+
+                    // Size
                     {
-                        label: 'Family',
-                        column: 'auto',
-                        property: 'font-family',
-                        component: () => renderValue('font-family'),
+                        label: 'Size',
+                        direction: 'column',
+                        property: 'font-size',
+                        component: () => renderValue('font-size')
                     },
 
                     // Weight
                     {
                         label: 'Weight',
-                        column: 'auto',
+                        direction: 'column',
                         property: 'font-weight',
                         component: () => renderValue('font-weight'),
-                    },
-
-                    // Size
-                    {
-                        label: 'Size',
-                        column: 'auto',
-                        property: 'font-size',
-                        component: () => renderValue('font-size')
                     },
 
                     // Height
                     {
                         label: 'Height',
-                        column: 'auto',
+                        direction: 'column',
                         property: 'line-height',
                         component: () => renderValue('line-height')
+                    },
+
+                    // Family
+                    {
+                        label: 'Family',
+                        direction: 'column',
+                        property: 'font-family',
+                        component: () => renderValue('font-family'),
                     },
 
                     // Color
                     {
                         label: 'Color',
-                        column: '1/-1',
+                        direction: 'column',
                         property: 'color',
                         component: () => renderValue('color'),
                     },
@@ -68,7 +70,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Align
                     {
                         label: 'Align',
-                        column: '1/-1',
+                        direction: 'column',
                         property: 'text-align',
                         component: () => renderValue('text-align')
                     },
@@ -76,23 +78,18 @@ export const useFontLayout = (): LayoutProps => {
                     // Style
                     {
                         label: 'Style',
-                        column: 'auto',
+                        column: '1',
+                        direction: 'column',
                         property: 'font-style',
                         component: () => renderValue('font-style')
                     },
 
-                    // Direction
-                    {
-                        label: 'Direction',
-                        column: 'auto',
-                        property: 'direction',
-                        component: () => renderValue('direction')
-                    },
 
                     // Transform
                     {
                         label: 'Transform',
-                        column: '1/-1',
+                        direction: 'column',
+                        column: '2/-1',
                         property: 'text-transform',
                         component: () => renderValue('text-transform')
                     },
@@ -101,13 +98,12 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Decoration',
                         column: '1/-1',
+                        direction: 'column',
                         property: 'text-decoration',
                         component: () => renderValue('text-decoration')
                     },
                 ],
             },
-
-
 
             {
                 properties: [
@@ -118,7 +114,12 @@ export const useFontLayout = (): LayoutProps => {
                         direction: 'column',
                         component: () => <HorizontalDivider type='bracket' />,
                     },
+                ]
+            },
 
+            {
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties: [
 
                     // Letter Spacing
                     {
@@ -191,152 +192,138 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'text-orientation',
                         component: () => renderValue('text-orientation'),
                     },
+                ],
+            },
 
-                    // Stroke Width
-                    // {
-                    //     label: 'Stroke Width',
-                    //     column: 'auto',
-                    //     direction: 'column',
-                    //     component: () => renderValue('stroke-width'),
-                    // },
-
-                    // Stroke Color
-                    // {
-                    //     label: 'Stroke Color',
-                    //     column: 'auto',
-                    //     direction: 'column',
-                    //     component: () => ColorSelect('strokeColor'),
-                    // },
-
-                    // Columns
+            {
+                properties: [
+                    // Horizontal Divider
                     {
-                        label: 'Columns',
-                        column: '2/-1',
+                        label: '',
+                        column: '1/-1',
                         direction: 'column',
-                        component: () => (
-                            <Dropdown closeOnChange={false}>
-                                <Group
-                                    columns='minmax(0, 0.7fr) minmax(0, 0.7fr) minmax(0, 0.7fr)'
-                                    properties={[
-                                        // Column Count
-                                        {
-                                            label: 'Count',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-count',
-                                            component: () => renderValue('column-count'),
-                                        },
-
-                                        // Column Width
-                                        {
-                                            label: 'Width',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-width',
-                                            component: () => renderValue('column-width'),
-                                        },
-
-                                        // Column Gap
-                                        {
-                                            label: 'Gap',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-gap',
-                                            component: () => renderValue('column-gap'),
-                                        },
-
-                                        // Column Rule Width
-                                        {
-                                            label: 'Rule Width',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-rule-width',
-                                            component: () => renderValue('column-rule-width'),
-                                        },
-
-                                        // Widows
-                                        // {
-                                        //     label: 'Widows',
-                                        //     column: 'auto',
-                                        //     direction: 'column',
-                                        //     component: () => renderValue('widows'),
-                                        // },
-
-                                        // // Orphans
-                                        // {
-                                        //     label: 'Orphans',
-                                        //     column: 'auto',
-                                        //     direction: 'column',
-                                        //     component: () => renderValue('orphans'),
-                                        // },
-
-                                        // Column Rule Style
-                                        {
-                                            label: 'Rule Style',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-rule-style',
-                                            component: () => renderValue('column-rule-style'),
-                                        },
-
-                                        // Column Rule Color
-                                        // {
-                                        //     label: 'Rule Color',
-                                        //     column: 'auto',
-                                        //     direction: 'column',
-                                        //     component: () => ColorSelect('columnRuleColor'),
-                                        // },
-
-                                        // Break Before
-                                        {
-                                            label: 'Break Before',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'break-before',
-                                            component: () => renderValue('break-before'),
-                                        },
-
-                                        // Break Inside
-                                        {
-                                            label: 'Break Inside',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'break-inside',
-                                            component: () => renderValue('break-inside'),
-                                        },
-
-                                        // Break After
-                                        {
-                                            label: 'Break After',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'break-after',
-                                            component: () => renderValue('break-after'),
-                                        },
-
-                                        // Column Span
-                                        {
-                                            label: 'Column Span',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-span',
-                                            component: () => renderValue('column-span'),
-                                        },
-
-                                        // Column Fill
-                                        {
-                                            label: 'Column Fill',
-                                            column: 'auto',
-                                            direction: 'column',
-                                            property: 'column-fill',
-                                            component: () => renderValue('column-fill'),
-                                        },
-
-                                    ]}
-                                />
-                            </Dropdown>
-                        ),
+                        component: () => <HorizontalDivider type='bracket' />,
                     },
+                ]
+            },
+
+            {
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties: [
+                    // Column Count
+                    {
+                        label: 'Count',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-count',
+                        component: () => renderValue('column-count'),
+                    },
+
+                    // Column Width
+                    {
+                        label: 'Width',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-width',
+                        component: () => renderValue('column-width'),
+                    },
+
+                    // Column Gap
+                    {
+                        label: 'Gap',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-gap',
+                        component: () => renderValue('column-gap'),
+                    },
+
+                    // Column Rule Width
+                    {
+                        label: 'Rule Width',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-rule-width',
+                        component: () => renderValue('column-rule-width'),
+                    },
+
+                    // Widows
+                    // {
+                    //     label: 'Widows',
+                    //     column: 'auto',
+                    //     direction: 'column',
+                    //     component: () => renderValue('widows'),
+                    // },
+
+                    // // Orphans
+                    // {
+                    //     label: 'Orphans',
+                    //     column: 'auto',
+                    //     direction: 'column',
+                    //     component: () => renderValue('orphans'),
+                    // },
+
+                    // Column Rule Style
+                    {
+                        label: 'Rule Style',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-rule-style',
+                        component: () => renderValue('column-rule-style'),
+                    },
+
+                    // Column Rule Color
+                    {
+                        label: 'Rule Color',
+                        column: 'auto',
+                        direction: 'column',
+                        component: () => renderValue('column-rule-color'),
+                    },
+
+                    // Break Before
+                    {
+                        label: 'Break Before',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'break-before',
+                        component: () => renderValue('break-before'),
+                    },
+
+                    // Break Inside
+                    {
+                        label: 'Break Inside',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'break-inside',
+                        component: () => renderValue('break-inside'),
+                    },
+
+                    // Break After
+                    {
+                        label: 'Break After',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'break-after',
+                        component: () => renderValue('break-after'),
+                    },
+
+                    // Column Span
+                    {
+                        label: 'Column Span',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-span',
+                        component: () => renderValue('column-span'),
+                    },
+
+                    // Column Fill
+                    {
+                        label: 'Column Fill',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'column-fill',
+                        component: () => renderValue('column-fill'),
+                    },
+
                 ],
             },
         ],

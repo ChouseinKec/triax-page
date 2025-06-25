@@ -4,18 +4,19 @@ import React, { useRef, useEffect, memo } from "react";
 import CSS from "@/components/Reveal/Float/styles.module.css";
 
 // Types
-import { FLOAT_REVEAL } from "@/components/Reveal/Float/types";
+import { FloatRevealProps } from "@/components/Reveal/Float/types";
 
 // Hooks
 import useHover from "@/hooks/interaction/useHover";
 import usePosition from "@/hooks/position/usePosition";
 
-const FloatReveal: React.FC<FLOAT_REVEAL> = (props) => {
+const FloatReveal: React.FC<FloatRevealProps> = (props) => {
     const {
         targetRef,
         position = "top",
         children,
         isOpen, // Parent controlled state overrides the hover state
+        style = {},
     } = props;
 
     const floatRef = useRef<HTMLDivElement | null>(null);
@@ -63,7 +64,7 @@ const FloatReveal: React.FC<FLOAT_REVEAL> = (props) => {
         <div
             className={CSS.FloatReveal}
             ref={floatRef}
-            style={{ position: "fixed" }}
+            style={style}
             onMouseEnter={isOpen === undefined ? hoverHandlers.handleFloatEnter : undefined}
             onMouseLeave={isOpen === undefined ? hoverHandlers.handleFloatLeave : undefined}
         >
