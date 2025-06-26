@@ -83,11 +83,27 @@ function isTokenFunction(input: string): boolean {
 	return false;
 }
 
+/**
+ * Checks if the input string is a valid CSS data color (e.g., '<color>').
+ * @param input - The string to check.
+ * @returns True if the input is a valid CSS data color, false otherwise.
+ * @example
+ * isTokenColor('<color>') → true
+ * isTokenColor('rgb(255, 0, 0)') → false
+ */
 function isTokenColor(input: string): boolean {
 	const canonical = getTokenCanonical(input);
 	return canonical === '<color>';
 }
 
+/**
+ * Checks if the input string is a valid CSS data link (e.g., '<link>').
+ * @param input - The string to check.
+ * @returns True if the input is a valid CSS data link, false otherwise.
+ * @example
+ * isTokenLink('<link>') → true
+ * isTokenLink('https://example.com/image.png') → false
+ */
 function isTokenLink(input: string): boolean {
 	const canonical = getTokenCanonical(input);
 	return canonical === '<link>';
@@ -128,7 +144,7 @@ function getTokenType(input: string): CSSTokenGroups | undefined {
  */
 function getTokenCanonical(input: string): string | undefined {
 	if (input.startsWith('(') && input.endsWith(')')) {
-		console.log(input, getTokenCanonical(input.replaceAll('(', '').replaceAll(')', '')));
+		// console.log(input, getTokenCanonical(input.replaceAll('(', '').replaceAll(')', '')));
 	}
 	if (!input) return undefined;
 

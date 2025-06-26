@@ -1,5 +1,4 @@
 // Constants
-import { CSSTokenDefs } from '@/constants/style/token';
 import { DimensionGroups } from '@/constants/style/value';
 import { CSSUnitOptions } from '@/constants/style/units';
 import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';

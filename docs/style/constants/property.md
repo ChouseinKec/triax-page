@@ -12,8 +12,6 @@ The `constants/style/property.ts` file serves as the main lookup table for CSS p
   - The canonical property name
   - A human-readable description
   - The value definition syntax string (as found in the CSS spec)
-  - The property category (e.g., layout, color, typography)
-  - The initial value (if any)
   - **A lazily-parsed `syntaxParsed` field**: This is an array of all possible value combinations for the property, generated on demand from the syntax string. This enables efficient incremental parsing and UI slot generation without precomputing all combinations at load time.
 
 ### What is it used for?
@@ -35,8 +33,6 @@ export const CSSPropertyDefs = {
     name: 'aspect-ratio',
     description: 'Specifies the preferred aspect ratio of the box',
     syntax: '<number> | auto',
-    category: 'layout',
-    initialValue: 'auto',
     syntaxParsed: /* lazy-loaded array of all valid value combinations */
   },
   // ...more properties

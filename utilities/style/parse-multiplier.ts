@@ -59,7 +59,6 @@ export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIP
 	return duplicateToken(input, maxDepth);
 }
 
-
 /**
  * Handles the * multiplier (zero or more occurrences).
  * This is used to generate all possible combinations for multipliers that allow zero or more occurrences.
