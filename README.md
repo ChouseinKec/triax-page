@@ -1,6 +1,6 @@
 # Triax Page Builder
 
-![version](https://img.shields.io/badge/version-0.2.0-blue)
+![version](https://img.shields.io/badge/version-0.2.0-blue) [🌐 Live Demo](https://demo.chouseinkechagia.com/)
 
 > 🚀 **Ambitious, extensible page builder for React**
 
