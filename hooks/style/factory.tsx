@@ -9,11 +9,12 @@ import type { Side, Corner } from '@/components/select/position/types';
 
 // Components
 import Value from '@/editors/style/components/value/component';
-import FlexView from '@/editors/style/components/value/view/flex/component';
-import BackgroundView from '@/editors/style/components/value/view/background/component';
+import FlexView from '@/editors/style/components/view/flex/component';
+import BackgroundView from '@/editors/style/components/view/background/component';
 import PositionSelect from '@/components/select/position/component';
-import TextView from '@/editors/style/components/value/view/text/component';
-import PositionView from '@/editors/style/components/value/view/position/component';
+import TextView from '@/editors/style/components/view/text/component';
+import PositionView from '@/editors/style/components/view/position/component';
+import SizeView from '@/editors/style/components/view/size/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
@@ -25,6 +26,7 @@ interface StyleFactoryProps {
 	renderBackgroundView: () => ReactElement;
 	renderTextView: () => ReactElement;
 	renderPositionView: () => ReactElement;
+	renderSizeView: () => ReactElement;
 	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, isCornerSelectable: boolean, isCenterSelectable: boolean) => ReactElement;
 }
 
@@ -217,7 +219,24 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		[handleValueChange]
 	);
 
+	const renderSizeView = useCallback<StyleFactoryProps['renderSizeView']>(() => {
+		return <SizeView
+			styles={{
+				width: getStyle('width'),
+				minWidth: getStyle('min-width'),
+				maxWidth: getStyle('max-width'),
 
+				height: getStyle('height'),
+				minHeight: getStyle('min-height'),
+				maxHeight: getStyle('max-height'),
+
+				aspectRatio: getStyle('aspect-ratio'),
+				overflow: getStyle('overflow'),
+				objectFit: getStyle('object-fit'),
+			}} />;
+
+	}, [getStyle]
+	);
 
 	return {
 		renderValue,
@@ -227,6 +246,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		renderTextView,
 		renderPositionView,
 		renderPositionSelect,
+		renderSizeView,
 	};
 
 

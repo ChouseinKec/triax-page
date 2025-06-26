@@ -88,27 +88,6 @@ function normalizeSyntax(input: string): string {
 	return input.trim();
 }
 
-function convertSyntax(syntax: string): string {
-	// Normalize the syntax first
-	syntax = normalizeSyntax(syntax);
-
-	const valueMap: Record<string, string> = {
-		'length': '0px',
-		'percentage': '0%',
-		'color': '#ffffff',
-		'number': '0.0',
-		'integer': '0',
-		'flex': '1fr',
-		'ratio': '1/1',
-		'link': '"https://example.com/image.png"',
-	};
-
-	// Replace all <token ...> with their default values, ignoring ranges/constraints
-	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
-		return valueMap[token] ?? `<${token}>`;
-	});
-}
-
 /**
  * Main parser for CSS Value Definition Syntax.
  * Recursively parses the syntax string, handling combinators in precedence order.
@@ -163,12 +142,12 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = "100|200|300";
-	// console.log(isValueColor(syntax));
+	// const syntax = '[<color>? && (<length> <length>)]#';
+	// console.log(parse(syntax));
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 	// const parsed = parse(syntax);
 	// console.log(parsed);
 }
 
 // Export all functions and types
-export { convertSyntax, test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };
+export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };

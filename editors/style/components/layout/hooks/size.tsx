@@ -13,7 +13,7 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @returns {LayoutProps} Configuration for size and overflow properties in the style editor.
 */
 export const useSizeLayout = (): LayoutProps => {
-    const { renderValue } = useStyleFactory();
+    const { renderValue, renderSizeView } = useStyleFactory();
 
     return {
         label: 'Size & Overflow',
@@ -21,6 +21,14 @@ export const useSizeLayout = (): LayoutProps => {
             {
                 columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
+
+                    // Size View
+                    {
+                        label: null,
+                        column: '1/-1',
+                        component: () => renderSizeView(),
+                    },
+                    
                     // Width
                     {
                         label: 'Width',
@@ -109,16 +117,6 @@ export const useSizeLayout = (): LayoutProps => {
                         property: 'object-fit',
                         component: () => renderValue('object-fit'),
                     },
-
-                    // Box-Sizing(e.g., border-box, content-box).
-                    {
-                        label: 'Box-Sizing',
-                        column: '4/-1',
-                        direction: 'column',
-                        property: 'box-sizing',
-                        component: () => renderValue('box-sizing'),
-                    },
-
 
                 ]
             }

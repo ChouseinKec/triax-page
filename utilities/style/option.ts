@@ -217,8 +217,10 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
 
-	// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
-
+	if (propertyName === 'text-shadow') {
+		// console.log(validValueSet);
+		// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
+	}
 	return new Set(validValueSet).has(testString);
 }
 

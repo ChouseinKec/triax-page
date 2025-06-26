@@ -43,6 +43,15 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
         [syntaxNormalized, syntaxSet, values, property.name]
     );
 
+
+    if (property.name === 'text-shadow') {
+        // console.log(property.syntaxParsed)
+        // console.log(syntaxSet)
+        console.log(syntaxNormalized)
+
+
+    }
+
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = useCallback((updatedValues: string[]) => {
 

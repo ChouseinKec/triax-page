@@ -18,8 +18,7 @@ import { createProperty } from '@/constants/style/property';
 // Utilities
 import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
 import { getValueToken } from '@/utilities/style/value';
-import { convertSyntax } from '@/utilities/style/parse';
-import { getTokenBase } from '@/utilities/style/token';
+import { getTokenBase, getTokenValues } from '@/utilities/style/token';
 
 /**
  * FunctionValue Component
@@ -64,7 +63,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
 
     // Determine default name and value from the option/property
     const defaultName = option ? getTokenBase(option.name) : '';
-    const defaultValue = property ? convertSyntax(property.syntaxParsed[0]) : '';
+    const defaultValue = property ? getTokenValues(property.syntaxParsed[0]) : '';
 
     // Use extracted or default values safely
     const safeName = extractedName || defaultName;

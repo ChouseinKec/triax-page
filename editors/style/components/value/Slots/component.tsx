@@ -71,7 +71,7 @@ const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
                 key={nextIndex}
                 value={''}
                 options={options[nextIndex]}
-                placeholder="⋯"
+                placeholder="..."
                 searchable={false}
                 grouped={true}
                 buttonStyle={{ fontSize: 'var(--font-size-lg)' }}

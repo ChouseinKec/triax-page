@@ -64,13 +64,6 @@ export const useFontLayout = (): LayoutProps => {
                         component: () => renderValue('color'),
                     },
 
-                    // Shadow
-                    // {
-                    //     label: 'Shadow',
-                    //     column: '1/-1',
-                    //     labelAlign: 'flex-start',
-                    //     component: () => InputGroup('textShadow', ',')
-                    // },
 
                     // Align
                     {
@@ -107,6 +100,14 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'text-decoration',
                         component: () => renderValue('text-decoration')
                     },
+                    // Text Shadow
+                    {
+                        label: 'Shadow',
+                        column: '1/-1',
+                        direction: 'column',
+                        property: 'text-shadow',
+                        component: () => renderValue('text-shadow')
+                    }
                 ],
             },
 

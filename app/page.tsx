@@ -23,29 +23,24 @@ export default function Home() {
       {/* Styles */}
       <StyleEditor className='CSS' />
 
-      <fieldset className={pageStyles.fieldset}>
-        <legend>Blocks</legend>
+      <div className={pageStyles.blocks}>
 
-        <div className={pageStyles.blocks}>
-
-          <div data-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
-            <p>Block 1A</p>
-            <p>Block 1B</p>
-            <p>Block 1C</p>
-            <style>{generateBlockStyles('1')}</style>
-          </div>
-
-          <div data-selected={selectedBlock === "2"} className='block-2' onClick={() => setSelected("2")}>
-            <p>Block 2A</p>
-            <p>Block 2B</p>
-            <p>Block 2C</p>
-            <style>{generateBlockStyles('2')}</style>
-          </div>
-
-
+        <div data-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
+          <p>Block 1A</p>
+          <p>Block 1B</p>
+          <p>Block 1C</p>
+          <style>{generateBlockStyles('1')}</style>
         </div>
 
-      </fieldset>
+        <div data-selected={selectedBlock === "2"} className='block-2' onClick={() => setSelected("2")}>
+          <p>Block 2A</p>
+          <p>Block 2B</p>
+          <p>Block 2C</p>
+          <style>{generateBlockStyles('2')}</style>
+        </div>
+
+
+      </div>
 
     </main>
 

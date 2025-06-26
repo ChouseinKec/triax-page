@@ -4,7 +4,7 @@ import React, { ReactElement, useMemo } from 'react';
 import CSS from './styles.module.css';
 
 // Types
-import { FlexViewProps } from '@/editors/style/components/value/view/flex/types';
+import { FlexViewProps } from '@/editors/style/components/view/flex/types';
 
 /**
  * FlexView Component

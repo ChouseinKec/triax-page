@@ -245,7 +245,7 @@ export const useDisplayLayout = (): LayoutProps => {
             {
                 isExpandable: true,
                 properties: [
-    
+
                     // Direction
                     {
                         label: 'Direction',
@@ -253,6 +253,15 @@ export const useDisplayLayout = (): LayoutProps => {
                         column: 'auto',
                         property: 'direction',
                         component: () => renderValue('direction')
+                    },
+
+                    // Box-Sizing(e.g., border-box, content-box).
+                    {
+                        label: 'Box-Sizing',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'box-sizing',
+                        component: () => renderValue('box-sizing'),
                     },
                 ]
             },

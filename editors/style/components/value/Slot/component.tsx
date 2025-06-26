@@ -36,6 +36,7 @@ const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
     }, [options]
     );
 
+
     /**
      * Determine the default type to use when value is empty.
      * Priority: dimension > keyword > function > color > first available type.

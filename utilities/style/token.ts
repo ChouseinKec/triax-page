@@ -1,6 +1,9 @@
 // Type
 import { CSSTokenGroups } from '@/types/style/token';
 
+// Utilities
+import { normalizeSyntax } from './parse';
+
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
  * @param input - The string to check.
@@ -124,6 +127,9 @@ function getTokenType(input: string): CSSTokenGroups | undefined {
  * getTokenCanonical('10') → undefined
  */
 function getTokenCanonical(input: string): string | undefined {
+	if (input.startsWith('(') && input.endsWith(')')) {
+		console.log(input, getTokenCanonical(input.replaceAll('(', '').replaceAll(')', '')));
+	}
 	if (!input) return undefined;
 
 	// Function: e.g. fit-content(<length [10,20]>)
@@ -231,5 +237,46 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 	}
 }
 
+/**
+ * Converts a single token (e.g., <length>, <color>) to its default value.
+ * @param token - The token string (without brackets or with brackets)
+ * @returns The default value for the token, or the token itself if not found
+ * @example
+ * getTokenValue('<length>') → '0px'
+ * getTokenValue('<color>') → '#ffffff'
+ * getTokenValue('<angle>') → '0deg'
+ * getTokenValue('<percentage>') → '0%'
+ * getTokenValue('<number>') → '0.0'
+ */
+function getTokenValue(token: string): string {
+	const valueMap: Record<string, string> = {
+		length: '0px',
+		angle: '0deg',
+		percentage: '0%',
+		color: '#ffffff',
+		number: '0.0',
+		integer: '0',
+		flex: '1fr',
+		ratio: '1/1',
+		link: '"https://example.com/image.png"',
+	};
+	return valueMap[token] ?? `<${token}>`;
+}
+
+/**
+ * Converts all tokens in a syntax string to their default values.
+ * @param syntax - The CSS value definition syntax string
+ * @returns The string with all tokens replaced by their default values
+ * @example
+ * getTokenValues('auto || <length>') → 'auto || 0px'
+ * getTokenValues('fit-content(<length> <percentage>)') → 'fit-content(0px 0%)'
+ */
+function getTokenValues(syntax: string): string {
+	syntax = normalizeSyntax(syntax);
+	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
+		return getTokenValue(token);
+	});
+}
+
 // Export the new helpers
-export { isTokenKeyword, isTokenDimension, isTokenFunction, isTokenInteger, isTokenNumber, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };
+export { getTokenValue, getTokenValues, isTokenKeyword, isTokenDimension, isTokenFunction, isTokenInteger, isTokenNumber, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };

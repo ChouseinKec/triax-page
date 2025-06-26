@@ -16,7 +16,6 @@ function generatePropertyName(property: string, position: Side | Corner): CSSPro
     return `${property}-${position}` as CSSProperties;
 }
 
-
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
  *
@@ -85,24 +84,28 @@ export const usePositionLayout = (): LayoutProps => {
                         direction: 'column',
                         component: () => renderValue(generatePropertyName('margin', currentSide)),
                     },
-                ],
-            },
-
-            {
-                columns: '1fr',
-                rows: 'auto auto',
-                properties: [
 
 
                     // Transform (e.g., translate, rotate).
                     {
                         label: 'Transform',
-                        column: '1/-1',
-                        labelAlign: 'flex-start',
+                        column: '1/3',
+                        direction: 'column',
                         component: () => renderValue('transform'),
                     },
+
+                    // Backdrop Filter (e.g., blur, brightness).
+                    {
+                        label: 'Z Index',
+                        column: '3/-1',
+                        direction: 'column',
+                        component: () => renderValue('z-index'),
+                    },
+
+
                 ],
             },
+
         ],
     };
 };
