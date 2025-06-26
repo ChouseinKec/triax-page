@@ -1,14 +1,22 @@
 import { useState } from 'react';
 
 // Components
-import HorizontalDivider from '@/components/divider/horizontal/component';
 
 // Types
-import { LayoutProps } from '@/editors/style/components/layout/types';
-import { Side, Corner } from '@/components/select/position/types';
+import type { LayoutProps } from '@/editors/style/components/layout/types';
+import type { Side, Corner } from '@/components/select/position/types';
+import type { CSSProperties } from '@/types/style/property';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
+
+
+
+function generatePropertyName(property: string, suffix: string, position: Side | Corner): CSSProperties {
+    if (!position) return `${property}-${suffix}` as CSSProperties;
+    return `${property}-${position}-${suffix}` as CSSProperties;
+}
+
 
 /**
  * Custom hook to render the layout for the border and shadow styles.
@@ -34,7 +42,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: null,
                         column: '1',
                         row: '1',
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true),
+                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true, true),
                     },
 
                     // Position selector for the border side (Top, Bottom, Left, Right)
@@ -53,8 +61,8 @@ export const useBackgroundLayout = (): LayoutProps => {
                         row: '2',
                         direction: 'column',
                         property: 'border-width',
-                        hidden: currentSide === null, // Disabled if no side is selected
-                        component: () => renderValue(`border-${currentSide || 'top'}-width`), // Dynamic length input based on selected side
+                        disabled: currentSide === null && currentCorner !== null,
+                        component: () => renderValue(generatePropertyName('border', 'width', currentSide)), // Dynamic length input based on selected side
                     },
 
                     // Border Style (solid, dashed, etc.)
@@ -64,8 +72,8 @@ export const useBackgroundLayout = (): LayoutProps => {
                         row: '2',
                         direction: 'column',
                         property: 'border-style',
-                        hidden: currentSide === null, // Disabled if no side is selected
-                        component: () => renderValue(`border-${currentSide || 'top'}-style`), // Dynamic radio selector based on selected side
+                        disabled: currentSide === null && currentCorner !== null,
+                        component: () => renderValue(generatePropertyName('border', 'style', currentSide)), // Dynamic radio selector based on selected side
                     },
 
                     // Border Color picker
@@ -75,8 +83,8 @@ export const useBackgroundLayout = (): LayoutProps => {
                         row: '2',
                         direction: 'column',
                         property: 'border-color',
-                        hidden: currentSide === null, // Disabled if no side is selected
-                        component: () => renderValue(`border-${currentSide || 'top'}-color`), // Dynamic color selector based on selected side
+                        disabled: currentSide === null && currentCorner !== null,
+                        component: () => renderValue(generatePropertyName('border', 'color', currentSide)), // Dynamic color selector based on selected side
                     },
 
                     // Border Radius
@@ -84,10 +92,10 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Border Radius',
                         direction: 'column',
                         property: 'border-radius',
-                        row: '2',
+                        row: '3',
                         column: '1/-1',
-                        hidden: currentCorner === null, // Disabled if no corner is selected
-                        component: () => renderValue(`border-${currentCorner || 'top-left'}-radius`), // Dynamic length input based on selected corner
+                        disabled: currentCorner === null && currentSide !== null,
+                        component: () => renderValue(generatePropertyName('border', 'radius', currentCorner)), // Dynamic length input based on selected corner
                     },
 
                     // Outline Width
@@ -95,7 +103,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Outline Width',
                         direction: 'column',
                         property: 'outline-width',
-                        row: '3',
+                        row: '4',
                         column: '1',
                         component: () => renderValue('outline-width'),
                     },
@@ -105,7 +113,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Outline Style',
                         direction: 'column',
                         property: 'outline-style',
-                        row: '3',
+                        row: '4',
                         column: '2',
                         component: () => renderValue('outline-style'),
                     },
@@ -115,7 +123,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                         label: 'Outline Color',
                         direction: 'column',
                         property: 'outline-color',
-                        row: '3',
+                        row: '4',
                         column: '3',
                         component: () => renderValue('outline-color'),
                     },

@@ -163,7 +163,7 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = "a|b 1|2";
+	// const syntax = "100|200|300";
 	// console.log(isValueColor(syntax));
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 	// const parsed = parse(syntax);

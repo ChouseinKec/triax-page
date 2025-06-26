@@ -10,6 +10,13 @@ import type { CSSProperties } from '@/types/style/property';
 import { useStyleFactory } from '@/hooks/style/factory';
 import { useStyleManager } from '@/hooks/style/manager';
 
+
+function generatePropertyName(property: string, position: Side | Corner): CSSProperties {
+    if (!position) return property as CSSProperties;
+    return `${property}-${position}` as CSSProperties;
+}
+
+
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
  *
@@ -20,7 +27,7 @@ export const usePositionLayout = (): LayoutProps => {
     const { getStyle } = useStyleManager();
 
     const [currentSide, setCurrentSide] = useState<Side>('top');
-    const [, setCurrentCorner] = useState<Corner>('top-left');
+    const [currentCorner, setCurrentCorner] = useState<Corner>('top-left');
 
     return {
         label: 'Position & Spacing',
@@ -34,7 +41,7 @@ export const usePositionLayout = (): LayoutProps => {
                         label: null,
                         column: '1',
                         row: '1',
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, false),
+                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, false, true),
                     },
 
                     // Position View
@@ -56,10 +63,10 @@ export const usePositionLayout = (): LayoutProps => {
 
                     // Top-Right-Bottom-Left
                     {
-                        label: currentSide, // Label dynamic based on selected side (e.g., 'Top')
+                        label: currentSide || '...',
                         column: '3/-1',
                         direction: 'column',
-                        disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')), // Disable if position is not absolute, fixed, or sticky
+                        disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')) || !currentSide,
                         component: () => renderValue(currentSide?.toLowerCase() as CSSProperties || 'top'),
                     },
 
@@ -68,7 +75,7 @@ export const usePositionLayout = (): LayoutProps => {
                         label: 'Padding',
                         column: '1/3',
                         direction: 'column',
-                        component: () => renderValue(`padding-${currentSide || 'top'}`),
+                        component: () => renderValue(generatePropertyName('padding', currentSide)),
                     },
 
                     // Margin dynamic based on current side selected.
@@ -76,7 +83,7 @@ export const usePositionLayout = (): LayoutProps => {
                         label: 'Margin',
                         column: '3/-1',
                         direction: 'column',
-                        component: () => renderValue(`margin-${currentSide || 'top'}`),
+                        component: () => renderValue(generatePropertyName('margin', currentSide)),
                     },
                 ],
             },

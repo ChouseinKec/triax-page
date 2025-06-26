@@ -17,6 +17,7 @@ import type { ValueSeparators } from '@/types/style/value';
  */
 function isValueKeyword(input: string): boolean {
 	return /^[a-zA-Z-]+$/.test(input);
+	
 }
 
 /**

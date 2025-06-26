@@ -6,6 +6,9 @@ import CSS from './styles.module.css';
 // Types
 import { TextViewProps } from './types';
 
+// Utilities
+import { clampDimension } from '@/utilities/style/dimension'
+
 /**
  * TextView Component
  *
@@ -17,8 +20,21 @@ import { TextViewProps } from './types';
  * @returns {ReactElement} - The rendered TextView component.
 */
 const TextView: React.FC<TextViewProps> = ({ styles }: TextViewProps): ReactElement => {
+    const _styles = useMemo(() => {
+        return {
+            ...styles,
+            fontSize: clampDimension(styles.fontSize, 25),
+            lineHeight: clampDimension(styles.lineHeight),
+            letterSpacing: clampDimension(styles.letterSpacing),
+            columnWidth: clampDimension(styles.columnWidth),
+            columnGap: clampDimension(styles.columnGap),
+            textIndent: clampDimension(styles.textIndent),
+            columnRuleWidth: clampDimension(styles.columnRuleWidth),
+        };
+    }, [styles]);
+
     return (
-        <div className={CSS.TextView} style={styles}>
+        <div className={CSS.TextView} style={_styles}>
             Try changing text properties to see the effect.
         </div>
     );

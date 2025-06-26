@@ -1,10 +1,10 @@
-import React, { memo, ReactElement, useMemo } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
 // Styles
-import CSS from '@/components/View/Flex/styles.module.css';
+import CSS from './styles.module.css';
 
 // Types
-import { FlexViewProps } from '@/components/view/flex/types';
+import { FlexViewProps } from '@/editors/style/components/value/view/flex/types';
 
 /**
  * FlexView Component

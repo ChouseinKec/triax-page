@@ -27,6 +27,13 @@
 			pointer-events: none;
 		}
 	}
+
+	&[data-center='false'] {
+		[data-value*='all'] {
+			opacity: 0.3;
+			pointer-events: none;
+		}
+	}
 }
 
 .PositionSelect_Position {
@@ -48,11 +55,6 @@
 
 		background: var(--color-gray);
 		border-radius: 50%;
-	}
-
-	&[data-value='center'] {
-		opacity: 0.3;
-		pointer-events: none;
 	}
 
 	&:hover,

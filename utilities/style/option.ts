@@ -33,7 +33,6 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If any of these are undefined or empty, return undefined
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
-
 	// Create and return the FunctionOptionData object
 	return {
 		name: canonicalName,
@@ -218,10 +217,6 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
 
-	// if (propertyName === 'column-rule-width') {
-	// 	console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
-	// }
-
 	// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
 
 	return new Set(validValueSet).has(testString);
@@ -241,7 +236,6 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], propertyName: string): InputOptionData[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
-
 	// Build the options table for each slot
 	return syntaxSet.map((tokenSet, setIndex) => {
 		if (!tokenSet || tokenSet.size === 0) return [];

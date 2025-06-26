@@ -258,6 +258,10 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'background-clip': createProperty('background-clip', 'border-box | padding-box | content-box | text'),
 	'background-origin': createProperty('background-origin', 'border-box | padding-box | content-box'),
 
+	'border-width': createProperty('border-width', '<length [0,∞]>'),
+	'border-style': createProperty('border-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
+	'border-color': createProperty('border-color', '<color>'),
+
 	'border-top-width': createProperty('border-top-width', '<length [0,∞]>'),
 	'border-right-width': createProperty('border-right-width', '<length [0,∞]>'),
 	'border-bottom-width': createProperty('border-bottom-width', '<length [0,∞]>'),
@@ -286,7 +290,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	// ============ Font & Text =============
 	'font-family': createProperty('font-family', '<generic-family>'),
 	'font-size': createProperty('font-size', '<absolute-size> | <relative-size> | <length-percentage>'),
-	'font-weight': createProperty('font-weight', 'normal | bold | bolder | lighter | 100 | 200 '),
+	'font-weight': createProperty('font-weight', 'normal|bold|<integer>'),
 	'line-height': createProperty('line-height', 'normal | <number> | <length-percentage>'),
 	color: createProperty('color', '<color>'),
 

@@ -9,11 +9,11 @@ import type { Side, Corner } from '@/components/select/position/types';
 
 // Components
 import Value from '@/editors/style/components/value/component';
-import FlexView from '@/components/view/flex/component';
-import BackgroundView from '@/components/view/background/component';
+import FlexView from '@/editors/style/components/value/view/flex/component';
+import BackgroundView from '@/editors/style/components/value/view/background/component';
 import PositionSelect from '@/components/select/position/component';
-import TextView from '@/components/view/text/component';
-import PositionView from '@/components/view/position/component';
+import TextView from '@/editors/style/components/value/view/text/component';
+import PositionView from '@/editors/style/components/value/view/position/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
@@ -25,7 +25,7 @@ interface StyleFactoryProps {
 	renderBackgroundView: () => ReactElement;
 	renderTextView: () => ReactElement;
 	renderPositionView: () => ReactElement;
-	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, areCornersVisible: boolean) => ReactElement;
+	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, isCornerSelectable: boolean, isCenterSelectable: boolean) => ReactElement;
 }
 
 
@@ -134,7 +134,9 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				borderLeftStyle: getStyle('border-left-style'),
 				borderLeftWidth: getStyle('border-left-width'),
 				borderLeftColor: getStyle('border-left-color'),
-				outline: getStyle('outline'),
+				outlineStyle: getStyle('outline-style'),
+				outlineWidth: getStyle('outline-width'),
+				outlineColor: getStyle('outline-color'),
 			}} />
 	}, [getStyle]
 	);
@@ -202,12 +204,13 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderPositionSelect = useCallback<StyleFactoryProps['renderPositionSelect']>((setCurrentSide, setCurrentCorner, areCornersVisible) => {
+	const renderPositionSelect = useCallback<StyleFactoryProps['renderPositionSelect']>((setCurrentSide, setCurrentCorner, isCornerSelectable, isCenterSelectable) => {
 		return (
 			<PositionSelect
 				onChangeSide={setCurrentSide}
 				onChangeCorner={setCurrentCorner}
-				areCornersVisible={areCornersVisible}
+				isCornerSelectable={isCornerSelectable}
+				isCenterSelectable={isCenterSelectable}
 			/>
 		);
 	},

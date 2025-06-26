@@ -5,9 +5,6 @@ import type { LayoutProps } from '@/editors/style/components/layout/types';
 import { useStyleFactory } from '@/hooks/style/factory';
 import { useStyleManager } from '@/hooks/style/manager';
 
-// Components
-import HorizontalDivider from '@/components/divider/horizontal/component';
-
 
 /**
  * Custom hook to render the layout for the "Display & Layout" section.

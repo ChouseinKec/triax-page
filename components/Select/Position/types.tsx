@@ -11,7 +11,7 @@ export type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' |
 /**
  * Represents the possible center position in the selection.
 */
-export type Center = 'center' | null;
+export type Center = 'all' | null;
 
 /**
  * Union of possible position types including sides, corners, or center.
@@ -27,15 +27,24 @@ export type PositionSelectProps = {
     */
     defaultValue?: Positions;
     /**
-     * Whether to show corners in the selection.
+     * Whether corners should be selectable in the position selection.
     */
-    areCornersVisible?: boolean;
+    isCornerSelectable?: boolean;
+
+    /**
+     * Whether the center position should be selectable in the position selection.
+    */
+    isCenterSelectable?: boolean;
+
+
     /**
      * Callback when the side selection changes.
     */
     onChangeSide: (value: Side) => void;
+
     /**
      * Callback when the corner selection changes.
     */
     onChangeCorner: (value: Corner) => void;
+
 };

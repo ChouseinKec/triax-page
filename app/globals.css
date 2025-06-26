@@ -8,7 +8,7 @@
 
 
   --color-warning: rgb(255, 141, 2);
-  
+
   --color-error--light: rgb(190, 0, 0);
   --color-error: rgb(144, 0, 0);
   --color-error--dark: rgb(86, 0, 0);
@@ -81,19 +81,18 @@ a {
 
 
 ::-webkit-scrollbar {
-    width: 0px;
+  width: 0px;
 }
 
 ::-webkit-scrollbar-track-piece {
-    background: var(--color-white)
+  background: var(--color-white)
 }
-::-webkit-scrollbar-thumb {
-    background: var(--color-white--darker);
-}​
 
+::-webkit-scrollbar-thumb {
+  background: var(--color-white--darker);
+}
 
 *[class *='block-'] {
-
   width: max-content;
   height: max-content;
   padding: 20px;
@@ -125,7 +124,7 @@ a {
 
 
 
-.CSS{
+.CSS {
   height: 100%;
   width: 300px;
   position: fixed;
@@ -133,5 +132,3 @@ a {
   right: 0;
   overflow: clip auto;
 }
-
-
