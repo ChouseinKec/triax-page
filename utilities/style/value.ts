@@ -186,7 +186,7 @@ function extractSeparator(variation: string): string[] {
 			}
 			return 'token';
 		})
-		.replace(/([a-zA-Z-]+\((?:[^()]|token)*\))/g, 'token')
+		.replace(/([a-zA-Z-]+\((?:[^()t]|t(?!oken)|token)*\))/g, 'token')
 		.trim();
 
 	// Build a regex to match all possible separators
