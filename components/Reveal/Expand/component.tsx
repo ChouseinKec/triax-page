@@ -1,28 +1,33 @@
-import React, { memo, ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 // Style
 import CSS from '@/components/Reveal/Expand/styles.module.css';
 
 // Types
-import { EXPAND_REVEAL } from '@/components/Reveal/Expand/types';
+import { ExpandRevealProps } from '@/components/reveal/expand/types';
 
 
 /**
- * Expand Component
+ * expandReveal Component
  *
  * A simple expand/collapse component that toggles visibility of content on button click.
  * The content is revealed when the component is in the "open" state.
  *
  * @component
- * @param {EXPAND_REVEAL} props - Component props
+ * @param {ExpandRevealProps} props - Component props
  * @param {React.ReactNode} props.children - Content displayed inside the expandable section
  * @returns {ReactElement} - The rendered expand component
  *
  * @example
- * <Expand>
+ * <expandReveal>
  *   <p>Expandable content</p>
- * </Expand>
+ * </expandReveal>
  */
-const Expand: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): ReactElement => {
+const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): ReactElement => {
+    const {
+        children,
+        title = '',
+    } = props;
+
     const [isOpen, setIsOpen] = useState(false);
 
 
@@ -34,14 +39,16 @@ const Expand: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): ReactElem
         setIsOpen((prev) => !prev);
     }, []);
 
+    const _style: React.CSSProperties = {
+        ['--expand-title-before' as string]: title ? `| ${title} ` : '+',
+        ['--expand-title-after' as string]: title ? title : '-',
+    };
 
     return (
-        <div className={CSS.ExpandReveal} data-isopen={isOpen} >
+        <div className={CSS.ExpandReveal} data-isopen={isOpen} style={_style}>
 
             {/* Toggle button to expand/collapse the content */}
-            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} >
-                <span />
-            </button>
+            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} />
 
             {/* Conditionally render content if the expand is open */}
             {isOpen && (
@@ -53,4 +60,4 @@ const Expand: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): ReactElem
     );
 };
 
-export default memo(Expand);
+export default ExpandReveal;

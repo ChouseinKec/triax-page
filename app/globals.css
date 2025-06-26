@@ -7,10 +7,14 @@
   --font-size-2xl: 15px;
 
 
-  --color-warning: rgb(197, 108, 0);
-  --color-error: rgb(108, 0, 0);
+  --color-warning: rgb(255, 141, 2);
+
+  --color-error--light: rgb(190, 0, 0);
+  --color-error: rgb(144, 0, 0);
+  --color-error--dark: rgb(86, 0, 0);
+
   --color-success: rgb(0, 108, 0);
-  --color-info: rgb(0, 108, 174);
+  --color-info: rgb(0, 82, 133);
 
   --color-white: rgb(255, 255, 255);
   --color-white--darker: rgb(200 200 200);
@@ -76,8 +80,19 @@ a {
 }
 
 
-*[class *='block-'] {
+::-webkit-scrollbar {
+  width: 0px;
+}
 
+::-webkit-scrollbar-track-piece {
+  background: var(--color-white)
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-white--darker);
+}
+
+*[class *='block-'] {
   width: max-content;
   height: max-content;
   padding: 20px;
@@ -103,4 +118,17 @@ a {
 
 *[class *='block-'][data-selected='true'] {
   opacity: 1 !important;
+}
+
+
+
+
+
+.CSS {
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  overflow: clip auto;
 }

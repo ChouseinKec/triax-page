@@ -1,1 +1,1 @@
-.Styles{display:flex;flex-direction:column;background:var(--color-white)}.Styles_Controls{padding:var(--size-md);display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);gap:var(--size-lg)}
+.Styles{display:flex;flex-direction:column;background:var(--color-white);box-shadow:var(--shadow-outset)}.Styles_Controls{position:sticky;top:0;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:var(--size-lg);padding:var(--size-md);background:var(--color-white);z-index:10;box-shadow:var(--shadow-outset)}

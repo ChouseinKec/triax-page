@@ -1,13 +1,14 @@
+
 import React, { memo, ReactElement, useCallback, useState } from 'react';
 
 // Style
 import CSS from '@/components/Group/Accordion/styles.module.css';
 
 // Component
-import Item from '@/components/Group/Accordion/Item/component';
+import Item from '@/components/group/accordion/Item/component';
 
 // Type
-import { ACCORDION_GROUP } from '@/components/Group/Accordion/types';
+import { ACCORDION_GROUP } from '@/components/group/accordion/types';
 
 /**
  * AccordionGroup Component
@@ -19,12 +20,6 @@ import { ACCORDION_GROUP } from '@/components/Group/Accordion/types';
  * @param {ACCORDION_GROUP} props - Component props
  * @param {ACCORDION_ITEMS[]} props.items - Array of accordion items with title/content pairs
  * @returns {ReactElement} - Returns a memoized accordion group component
- * 
- * @example
- * <AccordionGroup items={[
- *   { title: <h3>Section 1</h3>, content: <div>Content 1</div> },
- *   { title: <h3>Section 2</h3>, content: <div>Content 2</div> }
- * ]} />
  */
 const AccordionGroup: React.FC<ACCORDION_GROUP> = ({ items }): ReactElement => {
     const [selected, setSelected] = useState<number>(0);

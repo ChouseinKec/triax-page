@@ -1,0 +1,13 @@
+@use '../../../../../mixins/mixins.module.scss' as inputMixins;
+
+.FunctionValue {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: var(--size-md);
+}
+
+.Separator {
+	color: var(--color-gray);
+}

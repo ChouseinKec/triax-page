@@ -74,21 +74,18 @@ const useDeviceStore = create<DEVICE_STORE>()((set, get) => ({
 	 */
 	setDevice: (value: string) => {
 		const allDevices = get().allDevices;
-		const _device = allDevices.find((dev) => {
+		const device = allDevices.find((dev) => {
 			return dev.value === value;
 		});
 
-		if (!_device) {
-			throw new Error(
-				`Invalid device: ${value}. Available devices: ${allDevices
-					.map((dev) => {
-						return dev.name;
-					})
-					.join(',')}`
-			);
+		if (!device) {
+			throw new Error(`Invalid device: ${value}. Available devices: ${allDevices.map((dev) => dev.name).join(',')}`);
 		}
 
-		set({ currentDevice: _device });
+		// Only update if the device actually changed
+		if (get().currentDevice.value !== device.value) {
+			set({ currentDevice: device });
+		}
 	},
 }));
 

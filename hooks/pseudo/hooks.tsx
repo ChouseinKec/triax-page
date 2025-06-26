@@ -1,7 +1,7 @@
-import { useCallback, ReactElement } from 'react';
+import { useCallback, ReactElement, useMemo } from 'react';
 
 // Components
-import DropdownSelect from '@/components/Select/Dropdown/component';
+import DropdownSelect from '@/components/select/dropdown/component';
 
 // Store
 import usePseudoStore from '@/stores/pseudo/store';
@@ -13,22 +13,17 @@ interface PSEUDO_RENDER {
 
 
 export const usePseudoRender = (): PSEUDO_RENDER => {
-    const { getPseudos, getPseudo, setPseudo } = usePseudoStore();
-
+    const options = usePseudoStore(useCallback(store => store.getPseudos(), []));
+    const currentPseudo = usePseudoStore(useCallback(store => store.getPseudo(), []));
+    const setPseudo = usePseudoStore(useCallback(store => store.setPseudo, []));
 
     const renderPseudoSelect = useCallback<PSEUDO_RENDER['renderPseudoSelect']>(() => {
-        const options = getPseudos();
-        const currentPseudo = getPseudo();
-
         return <DropdownSelect options={options} value={currentPseudo.value} onChange={(value) => setPseudo(value)} />
-
     },
-        [getPseudo, getPseudos, setPseudo]
+        [options, currentPseudo.value, setPseudo]
     );
 
-
-
-    return {
-        renderPseudoSelect,
-    };
+    return useMemo(() => ({
+        renderPseudoSelect
+    }), [renderPseudoSelect]);
 };

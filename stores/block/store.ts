@@ -93,8 +93,9 @@ const useBlockStore = create<BLOCK_EDITOR_STORE>((set, get) => ({
 	 * @returns {STYLE | null} - The current style object, or null if no block is selected.
 	 */
 	getBlockStyles: (id?: string): STYLE | null => {
-		const block = get().getBlock(id);
-		return block?.styles ?? null;
+		const _id = id ?? get().selectedBlock;
+		if (!_id) return null;
+		return get().blocks[_id]?.styles ?? null;
 	},
 
 	setBlockStyle: (device: string, orientation: string, pseudo: string, property: string, value: string, id: string): void => {
