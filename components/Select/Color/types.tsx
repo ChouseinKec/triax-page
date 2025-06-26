@@ -1,12 +1,19 @@
 /**
  * Props for the ColorSelect component.
- * 
- * @param {string} [value] - Current selected color value (e.g., "#FF5733")
- * @param {(value: string) => void} [onChange] - Callback triggered when the color value changes
- * @param {string} [placeholder] - Placeholder text when no color is selected
 */
-export type COLOR_SELECT = {
+export type ColorSelectProps = {
+    /**
+     * The current color value in RGBA format.
+     */
     value?: string;
-    onChange?: (value: string) => void;
+    /**
+    * Placeholder text for the color picker toggle.
+    */
     placeholder?: string;
+    /**
+     * Callback function to handle color changes.
+     * @param value - The new color value in RGBA format.
+     */
+    onChange?: (value: string) => void;
+
 };

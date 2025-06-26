@@ -1,9 +1,9 @@
-import React, { memo, ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 // Style
 import CSS from '@/components/Reveal/Expand/styles.module.css';
 
 // Types
-import { EXPAND_REVEAL } from '@/components/Reveal/Expand/types';
+import { ExpandRevealProps } from '@/components/reveal/expand/types';
 
 
 /**
@@ -13,7 +13,7 @@ import { EXPAND_REVEAL } from '@/components/Reveal/Expand/types';
  * The content is revealed when the component is in the "open" state.
  *
  * @component
- * @param {EXPAND_REVEAL} props - Component props
+ * @param {ExpandRevealProps} props - Component props
  * @param {React.ReactNode} props.children - Content displayed inside the expandable section
  * @returns {ReactElement} - The rendered expand component
  *
@@ -22,7 +22,12 @@ import { EXPAND_REVEAL } from '@/components/Reveal/Expand/types';
  *   <p>Expandable content</p>
  * </expandReveal>
  */
-const ExpandReveal: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): ReactElement => {
+const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): ReactElement => {
+    const {
+        children,
+        title = '',
+    } = props;
+
     const [isOpen, setIsOpen] = useState(false);
 
 
@@ -34,9 +39,13 @@ const ExpandReveal: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): Rea
         setIsOpen((prev) => !prev);
     }, []);
 
+    const _style: React.CSSProperties = {
+        ['--expand-title-before' as string]: title ? `| ${title} ` : '+',
+        ['--expand-title-after' as string]: title ? title : '-',
+    };
 
     return (
-        <div className={CSS.ExpandReveal} data-isopen={isOpen} >
+        <div className={CSS.ExpandReveal} data-isopen={isOpen} style={_style}>
 
             {/* Toggle button to expand/collapse the content */}
             <button className={CSS.ExpandReveal_Button} onClick={handleToggle} />
@@ -51,4 +60,4 @@ const ExpandReveal: React.FC<EXPAND_REVEAL> = ({ children }: EXPAND_REVEAL): Rea
     );
 };
 
-export default memo(ExpandReveal);
+export default ExpandReveal;

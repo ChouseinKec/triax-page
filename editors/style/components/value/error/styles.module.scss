@@ -1,0 +1,18 @@
+@use '../../../../../mixins/mixins.module.scss' as inputMixins;
+
+.Error {
+	@include inputMixins.components--button;
+
+	color: var(--color-white);
+	background: var(--color-error);
+	filter: brightness(1.4);
+
+	&:hover {
+		background: var(--color-error--dark);
+		filter: brightness(1);
+	}
+}
+
+.ErrorMessage {
+	font-size: var(--font-size-lg);
+}

@@ -1,4 +1,4 @@
-@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false) {
+@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false, $error: false) {
 	@if $hover {
 		&:hover {
 			background: var(--color-hover);
@@ -9,8 +9,12 @@
 		&:focus {
 			background: var(--color-focus);
 			color: var(--color-white);
+			* {
+				color: var(--color-white);
+			}
+
 			@if $svg {
-				svg path {
+				svg *[fill]:not([fill='none']) {
 					fill: var(--color-white);
 				}
 			}
@@ -21,6 +25,10 @@
 		&:active {
 			background: var(--color-active);
 			color: var(--color-white);
+
+			* {
+				color: var(--color-white);
+			}
 			@if $svg {
 				svg path {
 					fill: var(--color-white);
@@ -35,7 +43,7 @@
 			background: var(--color-selected);
 			box-shadow: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
 			@if $svg {
-				svg path {
+				svg *[fill]:not([fill='none']) {
 					fill: var(--color-white);
 				}
 			}
@@ -55,6 +63,12 @@
 			}
 		}
 	}
+
+	@if $error {
+		&[data-iserror='true'] {
+			border-bottom: 3px solid var(--color-error);
+		}
+	}
 }
 
 @mixin components--container($background: true) {
@@ -71,7 +85,7 @@
 }
 
 @mixin components--button {
-	min-height: 25px;
+	height: 25px;
 	padding: var(--size-sm);
 
 	border: none;
@@ -83,7 +97,7 @@
 	text-transform: uppercase;
 	cursor: pointer;
 
-	@include states($selected: false, $open: true, $svg: true);
+	@include states($open: true, $svg: true);
 
 	&:hover {
 		box-shadow: var(--shadow-inset);
@@ -99,7 +113,7 @@
 }
 
 @mixin components--input {
-	min-height: 25px;
+	height: 25px;
 	padding: var(--size-sm) var(--size-md);
 
 	border: none;
@@ -107,9 +121,12 @@
 	border-radius: var(--size-sm);
 	background: var(--color-white);
 	box-shadow: var(--shadow-inset);
-	font-size: var(--font-size-md);
 
-	@include states($selected: false);
+	* {
+		font-size: var(--font-size-md);
+	}
+
+	@include states($error: true);
 }
 
 @mixin components--option {
@@ -129,11 +146,15 @@
 	text-transform: uppercase;
 
 	cursor: pointer;
-	@include states;
+	@include states($selected: true, $svg: true);
 
 	svg {
-		width: 15px;
-		height: 15px;
+		max-width: 15px;
+		max-height: 15px;
+
+		*[fill]:not([fill='none']) {
+			fill: var(--color-black);
+		}
 	}
 }
 
@@ -146,16 +167,14 @@
 		margin-left: 5px;
 		display: block;
 
-		// position: absolute;
-		// top: 53%;
-		// right: var(--size-sm);
-
 		transform: translateY(-50%);
 
 		clip-path: polygon(50% 100%, 0 0, 100% 0);
 		background: var(--color-black);
 
 		transition: all 0.5s;
+		position: absolute;
+		right: 5%;
 	}
 
 	&[data-isopen='true'] {

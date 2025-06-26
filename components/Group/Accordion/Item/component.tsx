@@ -4,7 +4,7 @@ import React, { memo, ReactElement } from 'react';
 import CSS from '@/components/Group/Accordion/Item/styles.module.css';
 
 // Type 
-import { ACCORDION_GROUP_ITEM } from '@/components/Group/Accordion/Item/types';
+import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/Item/types';
 
 /**
  * AccordionItem Component

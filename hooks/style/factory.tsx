@@ -1,354 +1,252 @@
-import { useCallback, ReactElement, useRef, useEffect } from 'react';
+import { useCallback, ReactElement } from 'react';
 
-// Components
-import LengthInput from '@/components/Input/Length/component';
-import InputGroup from '@/components/Group/Input/component';
-import NumberInput from '@/components/Input/Number/component';
-import ColorSelect from '@/components/Select/Color/component';
-import RadioSelect from '@/components/Select/Radio/component';
-import DropdownSelect from '@/components/Select/Dropdown/component';
-import PositionSelect from '@/components/Select/Position/component';
-import FlexView from '@/components/View/Flex/component';
-import StringInput from '@/components/Input/String/component';
-import VariantInput, { VariantInputRef } from '@/components/Input/Variant/component';
+// Constantss
+import { CSSPropertyDefs } from '@/constants/style/property'
 
 // Types
-import { POSITION_SELECT_CORNER, POSITION_SELECT_SIDE } from '@/components/Select/Position/types';
+import type { CSSProperties } from '@/types/style/property';
+import type { Side, Corner } from '@/components/select/position/types';
 
-// Utilities
-import { getStyleOptions } from '@/utilities/style'
-import { devLog } from '@/utilities/dev';
-
-// Constants
-import { STYLES_CONSTANTS_KEY } from '@/editors/style/constants/styles';
+// Components
+import Value from '@/editors/style/components/value/component';
+import FlexView from '@/editors/style/components/view/flex/component';
+import BackgroundView from '@/editors/style/components/view/background/component';
+import PositionSelect from '@/components/select/position/component';
+import TextView from '@/editors/style/components/view/text/component';
+import PositionView from '@/editors/style/components/view/position/component';
+import SizeView from '@/editors/style/components/view/size/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
-import { useToolbar } from '@/contexts/ToolbarContext';
 
-interface STYLE_RENDER {
+interface StyleFactoryProps {
+	renderValue: (propertyName: CSSProperties) => ReactElement | null;
 	renderFlexView: () => ReactElement;
 	renderGridView: () => ReactElement;
-	renderLengthInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
-	renderInputGroup: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
-	renderNumberInput: (style: STYLES_CONSTANTS_KEY) => ReactElement;
-	renderDropdownSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
-	renderColorSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
-	renderRadioSelect: (style: STYLES_CONSTANTS_KEY) => ReactElement;
-	renderPositionSelect: (onChangeSide: (value: POSITION_SELECT_SIDE) => void, onChangeCorner: (value: POSITION_SELECT_CORNER) => void, areCornersVisible?: boolean,) => ReactElement;
-
-	renderURLInput: (style: STYLES_CONSTANTS_KEY, prefix?: string, suffix?: string) => ReactElement;
-	renderVariantInput: (style: STYLES_CONSTANTS_KEY, separator: string) => ReactElement;
+	renderBackgroundView: () => ReactElement;
+	renderTextView: () => ReactElement;
+	renderPositionView: () => ReactElement;
+	renderSizeView: () => ReactElement;
+	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, isCornerSelectable: boolean, isCenterSelectable: boolean) => ReactElement;
 }
 
-/**
- * A custom hook that provides helper functions for rendering style-related components.
- * These helpers prevent duplication and provide a consistent way to render inputs, selects, and dynamic groups.
- * 
- * @returns {Object} An object containing helper functions for rendering style inputs (renderInputGroup, renderNumberInput, etc.)
- * 
- * @example
- * const { renderLengthInput, getStyle } = useStyleFactory();
- * 
- * // In your component:
- * renderLengthInput('width');
- */
-export const useStyleFactory = (): STYLE_RENDER => {
+
+export const useStyleFactory = (): StyleFactoryProps => {
 	const { getStyle, setStyle } = useStyleManager();
 
-	const getOptions = useCallback((style: STYLES_CONSTANTS_KEY) => {
-		return getStyleOptions(style)
-	}, [getStyleOptions]
-	)
 
-	const renderFlexView = useCallback<STYLE_RENDER['renderFlexView']>(() => {
-		return (
-			<FlexView
-				styles={{
-					display: 'flex',
-					flexDirection: getStyle('flexDirection'),
-					flexWrap: getStyle('flexWrap'),
-					justifyContent: getStyle('justifyContent'),
-					alignItems: getStyle('alignItems'),
-					alignContent: getStyle('alignContent'),
-				}}
-			/>
-		);
-	},
-		[getStyle]
+	const handleValueChange = useCallback(
+		(propertyName: CSSProperties, value: string) => {
+			// If the value is not a string, log an error
+			if (typeof value !== 'string') {
+				console.error(`Invalid value for property ${propertyName}:`, value);
+				return;
+			}
+
+			// If the value is an empty string, reset the style
+			if (value === '') {
+				setStyle(propertyName, '');
+				return;
+			}
+
+			// Set the style with the new value
+			setStyle(propertyName, value);
+		},
+		[setStyle]
 	);
 
-	const renderGridView = useCallback<STYLE_RENDER['renderGridView']>(() => {
-		return (
-			<FlexView
-				styles={{
-					display: 'grid',
-					flexDirection: getStyle('flexDirection'),
-					justifyContent: getStyle('justifyContent'),
-					justifyItems: getStyle('justifyItems'),
-					alignItems: getStyle('alignItems'),
-					alignContent: getStyle('alignContent'),
-					gridAutoFlow: getStyle('gridAutoFlow'),
-					gridTemplateColumns: getStyle('gridTemplateColumns'),
-					gridTemplateRows: getStyle('gridTemplateRows'),
-					gridAutoColumns: getStyle('gridAutoColumns'),
-					gridAutoRows: getStyle('gridAutoRows'),
-				}}
-			/>
-		);
-	},
-		[getStyle]
-	);
+	const renderValue = useCallback<StyleFactoryProps['renderValue']>((propertyName) => {
+		const value = getStyle(propertyName);
+		const property = CSSPropertyDefs[propertyName];
 
-	/**
-	 * Renders a length input for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @returns {React.ReactElement} The rendered length input
-	 */
-	const renderLengthInput = useCallback<STYLE_RENDER['renderLengthInput']>((style) => {
-		const options = getOptions(style);
-		if (!options) {
-			devLog.error(`No options available for style '${style}'`);
-			return <></>
+		if (!property) {
+			console.warn(`Property ${propertyName} is not defined in CSSPropertyDefs`);
+			return null;
 		}
 
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
+		const onChange = (val: string) => handleValueChange(propertyName, val);
 
-
-		return (
-			<LengthInput
-				value={getStyle(style)}
-				onChange={handleChange}
-				options={options}
-			/>
-		);
+		return <Value value={value} property={property} onChange={onChange} />;
 	},
-		[getStyle, setStyle, getOptions]
+		[getStyle, handleValueChange]
 	);
 
-	/**
-	 * Renders a dynamic value group for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @param {string} separator - The separator used to split multi-values
-	 * @returns {React.ReactElement} The rendered input group or error fallback
-	 */
-	const renderInputGroup = useCallback<STYLE_RENDER['renderInputGroup']>((style, separator) => {
-		const options = getOptions(style);
-		if (!options) {
-			devLog.error(`No options available for style '${style}'`);
-			return <></>
-		}
+	const renderFlexView = useCallback<StyleFactoryProps['renderFlexView']>(() => {
+		return <FlexView
 
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
+			styles={{
+				display: 'flex',
+				flexDirection: getStyle('flex-direction'),
+				flexWrap: getStyle('flex-wrap'),
+				justifyContent: getStyle('justify-content'),
+				alignItems: getStyle('align-items'),
+				alignContent: getStyle('align-content'),
+				direction: getStyle('direction'),
+			}}
 
-
-
-		return (
-			<InputGroup
-				value={getStyle(style)}
-				separator={separator}
-				onChange={handleChange}
-				options={options}
-			/>
-		);
-	},
-		[getStyle, setStyle, getOptions]
+		/>;
+	}, [getStyle]
 	);
 
-	/**
-	 * Renders a number input for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @returns {React.ReactElement} The rendered number input
-	 */
-	const renderNumberInput = useCallback<STYLE_RENDER['renderNumberInput']>((style) => {
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
-
-		return (
-			<NumberInput
-				value={getStyle(style)}
-				onChange={handleChange}
-			/>
-		);
-	},
-		[getStyle, setStyle]
+	const renderGridView = useCallback<StyleFactoryProps['renderGridView']>(() => {
+		return <FlexView
+			styles={{
+				display: 'grid',
+				flexDirection: getStyle('flex-direction'),
+				justifyContent: getStyle('justify-content'),
+				justifyItems: getStyle('justify-items'),
+				alignItems: getStyle('align-items'),
+				alignContent: getStyle('align-content'),
+				gridAutoFlow: getStyle('grid-auto-flow'),
+				gridTemplateColumns: getStyle('grid-template-columns'),
+				gridTemplateRows: getStyle('grid-template-rows'),
+				gridAutoColumns: getStyle('grid-auto-columns'),
+				gridAutoRows: getStyle('grid-auto-rows'),
+				direction: getStyle('direction'),
+			}}
+		/>;
+	}, [getStyle]
 	);
 
-	/**
-	 * Renders a dropdown select for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @returns {React.ReactElement} The rendered dropdown select
-	 */
-	const renderDropdownSelect = useCallback<STYLE_RENDER['renderDropdownSelect']>((style) => {
-		const options = getOptions(style);
-		if (!options) {
-			devLog.error(`No options available for style '${style}'`);
-			return <></>
-		}
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
+	const renderBackgroundView = useCallback<StyleFactoryProps['renderBackgroundView']>(() => {
+		return <BackgroundView
+			styles={{
+				backgroundColor: getStyle('background-color'),
+				backgroundImage: getStyle('background-image'),
+				backgroundSize: getStyle('background-size'),
+				backgroundPosition: getStyle('background-position'),
+				backgroundRepeat: getStyle('background-repeat'),
+				backgroundAttachment: getStyle('background-attachment'),
+				backgroundClip: getStyle('background-clip'),
+				backgroundOrigin: getStyle('background-origin'),
 
-		return (
-			<DropdownSelect
-				value={getStyle(style)}
-				onChange={handleChange}
-				options={options}
-			/>
-		);
-	},
-		[getStyle, setStyle, getOptions]
+				borderTopLeftRadius: getStyle('border-top-left-radius'),
+				borderTopRightRadius: getStyle('border-top-right-radius'),
+				borderBottomLeftRadius: getStyle('border-bottom-left-radius'),
+				borderBottomRightRadius: getStyle('border-bottom-right-radius'),
+				borderTopStyle: getStyle('border-top-style'),
+				borderTopWidth: getStyle('border-top-width'),
+				borderTopColor: getStyle('border-top-color'),
+				borderRightStyle: getStyle('border-right-style'),
+				borderRightWidth: getStyle('border-right-width'),
+				borderRightColor: getStyle('border-right-color'),
+				borderBottomStyle: getStyle('border-bottom-style'),
+				borderBottomWidth: getStyle('border-bottom-width'),
+				borderBottomColor: getStyle('border-bottom-color'),
+				borderLeftStyle: getStyle('border-left-style'),
+				borderLeftWidth: getStyle('border-left-width'),
+				borderLeftColor: getStyle('border-left-color'),
+				outlineStyle: getStyle('outline-style'),
+				outlineWidth: getStyle('outline-width'),
+				outlineColor: getStyle('outline-color'),
+			}} />
+	}, [getStyle]
 	);
 
-	/**
-	 * Renders a color select input for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @returns {React.ReactElement} The rendered color select
-	 */
-	const renderColorSelect = useCallback<STYLE_RENDER['renderColorSelect']>((style) => {
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
+	const renderTextView = useCallback<StyleFactoryProps['renderTextView']>(() => {
+		return <TextView
+			styles={{
+				fontSize: getStyle('font-size'),
+				fontWeight: getStyle('font-weight'),
+				lineHeight: getStyle('line-height'),
+				fontFamily: getStyle('font-family'),
+				color: getStyle('color'),
+				textAlign: getStyle('text-align'),
+				fontStyle: getStyle('font-style'),
+				textTransform: getStyle('text-transform'),
+				textDecoration: getStyle('text-decoration'),
 
-		return (
-			<ColorSelect
-				placeholder="Color"
-				value={getStyle(style)}
-				onChange={handleChange}
-			/>
-		);
-	},
-		[setStyle, getStyle]
+				letterSpacing: getStyle('letter-spacing'),
+				textIndent: getStyle('text-indent'),
+				wordBreak: getStyle('word-break'),
+				lineBreak: getStyle('line-break'),
+				whiteSpace: getStyle('white-space'),
+				textOverflow: getStyle('text-overflow'),
+				writingMode: getStyle('writing-mode'),
+				textOrientation: getStyle('text-orientation'),
+
+				columnCount: getStyle('column-count'),
+				columnWidth: getStyle('column-width'),
+				columnGap: getStyle('column-gap'),
+				columnRuleWidth: getStyle('column-rule-width'),
+				columnRuleStyle: getStyle('column-rule-style'),
+				columnRuleColor: getStyle('column-rule-color'),
+				breakBefore: getStyle('break-before'),
+				breakInside: getStyle('break-inside'),
+				breakAfter: getStyle('break-after'),
+				columnSpan: getStyle('column-span'),
+				columnFill: getStyle('column-fill'),
+			}}
+		/>;
+	}, [getStyle]
 	);
 
-	/**
-	 * Renders a radio select input for a given style property
-	 * @param {STYLES_CONSTANTS_KEY} style - The style property to render
-	 * @returns {React.ReactElement} The rendered radio select
-	 */
-	const renderRadioSelect = useCallback<STYLE_RENDER['renderRadioSelect']>((style) => {
-		const options = getOptions(style);
-		if (!options) {
-			devLog.error(`No options available for style '${style}'`);
-			return <></>
-		}
+	const renderPositionView = useCallback<StyleFactoryProps['renderPositionView']>(() => {
+		return <PositionView
+			styles={{
+				position: getStyle('position'),
+				top: getStyle('top'),
+				right: getStyle('right'),
+				bottom: getStyle('bottom'),
+				left: getStyle('left'),
 
-		const handleChange = useCallback((value: string) => {
-			setStyle(style, value);
-		}, [style, setStyle])
+				paddingTop: getStyle('padding-top'),
+				paddingRight: getStyle('padding-right'),
+				paddingBottom: getStyle('padding-bottom'),
+				paddingLeft: getStyle('padding-left'),
 
+				marginTop: getStyle('margin-top'),
+				marginRight: getStyle('margin-right'),
+				marginBottom: getStyle('margin-bottom'),
+				marginLeft: getStyle('margin-left'),
 
-		return (
-			<RadioSelect
-				options={options}
-				value={getStyle(style)}
-				onChange={handleChange}
-			/>
-		);
-	},
-		[setStyle, getStyle, getOptions]
+				zIndex: getStyle('z-index'),
+			}}
+		/>;
+	}, [getStyle]
 	);
 
-	/**
-	 * Renders a position select component for choosing layout positions
-	 * @param {boolean} [areCornersVisible=false] - Whether to show corner positions (top-left, top-right, etc.)
-	 * @returns {React.ReactElement} The rendered position select component or error fallback UI
-	 */
-	const renderPositionSelect = useCallback<STYLE_RENDER['renderPositionSelect']>((onChangeSide, onChangeCorner, areCornersVisible = false,) => {
+	const renderPositionSelect = useCallback<StyleFactoryProps['renderPositionSelect']>((setCurrentSide, setCurrentCorner, isCornerSelectable, isCenterSelectable) => {
 		return (
 			<PositionSelect
-				onChangeSide={onChangeSide}
-				onChangeCorner={onChangeCorner}
-				areCornersVisible={areCornersVisible}
+				onChangeSide={setCurrentSide}
+				onChangeCorner={setCurrentCorner}
+				isCornerSelectable={isCornerSelectable}
+				isCenterSelectable={isCenterSelectable}
 			/>
 		);
 	},
-		[]
+		[handleValueChange]
 	);
 
-	const renderURLInput = useCallback<STYLE_RENDER['renderURLInput']>((style, prefix = '', suffix = '') => {
-		let value = getStyle(style);
-		value = value.replace(prefix, '').replace(suffix, '');
+	const renderSizeView = useCallback<StyleFactoryProps['renderSizeView']>(() => {
+		return <SizeView
+			styles={{
+				width: getStyle('width'),
+				minWidth: getStyle('min-width'),
+				maxWidth: getStyle('max-width'),
 
-		const handleChange = useCallback((value: string) => {
-			const _value = value.length === 0 ? '' : `${prefix}${value}${suffix}`;
-			setStyle(style, _value)
-		}, [style, setStyle, prefix, suffix])
+				height: getStyle('height'),
+				minHeight: getStyle('min-height'),
+				maxHeight: getStyle('max-height'),
 
-		return (
-			<StringInput
-				value={value}
-				onChange={handleChange}
-				pattern={'url'}
-			/>
-		);
-	},
-		[setStyle, getStyle]
-	);
+				aspectRatio: getStyle('aspect-ratio'),
+				overflow: getStyle('overflow'),
+				objectFit: getStyle('object-fit'),
+			}} />;
 
-
-	// ! Find a better solution for the internal useRef and useEffect.
-	// ! Works for now,but not best practice.Create a wrapper component or custom hook
-	const renderVariantInput = useCallback<STYLE_RENDER['renderVariantInput']>((style, separator) => {
-		const options = getOptions(style);
-
-		if (!options) {
-			devLog.error(`No options available for style '${style}'`);
-			return <></>
-		}
-
-		const variantInputRef = useRef<VariantInputRef>(null);
-		const { addButton } = useToolbar();
-
-		useEffect(() => {
-			addButton(
-				<button
-					key={`${style}-variant-cycle`}
-					onClick={() => variantInputRef.current?.cycleVariant()}
-					title="Change Syntax"
-				>
-					⟳
-				</button>
-			);
-		}, []);
-
-
-		const handleChange = useCallback((value: string) => {
-			return setStyle(style, value);
-		}, [style, setStyle])
-
-
-		return (
-			<VariantInput
-				ref={variantInputRef}
-				value={getStyle(style)}
-				onChange={handleChange}
-				separator={separator}
-				option={options[0]}
-			/>
-
-		);
-	},
-		[setStyle, getStyle]
+	}, [getStyle]
 	);
 
 	return {
+		renderValue,
 		renderFlexView,
 		renderGridView,
-		renderInputGroup,
-		renderNumberInput,
-		renderDropdownSelect,
-		renderColorSelect,
-		renderRadioSelect,
-		renderLengthInput,
+		renderBackgroundView,
+		renderTextView,
+		renderPositionView,
 		renderPositionSelect,
-		renderURLInput,
-		renderVariantInput
+		renderSizeView,
 	};
 
 

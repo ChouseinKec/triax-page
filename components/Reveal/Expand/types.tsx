@@ -1,8 +1,9 @@
 /**
  * Props for the ExpandReveal component.
- * 
- * @param {React.ReactNode} children - Content to be revealed when expanded
 */
-export type EXPAND_REVEAL = {
+export type ExpandRevealProps = {
+    /** The content to be revealed */
     children: React.ReactNode;
+    /** Optional title for the expand section */
+    title?: string;
 };

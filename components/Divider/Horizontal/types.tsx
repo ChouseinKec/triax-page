@@ -3,6 +3,7 @@
  * 
  * @param {React.ReactNode} children - Content to be revealed when expanded
 */
-export type HORIZONTAL_DIVIDER = {
+export type HorizontalDividerProps = {
     type?: 'straight' | 'bracket';
+    className?: string;
 };
