@@ -1,10 +1,10 @@
 import React, { memo, ReactElement } from 'react';
 
 // Styles 
-import CSS from '@/components/Group/Accordion/Item/styles.module.css';
+import CSS from './styles.module.css';
 
 // Type 
-import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/Item/types';
+import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/item/types';
 
 /**
  * AccordionItem Component

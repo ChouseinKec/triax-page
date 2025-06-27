@@ -4,7 +4,7 @@ import { memo, ReactElement, useState, useMemo, useCallback } from 'react';
 import CSS from './styles.module.css';
 
 // Components
-import Option from '@/components/select/options/Option/component';
+import Option from '@/components/select/options/option/component';
 
 // Types
 import type { OptionsSelectProps } from './types';
@@ -151,6 +151,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                                             value={option.value}
                                             isSelected={value.length > 0 && option.name === value}
                                             onChange={handleChange}
+                                            type={option.type}
                                         />
                                     )
                                 }) ?? []}
@@ -172,6 +173,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                     key={index}
                     isSelected={value === option.name}
                     onChange={handleChange}
+                    type={option.type}
                 />
             )
         }));

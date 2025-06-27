@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 import { PositionSelectProps, Positions, Side, Corner } from '@/components/select/position/types';
-import CSS from '@/components/Select/Position/styles.module.css';
+import CSS from './styles.module.css';
 
 const POSITIONS: Positions[] = [
     'top-left',

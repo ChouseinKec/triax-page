@@ -1,7 +1,7 @@
 import React, { memo, ReactElement } from 'react';
 
 // Styles
-import CSS from '@/components/Select/Radio/styles.module.css';
+import CSS from './styles.module.css';
 
 // Components
 import Options from '@/components/select/options/component';

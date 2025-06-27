@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 
 // Styles
-import CSS from '@/components/Reveal/Dropdown/styles.module.css';
+import CSS from './styles.module.css';
 
 // Types
 import { DropdownRevealProps } from '@/components/reveal/dropdown/types';

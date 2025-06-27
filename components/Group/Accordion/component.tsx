@@ -1,11 +1,10 @@
-
 import React, { memo, ReactElement, useCallback, useState } from 'react';
 
 // Style
-import CSS from '@/components/Group/Accordion/styles.module.css';
+import CSS from './styles.module.css';
 
 // Component
-import Item from '@/components/group/accordion/Item/component';
+import Item from '@/components/group/accordion/item/component';
 
 // Type
 import { ACCORDION_GROUP } from '@/components/group/accordion/types';

@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useState } from 'react';
 // Style
-import CSS from '@/components/Reveal/Expand/styles.module.css';
+import CSS from './styles.module.css';
 
 // Types
 import { ExpandRevealProps } from '@/components/reveal/expand/types';
