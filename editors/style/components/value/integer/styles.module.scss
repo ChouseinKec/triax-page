@@ -5,7 +5,7 @@
 
 	position: relative;
 
-	[class$='DropdownReveal'] {
+	[class*='DropdownReveal'] {
 		position: absolute;
 		right: 0;
 		max-width: 50px;
