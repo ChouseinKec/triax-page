@@ -13,7 +13,7 @@ import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
 import { usePositionLayout } from '@/editors/style/components/layout/hooks/position';
 import { useFontLayout } from '@/editors/style/components/layout/hooks/font';
 import { useBackgroundLayout } from '@/editors/style/components/layout/hooks/background';
-import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
+// import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
 
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 

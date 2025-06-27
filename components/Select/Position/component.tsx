@@ -103,7 +103,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
 
 
         setCurrentPosition(value); // Update the current selected position
-    }, [onChangeCorner, onChangeSide, isPositionCorner, isPositionSide]
+    }, [onChangeSide, onChangeCorner, isCenterSelectable]
     );
 
 
@@ -118,7 +118,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
                 data-value={value}
             />
         ))
-    }, [handleChange, isPositionSelected]);
+    }, [handleChange]);
 
     return (
         <div className={CSS.PositionSelect}>

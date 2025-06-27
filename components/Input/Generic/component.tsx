@@ -116,7 +116,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
     const handleBlur = useCallback(() => {
         onBlur();
         handleReset();
-    }, [handleReset]
+    }, [handleReset, onBlur]
     );
 
 

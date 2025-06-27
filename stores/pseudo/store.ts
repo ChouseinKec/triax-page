@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import { PSEUDO_STORE, PSEUDO } from '@/stores/pseudo/type';
+import { usePseudoStoreProps, Pseudo } from '@/stores/pseudo/type';
 
 // Defaults
-const DEFAULT_PSEUDOS: PSEUDO[] = [
+const DEFAULT_PSEUDOS: Pseudo[] = [
 	{ name: 'default', value: 'default' },
 	{ name: 'hover', value: 'hover' },
 	{ name: 'active', value: 'active' },
@@ -14,7 +14,7 @@ const DEFAULT_PSEUDOS: PSEUDO[] = [
  * Zustand store for managing page editor state, including device, orientation, and pseudo state.
  * Provides functions for selecting and manipulating the current device, orientation, and pseudo classes.
  */
-const usePseudoStore = create<PSEUDO_STORE>()((set, get) => ({
+const usePseudoStore = create<usePseudoStoreProps>()((set, get) => ({
 	/**
 	 * List of all available pseudos.
 	 */
@@ -28,16 +28,16 @@ const usePseudoStore = create<PSEUDO_STORE>()((set, get) => ({
 	/**
 	 * Retrieves all available pseudos.
 	 *
-	 * @returns {PSEUDO[]} - The list of all pseudos.
+	 * @returns {Pseudo[]} - The list of all pseudos.
 	 */
-	getPseudos: (): PSEUDO[] => get().allPseudos,
+	getPseudos: (): Pseudo[] => get().allPseudos,
 
 	/**
 	 * Retrieves the currently selected pseudo class.
 	 *
-	 * @returns {PSEUDO} - The current pseudo class object.
+	 * @returns {Pseudo} - The current pseudo class object.
 	 */
-	getPseudo: (): PSEUDO => get().currentPseudo,
+	getPseudo: (): Pseudo => get().currentPseudo,
 
 	/**
 	 * Sets the current pseudo class based on the provided value.

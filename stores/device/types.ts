@@ -6,7 +6,7 @@
  * @param {string} media - The associated media query for the device.
  * @param {string} orientation - The default orientation for this device.
  */
-export type DEVICE = {
+export type Device = {
     name: string;
     value: string;
     media: string;
@@ -16,19 +16,19 @@ export type DEVICE = {
 /**
  * Zustand store interface for managing device state.
  *
- * @param {DEVICE[]} allDevices - A list of all available devices.
- * @param {DEVICE} currentDevice - The currently selected device.
+ * @param {Device[]} allDevices - A list of all available devices.
+ * @param {Device} currentDevice - The currently selected device.
 
- * @param {() => DEVICE[]} getDevices - Returns all available devices.
- * @param {() => DEVICE} getDevice - Returns the current device.
+ * @param {() => Device[]} getDevices - Returns all available devices.
+ * @param {() => Device} getDevice - Returns the current device.
  * @param {(value: string) => void} setDevice - Sets the current device by value.
  */
-export type DEVICE_STORE = {
-    allDevices: DEVICE[];
-    currentDevice: DEVICE;
+export type useDeviceStoreProps = {
+    allDevices: Device[];
+    currentDevice: Device;
    
-    getDevices: () => DEVICE[];
-    getDevice: () => DEVICE;
+    getDevices: () => Device[];
+    getDevice: () => Device;
     setDevice: (value: string) => void;
 
 };

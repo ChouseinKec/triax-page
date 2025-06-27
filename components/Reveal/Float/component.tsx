@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, memo } from "react";
 
 // Styles
-import CSS from "@/components/Reveal/Float/styles.module.css";
+import CSS from "./styles.module.css";
 
 // Types
 import { FloatRevealProps } from "@/components/reveal/float/types";

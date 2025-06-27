@@ -1,11 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import { DEVICE_STORE, DEVICE } from '@/stores/device/types';
-import { devLog } from '@/utilities/dev';
+import { useDeviceStoreProps, Device } from '@/stores/device/types';
 
 // Defaults
-const DEFAULT_DEVICES: DEVICE[] = [
+const DEFAULT_DEVICES: Device[] = [
 	{ name: 'default', value: 'default', media: 'min-width: 0px', orientation: 'portrait' },
 	{ name: 'mobile', value: 'mobile', media: 'max-width: 767px', orientation: 'portrait' }, // mobile in portrait
 	{ name: 'tablet', value: 'tablet', media: 'min-width: 768px; max-width: 1024px', orientation: 'landscape' }, // tablet in landscape
@@ -33,7 +32,7 @@ function getNumericValue(query: string): number {
  * Zustand store for managing  device state.
  * Provides functions for selecting and manipulating the current device.
  */
-const useDeviceStore = create<DEVICE_STORE>()((set, get) => ({
+const useDeviceStore = create<useDeviceStoreProps>()((set, get) => ({
 	/**
 	 * The currently selected device.
 	 */
@@ -47,9 +46,9 @@ const useDeviceStore = create<DEVICE_STORE>()((set, get) => ({
 	/**
 	 * Retrieves and sorts all available devices by their media query values.
 	 *
-	 * @returns {DEVICE[]} - The sorted list of devices.
+	 * @returns {Device[]} - The sorted list of devices.
 	 */
-	getDevices: (): DEVICE[] => {
+	getDevices: (): Device[] => {
 		const devices = get().allDevices;
 		return devices.sort((a, b) => {
 			const aValue = getNumericValue(a.media);
@@ -61,9 +60,9 @@ const useDeviceStore = create<DEVICE_STORE>()((set, get) => ({
 	/**
 	 * Retrieves the currently selected device.
 	 *
-	 * @returns {DEVICE} - The current device object.
+	 * @returns {Device} - The current device object.
 	 */
-	getDevice: (): DEVICE => get().currentDevice,
+	getDevice: (): Device => get().currentDevice,
 
 	/**
 	 * Sets the current device based on the provided value.

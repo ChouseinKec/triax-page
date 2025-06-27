@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 // Style
-import CSS from '@/components/Divider/Horizontal/styles.module.css';
+import CSS from './styles.module.css';
 
 // Types
 import { HorizontalDividerProps } from '@/components/divider/horizontal/types';

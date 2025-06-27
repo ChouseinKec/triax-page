@@ -4,7 +4,7 @@
  * @param {string} name - The display name of the orientation (e.g., 'Portrait').
  * @param {string} value - The internal value representing the orientation.
  */
-export type ORIENTATION = {
+export type Orientation = {
     name: string;
     value: string;
 };
@@ -13,19 +13,19 @@ export type ORIENTATION = {
  * Zustand store interface for managing the page editor state.
  * Provides device, orientation, and pseudo context for style editing.
  *
- * @param {ORIENTATION[]} allOrientations - A list of all available orientations.
- * @param {ORIENTATION} currentOrientation - The currently selected orientation.
+ * @param {Orientation[]} allOrientations - A list of all available orientations.
+ * @param {Orientation} currentOrientation - The currently selected orientation.
  *
- * @param {() => ORIENTATION[]} getOrientations - Returns all available orientations.
- * @param {() => ORIENTATION} getOrientation - Returns the current orientation.
+ * @param {() => Orientation[]} getOrientations - Returns all available orientations.
+ * @param {() => Orientation} getOrientation - Returns the current orientation.
  * @param {(value: string) => void} setOrientation - Sets the current orientation by value.
  *
  */
-export type ORIENTATION_STORE = {
-    allOrientations: ORIENTATION[];
-    currentOrientation: ORIENTATION;
+export type useOrientationStoreProps = {
+    allOrientations: Orientation[];
+    currentOrientation: Orientation;
 
-    getOrientations: () => ORIENTATION[];
-    getOrientation: () => ORIENTATION;
+    getOrientations: () => Orientation[];
+    getOrientation: () => Orientation;
     setOrientation: (value: string) => void;
 };

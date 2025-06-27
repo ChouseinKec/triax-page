@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import { ORIENTATION_STORE, ORIENTATION } from '@/stores/orientation/type';
+import { useOrientationStoreProps, Orientation } from '@/stores/orientation/type';
 
 // Defaults
-const DEFAULT_ORIENTATIONS: ORIENTATION[] = [
+const DEFAULT_ORIENTATIONS: Orientation[] = [
 	{ name: 'default', value: 'default' },
 	{ name: 'portrait', value: 'portrait' },
 	{ name: 'landscape', value: 'landscape' },
@@ -14,7 +14,7 @@ const DEFAULT_ORIENTATIONS: ORIENTATION[] = [
  * Zustand store for managing page editor state, including device, orientation, and pseudo state.
  * Provides functions for selecting and manipulating the current device, orientation, and pseudo classes.
  */
-const useOrientationStore = create<ORIENTATION_STORE>()((set, get) => ({
+const useOrientationStore = create<useOrientationStoreProps>()((set, get) => ({
 	/**
 	 * List of all available orientations.
 	 */
@@ -28,16 +28,16 @@ const useOrientationStore = create<ORIENTATION_STORE>()((set, get) => ({
 	/**
 	 * Retrieves all available orientations.
 	 *
-	 * @returns {ORIENTATION[]} - The list of all orientations.
+	 * @returns {Orientation[]} - The list of all orientations.
 	 */
-	getOrientations: (): ORIENTATION[] => get().allOrientations,
+	getOrientations: (): Orientation[] => get().allOrientations,
 
 	/**
 	 * Retrieves the currently selected orientation.
 	 *
-	 * @returns {ORIENTATION} - The current orientation object.
+	 * @returns {Orientation} - The current orientation object.
 	 */
-	getOrientation: (): ORIENTATION => get().currentOrientation,
+	getOrientation: (): Orientation => get().currentOrientation,
 
 	/**
 	 * Sets the current orientation based on the provided value.

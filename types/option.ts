@@ -9,7 +9,7 @@ export interface OptionData {
 	/** The value of the option (used for selection) */
 	value: string;
 	/** The type of the option, e.g., 'keyword', 'function', 'dimension', 'color', 'number' etc. */
-	type: CSSTokenGroups;
+	type?: CSSTokenGroups;
 	/** Optional category to group the option under */
 	category?: string;
 	/** Optional icon for the option (SVG element) */
