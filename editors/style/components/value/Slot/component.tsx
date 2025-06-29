@@ -27,7 +27,9 @@ import { getValueType } from '@/utilities/style/value';
  * @param props - SlotProps containing value, options, and onChange callback
  * @returns ReactElement - The rendered input for the slot
  */
-const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
+const Slot: React.FC<SlotProps> = (props: SlotProps) => {
+    const { value, options, onChange } = props;
+    
     /**
      * Compute all unique types available in the options.
      */

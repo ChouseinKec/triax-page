@@ -215,12 +215,17 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 	const testTokens = currentTokens.slice();
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
+	const matches = validValueSet.find((value) => value.startsWith(testString));
 
 	if (propertyName === 'text-shadow') {
 		// console.log(validValueSet);
-		// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
+
+		// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${matches}`);
+		// console.log(matches);
 	}
-	return new Set(validValueSet).has(testString);
+
+	if (!matches) return false;
+	return true;
 }
 
 /**

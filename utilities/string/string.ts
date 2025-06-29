@@ -83,11 +83,12 @@ function splitAdvanced(input: string, separators: string | string[]): string[] {
 function joinAdvanced(inputs: string[], separators: string[]): string {
 	if (!separators.length) return inputs.join(' ');
 	let result = '';
+
 	for (let i = 0; i < inputs.length; i++) {
 		result += inputs[i];
 		if (separators[i]) result += separators[i];
 	}
-	return result;
+	return result.trim();
 }
 
 /**

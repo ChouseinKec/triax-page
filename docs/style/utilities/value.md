@@ -19,3 +19,10 @@ Checks if a value is a CSS function.
 Converts a value string to an array of tokens.
 - **Parameters:** `values: string[]`
 - **Returns:** `string[]`
+
+### fillTokenValues
+Fills empty slots in a value array with the default value for the corresponding token using `getTokenValue`.
+- **Parameters:**
+  - `tokens: string[]` — Array of CSS tokens to use for fallback values.
+  - `value: string[]` — The current value array with potential empty slots.
+- **Returns:** `string[]` — New array with empty slots filled with the default value for each token.

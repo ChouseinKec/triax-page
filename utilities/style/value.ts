@@ -1,7 +1,7 @@
 import { ValueSeparators as ValueSeparatorConst } from '@/constants/style/value';
 
 // Utilities
-import { getTokenCanonical } from '@/utilities/style/token';
+import { getTokenCanonical, getTokenValue } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
 
 // Types
@@ -17,7 +17,6 @@ import type { ValueSeparators } from '@/types/style/value';
  */
 function isValueKeyword(input: string): boolean {
 	return /^[a-zA-Z-]+$/.test(input);
-	
 }
 
 /**
@@ -116,8 +115,8 @@ function getValueType(input: string): CSSTokenGroups | undefined {
  * @example
  * getCSSTokenGroups(['10px', 'auto', 'fit-content(10px)', '10']) → ['dimension', 'keyword', 'function', 'number']
  */
-function getCSSTokenGroups(values: string[]): string[] {
-	return values.map((value) => getValueType(value) || 'unknown');
+function getCSSTokenGroups(inputs: string[]): string[] {
+	return inputs.map((input) => getValueType(input) || 'unknown');
 }
 
 /**
@@ -132,22 +131,22 @@ function getCSSTokenGroups(values: string[]): string[] {
  * getValueToken('fit-content(10px)') → 'fit-content()'
  * getValueToken('10') → '<number>'
  */
-function getValueToken(value: string): string | undefined {
-	const type = getValueType(value);
+function getValueToken(input: string): string | undefined {
+	const type = getValueType(input);
 
 	switch (type) {
 		case 'keyword':
-			return value;
+			return input;
 		case 'integer':
 			return '<integer>';
 		case 'number':
 			return '<number>';
 		case 'dimension':
-			return `<${getDimensionType(value)}>`;
+			return `<${getDimensionType(input)}>`;
 		case 'color':
 			return '<color>';
 		default:
-			return getTokenCanonical(value);
+			return getTokenCanonical(input);
 	}
 }
 
@@ -159,8 +158,8 @@ function getValueToken(value: string): string | undefined {
  * @example
  * getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']
  */
-function getValueTokens(values: string[]): string[] {
-	return values.map((value) => getValueToken(value) || 'unknown');
+function getValueTokens(inputs: string[]): string[] {
+	return inputs.map((input) => getValueToken(input) || null).filter((input) => input !== null);
 }
 
 /**
@@ -168,12 +167,15 @@ function getValueTokens(values: string[]): string[] {
  * @param variation - The variation string to extract separators from.
  * @returns An array of separators found in the string.
  */
-function extractSeparator(variation: string): string[] {
+function extractSeparator(input: string): string[] {
 	// Clean and normalize the variation string for consistent separator extraction
-	const cleaned = variation
-		.replace(/\s+/g, ' ') // Normalize whitespace
-		.replace(/<[^>]*>/g, 'token') // Replace angle-bracketed tokens
+	const cleaned = input
+		// Normalize whitespace
+		.replace(/\s+/g, ' ')
+		// Replace angle-bracketed tokens
+		.replace(/<[^>]*>/g, 'token')
 		// Remove spaces around '/' and ','
+		.replace(/\s*([/,])\s*/g, '$1')
 		// Replace functions (including nested) and their arguments with 'token'
 		.replace(/([a-zA-Z-]+\([^()]*\))/g, function replacer(match) {
 			let depth = 0;
@@ -188,6 +190,8 @@ function extractSeparator(variation: string): string[] {
 		})
 		.replace(/([a-zA-Z-]+\((?:[^()t]|t(?!oken)|token)*\))/g, 'token')
 		.trim();
+
+	// console.log(cleaned);
 
 	// Build a regex to match all possible separators
 	const separatorPattern = ValueSeparatorConst.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
@@ -223,11 +227,38 @@ function extractSeparators(variations: string[]): string[][] {
  * @param values - The CSS value string to match.
  * @return The index of the matching variation, or -1 if not found.
  * @example
- * getVariationIndex(['10px', 'auto'], '10px') → 0
- * getVariationIndex(['10px', 'auto'], '20px') → -1
+ * findVariationIndex(['10px', 'auto'], '10px') → 0
+ * findVariationIndex(['10px', 'auto'], '20px') → -1
  */
-function getVariationIndex(variations: string[], values: string): number {
-	return variations.findIndex((variation) => variation === values);
+function findVariationIndex(input: string, variations: string[], strict?: boolean): number {
+	if (strict === false) {
+		return variations.findIndex((v) => v.startsWith(input));
+	}
+
+	return variations.findIndex((v) => v === input);
 }
 
-export { isValueColor, extractSeparator, isValueKeyword, isValueFunction, isValueNumber, getValueType, getCSSTokenGroups, getValueTokens, getValueToken, extractSeparators, getVariationIndex };
+/**
+ * Fills empty slots in the value array with the default value for the corresponding token.
+ * If a slot is empty, it replaces it with the default/fallback value for the token using getTokenValue.
+ * @param tokens - An array of CSS tokens to use for fallback values.
+ * @param value - The current value array with potential empty slots.
+ * @returns A new array with empty slots filled with the default value for each token.
+ * @example
+ * fillTokenValues(['<length>', '<angle>','auto'], ['10px']) → ['10px', '0deg', 'auto']
+ */
+function fillTokenValues(tokens: string[], values: string[]): string[] {
+	console.log(tokens), console.log(values);
+	// Fill empty slots in the value array with the default value for the corresponding token
+	return tokens.map((token, index) => {
+		// If the value slot is empty, use the default value for the token
+		if (!values[index] || values[index].length === 0) {
+			const tokenValue = getTokenValue(token);
+			return tokenValue ? tokenValue : '';
+		}
+		// Otherwise, keep the existing value
+		return values[index];
+	});
+}
+
+export { fillTokenValues, isValueColor, extractSeparator, isValueKeyword, isValueFunction, isValueNumber, getValueType, getCSSTokenGroups, getValueTokens, getValueToken, extractSeparators, findVariationIndex };

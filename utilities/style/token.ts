@@ -264,19 +264,21 @@ function getTokenParam(input: string): Record<string, any> | undefined {
  * getTokenValue('<percentage>') → '0%'
  * getTokenValue('<number>') → '0.0'
  */
-function getTokenValue(token: string): string {
+function getTokenValue(token: string): string | undefined {
 	const valueMap: Record<string, string> = {
-		length: '0px',
-		angle: '0deg',
-		percentage: '0%',
-		color: '#ffffff',
-		number: '0.0',
-		integer: '0',
-		flex: '1fr',
-		ratio: '1/1',
-		link: '"https://example.com/image.png"',
+		'<length>': '0px',
+		'<angle>': '0deg',
+		'<percentage>': '0%',
+		'<color>': '#ffffff',
+		'<number>': '0.0',
+		'<integer>': '0',
+		'<flex>': '1fr',
+		'<ratio>': '1/1',
+		'<link>': '"https://example.com/image.png"',
 	};
-	return valueMap[token] ?? `<${token}>`;
+
+	const tokenValue = valueMap[token];
+	return tokenValue ? tokenValue : undefined;
 }
 
 /**
@@ -288,9 +290,9 @@ function getTokenValue(token: string): string {
  * getTokenValues('fit-content(<length> <percentage>)') → 'fit-content(0px 0%)'
  */
 function getTokenValues(syntax: string): string {
-	syntax = normalizeSyntax(syntax);
 	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
-		return getTokenValue(token);
+		const tokenValue = getTokenValue(`<${token}>`);
+		return tokenValue ? tokenValue : '';
 	});
 }
 

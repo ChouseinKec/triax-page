@@ -191,7 +191,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 
 	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase'),
 	'text-indent': createProperty('text-indent', '<length-percentage>'),
-	'text-shadow': createProperty('text-shadow', 'none | <color> (<length> <length>)'),
+	'text-shadow': createProperty('text-shadow', 'none | <color> <length> <length>'),
 	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
 	'white-space': createProperty('white-space', 'normal | pre | nowrap | pre-wrap | pre-line | break-spaces'),
 	'word-break': createProperty('word-break', 'normal | break-all | keep-all | break-word'),

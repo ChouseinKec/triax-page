@@ -19,7 +19,13 @@ import type { SlotsProps } from './types';
  * @param props - SlotsProps containing values, options, and onChange callback
  * @returns ReactElement - The rendered slot editor UI
  */
-const Slots: React.FC<SlotsProps> = ({ values, options, onChange }) => {
+const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
+    const {
+        values,
+        options,
+        onChange
+    } = props;
+
     /**
      * Handles a change in a single slot, updating the overall slot values array.
      */

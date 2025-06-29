@@ -65,6 +65,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     const defaultName = option ? getTokenBase(option.name) : '';
     const defaultValue = property ? getTokenValues(property.syntaxParsed[0]) : '';
 
+
     // Use extracted or default values safely
     const safeName = extractedName || defaultName;
     const safeValue = extractedValue || defaultValue;
