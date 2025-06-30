@@ -57,14 +57,13 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     }, [option]
     );
 
+    // Determine default name and value from the option/property
+    const defaultName = option ? getTokenBase(option.name) : '';
+    const defaultValue = property ? getTokenValues(property.syntaxNormalized[0].split(' ')).join(' ') : '';
+
     // Extract function name and value from the input string
     const extractedName = extractFunctionName(value);
     const extractedValue = extractFunctionValue(value);
-
-    // Determine default name and value from the option/property
-    const defaultName = option ? getTokenBase(option.name) : '';
-    const defaultValue = property ? getTokenValues(property.syntaxParsed[0]) : '';
-
 
     // Use extracted or default values safely
     const safeName = extractedName || defaultName;

@@ -1,4 +1,5 @@
 import { MAX_MULTIPLIER_DEPTH } from './parse';
+
 /**
  * Duplicates a token up to maxDepth times, joining with spaces (for + and * multipliers).
  * This is used to generate all possible combinations for multipliers that allow one or more occurrences.
@@ -9,7 +10,7 @@ import { MAX_MULTIPLIER_DEPTH } from './parse';
  * duplicateToken('a', 3) → ['a', 'a a', 'a a a']
  * duplicateToken('b', 2) → ['b', 'b b']
  */
-export function duplicateToken(input: string, maxDepth: number): string[] {
+function duplicateToken(input: string, maxDepth: number): string[] {
 	const arr: string[] = [];
 	for (let i = 1; i <= maxDepth; i++) {
 		arr.push(Array(i).fill(input).join(' '));
@@ -28,7 +29,7 @@ export function duplicateToken(input: string, maxDepth: number): string[] {
  * hasMultiplier('c*') → true
  * hasMultiplier('d{2,4}') → true
  */
-export function hasMultiplier(input: string): boolean {
+function hasMultiplier(input: string): boolean {
 	return /[?+*]|\{\d+(,\d+)?\}$/.test(input);
 }
 
@@ -41,7 +42,7 @@ export function hasMultiplier(input: string): boolean {
  * parseMultiplierQuestion('a?') → ['', 'a']
  * parseMultiplierQuestion('b') → ['', 'b']
  */
-export function parseMultiplierQuestion(input: string): string[] {
+function parseMultiplierQuestion(input: string): string[] {
 	return ['', input];
 }
 
@@ -55,7 +56,7 @@ export function parseMultiplierQuestion(input: string): string[] {
  * parseMultiplierPlus('a+', 3) → ['a', 'a a', 'a a a']
  * parseMultiplierPlus('b+', 2) → ['b', 'b b']
  */
-export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
+function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
 	return duplicateToken(input, maxDepth);
 }
 
@@ -69,7 +70,7 @@ export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIP
  * parseMultiplierStar('a*', 3) → ['', 'a', 'a a', 'a a a']
  * parseMultiplierStar('b*', 2) → ['', 'b', 'b b']
  */
-export function parseMultiplierStar(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
+function parseMultiplierStar(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
 	return ['', ...duplicateToken(input, maxDepth)];
 }
 
@@ -83,7 +84,7 @@ export function parseMultiplierStar(input: string, maxDepth: number = MAX_MULTIP
  * parseMultiplier('b+') → ['b', 'b b']
  * parseMultiplier('c*') → ['', 'c', 'c c', 'c c c']
  */
-export function parseMultiplier(input: string): string[] {
+function parseMultiplier(input: string): string[] {
 	if (input.endsWith('?')) {
 		const base = input.slice(0, -1).trim();
 		return parseMultiplierQuestion(base);
@@ -111,62 +112,4 @@ export function parseMultiplier(input: string): string[] {
 	return [input];
 }
 
-/**
- * Parses a bracketed group with a multiplier (e.g., [a b]+) and returns all possible combinations.
- * Handles group extraction, recursive parsing, and multiplier logic internally.
- * @param syntax - The syntax string to parse, expected to be in the format [group]multiplier (e.g., [a b]+).
- * @return string[] - Returns an array of strings with all possible combinations based on the group
- * and multiplier.
- * @example
- * parseMultiplierWithGroup('[a b]+') → ['a b', 'a b a b', 'a b a b a b']
- * parseMultiplierWithGroup('[c d]{2,3}') → ['c d c d', 'c d c d c d', 'c d c d c d c d']
- */
-export function parseMultiplierWithGroup(syntax: string): string[] {
-	// syntax is expected to be something like: [group]multiplier
-	const match = syntax.match(/^(\[.*\])(\*|\+|\?|#|\{\d+(,\d+)?\})$/);
-	if (!match) return [syntax];
-	const group = match[1].slice(1, -1); // remove [ and ]
-	const multiplier = match[2];
-	// Dynamic require to avoid circular import with parse
-	const groupResults = require('./parse').parse(group);
-
-	let min = 0,
-		max = MAX_MULTIPLIER_DEPTH;
-	let joiner = ' ';
-	if (multiplier === '*') {
-		min = 0;
-	} else if (multiplier === '+') {
-		min = 1;
-	} else if (multiplier === '?') {
-		min = 0;
-		max = 1;
-	} else if (multiplier === '#') {
-		min = 1;
-		joiner = ',';
-	} else {
-		const m = multiplier.match(/\{(\d+)(,(\d+))?\}/);
-		if (m) {
-			min = parseInt(m[1], 10);
-			max = m[3] ? parseInt(m[3], 10) : min;
-		}
-	}
-	const results: string[] = [];
-	for (let count = min; count <= max; count++) {
-		if (count === 0) {
-			results.push('');
-		} else {
-			let combos = groupResults;
-			for (let i = 1; i < count; i++) {
-				const newCombos: string[] = [];
-				for (const left of combos) {
-					for (const right of groupResults) {
-						newCombos.push((left + joiner + right).trim());
-					}
-				}
-				combos = newCombos;
-			}
-			results.push(...combos);
-		}
-	}
-	return Array.from(new Set(results));
-}
+export { parseMultiplier, hasMultiplier };

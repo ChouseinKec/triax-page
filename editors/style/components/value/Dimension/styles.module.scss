@@ -1,12 +1,17 @@
 .DimensionValue {
 	width: 100%;
-	display: grid;
+	min-width: 60px;
 	min-height: 25px;
 
+	display: grid;
 	position: relative;
 
 	[class*='DropdownReveal'] {
 		position: absolute;
 		right: 0;
+	}
+	
+	[class*='GenericInput'] input {
+		padding-right: var(--size-xl);
 	}
 }

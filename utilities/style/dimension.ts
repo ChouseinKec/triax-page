@@ -77,16 +77,16 @@ function getDimensionType(input: string): CSSDimensionGroups | undefined {
  * Clamps a CSS value to a maximum of 10px.
  * Extracts the numeric part and returns it as px, limited to 10.
  * @param value - The CSS value (e.g., '10rem', '5vh', '12px')
- * @param maxPx - The maximum px value allowed (default: 10)
+ * @param max - The maximum px value allowed (default: 10)
  * @returns {string | undefined} - The clamped value in px, or undefined if input is invalid
  */
-function clampDimension(value: string, maxPx = 15): string | undefined {
+function clampDimension(value: string, max = 15): string | undefined {
 	if (value == null) return undefined;
 	const num = extractNumber(value);
 	if (!num) return undefined;
 
 	const safeNum = parseFloat(num);
-	return `${Math.min(safeNum, maxPx)}px`;
+	return `${Math.min(safeNum, max)}px`;
 }
 
 export { clampDimension, getDimensionType, extractNumber, extractUnit, isValueDimension };

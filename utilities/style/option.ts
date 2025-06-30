@@ -18,7 +18,7 @@ import type { CSSDimensionGroups } from '@/types/style/dimension';
  * @param token - The function token string (e.g., 'calc(<length>|<percentage>)')
  * @returns FunctionOptionData | undefined - The created function option or undefined if invalid.
  * @example
- * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function' }
+ * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function', type: 'function' }
  */
 function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// Check if the token is empty or undefined
@@ -82,7 +82,7 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
  * @param propertyName - The name of the CSS property being edited (for keyword options)
  * @returns KeywordOptionData | undefined - The created keyword option or undefined if empty.
  * @example
- * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword' }
+ * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword', icon: <Icon />, type: 'keyword' }
  */
 function createKeywordOption(token: string, propertyName: string): KeywordOptionData | undefined {
 	// Check if the token is empty or undefined
@@ -106,7 +106,7 @@ function createKeywordOption(token: string, propertyName: string): KeywordOption
  * @param token - The number token string (e.g., '<number [0,25]>')
  * @returns NumberOptionData | undefined - The created number option or undefined if invalid.
  * @example
- * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'number' }
+ * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'other', type: 'number' }
  */
 function createNumberOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
@@ -128,7 +128,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
  * @param token - The integer token string (e.g., '<integer [0,100]>')
  * @returns NumberOptionData | undefined - The created integer option or undefined if invalid.
  * @example
- * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'number' }
+ * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'other', type: 'integer' }
  */
 function createIntegerOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
@@ -143,6 +143,14 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
 	};
 }
 
+/**
+ * Creates a color option for a given token (e.g., 'color').
+ *
+ * @param token - The color token string (e.g., 'color')
+ * @returns OtherOptionData | undefined - The created color option or undefined if empty.
+ * @example
+ * createColorOption('color') → { name: 'color', value: '#000000', category: 'other', type: 'color' }
+ */
 function createColorOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
 	return {
@@ -153,6 +161,14 @@ function createColorOption(token: string): OtherOptionData | undefined {
 	};
 }
 
+/**
+ * Creates a link option for a given token (e.g., 'link').
+ *
+ * @param token - The link token string (e.g., 'link')
+ * @returns OtherOptionData | undefined - The created link option or undefined if empty.
+ * @example
+ * createLinkOption('link') → { name: 'link', value: 'https://example.com', category: 'other', type: 'link' }
+ */
 function createLinkOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
 	return {
@@ -216,13 +232,6 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 	testTokens[slotIndex] = tokenCanonical;
 	const testString = testTokens.join(' ').trim();
 	const matches = validValueSet.find((value) => value.startsWith(testString));
-
-	if (propertyName === 'text-shadow') {
-		// console.log(validValueSet);
-
-		// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${matches}`);
-		// console.log(matches);
-	}
 
 	if (!matches) return false;
 	return true;

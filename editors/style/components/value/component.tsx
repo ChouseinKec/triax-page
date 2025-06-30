@@ -6,10 +6,12 @@ import type { ValueProps } from './types';
 // Utilities
 import { splitAdvanced, joinAdvanced } from '@/utilities/string/string';
 import { createOptionsTable } from '@/utilities/style/option';
-import { getValueTokens, findVariationIndex, fillTokenValues } from '@/utilities/style/value';
+import { getValueTokens } from '@/utilities/style/value';
+import { getTokenValues } from '@/utilities/style/token';
+import { mergeArrays } from '@/utilities/array/array';
 
 // Constants
-import { ValueSeparators } from '@/constants/style/value';
+import { ValueSeparators } from '@/constants/style/separator';
 
 // Components
 import Slots from './slots/component';
@@ -42,7 +44,6 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
         [syntaxNormalized, syntaxSet, values, property.name]
     );
 
-
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = useCallback((input: string[]) => {
         if (!input || (input.length === 1 && input[0] === '')) return onChange('');
@@ -52,22 +53,20 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
 
         // Find the index of the matching variation with strict matching
         // This will return the index of the variation that matches the updated value tokens
-        let variationIndex = findVariationIndex(valueTokens, syntaxNormalized);
+        let variationIndex = syntaxNormalized.findIndex((value) => value === valueTokens)
 
         // If no matching variation is found,
         // Find the index of the matching variation with non-strict matching
         // This will return the index of the variation that starts with the updated value tokens
         // Needed for variations with tuple values
         if (variationIndex === -1) {
-            variationIndex = findVariationIndex(valueTokens, syntaxParsed, false);
+            variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
+
             // If still no match, return early
             // This will prevent assignment of invalid syntax when the slot is set to '' or empty
-
-            // console.log(variationIndex);
-            // console.log(syntaxParsed);
-
             if (variationIndex === -1) return;
-            input = fillTokenValues(syntaxNormalized[variationIndex].split(' '), input);
+            const syntax = syntaxNormalized[variationIndex];
+            input = mergeArrays(input, getTokenValues(syntax.split(' ')));
         }
 
 

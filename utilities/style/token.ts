@@ -1,8 +1,6 @@
 // Type
 import { CSSTokenGroups } from '@/types/style/token';
 
-// Utilities
-import { normalizeSyntax } from './parse';
 
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
@@ -119,6 +117,7 @@ function isTokenLink(input: string): boolean {
  * getTokenType('fit-content(10px)') → 'function'
  * getTokenType('<integer>') → 'integer'
  * getTokenType('<number>') → 'number'
+ * getTokenType('<link>') → 'link'
  */
 function getTokenType(input: string): CSSTokenGroups | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
@@ -265,6 +264,7 @@ function getTokenParam(input: string): Record<string, any> | undefined {
  * getTokenValue('<number>') → '0.0'
  */
 function getTokenValue(token: string): string | undefined {
+	if (isTokenKeyword(token)) return token;
 	const valueMap: Record<string, string> = {
 		'<length>': '0px',
 		'<angle>': '0deg',
@@ -282,19 +282,15 @@ function getTokenValue(token: string): string | undefined {
 }
 
 /**
- * Converts all tokens in a syntax string to their default values.
- * @param syntax - The CSS value definition syntax string
- * @returns The string with all tokens replaced by their default values
+ * Converts an array of tokens to their default values.
+ * @param tokens - An array of token strings (e.g., ['<length>', '<color>', '<angle>'])
+ * @returns An array of default values for the tokens, filtering out any undefined values
  * @example
- * getTokenValues('auto || <length>') → 'auto || 0px'
- * getTokenValues('fit-content(<length> <percentage>)') → 'fit-content(0px 0%)'
+ * getTokenValues(['<length>', '<color>', '<angle>']) → ['0px', '#ffffff', '0deg']
  */
-function getTokenValues(syntax: string): string {
-	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
-		const tokenValue = getTokenValue(`<${token}>`);
-		return tokenValue ? tokenValue : '';
-	});
+function getTokenValues(tokens: string[]): string[] {
+	return tokens.map(getTokenValue).filter((token): token is string => token !== undefined);
 }
 
 // Export the new helpers
-export { getTokenValue, getTokenValues, isTokenKeyword, isTokenDimension, isTokenFunction, isTokenInteger, isTokenNumber, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };
+export { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };

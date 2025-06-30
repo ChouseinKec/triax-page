@@ -2,14 +2,14 @@
 import { CSSTokenDefs } from '@/constants/style/token';
 
 // Types
-import { CSSTokens } from '@/types/style/token';
+import type { CSSTokens } from '@/types/style/token';
 
 // Utilities
 import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
 
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
-import { hasMultiplier, parseMultiplier, parseMultiplierWithGroup } from './parse-multiplier';
-import { hasBrackets, parseBrackets, hasBracketsGroup } from './parse-bracket';
+import { hasMultiplier, parseMultiplier } from './parse-multiplier';
+import { hasBrackets, parseBrackets, hasBracketsMultiplier, parseBracketsMultiplier } from './parse-bracket';
 
 export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
 
@@ -19,6 +19,8 @@ export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
  * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
  * @returns The syntax string with all known tokens recursively expanded
+ * @example
+ * expandTokens('auto || <ratio>') → 'auto || <number> / <number>'
  */
 function expandTokens(syntax: string, seen = new Set<string>()): string {
 	// Start with the input syntax string
@@ -67,25 +69,27 @@ function expandTokens(syntax: string, seen = new Set<string>()): string {
  * - Ensures '*', '+', '?' have no space before them.
  * @param s - The syntax string
  * @returns The normalized syntax string
+ * @example
+ * normalizeSyntax('a || b && c') → 'a || b&&c'
  */
-function normalizeSyntax(input: string): string {
+function normalizeSyntax(syntax: string): string {
 	// Normalize '||' to have spaces before and after
-	input = input.replace(/\s*\|\|\s*/g, ' || ');
+	syntax = syntax.replace(/\s*\|\|\s*/g, ' || ');
 
 	// Normalize '&&' to have no spaces before or after
-	input = input.replace(/\s*&&\s*/g, '&&');
+	syntax = syntax.replace(/\s*&&\s*/g, '&&');
 
 	// Normalize '|' to have no spaces before or after (but not '||')
 	// Use negative lookbehind and lookahead to avoid '||'
-	input = input.replace(/(?<!\|)\s*\|\s*(?!\|)/g, '|');
+	syntax = syntax.replace(/(?<!\|)\s*\|\s*(?!\|)/g, '|');
 
 	// Remove spaces before *, +, ?
-	input = input.replace(/\s+([*+?])/g, '$1');
+	syntax = syntax.replace(/\s+([*+?])/g, '$1');
 
 	// Remove multiple spaces
-	input = input.replace(/\s{2,}/g, ' ');
+	syntax = syntax.replace(/\s{2,}/g, ' ');
 
-	return input.trim();
+	return syntax.trim();
 }
 
 /**
@@ -128,8 +132,8 @@ function parse(syntax: string): string[] {
 	}
 
 	// Handle optional group in brackets or brackets with multipliers
-	if (hasBracketsGroup(normalizedSyntax)) {
-		return parseMultiplierWithGroup(normalizedSyntax);
+	if (hasBracketsMultiplier(normalizedSyntax)) {
+		return parseBracketsMultiplier(normalizedSyntax);
 	}
 
 	// Handle multipliers (?, +, *, {m,n})
@@ -150,4 +154,4 @@ function test() {
 }
 
 // Export all functions and types
-export { test, normalizeSyntax, expandTokens, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasSequence };
+export { test, normalizeSyntax, expandTokens, parse };

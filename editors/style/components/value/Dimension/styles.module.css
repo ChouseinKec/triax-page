@@ -1,1 +1,1 @@
-.DimensionValue{width:100%;display:grid;min-height:25px;position:relative}.DimensionValue [class*=DropdownReveal]{position:absolute;right:0}
+.DimensionValue{width:100%;min-width:60px;min-height:25px;display:grid;position:relative}.DimensionValue [class*=DropdownReveal]{position:absolute;right:0}.DimensionValue [class*=GenericInput] input{padding-right:var(--size-xl)}

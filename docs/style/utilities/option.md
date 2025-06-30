@@ -5,52 +5,115 @@ Helpers for generating option data for value editors, including functions, dimen
 
 ## Main Functions
 
-### createFunctionOption
-Creates a function option object for a given function token.
-- **Parameters:** `token: string`
-- **Returns:** `FunctionOptionData | undefined`
+### createFunctionOption (Internal)
+Creates a FunctionOptionData object for a given function token.
 
-### createDimensionOptions
-Creates an array of dimension option objects for a given dimension token.
-- **Parameters:** `token: string`
-- **Returns:** `DimensionOptionData[] | undefined`
+- **Parameters:**
+  - `token: string` — The function token string (e.g., 'calc(<length>|<percentage>)').
+- **Returns:** `FunctionOptionData | undefined` — The created function option or undefined if invalid.
+- **Example:**
+  - `createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function', type: 'function' }`
 
-### createKeywordOption
+---
+
+### createDimensionOptions (Internal)
+Creates an array of DimensionOptionData objects for a given dimension token.
+
+- **Parameters:**
+  - `token: string` — The dimension token string (e.g., '<length [0,100]>').
+- **Returns:** `DimensionOptionData[] | undefined` — An array of dimension options or undefined if invalid.
+- **Example:**
+  - `createDimensionOptions('<length [0,100]>') → [{ name: 'px', value: '0px', type: 'length', min: 0, max: 100 }, ...]`
+
+---
+
+### createKeywordOption (Internal)
 Creates a keyword option for a given token and property name.
-- **Parameters:** `token: string, propertyName: string`
-- **Returns:** `KeywordOptionData | undefined`
 
-### createNumberOption
-Creates a number option for a given number token.
-- **Parameters:** `token: string`
-- **Returns:** `OtherOptionData | undefined`
+- **Parameters:**
+  - `token: string` — The keyword token string (e.g., 'auto').
+  - `propertyName: string` — The name of the CSS property being edited (for keyword options).
+- **Returns:** `KeywordOptionData | undefined` — The created keyword option or undefined if empty.
+- **Example:**
+  - `createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword', icon: <Icon />, type: 'keyword' }`
 
-### createIntegerOption
-Creates an integer option for a given integer token.
-- **Parameters:** `token: string`
-- **Returns:** `OtherOptionData | undefined`
+---
 
-### createColorOption
-Creates a color option for a given color token.
-- **Parameters:** `token: string`
-- **Returns:** `OtherOptionData | undefined`
+### createNumberOption (Internal)
+Creates a NumberOptionData object for a given number token (e.g., '<number [0,25]>').
 
-### createLinkOption
-Creates a link option for a given link token.
-- **Parameters:** `token: string`
-- **Returns:** `OtherOptionData | undefined`
+- **Parameters:**
+  - `token: string` — The number token string (e.g., '<number [0,25]>').
+- **Returns:** `OtherOptionData | undefined` — The created number option or undefined if invalid.
+- **Example:**
+  - `createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'other', type: 'number' }`
+
+---
+
+### createIntegerOption (Internal)
+Creates an IntegerOptionData object for a given integer token (e.g., '<integer [0,100]>').
+
+- **Parameters:**
+  - `token: string` — The integer token string (e.g., '<integer [0,100]>').
+- **Returns:** `OtherOptionData | undefined` — The created integer option or undefined if invalid.
+- **Example:**
+  - `createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'other', type: 'integer' }`
+
+---
+
+### createColorOption (Internal)
+Creates a color option for a given token (e.g., 'color').
+
+- **Parameters:**
+  - `token: string` — The color token string (e.g., 'color').
+- **Returns:** `OtherOptionData | undefined` — The created color option or undefined if empty.
+- **Example:**
+  - `createColorOption('color') → { name: 'color', value: '#000000', category: 'other', type: 'color' }`
+
+---
+
+### createLinkOption (Internal)
+Creates a link option for a given token (e.g., 'link').
+
+- **Parameters:**
+  - `token: string` — The link token string (e.g., 'link').
+- **Returns:** `OtherOptionData | undefined` — The created link option or undefined if empty.
+- **Example:**
+  - `createLinkOption('link') → { name: 'link', value: 'https://example.com', category: 'other', type: 'link' }`
+
+---
 
 ### createOption
-Creates an option (or array of options) for a given token and property name, using the correct factory based on type.
-- **Parameters:** `token: string, propertyName: string`
+Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
+
+- **Parameters:**
+  - `token: string` — The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)').
+  - `propertyName: string` — The name of the CSS property being edited (for keyword options).
 - **Returns:** `InputOptionData | InputOptionData[] | undefined`
 
-### isSlotOptionValid
+---
+
+### isSlotOptionValid (Internal)
 Checks if a token is a valid option for a given slot, given the current values and all valid variations.
-- **Parameters:** `token: string, slotIndex: number, validValueSet: string[], currentTokens: string[], propertyName: string`
-- **Returns:** `boolean`
+
+- **Parameters:**
+  - `token: string` — The candidate token for the slot (e.g., 'auto', '<number>').
+  - `slotIndex: number` — The index of the slot being checked.
+  - `validValueSet: string[]` — Set of all valid value strings (normalized).
+  - `currentTokens: string[]` — The current value tokens for all slots (canonicalized).
+  - `propertyName: string` — The name of the CSS property being edited.
+- **Returns:** `boolean` — True if the token is valid for this slot in the current context.
+- **Example:**
+  - `isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true`
+
+---
 
 ### createOptionsTable
-Builds a 2D options table for slot-based value editors. Each slot contains only the valid options for the current context.
-- **Parameters:** `syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], propertyName: string`
-- **Returns:** `InputOptionData[][]`
+Builds a 2D options table for slot-based value editors. Each slot (column) contains only the valid options for the current context.
+
+- **Parameters:**
+  - `syntaxNormalized: string[]` — All valid variations, normalized and joined as strings.
+  - `syntaxSet: Set<string>[]` — Array of arrays, each containing all possible tokens for that slot.
+  - `values: string[]` — The current value tokens for all slots (user input, not yet canonicalized).
+  - `propertyName: string` — The name of the CSS property being edited (for keyword options).
+- **Returns:** `InputOptionData[][]` — 2D array of InputOptionData for each slot.

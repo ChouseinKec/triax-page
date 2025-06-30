@@ -30,7 +30,7 @@ function generateCrossProduct<T>(arrays: T[][]): T[][] {
  * @returns Array of subsets (combinations)
  * @example
  * generateAllSubsets(['a', 'b']) → [[], ['a'], ['b'], ['a', 'b']]
- * 
+ *
  */
 function generateAllSubsets<T>(arr: T[]): T[][] {
 	const result: T[][] = [];
@@ -103,13 +103,32 @@ function getColumnSets<T>(rows: T[][]): T[][] {
  * groupBy([{type: 'a'}, {type: 'b'}, {type: 'a'}], 'type')
  * → { a: [{type: 'a'}, {type: 'a'}], b: [{type: 'b'}] }
  */
-export function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
-    return arr.reduce((acc, item) => {
-        const key = String(item[prop]);
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(item);
-        return acc;
-    }, {} as Record<string, T[]>);
+function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
+	return arr.reduce((acc, item) => {
+		const key = String(item[prop]);
+		if (!acc[key]) acc[key] = [];
+		acc[key].push(item);
+		return acc;
+	}, {} as Record<string, T[]>);
 }
 
-export { generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets };
+/**
+ * Fills an array with values from a reference array, replacing undefined, null, or empty string values.
+ * This is useful for ensuring that an array has a complete set of values based on a reference
+ * array, while preserving existing values.
+ * @param target - The target array to fill, which may contain undefined, null, or empty string values.
+ * @param reference - The reference array containing the values to use for filling.
+ * @return A new array where each position is filled with the corresponding value from the reference array,
+ * or the existing value from the target array if it is not undefined, null, or an empty string.
+ * @example
+ * mergeArrays([undefined, 'b', null, ''], ['a', 'b', 'c', 'd']) → ['a', 'b', 'c', 'd']
+ * mergeArrays(['x'], ['a', 'b', 'c']) → ['x', 'b', 'c']
+ */
+function mergeArrays<T>(target: (T | undefined | null | '')[], reference: T[]): T[] {
+	return reference.map((ref, index) => {
+		const item = target[index];
+		return item == null || item === '' ? ref : item;
+	});
+}
+
+export { groupBy, generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets, mergeArrays };

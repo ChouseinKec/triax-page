@@ -2,7 +2,7 @@
 import type { CSSProperty, CSSProperties } from '@/types/style/property';
 
 // Constants
-import { ValueSeparators } from './value';
+import { ValueSeparators } from './separator';
 import { CSSPropertyDesc } from './property-description';
 
 // Utilities
@@ -10,7 +10,7 @@ import { getColumnSets } from '@/utilities/array/array';
 import { splitAdvanced } from '@/utilities/string/string';
 import { getTokenCanonical } from '@/utilities/style/token';
 import { parse, expandTokens } from '@/utilities/style/parse';
-import { extractSeparators } from '@/utilities/style/value';
+import { extractSeparators } from '@/utilities/style/separator';
 
 /**
  * Helper function to create a CSSProperty object.
