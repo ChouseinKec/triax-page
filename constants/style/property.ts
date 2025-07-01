@@ -29,7 +29,6 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 	return {
 		name,
 		description: CSSPropertyDesc[name as keyof typeof CSSPropertyDefs] ?? '',
-
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
 			if (_expanded === undefined) _expanded = expandTokens(syntax);

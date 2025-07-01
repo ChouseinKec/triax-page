@@ -1,20 +1,21 @@
-# CSS Property
+# CSS Property Constants
 
-A CSS property defines a specific aspect of an element's style, such as its color, size, layout, or typography. Each property accepts a set of allowed values, which are described by a formal syntax and interpreted by the browser to render the element accordingly.
-
-## Constants
 The `constants/style/property.ts` file serves as the main lookup table for CSS property definitions in this project. It provides structured metadata and syntax information for each supported CSS property, enabling robust parsing, validation, and UI generation.
 
-### What is property.ts?
+## What is property.ts?
 
 - `property.ts` is a TypeScript module that exports an object mapping CSS property names (e.g., `aspect-ratio`, `width`, `background-color`) to their definitions.
 - Each property definition includes:
-  - The canonical property name
-  - A human-readable description
-  - The value definition syntax string (as found in the CSS spec)
-  - **A lazily-parsed `syntaxParsed` field**: This is an array of all possible value combinations for the property, generated on demand from the syntax string. This enables efficient incremental parsing and UI slot generation without precomputing all combinations at load time.
+  - **`name`** The canonical property name.
+  - **`description`** A human-readable description.
+  - **`syntaxRaw`** The value definition syntax string (as found in the CSS spec).
+  - **`syntaxParsed`**: An array of all possible value combinations for the property, generated on demand from the syntax string. Enables efficient incremental parsing and UI slot generation without precomputing all combinations at load time.
+  - **`syntaxExpanded`**: An array of all expanded value combinations, including permutations and optional groups, as defined by the CSS Value Definition Syntax.
+  - **`syntaxSet`**: An array of allowed tokens for each slot position in the value, used to generate slot options and validate input.
+  - **`syntaxNormalized`**: An array of canonicalized value token strings for each variation, used for strict matching and comparison.
+  - **`syntaxSeparators`**: An array of separator arrays (e.g., spaces, commas, slashes) for each variation, used to join slot values correctly in the editor.
 
-### What is it used for?
+## What is it used for?
 
 - **Parsing:**
   - The parser uses `property.ts` to look up the syntax for a given property and expand it into all valid value combinations.
@@ -25,19 +26,21 @@ The `constants/style/property.ts` file serves as the main lookup table for CSS p
 - **Documentation and Tooling:**
   - The property definitions can be used to generate documentation, code completion, and other tooling features.
 
-### Example Structure
+## Example Structure
 
 ```ts
 export const CSSPropertyDefs = {
   'aspect-ratio': {
     name: 'aspect-ratio',
     description: 'Specifies the preferred aspect ratio of the box',
-    syntax: '<number> | auto',
-    syntaxParsed: /* lazy-loaded array of all valid value combinations */
+    syntaxRaw: '<number> | auto',
+    syntaxExpanded: // lazy-loaded
+    syntaxParsed: // lazy-loaded 
+    syntaxSet: // lazy-loaded  
+    syntaxNormalized: // lazy-loaded
+    syntaxSeparators: // lazy-loaded
   },
   // ...more properties
 };
 ```
-
-- The `syntaxParsed` field is typically generated on first access by parsing the `syntax` string using the CSS Value Definition Syntax parser. This avoids unnecessary computation and memory usage for properties that are not used.
 

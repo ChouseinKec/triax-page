@@ -219,7 +219,7 @@ function createOption(token: string, propertyName: string): InputOptionData | In
  * @example
  * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
  */
-function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[], propertyName: string): boolean {
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
 	// console.log(validValueSet);
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return false;
@@ -261,7 +261,7 @@ function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[]
 			if (!tokenCanonical) return [];
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens, propertyName)) {
+			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
 				const option = createOption(token, propertyName);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}

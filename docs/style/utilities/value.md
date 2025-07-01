@@ -1,5 +1,4 @@
-# utilities/style/value.ts
-
+# CSS Value Utilities
 ## Overview
 Helpers for parsing, classifying, and tokenizing CSS values, including slotting and separator logic for the value editor.
 
