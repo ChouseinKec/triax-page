@@ -87,8 +87,8 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'justify-content': createProperty('justify-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly'),
 	'align-items': createProperty('align-items', 'flex-start | flex-end | center | baseline | stretch'),
 	'align-content': createProperty('align-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch'),
-
 	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch'),
+
 	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense'),
 	'grid-template-columns': createProperty('grid-template-columns', '<track-list>'),
 	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>'),
@@ -97,6 +97,9 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'row-gap': createProperty('row-gap', '<length-percentage>'),
 	'column-gap': createProperty('column-gap', '<length-percentage>'),
 	gap: createProperty('gap', '<row-gap> <column-gap>'),
+
+	direction: createProperty('direction', 'ltr | rtl'),
+	'box-sizing': createProperty('box-sizing', 'content-box | border-box'),
 
 	// ============ Size & Dimension =============
 	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
@@ -107,7 +110,6 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'max-height': createProperty('max-height', '<length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	overflow: createProperty('overflow', '[<overflow-block>]{1,2}'),
 	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down'),
-	'box-sizing': createProperty('box-sizing', 'content-box | border-box'),
 	'aspect-ratio': createProperty('aspect-ratio', 'auto || <ratio>'),
 	float: createProperty('float', 'left | right | none'),
 	clear: createProperty('clear', 'none | left | right | both'),
@@ -170,9 +172,7 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'border-bottom-right-radius': createProperty('border-bottom-right-radius', '<length-percentage>'),
 	'border-bottom-left-radius': createProperty('border-bottom-left-radius', '<length-percentage>'),
 
-	'outline-width': createProperty('outline-width', '<length [0,∞]>'),
-	'outline-style': createProperty('outline-style', 'auto|none|dotted|dashed|solid|double|groove|ridge|inset|outset'),
-	'outline-color': createProperty('outline-color', '<color>'),
+	outline: createProperty('outline', 'auto|none|dotted|dashed|solid|double|groove|ridge|inset|outset <length [0,∞]> <color>'),
 
 	// ============ Font & Text =============
 	'font-family': createProperty('font-family', '<generic-family>'),
@@ -182,15 +182,12 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	color: createProperty('color', '<color>'),
 
 	'font-style': createProperty('font-style', 'normal | italic'),
-
-	direction: createProperty('direction', 'ltr | rtl'),
 	'text-align': createProperty('text-align', 'left | right | center | justify | start | end'),
-
-	'text-decoration': createProperty('text-decoration', '<text-decoration-line> || <text-decoration-style> || <text-decoration-color> || <text-decoration-thickness>'),
-
+	'text-decoration': createProperty('text-decoration', '<text-decoration-line> <text-decoration-style> <text-decoration-thickness> <text-decoration-color> '),
 	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase'),
+	
 	'text-indent': createProperty('text-indent', '<length-percentage>'),
-	'text-shadow': createProperty('text-shadow', 'none | <color> <length> <length>'),
+	'text-shadow': createProperty('text-shadow', 'none|<color> <length> <length> <length>'),
 	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
 	'white-space': createProperty('white-space', 'normal | pre | nowrap | pre-wrap | pre-line | break-spaces'),
 	'word-break': createProperty('word-break', 'normal | break-all | keep-all | break-word'),

@@ -93,40 +93,21 @@ export const useBackgroundLayout = (): LayoutProps => {
                         direction: 'column',
                         property: 'border-radius',
                         row: '3',
-                        column: '1/-1',
+                        column: '1',
                         disabled: currentCorner === null && currentSide !== null,
                         component: () => renderValue(generatePropertyName('border', 'radius', currentCorner)), // Dynamic length input based on selected corner
                     },
 
                     // Outline Width
                     {
-                        label: 'Outline Width',
+                        label: 'Outline',
                         direction: 'column',
-                        property: 'outline-width',
-                        row: '4',
-                        column: '1',
-                        component: () => renderValue('outline-width'),
+                        property: 'outline',
+                        row: '3',
+                        column: '2/-1',
+                        component: () => renderValue('outline'),
                     },
 
-                    // Outline Style
-                    {
-                        label: 'Outline Style',
-                        direction: 'column',
-                        property: 'outline-style',
-                        row: '4',
-                        column: '2',
-                        component: () => renderValue('outline-style'),
-                    },
-
-                    // Outline Color
-                    {
-                        label: 'Outline Color',
-                        direction: 'column',
-                        property: 'outline-color',
-                        row: '4',
-                        column: '3',
-                        component: () => renderValue('outline-color'),
-                    },
                 ],
             },
 

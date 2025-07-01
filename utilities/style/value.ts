@@ -1,5 +1,5 @@
 // Utilities
-import { getTokenCanonical, getTokenValue } from '@/utilities/style/token';
+import { getTokenCanonical } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
 
 // Types

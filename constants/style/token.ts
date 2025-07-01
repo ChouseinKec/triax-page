@@ -21,7 +21,7 @@ export const CSSTokenDefs: Partial<Record<CSSTokens, CSSToken>> = {
 	'<link>': createToken('<link>', '<link>'),
 
 	// === Composite Types ===
-	'<length-percentage>': createToken('<length-percentage>', '<length> | <percentage>'),
+	'<length-percentage>': createToken('<length-percentage>', '<length>|<percentage>'),
 	'<color>': createToken('<color>', '<color>'),
 
 	'<track-list>': createToken('<track-list>', '[<track-size>|<track-repeat>]+'),

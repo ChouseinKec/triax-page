@@ -95,7 +95,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Decoration
                     {
                         label: 'Decoration',
-                        column: '1/-1',
+                        column: '1',
                         direction: 'column',
                         property: 'text-decoration',
                         component: () => renderValue('text-decoration')
@@ -103,7 +103,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Text Shadow
                     {
                         label: 'Shadow',
-                        column: '1/-1',
+                        column: '2/-1',
                         direction: 'column',
                         property: 'text-shadow',
                         component: () => renderValue('text-shadow')

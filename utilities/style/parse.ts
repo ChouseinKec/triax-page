@@ -5,7 +5,7 @@ import { CSSTokenDefs } from '@/constants/style/token';
 import type { CSSTokens } from '@/types/style/token';
 
 // Utilities
-import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
+import { getTokenBase, getTokenCanonical, getTokenRange} from '@/utilities/style/token';
 
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier } from './parse-multiplier';
@@ -116,14 +116,14 @@ function parse(syntax: string): string[] {
 		return parseDoubleAmp(normalizedSyntax);
 	}
 
-	// Handle '|' (single bar)
-	if (hasSingleBar(normalizedSyntax)) {
-		return parseSingleBar(normalizedSyntax);
-	}
-
 	// Handle space-separated sequence
 	if (hasSequence(normalizedSyntax)) {
 		return parseSequence(normalizedSyntax);
+	}
+
+	// Handle '|' (single bar)
+	if (hasSingleBar(normalizedSyntax)) {
+		return parseSingleBar(normalizedSyntax);
 	}
 
 	// Handle '[]' (optional group)
@@ -146,7 +146,7 @@ function parse(syntax: string): string[] {
 }
 
 function test() {
-	// const syntax = '[<color>? && (<length> <length>)]#';
+	// const syntax = 'none|underline|overline|line-through|blink solid|double|dotted|dashed|wavy auto|from-font|<length>|<percentage> <color> ';
 	// console.log(parse(syntax));
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 	// const parsed = parse(syntax);

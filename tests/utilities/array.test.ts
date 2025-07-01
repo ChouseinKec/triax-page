@@ -1,4 +1,4 @@
-import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
+import { generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets, groupBy, mergeArrays } from '@/utilities/array/array';
 
 
 describe('generateCrossProduct', () => {
@@ -72,4 +72,71 @@ describe('generatePermutations', () => {
 	it('returns [[]] for empty array', () => {
 		expect(generatePermutations([])).toEqual([[]]);
 	});
+});
+
+describe('getColumnSets', () => {
+  it('returns unique values for each column', () => {
+    const rows = [
+      ['a', 'b'],
+      ['a', 'c'],
+      ['d', 'b']
+    ];
+    expect(getColumnSets(rows)).toEqual([
+      ['a', 'd'],
+      ['b', 'c']
+    ]);
+  });
+  it('handles uneven row lengths', () => {
+    const rows = [
+      ['a', 'b', 'x'],
+      ['a', 'c'],
+      ['d', 'b', 'y']
+    ];
+    expect(getColumnSets(rows)).toEqual([
+      ['a', 'd'],
+      ['b', 'c'],
+      ['x', 'y']
+    ]);
+  });
+  it('returns [] for empty input', () => {
+    expect(getColumnSets([])).toEqual([]);
+  });
+});
+
+describe('groupBy', () => {
+  it('groups objects by property', () => {
+    const arr = [
+      { type: 'a', value: 1 },
+      { type: 'b', value: 2 },
+      { type: 'a', value: 3 }
+    ];
+    expect(groupBy(arr, 'type')).toEqual({
+      a: [
+        { type: 'a', value: 1 },
+        { type: 'a', value: 3 }
+      ],
+      b: [
+        { type: 'b', value: 2 }
+      ]
+    });
+  });
+  it('handles empty array', () => {
+    expect(groupBy([], 'type')).toEqual({});
+  });
+});
+
+describe('mergeArrays', () => {
+  it('fills missing values from reference', () => {
+    expect(mergeArrays([undefined, 'b', null, ''], ['a', 'b', 'c', 'd'])).toEqual(['a', 'b', 'c', 'd']);
+    expect(mergeArrays(['x'], ['a', 'b', 'c'])).toEqual(['x', 'b', 'c']);
+  });
+  it('preserves existing values', () => {
+    expect(mergeArrays(['x', 'y', 'z'], ['a', 'b', 'c'])).toEqual(['x', 'y', 'z']);
+  });
+  it('handles empty target', () => {
+    expect(mergeArrays([], ['a', 'b'])).toEqual(['a', 'b']);
+  });
+  it('handles empty reference', () => {
+    expect(mergeArrays(['x', undefined], [])).toEqual([]);
+  });
 });

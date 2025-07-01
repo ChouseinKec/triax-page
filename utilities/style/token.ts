@@ -223,7 +223,8 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 			return undefined;
 		}
 		case 'dimension':
-		case 'number': {
+		case 'number':
+		case 'integer': {
 			// Extract range/step from dimension or number tokens
 			const dimMatch = input.match(/^<([a-zA-Z0-9-]+)(\s*\[([^\]]+)\])?>$/);
 			if (dimMatch?.[3]) {
