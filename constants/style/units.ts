@@ -41,7 +41,7 @@ function createUnitOption(name: CSSUnits): OptionData {
  * Each entry is a CSSUnit object describing the unit's name, category, and support status.
  * Used for unit validation, UI dropdowns, and documentation.
  */
-export const CSSUnitDefs: Partial<Record<CSSUnits, CSSUnit>> = {
+export const CSSUnitDefs: Partial<Record<string, CSSUnit>> = {
 	fr: createUnit('fr', 'relative', 'flex', 'widely'),
 	px: createUnit('px', 'absolute', 'length', 'widely'),
 	em: createUnit('em', 'relative', 'length', 'widely'),
@@ -50,14 +50,13 @@ export const CSSUnitDefs: Partial<Record<CSSUnits, CSSUnit>> = {
 	vw: createUnit('vw', 'relative', 'length', 'widely'),
 	vmax: createUnit('vmax', 'relative', 'length', 'widely'),
 	vmin: createUnit('vmin', 'relative', 'length', 'widely'),
-	
+
 	deg: createUnit('deg', 'absolute', 'angle', 'widely'),
 	grad: createUnit('grad', 'absolute', 'angle', 'not widely'),
 	rad: createUnit('rad', 'absolute', 'angle', 'not widely'),
 	turn: createUnit('turn', 'absolute', 'angle', 'not widely'),
 
 	'%': createUnit('%', 'relative', 'percentage', 'widely'),
-
 };
 
 /**

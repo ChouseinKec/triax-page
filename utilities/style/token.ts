@@ -1,6 +1,6 @@
 // Type
 import { CSSTokenGroups } from '@/types/style/token';
-
+import { extractBetween } from '@/utilities/string/string';
 
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
@@ -12,7 +12,9 @@ import { CSSTokenGroups } from '@/types/style/token';
  * isTokenKeyword('10px') → false
  */
 function isTokenKeyword(input: string): boolean {
-	return /^[a-zA-Z-]+$/.test(input);
+	const canonical = getTokenCanonical(input);
+	if (!canonical) return false;
+	return /^[a-zA-Z-]+$/.test(canonical);
 }
 
 /**
@@ -29,9 +31,7 @@ function isTokenDimension(input: string): boolean {
 	const canonical = getTokenCanonical(input);
 	if (!canonical) return false;
 
-	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(canonical)) {
-		return true;
-	}
+	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(canonical)) return true;
 
 	return false;
 }
@@ -72,13 +72,11 @@ function isTokenNumber(input: string): boolean {
  * isTokenFunction('10px') → false
  */
 function isTokenFunction(input: string): boolean {
-	const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
-	if (fnMatch) {
-		const functionName = fnMatch[1];
-		// Check if the function name is a valid CSS function
-		return /^[a-zA-Z-]+$/.test(functionName);
-	}
-	return false;
+	const canonical = getTokenCanonical(input);
+	if (!canonical) return false;
+
+	// Check if the input is a function format
+	return /^([a-zA-Z0-9-]+)\((.*)\)$/.test(canonical);
 }
 
 /**
@@ -142,13 +140,10 @@ function getTokenType(input: string): CSSTokenGroups | undefined {
  * getTokenCanonical('10') → undefined
  */
 function getTokenCanonical(input: string): string | undefined {
-	if (input.startsWith('(') && input.endsWith(')')) {
-		// console.log(input, getTokenCanonical(input.replaceAll('(', '').replaceAll(')', '')));
-	}
 	if (!input) return undefined;
 
 	// Function: e.g. fit-content(<length [10,20]>)
-	const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
+	const fnMatch = input.match(/^([a-zA-Z0-9-]+)\((.*)\)$/);
 	if (fnMatch) return `${fnMatch[1]}()`;
 
 	// Dimension: e.g. <length [0,10]>
@@ -188,12 +183,8 @@ function getTokenBase(input: string): string | undefined {
  * getTokenRange('fit-content(<length> <percentage>)') → undefined
  */
 function getTokenRange(input: string): string | undefined {
-	// Match the range part in square brackets
-	const rangeMatch = input.match(/\[([^\]]+)\]/);
-	if (rangeMatch) {
-		return rangeMatch[0].trim(); // Return the content inside the brackets
-	}
-	return undefined; // No range found
+	const range = extractBetween(input, '[]');
+	return range ? `[${range}]` : undefined;
 }
 
 /**
@@ -207,47 +198,27 @@ function getTokenRange(input: string): string | undefined {
  *
  */
 function getTokenParam(input: string): Record<string, any> | undefined {
-	// Determine the token group/type
 	const group = getTokenType(input);
 
 	switch (group) {
 		case 'function': {
-			// Extract function arguments inside the parentheses
-			const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
-			if (fnMatch) {
-				const param = fnMatch[2].trim();
-				if (param) {
-					return { syntax: param };
-				}
-			}
-			return undefined;
+			const param = extractBetween(input, '()');
+			return param ? { syntax: param } : undefined;
 		}
 		case 'dimension':
 		case 'number':
 		case 'integer': {
 			// Extract range/step from dimension or number tokens
-			const dimMatch = input.match(/^<([a-zA-Z0-9-]+)(\s*\[([^\]]+)\])?>$/);
-			if (dimMatch?.[3]) {
-				const range = dimMatch[3].split(',').map((s: string) => s.trim());
-				if (range.length === 2) {
-					const [min, max] = range;
-					return { min: parseFloat(min), max: parseFloat(max) };
+			const range = getTokenRange(input);
+			if (range) {
+				const rangeValues = range.replace(/[\[\]]/g, '').split(',');
+				if (rangeValues.length === 2) {
+					return { min: parseFloat(rangeValues[0]), max: parseFloat(rangeValues[1]) };
 				}
 			}
 			return undefined;
 		}
-		case 'integer': {
-			// For integer, extract range if present
-			const intMatch = input.match(/^<integer>(\s*\[([^\]]+)\])?$/);
-			if (intMatch?.[2]) {
-				const range = intMatch[2].split(',').map((s: string) => s.trim());
-				if (range.length === 2) {
-					const [min, max] = range;
-					return { min: parseInt(min, 10), max: parseInt(max, 10) };
-				}
-			}
-			return undefined;
-		}
+
 		default:
 			return undefined;
 	}
@@ -278,7 +249,10 @@ function getTokenValue(token: string): string | undefined {
 		'<link>': '"https://example.com/image.png"',
 	};
 
-	const tokenValue = valueMap[token];
+	const tokenCanonical = getTokenCanonical(token);
+	if (!tokenCanonical) return undefined;
+
+	const tokenValue = valueMap[tokenCanonical];
 	return tokenValue ? tokenValue : undefined;
 }
 

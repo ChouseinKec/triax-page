@@ -1,3 +1,6 @@
+// Components
+import HorizontalDivider from '@/components/divider/horizontal/component';
+
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
 
@@ -243,8 +246,13 @@ export const useDisplayLayout = (): LayoutProps => {
             },
 
             {
-                isExpandable: true,
                 properties: [
+                    // Divider
+                    {
+                        label: null,
+                        column: '1/-1',
+                        component: () => <HorizontalDivider />,
+                    },
 
                     // Direction
                     {
@@ -255,7 +263,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         component: () => renderValue('direction')
                     },
 
-                    // Box-Sizing(e.g., border-box, content-box).
+                    // Box-Sizing
                     {
                         label: 'Box-Sizing',
                         column: 'auto',
@@ -263,6 +271,45 @@ export const useDisplayLayout = (): LayoutProps => {
                         property: 'box-sizing',
                         component: () => renderValue('box-sizing'),
                     },
+
+                    // Object-Fit 
+                    {
+                        label: 'Object-Fit',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'object-fit',
+                        component: () => renderValue('object-fit'),
+                    },
+
+                    // Object-Position
+                    {
+                        label: 'Object-Position',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'object-position',
+                        component: () => renderValue('object-position'),
+                    },
+
+                    // Clear
+                    {
+                        label: 'Clear',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'clear',
+                        component: () => renderValue('clear'),
+                    },
+
+                    // Float
+                    {
+                        label: 'Float',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'float',
+                        component: () => renderValue('float'),
+                    },
+
+
+
                 ]
             },
         ],

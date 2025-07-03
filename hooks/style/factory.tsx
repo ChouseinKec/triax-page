@@ -18,12 +18,15 @@ import SizeView from '@/editors/style/components/view/size/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
+import { text } from 'stream/consumers';
+import { clear } from 'console';
 
 interface StyleFactoryProps {
 	renderValue: (propertyName: CSSProperties) => ReactElement | null;
 	renderFlexView: () => ReactElement;
 	renderGridView: () => ReactElement;
 	renderBackgroundView: () => ReactElement;
+	renderBorderView: () => ReactElement;
 	renderTextView: () => ReactElement;
 	renderPositionView: () => ReactElement;
 	renderSizeView: () => ReactElement;
@@ -81,7 +84,13 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				justifyContent: getStyle('justify-content'),
 				alignItems: getStyle('align-items'),
 				alignContent: getStyle('align-content'),
+				
 				direction: getStyle('direction'),
+				boxSizing: getStyle('box-sizing'),
+				objectFit: getStyle('object-fit'),
+				objectPosition: getStyle('object-position'),
+				clear: getStyle('clear'),
+				float: getStyle('float'),
 			}}
 
 		/>;
@@ -119,7 +128,25 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				backgroundAttachment: getStyle('background-attachment'),
 				backgroundClip: getStyle('background-clip'),
 				backgroundOrigin: getStyle('background-origin'),
+				backgroundBlendMode: getStyle('background-blend-mode'),
 
+				maskImage: getStyle('mask-image'),
+				maskPosition: getStyle('mask-position'),
+				maskSize: getStyle('mask-size'),
+				maskRepeat: getStyle('mask-repeat'),
+				maskClip: getStyle('mask-clip'),
+				maskOrigin: getStyle('mask-origin'),
+				maskMode: getStyle('mask-mode'),
+				maskType: getStyle('mask-type'),
+				maskComposite: getStyle('mask-composite'),
+				
+			}} />
+	}, [getStyle]
+	);
+
+	const renderBorderView = useCallback<StyleFactoryProps['renderBorderView']>(() => {
+		return <BackgroundView
+			styles={{
 				borderTopLeftRadius: getStyle('border-top-left-radius'),
 				borderTopRightRadius: getStyle('border-top-right-radius'),
 				borderBottomLeftRadius: getStyle('border-bottom-left-radius'),
@@ -139,6 +166,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				outlineStyle: getStyle('outline-style'),
 				outlineWidth: getStyle('outline-width'),
 				outlineColor: getStyle('outline-color'),
+				outlineOffset: getStyle('outline-offset'),
 			}} />
 	}, [getStyle]
 	);
@@ -148,22 +176,27 @@ export const useStyleFactory = (): StyleFactoryProps => {
 			styles={{
 				fontSize: getStyle('font-size'),
 				fontWeight: getStyle('font-weight'),
-				lineHeight: getStyle('line-height'),
 				fontFamily: getStyle('font-family'),
+				fontStyle: getStyle('font-style'),
+				lineHeight: getStyle('line-height'),
+
 				color: getStyle('color'),
 				textAlign: getStyle('text-align'),
-				fontStyle: getStyle('font-style'),
 				textTransform: getStyle('text-transform'),
-				textDecoration: getStyle('text-decoration'),
-
-				letterSpacing: getStyle('letter-spacing'),
 				textIndent: getStyle('text-indent'),
+				textDecoration: getStyle('text-decoration'),
+				textOrientation: getStyle('text-orientation'),
+				textOverflow: getStyle('text-overflow'),
+				textShadow: getStyle('text-shadow'),
+				textAlignLast: getStyle('text-align-last'),
+				textCombineUpright: getStyle('text-combine-upright'),
+				
+				letterSpacing: getStyle('letter-spacing'),
 				wordBreak: getStyle('word-break'),
 				lineBreak: getStyle('line-break'),
 				whiteSpace: getStyle('white-space'),
-				textOverflow: getStyle('text-overflow'),
 				writingMode: getStyle('writing-mode'),
-				textOrientation: getStyle('text-orientation'),
+				wordSpacing: getStyle('word-spacing'),
 
 				columnCount: getStyle('column-count'),
 				columnWidth: getStyle('column-width'),
@@ -243,6 +276,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		renderFlexView,
 		renderGridView,
 		renderBackgroundView,
+		renderBorderView,
 		renderTextView,
 		renderPositionView,
 		renderPositionSelect,

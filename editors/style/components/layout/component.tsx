@@ -12,8 +12,9 @@ import { useDisplayLayout } from '@/editors/style/components/layout/hooks/displa
 import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
 import { usePositionLayout } from '@/editors/style/components/layout/hooks/position';
 import { useFontLayout } from '@/editors/style/components/layout/hooks/font';
+import { useBorderLayout } from '@/editors/style/components/layout/hooks/border';
+import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
 import { useBackgroundLayout } from '@/editors/style/components/layout/hooks/background';
-// import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
 
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
@@ -27,7 +28,8 @@ const Layout: React.FC = ({ }): ReactElement => {
     const positionLayout = usePositionLayout();
     const fontLayout = useFontLayout();
     const backgroundLayout = useBackgroundLayout();
-    // const effectLayout = useEffectLayout();
+    const borderLayout = useBorderLayout();
+    const effectLayout = useEffectLayout();
 
     const layouts: LayoutProps[] = [
         displayLayout,
@@ -35,7 +37,8 @@ const Layout: React.FC = ({ }): ReactElement => {
         positionLayout,
         fontLayout,
         backgroundLayout,
-        // effectLayout,
+        borderLayout,
+        effectLayout,
     ];
 
     const AccordionItems = layouts.map((category) => ({

@@ -86,18 +86,10 @@ export const usePositionLayout = (): LayoutProps => {
                     },
 
 
-                    // Transform (e.g., translate, rotate).
+                    // Z-Index
                     {
-                        label: 'Transform',
-                        column: '1/3',
-                        direction: 'column',
-                        component: () => renderValue('transform'),
-                    },
-
-                    // Backdrop Filter (e.g., blur, brightness).
-                    {
-                        label: 'Z Index',
-                        column: '3/-1',
+                        label: 'Z-Index',
+                        column: 'auto',
                         direction: 'column',
                         component: () => renderValue('z-index'),
                     },

@@ -1,5 +1,5 @@
 // Types
-import type { CSSProperty, CSSProperties } from '@/types/style/property';
+import type { CSSProperty } from '@/types/style/property';
 
 // Constants
 import { ValueSeparators } from './separator';
@@ -44,7 +44,7 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 
 		get syntaxSet() {
 			if (_set === undefined) {
-				const tokens = this.syntaxParsed.map((variation) => [...splitAdvanced(variation, [...ValueSeparators])]);
+				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, ValueSeparators));
 				const columnArrays = getColumnSets(tokens);
 				_set = columnArrays.map((col) => new Set(col));
 			}
@@ -53,7 +53,11 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 
 		get syntaxNormalized() {
 			if (_normalized === undefined) {
-				_normalized = this.syntaxParsed.map((variation) => [...splitAdvanced(variation, [...ValueSeparators])].map((token) => getTokenCanonical(token)).join(' '));
+				_normalized = this.syntaxParsed.map((variation) =>
+					splitAdvanced(variation, ValueSeparators)
+						.map((token) => getTokenCanonical(token))
+						.join(' ')
+				);
 			}
 			return _normalized!;
 		},
@@ -72,8 +76,8 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
  * Each entry is a CSSProperty object describing the property's name, syntax, description, and category.
  * Used for property validation, UI dropdowns, and documentation.
  */
-export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
-	// ============ Display & Visibility =============
+export const CSSPropertyDefs: Partial<Record<string, CSSProperty>> = {
+	// ============ Display & Layout =============
 	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
 	visibility: createProperty('visibility', 'visible | hidden | collapse'),
 	opacity: createProperty('opacity', '<number [0,1]> | <percentage [0%,100%]>'),
@@ -100,19 +104,36 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 
 	direction: createProperty('direction', 'ltr | rtl'),
 	'box-sizing': createProperty('box-sizing', 'content-box | border-box'),
+	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down'),
+	'object-position': createProperty('object-position', '[[left|center|right]&&[top|center|bottom]] | <length-percentage> | [<length-percentage> <length-percentage>]'),
 
-	// ============ Size & Dimension =============
+	float: createProperty('float', 'left|right|none'),
+	clear: createProperty('clear', 'none|left|right|both'),
+
+	// ============ Size & Scroll =============
 	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	'min-width': createProperty('min-width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	'max-width': createProperty('max-width', '<length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	height: createProperty('height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	'min-height': createProperty('min-height', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
 	'max-height': createProperty('max-height', '<length-percentage [0,∞]> | min-content | max-content | fit-content'),
-	overflow: createProperty('overflow', '[<overflow-block>]{1,2}'),
-	'object-fit': createProperty('object-fit', 'fill|contain|cover|none|scale-down'),
 	'aspect-ratio': createProperty('aspect-ratio', 'auto || <ratio>'),
-	float: createProperty('float', 'left | right | none'),
-	clear: createProperty('clear', 'none | left | right | both'),
+	overflow: createProperty('overflow', '[<overflow-block>]{1,2}'),
+
+	'scroll-behavior': createProperty('scroll-behavior', 'auto|smooth'),
+	'overscroll-behavior': createProperty('overscroll-behavior', '[contain|none|auto]{1,2}'),
+
+	'scroll-snap-type': createProperty('scroll-snap-type', 'none|[[x|y|block|inline|both] [mandatory|proximity]?]'),
+	'scroll-snap-align': createProperty('scroll-snap-align', '  [none|start|end|center]{1,2}'),
+	'scroll-snap-stop': createProperty('scroll-snap-stop', 'normal|always'),
+
+	'scroll-margin': createProperty('scroll-margin', '<length>{1,4}'),
+	'scroll-margin-block': createProperty('scroll-margin-block', '<length>{1,2}'),
+	'scroll-margin-inline': createProperty('scroll-margin-inline', '<length>{1,2}'),
+
+	'scroll-padding': createProperty('scroll-padding', '[auto|<length-percentage [0,∞]>]{1,4}'),
+	'scroll-padding-block': createProperty('scroll-padding-block', '[auto|<length-percentage [0,∞]>]{1,2}'),
+	'scroll-padding-inline': createProperty('scroll-padding-inline', '[auto|<length-percentage [0,∞]>]{1,2}'),
 
 	// ============ Position & Spacing =============
 	position: createProperty('position', 'static | relative | absolute | fixed | sticky'),
@@ -134,19 +155,29 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'margin-left': createProperty('margin-left', 'auto | <length-percentage>'),
 	margin: createProperty('margin', 'auto | <length-percentage>{1,4}'),
 
-	transform: createProperty('transform', 'none | [<transform-function>]+'),
-
-	// ============ Background & Border =============
+	// ============ Background & Mask =============
 	'background-color': createProperty('background-color', '<color>'),
+
+	'background-image': createProperty('background-image', 'none|<bg-image>'),
 	'background-position': createProperty('background-position', '<bg-position>'),
 	'background-size': createProperty('background-size', '<bg-size>'),
-	'background-repeat': createProperty('background-repeat', 'repeat-x | repeat-y | repeat | space | round | no-repeat'),
+	'background-repeat': createProperty('background-repeat', 'repeat-x|repeat-y|[repeat|space|round|no-repeat]{1,2}'),
+	'background-clip': createProperty('background-clip', 'border-box|padding-box|content-box|text'),
+	'background-origin': createProperty('background-origin', 'border-box|padding-box|content-box'),
+	'background-blend-mode': createProperty('background-blend-mode', 'normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity'),
+	'background-attachment': createProperty('background-attachment', 'scroll|fixed|local'),
 
-	'background-image': createProperty('background-image', '<bg-image>'),
-	'background-attachment': createProperty('background-attachment', 'scroll | fixed | local'),
-	'background-clip': createProperty('background-clip', 'border-box | padding-box | content-box | text'),
-	'background-origin': createProperty('background-origin', 'border-box | padding-box | content-box'),
+	'mask-image': createProperty('mask-image', 'none|<image>'),
+	'mask-position': createProperty('mask-position', '<bg-position>'),
+	'mask-size': createProperty('mask-size', '<bg-size>'),
+	'mask-repeat': createProperty('mask-repeat', 'repeat-x|repeat-y|[repeat|space|round|no-repeat]{1,2}'),
+	'mask-clip': createProperty('mask-clip', 'no-clip|view-box|fill-box|stroke-box|content-box|padding-box|border-box'),
+	'mask-origin': createProperty('mask-origin', 'view-box|fill-box|stroke-box|content-box|padding-box|border-box'),
+	'mask-mode': createProperty('mask-mode', 'match-source|alpha|luminance'),
+	'mask-type': createProperty('mask-type', 'luminance|alpha'),
+	'mask-composite': createProperty('mask-composite', 'add|subtract|intersect|exclude'),
 
+	// ============  Border =============
 	'border-width': createProperty('border-width', '<length [0,∞]>'),
 	'border-style': createProperty('border-style', 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset'),
 	'border-color': createProperty('border-color', '<color>'),
@@ -172,29 +203,41 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'border-bottom-right-radius': createProperty('border-bottom-right-radius', '<length-percentage>'),
 	'border-bottom-left-radius': createProperty('border-bottom-left-radius', '<length-percentage>'),
 
-	outline: createProperty('outline', 'auto|none|dotted|dashed|solid|double|groove|ridge|inset|outset <length [0,∞]> <color>'),
+	'border-image-source': createProperty('border-image-source', 'none|<border-image-source>'),
+	'border-image-slice': createProperty('border-image-slice', '<border-image-slice>'),
+	'border-image-width': createProperty('border-image-width', '<border-image-width>'),
+	'border-image-outset': createProperty('border-image-outset', '<border-image-outset>'),
+	'border-image-repeat': createProperty('border-image-repeat', '<border-image-repeat>'),
+
+	'outline-width': createProperty('outline-width', 'medium|thin|thick|<length [0,∞]>'),
+	'outline-style': createProperty('outline-style', 'none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset'),
+	'outline-color': createProperty('outline-color', '<color>'),
+	'outline-offset': createProperty('outline-offset', '<length [0,∞]>'),
 
 	// ============ Font & Text =============
 	'font-family': createProperty('font-family', '<generic-family>'),
 	'font-size': createProperty('font-size', '<absolute-size> | <relative-size> | <length-percentage>'),
 	'font-weight': createProperty('font-weight', 'normal|bold|<integer>'),
-	'line-height': createProperty('line-height', 'normal | <number> | <length-percentage>'),
-	color: createProperty('color', '<color>'),
-
 	'font-style': createProperty('font-style', 'normal | italic'),
+	'line-height': createProperty('line-height', 'normal|<number>|<length-percentage>'),
+
+	color: createProperty('color', '<color>'),
+	'text-indent': createProperty('text-indent', '<length-percentage>'),
+	'text-shadow': createProperty('text-shadow', '<length> <length> <length> <color>'),
+	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
+	'text-orientation': createProperty('text-orientation', 'mixed | upright | sideways'),
 	'text-align': createProperty('text-align', 'left | right | center | justify | start | end'),
 	'text-decoration': createProperty('text-decoration', '<text-decoration-line> <text-decoration-style> <text-decoration-thickness> <text-decoration-color> '),
 	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase'),
-	
-	'text-indent': createProperty('text-indent', '<length-percentage>'),
-	'text-shadow': createProperty('text-shadow', 'none|<color> <length> <length> <length>'),
-	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
-	'white-space': createProperty('white-space', 'normal | pre | nowrap | pre-wrap | pre-line | break-spaces'),
-	'word-break': createProperty('word-break', 'normal | break-all | keep-all | break-word'),
-	'writing-mode': createProperty('writing-mode', 'horizontal-tb | vertical-rl | vertical-lr'),
-	'letter-spacing': createProperty('letter-spacing', 'normal | <length>'),
-	'line-break': createProperty('line-break', 'auto | loose | normal | strict | anywhere'),
-	'text-orientation': createProperty('text-orientation', 'mixed | upright | sideways'),
+	'text-align-last': createProperty('text-align-last', 'auto|start|end|left|right|center|justify'),
+	'text-combine-upright': createProperty('text-combine-upright', 'none|all|[digits <integer [2,4]>?]'),
+
+	'white-space': createProperty('white-space', 'normal|pre|nowrap|pre-wrap|pre-line|break-spaces'),
+	'word-break': createProperty('word-break', 'normal|break-all|keep-all|break-word'),
+	'writing-mode': createProperty('writing-mode', 'horizontal-tb|vertical-rl|vertical-lr'),
+	'letter-spacing': createProperty('letter-spacing', 'normal|<length>'),
+	'line-break': createProperty('line-break', 'auto|loose|normal|strict|anywhere'),
+	'word-spacing': createProperty('word-spacing', 'normal|<length>'),
 
 	'column-count': createProperty('column-count', 'auto|<integer [1,∞]>'),
 	'column-width': createProperty('column-width', 'auto|<length [0,∞]>'),
@@ -208,7 +251,8 @@ export const CSSPropertyDefs: Partial<Record<CSSProperties, CSSProperty>> = {
 	'column-fill': createProperty('column-fill', 'auto|balance|balance-all'),
 
 	// -------------------------------- EFFECTS --------------------------------
-	'box-shadow': createProperty('box-shadow', 'none | <shadow>#'),
-	filter: createProperty('filter', 'none | <filter-function>+'),
-	'backdrop-filter': createProperty('backdrop-filter', 'none | <filter-function>+'),
+	filter: createProperty('filter', 'none|[<filter-function>]+'),
+	'backdrop-filter': createProperty('backdrop-filter', 'none|[<filter-function>]+'),
+	transform: createProperty('transform', 'none|[<transform-function>]{1,4}'),
+	'box-shadow': createProperty('box-shadow', '<spread-shadow>'),
 };

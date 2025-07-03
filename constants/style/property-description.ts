@@ -2,7 +2,7 @@ import { CSSPropertyDefs } from './property';
 
 // New: Centralized descriptions for all CSS properties
 export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, string>> = {
-	// ============ Display & Visibility =============
+	// ============ Display & Layout =============
 	display: 'Controls the element’s display type and how it participates in layout.',
 	visibility: 'Specifies whether the element is visible, hidden, or collapses its space.',
 	opacity: 'Sets the transparency level of the element, affecting its content and children.',
@@ -29,19 +29,31 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
 
 	direction: 'Specifies the base writing direction for text and layout.',
 	'box-sizing': 'Controls how the total width and height of an element are calculated.',
+	'object-fit': 'Specifies how replaced content should be resized to fit its container.',
+	float: 'Removes the element from normal flow and positions it to the left or right.',
+	clear: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
 
-	// ============ Size & Dimension =============
+	// ============ Size & Scroll =============
 	width: 'Specifies the width of the element’s content area.',
 	'min-width': 'Sets the minimum width the element’s content area can be.',
 	'max-width': 'Sets the maximum width the element’s content area can be.',
 	height: 'Specifies the height of the element’s content area.',
 	'min-height': 'Sets the minimum height the element’s content area can be.',
 	'max-height': 'Sets the maximum height the element’s content area can be.',
-	overflow: 'Controls what happens when content overflows the element’s box.',
-	'object-fit': 'Specifies how replaced content should be resized to fit its container.',
 	'aspect-ratio': 'Sets a preferred width-to-height ratio for the element’s box.',
-	float: 'Removes the element from normal flow and positions it to the left or right.',
-	clear: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
+	overflow: 'Controls what happens when content overflows the element’s box.',
+
+	'scroll-behavior': 'Specifies the scrolling behavior for the element when scrolling is triggered.',
+	'overscroll-behavior': 'Specifies the behavior when scrolling reaches the boundary of a scroll container.',
+	'scroll-snap-type': 'Defines how the element’s children snap to a grid or points when scrolling.',
+	'scroll-snap-align': 'Defines the alignment of the element’s children within the scroll container.',
+	'scroll-snap-stop': 'Controls whether the scroll snap point is always respected or not.',
+	'scroll-margin': 'Sets the margin around the element for scroll snapping.',
+	'scroll-margin-block': 'Sets the margin around the element for scroll snapping in the block direction.',
+	'scroll-margin-inline': 'Sets the margin around the element for scroll snapping in the inline direction.',
+	'scroll-padding': 'Sets the padding around the element for scroll snapping.',
+	'scroll-padding-block': 'Sets the padding around the element for scroll snapping in the block direction.',
+	'scroll-padding-inline': 'Sets the padding around the element for scroll snapping in the inline direction.',
 
 	// ============ Position & Spacing =============
 	position: 'Specifies the positioning method for the element.',
@@ -55,54 +67,94 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
 	'padding-right': 'Sets the space between the element’s content and its right border.',
 	'padding-bottom': 'Sets the space between the element’s content and its bottom border.',
 	'padding-left': 'Sets the space between the element’s content and its left border.',
-	padding: 'Shorthand for setting all four padding sides at once.',
+	padding: 'Sets the space between the element’s content and all its borders.',
 
 	'margin-top': 'Sets the space outside the element’s top border.',
 	'margin-right': 'Sets the space outside the element’s right border.',
 	'margin-bottom': 'Sets the space outside the element’s bottom border.',
 	'margin-left': 'Sets the space outside the element’s left border.',
-	margin: 'Shorthand for setting all four margin sides at once.',
-	transform: 'Applies 2D or 3D transformations to the element.',
+	margin: 'Sets the space outside all the element’s borders.',
 
-	// ============ Background & Border =============
+	// ============ Background & Mask =============
 	'background-color': 'Sets the background color of the element.',
-	'background-position': 'Specifies the initial position of a background image within the element’s box.',
-	'background-size': 'Specifies the size of background images.',
-	'background-repeat': 'Controls how background images are repeated.',
+	'background-position': 'Positions the background image within the element.',
+	'background-size': 'Resizes the background image of the element.',
+	'background-repeat': 'Repeats the background image of the element.',
+	'background-image': 'Applies a background image to the element.',
 
-	'background-image': 'Sets one or more background images for the element.',
-	'background-attachment': 'Specifies whether a background image scrolls with the page or is fixed.',
+	'background-attachment': 'Determines if the background image scrolls with the page or stays fixed.',
 	'background-clip': 'Defines how far the background extends within the element.',
-	'background-origin': 'Specifies the positioning area for background images.',
+	'background-origin': 'Determines the positioning area for the background image.',
+	'background-blend-mode': 'Specifies how multiple background layers blend with each other.',
 
-	'border-width': 'Shorthand for setting the width of all four borders.',
-	'border-style': 'Shorthand for setting the style of all four borders.',
-	'border-color': 'Shorthand for setting the color of all four borders.',
-	'border-radius': 'Rounds the corners of the element.',
+	'mask-image': 'Applies a mask image to the element.',
+	'mask-position': 'Positions the mask image within the element.',
+	'mask-size': 'Resizes the mask image of the element.',
+	'mask-repeat': 'Repeats the mask image of the element.',
+	'mask-clip': 'Defines how far the mask extends within the element.',
+	'mask-origin': 'Determines the positioning area for the mask image.',
+	'mask-mode': 'Specifies the mask mode for the element.',
+	'mask-type': 'Specifies the mask type for the element.',
+	'mask-composite': 'Defines how multiple mask images are combined.',
+	// ============ Border =============
+	'border-width': "Sets the width of all sides of the element's borders.",
+	'border-style': "Sets the style of all sides of the element's borders.",
+	'border-color': "Sets the color of all sides of the element's borders.",
+	'border-radius': 'Rounds all corners of the element.',
 
-	outline: 'Shorthand for setting outline color, style, and width.',
+	'border-top-width': 'Sets the width of the top border of the element.',
+	'border-top-style': 'Sets the style of the top border of the element.',
+	'border-top-color': 'Sets the color of the top border of the element.',
+	'border-right-width': 'Sets the width of the right border of the element.',
+	'border-right-style': 'Sets the style of the right border of the element.',
+	'border-right-color': 'Sets the color of the right border of the element.',
+	'border-bottom-width': 'Sets the width of the bottom border of the element.',
+	'border-bottom-style': 'Sets the style of the bottom border of the element.',
+	'border-bottom-color': 'Sets the color of the bottom border of the element.',
+	'border-left-width': 'Sets the width of the left border of the element.',
+	'border-left-style': 'Sets the style of the left border of the element.',
+	'border-left-color': 'Sets the color of the left border of the element.',
+
+	'border-top-left-radius': 'Rounds the top-left corner of the element.',
+	'border-top-right-radius': 'Rounds the top-right corner of the element.',
+	'border-bottom-left-radius': 'Rounds the bottom-left corner of the element.',
+	'border-bottom-right-radius': 'Rounds the bottom-right corner of the element.',
+
+	'border-image-source': 'Specifies the source image for the border.',
+	'border-image-slice': 'Defines how the border image is sliced into regions.',
+	'border-image-width': 'Sets the width of the border image.',
+	'border-image-outset': 'Specifies the amount by which the border image area extends beyond the border box.',
+	'border-image-repeat': 'Specifies how the border image is repeated or stretched.',
+
+	'outline-width': 'Sets the width of the outline around the element.',
+	'outline-style': 'Sets the style of the outline around the element.',
+	'outline-color': 'Sets the color of the outline around the element.',
+	'outline-offset': 'Sets the space between the outline and the edge of the element’s border.',
 
 	// ============ Font & Text =============
 	'font-family': 'Specifies the font family for the element’s text.',
 	'font-size': 'Sets the size of the font.',
 	'font-weight': 'Sets the thickness or boldness of the font.',
-	'line-height': 'Sets the height of each line of text.',
-	color: 'Sets the color of the text.',
-
 	'font-style': 'Specifies the font style.',
+	'line-height': 'Sets the height of each line of text.',
+
+	color: 'Sets the color of the text.',
 	'text-align': 'Sets the horizontal alignment of text within its container.',
 	'text-decoration': 'Specifies decoration added to text, such as underline, overline, or line-through.',
 	'text-transform': 'Controls the capitalization of text.',
-
 	'text-indent': 'Indents the first line of text by a specified amount.',
 	'text-shadow': 'Adds shadow effects to text.',
 	'text-overflow': 'Specifies how overflowed content that is not displayed is signaled to the user.',
+	'text-orientation': 'Specifies the orientation of text characters in a line.',
+	'text-align-last': 'Specifies how the last line of a block or a line right before a forced line break is aligned.',
+	'text-combine-upright': 'Combines multiple characters into a single upright character, useful for vertical text layout.',
+
 	'white-space': 'Controls how whitespace inside the element is handled.',
 	'word-break': 'Specifies how words should break when reaching the end of a line.',
 	'writing-mode': 'Defines whether lines of text are laid out horizontally or vertically.',
 	'letter-spacing': 'Sets the spacing between characters of text.',
 	'line-break': 'Sets how/where to break lines within text.',
-	'text-orientation': 'Specifies the orientation of text characters in a line.',
+	'word-spacing': 'Sets the spacing between words in text.',
 
 	'column-count': 'Specifies the number of columns an element should be divided into for multi-column layout.',
 	'column-width': 'Specifies the ideal width of columns in a multi-column layout.',
@@ -116,4 +168,8 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
 	'column-fill': 'Specifies how content should be distributed between columns.',
 
 	// -------------------------------- EFFECTS --------------------------------
+	filter: 'Applies graphical effects such as blurring, brightness, contrast, and more to the element itself.',
+	'backdrop-filter': 'Applies graphical effects such as blurring or color shifting to the area behind an element.',
+	'box-shadow': 'Adds shadow effects around the element’s frame.',
+	transform: 'Transforms the element in 2D or 3D space.',
 };

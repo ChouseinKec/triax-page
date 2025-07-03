@@ -5,7 +5,7 @@ import { CSSTokenDefs } from '@/constants/style/token';
 import type { CSSTokens } from '@/types/style/token';
 
 // Utilities
-import { getTokenBase, getTokenCanonical, getTokenRange} from '@/utilities/style/token';
+import { getTokenBase, getTokenCanonical, getTokenRange } from '@/utilities/style/token';
 
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './parse-combinator';
 import { hasMultiplier, parseMultiplier } from './parse-multiplier';
@@ -44,15 +44,18 @@ function expandTokens(syntax: string, seen = new Set<string>()): string {
 
 		// Look up the token definition in CSSTokenDefs
 		const def = CSSTokenDefs[tokenCanonical as CSSTokens];
+
 		if (def?.syntax) {
 			// Mark this token as seen to prevent recursion
 			seen.add(tokenCanonical);
 			// Recursively expand the definition's syntax
 			let expanded = expandTokens(def.syntax, seen);
+
 			// If the original token had a range, propagate it to all <...> tokens in the expanded string
 			if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
 			// Replace the token in the result string with its expanded form
 			result = result.replace(token, expanded);
+
 			// Remove from seen set after expansion
 			seen.delete(tokenCanonical);
 		}
@@ -101,53 +104,55 @@ function normalizeSyntax(syntax: string): string {
  */
 function parse(syntax: string): string[] {
 	const normalizedSyntax = normalizeSyntax(syntax.trim());
+
+	let results: string[] = [];
+
 	// Handle comma-separated list (lowest precedence)
 	if (hasComma(normalizedSyntax)) {
-		return parseComma(normalizedSyntax);
+		results = parseComma(normalizedSyntax);
 	}
-
 	// Handle '||' (double bar) first (lowest precedence)
-	if (hasDoubleBar(normalizedSyntax)) {
-		return parseDoubleBar(normalizedSyntax);
+	else if (hasDoubleBar(normalizedSyntax)) {
+		results = parseDoubleBar(normalizedSyntax);
 	}
-
 	// Handle '&&' (double ampersand)
-	if (hasDoubleAmp(normalizedSyntax)) {
-		return parseDoubleAmp(normalizedSyntax);
+	else if (hasDoubleAmp(normalizedSyntax)) {
+		results = parseDoubleAmp(normalizedSyntax);
 	}
-
 	// Handle space-separated sequence
-	if (hasSequence(normalizedSyntax)) {
-		return parseSequence(normalizedSyntax);
+	else if (hasSequence(normalizedSyntax)) {
+		results = parseSequence(normalizedSyntax);
 	}
-
 	// Handle '|' (single bar)
-	if (hasSingleBar(normalizedSyntax)) {
-		return parseSingleBar(normalizedSyntax);
+	else if (hasSingleBar(normalizedSyntax)) {
+		results = parseSingleBar(normalizedSyntax);
 	}
-
 	// Handle '[]' (optional group)
-	if (hasBrackets(normalizedSyntax)) {
-		return parseBrackets(normalizedSyntax);
+	else if (hasBrackets(normalizedSyntax)) {
+		results = parseBrackets(normalizedSyntax);
 	}
-
 	// Handle optional group in brackets or brackets with multipliers
-	if (hasBracketsMultiplier(normalizedSyntax)) {
-		return parseBracketsMultiplier(normalizedSyntax);
+	else if (hasBracketsMultiplier(normalizedSyntax)) {
+		results = parseBracketsMultiplier(normalizedSyntax);
 	}
-
 	// Handle multipliers (?, +, *, {m,n})
-	if (hasMultiplier(normalizedSyntax)) {
-		return parseMultiplier(normalizedSyntax).sort((a, b) => a.length - b.length);
+	else if (hasMultiplier(normalizedSyntax)) {
+		results = parseMultiplier(normalizedSyntax);
+	}
+	// Base case: atomic value
+	else {
+		results = [normalizedSyntax];
 	}
 
-	// Base case: atomic value
-	return [normalizedSyntax];
+	// Remove duplicates and sort by length
+	return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
 }
 
 function test() {
-	// const syntax = 'none|underline|overline|line-through|blink solid|double|dotted|dashed|wavy auto|from-font|<length>|<percentage> <color> ';
-	// console.log(parse(syntax));
+	// [left|center|right|top|bottom|<length-percentage>]|[[left|center|right|<length-percentage>] [top|center|bottom|<length-percentage>]]
+	// const syntax = '';
+	// const result = parse(syntax);
+	// console.log(result);
 	// const syntax = '<integer [1,∞]>,[<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto|minmax(<length [0,∞]>|<percentage [0,∞]>|min-content|max-content|auto,<length [0,∞]>|<percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto)|fit-content(<length [0,∞]>|<percentage [0,∞]>)]+';
 	// const parsed = parse(syntax);
 	// console.log(parsed);

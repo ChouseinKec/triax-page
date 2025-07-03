@@ -6,10 +6,11 @@ import CSS from './styles.module.css';
 import { HorizontalDividerProps } from '@/components/divider/horizontal/types';
 
 
-const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ type = 'straight' }: HorizontalDividerProps): ReactElement => {
-    return (
-        <div className={CSS.HorizontalDivider} data-type={type} />
-    );
+const HorizontalDivider: React.FC<HorizontalDividerProps> = (props: HorizontalDividerProps): ReactElement => {
+    const { title } = props;
+    const _style = { '--divider-title': title ? `"${title}"` : '""' } as React.CSSProperties;
+
+    return <div className={CSS.HorizontalDivider} data-title={title} style={_style} />;
 };
 
 export default HorizontalDivider;

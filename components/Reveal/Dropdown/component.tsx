@@ -92,7 +92,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                     targetRef={dropdownRef}
                     position='bottom'
                     isOpen={isOpen}
-                    style={{ minWidth: dropdownRef.current?.offsetWidth, borderTop: '4px solid var(--color-black--lighter)' }}
+                    style={{ borderTop: '4px solid var(--color-black--lighter)' }}
                 >
                     {children}
                 </FloatReveal>

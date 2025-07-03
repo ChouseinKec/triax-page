@@ -1,124 +1,45 @@
-import { useState } from 'react';
 
 // Components
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
-import type { Side, Corner } from '@/components/select/position/types';
-import type { CSSProperties } from '@/types/style/property';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
 
 
-
-function generatePropertyName(property: string, suffix: string, position: Side | Corner): CSSProperties {
-    if (!position) return `${property}-${suffix}` as CSSProperties;
-    return `${property}-${position}-${suffix}` as CSSProperties;
-}
-
-
 /**
- * Custom hook to render the layout for the border and shadow styles.
- * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
+ * Custom hook to render the layout for the background styles.
+ * This hook generates the structure and behavior of the "Background" section in the style editor.
  * 
- * @returns {LayoutProps} The layout configuration for border and shadow settings.
+ * @returns {LayoutProps} The layout configuration for background settings.
  */
 export const useBackgroundLayout = (): LayoutProps => {
-    const { renderValue, renderPositionSelect, renderBackgroundView } = useStyleFactory();
-
-    const [currentSide, setCurrentSide] = useState<Side>('top');
-    const [currentCorner, setCurrentCorner] = useState<Corner>(null);
+    const { renderValue, renderBackgroundView } = useStyleFactory();
 
     return {
-        label: 'Background & Border',
+        label: 'Background & Mask',
         groups: [
             {
-                columns: '0.2fr 1fr 1fr',
                 properties: [
-
                     // Position selector for the border side (Top, Bottom, Left, Right)
                     {
                         label: null,
-                        column: '1',
-                        row: '1',
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true, true),
-                    },
-
-                    // Position selector for the border side (Top, Bottom, Left, Right)
-                    {
-                        label: null,
-                        column: '2/-1',
+                        column: '1/-1',
                         row: '1',
                         component: () => renderBackgroundView(),
-                    },
-
-
-                    // Border Width
-                    {
-                        label: 'Border Width',
-                        column: '1',
-                        row: '2',
-                        direction: 'column',
-                        property: 'border-width',
-                        disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(generatePropertyName('border', 'width', currentSide)), // Dynamic length input based on selected side
-                    },
-
-                    // Border Style (solid, dashed, etc.)
-                    {
-                        label: 'Border Style',
-                        column: '2',
-                        row: '2',
-                        direction: 'column',
-                        property: 'border-style',
-                        disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(generatePropertyName('border', 'style', currentSide)), // Dynamic radio selector based on selected side
-                    },
-
-                    // Border Color picker
-                    {
-                        label: 'Border Color',
-                        column: '3',
-                        row: '2',
-                        direction: 'column',
-                        property: 'border-color',
-                        disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(generatePropertyName('border', 'color', currentSide)), // Dynamic color selector based on selected side
-                    },
-
-                    // Border Radius
-                    {
-                        label: 'Border Radius',
-                        direction: 'column',
-                        property: 'border-radius',
-                        row: '3',
-                        column: '1',
-                        disabled: currentCorner === null && currentSide !== null,
-                        component: () => renderValue(generatePropertyName('border', 'radius', currentCorner)), // Dynamic length input based on selected corner
-                    },
-
-                    // Outline Width
-                    {
-                        label: 'Outline',
-                        direction: 'column',
-                        property: 'outline',
-                        row: '3',
-                        column: '2/-1',
-                        component: () => renderValue('outline'),
                     },
 
                 ],
             },
 
             {
-                columns: '0.2fr 1fr 1fr',
-                isExpandable: true,
+                columns: 'repeat(3,minmax(0,1fr))',
                 properties: [
                     // Background-Image
                     {
                         label: 'Image',
-                        column: '1/3',
                         direction: 'column',
                         property: 'background-image',
                         component: () => renderValue('background-image'),
@@ -133,21 +54,13 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderValue('background-color'),
                     },
 
+                    // Background-Blend-Mode
                     {
-                        label: 'Size',
+                        label: 'Blend',
                         column: 'auto',
                         direction: 'column',
-                        property: 'background-size',
-                        component: () => renderValue('background-size'),
-                    },
-
-                    // Background-Position
-                    {
-                        label: 'Position',
-                        column: 'auto',
-                        direction: 'column',
-                        property: 'background-position',
-                        component: () => renderValue('background-position'),
+                        property: 'background-blend-mode',
+                        component: () => renderValue('background-blend-mode'),
                     },
 
                     // Background-Repeat
@@ -186,8 +99,125 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderValue('background-origin'),
                     },
 
+                    // Background-Size
+                    {
+                        label: 'Size',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'background-size',
+                        component: () => renderValue('background-size'),
+                    },
+
+                    // Background-Position
+                    {
+                        label: 'Position',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'background-position',
+                        component: () => renderValue('background-position'),
+                    },
+
                 ]
-            }
+            },
+
+
+            {
+
+                columns: 'repeat(3,minmax(0,1fr))',
+                properties: [
+
+                    {
+                        label: null,
+                        column: '1/-1',
+                        component: () => <HorizontalDivider title='Mask' />,
+                    },
+
+                    // Mask-Image
+                    {
+                        label: 'Image',
+                        direction: 'column',
+                        property: 'mask-image',
+                        component: () => renderValue('mask-image'),
+                    },
+
+
+                    // Mask-Type
+                    {
+                        label: 'Type',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-type',
+                        component: () => renderValue('mask-type'),
+                    },
+
+
+                    // Mask-Mode
+                    {
+                        label: 'Mode',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-mode',
+                        component: () => renderValue('mask-mode'),
+                    },
+
+                    // Mask-Repeat
+                    {
+                        label: 'Repeat',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-repeat',
+                        component: () => renderValue('mask-repeat'),
+                    },
+
+                    // Mask-Composite
+                    {
+                        label: 'Composite',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-composite',
+                        component: () => renderValue('mask-composite'),
+                    },
+
+
+                    // Mask-Clip
+                    {
+                        label: 'Clip',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-clip',
+                        component: () => renderValue('mask-clip'),
+                    },
+
+                    // Mask-Origin
+                    {
+                        label: 'Origin',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-origin',
+                        component: () => renderValue('mask-origin'),
+                    },
+
+                    // Mask-Size
+                    {
+                        label: 'Size',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-size',
+                        component: () => renderValue('mask-size'),
+                    },
+
+                    // Mask-Position
+                    {
+                        label: 'Position',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'mask-position',
+                        component: () => renderValue('mask-position'),
+                    },
+
+                ]
+            },
+
         ],
     };
 };

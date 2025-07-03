@@ -16,7 +16,7 @@ export const useSizeLayout = (): LayoutProps => {
     const { renderValue, renderSizeView } = useStyleFactory();
 
     return {
-        label: 'Size & Overflow',
+        label: 'Size & Scroll',
         groups: [
             {
                 columns: 'repeat(3,minmax(0, 1fr))',
@@ -28,7 +28,7 @@ export const useSizeLayout = (): LayoutProps => {
                         column: '1/-1',
                         component: () => renderSizeView(),
                     },
-                    
+
                     // Width
                     {
                         label: 'Width',
@@ -82,14 +82,7 @@ export const useSizeLayout = (): LayoutProps => {
                         property: 'max-height',
                         component: () => renderValue('max-height'),
                     },
-                ],
 
-            },
-
-            {
-                isExpandable: true,
-                columns: 'repeat(4,minmax(0, 1fr))',
-                properties: [
 
                     // Aspect-Ratio(width / height).
                     {
@@ -100,23 +93,125 @@ export const useSizeLayout = (): LayoutProps => {
                         component: () => renderValue('aspect-ratio'),
                     },
 
+
                     // Overflow
                     {
                         label: 'Overflow',
-                        column: '3/-1',
+                        column: 'auto',
                         direction: 'column',
                         property: 'overflow',
                         component: () => renderValue('overflow'),
                     },
 
-                    // Object-Fit (e.g., cover, contain).
+                ],
+
+            },
+
+            {
+
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties: [
+
+                    // Divider
                     {
-                        label: 'Object-Fit',
-                        column: '1/4',
-                        direction: 'column',
-                        property: 'object-fit',
-                        component: () => renderValue('object-fit'),
+                        label: null,
+                        column: '1/-1',
+                        component: () => <HorizontalDivider title='Scroll' />,
                     },
+
+
+                    // Scroll Behavior
+                    {
+                        label: 'Behavior',
+                        column: '1',
+                        direction: 'column',
+                        property: 'scroll-behavior',
+                        component: () => renderValue('scroll-behavior'),
+                    },
+
+                    // Overscroll Behavior
+                    {
+                        label: 'Overscroll',
+                        column: '2/-1',
+                        direction: 'column',
+                        property: 'overscroll-behavior',
+                        component: () => renderValue('overscroll-behavior'),
+                    },
+
+                    // Scroll Snap Type
+                    {
+                        label: 'Snap Type',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-snap-type',
+                        component: () => renderValue('scroll-snap-type'),
+                    },
+                    // Scroll Snap Align
+                    {
+                        label: 'Snap Align',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-snap-align',
+                        component: () => renderValue('scroll-snap-align'),
+                    },
+                    // Scroll Snap Stop
+                    {
+                        label: 'Snap Stop',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-snap-stop',
+                        component: () => renderValue('scroll-snap-stop'),
+                    },
+                    // Scroll Margin
+                    {
+                        label: 'Margin',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-margin',
+                        component: () => renderValue('scroll-margin'),
+                    },
+                    // Scroll Margin Block
+                    {
+                        label: 'Margin Block',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-margin-block',
+                        component: () => renderValue('scroll-margin-block'),
+                    },
+                    // Scroll Margin Inline
+                    {
+                        label: 'Margin Inline',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-margin-inline',
+                        component: () => renderValue('scroll-margin-inline'),
+                    },
+                    // Scroll Padding
+                    {
+                        label: 'Padding',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-padding',
+                        component: () => renderValue('scroll-padding'),
+                    },
+                    // Scroll Padding Block
+                    {
+                        label: 'Padding Block',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-padding-block',
+                        component: () => renderValue('scroll-padding-block'),
+                    },
+                    // Scroll Padding Inline
+                    {
+                        label: 'Padding Inline',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'scroll-padding-inline',
+                        component: () => renderValue('scroll-padding-inline'),
+                    },
+
+
 
                 ]
             }

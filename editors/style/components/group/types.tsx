@@ -15,4 +15,7 @@ export type LayoutGroup = {
     properties: LayoutProps[];
     /** Optional flag indicating whether the group is expandable. */
     isExpandable?: boolean;
+    /** Optional title for the expandable group. */
+    expandTitle?: string;
+    
 };

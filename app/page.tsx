@@ -1,6 +1,6 @@
 "use client";
 // Styles
-import pageStyles from "./page.module.css";
+import CSS from "./page.module.css";
 
 // Components
 import StyleEditor from "@/editors/style/component";
@@ -17,13 +17,14 @@ export default function Home() {
   const { setSelected } = useBlockStore();
   const { generateBlockStyles } = useBlockEditor();
   const selectedBlock = useBlockStore(state => state.selectedBlock);
+  const version = process.env.NEXT_PUBLIC_APP_VERSION;
   test();
   return (
-    <main className={pageStyles.main}>
+    <main className={CSS.main}>
       {/* Styles */}
       <StyleEditor className='CSS' />
 
-      <div className={pageStyles.blocks}>
+      <div className={CSS.blocks}>
 
         <div data-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
           <p>Block 1A</p>
@@ -42,6 +43,9 @@ export default function Home() {
 
       </div>
 
+      <div className={CSS.version}>
+        <p>v{version}</p>
+      </div>
     </main>
 
 

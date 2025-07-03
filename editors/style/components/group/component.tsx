@@ -28,6 +28,7 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
         rows = 'auto', 
         hidden = false, 
         isExpandable = false, 
+        expandTitle = '',
     } = props;
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
@@ -51,7 +52,7 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
             _properties);
 
         return (
-            <ExpandReveal>
+            <ExpandReveal title={expandTitle}>
                 {_properties}
             </ExpandReveal>
         )

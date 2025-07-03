@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "update-version-env": "node scripts/update-version-env.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",

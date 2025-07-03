@@ -9,9 +9,9 @@
 
 	background: var(--color-white--darker);
 
-	&[data-type='bracket'] {
+	&[data-title] {
 		&::after {
-			content: '| |';
+			content: var(--divider-title);
 			width: max-content;
 			padding: var(--size-sm);
 			display: block;

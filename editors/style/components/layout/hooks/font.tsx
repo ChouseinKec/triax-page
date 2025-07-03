@@ -24,6 +24,13 @@ export const useFontLayout = (): LayoutProps => {
                         component: () => renderTextView()
                     },
 
+                ],
+            },
+
+            {
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties: [
+
                     // Size
                     {
                         label: 'Size',
@@ -56,81 +63,135 @@ export const useFontLayout = (): LayoutProps => {
                         component: () => renderValue('font-family'),
                     },
 
-                    // Color
-                    {
-                        label: 'Color',
-                        direction: 'column',
-                        property: 'color',
-                        component: () => renderValue('color'),
-                    },
-
-
-                    // Align
-                    {
-                        label: 'Align',
-                        direction: 'column',
-                        property: 'text-align',
-                        component: () => renderValue('text-align')
-                    },
 
                     // Style
                     {
                         label: 'Style',
-                        column: '1',
+                        column: 'auto',
                         direction: 'column',
                         property: 'font-style',
                         component: () => renderValue('font-style')
                     },
-
-
-                    // Transform
-                    {
-                        label: 'Transform',
-                        direction: 'column',
-                        column: '2/-1',
-                        property: 'text-transform',
-                        component: () => renderValue('text-transform')
-                    },
-
-                    // Decoration
-                    {
-                        label: 'Decoration',
-                        column: '1',
-                        direction: 'column',
-                        property: 'text-decoration',
-                        component: () => renderValue('text-decoration')
-                    },
-                    // Text Shadow
-                    {
-                        label: 'Shadow',
-                        column: '2/-1',
-                        direction: 'column',
-                        property: 'text-shadow',
-                        component: () => renderValue('text-shadow')
-                    }
                 ],
             },
 
             {
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties:
+                    [
+
+                        // Horizontal Divider
+                        {
+                            label: '',
+                            column: '1/-1',
+                            direction: 'column',
+                            component: () => <HorizontalDivider title='Text' />,
+                        },
+                        // Color
+                        {
+                            label: 'Color',
+                            direction: 'column',
+                            property: 'color',
+                            component: () => renderValue('color'),
+                        },
+
+
+                        // Align
+                        {
+                            label: 'Align',
+                            direction: 'column',
+                            property: 'text-align',
+                            component: () => renderValue('text-align')
+                        },
+
+
+                        // Decoration
+                        {
+                            label: 'Decoration',
+                            direction: 'column',
+                            property: 'text-decoration',
+                            component: () => renderValue('text-decoration')
+                        },
+
+                        // Text Shadow
+                        {
+                            label: 'Shadow',
+                            direction: 'column',
+                            property: 'text-shadow',
+                            component: () => renderValue('text-shadow')
+                        },
+
+                        // Transform
+                        {
+                            label: 'Transform',
+                            column: '2/-1',
+                            direction: 'column',
+                            property: 'text-transform',
+                            component: () => renderValue('text-transform')
+                        },
+
+                        // Text Indent
+                        {
+                            label: 'Indent',
+                            column: 'auto',
+                            direction: 'column',
+                            property: 'text-indent',
+                            component: () => renderValue('text-indent')
+                        },
+
+                        // Text Overflow
+                        {
+                            label: 'Overflow',
+                            column: 'auto',
+                            direction: 'column',
+                            property: 'text-overflow',
+                            component: () => renderValue('text-overflow'),
+                        },
+
+                        // Text Orientation
+                        {
+                            label: 'Orientation',
+                            column: 'auto',
+                            direction: 'column',
+                            property: 'text-orientation',
+                            component: () => renderValue('text-orientation'),
+                        },
+
+
+                        // Text Align Last
+                        {
+                            label: 'Align Last',
+                            column: 'auto',
+                            direction: 'column',
+                            property: 'text-align-last',
+                            component: () => renderValue('text-align-last'),
+                        },
+
+                        // Text Combine Upright
+                        {
+                            label: 'Combine Upright',
+                            column: 'auto',
+                            direction: 'column',
+                            property: 'text-combine-upright',
+                            component: () => renderValue('text-combine-upright'),
+                        },
+
+
+                    ],
+            },
+
+            {
                 isExpandable: true,
+                expandTitle: 'Spacing',
                 columns: 'repeat(3,minmax(0, 1fr))',
                 properties: [
-                    // Letter Spacing
+                    // Writing Mode
                     {
-                        label: 'Letter Spacing',
+                        label: 'Writing Mode',
                         column: 'auto',
                         direction: 'column',
-                        property: 'letter-spacing',
-                        component: () => renderValue('letter-spacing')
-                    },
-
-                    // Text Indent
-                    {
-                        label: 'Text Indent',
-                        column: 'auto',
-                        direction: 'column',
-                        property: 'text-indent',
-                        component: () => renderValue('text-indent')
+                        property: 'writing-mode',
+                        component: () => renderValue('writing-mode'),
                     },
 
                     // Word-Break
@@ -160,41 +221,31 @@ export const useFontLayout = (): LayoutProps => {
                         component: () => renderValue('white-space'),
                     },
 
-                    // Overflow
+                    // Letter Spacing
                     {
-                        label: 'Text-Overflow',
+                        label: 'Letter Spacing',
                         column: 'auto',
                         direction: 'column',
-                        property: 'text-overflow',
-                        component: () => renderValue('text-overflow'),
+                        property: 'letter-spacing',
+                        component: () => renderValue('letter-spacing')
                     },
 
-                    // Writing Mode
+                    // Word Spacing
                     {
-                        label: 'Writing Mode',
+                        label: 'Word Spacing',
                         column: 'auto',
                         direction: 'column',
-                        property: 'writing-mode',
-                        component: () => renderValue('writing-mode'),
+                        property: 'word-spacing',
+                        component: () => renderValue('word-spacing'),
                     },
+                ],
+            },
 
-                    // Text Orientation
-                    {
-                        label: 'Text Orientation',
-                        column: 'auto',
-                        direction: 'column',
-                        property: 'text-orientation',
-                        component: () => renderValue('text-orientation'),
-                    },
-
-                    // Horizontal Divider
-                    {
-                        label: '',
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => <HorizontalDivider type='bracket' />,
-                    },
-
+            {
+                isExpandable: true,
+                expandTitle: 'Column',
+                columns: 'repeat(3,minmax(0, 1fr))',
+                properties: [
 
                     // Column Count
                     {
@@ -231,22 +282,6 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'column-rule-width',
                         component: () => renderValue('column-rule-width'),
                     },
-
-                    // Widows
-                    // {
-                    //     label: 'Widows',
-                    //     column: 'auto',
-                    //     direction: 'column',
-                    //     component: () => renderValue('widows'),
-                    // },
-
-                    // // Orphans
-                    // {
-                    //     label: 'Orphans',
-                    //     column: 'auto',
-                    //     direction: 'column',
-                    //     component: () => renderValue('orphans'),
-                    // },
 
                     // Column Rule Style
                     {

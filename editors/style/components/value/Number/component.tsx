@@ -67,6 +67,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
                 value={value}
                 min={minValue}
                 max={maxValue}
+                placeholder='0.0'
                 type='number'
                 onChange={handleValueChange}
             />

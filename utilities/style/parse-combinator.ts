@@ -136,13 +136,14 @@ function parseDoubleAmp(input: string): string[] {
  * @param input - The input string to parse.
  * @return string[] - Returns an array of all possible combinations as strings.
  * @example
- * parseSingleBar('a | b c') → ['a b c', 'a c b', 'b c a', 'c b a']
+ * parseSingleBar('a | b c') → ['a', 'b c']
  */
 function parseSingleBar(input: string): string[] {
 	const parts = splitAdvanced(input, '|');
 	if (parts.length > 1) {
 		const results = parts.flatMap((part) => parse(part.trim()));
-		return results.sort((a, b) => a.length - b.length);
+		// Remove duplicates and sort by length
+		return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
 	}
 	return [parts.join(' ')];
 }

@@ -4,6 +4,9 @@
  * @param {React.ReactNode} children - Content to be revealed when expanded
 */
 export type HorizontalDividerProps = {
-    type?: 'straight' | 'bracket';
-    className?: string;
+
+    /**
+     * Optional title for the divider.
+     */
+    title?: string;
 };

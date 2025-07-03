@@ -38,7 +38,6 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     }, [options]
     );
 
-
     /**
      * Determine the default type to use when value is empty.
      * Priority: dimension > keyword > function > color > first available type.
@@ -57,6 +56,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
      * If value is empty, use the default type.
      */
     const valueType = value.length === 0 ? defaultType : getValueType(value);
+
 
     /**
      * Render the appropriate input component based on the value type.

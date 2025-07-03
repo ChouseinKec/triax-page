@@ -5,6 +5,7 @@ import CSS from './styles.module.css';
 // Types
 import { ExpandRevealProps } from '@/components/reveal/expand/types';
 
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 /**
  * expandReveal Component
@@ -39,16 +40,18 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): Re
         setIsOpen((prev) => !prev);
     }, []);
 
-    const _style: React.CSSProperties = {
-        ['--expand-title-before' as string]: title ? `| ${title} ` : '+',
-        ['--expand-title-after' as string]: title ? title : '-',
-    };
+
+    const dividerTitle = title ? `| ${title} |` : (isOpen ? 'Collapse' : 'Expand');
+
+
 
     return (
-        <div className={CSS.ExpandReveal} data-isopen={isOpen} style={_style}>
+        <div className={CSS.ExpandReveal} data-isopen={isOpen} >
 
             {/* Toggle button to expand/collapse the content */}
-            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} />
+            <button className={CSS.ExpandReveal_Button} onClick={handleToggle} >
+                <HorizontalDivider title={dividerTitle} />
+            </button>
 
             {/* Conditionally render content if the expand is open */}
             {isOpen && (

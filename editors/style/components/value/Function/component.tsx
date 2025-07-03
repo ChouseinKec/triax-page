@@ -14,11 +14,13 @@ import Error from '@/editors/style/components/value/error/component';
 
 // Constants
 import { createProperty } from '@/constants/style/property';
+import { ValueSeparators } from '@/constants/style/separator';
 
 // Utilities
 import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
 import { getValueToken } from '@/utilities/style/value';
 import { getTokenBase, getTokenValues } from '@/utilities/style/token';
+import { splitAdvanced } from '@/utilities/string/string';
 
 /**
  * FunctionValue Component
@@ -59,7 +61,8 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
 
     // Determine default name and value from the option/property
     const defaultName = option ? getTokenBase(option.name) : '';
-    const defaultValue = property ? getTokenValues(property.syntaxNormalized[0].split(' ')).join(' ') : '';
+    const defaultVariation = property ? splitAdvanced(property.syntaxParsed[0], ValueSeparators) : [];
+    const defaultValue = property ? getTokenValues(defaultVariation).join(' ') : '';
 
     // Extract function name and value from the input string
     const extractedName = extractFunctionName(value);
@@ -69,6 +72,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     const safeName = extractedName || defaultName;
     const safeValue = extractedValue || defaultValue;
 
+ 
     /**
      * Handle changes to the function argument value.
      * If the new value is empty, clear the function value.
@@ -98,6 +102,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     if (!safeName || !safeValue) return <Error message="[Function]: Malformed function value." />;
     if (!property) return <Error message="[Function]: Property creation failed." />;
 
+    
     /**
      * Render the dropdown select for function options.
      */

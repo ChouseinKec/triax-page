@@ -29,7 +29,7 @@ function isValueKeyword(input: string): boolean {
  * isValueFunction('auto') → false
  */
 function isValueFunction(input: string): boolean {
-	return /^[a-zA-Z-]+\(.*\)$/.test(input);
+	return/^([a-zA-Z0-9-]+)\((.*)\)$/.test(input);
 }
 
 /**

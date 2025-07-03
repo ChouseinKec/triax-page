@@ -40,7 +40,10 @@ function parseBrackets(input: string): string[] {
 	}
 
 	// Otherwise, return ['', ...parsed] but filter out empty strings from parsed
-	return ['', ...parsed.filter((v) => v.trim() !== '')];
+	const results = ['', ...parsed.filter((v) => v.trim() !== '')];
+	
+	// Remove duplicates
+	return Array.from(new Set(results));
 }
 
 /**

@@ -1,45 +1,22 @@
 .ExpandReveal {
 	width: 100%;
-
-	&[data-isopen='true'] {
-		.ExpandReveal_Button::after {
-			content: '| Collapse |';
-		}
-	}
 }
 
 .ExpandReveal_Button {
 	width: 100%;
-	height: 1px;
-	margin-bottom: var(--size-xl);
+	height: auto;
 
 	position: relative;
-
 	border: 0;
 	outline: 0;
-
-	background: var(--color-white--darker);
+	background: transparent;
 	cursor: pointer;
-
-	&::after {
-		content: '| Expand |';
-		width: max-content;
-		display: block;
-
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-
-		font-size: calc(var(--size-lg) * 0.8);
-
-		color: var(--color-white--darker);
-		background: var(--color-white);
-	}
 }
 
 .ExpandReveal_Content {
 	padding-bottom: var(--size-md);
+	padding-top: var(--size-lg);
+
 
 	display: flex;
 	flex-direction: column;
