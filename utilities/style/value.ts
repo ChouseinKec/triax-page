@@ -5,6 +5,9 @@ import { isValueDimension, getDimensionType } from '@/utilities/style/dimension'
 // Types
 import type { CSSTokenGroups } from '@/types/style/token';
 
+// Constants
+import { CSSPropertyDefs } from '@/constants/style/property';
+
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
  * @param input - The string to check.
@@ -29,7 +32,7 @@ function isValueKeyword(input: string): boolean {
  * isValueFunction('auto') → false
  */
 function isValueFunction(input: string): boolean {
-	return/^([a-zA-Z0-9-]+)\((.*)\)$/.test(input);
+	return /^([a-zA-Z0-9-]+)\((.*)\)$/.test(input);
 }
 
 /**
@@ -156,4 +159,33 @@ function getValueTokens(values: string[]): string[] {
 	return values.map(getValueToken).filter((token): token is string => token !== undefined);
 }
 
-export { getValueType, getValueTokens, getValueToken };
+/**
+ * Validates if a given value is valid for a specific CSS property.
+ * Uses the property's syntaxNormalized to check if the value matches any of the defined syntaxes.
+ * @param property - The CSS property name (e.g., 'margin', 'padding').
+ * @param value - The CSS value string to validate (e.g., '10px auto').
+ * @returns {boolean} True if the value is valid for the property, false otherwise.
+ * @example
+ * isValueValid('margin', '10px auto') → true
+ * isValueValid('padding', '10px') → true
+ * isValueValid('color', '#fff') → true
+ * isValueValid('display', 'flex') → true
+ */
+function isValueValid(property: string, value: string): boolean {
+	const propertyDef = CSSPropertyDefs[property];
+	if (!propertyDef) return false;
+
+	const syntaxNormalized = propertyDef.syntaxNormalized;
+	if (!syntaxNormalized) return false;
+	
+	const valueTokens = getValueTokens([value]).join(' ');
+	if (valueTokens.length === 0) return false;
+
+	// Check if the value matches any of the normalized syntaxes
+	return syntaxNormalized.some((syntax) => {
+		return syntax === valueTokens;
+	});
+
+}
+
+export { getValueType, getValueTokens, getValueToken, isValueValid };

@@ -57,6 +57,15 @@ export const useEffectLayout = (): LayoutProps => {
                         property: 'box-shadow',
                         component: () => renderValue('box-shadow'),
                     },
+
+                    // Opacity
+                    {
+                        label: 'Opacity',
+                        direction: 'column',
+                        column: 'auto',
+                        property: 'opacity',
+                        component: () => renderValue('opacity'),
+                    },
                 ],
             },
 

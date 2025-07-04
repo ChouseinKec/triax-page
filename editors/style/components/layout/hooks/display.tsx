@@ -308,7 +308,14 @@ export const useDisplayLayout = (): LayoutProps => {
                         component: () => renderValue('float'),
                     },
 
-
+                    // Visibility
+                    {
+                        label: 'Visibility',
+                        column: 'auto',
+                        direction: 'column',
+                        property: 'visibility',
+                        component: () => renderValue('visibility'),
+                    },
 
                 ]
             },

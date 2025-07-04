@@ -1,11 +1,9 @@
 import { CSSPropertyDefs } from './property';
 
 // New: Centralized descriptions for all CSS properties
-export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, string>> = {
+export const CSSPropertyDesc: Record<keyof typeof CSSPropertyDefs, string> = {
 	// ============ Display & Layout =============
 	display: 'Controls the element’s display type and how it participates in layout.',
-	visibility: 'Specifies whether the element is visible, hidden, or collapses its space.',
-	opacity: 'Sets the transparency level of the element, affecting its content and children.',
 
 	'flex-direction': 'Defines the main axis direction for flex container children.',
 	'flex-wrap': 'Specifies whether flex items are forced onto a single line or can wrap.',
@@ -32,6 +30,7 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
 	'object-fit': 'Specifies how replaced content should be resized to fit its container.',
 	float: 'Removes the element from normal flow and positions it to the left or right.',
 	clear: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
+	visibility: 'Specifies whether the element is visible, hidden, or collapses its space.',
 
 	// ============ Size & Scroll =============
 	width: 'Specifies the width of the element’s content area.',
@@ -172,4 +171,6 @@ export const CSSPropertyDesc: Partial<Record<keyof typeof CSSPropertyDefs, strin
 	'backdrop-filter': 'Applies graphical effects such as blurring or color shifting to the area behind an element.',
 	'box-shadow': 'Adds shadow effects around the element’s frame.',
 	transform: 'Transforms the element in 2D or 3D space.',
+	opacity: 'Sets the transparency level of the element, affecting its content and children.',
+
 };

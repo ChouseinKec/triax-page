@@ -6,18 +6,12 @@ import HorizontalDivider from '@/components/divider/horizontal/component';
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
 import type { Side, Corner } from '@/components/select/position/types';
-import type { CSSProperties } from '@/types/style/property';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
 
-
-
-function generatePropertyName(property: string, suffix: string, position: Side | Corner): CSSProperties {
-    if (!position) return `${property}-${suffix}` as CSSProperties;
-    return `${property}-${position}-${suffix}` as CSSProperties;
-}
-
+// Utilities
+import { generatePropertyName } from '@/utilities/style/property';
 
 
 /**
@@ -33,10 +27,10 @@ export const useBorderLayout = (): LayoutProps => {
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 
 
-    const borderWidth = generatePropertyName('border', 'width', currentSide);
-    const borderStyle = generatePropertyName('border', 'style', currentSide);
-    const borderColor = generatePropertyName('border', 'color', currentSide);
-    const borderRadius = generatePropertyName('border', 'radius', currentCorner);
+    const borderWidth = generatePropertyName('border', currentSide, 'width');
+    const borderStyle = generatePropertyName('border', currentSide, 'style');
+    const borderColor = generatePropertyName('border', currentSide, 'color');
+    const borderRadius = generatePropertyName('border', currentCorner, 'radius');
 
     return {
         label: 'Border',
@@ -63,7 +57,7 @@ export const useBorderLayout = (): LayoutProps => {
 
                 ],
             },
-            
+
             {
                 columns: 'repeat(3,minmax(0,1fr))',
                 properties: [
@@ -168,7 +162,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: null,
                         direction: 'column',
                         column: '1/-1',
-                        component: () => <HorizontalDivider  title='Outline' />,
+                        component: () => <HorizontalDivider title='Outline' />,
                     },
 
                     // Outline Width

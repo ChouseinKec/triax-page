@@ -10,11 +10,10 @@ import type { CSSProperties } from '@/types/style/property';
 import { useStyleFactory } from '@/hooks/style/factory';
 import { useStyleManager } from '@/hooks/style/manager';
 
+// Utilities
+import { generatePropertyName } from '@/utilities/style/property';
 
-function generatePropertyName(property: string, position: Side | Corner): CSSProperties {
-    if (!position) return property as CSSProperties;
-    return `${property}-${position}` as CSSProperties;
-}
+
 
 /**
  * Custom hook for managing the "Position & Spacing" section layout in the style editor.
@@ -26,7 +25,7 @@ export const usePositionLayout = (): LayoutProps => {
     const { getStyle } = useStyleManager();
 
     const [currentSide, setCurrentSide] = useState<Side>('top');
-    const [currentCorner, setCurrentCorner] = useState<Corner>('top-left');
+    const [, setCurrentCorner] = useState<Corner>('top-left');
 
     return {
         label: 'Position & Spacing',

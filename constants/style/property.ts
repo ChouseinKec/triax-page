@@ -1,5 +1,5 @@
 // Types
-import type { CSSProperty } from '@/types/style/property';
+import type { CSSProperty,CSSProperties } from '@/types/style/property';
 
 // Constants
 import { ValueSeparators } from './separator';
@@ -76,11 +76,9 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
  * Each entry is a CSSProperty object describing the property's name, syntax, description, and category.
  * Used for property validation, UI dropdowns, and documentation.
  */
-export const CSSPropertyDefs: Partial<Record<string, CSSProperty>> = {
+export const CSSPropertyDefs: Record<string, CSSProperty> = {
 	// ============ Display & Layout =============
 	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
-	visibility: createProperty('visibility', 'visible | hidden | collapse'),
-	opacity: createProperty('opacity', '<number [0,1]> | <percentage [0%,100%]>'),
 
 	'flex-direction': createProperty('flex-direction', 'row | row-reverse | column | column-reverse'),
 	'flex-wrap': createProperty('flex-wrap', 'nowrap | wrap | wrap-reverse'),
@@ -109,6 +107,7 @@ export const CSSPropertyDefs: Partial<Record<string, CSSProperty>> = {
 
 	float: createProperty('float', 'left|right|none'),
 	clear: createProperty('clear', 'none|left|right|both'),
+	visibility: createProperty('visibility', 'visible | hidden | collapse'),
 
 	// ============ Size & Scroll =============
 	width: createProperty('width', 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content'),
@@ -255,4 +254,16 @@ export const CSSPropertyDefs: Partial<Record<string, CSSProperty>> = {
 	'backdrop-filter': createProperty('backdrop-filter', 'none|[<filter-function>]+'),
 	transform: createProperty('transform', 'none|[<transform-function>]{1,4}'),
 	'box-shadow': createProperty('box-shadow', '<spread-shadow>'),
+	opacity: createProperty('opacity', '<number [0,1]>|<percentage [0%,100%]>'),
+
+};
+
+
+export const CSSPropertyShorthandDefs: Partial<Record<CSSProperties, CSSProperties[]>> = {
+	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
+	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
+	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],
+	margin: ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'],
+	padding: ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
+	// Add more as needed
 };

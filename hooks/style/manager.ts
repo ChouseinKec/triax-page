@@ -2,10 +2,12 @@ import { useCallback } from 'react';
 
 // Constants
 import { CSSProperties } from '@/types/style/property';
-import { CSSShorthandsDefs } from '@/constants/style/style';
+import { CSSPropertyShorthandDefs } from '@/constants/style/property';
 
 // Utilities
 import { devLog } from '@/utilities/dev';
+import { isPropertyValid } from '@/utilities/style/property';
+import { isValueValid } from '@/utilities/style/value';
 
 // Stores
 import useDeviceStore from '@/stores/device/store';
@@ -116,14 +118,14 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * @throws {Error} If property conversion fails or value is invalid
 	 */
 	const setStyle = useCallback<StyleManagerProps['setStyle']>((property: CSSProperties, value: string): void => {
-		// if (!isPropertyValid(property)) return devLog.error(`Error setting style property: ${property} is not valid`);
+		if (!isPropertyValid(property)) return devLog.error(`Error setting style property: ${property} is not valid`);
 
 		// If value is not empty and value is not valid
-		// if (value !== '' && !isValueValid(property, value)) return devLog.error(`Error setting style value: ${value} is not valid`);
+		if (value !== '' && !isValueValid(property, value)) return devLog.error(`Error setting style value: ${value} is not valid`);
 
 		// If the property is a CSS shorthand (e.g. 'margin', 'padding'), set all its longhand properties
-		if (CSSShorthandsDefs[property]) {
-			CSSShorthandsDefs[property].forEach((longhand) => {
+		if (CSSPropertyShorthandDefs[property]) {
+			CSSPropertyShorthandDefs[property].forEach((longhand) => {
 				_setStyle(longhand, value);
 			});
 		} else {
@@ -139,15 +141,15 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * @throws {Error} If property conversion fails
 	 */
 	const getStyle = useCallback<StyleManagerProps['getStyle']>((property: CSSProperties): string => {
-		// if (!isPropertyValid(property)) {
-		//     devLog.error(`Error getting single-style property: ${property} is not valid`);
-		//     return ''
-		// };
+		if (!isPropertyValid(property)) {
+			devLog.error(`Error getting single-style property: ${property} is not valid`);
+			return '';
+		}
 
-		if (CSSShorthandsDefs[property]) {
-			const values = CSSShorthandsDefs[property].map((longhand) => _getStyle(longhand as CSSProperties));
-            
-            const uniqueValues = Array.from(new Set(values.filter(Boolean)));
+		if (CSSPropertyShorthandDefs[property]) {
+			const values = CSSPropertyShorthandDefs[property].map((longhand) => _getStyle(longhand as CSSProperties));
+
+			const uniqueValues = Array.from(new Set(values.filter(Boolean)));
 			if (uniqueValues.length === 1) {
 				return uniqueValues[0]; // All sides are the same
 			} else if (uniqueValues.length === 0) {
@@ -165,7 +167,7 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * @param {CSSProperties} property - The style property to copy
 	 * @returns {string} The copied value or empty string if not found
 	 */
-	const copyStyle = useCallback(
+	const copyStyle = useCallback<StyleManagerProps['copyStyle']>(
 		(property: CSSProperties): void => {
 			const value = getStyle(property);
 
@@ -193,22 +195,22 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * @param {CSSProperties} property - The style property to paste
 	 * @returns {void}
 	 */
-	const pasteStyle = useCallback(
+	const pasteStyle = useCallback<StyleManagerProps['pasteStyle']>(
 		(property: CSSProperties): void => {
 			navigator.clipboard
 				.readText()
 				.then((text) => {
-					// // If property is not valid
-					// if (!isPropertyValid(property)) {
-					//     devLog.error(`Error pasting style: ${property} is not valid`);
-					//     return;
-					// }
+					// If property is not valid
+					if (!isPropertyValid(property)) {
+						devLog.error(`Error pasting style: ${property} is not valid`);
+						return;
+					}
 
 					// If value is not valid
-					// if (text !== '' && !isValueValid(property, text)) {
-					//     devLog.error(`Error pasting style: ${text} is not valid for ${property}`);
-					//     return;
-					// }
+					if (text !== '' && !isValueValid(property, text)) {
+					    devLog.error(`Error pasting style: ${text} is not valid for ${property}`);
+					    return;
+					}
 
 					_setStyle(property, text);
 					devLog.info(`Pasted style ${property}: ${text}`);
@@ -225,13 +227,13 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * @param {CSSProperties} property - The style property to reset
 	 * @returns {void}
 	 */
-	const resetStyle = useCallback(
+	const resetStyle = useCallback<StyleManagerProps['resetStyle']>(
 		(property: CSSProperties): void => {
 			// If property is not valid
-			// if (!isPropertyValid(property)) {
-			//     devLog.error(`Error resetting style: ${property} is not valid`);
-			//     return;
-			// }
+			if (!isPropertyValid(property)) {
+				devLog.error(`Error resetting style: ${property} is not valid`);
+				return;
+			}
 
 			// Reset the style to empty string
 			_setStyle(property, '');

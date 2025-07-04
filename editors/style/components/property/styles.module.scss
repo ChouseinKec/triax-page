@@ -36,37 +36,6 @@
 	cursor: pointer;
 }
 
-.Property_Float__Tools {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--size-sm);
-
-	> button {
-		@include inputMixins.components--button;
-
-		height: 100%;
-		width: auto;
-		aspect-ratio: 1;
-
-		padding: 0px;
-		font-size: var(--font-size-sm);
-	}
-}
-
-.Property__Float__Title {
-	font-size: var(--font-size-lg);
-}
-
-.Property__Float__Description {
-	font-size: var(--font-size-md);
-	opacity: 0.8;
-}
-
-.Property_Float__Divider {
-	margin-top: 0 !important;
-}
-
 .Property_Float__Title {
 	text-transform: capitalize;
 	font-size: var(--font-size-lg);
@@ -76,4 +45,31 @@
 .Property_Float__Description {
 	font-size: var(--font-size-md);
 	line-height: var(--size-xl);
+}
+
+.Property_Float__Divider {
+	margin-top: 0 !important;
+}
+
+.Property_Float__Tools {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-sm);
+
+	> button {
+		@include inputMixins.components--button;
+
+		height: 25px;
+		width: auto;
+		aspect-ratio: 1;
+
+		padding: var(--size-sm);
+		font-size: var(--font-size-sm);
+
+		svg{
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
