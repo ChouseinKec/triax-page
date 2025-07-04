@@ -91,7 +91,7 @@ export const CSSPropertyDefs: Record<string, CSSProperty> = {
 	'align-content': createProperty('align-content', 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch'),
 	'justify-items': createProperty('justify-items', 'flex-start | flex-end | center | baseline | stretch'),
 
-	'grid-auto-flow': createProperty('grid-auto-flow', 'row | column | row dense | column dense'),
+	'grid-auto-flow': createProperty('grid-auto-flow', 'row|column|[row dense]|[column dense]'),
 	'grid-template-columns': createProperty('grid-template-columns', '<track-list>'),
 	'grid-template-rows': createProperty('grid-template-rows', 'none | <track-list> | <auto-track-list>'),
 	'grid-auto-columns': createProperty('grid-auto-columns', '<track-size>+'),

@@ -111,7 +111,9 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
             options={options}
             value={option.name}
             onChange={handleOptionChange}
-            placeholder="Select Option"
+            buttonTitle='Change Function'
+            placeholder="↺"
+            forcePlaceholder={true}
             grouped={true}
         />
     );
@@ -124,7 +126,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
         >
             <div className={CSS.FunctionValue}>
                 {renderOptionsSelect()}
-                <span className={CSS.Separator}>|</span>
+                <span className={CSS.Separator}>⇄</span>
                 <Value
                     value={safeValue}
                     property={property}

@@ -33,12 +33,12 @@ import Options from '@/components/select/options/component';
  * />
  */
 const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps): ReactElement => {
-
     const {
         value,
         options,
         onChange,
-        placeholder = 'Select an option',
+        placeholder = 'N/A',
+        forcePlaceholder = false,
         grouped = false,
         searchable = false,
         buttonStyle = {},
@@ -54,8 +54,9 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
     }, [onChange]);
 
 
+
     return (
-        <DropdownReveal value={value || placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
+        <DropdownReveal value={value} forcePlaceholder={forcePlaceholder} placeholder={placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
             <div className={CSS.DropdownSelect_Options}>
                 <Options searchable={searchable} grouped={grouped} value={value} options={options} onChange={handleOptionChange} />
             </div>

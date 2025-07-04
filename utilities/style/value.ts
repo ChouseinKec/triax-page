@@ -1,12 +1,14 @@
 // Utilities
 import { getTokenCanonical } from '@/utilities/style/token';
 import { isValueDimension, getDimensionType } from '@/utilities/style/dimension';
+import { splitAdvanced } from '@/utilities/string/string';
 
 // Types
 import type { CSSTokenGroups } from '@/types/style/token';
 
 // Constants
 import { CSSPropertyDefs } from '@/constants/style/property';
+import { ValueSeparators } from '@/constants/style/separator';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -172,20 +174,24 @@ function getValueTokens(values: string[]): string[] {
  * isValueValid('display', 'flex') → true
  */
 function isValueValid(property: string, value: string): boolean {
+	// Fetch the property definition from the CSSPropertyDefs
 	const propertyDef = CSSPropertyDefs[property];
 	if (!propertyDef) return false;
 
+	// Fetch the normalized syntax variations for the property
 	const syntaxNormalized = propertyDef.syntaxNormalized;
 	if (!syntaxNormalized) return false;
-	
-	const valueTokens = getValueTokens([value]).join(' ');
+
+	// Split the value into its components
+	const values = splitAdvanced(value, ValueSeparators);
+	// Convert the values to their token representations
+	const valueTokens = getValueTokens(values).join(' ');
 	if (valueTokens.length === 0) return false;
 
-	// Check if the value matches any of the normalized syntaxes
+	// Check if the value tokens match any of the normalized syntaxes
 	return syntaxNormalized.some((syntax) => {
 		return syntax === valueTokens;
 	});
-
 }
 
 export { getValueType, getValueTokens, getValueToken, isValueValid };

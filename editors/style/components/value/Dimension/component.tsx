@@ -13,6 +13,7 @@ import { DimensionValueProps } from './types';
 
 // Utilities
 import { extractNumber, extractUnit } from '@/utilities/style/dimension';
+import { on } from 'events';
 
 
 /**
@@ -26,7 +27,6 @@ import { extractNumber, extractUnit } from '@/utilities/style/dimension';
  * @param {Array<{ label: string, value: string }>} [props.options=[]] - List of unit options for the dropdown.
  * @param {number} [props.minValue=-Infinity] - Minimum numeric value allowed.
  * @param {number} [props.maxValue=Infinity] - Maximum numeric value allowed.
- * @param {boolean} [props.isStrict=false] - If true, enforces a valid value format (number + unit).
  * @return {ReactElement} The rendered DimensionValue component.
  */
 const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProps): ReactElement => {
@@ -36,7 +36,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		options = [],
 		minValue = -Infinity,
 		maxValue = Infinity,
-		isStrict = false,
 	} = props;
 
 	const DEFAULT_UNIT = options.find(option => option.category === 'dimension')?.name || 'px';
@@ -48,10 +47,8 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	// Handle changes to the numeric input (unit is always from latest extractedUnit)
 	function handleValueChange(number: string): void {
 		const unit = extractedUnit || DEFAULT_UNIT;
-		if (number === '') {
-			onChange(isStrict ? `${number}${unit}` : '');
-			return;
-		}
+		if (number === '') return onChange('');
+
 		onChange(`${number}${unit}`);
 	}
 
@@ -63,13 +60,10 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			return;
 		}
 
-
 		unit = extractUnit(unit) || '';
 		const number = extractedNumber || DEFAULT_NUMBER;
-		if (unit === '') {
-			onChange(isStrict ? `${number}${unit}` : '');
-			return;
-		}
+		if (unit === '') return onChange('');
+		
 		onChange(`${number}${unit}`);
 	}
 
@@ -88,7 +82,9 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			{/* Dropdown for the unit part */}
 			<SelectDropdown
 				options={options}
-				value={extractedUnit || DEFAULT_UNIT}
+				value={extractedUnit || ''}
+				placeholder='N/A'
+				buttonTitle='Select Unit'
 				onChange={handleOptionChange}
 				searchable={true}
 				grouped={true}

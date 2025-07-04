@@ -35,12 +35,12 @@ export const useBackgroundLayout = (): LayoutProps => {
             },
 
             {
-                columns: 'repeat(3,minmax(0,1fr))',
+                columns: 'repeat(1,minmax(0,1fr))',
                 properties: [
                     // Background-Image
                     {
                         label: 'Image',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'background-image',
                         component: () => renderValue('background-image'),
                     },
@@ -49,7 +49,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Color',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-color',
                         component: () => renderValue('background-color'),
                     },
@@ -58,7 +57,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Blend',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-blend-mode',
                         component: () => renderValue('background-blend-mode'),
                     },
@@ -67,7 +65,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Repeat',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-repeat',
                         component: () => renderValue('background-repeat'),
                     },
@@ -76,7 +73,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Attachment',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-attachment',
                         component: () => renderValue('background-attachment'),
                     },
@@ -85,7 +81,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Clip',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-clip',
                         component: () => renderValue('background-clip'),
                     },
@@ -94,7 +89,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Origin',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-origin',
                         component: () => renderValue('background-origin'),
                     },
@@ -103,7 +97,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Size',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-size',
                         component: () => renderValue('background-size'),
                     },
@@ -112,7 +105,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Position',
                         column: 'auto',
-                        direction: 'column',
                         property: 'background-position',
                         component: () => renderValue('background-position'),
                     },
@@ -123,19 +115,14 @@ export const useBackgroundLayout = (): LayoutProps => {
 
             {
 
-                columns: 'repeat(3,minmax(0,1fr))',
+                columns: 'repeat(1,minmax(0,1fr))',
+                expandTitle: 'Mask',
                 properties: [
-
-                    {
-                        label: null,
-                        column: '1/-1',
-                        component: () => <HorizontalDivider title='Mask' />,
-                    },
 
                     // Mask-Image
                     {
                         label: 'Image',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'mask-image',
                         component: () => renderValue('mask-image'),
                     },
@@ -145,7 +132,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Type',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-type',
                         component: () => renderValue('mask-type'),
                     },
@@ -155,7 +141,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Mode',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-mode',
                         component: () => renderValue('mask-mode'),
                     },
@@ -164,7 +149,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Repeat',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-repeat',
                         component: () => renderValue('mask-repeat'),
                     },
@@ -173,7 +157,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Composite',
                         column: 'auto',
-                        direction: 'column',
+                       
                         property: 'mask-composite',
                         component: () => renderValue('mask-composite'),
                     },
@@ -183,7 +167,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Clip',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-clip',
                         component: () => renderValue('mask-clip'),
                     },
@@ -192,7 +175,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Origin',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-origin',
                         component: () => renderValue('mask-origin'),
                     },
@@ -201,7 +183,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Size',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-size',
                         component: () => renderValue('mask-size'),
                     },
@@ -210,7 +191,6 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Position',
                         column: 'auto',
-                        direction: 'column',
                         property: 'mask-position',
                         component: () => renderValue('mask-position'),
                     },

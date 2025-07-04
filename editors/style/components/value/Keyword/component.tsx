@@ -23,7 +23,7 @@ const KeywordValue: React.FC<KeywordValueProps> = (props: KeywordValueProps) => 
             <DropdownSelect
                 value={value}
                 options={options}
-                placeholder="Select"
+                placeholder="N/A"
                 searchable={false}
                 grouped={true}
                 onChange={onChange}

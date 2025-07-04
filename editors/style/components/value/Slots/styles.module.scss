@@ -5,6 +5,19 @@
 	> * {
 		width: 100%;
 	}
+
+	*[title='Set Next'] {
+		font-size: var(--font-size-lg);
+
+		padding: var(--size-xs);
+		min-width: auto;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		&::before,
+		&::after {
+			content: none;
+		}
+	}
 }
 
 .DropdownSelect_Button {
@@ -14,5 +27,13 @@
 .DropdownContainer {
 	display: flex;
 	flex-direction: row;
-	gap: var(--size-lg);
+	gap: var(--size-xs);
+}
+
+.Separator {
+	color: var(--color-gray);
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

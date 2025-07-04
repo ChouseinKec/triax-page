@@ -19,13 +19,12 @@ export const useEffectLayout = (): LayoutProps => {
         label: 'Effects',
         groups: [
             {
-                columns: 'repeat(3,minmax(0,1fr))',
+                columns: 'repeat(1,minmax(0,1fr))',
                 properties: [
 
                     // Filter
                     {
                         label: 'Filter',
-                        direction: 'column',
                         column: 'auto',
                         property: 'filter',
                         component: () => renderValue('filter'),
@@ -34,7 +33,6 @@ export const useEffectLayout = (): LayoutProps => {
                     // Backdrop-Filter
                     {
                         label: 'Backdrop',
-                        direction: 'column',
                         column: 'auto',
                         property: 'backdrop-filter',
                         component: () => renderValue('backdrop-filter'),
@@ -43,7 +41,6 @@ export const useEffectLayout = (): LayoutProps => {
                     // Transform
                     {
                         label: 'Transform',
-                        direction: 'column',
                         column: 'auto',
                         property: 'transform',
                         component: () => renderValue('transform'),
@@ -52,7 +49,6 @@ export const useEffectLayout = (): LayoutProps => {
                     // Box-Shadow
                     {
                         label: 'Box-Shadow',
-                        direction: 'column',
                         column: 'auto',
                         property: 'box-shadow',
                         component: () => renderValue('box-shadow'),
@@ -61,7 +57,6 @@ export const useEffectLayout = (): LayoutProps => {
                     // Opacity
                     {
                         label: 'Opacity',
-                        direction: 'column',
                         column: 'auto',
                         property: 'opacity',
                         component: () => renderValue('opacity'),

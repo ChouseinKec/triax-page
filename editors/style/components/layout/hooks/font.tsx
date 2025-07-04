@@ -14,13 +14,12 @@ export const useFontLayout = (): LayoutProps => {
         label: 'Font & Text',
         groups: [
             {
-                columns: 'repeat(3,minmax(0, 1fr))',
+                columns: '1fr',
                 properties: [
                     // Text View
                     {
                         label: null,
-                        column: '1/-1',
-                        direction: 'column',
+                        column: 'auto',
                         component: () => renderTextView()
                     },
 
@@ -28,13 +27,13 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                columns: 'repeat(3,minmax(0, 1fr))',
+                columns: 'repeat(1,minmax(0, 1fr))',
                 properties: [
 
                     // Size
                     {
                         label: 'Size',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'font-size',
                         component: () => renderValue('font-size')
                     },
@@ -42,7 +41,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Weight
                     {
                         label: 'Weight',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'font-weight',
                         component: () => renderValue('font-weight'),
                     },
@@ -50,7 +49,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Height
                     {
                         label: 'Height',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'line-height',
                         component: () => renderValue('line-height')
                     },
@@ -58,7 +57,7 @@ export const useFontLayout = (): LayoutProps => {
                     // Family
                     {
                         label: 'Family',
-                        direction: 'column',
+                        column: 'auto',
                         property: 'font-family',
                         component: () => renderValue('font-family'),
                     },
@@ -68,7 +67,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Style',
                         column: 'auto',
-                        direction: 'column',
                         property: 'font-style',
                         component: () => renderValue('font-style')
                     },
@@ -76,21 +74,14 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                columns: 'repeat(3,minmax(0, 1fr))',
+                columns: 'repeat(1,minmax(0, 1fr))',
+                expandTitle: 'Text',
                 properties:
                     [
-
-                        // Horizontal Divider
-                        {
-                            label: '',
-                            column: '1/-1',
-                            direction: 'column',
-                            component: () => <HorizontalDivider title='Text' />,
-                        },
                         // Color
                         {
                             label: 'Color',
-                            direction: 'column',
+                            column: 'auto',
                             property: 'color',
                             component: () => renderValue('color'),
                         },
@@ -99,7 +90,7 @@ export const useFontLayout = (): LayoutProps => {
                         // Align
                         {
                             label: 'Align',
-                            direction: 'column',
+                            column: 'auto',
                             property: 'text-align',
                             component: () => renderValue('text-align')
                         },
@@ -108,7 +99,7 @@ export const useFontLayout = (): LayoutProps => {
                         // Decoration
                         {
                             label: 'Decoration',
-                            direction: 'column',
+                            column: 'auto',
                             property: 'text-decoration',
                             component: () => renderValue('text-decoration')
                         },
@@ -116,7 +107,7 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Shadow
                         {
                             label: 'Shadow',
-                            direction: 'column',
+                            column: 'auto',
                             property: 'text-shadow',
                             component: () => renderValue('text-shadow')
                         },
@@ -124,8 +115,7 @@ export const useFontLayout = (): LayoutProps => {
                         // Transform
                         {
                             label: 'Transform',
-                            column: '2/-1',
-                            direction: 'column',
+                            column: 'auto',
                             property: 'text-transform',
                             component: () => renderValue('text-transform')
                         },
@@ -134,7 +124,6 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: 'Indent',
                             column: 'auto',
-                            direction: 'column',
                             property: 'text-indent',
                             component: () => renderValue('text-indent')
                         },
@@ -143,7 +132,6 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: 'Overflow',
                             column: 'auto',
-                            direction: 'column',
                             property: 'text-overflow',
                             component: () => renderValue('text-overflow'),
                         },
@@ -152,7 +140,6 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: 'Orientation',
                             column: 'auto',
-                            direction: 'column',
                             property: 'text-orientation',
                             component: () => renderValue('text-orientation'),
                         },
@@ -162,7 +149,6 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: 'Align Last',
                             column: 'auto',
-                            direction: 'column',
                             property: 'text-align-last',
                             component: () => renderValue('text-align-last'),
                         },
@@ -171,7 +157,6 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: 'Combine Upright',
                             column: 'auto',
-                            direction: 'column',
                             property: 'text-combine-upright',
                             component: () => renderValue('text-combine-upright'),
                         },
@@ -181,15 +166,13 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                isExpandable: true,
                 expandTitle: 'Spacing',
-                columns: 'repeat(3,minmax(0, 1fr))',
+                columns: 'repeat(1,minmax(0, 1fr))',
                 properties: [
                     // Writing Mode
                     {
                         label: 'Writing Mode',
                         column: 'auto',
-                        direction: 'column',
                         property: 'writing-mode',
                         component: () => renderValue('writing-mode'),
                     },
@@ -198,7 +181,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Word-Break',
                         column: 'auto',
-                        direction: 'column',
                         property: 'word-break',
                         component: () => renderValue('word-break'),
                     },
@@ -207,7 +189,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Line-Break',
                         column: 'auto',
-                        direction: 'column',
                         property: 'line-break',
                         component: () => renderValue('line-break'),
                     },
@@ -216,7 +197,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'White-Space',
                         column: 'auto',
-                        direction: 'column',
                         property: 'white-space',
                         component: () => renderValue('white-space'),
                     },
@@ -225,7 +205,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Letter Spacing',
                         column: 'auto',
-                        direction: 'column',
                         property: 'letter-spacing',
                         component: () => renderValue('letter-spacing')
                     },
@@ -234,7 +213,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Word Spacing',
                         column: 'auto',
-                        direction: 'column',
                         property: 'word-spacing',
                         component: () => renderValue('word-spacing'),
                     },
@@ -242,16 +220,14 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                isExpandable: true,
                 expandTitle: 'Column',
-                columns: 'repeat(3,minmax(0, 1fr))',
+                columns: 'repeat(1,minmax(0, 1fr))',
                 properties: [
 
                     // Column Count
                     {
                         label: 'Count',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-count',
                         component: () => renderValue('column-count'),
                     },
@@ -260,7 +236,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Width',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-width',
                         component: () => renderValue('column-width'),
                     },
@@ -269,7 +244,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Gap',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-gap',
                         component: () => renderValue('column-gap'),
                     },
@@ -278,7 +252,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Rule Width',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-rule-width',
                         component: () => renderValue('column-rule-width'),
                     },
@@ -287,7 +260,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Rule Style',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-rule-style',
                         component: () => renderValue('column-rule-style'),
                     },
@@ -296,7 +268,7 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Rule Color',
                         column: 'auto',
-                        direction: 'column',
+                        property: 'column-rule-color',
                         component: () => renderValue('column-rule-color'),
                     },
 
@@ -304,7 +276,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Break Before',
                         column: 'auto',
-                        direction: 'column',
                         property: 'break-before',
                         component: () => renderValue('break-before'),
                     },
@@ -313,7 +284,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Break Inside',
                         column: 'auto',
-                        direction: 'column',
                         property: 'break-inside',
                         component: () => renderValue('break-inside'),
                     },
@@ -322,7 +292,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Break After',
                         column: 'auto',
-                        direction: 'column',
                         property: 'break-after',
                         component: () => renderValue('break-after'),
                     },
@@ -331,7 +300,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Column Span',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-span',
                         component: () => renderValue('column-span'),
                     },
@@ -340,7 +308,6 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Column Fill',
                         column: 'auto',
-                        direction: 'column',
                         property: 'column-fill',
                         component: () => renderValue('column-fill'),
                     },

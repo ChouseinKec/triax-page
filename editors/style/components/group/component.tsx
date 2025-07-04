@@ -6,6 +6,7 @@ import CSS from '@/editors/style/components/group/styles.module.css';
 // Components
 import Property from '@/editors/style/components/property/components';
 import ExpandReveal from '@/components/reveal/expand/component';
+import HorizontalDivider from '@/components/divider/horizontal/component';
 
 // Types
 import type { LayoutGroup } from '@/editors/style/components/group/types';
@@ -24,10 +25,10 @@ import type { LayoutGroup } from '@/editors/style/components/group/types';
 const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
     const {
         properties = [],
-        columns = '1fr 1fr', 
-        rows = 'auto', 
-        hidden = false, 
-        isExpandable = false, 
+        columns = '1fr 1fr',
+        rows = 'auto',
+        hidden = false,
+        isExpandable = false,
         expandTitle = '',
     } = props;
 
@@ -49,7 +50,11 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
         ))
 
         if (!isExpandable) return (
-            _properties);
+            <>
+                {expandTitle && <HorizontalDivider title={expandTitle} />}
+                {_properties}
+            </>
+        );
 
         return (
             <ExpandReveal title={expandTitle}>

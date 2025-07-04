@@ -51,19 +51,17 @@ export const usePositionLayout = (): LayoutProps => {
                     },
 
 
-                    // Position (e.g., absolute, relative).
+                    // Position
                     {
                         label: 'Position',
-                        column: '1/3',
-                        direction: 'column',
+                        column: '1/-1',
                         component: () => renderValue('position'),
                     },
 
                     // Top-Right-Bottom-Left
                     {
                         label: currentSide || '...',
-                        column: '3/-1',
-                        direction: 'column',
+                        column: '1/-1',
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')) || !currentSide,
                         component: () => renderValue(currentSide?.toLowerCase() as CSSProperties || 'top'),
                     },
@@ -71,16 +69,14 @@ export const usePositionLayout = (): LayoutProps => {
                     // Padding dynamic based on current side selected.
                     {
                         label: 'Padding',
-                        column: '1/3',
-                        direction: 'column',
+                        column: '1/-1',
                         component: () => renderValue(generatePropertyName('padding', currentSide)),
                     },
 
                     // Margin dynamic based on current side selected.
                     {
                         label: 'Margin',
-                        column: '3/-1',
-                        direction: 'column',
+                        column: '1/-1',
                         component: () => renderValue(generatePropertyName('margin', currentSide)),
                     },
 
@@ -88,8 +84,7 @@ export const usePositionLayout = (): LayoutProps => {
                     // Z-Index
                     {
                         label: 'Z-Index',
-                        column: 'auto',
-                        direction: 'column',
+                        column: '1/-1',
                         component: () => renderValue('z-index'),
                     },
 

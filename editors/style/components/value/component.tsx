@@ -36,7 +36,7 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxNormalized = useMemo(() => property.syntaxNormalized, [property.syntaxNormalized]);
     const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
 
-    // if(property.name === 'transform') {
+    // if(property.name === 'grid-template-rows') {
         // console.log(property.syntaxExpanded);
         // console.log(syntaxNormalized);
     // }

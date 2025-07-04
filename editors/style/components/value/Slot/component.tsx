@@ -29,7 +29,7 @@ import { getValueType } from '@/utilities/style/value';
  */
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
-    
+
     /**
      * Compute all unique types available in the options.
      */
@@ -98,11 +98,8 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
         }
     }, [valueType, value, onChange, options]);
 
-    return (
-        <div className={CSS.Slot}>
-            {slotInput}
-        </div>
-    );
+    return slotInput;
+
 };
 
 export default Slot;

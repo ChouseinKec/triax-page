@@ -20,22 +20,17 @@ const IntegerValue: React.FC<IntegerValueProps> = memo((props: IntegerValueProps
         options = [],
         minValue = -Infinity,
         maxValue = Infinity,
-        isStrict = false,
     } = props;
 
 
-    // Default number is '0', used when no numeric value is provided
-    const DEFAULT_NUMBER = '0';
-
     // Handle changes to the numeric input
     const handleValueChange = useCallback((input: string): void => {
-        if (input === '') {
-            onChange(isStrict ? DEFAULT_NUMBER : '');
-        }
+        if (input === '') onChange('');
+
 
         const intValue = String(parseInt(input, 10));
         onChange(intValue);
-    }, [onChange, isStrict]);
+    }, [onChange]);
 
 
     // Handle changes to the unit dropdown
@@ -52,6 +47,8 @@ const IntegerValue: React.FC<IntegerValueProps> = memo((props: IntegerValueProps
                 value={'number'}
                 onChange={(handleOptionChange)}
                 searchable={true}
+                placeholder='INT'
+                forcePlaceholder={true}
                 grouped={true}
             />
         )

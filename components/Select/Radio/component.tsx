@@ -24,7 +24,7 @@ import { RadioSelectProps } from '@/components/select/radio/types';
  */
 const RadioSelect: React.FC<RadioSelectProps> = ({ value, options, onChange }: RadioSelectProps): ReactElement => {
     return (
-        <div className={CSS.RadioSelect}  >
+        <div className={CSS.RadioSelect}>
             <Options value={value} options={options} onChange={onChange} />
         </div>
     );

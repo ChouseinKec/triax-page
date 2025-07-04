@@ -20,6 +20,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         value,
         buttonStyle,
         placeholder = 'Toggle',
+        forcePlaceholder = false,
         children,
         closeOnChange,
         isDisabled,
@@ -72,6 +73,8 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         setIsOpen((prev) => !prev);
     }, []);
 
+    const placeholderText = forcePlaceholder ? placeholder : value || placeholder;
+
     return (
         <div className={CSS.DropdownReveal} ref={dropdownRef}>
             {/* Toggle button to open/close the dropdown */}
@@ -83,7 +86,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                 data-isdisabled={isDisabled}
                 title={buttonTitle}
             >
-                {value || placeholder}
+                {placeholderText}
             </button>
 
             {/* Conditionally render the dropdown content */}

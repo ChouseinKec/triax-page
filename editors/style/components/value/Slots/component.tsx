@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { Fragment, useCallback, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -52,12 +52,18 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         }
 
         return values.map((slotValue, slotIndex) => (
-            <Slot
-                key={slotIndex}
-                value={slotValue}
-                options={options[slotIndex]}
-                onChange={val => handleSlotChange(val, slotIndex)}
-            />
+            <Fragment key={slotIndex}>
+                <Slot
+                    value={slotValue}
+                    options={options[slotIndex]}
+                    onChange={val => handleSlotChange(val, slotIndex)}
+                />
+
+                {slotIndex < values.length - 1 &&
+                    <span className={CSS.Separator}>─</span>
+                }
+
+            </Fragment>
         ));
     }, [values, options, handleSlotChange]
     );
@@ -73,17 +79,19 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         if (!hasNext) return null;
 
         return (
-            <DropdownSelect
-                key={nextIndex}
-                value={''}
-                options={options[nextIndex]}
-                placeholder="..."
-                searchable={false}
-                grouped={true}
-                buttonStyle={{ fontSize: 'var(--font-size-lg)' }}
-                buttonTitle="Select next slot"
-                onChange={(val: string) => handleSlotChange(val, nextIndex)}
-            />
+            <Fragment key={nextIndex}>
+                <span className={CSS.Separator}>─</span>
+
+                <DropdownSelect
+                    value={''}
+                    options={options[nextIndex]}
+                    placeholder="+"
+                    searchable={false}
+                    grouped={true}
+                    buttonTitle="Set Next"
+                    onChange={(val: string) => handleSlotChange(val, nextIndex)}
+                />
+            </Fragment>
         );
     }, [values, options, handleSlotChange]
     );
@@ -102,7 +110,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
     const render = useCallback(() => {
         if (maxSlots > 1 && values.length > 0) {
             return (
-                <DropdownReveal closeOnChange={false} placeholder={values.join(' ')}>
+                <DropdownReveal closeOnChange={false} buttonTitle='Edit Values' placeholder={values.join(' ')}>
                     <div className={CSS.DropdownContainer}>
                         {renderCurrentSlots()}
                         {renderNextSlot()}

@@ -5,10 +5,13 @@
 	display: flex;
 	flex-direction: var(--property-direction);
 	justify-content: flex-start;
-	align-items: flex-start;
+	align-items: center;
 	gap: var(--size-sm);
+
 	grid-column: var(--property-column);
 	grid-row: var(--property-row);
+
+
 	&[data-direction='column'] {
 		.Property_Label {
 			width: 100%;
@@ -22,8 +25,7 @@
 }
 
 .Property_Label {
-	width: 55px;
-
+    flex: 1 0 auto;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
@@ -33,7 +35,7 @@
 	font-family: 'Segoe UI';
 	text-transform: capitalize;
 
-	cursor: pointer;
+	cursor:help;
 }
 
 .Property_Float__Title {
@@ -72,4 +74,20 @@
 			height: 100%;
 		}
 	}
+}
+
+.Property_Separator {
+    flex: 1 1 auto;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: var(--color-gray);
+	font-size: var(--font-size-md);
+
+	white-space: nowrap;
+	overflow: hidden;
+
+	opacity: 0.3;
 }

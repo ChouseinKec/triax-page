@@ -84,9 +84,9 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
             {/* Render the label if provided */}
             {label && (
                 <>
-                    <label className={CSS.Property_Label} ref={labelRef}>
+                    <span className={CSS.Property_Label} ref={labelRef}>
                         {label}
-                    </label>
+                    </span>
 
                     <FloatReveal targetRef={labelRef} position='top'>
 
@@ -115,9 +115,11 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
 
 
                     </FloatReveal>
+
+                    <span className={CSS.Property_Separator}>————————————————————————————————————————————————</span>
+
                 </>
             )}
-
             {component()}
         </>
     )

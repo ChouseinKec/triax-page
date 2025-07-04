@@ -18,6 +18,8 @@ export type DropdownSelectProps = {
   options: OptionData[];
   /** Placeholder text to display when no value is selected */
   placeholder?: string;
+  /** Whether to force the placeholder to be shown even when a value is selected */
+  forcePlaceholder?: boolean;
   /** Whether the dropdown supports searching options */
   searchable?: boolean;
   /** Whether the options should be displayed in grouped sections */

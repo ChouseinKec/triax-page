@@ -28,12 +28,6 @@ export type DimensionValueProps = {
   options?: OptionData[];
 
   /**
-   * If true, empty inputs are replaced with defaults, default is false.
-   * @type {boolean}
-   */
-  isStrict?: boolean;
-
-  /**
    * Callback function to handle value changes.
    * @type {(value: string) => void}
    */

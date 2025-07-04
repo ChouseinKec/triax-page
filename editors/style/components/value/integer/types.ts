@@ -22,11 +22,6 @@ export type IntegerValueProps = {
 	options?: InputOptionData[];
 
 	/**
-	 * If true, empty inputs are replaced with defaults, default is false.
-	 */
-	isStrict?: boolean;
-
-	/**
 	 * Callback function to handle value changes.
 	 */
 	onChange?: (value: string) => void;

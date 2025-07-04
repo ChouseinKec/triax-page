@@ -20,17 +20,13 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
         options = [],
         minValue = -Infinity,
         maxValue = Infinity,
-        isStrict = false,
     } = props;
 
-    // Default number is '0', used when no numeric value is provided
-    const DEFAULT_NUMBER = '0.0';
 
     // Handle changes to the numeric input
     const handleValueChange = useCallback((input: string): void => {
-        if (input === '') {
-            onChange(isStrict ? DEFAULT_NUMBER : '');
-        }
+        if (input === '') onChange('');
+
 
         // Convert input to float and ensure it has a decimal if it's an integer
         const num = parseFloat(input);
@@ -38,7 +34,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
         const formatted = Number.isInteger(num) ? num.toFixed(1) : input;
 
         onChange(formatted);
-    }, [onChange, isStrict]);
+    }, [onChange]);
 
 
     // Handle changes to the unit dropdown
@@ -56,6 +52,8 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
                 onChange={(handleOptionChange)}
                 searchable={true}
                 grouped={true}
+                placeholder='NUM'
+                forcePlaceholder={true}
             />
         )
     }
