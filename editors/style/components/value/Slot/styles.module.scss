@@ -1,9 +1,15 @@
 // .Slot {
-// 	// display: flex;
-// 	// flex-direction: row;
-// 	// width: 100%;
+// 	width: max-content;
+// 	overflow: hidden;
 
-// 	// >*{
-// 	// 	width: 100%;
-// 	// }
+// 	> * {
+// 		width: 100%;
+// 		overflow: hidden;
+
+// 		flex: 1 1 auto;
+// 	}
+
+//     > *[class*='DropdownReveal'] {
+//         flex: 1 0 auto;
+//     }
 // }

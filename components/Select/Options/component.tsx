@@ -34,11 +34,14 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
         options,
         onChange,
         searchable = false,
-        grouped = false
+        grouped = false,
+        prioritizeIcons = false
     } = props;
+
 
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);
+
 
     /**
      * Handles the selection of an option.
@@ -151,7 +154,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                                             value={option.value}
                                             isSelected={value.length > 0 && option.name === value}
                                             onChange={handleChange}
-                                            type={option.type}
+                                            icon={option.icon}
                                         />
                                     )
                                 }) ?? []}
@@ -167,13 +170,15 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
         return (filteredOptions.map((option: OptionData, index) => {
             return (
                 <Option
+                    key={index}
+
                     name={option.name}
                     value={option.value}
                     icon={option.icon}
-                    key={index}
+                    prioritizeIcons={prioritizeIcons}
+
                     isSelected={value === option.name}
                     onChange={handleChange}
-                    type={option.type}
                 />
             )
         }));

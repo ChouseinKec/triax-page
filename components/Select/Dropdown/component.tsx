@@ -54,7 +54,6 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
     }, [onChange]);
 
 
-
     return (
         <DropdownReveal value={value} forcePlaceholder={forcePlaceholder} placeholder={placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
             <div className={CSS.DropdownSelect_Options}>

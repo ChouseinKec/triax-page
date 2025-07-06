@@ -3,6 +3,6 @@
  * 
  * @param {() => void} [onChange] - Optional callback invoked when style values change.
  */
-export type STYLE_EDITOR = {
+export type StyleEditorProps = {
     className?: string;
 };

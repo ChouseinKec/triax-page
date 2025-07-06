@@ -1,7 +1,4 @@
 
-// Components
-import HorizontalDivider from '@/components/divider/horizontal/component';
-
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
 
@@ -18,8 +15,11 @@ import { useStyleFactory } from '@/hooks/style/factory';
 export const useBackgroundLayout = (): LayoutProps => {
     const { renderValue, renderBackgroundView } = useStyleFactory();
 
+    const icon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z" /></svg>;
+
     return {
-        label: 'Background & Mask',
+        label: icon,
+        title: 'Background & Mask',
         groups: [
             {
                 properties: [
@@ -157,7 +157,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Composite',
                         column: 'auto',
-                       
+
                         property: 'mask-composite',
                         component: () => renderValue('mask-composite'),
                     },

@@ -75,7 +75,7 @@
 	border: none;
 	outline: none;
 	border-radius: var(--size-sm);
-	box-shadow: var(--shadow-outset);
+	border: var(--border-generic);
 
 	cursor: default;
 
@@ -88,28 +88,16 @@
 	height: 25px;
 	padding: var(--size-sm);
 
-	border: none;
 	outline: none;
 	border-radius: var(--size-sm);
 	background: var(--color-white);
-	box-shadow: var(--shadow-outset);
+	border: var(--border-generic);
+
 	font-size: var(--font-size-sm);
 	text-transform: uppercase;
 	cursor: pointer;
 
 	@include states($open: true, $svg: true);
-
-	&:hover {
-		box-shadow: var(--shadow-inset);
-	}
-
-	&:focus {
-		box-shadow: var(--shadow-inset);
-	}
-
-	&:active {
-		box-shadow: var(--shadow-inset);
-	}
 }
 
 @mixin components--input {
@@ -120,7 +108,8 @@
 	outline: none;
 	border-radius: var(--size-sm);
 	background: var(--color-white);
-	box-shadow: var(--shadow-inset);
+	border: var(--border-generic);
+
 
 	* {
 		font-size: var(--font-size-md);

@@ -5,4 +5,6 @@
 	font-style: normal;
 	text-wrap: nowrap;
 	@include inputMixins.components--option;
+
+	gap: var(--size-sm);
 }

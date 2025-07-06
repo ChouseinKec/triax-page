@@ -10,7 +10,7 @@ import { KeywordValueProps } from './types';
 const KeywordValue: React.FC<KeywordValueProps> = (props: KeywordValueProps) => {
     const { value, options, onChange } = props;
 
-    const hasIcon = options.some(option => option.icon);
+    const hasIcon = options.every(option => option.icon);
 
     return (
         hasIcon ?

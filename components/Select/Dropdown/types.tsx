@@ -1,4 +1,5 @@
 import { OptionData } from "@/types/option";
+import React from "react";
 
 /**
  * Props for the DropdownSelect component.
@@ -17,7 +18,7 @@ export type DropdownSelectProps = {
   /** The list of options to display in the dropdown */
   options: OptionData[];
   /** Placeholder text to display when no value is selected */
-  placeholder?: string;
+  placeholder?: string | React.ReactNode;
   /** Whether to force the placeholder to be shown even when a value is selected */
   forcePlaceholder?: boolean;
   /** Whether the dropdown supports searching options */

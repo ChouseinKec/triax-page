@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 // Components
 import Category from '@/editors/style/components/category/component';
 import AccordionGroup from '@/components/group/accordion/component';
+import TabGroup from '@/components/group/tab/component';
 
 // Types 
 import { LayoutProps } from '@/editors/style/components/layout/types';
@@ -41,13 +42,13 @@ const Layout: React.FC = ({ }): ReactElement => {
         effectLayout,
     ];
 
-    const AccordionItems = layouts.map((category) => ({
-        title: <span>{category.label}</span>,
-        content: <Category key={category.label} groups={category.groups} />,
+    const AccordionItems = layouts.map((category,idx) => ({
+        title: <>{category.label}</>,
+        content: <Category key={idx} groups={category.groups} />,
     }));
 
     return (
-        <AccordionGroup items={AccordionItems} />
+        <TabGroup items={AccordionItems} />
     );
 
 };

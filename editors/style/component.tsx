@@ -5,14 +5,15 @@ import CSS from './style.module.css';
 import Layout from '@/editors/style/components/layout/component';
 
 // Types 
-import { STYLE_EDITOR } from '@/editors/style/types';
+import { StyleEditorProps } from '@/editors/style/types';
 
 // Hooks
 import { useDeviceRender } from '@/hooks/device/hooks';
 import { useOrientationRender } from '@/hooks/orientation/hooks';
 import { usePseudoRender } from '@/hooks/pseudo/hooks';
 
-const StyleEditor: React.FC<STYLE_EDITOR> = ({ className }): ReactElement => {
+const StyleEditor: React.FC<StyleEditorProps> = (props: StyleEditorProps): ReactElement => {
+    const { className = '' } = props;
     const { renderDeviceSelect } = useDeviceRender();
     const { renderOrientationSelect } = useOrientationRender();
     const { renderPseudoSelect } = usePseudoRender();

@@ -1,4 +1,5 @@
 import { LayoutGroup } from '@/editors/style/components/group/types';
+import { ReactElement } from 'react';
 
 /**
  * Represents a layout section within the style editor.
@@ -8,6 +9,7 @@ import { LayoutGroup } from '@/editors/style/components/group/types';
  * @param {LayoutGroup[]} groups - An array of style groups included in this layout.
  */
 export type LayoutProps = {
-	label: string;
+	label: string | ReactElement;
+	title?: string;
 	groups: LayoutGroup[];
 };

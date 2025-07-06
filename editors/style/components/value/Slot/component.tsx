@@ -57,11 +57,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
      */
     const valueType = value.length === 0 ? defaultType : getValueType(value);
 
-
-    /**
-     * Render the appropriate input component based on the value type.
-     */
-    const slotInput = useMemo(() => {
+    return useMemo(() => {
         switch (valueType) {
             case 'function':
                 return (
@@ -97,8 +93,6 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                 );
         }
     }, [valueType, value, onChange, options]);
-
-    return slotInput;
 
 };
 

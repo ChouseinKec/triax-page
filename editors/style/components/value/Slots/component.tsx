@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo } from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -6,7 +6,7 @@ import CSS from './styles.module.css';
 // Components
 import Slot from '../slot/component';
 import DropdownSelect from '@/components/select/dropdown/component';
-import DropdownReveal from '@/components/reveal/dropdown/component';
+import RadioSelect from '@/components/select/radio/component';
 
 // Types
 import type { SlotsProps } from './types';
@@ -26,6 +26,11 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         onChange
     } = props;
 
+    const valuesLength = values.length;
+    const slotsLength = options.length;
+
+
+
     /**
      * Handles a change in a single slot, updating the overall slot values array.
      */
@@ -40,7 +45,8 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
      * Renders Slot components for each current value slot.
      */
     const renderCurrentSlots = useCallback(() => {
-        if (!values || values.length === 0) {
+        // Handle empty values case - render first slot with empty value
+        if (!values || valuesLength === 0) {
             return (
                 <Slot
                     key={0}
@@ -51,20 +57,25 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
             );
         }
 
-        return values.map((slotValue, slotIndex) => (
-            <Fragment key={slotIndex}>
-                <Slot
-                    value={slotValue}
-                    options={options[slotIndex]}
-                    onChange={val => handleSlotChange(val, slotIndex)}
-                />
+        // Render all existing slots with separators between them
+        return values.map((slotValue, slotIndex) => {
+            const isLastSlot = slotIndex === valuesLength - 1;
 
-                {slotIndex < values.length - 1 &&
-                    <span className={CSS.Separator}>─</span>
-                }
+            return (
+                <Fragment key={slotIndex}>
+                    <Slot
+                        value={slotValue}
+                        options={options[slotIndex]}
+                        onChange={val => handleSlotChange(val, slotIndex)}
+                    />
 
-            </Fragment>
-        ));
+                    {/* Add separator between slots (but not after the last one) */}
+                    {!isLastSlot && (
+                        <span className={CSS.Separator}>–</span>
+                    )}
+                </Fragment>
+            );
+        });
     }, [values, options, handleSlotChange]
     );
 
@@ -72,61 +83,89 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
      * Renders an extra dropdown for the next possible slot (if any).
      */
     const renderNextSlot = useCallback(() => {
-        if (!values || values.length === 0) return null;
+        // Early return if no values exist
+        if (!values || valuesLength === 0) return null;
 
-        const nextIndex = values.length;
-        const hasNext = nextIndex < options.length && options[nextIndex] && options[nextIndex].length > 0;
+        const nextOptions = options[valuesLength];
+
+        // Check if there are valid options for the next slot
+        const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
         if (!hasNext) return null;
 
-        return (
-            <Fragment key={nextIndex}>
-                <span className={CSS.Separator}>─</span>
+        // Determine if the next options are a single keyword type
+        const optionsLength = nextOptions.length;
+        const isSingleKeyword = optionsLength === 1 && nextOptions[0].type === 'keyword';
 
+        // Render radio select for single keyword options (simpler UI)
+        if (isSingleKeyword) {
+            return (
+                <Fragment>
+                    <span className={CSS.Separator}>-</span>
+                    <RadioSelect
+                        value={''}
+                        options={nextOptions}
+                        onChange={(val: string) => handleSlotChange(val, valuesLength)}
+                    />
+                </Fragment>
+            );
+        }
+
+        // Render dropdown select for multiple options or complex types
+        return (
+            <Fragment key={valuesLength}>
+                <span className={CSS.Separator}>–</span>
                 <DropdownSelect
                     value={''}
-                    options={options[nextIndex]}
+                    options={nextOptions}
                     placeholder="+"
                     searchable={false}
                     grouped={true}
                     buttonTitle="Set Next"
-                    onChange={(val: string) => handleSlotChange(val, nextIndex)}
+                    onChange={(val: string) => handleSlotChange(val, valuesLength)}
                 />
             </Fragment>
         );
-    }, [values, options, handleSlotChange]
-    );
 
-    /**
-     * Calculates the maximum number of slots available.
-     */
-    const maxSlots = useMemo(
-        () => options.filter(opt => opt && opt.length > 0).length,
-        [options]
+    }, [values, options, handleSlotChange]
     );
 
     /**
      * Renders all current slots and the next slot dropdown, optionally inside a dropdown reveal.
      */
     const render = useCallback(() => {
-        if (maxSlots > 1 && values.length > 0) {
-            return (
-                <DropdownReveal closeOnChange={false} buttonTitle='Edit Values' placeholder={values.join(' ')}>
-                    <div className={CSS.DropdownContainer}>
-                        {renderCurrentSlots()}
-                        {renderNextSlot()}
-                    </div>
-                </DropdownReveal>
-            );
-        }
+        // Calculate the number of available slots (slots with valid options)
+        // const maxSlots = options.filter(opt => opt?.length > 0).length;
 
+        // Use dropdown reveal for complex scenarios (multiple slots and many values)
+        // const shouldUseDropdown = maxSlots > 1 && valuesLength > 3;
+
+        // if (shouldUseDropdown) {
+        //     const valuesDisplay = values.join(' ');
+
+        //     return (
+        //         <DropdownReveal
+        //             closeOnChange={false}
+        //             buttonTitle="Edit Values"
+        //             placeholder={valuesDisplay}
+        //         >
+        //             <div className={CSS.DropdownContainer}>
+        //                 {renderCurrentSlots()}
+        //                 {renderNextSlot()}
+        //             </div>
+        //         </DropdownReveal>
+        //     );
+        // }
+
+        // Default inline rendering for simple scenarios
         return (
             <>
                 {renderCurrentSlots()}
                 {renderNextSlot()}
             </>
         );
-    }, [maxSlots, values, renderCurrentSlots, renderNextSlot]
+    }, [values, renderCurrentSlots, renderNextSlot]
     );
+
 
     return (
         <div className={CSS.Slots}>

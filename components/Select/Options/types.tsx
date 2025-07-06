@@ -11,6 +11,8 @@ export interface OptionsSelectProps {
     searchable?: boolean;
     /** Whether to display options in grouped sections (default: false) */
     grouped?: boolean;
+    /** Whether to prioritize icons over text in the dropdown options (default: false) */
+    prioritizeIcons?: boolean;
     /** Event handler triggered when the selected option changes */
     onChange: (value: string) => void;
 }

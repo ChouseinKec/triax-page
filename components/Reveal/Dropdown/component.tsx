@@ -73,7 +73,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         setIsOpen((prev) => !prev);
     }, []);
 
-    const placeholderText = forcePlaceholder ? placeholder : value || placeholder;
+    const buttonPlaceholder = forcePlaceholder ? placeholder : value || placeholder;
 
     return (
         <div className={CSS.DropdownReveal} ref={dropdownRef}>
@@ -86,7 +86,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                 data-isdisabled={isDisabled}
                 title={buttonTitle}
             >
-                {placeholderText}
+                {buttonPlaceholder}
             </button>
 
             {/* Conditionally render the dropdown content */}

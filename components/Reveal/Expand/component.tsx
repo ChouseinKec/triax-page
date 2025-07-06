@@ -41,7 +41,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): Re
     }, []);
 
 
-    const dividerTitle = title ? `| ${title} |` : (isOpen ? 'Collapse' : 'Expand');
+    const dividerTitle = title ? `${title} ` : (isOpen ? 'Collapse' : 'Expand');
 
 
 

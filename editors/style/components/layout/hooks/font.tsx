@@ -1,6 +1,3 @@
-// Components
-import HorizontalDivider from '@/components/divider/horizontal/component';
-
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
 
@@ -9,9 +6,10 @@ import { useStyleFactory } from '@/hooks/style/factory';
 
 export const useFontLayout = (): LayoutProps => {
     const { renderValue, renderTextView } = useStyleFactory();
-
+    const icon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
     return {
-        label: 'Font & Text',
+        label: icon,
+        title: 'Font & Text',
         groups: [
             {
                 columns: '1fr',
@@ -220,6 +218,7 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
+                isExpandable: true,
                 expandTitle: 'Column',
                 columns: 'repeat(1,minmax(0, 1fr))',
                 properties: [

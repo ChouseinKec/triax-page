@@ -5,6 +5,6 @@ import { LayoutGroup } from '@/editors/style/components/group/types';
  * 
  * @param {LayoutGroup[]} groups - An array of style groups included in this category.
  */
-export type LAYOUT_CATEGORY = {
+export type LayoutCategoryProps = {
     groups: LayoutGroup[];
 };

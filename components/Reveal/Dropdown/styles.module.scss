@@ -23,10 +23,15 @@
 		display: block;
 	}
 
+	> svg {
+		width: 15px;
+		height: 15px;
+	}	
+
 	@include inputMixins.icon-arrow;
 	@include inputMixins.components--button;
 
-	padding-right: var(--size-lg);
+	padding-right: var(--size-md);
 	&[data-isdisabled='true'] {
 		pointer-events: none;
 		opacity: 0.5;

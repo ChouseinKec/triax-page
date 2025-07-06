@@ -18,8 +18,16 @@ import { OptionProps } from './types';
  * @param {OptionProps} props - The props for the option item.
  * @returns {ReactElement} - The rendered option element.
  */
-const Option: React.FC<OptionProps> = (props): ReactElement => {
-    const { name, value, icon, style, isSelected, onChange } = props;
+const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
+    const {
+        name,
+        value,
+        icon,
+        style,
+        isSelected,
+        onChange,
+        prioritizeIcons = false
+    } = props;
 
     /**
      * Handles the selection or deselection of this option.
@@ -40,7 +48,8 @@ const Option: React.FC<OptionProps> = (props): ReactElement => {
     }, [isSelected, onChange]
     );
 
-
+    const iconElement = icon ? icon : '';
+    const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
         <i
             className={CSS.Option}
@@ -49,9 +58,9 @@ const Option: React.FC<OptionProps> = (props): ReactElement => {
             style={style}
             title={name}
         >
-            
-            {icon}
-            {!icon && name}
+
+            {iconElement}
+            {textElement}
         </i>
     )
 };

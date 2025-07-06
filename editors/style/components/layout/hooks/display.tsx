@@ -18,8 +18,11 @@ import { useStyleManager } from '@/hooks/style/manager';
 export const useDisplayLayout = (): LayoutProps => {
     const { renderValue, renderFlexView, renderGridView } = useStyleFactory();
     const { getStyle } = useStyleManager();
+    const icon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" /></svg>;
+
     return {
-        label: 'Display & Layout',
+        label: icon,
+        title: 'Display & Layout',
         groups: [
             // Display 
             {

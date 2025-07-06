@@ -38,7 +38,7 @@ const LinkValue: React.FC<IntegerValueProps> = memo((props: IntegerValueProps): 
 
 
     return (
-        <div className={CSS.NumberValue}>
+        <div className={CSS.LinkValue}>
             <GenericInput
                 prefix='https://'
                 value={safeValue}

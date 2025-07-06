@@ -46,6 +46,8 @@
 
   --shadow-inset: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
   --shadow-outset: 0 0.5px 2px 1px rgb(0 0 0 / 40%);
+
+  --border-generic: 1px solid var(--color-white--darker);
 }
 
 
@@ -131,5 +133,5 @@ a {
   position: fixed;
   top: 0;
   right: 0;
-  overflow: clip auto;
+  overflow: hidden;
 }

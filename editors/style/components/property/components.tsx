@@ -24,8 +24,6 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @param {string} [props.column='auto'] - The column layout for the property.
  * @param {string} [props.row='auto'] - The row layout for the property.
  * @param {string | null} [props.label] - The label for the property.
- * @param {string} [props.labelAlign='center'] - The alignment of the label.
- * @param {string} [props.direction] - The direction (e.g., 'ltr' or 'rtl') for the property.
  * @param {boolean} [props.hidden] - Flag to determine if the property should be visible.
  * @param {boolean} [props.disabled] - Flag to disable the property input.
  * @returns {ReactElement} The rendered Property component.
@@ -36,8 +34,6 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
         column = 'auto',
         row = 'auto',
         label = null,
-        labelAlign = 'center',
-        direction = 'row',
         hidden = false,
         disabled = false,
         property,
@@ -51,8 +47,6 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
     const _style: React.CSSProperties = {
         ['--property-column' as string]: column,
         ['--property-row' as string]: row,
-        ['--property-direction' as string]: direction,
-        ['--property-label--align' as string]: labelAlign,
     };
 
     return (
@@ -61,7 +55,6 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
             style={_style}
             data-label={label?.toLocaleLowerCase()}
             data-disabled={disabled}
-            data-direction={direction}
         >
 
             <Content component={component} label={label} property={property} />
@@ -83,8 +76,8 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
         <>
             {/* Render the label if provided */}
             {label && (
-                <>
-                    <span className={CSS.Property_Label} ref={labelRef}>
+                <div className={CSS.Property_Label}>
+                    <span ref={labelRef}>
                         {label}
                     </span>
 
@@ -115,12 +108,16 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
 
 
                     </FloatReveal>
-
-                    <span className={CSS.Property_Separator}>————————————————————————————————————————————————</span>
-
-                </>
+                </div>
             )}
-            {component()}
+
+
+            <div className={CSS.Property_Content}>
+                {label &&
+                    <span className={CSS.Property_Separator}>————————————————————————————————————————————————</span>
+                }
+                {component()}
+            </div>
         </>
     )
 

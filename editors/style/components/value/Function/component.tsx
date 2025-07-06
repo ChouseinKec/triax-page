@@ -44,9 +44,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
      * Fallback to the first function option if no match is found.
      */
     const option = useMemo(() => {
-        const match = functionOptions.find(
-            opt => getValueToken(value) === getValueToken(opt.value)
-        );
+        const match = functionOptions.find(opt => getValueToken(value) === getValueToken(opt.value));
         return match || functionOptions[0];
     }, [functionOptions, value]
     );
@@ -72,7 +70,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     const safeName = extractedName || defaultName;
     const safeValue = extractedValue || defaultValue;
 
- 
+
     /**
      * Handle changes to the function argument value.
      * If the new value is empty, clear the function value.
@@ -102,7 +100,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
     if (!safeName || !safeValue) return <Error message="[Function]: Malformed function value." />;
     if (!property) return <Error message="[Function]: Property creation failed." />;
 
-    
+
     /**
      * Render the dropdown select for function options.
      */

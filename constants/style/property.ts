@@ -225,10 +225,10 @@ export const CSSPropertyDefs: Record<string, CSSProperty> = {
 	'text-shadow': createProperty('text-shadow', '<length> <length> <length> <color>'),
 	'text-overflow': createProperty('text-overflow', 'clip | ellipsis | <string>'),
 	'text-orientation': createProperty('text-orientation', 'mixed | upright | sideways'),
-	'text-align': createProperty('text-align', 'left | right | center | justify | start | end'),
+	'text-align': createProperty('text-align', 'left|right|center|justify'),
 	'text-decoration': createProperty('text-decoration', '<text-decoration-line> <text-decoration-style> <text-decoration-thickness> <text-decoration-color> '),
 	'text-transform': createProperty('text-transform', 'none | capitalize | uppercase | lowercase'),
-	'text-align-last': createProperty('text-align-last', 'auto|start|end|left|right|center|justify'),
+	'text-align-last': createProperty('text-align-last', 'auto|left|right|center|justify'),
 	'text-combine-upright': createProperty('text-combine-upright', 'none|all|[digits <integer [2,4]>?]'),
 
 	'white-space': createProperty('white-space', 'normal|pre|nowrap|pre-wrap|pre-line|break-spaces'),

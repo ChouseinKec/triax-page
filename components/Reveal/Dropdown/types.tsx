@@ -18,7 +18,7 @@ export interface DropdownRevealProps {
     /** Custom style for the dropdown trigger/button. */
     buttonStyle?: React.CSSProperties;
     /** Placeholder text to display when no value is selected. */
-    placeholder?: string;
+    placeholder?: string | React.ReactNode;
     /** Force the placeholder to be shown even when a value is selected. */
     forcePlaceholder?: boolean;
     /** If true, disables the dropdown interaction. */

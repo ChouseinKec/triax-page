@@ -1,13 +1,13 @@
 .Slots {
-	display: flex;
 	flex: 1;
-	width: 100%;
-	> * {
-		width: 100%;
-	}
+	width: 95%;
+	display: flex;
+	align-items: center;
+	gap: var(--size-xs);
 
 	*[title='Set Next'] {
 		font-size: var(--font-size-lg);
+		aspect-ratio: 1;
 
 		padding: var(--size-xs);
 		min-width: auto;
@@ -18,10 +18,25 @@
 			content: none;
 		}
 	}
-}
+	> * {
+		flex: 1 0 auto;
+		width: max-content;
+		overflow: hidden;
+	}
 
-.DropdownSelect_Button {
-	width: max-content;
+	> *[class*='DimensionValue'],
+	> *[class*='RadioSelect'],
+	> *[class*='Integer'],
+	> *[class*='Number'] {
+		flex: 1 1 auto;
+	}
+
+	> *[class*='DimensionValue'],
+	> *[class*='Integer'],
+	> *[class*='Number'] {
+		max-width: 80px;
+	}
+
 }
 
 .DropdownContainer {
@@ -34,6 +49,7 @@
 	color: var(--color-gray);
 
 	display: flex;
+	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 }

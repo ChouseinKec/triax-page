@@ -27,9 +27,6 @@ export interface FunctionOptionData extends OptionData {
 	syntax: string;
 }
 
-/**
- * Represents a CSS dimension option, which can include units like 'px', '%', 'rem', etc.
- */
 export interface DimensionOptionData extends OptionData {
 	category: 'dimension';
 	group: CSSDimensionGroups;
