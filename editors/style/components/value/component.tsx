@@ -1,4 +1,4 @@
-import { memo, ReactElement, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 // Types
 import type { ValueProps } from './types';
@@ -16,6 +16,9 @@ import { ValueSeparators } from '@/constants/style/separator';
 // Components
 import Slots from './slots/component';
 
+// Utilities
+import { devLog } from '@/utilities/dev';
+
 
 /**
  * Value Component
@@ -27,19 +30,25 @@ import Slots from './slots/component';
  * @param onChange - Callback to update the value
  * @returns ReactElement - The rendered value editor UI for the property.
  */
-const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
+const Value: React.FC<ValueProps> = (props: ValueProps) => {
     const { property, value, onChange } = props;
+
+    // Guard Clause
+    if (property == null) {
+        devLog.error('[Value] No property provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.error('[Value] Invalid value provided, expected a string');
+        return null;
+    }
 
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
     const syntaxSet = useMemo(() => property.syntaxSet, [property.syntaxSet]);
     const syntaxParsed = useMemo(() => property.syntaxParsed, [property.syntaxParsed]);
     const syntaxNormalized = useMemo(() => property.syntaxNormalized, [property.syntaxNormalized]);
     const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
-
-    // if(property.name === 'grid-template-rows') {
-    // console.log(property.syntaxExpanded);
-    // console.log(syntaxNormalized);
-    // }
 
     // Split the value string into slots (e.g., ['10px', 'auto'])
     const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
@@ -74,11 +83,8 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
             input = mergeArrays(input, getTokenValues(syntax.split(' ')));
         }
 
-
         // Get separators for this variation, or fallback to spaces
         const separators = syntaxSeparators[variationIndex]
-            ? syntaxSeparators[variationIndex]
-            : [];
 
         // Join values with the determined separators
         const joinedValue = joinAdvanced(input, separators);

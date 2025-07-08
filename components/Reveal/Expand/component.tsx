@@ -9,6 +9,9 @@ import HorizontalDivider from '@/components/divider/horizontal/component';
 // Types
 import { ExpandRevealProps } from './types';
 
+// Utilities
+import { devLog } from '@/utilities/dev';
+
 /**
  * ExpandReveal Component
  *
@@ -22,10 +25,16 @@ import { ExpandRevealProps } from './types';
  * @param {string} [props.title=''] - Optional title for the expand section
  * @returns {ReactElement} The rendered ExpandReveal component
  */
-const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): ReactElement => {
+const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => {
     const { children, title = '' } = props;
 
-    // Component state for expand/collapse
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[ExpandReveal] No children provided');
+        return null;
+    }
+
+    // Component state managment
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     /**
@@ -52,9 +61,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): Re
      * Provides contextual title that changes with expand state.
      */
     const dividerTitle = useMemo((): string => {
-        if (title) {
-            return `${title} ${isOpen ? '(Expanded)' : '(Collapsed)'}`;
-        }
+        if (title) return `${title} ${isOpen ? '(Expanded)' : '(Collapsed)'}`;
         return isOpen ? 'Collapse' : 'Expand';
     }, [title, isOpen]
     );
@@ -74,7 +81,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): Re
         <div className={CSS.ExpandReveal} data-isopen={isOpen}>
             {/* Toggle button to expand/collapse the content */}
             <button
-                className={CSS.ExpandReveal_Button}
+                className={CSS.Button}
                 onClick={handleToggle}
                 onKeyDown={handleKeyDown}
                 {...accessibilityProps}
@@ -84,7 +91,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps): Re
 
             {/* Conditionally render content when expanded */}
             {isOpen && (
-                <div className={CSS.ExpandReveal_Content} role="region">
+                <div className={CSS.Content} role="region">
                     {children}
                 </div>
             )}

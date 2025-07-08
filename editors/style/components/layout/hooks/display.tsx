@@ -44,6 +44,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     // Display (e.g., block, inline, flex, grid)
                     {
                         label: 'Display',
+                        property: 'display',
                         component: () => renderValue('display')
                     },
                 ],

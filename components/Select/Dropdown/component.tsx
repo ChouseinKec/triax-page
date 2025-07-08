@@ -28,28 +28,34 @@ import Options from '@/components/select/options/component';
  * @returns {ReactElement} - The rendered dropdown select component.
  *
  */
-const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps): ReactElement => {
+const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps) => {
     const {
+        // Core
         value,
         options,
         onChange,
+
         placeholder = 'N/A',
         forcePlaceholder = false,
         grouped = false,
         searchable = false,
+
+        // Accessibility
         title = 'Toggle Dropdown',
         ariaLabel = 'Dropdown select',
     } = props;
 
-    // Validation and early returns for edge cases
+    // Guard Clause
     if (!options || options.length === 0) {
         devLog.warn('[DropdownSelect] No options provided');
-        return (
-            <div className={CSS.DropdownSelect} aria-label="Empty dropdown">
-                <span className={CSS.EmptyState}>No options available</span>
-            </div>
-        );
+        return null;
     }
+
+    if (value == null) {
+        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        return null;
+    }
+
 
     /**
      * Handles option selection with validation and error handling
@@ -58,6 +64,9 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
      * @param {string} selectedValue - The value of the selected option
      */
     const handleOptionChange = useCallback((selectedValue: string): void => {
+        // If no value is selected, clear the selection
+        if (selectedValue === '') return onChange('');
+
         // Validate that the selected value exists in options
         const isValidOption = options.some(option => option.value === selectedValue);
 
@@ -67,7 +76,8 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         }
 
         onChange(selectedValue);
-    }, [options, onChange]);
+    }, [options, onChange]
+    );
 
     /**
      * Options container props for performance
@@ -79,20 +89,22 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         value,
         options,
         onChange: handleOptionChange
-    }), [searchable, grouped, value, options, handleOptionChange]);
+    }), [searchable, grouped, value, options, handleOptionChange]
+    );
 
-
+    /**
+     * Dropdown properties for the reveal component
+    */
     const dropdownProps = useMemo(() => ({
         value,
-        forcePlaceholder,
-        placeholder,
+        placeholder: forcePlaceholder ? placeholder : value || 'N/A',
         title,
-    }), [value, forcePlaceholder, placeholder, title]);
-
+    }), [value, placeholder, title]
+    );
 
     return (
         <DropdownReveal ariaLabel={ariaLabel} {...dropdownProps}>
-            <div className={CSS.DropdownSelect_Options}>
+            <div className={CSS.Options}>
                 <Options {...optionsProps} />
             </div>
         </DropdownReveal>

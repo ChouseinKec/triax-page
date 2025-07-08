@@ -53,6 +53,18 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         ariaModal = false,
     } = props;
 
+
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[FloatReveal] No children provided');
+        return null;
+    }
+
+    if(!targetRef){
+        devLog.warn('[FloatReveal] Target reference is not provided');
+        return null;
+    }
+
     // Refs for DOM elements
     const floatRef = useRef<HTMLDivElement | null>(null);
 

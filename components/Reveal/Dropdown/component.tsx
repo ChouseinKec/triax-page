@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -9,25 +9,37 @@ import { DropdownRevealProps } from '@/components/reveal/dropdown/types';
 // Components
 import FloatReveal from '@/components/reveal/float/component'
 
+// Utilities
+import { devLog } from '@/utilities/dev';
+
 /**
  * Dropdown Component
  *
  * A reusable dropdown component that toggles visibility on button click
  * and closes when clicking outside or when the children element changes (optional).
  */
-const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): ReactElement => {
+const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProps) => {
     const {
-        value,
-        placeholder = 'Toggle',
-        forcePlaceholder = false,
+        // Core
         children,
+
+        // Optional props
+        placeholder = 'Toggle',
         closeOnChange,
         isDisabled,
+
+        // Accessibility and UX
         title = 'Toggle Dropdown',
         ariaLabel = 'Dropdown reveal',
     } = props;
 
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[DropdownReveal] No children provided');
+        return null;
+    }
 
+    // Component state management
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -71,20 +83,18 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
     }, []
     );
 
-    const buttonPlaceholder = forcePlaceholder ? placeholder : value || placeholder;
-
     return (
         <div className={CSS.DropdownReveal} ref={dropdownRef}>
             {/* Toggle button to open/close the dropdown */}
             <button
-                className={CSS.DropdownReveal_Button}
+                className={CSS.ToggleButton}
                 onClick={handleToggle}
                 data-isopen={isOpen}
                 data-isdisabled={isDisabled}
                 title={title}
                 aria-label={ariaLabel}
             >
-                {buttonPlaceholder}
+                {placeholder}
             </button>
 
             {/* Conditionally render the dropdown content */}

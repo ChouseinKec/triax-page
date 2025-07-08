@@ -1,3 +1,5 @@
+type symbolType = '()' | '[]' | '{}' | '<>';
+
 /**
  * Splits a string by one or more separators at the top level (not inside brackets or quotes).
  * Handles (), [], <>, {}, and "" as grouping symbols.
@@ -73,7 +75,7 @@ function splitAdvanced(input: string, separators: string | string[]): string[] {
  * Joins an array of values with their corresponding separators.
  * If no separators are provided, joins with a single space.
  * @param vals - The array of values to join.
- * @param seps - The array of separators to use between values.
+ * @param seps - The array of separators to use between values.(Defaults to a single space if empty)
  * @returns A single string with values joined by their respective separators.
  * @example
  * joinAdvanced(['10px', 'auto'], [' ', '/']) → '10px auto'
@@ -88,8 +90,6 @@ function joinAdvanced(inputs: string[], separators: string[]): string {
 	}
 	return result.trim();
 }
-
-type symbolType = '()' | '[]' | '{}' | '<>';
 
 /**
  * Removes all whitespace characters (spaces, tabs, newlines) from a string.
@@ -166,34 +166,6 @@ function extractBetween(input: string, symbol: symbolType): string | undefined {
 	return undefined; // No matching symbol pair found
 }
 
-/**
- * Extracts the substring before the first occurrence of a specified opening symbol.
- * Returns the part of the string before the first opening symbol found.
- *
- * @param input - The input string to search within.
- * @param symbol - The paired symbol type: '()', '[]', '{}', or '<>'
- * @returns The substring before the first opening symbol, or undefined if no symbol found.
- *
- * @example
- * extractBefore('text (content) more', '()'); → Returns 'text'
- * extractBefore('data [array] text', '[]'); → Returns 'data'
- * extractBefore('no symbols here', '()'); → Returns undefined
- */
-function extractBefore(input: string, symbol: symbolType): string | undefined {
-	const symbolMap: Record<string, { open: string; close: string }> = {
-		'()': { open: '(', close: ')' },
-		'[]': { open: '[', close: ']' },
-		'{}': { open: '{', close: '}' },
-		'<>': { open: '<', close: '>' },
-	};
 
-	const symbolInfo = symbolMap[symbol];
-	const { open } = symbolInfo;
 
-	const index = input.indexOf(open);
-	if (index === -1) return undefined; // No opening symbol found
-
-	return input.slice(0, index).trim();
-}
-
-export { extractBetween, extractBefore,  splitAdvanced, clearSpaces, joinAdvanced };
+export { extractBetween, splitAdvanced, clearSpaces, joinAdvanced };

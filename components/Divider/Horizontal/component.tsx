@@ -17,15 +17,8 @@ import { HorizontalDividerProps } from './types';
  * @param {string} [props.title] - Optional title text displayed on the divider
  * @returns {ReactElement} The rendered HorizontalDivider component
  */
-const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ title }): ReactElement => {
-    /**
-     * CSS custom properties for the divider title
-     */
-    const customProperties = useMemo((): React.CSSProperties => ({
-        '--divider-title': title ? `"${title}"` : '""'
-    } as React.CSSProperties),
-        [title]
-    );
+const HorizontalDivider: React.FC<HorizontalDividerProps> = (props: HorizontalDividerProps): ReactElement => {
+    const { title } = props;
 
     /**
      * Provides proper ARIA labeling for screen readers
@@ -34,13 +27,22 @@ const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ title }): ReactEl
         role: 'separator',
         'aria-label': title ? `Section separator: ${title}` : 'Section separator',
         'aria-orientation': 'horizontal' as const
-    }), [title]);
+    }), [title]
+    );
+
+    /**
+     * Style and data attributes.
+    */
+    const customProps = useMemo(() => ({
+        style: { '--divider-title': title ? `"${title}"` : '""' } as React.CSSProperties,
+        'data-title': title,
+    }), [title]
+    );
 
     return (
         <div
             className={CSS.HorizontalDivider}
-            style={customProperties}
-            data-title={title || undefined}
+            {...customProps}
             {...accessibilityProps}
         />
     );

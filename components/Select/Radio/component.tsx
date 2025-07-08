@@ -28,7 +28,8 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
         value,
         options,
         onChange,
-        maxOptions = 20
+        maxOptions = 20,
+        ariaLabel = 'Radio Select',
     } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -46,9 +47,9 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
             // Get current container and option measurements
             const radioSelectWidth = container.clientWidth;
             // Find the first child whose className contains '_Option'
-            const firstOption = Array.from(container.children).find(
-                (child) => (child as HTMLElement).className.includes('_Option')
-            ) as HTMLElement;
+            const firstOption = Array.from(container.children).find((child) =>
+                (child).className.includes('_Option')
+            );
             if (!firstOption) return;
 
 
@@ -57,11 +58,16 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
             const allOptionsWidth = singleOptionWidth * optionsLength;
             const totalGapWidth = Math.abs(radioSelectWidth - allOptionsWidth);
             const singleGapWidth = totalGapWidth / (optionsLength);
-
-            // Calculate how many options can fit in available space
             const optionWithGapWidth = singleOptionWidth + singleGapWidth;
 
+            // Calculate how many options can fit in available space
             const fittingOptions = Math.floor(radioSelectWidth / optionWithGapWidth);
+
+            // If fewer than half the options fit, set to 1
+            if (fittingOptions < optionsLength / 2) {
+                setDynamicMaxOptions(1);
+                return;
+            }
 
             // Ensure we stay within bounds
             const finalMaxOptions = Math.max(1, Math.min(fittingOptions, maxOptions));
@@ -75,7 +81,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
     }, [maxOptions, optionsLength]);
 
     return (
-        <div ref={containerRef} role='radiogroup' className={CSS.RadioSelect} data-is-collapsed={dynamicMaxOptions < optionsLength}>
+        <div ref={containerRef} aria-label={ariaLabel} role='radiogroup' className={CSS.RadioSelect} data-is-collapsed={dynamicMaxOptions < optionsLength}>
 
             {dynamicMaxOptions < optionsLength && (
                 <>

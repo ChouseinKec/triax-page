@@ -42,7 +42,7 @@ import { devLog } from '@/utilities/dev';
  *   grouped={true}
  * />
  */
-const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps): ReactElement => {
+const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) => {
     const {
         value,
         options,
@@ -52,6 +52,16 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
         prioritizeIcons = false,
         ariaRole = 'radio',
     } = props;
+
+    if (!options || options.length === 0) {
+        devLog.warn('[DropdownSelect] No options provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        return null;
+    }
 
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);

@@ -1,5 +1,5 @@
 // External imports
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -27,23 +27,33 @@ import { devLog } from '@/utilities/dev';
  * @param {string} [props.value=''] - Current CSS dimension value (e.g., '10px')
  * @param {function} [props.onChange] - Callback for value changes
  * @param {Array} [props.options=[]] - Available unit options with categories
- * @param {number} [props.minValue=-Infinity] - Minimum allowed numeric value
- * @param {number} [props.maxValue=Infinity] - Maximum allowed numeric value
+ * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
+ * @param {number} [props.max=Infinity] - Maximum allowed numeric value
  * @returns {ReactElement} The rendered DimensionValue component
  */
-const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProps): ReactElement => {
+const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProps) => {
 	const {
-		value = '',
-		onChange = () => { },
-		options = [],
-		minValue = -Infinity,
-		maxValue = Infinity,
+		// Core
+		value,
+		onChange,
+		options,
+
+		// Validation
+		min = -Infinity,
+		max = Infinity,
 	} = props;
 
-	// Validate props and provide warnings for development
-	if (options.length === 0) {
-		devLog.warn('[DimensionValue] No unit options provided, component may not function correctly');
+	// Guard Clause
+	if (!options || options.length === 0) {
+		devLog.error('[DimensionValue] No options provided');
+		return null;
 	}
+
+	if (value == null) {
+		devLog.error('[DimensionValue] Invalid value provided, expected a string');
+		return null;
+	}
+
 
 	/**
 	 * Finds the first dimension category unit as default, fallback to 'px'
@@ -70,6 +80,51 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		};
 	},
 		[value]
+	);
+
+	/**
+	* Validates numeric input and provides user-friendly error messages
+	* Checks for valid numbers, range constraints, and handles edge cases
+	* 
+	* @param {string} inputValue - The input value to validate
+	* @returns {object} Validation result with status and message
+	*/
+	const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
+		// Allow empty values
+		if (inputValue === '' || inputValue === null || inputValue === undefined) {
+			return { status: true, message: '' };
+		}
+
+		// Parse the numeric value
+		const numericValue = parseFloat(inputValue);
+
+		// Check if it's a valid number
+		if (isNaN(numericValue) || !isFinite(numericValue)) {
+			return {
+				status: false,
+				message: 'Please enter a valid number'
+			};
+		}
+
+		// Check minimum value constraint
+		if (min > -Infinity && numericValue < min) {
+			return {
+				status: false,
+				message: `Value must be at least ${min}`
+			};
+		}
+
+		// Check maximum value constraint
+		if (max < Infinity && numericValue > max) {
+			return {
+				status: false,
+				message: `Value must be at most ${max}`
+			};
+		}
+
+		return { status: true, message: '' };
+	},
+		[min, max]
 	);
 
 	/**
@@ -156,11 +211,12 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		>
 			{/* Numeric input for the value component */}
 			<GenericInput
-				value={extractedValue.number || ''}
-				min={minValue}
-				max={maxValue}
+				value={extractedValue.number || ""}
+				min={min}
+				max={max}
 				type="number"
 				placeholder="N/A"
+				onValidate={validateNumber}
 				onChange={handleNumberChange}
 				title="Enter Dimension Value"
 				ariaLabel="Enter Dimension Value"
@@ -169,16 +225,16 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			{/* Unit dropdown for the unit component */}
 			<SelectDropdown
 				options={options}
-				value={extractedValue.unit || ''}
+				value={extractedValue.unit || "N/A"}
 				placeholder="N/A"
 				onChange={handleUnitChange}
 				searchable={true}
 				grouped={true}
-				ariaLabel="Select Dimension Unit"
-				title="Select Dimension Unit"
+				ariaLabel="Change Value Type"
+				title="Change Value Type"
 			/>
 		</div>
 	);
 };
 
-export default DimensionValue;
+export default memo(DimensionValue);

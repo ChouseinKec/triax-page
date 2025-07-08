@@ -7,8 +7,8 @@
 	justify-content: center;
 	gap: var(--size-md);
 
-	*[title*='Change Function'] {
-		font-size: var(--font-size-md);
+	> *[class*='DropdownReveal'] *[class*='ToggleButton'] {
+		font-size: var(--font-size-lg);
 
 		padding: var(--size-xs);
 		min-width: auto;

@@ -23,8 +23,6 @@ const Category: React.FC<LayoutCategoryProps> = ({ groups }): ReactElement => {
                 <Group
                     key={index}
                     properties={group.properties}
-                    columns={group.columns}
-                    rows={group.rows}
                     hidden={group.hidden}
                     isExpandable={group.isExpandable}
                     expandTitle={group.expandTitle}

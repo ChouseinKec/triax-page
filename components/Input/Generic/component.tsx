@@ -1,4 +1,4 @@
-import React, { useCallback, ReactElement, memo, useState, useRef, useMemo } from 'react';
+import React, { useCallback, ReactElement, memo, useState, useRef, useMemo, useReducer } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -11,13 +11,16 @@ import type { GenericInputProps } from './types';
 
 // Utilities
 import { devLog } from '@/utilities/dev';
+import { validationReducer } from './reducer';
+
+// Hooks
+import { useSafeCallback } from '@/hooks/utility/useSafeCallback';
 
 /**
  * GenericInput Component
  * 
  * A flexible, accessible base input component with comprehensive validation support.
  * Provides real-time validation, error handling, keyboard navigation, and accessibility features.
- * Supports various input types with appropriate constraints and visual enhancements.
  * 
  * @param {GenericInputProps} props - Component properties
  * @param {string} [props.value=''] - Current input value
@@ -35,36 +38,47 @@ import { devLog } from '@/utilities/dev';
  * @param {string|ReactElement} [props.suffix=''] - Suffix element/text
  * @returns {ReactElement} The rendered GenericInput component
  */
-const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): ReactElement => {
+const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => {
     const {
         // Core
-        value = '',
+        value,
         type = 'text',
         placeholder = `Enter ${type}`,
 
         // Validation
         min = -Infinity,
         max = Infinity,
-        validate,
 
         // Accessibility
         ariaLabel = 'Generic Input',
         title = 'Enter Value',
 
         // Event
-        onChange = () => { },
+        onChange,
         onFocus = () => { },
         onBlur = () => { },
+        onValidate,
 
         // Visual
         prefix = '',
         suffix = '',
     } = props;
 
+    // Guard Clause
+    if (value == null) {
+        devLog.warn('[GenericInput] Invalid value provided, expected a string');
+        return null;
+    }
+
     // Component state management
     const inputRef = useRef<HTMLInputElement>(null);
-    const [isError, setIsError] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [validationState, validationDispatch] = useReducer(validationReducer, { isError: false, message: '' });
+
+    // Create a "safe" version of the onValidate prop that will never crash the component.
+    // It automatically dispatches an exception action if the original onValidate throws an error.
+    const safeOnValidate = useSafeCallback(onValidate, () =>
+        validationDispatch({ type: 'VALIDATION_EXCEPTION', payload: { message: 'Validation error occurred' } })
+    );
 
     /**
      * Computes accessibility attributes for the input element
@@ -77,16 +91,16 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
             // Accessibility attributes
             'role': 'textbox',
             'aria-label': ariaLabel,
-            'aria-invalid': isError,
-            'aria-errormessage': isError ? errorMessage : undefined,
+            'aria-invalid': validationState.isError,
+            'aria-errormessage': validationState.isError ? validationState.message : undefined,
             'title': title,
 
             // Data attributes for styling
-            'data-iserror': isError,
+            'data-iserror': validationState.isError,
             'data-type': type,
         };
     },
-        [type, ariaLabel, isError, errorMessage]
+        [type, ariaLabel, validationState]
     );
 
     /**
@@ -97,11 +111,11 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
      */
     const dataAttributes = useMemo(() => {
         return {
-            'data-iserror': isError,
+            'data-iserror': validationState.isError,
             'data-type': type,
         };
     },
-        [type, isError]
+        [type, validationState]
     );
 
     /**
@@ -141,19 +155,14 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
     const handleReset = useCallback((): void => {
         const inputElement = inputRef.current;
 
-        if (!inputElement) {
-            devLog.warn('[GenericInput] Input element not found during reset');
-            return;
-        }
+        // If input element is not found, log a warning and exit
+        if (!inputElement) return devLog.warn('[GenericInput] Input element not found during reset');
 
         // Reset input value to prop value
         inputElement.value = value.toString();
 
         // Clear error state
-        setIsError(false);
-        setErrorMessage('');
-
-        devLog.info('[GenericInput] Input reset to original value');
+        validationDispatch({ type: 'CLEAR' });
     },
         [value]
     );
@@ -168,36 +177,26 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
     const handleCommit = useCallback((): void => {
         const inputElement = inputRef.current;
 
-        if (!inputElement) {
-            devLog.warn('[GenericInput] Input element not found during commit');
+        if (!inputElement) return devLog.warn('[GenericInput] Input element not found during commit');
+
+
+        const inputValue = inputElement.value.trim();
+        const validationResult = safeOnValidate(inputValue);
+
+        // If validation doesn't exist or it threw an error, validationResult will be undefined.
+        if (validationResult === undefined && onValidate) return;
+
+        // If a validator exists and it failed, dispatch failure.
+        if (validationResult && !validationResult.status) {
+            validationDispatch({ type: 'VALIDATION_FAILURE', payload: { message: validationResult.message } });
+            onChange(''); // Clear the value on validation failure
+            devLog.warn(`[GenericInput] Validation failed: ${validationResult.message}`);
             return;
         }
 
-        const inputValue = inputElement.value.trim();
-
-        // Perform validation if validator function is provided
-        if (validate) {
-            try {
-                const validationResult = validate(inputValue);
-
-                if (!validationResult.status) {
-                    // Validation failed - set error state and clear value
-                    setIsError(true);
-                    setErrorMessage(validationResult.message || 'Invalid input');
-                    onChange(''); // Clear the value on validation failure
-                    devLog.warn(`[GenericInput] Validation failed: ${validationResult.message}`);
-                    return;
-                }
-
-                // Clear any existing error state on successful validation
-                setIsError(false);
-                setErrorMessage('');
-            } catch (error) {
-                devLog.error('[GenericInput] Validation function threw an error:', error);
-                setIsError(true);
-                setErrorMessage('Validation error occurred');
-                return;
-            }
+        // On success, clear any existing error state.
+        if (validationResult?.status) {
+            validationDispatch({ type: 'VALIDATION_SUCCESS' });
         }
 
         // Only call onChange if value has actually changed
@@ -206,7 +205,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
         }
 
     },
-        [onChange, validate, value]
+        [onChange, onValidate, value]
     );
 
     /**
@@ -247,25 +246,24 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
      * @returns {void}
      */
     const handleChange = useCallback((): void => {
-        // Only perform real-time validation if validator is provided
-        if (!validate) return;
-
         const inputElement = inputRef.current;
         if (!inputElement) return;
 
         const inputValue = inputElement.value;
+        const validationResult = safeOnValidate(inputValue);
 
-        try {
-            const validationResult = validate(inputValue);
-            setIsError(!validationResult.status);
-            setErrorMessage(validationResult.message || '');
-        } catch (error) {
-            devLog.error('[GenericInput] Real-time validation error:', error);
-            setIsError(true);
-            setErrorMessage('Validation error');
+        // If validation doesn't exist or it threw an error, do nothing.
+        if (validationResult === undefined) return;
+
+
+        // Dispatch success or failure based on the result.
+        if (validationResult.status) {
+            validationDispatch({ type: 'VALIDATION_SUCCESS' });
+        } else {
+            validationDispatch({ type: 'VALIDATION_FAILURE', payload: { message: validationResult.message } });
         }
     },
-        [validate]
+        [onValidate]
     );
 
     /**
@@ -324,9 +322,9 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
             <FloatReveal
                 position="bottom"
                 targetRef={inputRef}
-                isOpen={isError}
+                isOpen={validationState.isError}
                 role="alertdialog"
-                ariaLabel="Input validation error"
+                ariaLabel="Input Validation Error"
             >
                 <div className={CSS.ErrorMessage} role="alert">
 
@@ -334,7 +332,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): Re
                         ✖
                     </span>
 
-                    <span>{errorMessage}</span>
+                    <span>{validationState.message}</span>
                 </div>
             </FloatReveal>
         </div>

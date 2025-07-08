@@ -7,10 +7,16 @@ import type { OptionData } from '@/types/option';
 export type RadioSelectProps = {
     /** The currently selected value from the radio options. */
     value: string;
+    
     /** The list of options available for selection. */
     options: OptionData[];
+    
     /** The maximum number of options to display. */
     maxOptions?: number;
+
+    /** ARIA label for the radio group. */
+    ariaLabel?: string;
+
     /** Callback function to handle changes in the selected value. */
     onChange: (value: string) => void;
 };

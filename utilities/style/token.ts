@@ -1,5 +1,10 @@
 // Type
-import { CSSTokenGroups } from '@/types/style/token';
+import type { CSSTokenGroups } from '@/types/style/token';
+
+// Constants
+import { CSSTokenDefaults } from '@/constants/style/token';
+
+// Utilities
 import { extractBetween } from '@/utilities/string/string';
 
 /**
@@ -237,22 +242,11 @@ function getTokenParam(input: string): Record<string, any> | undefined {
  */
 function getTokenValue(token: string): string | undefined {
 	if (isTokenKeyword(token)) return token;
-	const valueMap: Record<string, string> = {
-		'<length>': '0px',
-		'<angle>': '0deg',
-		'<percentage>': '0%',
-		'<color>': '#ffffff',
-		'<number>': '0.0',
-		'<integer>': '0',
-		'<flex>': '1fr',
-		'<ratio>': '1/1',
-		'<link>': '"https://example.com/image.png"',
-	};
 
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return undefined;
 
-	const tokenValue = valueMap[tokenCanonical];
+	const tokenValue = CSSTokenDefaults[tokenCanonical];
 	return tokenValue ? tokenValue : undefined;
 }
 

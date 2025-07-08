@@ -80,3 +80,15 @@ export const CSSTokenDefs: Partial<Record<string, CSSToken>> = {
 	'<box-shadow-blur>': createToken('<box-shadow-blur>', '<length [0,∞]>'),
 	'<box-shadow-spread>': createToken('<box-shadow-spread>', '<length>'),
 };
+
+export const CSSTokenDefaults: Record<string, string> = {
+	'<length>': '0px',
+	'<angle>': '0deg',
+	'<percentage>': '0%',
+	'<color>': '#ffffff',
+	'<number>': '0.0',
+	'<integer>': '0',
+	'<flex>': '1fr',
+	'<ratio>': '1/1',
+	'<link>': '"https://example.com/image.png"',
+};

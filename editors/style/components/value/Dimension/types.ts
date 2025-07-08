@@ -1,36 +1,28 @@
-import { OptionData } from 'types/option'
-
+import { OptionData } from 'types/option';
 
 export type DimensionValueProps = {
-  /**
-   * The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)".
-   * @type {string}
-   */
-  value?: string;
+	/**
+	 * The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)".
+	 */
+	value: string;
 
-  /**
-   * The minimum numeric value allowed, default is -Infinity.
-   * @type {number}
-   */
-  minValue?: number;
+	/**
+	 * Array of options for the unit dropdown, each option should have a value and category.
+	 */
+	options: OptionData[];
 
-  /**
-   * The maximum numeric value allowed, default is Infinity.
-   * @type {number}
-   */
-  maxValue?: number;
+	/**
+	 * Callback function to handle value changes.
+	 */
+	onChange: (value: string) => void;
 
-  /**
-   * Array of options for the unit dropdown, each option should have a value and category.
+	/**
+	 * The minimum numeric value allowed, default is -Infinity.
+	 */
+	min?: number;
 
-   * @type {STYLE_OPTION[]}
-   */
-  options?: OptionData[];
-
-  /**
-   * Callback function to handle value changes.
-   * @type {(value: string) => void}
-   */
-  onChange?: (value: string) => void;
+	/**
+	 * The maximum numeric value allowed, default is Infinity.
+	 */
+	max?: number;
 };
-

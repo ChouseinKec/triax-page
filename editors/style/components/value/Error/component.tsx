@@ -1,4 +1,4 @@
-import React, { useRef, ReactElement, useCallback } from 'react';
+import React, { useRef, ReactElement, useCallback, Fragment } from 'react';
 
 // Types
 import type { ErrorProps } from './types';
@@ -23,15 +23,16 @@ import { devLog } from '@/utilities/dev';
  * @param {string} props.message - Error message to display in tooltip
  * @returns {ReactElement} The rendered Error component
  */
-const Error: React.FC<ErrorProps> = (props: ErrorProps): ReactElement => {
+const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
     const { message } = props;
 
     if (!message || message.trim() === '') {
         devLog.warn('[Error] Empty or missing error message provided');
+        return null;
     }
 
     // Ref for the error trigger button (target for floating tooltip)
-    const errorButtonRef = useRef<HTMLButtonElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     // Fallback for empty messages
     const displayMessage = message?.trim() || 'An unknown error occurred';
 
@@ -46,8 +47,8 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps): ReactElement => {
         event.preventDefault();
 
         // Focus the button to ensure accessibility
-        if (errorButtonRef.current) {
-            errorButtonRef.current.focus();
+        if (buttonRef.current) {
+            buttonRef.current.focus();
         }
 
         devLog.info('[Error] Error button clicked, tooltip should be visible');
@@ -71,8 +72,8 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps): ReactElement => {
         // Close on Escape key
         if (event.key === 'Escape') {
             event.preventDefault();
-            if (errorButtonRef.current) {
-                errorButtonRef.current.blur();
+            if (buttonRef.current) {
+                buttonRef.current.blur();
             }
         }
     },
@@ -81,42 +82,28 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps): ReactElement => {
 
 
     return (
-        <div
-            className={CSS.ErrorContainer}
-            role="alert"
-            aria-live="polite"
-        >
+        <Fragment>
             {/* Error indicator button */}
             <button
                 className={CSS.Error}
-                ref={errorButtonRef}
+                ref={buttonRef}
                 onClick={handleErrorClick}
                 onKeyDown={handleKeyDown}
                 type="button"
                 aria-label={`Error: ${displayMessage}`}
-                aria-describedby="error-tooltip"
                 aria-expanded="false"
-                title="Click or press Enter to view error details"
+                title="Hover to view error details"
             >
-                <span aria-hidden="true">⚠</span>
-                <span className={CSS.ScreenReaderOnly}>Error</span>
+                <span>⚠ Error</span>
             </button>
 
             {/* Floating error message tooltip */}
-            <FloatReveal
-                targetRef={errorButtonRef}
-                aria-label="Error message tooltip"
-            >
-                <div
-                    className={CSS.ErrorMessage}
-                    role="tooltip"
-                    id="error-tooltip"
-                    aria-live="polite"
-                >
-                    <p>{displayMessage}</p>
-                </div>
+            <FloatReveal targetRef={buttonRef} role='tooltip' aria-label="Error Message">
+                <p className={CSS.ErrorMessage}>
+                    {displayMessage}
+                </p>
             </FloatReveal>
-        </div>
+        </Fragment>
     );
 };
 

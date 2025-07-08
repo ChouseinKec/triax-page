@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, ReactElement } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -14,13 +14,10 @@ import Error from '@/editors/style/components/value/error/component';
 
 // Constants
 import { createProperty } from '@/constants/style/property';
-import { ValueSeparators } from '@/constants/style/separator';
 
 // Utilities
 import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
 import { getValueToken } from '@/utilities/style/value';
-import { getTokenBase, getTokenValues } from '@/utilities/style/token';
-import { splitAdvanced } from '@/utilities/string/string';
 import { devLog } from '@/utilities/dev';
 
 /**
@@ -36,14 +33,25 @@ import { devLog } from '@/utilities/dev';
  * @param {function} props.onChange - Callback for value changes
  * @returns {ReactElement} The rendered FunctionValue component
  */
-const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps): ReactElement => {
-    const { value, options, onChange } = props;
+const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) => {
+    const {
+        // Core
+        value,
+        options,
+        onChange
+    } = props;
 
-    // Early validation and warnings for development
+    // Guard Clause
     if (!options || options.length === 0) {
-        devLog.warn('[FunctionValue] No options provided, component may not function correctly');
-        return <Error message="[Function] No options available." />;
+        devLog.error('[DimensionValue] No options provided');
+        return null;
     }
+
+    if (value == null) {
+        devLog.error('[DimensionValue] Invalid value provided, expected a string');
+        return null;
+    }
+
 
     /**
      * Extracts only function category options from the provided options array
@@ -108,31 +116,6 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps):
     );
 
     /**
-     * Extracts default function name and arguments from the current option
-     * Provides fallback values for component initialization
-     * 
-     * @returns {Object} Object containing default name and value
-     */
-    const defaults = useMemo(() => {
-        if (!currentOption || !property) {
-            return { name: '', value: '' };
-        }
-
-        try {
-            const defaultName = getTokenBase(currentOption.name);
-            const defaultVariation = splitAdvanced(property.syntaxParsed[0], ValueSeparators);
-            const defaultValue = getTokenValues(defaultVariation).join(' ');
-
-            return { name: defaultName, value: defaultValue };
-        } catch (error) {
-            devLog.error(`[FunctionValue] Failed to extract defaults:`, error);
-            return { name: '', value: '' };
-        }
-    },
-        [currentOption, property]
-    );
-
-    /**
      * Extracts function name and arguments from the current value
      * Provides safe fallbacks for missing or malformed data
      * 
@@ -143,11 +126,11 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps):
         const extractedValue = extractFunctionValue(value);
 
         return {
-            name: extractedName || defaults.name,
-            value: extractedValue || defaults.value
+            name: extractedName,
+            value: extractedValue
         };
     },
-        [value, defaults.name, defaults.value]
+        [value]
     );
 
     /**
@@ -195,60 +178,44 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps):
     );
 
     // Error handling for missing or malformed data
-    if (!currentOption) {
-        return <Error message="[Function] No matching function option available." />;
-    }
-
     if (!extractedValue.name || !extractedValue.value) {
         return <Error message="[Function] Malformed function value - missing name or arguments." />;
     }
 
+    if (!currentOption) {
+        devLog.error('[FunctionValue] No matching function option available.');
+        return null;
+    }
+
     if (!property) {
-        return <Error message="[Function] Property creation failed - invalid syntax definition." />;
+        devLog.error('[FunctionValue] Property creation failed - invalid syntax definition.');
+        return null;
     }
 
     return (
-        <DropdownReveal
-            closeOnChange={false}
-            placeholder={`${extractedValue.name}()`}
-            buttonTitle="Edit Function"
-        >
+        <DropdownReveal closeOnChange={false} placeholder={`${extractedValue.name}()`} title="Edit Function">
 
-            <div
-                className={CSS.FunctionValue}
-                role="group"
-                aria-label="CSS function value editor"
-            >
+            <div className={CSS.FunctionValue} role='presentation'>
                 {/* Function selection dropdown */}
                 <DropdownSelect
                     options={options}
                     value={currentOption.name}
                     onChange={handleFunctionChange}
-                    buttonTitle="Change Function"
+                    title="Change Value Type"
                     placeholder="↺"
                     forcePlaceholder={true}
                     grouped={true}
-                    aria-label="Function type selector"
+                    aria-label="Change Value Type"
                 />
 
                 {/* Visual separator */}
-                <span
-                    className={CSS.Separator}
-                    aria-hidden="true"
-                >
-                    ⇄
-                </span>
+                <span className={CSS.Separator} aria-hidden="true">⇄</span>
 
                 {/* Function arguments editor */}
-                <Value
-                    value={extractedValue.value}
-                    property={property}
-                    onChange={handleArgumentsChange}
-                    aria-label="Function arguments"
-                />
+                <Value value={extractedValue.value} property={property} onChange={handleArgumentsChange} />
             </div>
         </DropdownReveal>
     );
 };
 
-export default FunctionValue;
+export default memo(FunctionValue);

@@ -1,9 +1,14 @@
 /**
- * Represents a single accordion item with a title and collapsible content.
+ * Represents a single tab item with a title and collapsible content.
  */
 export type TabGroupItemsProps = {
+    /** The label for the tab, displayed in the tab header */
     label: string | React.ReactElement;
+
+    /** The title of the tab, displayed in the tab header */
     title: string;
+
+    /** The content to display within the tab */
     content: React.ReactElement;
 };
 
@@ -16,7 +21,7 @@ export type TabGroupProps = {
 
     /** ARIA label for the tab group */
     ariaLabel?: string;
-    
+
     /** Optional description for the tab group */
     ariaDescription?: string;
 };

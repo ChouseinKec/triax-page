@@ -6,15 +6,11 @@
 	flex-direction: column;
 	overflow: auto;
 	background: var(--color-white);
-}
 
-.TabNavigation {
-	width: 100%;
+	> *[class*='RadioSelect'] {
+		position: absolute;
+		bottom: 0;
 
-	position: absolute;
-	bottom: 0;
-
-	> *[class*="RadioSelect"] {
 		width: 100%;
 	}
 }

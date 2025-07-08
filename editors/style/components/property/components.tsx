@@ -58,7 +58,7 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
             data-label={label?.toLocaleLowerCase()}
             data-disabled={disabled}
             role='group'
-            aria-label={label ? `${label} Property` : ''}
+            aria-label={label ? `Property ${label}` : ''}
             aria-hidden={label? 'false' : 'true'}
         >
 

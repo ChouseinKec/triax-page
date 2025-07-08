@@ -1,10 +1,9 @@
-/**
- * Complete props for the GenericInput component.
- * Combines all input-related interfaces for a comprehensive input solution.
- */
 export interface GenericInputProps {
 	/** The current value of the input */
-	value?: string;
+	value: string;
+
+	/** Callback when the input value changes */
+	onChange: (value: string) => void;
 
 	/** Input type, either 'text' or 'number' */
 	type?: 'text' | 'number';
@@ -34,13 +33,10 @@ export interface GenericInputProps {
 	 * Optional validation function.
 	 * Should return an object with status and message.
 	 */
-	validate?: (value: string) => {
+	onValidate?: (value: string) => {
 		status: boolean;
 		message: string;
 	};
-
-	/** Callback when the input value changes */
-	onChange: (value: string) => void;
 
 	/** Callback when the input receives focus */
 	onFocus?: () => void;

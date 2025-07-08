@@ -1,5 +1,5 @@
 // External imports
-import React, { useCallback, ReactElement, memo, useMemo } from 'react';
+import React, { useCallback, memo, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -10,6 +10,9 @@ import SelectDropdown from '@/components/select/dropdown/component';
 
 // Types
 import { NumberValueProps } from './types';
+
+// Utilities
+import { devLog } from '@/utilities/dev';
 
 /**
  * NumberValue Component
@@ -24,18 +27,29 @@ import { NumberValueProps } from './types';
  * @param {Array} [props.options=[]] - Available alternative options (keywords, etc.)
  * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
  * @param {number} [props.max=Infinity] - Maximum allowed numeric value
- * @param {boolean} [props.isInteger=false] - Whether the value should be treated as an integer
+ * @param {boolean} [props.forceInteger=false] - Whether the value should be treated as an integer
  * @returns {ReactElement} Memoized NumberValue component
  */
-const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): ReactElement => {
+const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
     const {
         value = '',
         onChange = () => { },
         options = [],
         min = -Infinity,
         max = Infinity,
-        isInteger = false,
+        forceInteger = false,
     } = props;
+
+
+    if (!options || options.length === 0) {
+        devLog.error('[NumberValue] No options provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.error('[NumberValue] Invalid value provided, expected a string');
+        return null;
+    }
 
 
     /**
@@ -102,20 +116,20 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
      */
     const handleNumberChange = useCallback((inputValue: string): void => {
         // Handle empty input
-        if (inputValue === '' || inputValue === null || inputValue === undefined) {
-            onChange('');
-            return;
+        if (inputValue === '' || inputValue === null || inputValue === undefined) return onChange('');
+
+
+        let safeValue: string;
+        if (forceInteger) {
+            // Convert to integer, fallback to empty if invalid
+            const intValue = parseInt(inputValue, 10);
+            safeValue = isNaN(intValue) ? '' : intValue.toString();
+        } else {
+            // Convert to float with one decimal (0.0), fallback to empty if invalid
+            const floatValue = parseFloat(inputValue);
+            safeValue = isNaN(floatValue) ? '' : floatValue.toFixed(1);
         }
 
-        let safeValue = inputValue;
-
-        // If the input should be integer  
-        if (isInteger === true) {
-            const integerValue = parseInt(inputValue, 10);
-            safeValue = integerValue.toString();
-        }
-
-        // For decimals, preserve the original input
         onChange(safeValue);
     },
         [onChange]
@@ -148,7 +162,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps): 
                 max={max}
                 placeholder="0.0"
                 type="number"
-                validate={validateNumber}
+                onValidate={validateNumber}
                 onChange={handleNumberChange}
                 title="Enter Numeric Value"
                 ariaLabel="Enter Numeric Value"

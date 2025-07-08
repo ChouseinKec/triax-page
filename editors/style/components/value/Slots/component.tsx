@@ -11,6 +11,9 @@ import RadioSelect from '@/components/select/radio/component';
 // Types
 import type { SlotsProps } from './types';
 
+// Utilities
+import { devLog } from '@/utilities/dev';
+
 /**
  * Slots Component
  * Renders a row of Slot components for each value slot, plus an extra dropdown for the next possible slot.
@@ -26,11 +29,21 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         onChange,
     } = props;
 
+    // Guard Clause
+    if (!options || options.length === 0) {
+        devLog.error('[Slots] No options provided');
+        return null;
+    }
+
+    if (values == null) {
+        devLog.error('[Slots] Invalid value provided, expected a string');
+        return null;
+    }
+
     const valuesLength = values.length;
     const slotsLength = options.length;
 
     const separatorElement = <span aria-hidden="true" className={CSS.Separator}>–</span>;
-
 
     /**
      * Handles a change in a single slot, updating the overall slot values array.
@@ -114,7 +127,8 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
             <Fragment key={valuesLength}>
                 {separatorElement}
                 <DropdownSelect
-                    value={''}
+                    value=''
+                    forcePlaceholder={true}
                     options={nextOptions}
                     placeholder="+"
                     searchable={false}

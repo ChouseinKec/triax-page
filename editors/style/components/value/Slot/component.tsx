@@ -17,6 +17,7 @@ import type { SlotProps } from './types';
 
 // Utilities
 import { getValueType } from '@/utilities/style/value';
+import { devLog } from '@/utilities/dev';
 
 /**
  * Slot Component
@@ -29,6 +30,17 @@ import { getValueType } from '@/utilities/style/value';
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
 
+    // Guard Clause
+    if (!options || options.length === 0) {
+        devLog.error('[Slot] No options provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.error('[Slot] Invalid value provided, expected a string');
+        return null;
+    }
+
     /**
      * Compute all unique types available in the options.
      */
@@ -39,13 +51,15 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
 
     /**
      * Determine the default type to use when value is empty.
-     * Priority: dimension > keyword > function > color > first available type.
+     * Priority: dimension > keyword > color > function  first available type.
+     * If no types are available, fallback to the first option's type.
+     * Because the value can be empty, we need to determine a default type based on available options.
      */
     const defaultType = useMemo(() => {
         if (allTypes.has('dimension')) return 'dimension';
         if (allTypes.has('keyword')) return 'keyword';
-        if (allTypes.has('function')) return 'function';
         if (allTypes.has('color')) return 'color';
+        if (allTypes.has('function')) return 'function';
         return options[0]?.type;
     }, [allTypes, options]
     );
@@ -72,7 +86,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                 );
             case 'integer':
                 return (
-                    <NumberValue value={value} options={options} onChange={onChange} isInteger={true} />
+                    <NumberValue value={value} options={options} onChange={onChange} forceInteger={true} />
                 );
             case 'number':
                 return (

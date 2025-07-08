@@ -21,19 +21,21 @@ import { devLog } from '@/utilities/dev';
  * 
  * @param {TabGroupProps} props - Component properties
  * @param {TabGroupItemsProps[]} props.items - Array of tab configurations
+ * @param {string} [props.ariaLabel] - ARIA label for the tab group
+ * @param {string} [props.ariaDescription] - Optional description for the tab group
  * @returns {ReactElement} Memoized TabGroup component
  */
-const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps): ReactElement => {
+const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const {
         items,
-        ariaLabel = 'Tab Group',
-        ariaDescription = 'Select a tab to view content',
+        ariaLabel = 'Tab List',
+        ariaDescription = 'Tab list for navigating between sections',
     } = props;
 
-    // Early return for empty items array
+    // Guard Clause
     if (!items || items.length === 0) {
         devLog.warn('[TabGroup] No items provided');
-        return <div className={CSS.TabGroup} role="tablist" aria-label="Empty tab group" />;
+        return null;
     }
 
     // State management for active tab selection
@@ -98,32 +100,33 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps): ReactElement =
         [items, selectedIndex]
     );
 
-    return (
-        <div
-            className={CSS.TabGroup}
-            role="tablist"
-            aria-label={ariaLabel}
-            aria-multiselectable="false"
-            aria-description={ariaDescription}
-        >
+    /**
+     * Accessibility props for the tab group 
+     * 
+     * @returns {React.HTMLAttributes<HTMLDivElement>} Accessibility attributes for the tab group
+    */
+    const accessibilityProps = useMemo((): React.HTMLAttributes<HTMLDivElement> => {
+        return {
+            role: 'tablist',
+            'aria-label': ariaLabel,
+            'aria-multiselectable': 'false' as const,
+            'aria-description': ariaDescription,
+        };
+    }, [ariaLabel, ariaDescription]
+    );
 
+    return (
+        <div className={CSS.TabGroup} {...accessibilityProps}>
             {/* Content area - displays selected tab content */}
-            <div
-                className={CSS.TabContent}
-                role="tabpanel"
-                aria-label={`${items[parseInt(selectedIndex, 10)]?.title || 'Tab Content'} Panel`}
-            >
-                {activeContent}
-            </div>
+            {activeContent}
 
             {/* Navigation controls - tab selection interface */}
-            <div className={CSS.TabNavigation} role='radiogroup' aria-label="Group Selection">
-                <RadioSelect
-                    options={tabOptions}
-                    value={selectedIndex}
-                    onChange={handleTabChange}
-                />
-            </div>
+            <RadioSelect
+                options={tabOptions}
+                value={selectedIndex}
+                onChange={handleTabChange}
+                ariaLabel={'List Selection'}
+            />
         </div>
     );
 };

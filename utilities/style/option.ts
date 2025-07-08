@@ -1,5 +1,5 @@
 // Constants
-import { DimensionGroups } from '@/constants/style/value';
+import { DimensionGroups, CSSFunctionDefaults } from '@/constants/style/value';
 import { CSSUnitOptions } from '@/constants/style/units';
 import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';
 
@@ -32,10 +32,16 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If any of these are undefined or empty, return undefined
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
+	// Get the default function value from the constants
+	const defaultValue = CSSFunctionDefaults[baseName];
+
+	// If no default value is defined for this function, return undefined
+	if (!defaultValue) return undefined;
+
 	// Create and return the FunctionOptionData object
 	return {
 		name: canonicalName,
-		value: `${baseName}()`, // Use the syntax as the initial value
+		value: defaultValue, // Use the syntax as the initial value
 		syntax,
 		category: 'function',
 		type: 'function',
