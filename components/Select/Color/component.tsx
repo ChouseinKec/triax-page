@@ -47,7 +47,7 @@ const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): React
     );
 
     return (
-        <DropdownReveal value={value} buttonStyle={{ backgroundColor: value }} closeOnChange={false} placeholder={placeholder} >
+        <DropdownReveal value={value} closeOnChange={false} placeholder={placeholder} >
             <ChromePicker disableAlpha={false} color={value} onChange={handleChange} />
         </DropdownReveal>
 

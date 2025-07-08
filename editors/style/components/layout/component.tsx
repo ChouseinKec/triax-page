@@ -2,12 +2,11 @@ import React, { ReactElement } from 'react';
 
 // Components
 import Category from '@/editors/style/components/category/component';
-import AccordionGroup from '@/components/group/accordion/component';
 import TabGroup from '@/components/group/tab/component';
 
 // Types 
 import { LayoutProps } from '@/editors/style/components/layout/types';
-
+import type { TabGroupItemsProps } from '@/components/group/tab/types';
 // Hooks
 import { useDisplayLayout } from '@/editors/style/components/layout/hooks/display';
 import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
@@ -42,13 +41,18 @@ const Layout: React.FC = ({ }): ReactElement => {
         effectLayout,
     ];
 
-    const AccordionItems = layouts.map((category,idx) => ({
-        title: <>{category.label}</>,
+    const TabItems: TabGroupItemsProps[] = layouts.map((category, idx) => ({
+        label: <>{category.label}</>,
+        title: category.title,
         content: <Category key={idx} groups={category.groups} />,
     }));
 
     return (
-        <TabGroup items={AccordionItems} />
+        <TabGroup 
+            ariaLabel="Property Groups" 
+            ariaDescription="Navigate between different CSS property groups" 
+            items={TabItems} 
+        />
     );
 
 };

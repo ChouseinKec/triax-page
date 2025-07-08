@@ -18,13 +18,13 @@ import FloatReveal from '@/components/reveal/float/component'
 const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProps): ReactElement => {
     const {
         value,
-        buttonStyle,
         placeholder = 'Toggle',
         forcePlaceholder = false,
         children,
         closeOnChange,
         isDisabled,
-        buttonTitle = 'Toggle Dropdown',
+        title = 'Toggle Dropdown',
+        ariaLabel = 'Dropdown reveal',
     } = props;
 
 
@@ -34,7 +34,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
     /**
      * Handles clicks outside the dropdown container.
      * Closes the dropdown if an outside click is detected.
-     * Memoized to prevent unnecessary re-creation.
     */
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -57,7 +56,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
     /**
      * Closes the dropdown when the children element changes, if enabled.
-     * Memoized to prevent unnecessary re-execution.
     */
     useEffect(() => {
         if (closeOnChange === false) return;
@@ -67,11 +65,11 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
     /**
      * Toggles the dropdown open/closed state.
-     * Memoized to prevent unnecessary re-creations.
     */
     const handleToggle = useCallback(() => {
         setIsOpen((prev) => !prev);
-    }, []);
+    }, []
+    );
 
     const buttonPlaceholder = forcePlaceholder ? placeholder : value || placeholder;
 
@@ -80,11 +78,11 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
             {/* Toggle button to open/close the dropdown */}
             <button
                 className={CSS.DropdownReveal_Button}
-                style={buttonStyle}
                 onClick={handleToggle}
                 data-isopen={isOpen}
                 data-isdisabled={isDisabled}
-                title={buttonTitle}
+                title={title}
+                aria-label={ariaLabel}
             >
                 {buttonPlaceholder}
             </button>
@@ -95,7 +93,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                     targetRef={dropdownRef}
                     position='bottom'
                     isOpen={isOpen}
-                    style={{ borderTop: '4px solid var(--color-black--lighter)' }}
                 >
                     {children}
                 </FloatReveal>

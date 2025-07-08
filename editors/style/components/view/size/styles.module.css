@@ -1,1 +1,24 @@
-.SizeView{width:100%;height:100%;min-height:100px;overflow:hidden;padding:5px;background:var(--color-black--lighter);border:none;outline:none;border-radius:var(--size-sm);border:var(--border-generic);cursor:default;color:var(--color-white);position:relative}.SizeView_Content{height:100%;display:flex;justify-content:center;align-items:center;background:var(--color-gray--darker);color:gray}
+.SizeView {
+  width: 100%;
+  height: 100%;
+  min-height: 100px;
+  overflow: hidden;
+  padding: 5px;
+  background: var(--color-black--lighter);
+  border: none;
+  outline: none;
+  border-radius: var(--size-sm);
+  border: var(--border-generic);
+  cursor: default;
+  color: var(--color-white);
+  position: relative;
+}
+
+.SizeView_Content {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-gray--darker);
+  color: gray;
+}/*# sourceMappingURL=styles.module.css.map */

@@ -1,5 +1,5 @@
 // External imports
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -13,21 +13,23 @@ import { DimensionValueProps } from './types';
 
 // Utilities
 import { extractNumber, extractUnit } from '@/utilities/style/dimension';
-import { on } from 'events';
-
+import { devLog } from '@/utilities/dev';
 
 /**
  * DimensionValue Component
- * A controlled input for CSS dimension values (e.g., '10px', '2rem').
- * Splits the value into number and unit, and allows editing both parts.
+ * 
+ * A controlled input component for CSS dimension values (e.g., '10px', '2rem', '100%').
+ * Intelligently splits values into numeric and unit components for separate editing.
+ * Supports grouped unit categories and validation for numeric ranges.
+ *
  * @component
- * @param {DimensionValueProps} props - The properties for the DimensionValue component.
- * @param {string} [props.value=''] - The current value of the dimension input.
- * @param {function} [props.onChange=() => {}] - Callback function to handle value changes.
- * @param {Array<{ label: string, value: string }>} [props.options=[]] - List of unit options for the dropdown.
- * @param {number} [props.minValue=-Infinity] - Minimum numeric value allowed.
- * @param {number} [props.maxValue=Infinity] - Maximum numeric value allowed.
- * @return {ReactElement} The rendered DimensionValue component.
+ * @param {DimensionValueProps} props - Component properties
+ * @param {string} [props.value=''] - Current CSS dimension value (e.g., '10px')
+ * @param {function} [props.onChange] - Callback for value changes
+ * @param {Array} [props.options=[]] - Available unit options with categories
+ * @param {number} [props.minValue=-Infinity] - Minimum allowed numeric value
+ * @param {number} [props.maxValue=Infinity] - Maximum allowed numeric value
+ * @returns {ReactElement} The rendered DimensionValue component
  */
 const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProps): ReactElement => {
 	const {
@@ -38,56 +40,142 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		maxValue = Infinity,
 	} = props;
 
-	const DEFAULT_UNIT = options.find(option => option.category === 'dimension')?.name || 'px';
-	const DEFAULT_NUMBER = '0';
-
-	const extractedNumber = extractNumber(value);
-	const extractedUnit = extractUnit(value);
-
-	// Handle changes to the numeric input (unit is always from latest extractedUnit)
-	function handleValueChange(number: string): void {
-		const unit = extractedUnit || DEFAULT_UNIT;
-		if (number === '') return onChange('');
-
-		onChange(`${number}${unit}`);
+	// Validate props and provide warnings for development
+	if (options.length === 0) {
+		devLog.warn('[DimensionValue] No unit options provided, component may not function correctly');
 	}
 
-	// Handle changes to the unit dropdown (number is always from latest extractedNumber)
-	function handleOptionChange(unit: string): void {
-		const category = options.find(option => option.value === unit)?.category;
-		if (category !== 'dimension') {
-			onChange(unit);
+	/**
+	 * Finds the first dimension category unit as default, fallback to 'px'
+	 */
+	const defaults = useMemo(() => {
+		const unit = options.find(option => option.category === 'dimension')?.name || 'px';
+		const number = '0';
+
+		return { unit, number };
+	},
+		[options]
+	);
+
+	/**
+	 * Extracts numeric and unit components from the current value
+	 */
+	const extractedValue = useMemo(() => {
+		const extractedNumber = extractNumber(value);
+		const extractedUnit = extractUnit(value);
+
+		return {
+			number: extractedNumber,
+			unit: extractedUnit
+		};
+	},
+		[value]
+	);
+
+	/**
+	 * Handles changes to the numeric input component
+	 * Preserves the current unit while updating the numeric value
+	 * Validates input and handles edge cases (empty values, etc.)
+	 * 
+	 * @param {string} inputNumber - The new numeric value from input
+	 */
+	const handleNumberChange = useCallback((inputNumber: string): void => {
+		// Handle empty input - clear the entire value
+		if (inputNumber === '' || inputNumber === null || inputNumber === undefined) {
+			onChange('');
 			return;
 		}
 
-		unit = extractUnit(unit) || '';
-		const number = extractedNumber || DEFAULT_NUMBER;
-		if (unit === '') return onChange('');
-		
-		onChange(`${number}${unit}`);
-	}
+		// Validate numeric input
+		const numericValue = parseFloat(inputNumber);
+		if (isNaN(numericValue)) {
+			devLog.warn(`[DimensionValue] Invalid numeric input "${inputNumber}"`);
+			return;
+		}
+
+		// Use current unit or fallback to default
+		const currentUnit = extractedValue.unit || defaults.unit;
+		const newValue = `${inputNumber}${currentUnit}`;
+
+		onChange(newValue);
+	},
+		[onChange, extractedValue.unit, defaults.unit]
+	);
+
+	/**
+	 * Handles changes to the unit dropdown selection
+	 * Preserves the current numeric value while updating the unit
+	 * Handles special categories (non-dimension units) appropriately
+	 * 
+	 * @param {string} selectedUnit - The new unit value from dropdown
+	 */
+	const handleUnitChange = useCallback((selectedUnit: string): void => {
+		// Handle empty selection
+		if (!selectedUnit) {
+			onChange('');
+			return;
+		}
+
+		// Find the selected option to determine its category
+		const selectedOption = options.find(option => option.value === selectedUnit);
+
+		if (!selectedOption) {
+			devLog.warn(`[DimensionValue] Unknown unit option "${selectedUnit}"`);
+			return;
+		}
+
+		// Handle non-dimension categories (e.g., 'auto', 'inherit', etc.)
+		if (selectedOption.category !== 'dimension') {
+			// For non-dimensional values, use the unit value directly
+			onChange(selectedUnit);
+			return;
+		}
+
+		// Extract unit from the selected value (in case of compound values)
+		const unitValue = extractUnit(selectedUnit) || selectedUnit;
+
+		// Handle empty unit
+		if (!unitValue) {
+			onChange('');
+			return;
+		}
+
+		// Preserve current number or use default
+		const currentNumber = extractedValue.number || defaults.number;
+		const newValue = `${currentNumber}${unitValue}`;
+
+		onChange(newValue);
+	},
+		[onChange, options, extractedValue.number, defaults.number]
+	);
 
 	return (
-		<div className={CSS.DimensionValue}>
-			{/* Numeric input for the value part */}
+		<div
+			className={CSS.DimensionValue}
+			role="representation"
+		>
+			{/* Numeric input for the value component */}
 			<GenericInput
-				value={extractedNumber}
+				value={extractedValue.number || ''}
 				min={minValue}
 				max={maxValue}
-				type='number'
-				placeholder='0'
-				onChange={handleValueChange}
+				type="number"
+				placeholder="N/A"
+				onChange={handleNumberChange}
+				title="Enter Dimension Value"
+				ariaLabel="Enter Dimension Value"
 			/>
 
-			{/* Dropdown for the unit part */}
+			{/* Unit dropdown for the unit component */}
 			<SelectDropdown
 				options={options}
-				value={extractedUnit || ''}
-				placeholder='N/A'
-				buttonTitle='Select Unit'
-				onChange={handleOptionChange}
+				value={extractedValue.unit || ''}
+				placeholder="N/A"
+				onChange={handleUnitChange}
 				searchable={true}
 				grouped={true}
+				ariaLabel="Select Dimension Unit"
+				title="Select Dimension Unit"
 			/>
 		</div>
 	);

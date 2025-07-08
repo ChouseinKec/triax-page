@@ -14,6 +14,6 @@ export type ACCORDION_ITEMS = {
  * 
  * @param {ACCORDION_ITEMS[]} items - List of accordion items to display
  */
-export type ACCORDION_GROUP = {
+export type AccordionGroupProps = {
     items: ACCORDION_ITEMS[];
 };

@@ -23,12 +23,13 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
     const {
         values,
         options,
-        onChange
+        onChange,
     } = props;
 
     const valuesLength = values.length;
     const slotsLength = options.length;
 
+    const separatorElement = <span aria-hidden="true" className={CSS.Separator}>–</span>;
 
 
     /**
@@ -70,9 +71,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
                     />
 
                     {/* Add separator between slots (but not after the last one) */}
-                    {!isLastSlot && (
-                        <span className={CSS.Separator}>–</span>
-                    )}
+                    {!isLastSlot && (separatorElement)}
                 </Fragment>
             );
         });
@@ -100,7 +99,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         if (isSingleKeyword) {
             return (
                 <Fragment>
-                    <span className={CSS.Separator}>-</span>
+                    {separatorElement}
                     <RadioSelect
                         value={''}
                         options={nextOptions}
@@ -113,14 +112,15 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Render dropdown select for multiple options or complex types
         return (
             <Fragment key={valuesLength}>
-                <span className={CSS.Separator}>–</span>
+                {separatorElement}
                 <DropdownSelect
                     value={''}
                     options={nextOptions}
                     placeholder="+"
                     searchable={false}
                     grouped={true}
-                    buttonTitle="Set Next"
+                    title="Select Next Slot"
+                    ariaLabel="Select Next Slot"
                     onChange={(val: string) => handleSlotChange(val, valuesLength)}
                 />
             </Fragment>
@@ -168,7 +168,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
 
     return (
-        <div className={CSS.Slots}>
+        <div className={CSS.Slots} role='presentation'>
             {render()}
         </div>
     );

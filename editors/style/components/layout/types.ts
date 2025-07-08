@@ -10,6 +10,6 @@ import { ReactElement } from 'react';
  */
 export type LayoutProps = {
 	label: string | ReactElement;
-	title?: string;
+	title: string;
 	groups: LayoutGroup[];
 };

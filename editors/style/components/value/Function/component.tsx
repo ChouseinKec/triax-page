@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, ReactElement } from 'react';
 
-// Style
+// Styles
 import CSS from './styles.module.css';
 
 // Types
@@ -21,114 +21,230 @@ import { extractFunctionName, extractFunctionValue } from '@/utilities/style/fun
 import { getValueToken } from '@/utilities/style/value';
 import { getTokenBase, getTokenValues } from '@/utilities/style/token';
 import { splitAdvanced } from '@/utilities/string/string';
+import { devLog } from '@/utilities/dev';
 
 /**
  * FunctionValue Component
- * Renders an input for CSS function values (e.g., `repeat(2, 1fr)`).
- * Allows selecting a function and editing its arguments.
- *
- * @param props - FunctionValueProps containing value, options, and onChange callback
- * @returns ReactElement - The rendered function value input
+ * 
+ * A controlled input component for CSS function values (e.g., 'repeat(2, 1fr)', 'calc(100% - 20px)').
+ * Intelligently parses function names and arguments, providing separate controls for each.
+ * Supports function selection from categorized options and dynamic argument validation.
+ * 
+ * @param {FunctionValueProps} props - Component properties
+ * @param {string} props.value - Current CSS function value (e.g., 'repeat(2, 1fr)')
+ * @param {Array} props.options - Available function options with categories and syntax
+ * @param {function} props.onChange - Callback for value changes
+ * @returns {ReactElement} The rendered FunctionValue component
  */
-const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
+const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps): ReactElement => {
+    const { value, options, onChange } = props;
+
+    // Early validation and warnings for development
+    if (!options || options.length === 0) {
+        devLog.warn('[FunctionValue] No options provided, component may not function correctly');
+        return <Error message="[Function] No options available." />;
+    }
+
     /**
-     * Filter options to only include those with category 'function'.
+     * Extracts only function category options from the provided options array
+     * 
+     * @returns {Array} Filtered array of function options
      */
     const functionOptions = useMemo(() => {
-        return options.filter(opt => opt.category === 'function');
-    }, [options]
+        const filtered = options.filter(opt => opt.category === 'function');
+
+        if (filtered.length === 0) {
+            devLog.warn('[FunctionValue] No function category options found');
+        }
+
+        return filtered;
+    },
+        [options]
     );
 
     /**
-     * Find the matching option for the current value.
-     * Fallback to the first function option if no match is found.
+     * Finds the matching option for the current value based on token matching
+     * Falls back to the first function option if no match is found
+     * 
+     * @returns {Object|undefined} The matching option object or first available option
      */
-    const option = useMemo(() => {
-        const match = functionOptions.find(opt => getValueToken(value) === getValueToken(opt.value));
-        return match || functionOptions[0];
-    }, [functionOptions, value]
+    const currentOption = useMemo(() => {
+        if (functionOptions.length === 0) return undefined;
+
+        // Try to find exact match based on value token
+        const match = functionOptions.find(opt =>
+            getValueToken(value) === getValueToken(opt.value)
+        );
+
+        // Fallback to first option if no match found
+        const selectedOption = match || functionOptions[0];
+
+        if (!match && value) {
+            devLog.info(`[FunctionValue] No exact match for "${value}", using fallback: ${selectedOption.name}`);
+        }
+
+        return selectedOption;
+    },
+        [functionOptions, value]
     );
 
     /**
-     * Create a property object from the selected option.
+     * Creates a property object from the selected option for syntax validation
+     * Handles property creation errors gracefully
+     * 
+     * @returns {Object|undefined} The created property object or undefined
      */
     const property = useMemo(() => {
-        return option ? createProperty(option.name, option.syntax) : undefined;
-    }, [option]
+        if (!currentOption) return undefined;
+
+        try {
+            return createProperty(currentOption.name, currentOption.syntax);
+        } catch (error) {
+            devLog.error(`[FunctionValue] Failed to create property for ${currentOption.name}:`, error);
+            return undefined;
+        }
+    },
+        [currentOption]
     );
 
-    // Determine default name and value from the option/property
-    const defaultName = option ? getTokenBase(option.name) : '';
-    const defaultVariation = property ? splitAdvanced(property.syntaxParsed[0], ValueSeparators) : [];
-    const defaultValue = property ? getTokenValues(defaultVariation).join(' ') : '';
+    /**
+     * Extracts default function name and arguments from the current option
+     * Provides fallback values for component initialization
+     * 
+     * @returns {Object} Object containing default name and value
+     */
+    const defaults = useMemo(() => {
+        if (!currentOption || !property) {
+            return { name: '', value: '' };
+        }
 
-    // Extract function name and value from the input string
-    const extractedName = extractFunctionName(value);
-    const extractedValue = extractFunctionValue(value);
+        try {
+            const defaultName = getTokenBase(currentOption.name);
+            const defaultVariation = splitAdvanced(property.syntaxParsed[0], ValueSeparators);
+            const defaultValue = getTokenValues(defaultVariation).join(' ');
 
-    // Use extracted or default values safely
-    const safeName = extractedName || defaultName;
-    const safeValue = extractedValue || defaultValue;
-
+            return { name: defaultName, value: defaultValue };
+        } catch (error) {
+            devLog.error(`[FunctionValue] Failed to extract defaults:`, error);
+            return { name: '', value: '' };
+        }
+    },
+        [currentOption, property]
+    );
 
     /**
-     * Handle changes to the function argument value.
-     * If the new value is empty, clear the function value.
+     * Extracts function name and arguments from the current value
+     * Provides safe fallbacks for missing or malformed data
+     * 
+     * @returns {Object} Object containing parsed name and value with fallbacks
      */
-    const handleValueChange = useCallback((newValue: string) => {
-        if (!safeName) return;
-        if (newValue === '') {
+    const extractedValue = useMemo(() => {
+        const extractedName = extractFunctionName(value);
+        const extractedValue = extractFunctionValue(value);
+
+        return {
+            name: extractedName || defaults.name,
+            value: extractedValue || defaults.value
+        };
+    },
+        [value, defaults.name, defaults.value]
+    );
+
+    /**
+     * Handles changes to the function arguments/value
+     * Preserves the current function name while updating the arguments
+     * Validates input and handles edge cases (empty values, etc.)
+     * 
+     * @param {string} newValue - The new function arguments/value from input
+     */
+    const handleArgumentsChange = useCallback((newValue: string): void => {
+        if (!extractedValue.name) {
+            devLog.warn('[FunctionValue] No function name available for value change');
+            return;
+        }
+
+        // Handle empty input - clear the entire function value
+        if (newValue === '' || newValue === null || newValue === undefined) {
             onChange('');
             return;
         }
-        onChange(`${safeName}(${newValue})`);
+
+        // Construct the new function value
+        const newFunctionValue = `${extractedValue.name}(${newValue})`;
+        onChange(newFunctionValue);
     },
-        [safeName, onChange]
+        [extractedValue.name, onChange]
     );
 
     /**
-     * Handle changes to the selected function option.
+     * Handles changes to the selected function option
+     * Updates the entire function when a different function type is selected
+     * Preserves arguments when possible or uses default arguments
+     * 
+     * @param {string} newOptionValue - The new function option value from dropdown
      */
-    const handleOptionChange = useCallback((newOption: string) => {
-        onChange(newOption);
+    const handleFunctionChange = useCallback((newOptionValue: string): void => {
+        if (!newOptionValue) {
+            onChange('');
+            return;
+        }
+
+        onChange(newOptionValue);
     },
         [onChange]
     );
 
     // Error handling for missing or malformed data
-    if (!option) return <Error message="[Function]: No matching function option." />;
-    if (!safeName || !safeValue) return <Error message="[Function]: Malformed function value." />;
-    if (!property) return <Error message="[Function]: Property creation failed." />;
+    if (!currentOption) {
+        return <Error message="[Function] No matching function option available." />;
+    }
 
+    if (!extractedValue.name || !extractedValue.value) {
+        return <Error message="[Function] Malformed function value - missing name or arguments." />;
+    }
 
-    /**
-     * Render the dropdown select for function options.
-     */
-    const renderOptionsSelect = () => (
-        <DropdownSelect
-            options={options}
-            value={option.name}
-            onChange={handleOptionChange}
-            buttonTitle='Change Function'
-            placeholder="↺"
-            forcePlaceholder={true}
-            grouped={true}
-        />
-    );
+    if (!property) {
+        return <Error message="[Function] Property creation failed - invalid syntax definition." />;
+    }
 
     return (
         <DropdownReveal
             closeOnChange={false}
-            placeholder={`${safeName}()`}
+            placeholder={`${extractedValue.name}()`}
             buttonTitle="Edit Function"
         >
-            <div className={CSS.FunctionValue}>
-                {renderOptionsSelect()}
-                <span className={CSS.Separator}>⇄</span>
+
+            <div
+                className={CSS.FunctionValue}
+                role="group"
+                aria-label="CSS function value editor"
+            >
+                {/* Function selection dropdown */}
+                <DropdownSelect
+                    options={options}
+                    value={currentOption.name}
+                    onChange={handleFunctionChange}
+                    buttonTitle="Change Function"
+                    placeholder="↺"
+                    forcePlaceholder={true}
+                    grouped={true}
+                    aria-label="Function type selector"
+                />
+
+                {/* Visual separator */}
+                <span
+                    className={CSS.Separator}
+                    aria-hidden="true"
+                >
+                    ⇄
+                </span>
+
+                {/* Function arguments editor */}
                 <Value
-                    value={safeValue}
+                    value={extractedValue.value}
                     property={property}
-                    onChange={handleValueChange}
+                    onChange={handleArgumentsChange}
+                    aria-label="Function arguments"
                 />
             </div>
         </DropdownReveal>

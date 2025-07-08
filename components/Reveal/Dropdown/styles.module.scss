@@ -2,6 +2,10 @@
 
 .DropdownReveal {
 	position: relative;
+
+	*[class*='Float'] {
+		border-top: 4px solid var(--color-black--lighter);
+	}
 }
 
 .DropdownReveal_Button {
@@ -26,7 +30,7 @@
 	> svg {
 		width: 15px;
 		height: 15px;
-	}	
+	}
 
 	@include inputMixins.icon-arrow;
 	@include inputMixins.components--button;

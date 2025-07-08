@@ -9,7 +9,7 @@ import type { Side, Corner } from '@/components/select/position/types';
 
 // Components
 import Value from '@/editors/style/components/value/component';
-import FlexView from '@/editors/style/components/view/flex/component';
+import DisplayView from '@/editors/style/components/view/flex/component';
 import BackgroundView from '@/editors/style/components/view/background/component';
 import PositionSelect from '@/components/select/position/component';
 import TextView from '@/editors/style/components/view/text/component';
@@ -18,13 +18,10 @@ import SizeView from '@/editors/style/components/view/size/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
-import { text } from 'stream/consumers';
-import { clear } from 'console';
 
 interface StyleFactoryProps {
 	renderValue: (propertyName: CSSProperties) => ReactElement | null;
-	renderFlexView: () => ReactElement;
-	renderGridView: () => ReactElement;
+	renderDisplayView: () => ReactElement;
 	renderBackgroundView: () => ReactElement;
 	renderBorderView: () => ReactElement;
 	renderTextView: () => ReactElement;
@@ -74,19 +71,24 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		[getStyle, handleValueChange]
 	);
 
-	const renderFlexView = useCallback<StyleFactoryProps['renderFlexView']>(() => {
-		return <FlexView
-
+	const renderDisplayView = useCallback<StyleFactoryProps['renderDisplayView']>(() => {
+		return <DisplayView
 			styles={{
-				display: 'flex',
+				display: getStyle('display'),
 				flexDirection: getStyle('flex-direction'),
 				flexWrap: getStyle('flex-wrap'),
 				justifyContent: getStyle('justify-content'),
 				alignItems: getStyle('align-items'),
 				alignContent: getStyle('align-content'),
-				
+
+				justifyItems: getStyle('justify-items'),
+				gridAutoFlow: getStyle('grid-auto-flow'),
+				gridTemplateColumns: getStyle('grid-template-columns'),
+				gridTemplateRows: getStyle('grid-template-rows'),
+				gridAutoColumns: getStyle('grid-auto-columns'),
+				gridAutoRows: getStyle('grid-auto-rows'),
+
 				direction: getStyle('direction'),
-				boxSizing: getStyle('box-sizing'),
 				objectFit: getStyle('object-fit'),
 				objectPosition: getStyle('object-position'),
 				clear: getStyle('clear'),
@@ -97,25 +99,6 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderGridView = useCallback<StyleFactoryProps['renderGridView']>(() => {
-		return <FlexView
-			styles={{
-				display: 'grid',
-				flexDirection: getStyle('flex-direction'),
-				justifyContent: getStyle('justify-content'),
-				justifyItems: getStyle('justify-items'),
-				alignItems: getStyle('align-items'),
-				alignContent: getStyle('align-content'),
-				gridAutoFlow: getStyle('grid-auto-flow'),
-				gridTemplateColumns: getStyle('grid-template-columns'),
-				gridTemplateRows: getStyle('grid-template-rows'),
-				gridAutoColumns: getStyle('grid-auto-columns'),
-				gridAutoRows: getStyle('grid-auto-rows'),
-				direction: getStyle('direction'),
-			}}
-		/>;
-	}, [getStyle]
-	);
 
 	const renderBackgroundView = useCallback<StyleFactoryProps['renderBackgroundView']>(() => {
 		return <BackgroundView
@@ -139,7 +122,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				maskMode: getStyle('mask-mode'),
 				maskType: getStyle('mask-type'),
 				maskComposite: getStyle('mask-composite'),
-				
+
 			}} />
 	}, [getStyle]
 	);
@@ -190,7 +173,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 				textShadow: getStyle('text-shadow'),
 				textAlignLast: getStyle('text-align-last'),
 				textCombineUpright: getStyle('text-combine-upright'),
-				
+
 				letterSpacing: getStyle('letter-spacing'),
 				wordBreak: getStyle('word-break'),
 				lineBreak: getStyle('line-break'),
@@ -273,8 +256,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 
 	return {
 		renderValue,
-		renderFlexView,
-		renderGridView,
+		renderDisplayView,
 		renderBackgroundView,
 		renderBorderView,
 		renderTextView,

@@ -3,6 +3,11 @@
 .Error {
 	@include inputMixins.components--button;
 
+	display: flex;
+	align-items: baseline;
+	justify-content: center;
+	gap: var(--size-sm);
+
 	color: var(--color-white);
 	background: var(--color-error);
 	filter: brightness(1.4);

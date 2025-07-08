@@ -1,1 +1,13 @@
-.DimensionValue{min-width:30px;min-height:25px;display:grid;position:relative}.DimensionValue [class*=DropdownReveal]{position:absolute;right:0}.DimensionValue [class*=GenericInput] input{padding-right:var(--size-xl)}
+.DimensionValue {
+  min-width: 30px;
+  min-height: 25px;
+  display: grid;
+  position: relative;
+}
+.DimensionValue [class*=DropdownReveal] {
+  position: absolute;
+  right: 0;
+}
+.DimensionValue [class*=GenericInput] input {
+  padding-right: var(--size-xl);
+}/*# sourceMappingURL=styles.module.css.map */

@@ -1,10 +1,12 @@
-import React, { memo, ReactElement, useCallback } from 'react';
+import React, { memo, ReactElement, useCallback, useMemo } from 'react';
 // Styles
 import CSS from './styles.module.css';
 
 // Types
 import { DropdownSelectProps } from '@/components/select/dropdown/types';
 
+// Utilities
+import { devLog } from '@/utilities/dev';
 
 // Components
 import DropdownReveal from '@/components/reveal/dropdown/component';
@@ -24,13 +26,7 @@ import Options from '@/components/select/options/component';
  * @param {boolean} [props.grouped=false] - Whether the options should be grouped.
  * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
  * @returns {ReactElement} - The rendered dropdown select component.
- * 
- * @example
- * <DropdownSelect 
- *   value="option1"
- *   options={[{ name: 'Option 1', value: 'option1' }, { name: 'Option 2', value: 'option2' }]}
- *   onChange={(value) => setSelectedValue(value)}
- * />
+ *
  */
 const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps): ReactElement => {
     const {
@@ -41,23 +37,63 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         forcePlaceholder = false,
         grouped = false,
         searchable = false,
-        buttonStyle = {},
-        buttonTitle = 'Toggle Dropdown',
+        title = 'Toggle Dropdown',
+        ariaLabel = 'Dropdown select',
     } = props;
 
+    // Validation and early returns for edge cases
+    if (!options || options.length === 0) {
+        devLog.warn('[DropdownSelect] No options provided');
+        return (
+            <div className={CSS.DropdownSelect} aria-label="Empty dropdown">
+                <span className={CSS.EmptyState}>No options available</span>
+            </div>
+        );
+    }
+
     /**
-    * Handles the onChange event for when an option is selected from the dropdown.
-    * Memoized to prevent unnecessary re-creations.
-    */
-    const handleOptionChange = useCallback((selectedValue: string) => {
+     * Handles option selection with validation and error handling
+     * Ensures the selected value exists in the options array
+     * 
+     * @param {string} selectedValue - The value of the selected option
+     */
+    const handleOptionChange = useCallback((selectedValue: string): void => {
+        // Validate that the selected value exists in options
+        const isValidOption = options.some(option => option.value === selectedValue);
+
+        if (!isValidOption) {
+            devLog.warn(`[DropdownSelect] Invalid option selected: ${selectedValue}`);
+            return;
+        }
+
         onChange(selectedValue);
-    }, [onChange]);
+    }, [options, onChange]);
+
+    /**
+     * Options container props for performance
+     * Reduces re-renders when parent component updates
+     */
+    const optionsProps = useMemo(() => ({
+        searchable,
+        grouped,
+        value,
+        options,
+        onChange: handleOptionChange
+    }), [searchable, grouped, value, options, handleOptionChange]);
+
+
+    const dropdownProps = useMemo(() => ({
+        value,
+        forcePlaceholder,
+        placeholder,
+        title,
+    }), [value, forcePlaceholder, placeholder, title]);
 
 
     return (
-        <DropdownReveal value={value} forcePlaceholder={forcePlaceholder} placeholder={placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
+        <DropdownReveal ariaLabel={ariaLabel} {...dropdownProps}>
             <div className={CSS.DropdownSelect_Options}>
-                <Options searchable={searchable} grouped={grouped} value={value} options={options} onChange={handleOptionChange} />
+                <Options {...optionsProps} />
             </div>
         </DropdownReveal>
     );

@@ -1,73 +1,129 @@
-import React, { memo, ReactElement, useCallback, useState } from 'react';
+import React, { memo, ReactElement, useCallback, useState, useMemo } from 'react';
 
-// Style
+// Styles
 import CSS from './styles.module.css';
 
-// Component
+// Components
 import RadioSelect from '@/components/select/radio/component';
 
-// Type
+// Types
 import type { TabGroupProps } from './types';
 import type { OptionData } from '@/types/option';
 
+// Utilities
+import { devLog } from '@/utilities/dev';
+
 /**
  * TabGroup Component
- *
- * A compound component that manages a collection of tab items.
- * Only one item can be expanded at a time (accordion behavior).
  * 
- * @component
- * @param {TabGroupProps} props - Component props
- * @param {TabGroupItemsProps[]} props.items - Array of tab items with title/content pairs
- * @returns {ReactElement} - Returns a memoized tab group component
+ * A controlled tab navigation component that displays content based on selected tab.
+ * Provides accessible tab navigation with radio button selection interface.
+ * 
+ * @param {TabGroupProps} props - Component properties
+ * @param {TabGroupItemsProps[]} props.items - Array of tab configurations
+ * @returns {ReactElement} Memoized TabGroup component
  */
 const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps): ReactElement => {
-    const { items } = props;
+    const {
+        items,
+        ariaLabel = 'Tab Group',
+        ariaDescription = 'Select a tab to view content',
+    } = props;
 
-    // State to track which tab is currently selected
-    const [selected, setSelected] = useState<string>('0');
+    // Early return for empty items array
+    if (!items || items.length === 0) {
+        devLog.warn('[TabGroup] No items provided');
+        return <div className={CSS.TabGroup} role="tablist" aria-label="Empty tab group" />;
+    }
 
-    const handleSelect = useCallback((value: string): void => {
-        if(!value) return setSelected('0');
-        setSelected(value);
-    }, []);
+    // State management for active tab selection
+    // Default to first tab (index 0) for consistent behavior
+    const [selectedIndex, setSelectedIndex] = useState<string>('0');
 
     /**
-     * Renders the clickable toggle button for each tab item
-     * @param {ReactElement} title - The title content to display
-     * @param {number} index - Position of the item in the array
-     * @returns {ReactElement} - Button element with click handler
+     * Handles tab selection changes with validation
+     * Ensures selected index is within valid range
+     * 
+     * @param {string} value - The selected tab index as string
      */
-    const renderButtons = useCallback((): ReactElement => {
-        const options: OptionData[] = items.map((item, idx) => ({
-            name: typeof item.title === 'string' ? item.title : idx.toString(),
-            icon: typeof item.title === 'object' ? item.title : undefined,
-            value: idx.toString(),
+    const handleTabChange = useCallback((value: string): void => {
+        const index = parseInt(value, 10);
+
+        // Validate index is within bounds
+        if (isNaN(index) || index < 0 || index >= items.length) {
+            devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
+            setSelectedIndex('0');
+            return;
+        }
+
+        setSelectedIndex(value);
+    }, [items.length]
+    );
+
+    /**
+     * Transforms tab items into RadioSelect-compatible options
+     * 
+     * @returns {OptionData[]} Array of options for RadioSelect
+     */
+    const tabOptions = useMemo((): OptionData[] => {
+        return items.map((item, index) => ({
+            name: item.title || `Tab ${index + 1}`,
+            icon: typeof item.label === 'object' ? item.label : undefined,
+            value: index.toString(),
         }));
-
-        return <RadioSelect options={options} value={selected} onChange={handleSelect} />;
-
-    }, [items, selected]);
+    },
+        [items]
+    );
 
     /**
-     * Renders the collapsible content section for each item
-     * @param {ReactElement} content - The content to display when expanded
-     * @returns {ReactElement} - Content container div
+     * Returns content for currently selected tab with error boundary
+     * 
+     * @returns {ReactElement} The content of the active tab
      */
-    const renderContent = useCallback((): ReactElement => {
-        return items[parseInt(selected, 10)].content;
-    }, [items, selected]);
+    const activeContent = useMemo((): ReactElement => {
+        const index = parseInt(selectedIndex, 10);
+
+        // Validate index and return content or fallback
+        if (index >= 0 && index < items.length && items[index]?.content) {
+            return items[index].content;
+        }
+
+        // Fallback content for missing or invalid content
+        return (
+            <div className={CSS.TabContentError} role="alert">
+                <p>Content not available for this tab</p>
+            </div>
+        );
+    },
+        [items, selectedIndex]
+    );
 
     return (
         <div
             className={CSS.TabGroup}
             role="tablist"
+            aria-label={ariaLabel}
             aria-multiselectable="false"
+            aria-description={ariaDescription}
         >
-            <>
-                {renderContent()}
-                {renderButtons()}
-            </>
+
+            {/* Content area - displays selected tab content */}
+            <div
+                className={CSS.TabContent}
+                role="tabpanel"
+                aria-label={`${items[parseInt(selectedIndex, 10)]?.title || 'Tab Content'} Panel`}
+            >
+                {activeContent}
+            </div>
+
+            {/* Navigation controls - tab selection interface */}
+            <div className={CSS.TabNavigation} role='radiogroup' aria-label="Group Selection">
+                <RadioSelect
+                    options={tabOptions}
+                    value={selectedIndex}
+                    onChange={handleTabChange}
+                />
+            </div>
         </div>
     );
 };

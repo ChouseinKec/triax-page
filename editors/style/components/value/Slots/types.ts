@@ -13,8 +13,10 @@ import type { ValueSeparators } from '@/types/style/separator';
 export interface SlotsProps {
 	/** The current values for each slot (column). */
 	values: string[];
+
 	/** All possible value pattern variations for the property. */
 	options: InputOptionData[][];
+
 	/** Callback fired when the slot values change (array of slot values). */
 	onChange: (values: string[]) => void;
 }

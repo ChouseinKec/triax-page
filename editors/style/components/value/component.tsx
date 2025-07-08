@@ -37,8 +37,8 @@ const Value: React.FC<ValueProps> = (props: ValueProps): ReactElement => {
     const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
 
     // if(property.name === 'grid-template-rows') {
-        // console.log(property.syntaxExpanded);
-        // console.log(syntaxNormalized);
+    // console.log(property.syntaxExpanded);
+    // console.log(syntaxNormalized);
     // }
 
     // Split the value string into slots (e.g., ['10px', 'auto'])

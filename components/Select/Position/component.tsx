@@ -83,9 +83,6 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
      */
     const handleChange = useCallback((value: Positions): void => {
 
-
-
-
         // Ensure callbacks are defined
         if (isPositionSide(value)) {
             onChangeSide(value); // Update the side if it's a side position

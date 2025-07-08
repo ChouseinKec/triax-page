@@ -4,7 +4,7 @@ import React, { memo, ReactElement } from 'react';
 import CSS from './styles.module.css';
 
 // Type 
-import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/item/types';
+import { AccordionGroupProps_ITEM } from '@/components/group/accordion/item/types';
 
 /**
  * AccordionItem Component
@@ -13,7 +13,7 @@ import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/item/types';
  * the toggle header and conditionally displays its content based on selection state.
  * 
  * @component
- * @param {ACCORDION_GROUP_ITEM} props - Component props
+ * @param {AccordionGroupProps_ITEM} props - Component props
  * @param {React.ReactElement} props.toggleElement - Clickable header element
  * @param {React.ReactElement} props.contentElement - Expandable content section
  * @param {boolean} props.isSelected - Controls content visibility
@@ -26,7 +26,7 @@ import { ACCORDION_GROUP_ITEM } from '@/components/group/accordion/item/types';
  *   isSelected={true}
  * />
  */
-const Item: React.FC<ACCORDION_GROUP_ITEM> = ({ toggleElement, contentElement, isSelected }: ACCORDION_GROUP_ITEM): ReactElement => {
+const Item: React.FC<AccordionGroupProps_ITEM> = ({ toggleElement, contentElement, isSelected }: AccordionGroupProps_ITEM): ReactElement => {
     return (
         <div
             className={CSS.AccordionGroup_Item}

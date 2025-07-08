@@ -1,16 +1,10 @@
 /**
- * Props for the GenericInput component.
- * Defines the expected properties for a generic input field.
+ * Complete props for the GenericInput component.
+ * Combines all input-related interfaces for a comprehensive input solution.
  */
 export interface GenericInputProps {
 	/** The current value of the input */
 	value?: string;
-
-	/** Minimum value (for number input types) */
-	min?: number;
-
-	/** Maximum value (for number input types) */
-	max?: number;
 
 	/** Input type, either 'text' or 'number' */
 	type?: 'text' | 'number';
@@ -23,6 +17,18 @@ export interface GenericInputProps {
 
 	/** Suffix text to display after the input value */
 	suffix?: string;
+
+	/** Minimum value (for number types) or minimum length (for text types) */
+	min?: number;
+
+	/** Maximum value (for number types) or maximum length (for text types) */
+	max?: number;
+
+	/** ARIA label for the input - primary accessible name */
+	ariaLabel?: string;
+
+	/** Optional title attribute for additional context */
+	title?: string; // Optional title attribute for additional context
 
 	/**
 	 * Optional validation function.

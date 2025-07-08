@@ -13,27 +13,30 @@ import { useStyleFactory } from '@/hooks/style/factory';
 */
 export const useSizeLayout = (): LayoutProps => {
     const { renderValue, renderSizeView } = useStyleFactory();
-    const icon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M136,112H48a8,8,0,0,0-8,8v88a8,8,0,0,0,8,8h88a8,8,0,0,0,8-8V120A8,8,0,0,0,136,112Zm-8,88H56V128h72Zm88-16v16a16,16,0,0,1-16,16H176a8,8,0,0,1,0-16h24V184a8,8,0,0,1,16,0Zm0-72v32a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm0-56V72a8,8,0,0,1-16,0V56H184a8,8,0,0,1,0-16h16A16,16,0,0,1,216,56Zm-64-8a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h32A8,8,0,0,1,152,48ZM40,80V56A16,16,0,0,1,56,40H72a8,8,0,0,1,0,16H56V80a8,8,0,0,1-16,0Z" /></svg>;
+    const icon = <svg aria-label='Size & Overflow Icon' xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M136,112H48a8,8,0,0,0-8,8v88a8,8,0,0,0,8,8h88a8,8,0,0,0,8-8V120A8,8,0,0,0,136,112Zm-8,88H56V128h72Zm88-16v16a16,16,0,0,1-16,16H176a8,8,0,0,1,0-16h24V184a8,8,0,0,1,16,0Zm0-72v32a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm0-56V72a8,8,0,0,1-16,0V56H184a8,8,0,0,1,0-16h16A16,16,0,0,1,216,56Zm-64-8a8,8,0,0,1-8,8H112a8,8,0,0,1,0-16h32A8,8,0,0,1,152,48ZM40,80V56A16,16,0,0,1,56,40H72a8,8,0,0,1,0,16H56V80a8,8,0,0,1-16,0Z" /></svg>;
 
     return {
         label: icon,
-        title: 'Size & Overflow',
+        title: 'Size&Overflow',
         groups: [
             {
-                columns: 'repeat(3,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr', position: 'sticky', top: '0', zIndex: 1, boxShadow: 'inset 0 0 20px 20px #ffffff' },
                 properties: [
-
                     // Size View
                     {
                         label: null,
-                        column: '1/-1',
                         component: () => renderSizeView(),
                     },
+                ]
+            },
+            {
+                styles: { gridTemplateColumns: '1fr' },
+                properties: [
+
 
                     // Width
                     {
                         label: 'Width',
-                        column: '1/-1',
                         property: 'width',
                         component: () => renderValue('width'),
                     },
@@ -41,7 +44,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Min-Width
                     {
                         label: 'Min-Width',
-                        column: '1/-1',
                         property: 'min-width',
                         component: () => renderValue('min-width'),
                     },
@@ -49,7 +51,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Max-Width
                     {
                         label: 'Max-Width',
-                        column: '1/-1',
                         property: 'max-width',
                         component: () => renderValue('max-width'),
                     },
@@ -57,7 +58,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Height
                     {
                         label: 'Height',
-                        column: '1/-1',
                         property: 'height',
                         component: () => renderValue('height'),
                     },
@@ -65,7 +65,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Min-Height
                     {
                         label: 'Min-Height',
-                        column: '1/-1',
                         property: 'min-height',
                         component: () => renderValue('min-height'),
                     },
@@ -73,7 +72,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Max-Height
                     {
                         label: 'Max-Height',
-                        column: '1/-1',
                         property: 'max-height',
                         component: () => renderValue('max-height'),
                     },
@@ -82,7 +80,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Aspect-Ratio(width / height).
                     {
                         label: 'Aspect-Ratio',
-                        column: '1/-1',
                         property: 'aspect-ratio',
                         component: () => renderValue('aspect-ratio'),
                     },
@@ -91,7 +88,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Overflow
                     {
                         label: 'Overflow',
-                        column: '1/-1',
                         property: 'overflow',
                         component: () => renderValue('overflow'),
                     },
@@ -102,13 +98,12 @@ export const useSizeLayout = (): LayoutProps => {
 
             {
 
-                columns: 'repeat(4,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr' },
                 properties: [
 
                     // Divider
                     {
                         label: null,
-                        column: '1/-1',
                         component: () => <HorizontalDivider title='Scroll' />,
                     },
 
@@ -116,8 +111,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Scroll Behavior
                     {
                         label: 'Behavior',
-                        column: '1/-1',
-
                         property: 'scroll-behavior',
                         component: () => renderValue('scroll-behavior'),
                     },
@@ -125,8 +118,6 @@ export const useSizeLayout = (): LayoutProps => {
                     // Overscroll Behavior
                     {
                         label: 'Overscroll',
-                        column: '1/-1',
-
                         property: 'overscroll-behavior',
                         component: () => renderValue('overscroll-behavior'),
                     },
@@ -134,72 +125,54 @@ export const useSizeLayout = (): LayoutProps => {
                     // Scroll Snap Type
                     {
                         label: 'Snap Type',
-                        column: '1/-1',
-
                         property: 'scroll-snap-type',
                         component: () => renderValue('scroll-snap-type'),
                     },
                     // Scroll Snap Align
                     {
                         label: 'Snap Align',
-                        column: '1/-1',
-
                         property: 'scroll-snap-align',
                         component: () => renderValue('scroll-snap-align'),
                     },
                     // Scroll Snap Stop
                     {
                         label: 'Snap Stop',
-                        column: '1/-1',
-
                         property: 'scroll-snap-stop',
                         component: () => renderValue('scroll-snap-stop'),
                     },
                     // Scroll Margin
                     {
                         label: 'Margin',
-                        column: '1/-1',
-
                         property: 'scroll-margin',
                         component: () => renderValue('scroll-margin'),
                     },
                     // Scroll Margin Block
                     {
                         label: 'Margin Block',
-                        column: '1/-1',
-
                         property: 'scroll-margin-block',
                         component: () => renderValue('scroll-margin-block'),
                     },
                     // Scroll Margin Inline
                     {
                         label: 'Margin Inline',
-                        column: '1/-1',
-
                         property: 'scroll-margin-inline',
                         component: () => renderValue('scroll-margin-inline'),
                     },
                     // Scroll Padding
                     {
                         label: 'Padding',
-                        column: '1/-1',
-
                         property: 'scroll-padding',
                         component: () => renderValue('scroll-padding'),
                     },
                     // Scroll Padding Block
                     {
                         label: 'Padding Block',
-                        column: '1/-1',
-
                         property: 'scroll-padding-block',
                         component: () => renderValue('scroll-padding-block'),
                     },
                     // Scroll Padding Inline
                     {
                         label: 'Padding Inline',
-                        column: '1/-1',
-
                         property: 'scroll-padding-inline',
                         component: () => renderValue('scroll-padding-inline'),
                     },

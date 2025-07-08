@@ -9,7 +9,6 @@ import React from "react";
  * @property placeholder - Placeholder text to display when no value is selected.
  * @property searchable - Whether the dropdown supports searching options.
  * @property grouped - Whether the options should be displayed in grouped sections.
- * @property buttonStyle - Custom style for the dropdown trigger/button.
  * @property onChange - Callback function triggered when an option is selected.
  */
 export type DropdownSelectProps = {
@@ -25,10 +24,10 @@ export type DropdownSelectProps = {
   searchable?: boolean;
   /** Whether the options should be displayed in grouped sections */
   grouped?: boolean;
-  /** Custom style for the dropdown button */
-  buttonStyle?: React.CSSProperties;
   /** Optional title for the dropdown button */
-  buttonTitle?: string;
+  title?: string;
   /** Callback function triggered when an option is selected */
   onChange: (value: string) => void;
+  /** Optional ARIA label for accessibility */
+  ariaLabel?: string;
 };

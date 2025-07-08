@@ -27,7 +27,8 @@ const KeywordValue: React.FC<KeywordValueProps> = (props: KeywordValueProps) => 
                 searchable={false}
                 grouped={true}
                 onChange={onChange}
-                buttonTitle='Select Option'
+                title='Select Keyword Value'
+                ariaLabel='Select Keyword Value'
             />
     )
 

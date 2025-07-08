@@ -5,7 +5,7 @@
  * @param {React.ReactElement} contentElement - The content to display when the accordion item is expanded
  * @param {boolean} isSelected - Whether this item is currently selected (expanded)
  */
-export type ACCORDION_GROUP_ITEM = {
+export type AccordionGroupProps_ITEM = {
     toggleElement: React.ReactElement;
     contentElement: React.ReactElement;
     isSelected: boolean;

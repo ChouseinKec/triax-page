@@ -17,10 +17,6 @@
 
 	&:not([data-label]) {
 		grid-template-columns: auto;
-
-		// *[class*='Content'] {
-		// 	grid-template-columns: auto;
-		// }
 	}
 
 	> * {

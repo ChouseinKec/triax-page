@@ -25,21 +25,16 @@ import type { LayoutGroup } from '@/editors/style/components/group/types';
 const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
     const {
         properties = [],
-        columns = '1fr 1fr',
-        rows = 'auto',
         hidden = false,
         isExpandable = false,
         expandTitle = '',
+        styles = {},
     } = props;
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
     if (hidden === true) return <></>;
 
-    // Define the CSS styles for the grid layout using CSS variables
-    const _style: React.CSSProperties = {
-        ['--group-columns' as string]: columns,
-        ['--group-rows' as string]: rows,
-    };
+
 
     const render = () => {
         const _properties = properties.map((property, index) => (
@@ -64,7 +59,7 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
     }
 
     return (
-        <div className={CSS.Group} style={_style}>
+        <div className={CSS.Group} style={styles}>
             {render()}
         </div>
     );

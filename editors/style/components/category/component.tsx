@@ -28,6 +28,7 @@ const Category: React.FC<LayoutCategoryProps> = ({ groups }): ReactElement => {
                     hidden={group.hidden}
                     isExpandable={group.isExpandable}
                     expandTitle={group.expandTitle}
+                    styles={group.styles}
                 />
             ))}
         </>

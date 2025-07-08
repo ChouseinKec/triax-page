@@ -26,7 +26,8 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         style,
         isSelected,
         onChange,
-        prioritizeIcons = false
+        prioritizeIcons = false,
+        ariaRole = 'radio',
     } = props;
 
     /**
@@ -57,6 +58,8 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
             data-selected={isSelected}
             style={style}
             title={name}
+            aria-label={`Select ${name}`}
+            role={ariaRole}
         >
 
             {iconElement}

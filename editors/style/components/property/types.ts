@@ -1,5 +1,5 @@
 import type { CSSProperties } from '@/types/style/property';
-
+import type { CSSProperties as OfficialCSSProperties } from 'react';
 /**
  * Represents a single layout property within the style editor.
  * This type defines the structure of a layout property, including its label,
@@ -19,6 +19,8 @@ export interface LayoutProps {
 	disabled?: boolean;
 	/** The CSS property associated with this layout property */
 	property?: CSSProperties;
+	/** The CSS styles applied to the property in the UI */
+	styles?: OfficialCSSProperties;
 	/** The component that renders the property in the UI */
 	component: () => React.ReactNode;
 }

@@ -8,7 +8,6 @@ import DimensionValue from '../dimension/component';
 import FunctionValue from '../function/component';
 import KeywordValue from '../keyword/component';
 import NumberValue from '../number/component';
-import IntegerValue from '../integer/component';
 import LinkValue from '../link/component';
 import ColorSelect from '@/components/select/color/component';
 import Error from '../error/component';
@@ -73,7 +72,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                 );
             case 'integer':
                 return (
-                    <IntegerValue value={value} options={options} onChange={onChange} />
+                    <NumberValue value={value} options={options} onChange={onChange} isInteger={true} />
                 );
             case 'number':
                 return (

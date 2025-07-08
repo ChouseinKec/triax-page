@@ -8,6 +8,8 @@
 	gap: var(--size-md);
 	padding: var(--size-md);
 
+	position: relative;
+
 	[class*='ExpandReveal'] {
 		grid-column: 1/-1;
 	}

@@ -6,13 +6,13 @@ import { useStyleFactory } from '@/hooks/style/factory';
 
 export const useFontLayout = (): LayoutProps => {
     const { renderValue, renderTextView } = useStyleFactory();
-    const icon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
+    const icon = <svg aria-label='Font & Text Icon' xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
     return {
         label: icon,
-        title: 'Font & Text',
+        title: 'Font&Text',
         groups: [
             {
-                columns: '1fr',
+                styles: { gridTemplateColumns: '1fr', position: 'sticky', top: '0', zIndex: 1, boxShadow: 'inset 0 0 20px 20px #ffffff' },
                 properties: [
                     // Text View
                     {
@@ -25,13 +25,12 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                columns: 'repeat(1,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr' },
                 properties: [
 
                     // Size
                     {
                         label: 'Size',
-                        column: 'auto',
                         property: 'font-size',
                         component: () => renderValue('font-size')
                     },
@@ -39,7 +38,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Weight
                     {
                         label: 'Weight',
-                        column: 'auto',
                         property: 'font-weight',
                         component: () => renderValue('font-weight'),
                     },
@@ -47,7 +45,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Height
                     {
                         label: 'Height',
-                        column: 'auto',
                         property: 'line-height',
                         component: () => renderValue('line-height')
                     },
@@ -55,7 +52,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Family
                     {
                         label: 'Family',
-                        column: 'auto',
                         property: 'font-family',
                         component: () => renderValue('font-family'),
                     },
@@ -64,7 +60,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Style
                     {
                         label: 'Style',
-                        column: 'auto',
                         property: 'font-style',
                         component: () => renderValue('font-style')
                     },
@@ -72,14 +67,13 @@ export const useFontLayout = (): LayoutProps => {
             },
 
             {
-                columns: 'repeat(1,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr' },
                 expandTitle: 'Text',
                 properties:
                     [
                         // Color
                         {
                             label: 'Color',
-                            column: 'auto',
                             property: 'color',
                             component: () => renderValue('color'),
                         },
@@ -88,7 +82,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Align
                         {
                             label: 'Align',
-                            column: 'auto',
                             property: 'text-align',
                             component: () => renderValue('text-align')
                         },
@@ -97,7 +90,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Decoration
                         {
                             label: 'Decoration',
-                            column: 'auto',
                             property: 'text-decoration',
                             component: () => renderValue('text-decoration')
                         },
@@ -105,7 +97,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Shadow
                         {
                             label: 'Shadow',
-                            column: 'auto',
                             property: 'text-shadow',
                             component: () => renderValue('text-shadow')
                         },
@@ -113,7 +104,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Transform
                         {
                             label: 'Transform',
-                            column: 'auto',
                             property: 'text-transform',
                             component: () => renderValue('text-transform')
                         },
@@ -121,7 +111,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Indent
                         {
                             label: 'Indent',
-                            column: 'auto',
                             property: 'text-indent',
                             component: () => renderValue('text-indent')
                         },
@@ -129,7 +118,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Overflow
                         {
                             label: 'Overflow',
-                            column: 'auto',
                             property: 'text-overflow',
                             component: () => renderValue('text-overflow'),
                         },
@@ -137,7 +125,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Orientation
                         {
                             label: 'Orientation',
-                            column: 'auto',
                             property: 'text-orientation',
                             component: () => renderValue('text-orientation'),
                         },
@@ -146,7 +133,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Align Last
                         {
                             label: 'Align Last',
-                            column: 'auto',
                             property: 'text-align-last',
                             component: () => renderValue('text-align-last'),
                         },
@@ -154,7 +140,6 @@ export const useFontLayout = (): LayoutProps => {
                         // Text Combine Upright
                         {
                             label: 'Combine Upright',
-                            column: 'auto',
                             property: 'text-combine-upright',
                             component: () => renderValue('text-combine-upright'),
                         },
@@ -165,12 +150,11 @@ export const useFontLayout = (): LayoutProps => {
 
             {
                 expandTitle: 'Spacing',
-                columns: 'repeat(1,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr' },
                 properties: [
                     // Writing Mode
                     {
                         label: 'Writing Mode',
-                        column: 'auto',
                         property: 'writing-mode',
                         component: () => renderValue('writing-mode'),
                     },
@@ -178,7 +162,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Word-Break
                     {
                         label: 'Word-Break',
-                        column: 'auto',
                         property: 'word-break',
                         component: () => renderValue('word-break'),
                     },
@@ -186,7 +169,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Line-Break
                     {
                         label: 'Line-Break',
-                        column: 'auto',
                         property: 'line-break',
                         component: () => renderValue('line-break'),
                     },
@@ -194,7 +176,6 @@ export const useFontLayout = (): LayoutProps => {
                     // White-Space
                     {
                         label: 'White-Space',
-                        column: 'auto',
                         property: 'white-space',
                         component: () => renderValue('white-space'),
                     },
@@ -202,7 +183,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Letter Spacing
                     {
                         label: 'Letter Spacing',
-                        column: 'auto',
                         property: 'letter-spacing',
                         component: () => renderValue('letter-spacing')
                     },
@@ -210,7 +190,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Word Spacing
                     {
                         label: 'Word Spacing',
-                        column: 'auto',
                         property: 'word-spacing',
                         component: () => renderValue('word-spacing'),
                     },
@@ -220,13 +199,12 @@ export const useFontLayout = (): LayoutProps => {
             {
                 isExpandable: true,
                 expandTitle: 'Column',
-                columns: 'repeat(1,minmax(0, 1fr))',
+                styles: { gridTemplateColumns: '1fr' },
                 properties: [
 
                     // Column Count
                     {
                         label: 'Count',
-                        column: 'auto',
                         property: 'column-count',
                         component: () => renderValue('column-count'),
                     },
@@ -234,7 +212,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Width
                     {
                         label: 'Width',
-                        column: 'auto',
                         property: 'column-width',
                         component: () => renderValue('column-width'),
                     },
@@ -242,7 +219,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Gap
                     {
                         label: 'Gap',
-                        column: 'auto',
                         property: 'column-gap',
                         component: () => renderValue('column-gap'),
                     },
@@ -250,7 +226,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Rule Width
                     {
                         label: 'Rule Width',
-                        column: 'auto',
                         property: 'column-rule-width',
                         component: () => renderValue('column-rule-width'),
                     },
@@ -258,7 +233,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Rule Style
                     {
                         label: 'Rule Style',
-                        column: 'auto',
                         property: 'column-rule-style',
                         component: () => renderValue('column-rule-style'),
                     },
@@ -266,7 +240,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Rule Color
                     {
                         label: 'Rule Color',
-                        column: 'auto',
                         property: 'column-rule-color',
                         component: () => renderValue('column-rule-color'),
                     },
@@ -274,7 +247,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Break Before
                     {
                         label: 'Break Before',
-                        column: 'auto',
                         property: 'break-before',
                         component: () => renderValue('break-before'),
                     },
@@ -282,7 +254,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Break Inside
                     {
                         label: 'Break Inside',
-                        column: 'auto',
                         property: 'break-inside',
                         component: () => renderValue('break-inside'),
                     },
@@ -290,7 +261,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Break After
                     {
                         label: 'Break After',
-                        column: 'auto',
                         property: 'break-after',
                         component: () => renderValue('break-after'),
                     },
@@ -298,7 +268,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Span
                     {
                         label: 'Column Span',
-                        column: 'auto',
                         property: 'column-span',
                         component: () => renderValue('column-span'),
                     },
@@ -306,7 +275,6 @@ export const useFontLayout = (): LayoutProps => {
                     // Column Fill
                     {
                         label: 'Column Fill',
-                        column: 'auto',
                         property: 'column-fill',
                         component: () => renderValue('column-fill'),
                     },

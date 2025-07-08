@@ -41,7 +41,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
         const container = containerRef.current;
         if (!container) return;
 
-        const resizeObserver = new ResizeObserver((entries) => {
+        const resizeObserver = new ResizeObserver(() => {
 
             // Get current container and option measurements
             const radioSelectWidth = container.clientWidth;
@@ -71,17 +71,11 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
 
         resizeObserver.observe(container);
 
-        // // Initial calculation
-        // setTimeout(() => {
-        //     resizeObserver.disconnect();
-        //     resizeObserver.observe(container);
-        // }, 0);
-
         return () => resizeObserver.disconnect();
     }, [maxOptions, optionsLength]);
 
     return (
-        <div ref={containerRef} className={CSS.RadioSelect} data-is-collapsed={dynamicMaxOptions < optionsLength}>
+        <div ref={containerRef} role='radiogroup' className={CSS.RadioSelect} data-is-collapsed={dynamicMaxOptions < optionsLength}>
 
             {dynamicMaxOptions < optionsLength && (
                 <>
@@ -96,7 +90,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
                 </>
             )}
 
-            <Options prioritizeIcons={true} value={value} options={options} onChange={onChange} />
+            <Options prioritizeIcons={true} ariaRole={'radio'} value={value} options={options} onChange={onChange} />
 
         </div>
     );
