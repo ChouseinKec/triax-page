@@ -254,7 +254,7 @@ export const CSSPropertyDefs: Record<string, CSSProperty> = {
 	'backdrop-filter': createProperty('backdrop-filter', 'none|[<filter-function>]+'),
 	transform: createProperty('transform', 'none|[<transform-function>]{1,4}'),
 	'box-shadow': createProperty('box-shadow', '<spread-shadow>'),
-	opacity: createProperty('opacity', '<number [0,1]>|<percentage [0%,100%]>'),
+	opacity: createProperty('opacity', '<number [0,1]>'),
 
 };
 

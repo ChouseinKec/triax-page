@@ -71,7 +71,7 @@ function isValueInteger(input: string): boolean {
  * isValueColor('10px') → false
  */
 function isValueColor(input: string): boolean {
-	return /^#[0-9a-fA-F]{3,6}$|^rgba?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(,\s*[\d.]+)?\)$|^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%\s*(,\s*[\d.]+)?\)$/.test(input);
+	return /^#[0-9a-fA-F]{3,6}$|^rgba?\(\d{1,3},\s*\d{1,3},\s*\d{1,3}(,\s[\d.]+)?\)$|^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%\s*,\s*\d{1,3}%\s*(,\s[\d.]+)?\)$/.test(input);
 }
 
 /**

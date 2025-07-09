@@ -72,9 +72,11 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	);
 
 	const renderDisplayView = useCallback<StyleFactoryProps['renderDisplayView']>(() => {
+		const display = getStyle('display');
+
 		return <DisplayView
 			styles={{
-				display: getStyle('display'),
+				display: display === 'none' ? 'block' : display,
 				flexDirection: getStyle('flex-direction'),
 				flexWrap: getStyle('flex-wrap'),
 				justifyContent: getStyle('justify-content'),

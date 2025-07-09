@@ -3,7 +3,7 @@
 .DropdownReveal {
 	position: relative;
 
-	*[class*='Float'] {
+	[class*='Float'] {
 		border-top: 4px solid var(--color-black--lighter);
 	}
 }

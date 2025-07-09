@@ -1,42 +1,20 @@
 .Slots {
-	flex: 1;
-	width: 95%;
 	display: flex;
 	align-items: center;
 	gap: var(--size-xs);
 
-	*[title='Select Next Slot'] {
+	[title='Select Next Slot'] {
 		font-size: var(--font-size-lg);
-		aspect-ratio: 1;
-
 		padding: var(--size-xs);
 		min-width: auto;
 		aspect-ratio: 1;
 		border-radius: 50%;
+
 		&::before,
 		&::after {
 			content: none;
 		}
 	}
-	> * {
-		flex: 1 0 auto;
-		width: max-content;
-		overflow: hidden;
-	}
-
-	> *[class*='DimensionValue'],
-	> *[class*='RadioSelect'],
-	> *[class*='Integer'],
-	> *[class*='Number'] {
-		flex: 1 1 auto;
-	}
-
-	> *[class*='DimensionValue'],
-	> *[class*='Integer'],
-	> *[class*='Number'] {
-		max-width: 80px;
-	}
-
 }
 
 .DropdownContainer {
@@ -52,4 +30,5 @@
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
+	// display: none;
 }

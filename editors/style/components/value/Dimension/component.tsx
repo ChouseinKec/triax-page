@@ -38,9 +38,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		onChange,
 		options,
 
-		// Validation
-		min = -Infinity,
-		max = Infinity,
 	} = props;
 
 	// Guard Clause
@@ -54,7 +51,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		return null;
 	}
 
-
 	/**
 	 * Finds the first dimension category unit as default, fallback to 'px'
 	 */
@@ -65,6 +61,38 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		return { unit, number };
 	},
 		[options]
+	);
+
+	/**
+	 * Computes the valid numeric range based on the first option's min/max values
+	 * Defaults to -Infinity and Infinity if not specified
+	 * 
+	 * @returns {object} Range object with min and max properties
+	*/
+	const range = useMemo(() => {
+		// Find the first option that is a number or integer
+		const option = options[0];
+
+		// Ensure min and max are valid numbers if present
+		const validMin = (option && 'min' in option && typeof option.min === 'number') ? option.min : -Infinity;
+		const validMax = (option && 'max' in option && typeof option.max === 'number') ? option.max : Infinity;
+
+		return {
+			min: validMin,
+			max: validMax
+		};
+	}, [options]
+	);
+
+	/**
+	 * Determines whether to show the options dropdown based on available choices
+	 * 
+	 * @returns {boolean} Whether the options dropdown should be rendered
+	 */
+	const shouldShowOptions = useMemo(() => {
+		return options.length > 1;
+	},
+		[options.length]
 	);
 
 	/**
@@ -107,24 +135,24 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		}
 
 		// Check minimum value constraint
-		if (min > -Infinity && numericValue < min) {
+		if (range.min > -Infinity && numericValue < range.min) {
 			return {
 				status: false,
-				message: `Value must be at least ${min}`
+				message: `Value must be at least ${range.min}`
 			};
 		}
 
 		// Check maximum value constraint
-		if (max < Infinity && numericValue > max) {
+		if (range.max < Infinity && numericValue > range.max) {
 			return {
 				status: false,
-				message: `Value must be at most ${max}`
+				message: `Value must be at most ${range.max}`
 			};
 		}
 
 		return { status: true, message: '' };
 	},
-		[min, max]
+		[range]
 	);
 
 	/**
@@ -205,15 +233,12 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	);
 
 	return (
-		<div
-			className={CSS.DimensionValue}
-			role="representation"
-		>
+		<div className={CSS.DimensionValue} role="representation" data-show-options={shouldShowOptions}>
 			{/* Numeric input for the value component */}
 			<GenericInput
 				value={extractedValue.number || ""}
-				min={min}
-				max={max}
+				min={range.min}
+				max={range.max}
 				type="number"
 				placeholder="N/A"
 				onValidate={validateNumber}

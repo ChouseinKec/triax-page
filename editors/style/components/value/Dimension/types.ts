@@ -16,13 +16,4 @@ export type DimensionValueProps = {
 	 */
 	onChange: (value: string) => void;
 
-	/**
-	 * The minimum numeric value allowed, default is -Infinity.
-	 */
-	min?: number;
-
-	/**
-	 * The maximum numeric value allowed, default is Infinity.
-	 */
-	max?: number;
 };

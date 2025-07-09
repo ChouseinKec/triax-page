@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useCallback, useRef } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -7,12 +7,15 @@ import CSS from './styles.module.css';
 import Slot from '../slot/component';
 import DropdownSelect from '@/components/select/dropdown/component';
 import RadioSelect from '@/components/select/radio/component';
+import DropdownReveal from '@/components/reveal/dropdown/component';
+import FloatReveal from '@/components/reveal/float/component';
 
 // Types
 import type { SlotsProps } from './types';
 
 // Utilities
 import { devLog } from '@/utilities/dev';
+import next from 'next';
 
 /**
  * Slots Component
@@ -28,6 +31,8 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         options,
         onChange,
     } = props;
+
+    const slotsRef = useRef<HTMLDivElement>(null);
 
     // Guard Clause
     if (!options || options.length === 0) {
@@ -110,10 +115,11 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
+            console.log(nextOptions[0].value);
             return (
                 <Fragment>
                     {separatorElement}
-                    <RadioSelect
+                    <Slot
                         value={''}
                         options={nextOptions}
                         onChange={(val: string) => handleSlotChange(val, valuesLength)}
@@ -150,29 +156,28 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Calculate the number of available slots (slots with valid options)
         // const maxSlots = options.filter(opt => opt?.length > 0).length;
 
-        // Use dropdown reveal for complex scenarios (multiple slots and many values)
+        // // Use dropdown reveal for complex scenarios (multiple slots and many values)
         // const shouldUseDropdown = maxSlots > 1 && valuesLength > 3;
 
         // if (shouldUseDropdown) {
         //     const valuesDisplay = values.join(' ');
 
         //     return (
-        //         <DropdownReveal
-        //             closeOnChange={false}
-        //             buttonTitle="Edit Values"
-        //             placeholder={valuesDisplay}
-        //         >
-        //             <div className={CSS.DropdownContainer}>
-        //                 {renderCurrentSlots()}
-        //                 {renderNextSlot()}
-        //             </div>
-        //         </DropdownReveal>
+        //         <FloatReveal targetRef={slotsRef}>
+        //             {renderCurrentSlots()}
+        //             {renderNextSlot()}
+        //         </FloatReveal>
         //     );
         // }
 
         // Default inline rendering for simple scenarios
         return (
             <>
+                {/* <FloatReveal targetRef={slotsRef}>
+                    {renderCurrentSlots()}
+                    {renderNextSlot()}
+                </FloatReveal> */}
+
                 {renderCurrentSlots()}
                 {renderNextSlot()}
             </>
@@ -182,7 +187,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
 
     return (
-        <div className={CSS.Slots} role='presentation'>
+        <div className={CSS.Slots} role='presentation' ref={slotsRef}>
             {render()}
         </div>
     );

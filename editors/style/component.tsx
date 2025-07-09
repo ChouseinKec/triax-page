@@ -25,7 +25,7 @@ const StyleEditor: React.FC<StyleEditorProps> = (props: StyleEditorProps): React
     return (
         <div className={`${CSS.Styles} ${className}`}>
 
-            <div className={CSS.Styles_Controls}>
+            <div className={CSS.Controls}>
                 {deviceSelect}
                 {orientationSelect}
                 {pseudoSelect}

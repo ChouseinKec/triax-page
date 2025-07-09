@@ -27,7 +27,7 @@
 .Option:focus * {
   color: var(--color-white);
 }
-.Option:focus svg *[fill]:not([fill=none]) {
+.Option:focus svg [fill]:not([fill=none]) {
   fill: var(--color-white);
 }
 .Option:active {
@@ -45,13 +45,13 @@
   background: var(--color-selected);
   box-shadow: inset 0px 0.5px 2px 1px rgba(0, 0, 0, 0.4);
 }
-.Option[data-selected=true] svg *[fill]:not([fill=none]) {
+.Option[data-selected=true] svg [fill]:not([fill=none]) {
   fill: var(--color-white);
 }
 .Option svg {
   max-width: 15px;
   max-height: 15px;
 }
-.Option svg *[fill]:not([fill=none]) {
+.Option svg [fill]:not([fill=none]) {
   fill: var(--color-black);
 }/*# sourceMappingURL=styles.module.css.map */

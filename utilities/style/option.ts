@@ -124,6 +124,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		icon: CSSIconDefs?.number,
 		type: 'number',
 	};
 }
@@ -145,6 +146,7 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		icon: CSSIconDefs?.number,
 		type: 'integer',
 	};
 }

@@ -14,7 +14,7 @@
 			}
 
 			@if $svg {
-				svg *[fill]:not([fill='none']) {
+				svg [fill]:not([fill='none']) {
 					fill: var(--color-white);
 				}
 			}
@@ -43,7 +43,7 @@
 			background: var(--color-selected);
 			box-shadow: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
 			@if $svg {
-				svg *[fill]:not([fill='none']) {
+				svg [fill]:not([fill='none']) {
 					fill: var(--color-white);
 				}
 			}
@@ -102,6 +102,7 @@
 
 @mixin components--input {
 	height: 25px;
+
 	padding: var(--size-sm) var(--size-md);
 
 	border: none;
@@ -109,7 +110,6 @@
 	border-radius: var(--size-sm);
 	background: var(--color-white);
 	border: var(--border-generic);
-
 
 	* {
 		font-size: var(--font-size-md);
@@ -141,7 +141,7 @@
 		max-width: 15px;
 		max-height: 15px;
 
-		*[fill]:not([fill='none']) {
+		[fill]:not([fill='none']) {
 			fill: var(--color-black);
 		}
 	}

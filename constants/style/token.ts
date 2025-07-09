@@ -71,7 +71,7 @@ export const CSSTokenDefs: Partial<Record<string, CSSToken>> = {
 	'<border-image-repeat>': createToken('<border-image-repeat>', '[stretch|repeat|round|space]{1,2}'),
 
 	// === Effect Types ===
-	'<filter-function>': createToken('<filter-function>', 'blur(<length>)|brightness(<number [0,∞]>)|contrast(<number [0,∞]>)|drop-shadow(<length-percentage> <length-percentage> <length-percentage> <color>)|grayscale(<number [0,∞]>)|hue-rotate(<angle>)|invert(<number [0,∞]>)|opacity(<number [0,∞]>)|saturate(<number [0,∞]>)|sepia(<number [0,∞]>)'),
+	'<filter-function>': createToken('<filter-function>', 'blur(<length [0,∞]>)|brightness(<number [0,∞]>)|contrast(<number [0,∞]>)|drop-shadow(<length-percentage> <length-percentage> <length-percentage> <color>)|grayscale(<number [0,∞]>)|hue-rotate(<angle>)|invert(<number [0,∞]>)|opacity(<number [0,∞]>)|saturate(<number [0,∞]>)|sepia(<number [0,∞]>)'),
 
 	'<spread-shadow>': createToken('<spread-shadow>', '<box-shadow-offset> <box-shadow-blur> <box-shadow-spread> <box-shadow-color> <box-shadow-position>?'),
 	'<box-shadow-position>': createToken('<box-shadow-position>', 'inset'),

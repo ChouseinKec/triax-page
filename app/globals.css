@@ -95,7 +95,7 @@ a {
   background: var(--color-white--darker);
 }
 
-*[class *='block-'] {
+[class *='block-'] {
   width: max-content;
   height: max-content;
   padding: 20px;
@@ -112,14 +112,14 @@ a {
 }
 
 
-*[class *='block-']>* {
+[class *='block-']>* {
   width: max-content;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 10px;
 }
 
-*[class *='block-'][data-selected='true'] {
+[class *='block-'][data-selected='true'] {
   opacity: 1 !important;
 }
 

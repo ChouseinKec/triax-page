@@ -1,10 +1,1 @@
-.NumberValue {
-  display: grid;
-  min-height: 25px;
-  position: relative;
-}
-.NumberValue [class*=DropdownReveal] {
-  position: absolute;
-  right: 0;
-  max-width: 40px;
-}/*# sourceMappingURL=styles.module.css.map */
+.NumberValue{height:25px;display:grid;position:relative}.NumberValue [class*=GenericInput]{width:50px}.NumberValue[data-show-options=true] [class*=GenericInput]{width:80px;padding-right:35px;padding-left:5px}.NumberValue[data-show-options=true] [class*=DropdownReveal]{width:35px;position:absolute;right:0}

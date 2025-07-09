@@ -47,6 +47,13 @@ export const useDisplayLayout = (): LayoutProps => {
                         property: 'display',
                         component: () => renderValue('display')
                     },
+
+                    // Divider
+                    {
+                        label: null,
+                        column: '1/-1',
+                        component: () => <HorizontalDivider />,
+                    },
                 ],
             },
 

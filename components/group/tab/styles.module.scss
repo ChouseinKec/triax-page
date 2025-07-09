@@ -1,17 +1,23 @@
 .TabGroup {
 	height: 100%;
 	width: 100%;
-
+	padding-bottom: var(--size-2xl);
 	display: flex;
 	flex-direction: column;
 	overflow: auto;
 	background: var(--color-white);
 
-	> *[class*='RadioSelect'] {
+
+	> * {
+		padding: 0 var(--size-md) var(--size-md) var(--size-md);
+	}
+
+	> [class*='RadioSelect'] {
+		width: 100%;
 		position: absolute;
 		bottom: 0;
-
-		width: 100%;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 }
 

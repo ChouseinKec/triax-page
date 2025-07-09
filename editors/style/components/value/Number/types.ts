@@ -10,12 +10,6 @@ export interface NumberValueProps {
 	/** Callback function to handle value changes. */
 	onChange: (value: string) => void;
 
-	/** The minimum value allowed for the input, defaults to -Infinity. */
-	min?: number;
-
-	/** The maximum value allowed for the input, defaults to Infinity. */
-	max?: number;
-
 	/** Indicates if the value is an integer. */
 	forceInteger?: boolean;
 }

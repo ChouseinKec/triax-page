@@ -14,9 +14,8 @@
 	@include inputMixins.components--container;
 
 	&[data-is-collapsed='true'] {
-		> *[class*='Option'] {
+		> [class*='Option'] {
 			background: transparent !important;
-			box-shadow: none !important;
 
 			* {
 				fill: var(--color-black--lighter) !important;
@@ -24,8 +23,8 @@
 		}
 	}
 
-	*[class*='DropdownReveal'] {
-		*[class*='DropdownReveal_Button'] {
+	[class*='DropdownReveal'] {
+		[class*='ToggleButton'] {
 			background: var(--color-black--lighter);
 			border: none;
 			height: 20px;
@@ -35,7 +34,6 @@
 			}
 
 			&::after {
-				// content: none;
 				background-color: var(--color-white);
 			}
 		}

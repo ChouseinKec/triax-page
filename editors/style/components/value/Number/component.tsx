@@ -35,8 +35,6 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         value = '',
         onChange = () => { },
         options = [],
-        min = -Infinity,
-        max = Infinity,
         forceInteger = false,
     } = props;
 
@@ -51,6 +49,18 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         return null;
     }
 
+    const range = useMemo(() => {
+        const option = options.find(opt => opt.name === 'number' || opt.name === 'integer');
+        // Ensure min and max are valid numbers if present
+        const validMin = (option && 'min' in option && typeof option.min === 'number') ? option.min : -Infinity;
+        const validMax = (option && 'max' in option && typeof option.max === 'number') ? option.max : Infinity;
+
+        // Return the range as an object
+        return {
+            min: validMin,
+            max: validMax
+        };
+    }, [options]);
 
     /**
      * Determines whether to show the options dropdown based on available choices
@@ -88,24 +98,24 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         }
 
         // Check minimum value constraint
-        if (min > -Infinity && numericValue < min) {
+        if (range.min > -Infinity && numericValue < range.min) {
             return {
                 status: false,
-                message: `Value must be at least ${min}`
+                message: `Value must be at least ${range.min}`
             };
         }
 
         // Check maximum value constraint
-        if (max < Infinity && numericValue > max) {
+        if (range.max < Infinity && numericValue > range.max) {
             return {
                 status: false,
-                message: `Value must be at most ${max}`
+                message: `Value must be at most ${range.max}`
             };
         }
 
         return { status: true, message: '' };
     },
-        [min, max]
+        [range]
     );
 
     /**
@@ -153,13 +163,13 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
     );
 
     return (
-        <div className={CSS.NumberValue} role="presentation">
+        <div className={CSS.NumberValue} role="presentation" data-show-options={shouldShowOptions}>
 
             {/* Numeric input for float values */}
             <GenericInput
                 value={value}
-                min={min}
-                max={max}
+                min={range.min}
+                max={range.max}
                 placeholder="0.0"
                 type="number"
                 onValidate={validateNumber}
