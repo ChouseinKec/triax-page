@@ -1,0 +1,16 @@
+@use '../../../mixins/mixins.module.scss' as inputMixins;
+
+.ColorSelect {
+	@include inputMixins.components--input;
+	position: relative;
+	cursor: pointer;
+    padding: 0;
+	
+}
+
+.Input {
+	border: none;
+	opacity: 0;
+	cursor: pointer;
+}
+

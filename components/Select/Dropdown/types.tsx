@@ -28,4 +28,7 @@ export type DropdownSelectProps = {
 
   /** Optional ARIA label for accessibility */
   ariaLabel?: string;
+
+  /** Whether the dropdown is disabled */
+  isDisabled?: boolean;
 };

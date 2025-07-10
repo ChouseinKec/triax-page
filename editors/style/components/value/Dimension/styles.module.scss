@@ -1,13 +1,10 @@
 .DimensionValue {
-	min-width: 65px;
-	min-height: 25px;
-
-	display: grid;
 	position: relative;
 
+
 	[class*='GenericInput'] {
-		width: 80px;
-		padding-right: 35px;
+		width: 70px;
+		padding-right: 50%;
 		padding-left: 5px;
 	}
 
@@ -15,5 +12,23 @@
 		width: 35px;
 		position: absolute;
 		right: 0;
+		top: 0;
+		opacity: 1;
+	}
+
+	&[data-is-collapsed='true'] {
+		[class*='GenericInput'] {
+			width: auto;
+			min-width: auto;
+			padding: 0;
+		}
+
+		[class*='DropdownReveal'] {
+			opacity: 0;
+		}
+	}
+
+	> * {
+		transition: all 0.25s;
 	}
 }

@@ -74,6 +74,7 @@ export const CSSPropertyDesc: Record<keyof typeof CSSPropertyDefs, string> = {
 	'margin-left': 'Sets the space outside the element’s left border.',
 	margin: 'Sets the space outside all the element’s borders.',
 
+
 	// ============ Background & Mask =============
 	'background-color': 'Sets the background color of the element.',
 	'background-position': 'Positions the background image within the element.',
@@ -172,5 +173,4 @@ export const CSSPropertyDesc: Record<keyof typeof CSSPropertyDefs, string> = {
 	'box-shadow': 'Adds shadow effects around the element’s frame.',
 	transform: 'Transforms the element in 2D or 3D space.',
 	opacity: 'Sets the transparency level of the element, affecting its content and children.',
-
 };

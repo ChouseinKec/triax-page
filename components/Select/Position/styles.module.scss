@@ -58,7 +58,7 @@
 	}
 
 	&:hover,
-	&[data-selected='true'] {
+	&[data-is-selected='true'] {
 		background: var(--color-gray);
 	}
 }

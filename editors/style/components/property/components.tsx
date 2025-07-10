@@ -59,7 +59,7 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
             data-disabled={disabled}
             role='group'
             aria-label={label ? `Property ${label}` : ''}
-            aria-hidden={label? 'false' : 'true'}
+            aria-hidden={label ? 'false' : 'true'}
         >
 
             <Content component={component} label={label} property={property} />

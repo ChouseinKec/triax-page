@@ -46,6 +46,7 @@
 
   --shadow-inset: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
   --shadow-outset: 0 0.5px 2px 1px rgb(0 0 0 / 40%);
+  --shadow-selected:inset 0px 0px 0px 1px var(--color-gray);
 
   --border-generic: 1px solid var(--color-white--darker);
 }
@@ -119,13 +120,9 @@ a {
   padding: 10px;
 }
 
-[class *='block-'][data-selected='true'] {
+[class *='block-'][data-is-selected='true'] {
   opacity: 1 !important;
 }
-
-
-
-
 
 .CSS {
   height: 100%;

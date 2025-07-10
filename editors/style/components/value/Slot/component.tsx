@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // Styles
 import CSS from './styles.module.css';
@@ -19,6 +19,9 @@ import type { SlotProps } from './types';
 import { getValueType } from '@/utilities/style/value';
 import { devLog } from '@/utilities/dev';
 
+// Hooks
+import useHover from '@/hooks/interface/useHover';
+
 /**
  * Slot Component
  * Renders the appropriate input component for a single value slot based on its type.
@@ -29,6 +32,8 @@ import { devLog } from '@/utilities/dev';
  */
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
+    // Hover state management with configurable delay
+    const {isHovered, handleTargetEnter, handleTargetLeave} = useHover(300);
 
     // Guard Clause
     if (!options || options.length === 0) {
@@ -70,7 +75,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
      */
     const valueType = value.length === 0 ? defaultType : getValueType(value);
 
-    return useMemo(() => {
+    const slot = useMemo(() => {
         switch (valueType) {
             case 'function':
                 return (
@@ -105,8 +110,14 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                     <Error message={`[Slot] Unknown value type: ${String(valueType)}`} />
                 );
         }
-    }, [valueType, value, onChange, options]);
+    }, [valueType, value, onChange, options]
+    );
 
+    return (
+        <div data-is-hovered={isHovered} className={CSS.Slot} onMouseEnter={handleTargetEnter} onMouseLeave={handleTargetLeave} >
+            {slot}
+        </div>
+    );
 };
 
 export default Slot;

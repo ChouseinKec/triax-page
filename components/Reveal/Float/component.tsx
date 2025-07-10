@@ -7,8 +7,8 @@ import CSS from "./styles.module.css";
 import { FloatRevealProps } from "@/components/reveal/float/types";
 
 // Hooks
-import useHover from "@/hooks/interaction/useHover";
-import usePosition from "@/hooks/position/usePosition";
+import useHover from "@/hooks/interface/useHover";
+import usePosition from "@/hooks/interface/usePosition";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
@@ -53,7 +53,6 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         ariaModal = false,
     } = props;
 
-
     // Guard Clause
     if (!children) {
         devLog.warn('[FloatReveal] No children provided');
@@ -74,9 +73,9 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
     // Determine the actual visibility state
     const isVisible = useMemo(() => {
         // Parent-controlled state takes precedence over hover state
-        return isOpen !== undefined ? isOpen : hoverState.isVisible;
+        return isOpen !== undefined ? isOpen : hoverState.isHovered;
     },
-        [isOpen, hoverState.isVisible]
+        [isOpen, hoverState.isHovered]
     );
 
     // Position management hook

@@ -111,7 +111,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
                 key={value}
                 className={CSS.PositionSelect_Position}
                 onClick={() => handleChange(value)}
-                data-selected={isPositionSelected(value, currentPosition)}
+                data-is-selected={isPositionSelected(value, currentPosition)}
                 data-value={value}
             />
         ))

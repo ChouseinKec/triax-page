@@ -39,6 +39,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         forcePlaceholder = false,
         grouped = false,
         searchable = false,
+        isDisabled = false,
 
         // Accessibility
         title = 'Toggle Dropdown',
@@ -103,7 +104,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
     );
 
     return (
-        <DropdownReveal ariaLabel={ariaLabel} {...dropdownProps}>
+        <DropdownReveal ariaLabel={ariaLabel} {...dropdownProps} isDisabled={isDisabled}>
             <div className={CSS.Options}>
                 <Options {...optionsProps} />
             </div>

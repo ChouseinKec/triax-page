@@ -55,7 +55,7 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         <i
             className={CSS.Option}
             onClick={() => handleChange(value)}
-            data-selected={isSelected}
+            data-is-selected={isSelected}
             style={style}
             title={name}
             aria-label={`Select ${name}`}

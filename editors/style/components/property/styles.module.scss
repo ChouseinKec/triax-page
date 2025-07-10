@@ -26,7 +26,7 @@
 }
 
 .Property_Label {
-	span {
+	> span {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -35,7 +35,6 @@
 		font-weight: 500;
 		font-family: 'Segoe UI';
 		text-transform: capitalize;
-
 		cursor: help;
 	}
 }
@@ -83,7 +82,6 @@
 }
 
 .Property_Separator {
-	flex: 1 1 auto;
 	min-width: 10px;
 
 	color: var(--color-gray);
@@ -91,6 +89,6 @@
 
 	white-space: nowrap;
 	overflow: hidden;
-
+	flex: auto;
 	opacity: 0.3;
 }

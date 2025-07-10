@@ -39,20 +39,20 @@
 .Error:active svg path {
   fill: var(--color-white);
 }
-.Error[data-selected=true] {
+.Error[data-is-selected=true] {
   color: var(--color-white);
   background: var(--color-selected);
   box-shadow: inset 0px 0.5px 2px 1px rgba(0, 0, 0, 0.4);
 }
-.Error[data-selected=true] svg [fill]:not([fill=none]) {
+.Error[data-is-selected=true] svg [fill]:not([fill=none]) {
   fill: var(--color-white);
 }
-.Error[data-isopen=true] {
+.Error[data-is-open=true] {
   color: var(--color-white);
   background: var(--color-selected);
   box-shadow: inset 0px 0.5px 2px 1px rgba(0, 0, 0, 0.4);
 }
-.Error[data-isopen=true] svg path {
+.Error[data-is-open=true] svg path {
   fill: var(--color-white);
 }
 .Error:hover {

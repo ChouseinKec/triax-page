@@ -34,7 +34,11 @@ const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObje
 
 		// Ensure the float stays within viewport boundaries
 		top = Math.max(0, Math.min(top, window.innerHeight - floatRect.height));
-		left = Math.max(0, Math.min(left, window.innerWidth - floatRect.width));
+		// left = Math.max(0, Math.min(left, window.innerWidth - floatRect.width));
+
+		if (floatRect.right > window.innerWidth) {
+			left = targetRect.left - Math.min(floatRect.width - targetRect.width);
+		}
 
 		floatRef.current.style.top = `${top}px`;
 		floatRef.current.style.left = `${left}px`;

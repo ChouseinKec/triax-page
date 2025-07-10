@@ -26,14 +26,14 @@ export default function Home() {
 
       <div className={CSS.blocks}>
 
-        <div data-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
+        <div data-is-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
           <p>Block 1A</p>
           <p>Block 1B</p>
           <p>Block 1C</p>
           <style>{generateBlockStyles('1')}</style>
         </div>
 
-        <div data-selected={selectedBlock === "2"} className='block-2' onClick={() => setSelected("2")}>
+        <div data-is-selected={selectedBlock === "2"} className='block-2' onClick={() => setSelected("2")}>
           <p>Block 2A</p>
           <p>Block 2B</p>
           <p>Block 2C</p>

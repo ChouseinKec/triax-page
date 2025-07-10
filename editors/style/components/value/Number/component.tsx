@@ -14,6 +14,12 @@ import { NumberValueProps } from './types';
 // Utilities
 import { devLog } from '@/utilities/dev';
 
+// Constants
+import { CSSIconDefs } from '@/constants/style/icon';
+
+// Hooks
+import useSize from '@/hooks/interface/useSize';
+
 /**
  * NumberValue Component
  * 
@@ -38,6 +44,8 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         forceInteger = false,
     } = props;
 
+    const targetRef = React.useRef<HTMLDivElement>(null);
+    const sizeState = useSize(targetRef);
 
     if (!options || options.length === 0) {
         devLog.error('[NumberValue] No options provided');
@@ -49,6 +57,8 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         return null;
     }
 
+
+    // Extracts min and max from options if available, otherwise defaults to -Infinity and Infinity
     const range = useMemo(() => {
         const option = options.find(opt => opt.name === 'number' || opt.name === 'integer');
         // Ensure min and max are valid numbers if present
@@ -60,17 +70,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
             min: validMin,
             max: validMax
         };
-    }, [options]);
-
-    /**
-     * Determines whether to show the options dropdown based on available choices
-     * 
-     * @returns {boolean} Whether the options dropdown should be rendered
-     */
-    const shouldShowOptions = useMemo(() => {
-        return options.length > 1;
-    },
-        [options.length]
+    }, [options]
     );
 
     /**
@@ -162,8 +162,18 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         [onChange]
     );
 
+    const isCollapsed = useMemo(() => {
+        // Default to not collapsed if no target ref
+        if (!targetRef.current) {
+            return false;
+        }
+        // Collapse if the width is less than 40px
+        return sizeState.size.width < 50;
+    }, [sizeState.size.width]
+    );
+
     return (
-        <div className={CSS.NumberValue} role="presentation" data-show-options={shouldShowOptions}>
+        <div className={CSS.NumberValue} role="presentation" ref={targetRef} data-is-collapsed={isCollapsed}>
 
             {/* Numeric input for float values */}
             <GenericInput
@@ -179,19 +189,18 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
             />
 
             {/* Options dropdown for alternative values */}
-            {shouldShowOptions &&
-                <SelectDropdown
-                    options={options}
-                    value={"number"}
-                    onChange={handleOptionChange}
-                    searchable={true}
-                    grouped={true}
-                    placeholder="NUM"
-                    forcePlaceholder={true}
-                    title="Select Value Type"
-                    ariaLabel="Select Value Type"
-                />
-            }
+            <SelectDropdown
+                options={options}
+                value={"number"}
+                onChange={handleOptionChange}
+                searchable={true}
+                grouped={true}
+                placeholder={CSSIconDefs.number || 'NUM'}
+                forcePlaceholder={true}
+                isDisabled={options.length <= 1}
+                ariaLabel="Change Value Type"
+                title="Change Value Type"
+            />
 
         </div>
     );

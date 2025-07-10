@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 const useHover = (delay = 200) => {
-	const [isVisible, setIsVisible] = useState(false);
+	const [isHovered, setisHovered] = useState(false);
 	const showTimeoutRef = useRef<number | null>(null);
 	const hideTimeoutRef = useRef<number | null>(null);
 	const isHoveringRef = useRef(false);
@@ -12,12 +12,12 @@ const useHover = (delay = 200) => {
 			hideTimeoutRef.current = null;
 		}
 
-		if (!isVisible) {
+		if (!isHovered) {
 			showTimeoutRef.current = window.setTimeout(() => {
-				setIsVisible(true);
+				setisHovered(true);
 			}, delay);
 		}
-	}, [isVisible, delay]);
+	}, [isHovered, delay]);
 
 	const hide = useCallback(() => {
 		if (showTimeoutRef.current) {
@@ -27,7 +27,7 @@ const useHover = (delay = 200) => {
 
 		hideTimeoutRef.current = window.setTimeout(() => {
 			if (!isHoveringRef.current) {
-				setIsVisible(false);
+				setisHovered(false);
 			}
 		}, delay);
 	}, [delay]);
@@ -43,13 +43,13 @@ const useHover = (delay = 200) => {
 
 	const handleFloatEnter = useCallback(() => {
 		isHoveringRef.current = true;
-		if (!isVisible) {
+		if (!isHovered) {
 			if (showTimeoutRef.current) {
 				clearTimeout(showTimeoutRef.current);
 			}
-			setIsVisible(true);
+			setisHovered(true);
 		}
-	}, [isVisible]);
+	}, [isHovered]);
 
 	const handleFloatLeave = useCallback(() => {
 		isHoveringRef.current = false;
@@ -65,7 +65,7 @@ const useHover = (delay = 200) => {
 	}, []);
 
 	return {
-		isVisible,
+		isHovered,
 		handleTargetEnter,
 		handleTargetLeave,
 		handleFloatEnter,

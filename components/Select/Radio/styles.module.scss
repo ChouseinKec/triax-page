@@ -1,8 +1,8 @@
 @use '../../../mixins/mixins.module.scss' as inputMixins;
 
 .RadioSelect {
-	width: max-content;
-	height: max-content;
+	height: 25px;
+
 	padding: var(--size-xs);
 
 	display: flex;
@@ -13,38 +13,10 @@
 	position: relative;
 	@include inputMixins.components--container;
 
-	&[data-is-collapsed='true'] {
-		> [class*='Option'] {
-			background: transparent !important;
-
-			* {
-				fill: var(--color-black--lighter) !important;
-			}
-		}
+	[class*='FloatReveal'] {
+		display: flex;
+		flex-direction: row;
+		padding: var(--size-xs);
+		// background-color: var(--color-gray);
 	}
-
-	[class*='DropdownReveal'] {
-		[class*='ToggleButton'] {
-			background: var(--color-black--lighter);
-			border: none;
-			height: 20px;
-			min-width: 25px;
-			* {
-				fill: var(--color-white);
-			}
-
-			&::after {
-				background-color: var(--color-white);
-			}
-		}
-	}
-}
-
-.Divider {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: var(--size-md);
-	flex: 1 0 auto;
-	color: rgba(0, 0, 0, 0.5);
 }

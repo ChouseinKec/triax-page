@@ -45,26 +45,24 @@ const KeywordValue: React.FC<KeywordValueProps> = memo((props: KeywordValueProps
 
     // Render radio group if all options have icons, otherwise render dropdown
     return (
-        <div className={CSS.KeywordValue}>
-            {hasIcon ? (
-                <RadioSelect
-                    value={value}
-                    options={options}
-                    onChange={onChange}
-                />
-            ) : (
-                <DropdownSelect
-                    value={value}
-                    options={options}
-                    placeholder="N/A"
-                    searchable={false}
-                    grouped={true}
-                    onChange={onChange}
-                    title="Change Value Type"
-                    ariaLabel="Change Value Type"
-                />
-            )}
-        </div>
+        hasIcon ? (
+            <RadioSelect
+                value={value}
+                options={options}
+                onChange={onChange}
+            />
+        ) : (
+            <DropdownSelect
+                value={value}
+                options={options}
+                placeholder="N/A"
+                searchable={false}
+                grouped={true}
+                onChange={onChange}
+                title="Change Value Type"
+                ariaLabel="Change Value Type"
+            />
+        )
 
     )
 });

@@ -96,7 +96,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             'title': title,
 
             // Data attributes for styling
-            'data-iserror': validationState.isError,
+            'data-is-error': validationState.isError,
             'data-type': type,
         };
     },
@@ -111,7 +111,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
      */
     const dataAttributes = useMemo(() => {
         return {
-            'data-iserror': validationState.isError,
+            'data-is-error': validationState.isError,
             'data-type': type,
         };
     },

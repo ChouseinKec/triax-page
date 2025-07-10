@@ -78,7 +78,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
     );
 
     return (
-        <div className={CSS.ExpandReveal} data-isopen={isOpen}>
+        <div className={CSS.ExpandReveal} data-is-open={isOpen}>
             {/* Toggle button to expand/collapse the content */}
             <button
                 className={CSS.Button}

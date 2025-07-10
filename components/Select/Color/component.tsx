@@ -1,14 +1,16 @@
 import React, { memo, ReactElement, useCallback } from 'react';
-import { ChromePicker, ColorResult } from 'react-color';
 
-// Components
-import DropdownReveal from '@/components/reveal/dropdown/component';
+// Styles
+import CSS from './styles.module.css';
 
 // Types
 import { ColorSelectProps } from '@/components/select/color/types';
 
 // Utilities
 import { clearSpaces } from '@/utilities/string/string';
+
+// Hooks
+import { useDebouncedCallback } from '@/hooks/hooks';
 
 /**
  * ColorSelect Component
@@ -22,36 +24,27 @@ import { clearSpaces } from '@/utilities/string/string';
  * @param {(value: string) => void} props.onChange - Handler function for when the color changes
  * @param {string} [props.placeholder='Pick'] - Placeholder text for the DropdownReveal toggle
  * @returns {ReactElement} - The rendered color picker component
- *
- * @example
- * <ColorSelect value="rgba(255, 0, 0, 1)" onChange={(color) => setColor(color)} />
  */
 const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): ReactElement => {
     const {
         value,
         onChange,
-        placeholder = 'Pick'
     } = props;
-    /**
-     * Handles color change from the ChromePicker.
-     * Memoized to prevent unnecessary re-creations.
-     * 
-     * @param {ColorResult} color - The selected color object from the ChromePicker
-    */
-    const handleChange = useCallback((color: ColorResult) => {
-        const rgbaColor = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
-        if (onChange) {
-            onChange(clearSpaces(rgbaColor)); // Pass the new color to the parent
-        }
-    }, [onChange]
-    );
+
+    const debouncedOnChange = useDebouncedCallback(onChange, 100);
+
+    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        const color = clearSpaces(event.target.value);
+        debouncedOnChange(color);
+    }, [debouncedOnChange]);
+
 
     return (
-        <DropdownReveal value={value} closeOnChange={false} placeholder={placeholder} >
-            <ChromePicker disableAlpha={false} color={value} onChange={handleChange} />
-        </DropdownReveal>
-
+        <div className={CSS.ColorSelect} style={{ backgroundColor: value }}>
+            <input className={CSS.Input} type='color' value={value} onChange={handleChange} />
+        </div>
     );
+
 };
 
 export default memo(ColorSelect);

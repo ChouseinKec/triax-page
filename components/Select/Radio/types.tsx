@@ -11,9 +11,6 @@ export type RadioSelectProps = {
     /** The list of options available for selection. */
     options: OptionData[];
     
-    /** The maximum number of options to display. */
-    maxOptions?: number;
-
     /** ARIA label for the radio group. */
     ariaLabel?: string;
 

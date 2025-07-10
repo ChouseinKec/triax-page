@@ -36,7 +36,7 @@
 	@include inputMixins.components--button;
 
 	padding-right: var(--size-md);
-	&[data-isdisabled='true'] {
+	&[data-is-disabled='true'] {
 		pointer-events: none;
 		opacity: 0.5;
 

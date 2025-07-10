@@ -54,6 +54,7 @@ export const usePositionLayout = (): LayoutProps => {
                     // Position
                     {
                         label: 'Position',
+                        property: 'position',
                         component: () => renderValue('position'),
                     },
 
@@ -61,18 +62,21 @@ export const usePositionLayout = (): LayoutProps => {
                     {
                         label: currentSide || '...',
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')) || !currentSide,
+                        property: currentSide ? currentSide.toLowerCase() as CSSProperties : 'top',
                         component: () => renderValue(currentSide?.toLowerCase() as CSSProperties || 'top'),
                     },
 
                     // Padding dynamic based on current side selected.
                     {
                         label: currentSide ? `Padding-${currentSide}` : 'Padding',
+                        property: generatePropertyName('padding', currentSide),
                         component: () => renderValue(generatePropertyName('padding', currentSide)),
                     },
 
                     // Margin dynamic based on current side selected.
                     {
                         label: currentSide ? `Margin-${currentSide}` : 'Margin',
+                        property: generatePropertyName('margin', currentSide),
                         component: () => renderValue(generatePropertyName('margin', currentSide)),
                     },
 
@@ -80,6 +84,7 @@ export const usePositionLayout = (): LayoutProps => {
                     // Z-Index
                     {
                         label: 'Z-Index',
+                        property: 'z-index',
                         component: () => renderValue('z-index'),
                     },
 

@@ -15,6 +15,9 @@ import { DimensionValueProps } from './types';
 import { extractNumber, extractUnit } from '@/utilities/style/dimension';
 import { devLog } from '@/utilities/dev';
 
+// Hooks
+import useSize from '@/hooks/interface/useSize';
+
 /**
  * DimensionValue Component
  * 
@@ -39,6 +42,10 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		options,
 
 	} = props;
+
+	const targetRef = React.useRef<HTMLDivElement>(null);
+	const sizeState = useSize(targetRef);
+
 
 	// Guard Clause
 	if (!options || options.length === 0) {
@@ -82,17 +89,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			max: validMax
 		};
 	}, [options]
-	);
-
-	/**
-	 * Determines whether to show the options dropdown based on available choices
-	 * 
-	 * @returns {boolean} Whether the options dropdown should be rendered
-	 */
-	const shouldShowOptions = useMemo(() => {
-		return options.length > 1;
-	},
-		[options.length]
 	);
 
 	/**
@@ -232,8 +228,18 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		[onChange, options, extractedValue.number, defaults.number]
 	);
 
+	const isCollapsed = useMemo(() => {
+		// Default to not collapsed if no target ref
+		if (!targetRef.current) {
+			return false;
+		}
+		// Collapse if the width is less than 40px
+		return sizeState.size.width < 50;
+	}, [sizeState.size.width]
+	);
+
 	return (
-		<div className={CSS.DimensionValue} role="representation" data-show-options={shouldShowOptions}>
+		<div className={CSS.DimensionValue} role="representation" ref={targetRef} data-is-collapsed={isCollapsed}>
 			{/* Numeric input for the value component */}
 			<GenericInput
 				value={extractedValue.number || ""}
@@ -247,6 +253,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 				ariaLabel="Enter Dimension Value"
 			/>
 
+
 			{/* Unit dropdown for the unit component */}
 			<SelectDropdown
 				options={options}
@@ -258,6 +265,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 				ariaLabel="Change Value Type"
 				title="Change Value Type"
 			/>
+
 		</div>
 	);
 };

@@ -6,16 +6,13 @@ import CSS from './styles.module.css';
 // Components
 import Slot from '../slot/component';
 import DropdownSelect from '@/components/select/dropdown/component';
-import RadioSelect from '@/components/select/radio/component';
 import DropdownReveal from '@/components/reveal/dropdown/component';
-import FloatReveal from '@/components/reveal/float/component';
 
 // Types
 import type { SlotsProps } from './types';
 
 // Utilities
 import { devLog } from '@/utilities/dev';
-import next from 'next';
 
 /**
  * Slots Component
@@ -44,6 +41,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         devLog.error('[Slots] Invalid value provided, expected a string');
         return null;
     }
+
 
     const valuesLength = values.length;
     const slotsLength = options.length;
@@ -93,6 +91,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
                 </Fragment>
             );
         });
+
     }, [values, options, handleSlotChange]
     );
 
@@ -115,7 +114,6 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
-            console.log(nextOptions[0].value);
             return (
                 <Fragment>
                     {separatorElement}
@@ -154,30 +152,25 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
      */
     const render = useCallback(() => {
         // Calculate the number of available slots (slots with valid options)
-        // const maxSlots = options.filter(opt => opt?.length > 0).length;
+        const maxSlots = options.filter(opt => opt?.length > 0).length;
 
-        // // Use dropdown reveal for complex scenarios (multiple slots and many values)
-        // const shouldUseDropdown = maxSlots > 1 && valuesLength > 3;
+        // Use dropdown reveal for complex scenarios (multiple slots and many values)
+        const shouldUseDropdown = maxSlots > 1 && valuesLength > 4;
 
-        // if (shouldUseDropdown) {
-        //     const valuesDisplay = values.join(' ');
-
-        //     return (
-        //         <FloatReveal targetRef={slotsRef}>
-        //             {renderCurrentSlots()}
-        //             {renderNextSlot()}
-        //         </FloatReveal>
-        //     );
-        // }
+        if (shouldUseDropdown) {
+            return (
+                <DropdownReveal placeholder={values.join(' ')} >
+                    <div className={CSS.SlotsInner}>
+                        {renderCurrentSlots()}
+                        {renderNextSlot()}
+                    </div>
+                </DropdownReveal>
+            );
+        }
 
         // Default inline rendering for simple scenarios
         return (
             <>
-                {/* <FloatReveal targetRef={slotsRef}>
-                    {renderCurrentSlots()}
-                    {renderNextSlot()}
-                </FloatReveal> */}
-
                 {renderCurrentSlots()}
                 {renderNextSlot()}
             </>

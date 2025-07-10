@@ -1,7 +1,10 @@
 .Slots {
+	width: 95%;
+
 	display: flex;
 	align-items: center;
-	gap: var(--size-xs);
+	flex: 1;
+	gap: var(--size-sm);
 
 	[title='Select Next Slot'] {
 		font-size: var(--font-size-lg);
@@ -15,20 +18,24 @@
 			content: none;
 		}
 	}
+
+	> * {
+		flex: auto;
+	}
 }
 
-.DropdownContainer {
+.SlotsInner {
 	display: flex;
 	flex-direction: row;
 	gap: var(--size-xs);
 }
 
 .Separator {
+	width: 3px;
 	color: var(--color-gray);
 
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	// display: none;
 }
