@@ -1,4 +1,4 @@
-import { useCallback, ReactElement, useMemo } from 'react';
+import { useCallback, ReactElement, useMemo } from "react";
 
 // Components
 import DropdownSelect from '@/components/select/dropdown/component';

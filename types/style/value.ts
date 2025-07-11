@@ -1,2 +1,3 @@
-export type ValueRenderTypes = 'radio' | 'dropdown';
+
+export type ValueSeparator = ' ' | ',' | '/';
 

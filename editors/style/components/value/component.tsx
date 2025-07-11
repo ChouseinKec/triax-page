@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from "react";
 
 // Types
 import type { ValueProps } from './types';
@@ -11,7 +11,7 @@ import { getTokenValues } from '@/utilities/style/token';
 import { mergeArrays } from '@/utilities/array/array';
 
 // Constants
-import { ValueSeparators } from '@/constants/style/separator';
+import { ValueSeparatorDefaults } from '@/constants/style/value';
 
 // Components
 import Slots from './slots/component';
@@ -51,7 +51,7 @@ const Value: React.FC<ValueProps> = (props: ValueProps) => {
     const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
 
     // Split the value string into slots (e.g., ['10px', 'auto'])
-    const values = useMemo(() => splitAdvanced(value, [...ValueSeparators]), [value]);
+    const values = useMemo(() => splitAdvanced(value, [...ValueSeparatorDefaults]), [value]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
     const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values, property.name),

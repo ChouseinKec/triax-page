@@ -1,25 +1,25 @@
 // Types
-import type { CSSProperty,CSSProperties } from '@/types/style/property';
+import type { StylePropertyData, StylePropertyKeys } from '@/types/style/property';
 
 // Constants
-import { ValueSeparators } from './separator';
-import { CSSPropertyDesc } from './property-description';
+import { ValueSeparatorDefaults } from './value';
+import { StylePropertyDescription } from './property-description';
 
 // Utilities
 import { getColumnSets } from '@/utilities/array/array';
 import { splitAdvanced } from '@/utilities/string/string';
-import { getTokenCanonical } from '@/utilities/style/token';
-import { parse, expandTokens } from '@/utilities/style/parse';
+import { getTokenCanonical, expandTokens } from '@/utilities/style/token';
+import { parse } from '@/utilities/style/parse';
 import { extractSeparators } from '@/utilities/style/separator';
 
 /**
- * Helper function to create a CSSProperty object.
+ * Helper function to create a StylePropertyData object.
  * @param name - The canonical name of the CSS property (e.g. 'color', 'font-size').
  * @param syntax - The raw CSS Value Definition Syntax string (may contain data-type references).
  * @param category - The property category for grouping/filtering in the UI.
- * @returns A CSSProperty object with all metadata fields populated, including expanded and parsed syntax.
+ * @returns A StylePropertyData object with all metadata fields populated, including expanded and parsed syntax.
  */
-export const createProperty = (name: string, syntax: string): CSSProperty => {
+export const createProperty = (name: string, syntax: string): StylePropertyData => {
 	let _expanded: string | undefined;
 	let _parsed: string[] | undefined;
 	let _set: Set<string>[] | undefined;
@@ -28,7 +28,7 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 
 	return {
 		name,
-		description: CSSPropertyDesc[name as keyof typeof CSSPropertyDefs] ?? '',
+		description: StylePropertyDescription[name as keyof typeof StylePropertyDefinitions] ?? '',
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
 			if (_expanded === undefined) _expanded = expandTokens(syntax);
@@ -44,7 +44,7 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 
 		get syntaxSet() {
 			if (_set === undefined) {
-				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, ValueSeparators));
+				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, ValueSeparatorDefaults));
 				const columnArrays = getColumnSets(tokens);
 				_set = columnArrays.map((col) => new Set(col));
 			}
@@ -54,7 +54,7 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 		get syntaxNormalized() {
 			if (_normalized === undefined) {
 				_normalized = this.syntaxParsed.map((variation) =>
-					splitAdvanced(variation, ValueSeparators)
+					splitAdvanced(variation, ValueSeparatorDefaults)
 						.map((token) => getTokenCanonical(token))
 						.join(' ')
 				);
@@ -73,10 +73,10 @@ export const createProperty = (name: string, syntax: string): CSSProperty => {
 
 /**
  * A lookup table of all supported CSS properties and their metadata.
- * Each entry is a CSSProperty object describing the property's name, syntax, description, and category.
+ * Each entry is a StylePropertyData object describing the property's name, syntax, description, and category.
  * Used for property validation, UI dropdowns, and documentation.
  */
-export const CSSPropertyDefs: Record<string, CSSProperty> = {
+export const StylePropertyDefinitions: Record<string, StylePropertyData> = {
 	// ============ Display & Layout =============
 	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
 
@@ -255,11 +255,9 @@ export const CSSPropertyDefs: Record<string, CSSProperty> = {
 	transform: createProperty('transform', 'none|[<transform-function>]{1,4}'),
 	'box-shadow': createProperty('box-shadow', '<spread-shadow>'),
 	opacity: createProperty('opacity', '<number [0,1]>'),
-
 };
 
-
-export const CSSPropertyShorthandDefs: Partial<Record<CSSProperties, CSSProperties[]>> = {
+export const StylePropertyShorthandDefinitions: Partial<Record<StylePropertyKeys, StylePropertyKeys[]>> = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],

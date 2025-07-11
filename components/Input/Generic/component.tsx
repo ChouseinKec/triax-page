@@ -1,4 +1,4 @@
-import React, { useCallback, ReactElement, memo, useState, useRef, useMemo, useReducer } from 'react';
+import React, { useCallback, ReactElement, memo, useState, useRef, useMemo, useReducer } from "react";
 
 // Styles
 import CSS from './styles.module.css';

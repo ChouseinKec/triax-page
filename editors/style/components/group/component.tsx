@@ -1,4 +1,4 @@
-import { memo, ReactElement } from 'react';
+import { memo, ReactElement } from "react";
 
 // Styles
 import CSS from '@/editors/style/components/group/styles.module.css';

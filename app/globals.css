@@ -95,7 +95,7 @@ a {
 ::-webkit-scrollbar-thumb {
   background: var(--color-white--darker);
 }
-
+/* 
 [class *='block-'] {
   width: max-content;
   height: max-content;
@@ -122,9 +122,9 @@ a {
 
 [class *='block-'][data-is-selected='true'] {
   opacity: 1 !important;
-}
+} */
 
-.CSS {
+[class*='StyleEditor'] {
   height: 100%;
   width: 300px;
   position: fixed;

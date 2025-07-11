@@ -1,4 +1,4 @@
-import { memo, ReactElement, useRef } from 'react';
+import { memo, ReactElement, useRef } from "react";
 
 // Styles
 import CSS from '@/editors/style/components/property/styles.module.css';
@@ -10,7 +10,7 @@ import FloatReveal from '@/components/reveal/float/component';
 import type { LayoutProps, LayoutContentProps } from '@/editors/style/components/property/types';
 
 // Constants
-import { CSSPropertyDefs } from '@/constants/style/property';
+import { StylePropertyDefinitions } from '@/constants/style/property';
 
 // Hooks
 import { useStyleManager } from '@/hooks/style/manager';
@@ -72,8 +72,8 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
     const { component, label, property } = props;
     const labelRef = useRef<HTMLLabelElement>(null);
 
-    const propertyName = property ? CSSPropertyDefs[property]?.name : 'N/A';
-    const propertyDescription = property ? CSSPropertyDefs[property]?.description : 'N/A';
+    const propertyName = property ? StylePropertyDefinitions[property]?.name : 'N/A';
+    const propertyDescription = property ? StylePropertyDefinitions[property]?.description : 'N/A';
 
     const { copyStyle, pasteStyle, resetStyle } = useStyleManager();
 

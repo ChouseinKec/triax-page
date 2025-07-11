@@ -1,7 +1,7 @@
 // Constants
-import { DimensionGroups, CSSFunctionDefaults } from '@/constants/style/value';
-import { CSSUnitOptions } from '@/constants/style/units';
-import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';
+import { ValueFunctionDefaults } from '@/constants/style/value';
+import { StyleUnitOptions } from '@/constants/style/unit';
+import { StyleIconDefinitions, CSSIcons } from '@/constants/style/icon';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
@@ -10,7 +10,7 @@ import { getValueTokens } from '@/utilities/style/value';
 
 // Types
 import type { InputOptionData, OtherOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
-import type { CSSDimensionGroups } from '@/types/style/dimension';
+import type { StyleUnitType } from '@/types/style/unit';
 
 /**
  * Creates a FunctionOptionData object for a given function token.
@@ -33,7 +33,7 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
 	// Get the default function value from the constants
-	const defaultValue = CSSFunctionDefaults[baseName];
+	const defaultValue = ValueFunctionDefaults[baseName];
 
 	// If no default value is defined for this function, return undefined
 	if (!defaultValue) return undefined;
@@ -61,14 +61,15 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
 	if (!token) return undefined;
 
 	// Get the base name of the token and check if it's a valid dimension group
-	const baseName = getTokenBase(token) as CSSDimensionGroups;
+	const baseName = getTokenBase(token) as StyleUnitType;
 
 	// If the base name is not a valid dimension group, return undefined
-	if (!DimensionGroups.includes(baseName)) return undefined;
+	if (!StyleUnitOptions[baseName]) return undefined;
 
 	// Get the range parameters for the token, and retrieve the unit options for the base name
 	const range = getTokenParam(token);
-	const unitOptions = CSSUnitOptions[baseName] || [];
+	const unitOptions = StyleUnitOptions[baseName] || [];
+
 
 	// If no range is specified, return the unit options as is
 	if (!range) return unitOptions as DimensionOptionData[];
@@ -94,7 +95,7 @@ function createKeywordOption(token: string, propertyName: string): KeywordOption
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
-	const icon = CSSIconDefs?.[`${propertyName}-${token}` as CSSIcons];
+	const icon = StyleIconDefinitions?.[`${propertyName}-${token}` as CSSIcons];
 
 	// Create and return the KeywordOptionData object for the keyword
 	return {
@@ -124,7 +125,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
-		icon: CSSIconDefs?.number,
+		icon: StyleIconDefinitions?.number,
 		type: 'number',
 	};
 }
@@ -146,7 +147,7 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
-		icon: CSSIconDefs?.number,
+		icon: StyleIconDefinitions?.number,
 		type: 'integer',
 	};
 }
@@ -228,7 +229,6 @@ function createOption(token: string, propertyName: string): InputOptionData | In
  * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
  */
 function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
-	// console.log(validValueSet);
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return false;
 

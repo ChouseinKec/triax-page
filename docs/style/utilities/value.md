@@ -86,7 +86,7 @@ Determines the type of a CSS value based on its format. Uses specific checks for
 
 - **Parameters:**
   - `input: string` — The CSS value string to classify.
-- **Returns:** `CSSTokenGroups | undefined` — The detected value type or undefined if not recognized.
+- **Returns:** `StyleTokenType | undefined` — The detected value type or undefined if not recognized.
 - **Example:**
   - `getValueType('10px') → 'dimension'`
   - `getValueType('auto') → 'keyword'`

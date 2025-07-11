@@ -1,4 +1,4 @@
-import React, { useRef, ReactElement, useCallback, Fragment } from 'react';
+import React, { useRef, ReactElement, useCallback, Fragment } from "react";
 
 // Types
 import type { ErrorProps } from './types';

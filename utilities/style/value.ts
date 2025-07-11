@@ -4,11 +4,11 @@ import { isValueDimension, getDimensionType } from '@/utilities/style/dimension'
 import { splitAdvanced } from '@/utilities/string/string';
 
 // Types
-import type { CSSTokenGroups } from '@/types/style/token';
+import type { StyleTokenType } from '@/types/style/token';
 
 // Constants
-import { CSSPropertyDefs } from '@/constants/style/property';
-import { ValueSeparators } from '@/constants/style/separator';
+import { StylePropertyDefinitions } from '@/constants/style/property';
+import { ValueSeparatorDefaults } from '@/constants/style/value';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -91,7 +91,7 @@ function isValueLink(input: string): boolean {
  * Determines the type of a CSS value based on its format.
  * Uses specific checks for dimension, keyword, function, and number.
  * @param input - The CSS value string to classify.
- * @returns {CSSTokenGroups | undefined} The detected value type or undefined if not recognized.
+ * @returns {StyleTokenType | undefined} The detected value type or undefined if not recognized.
  * @example
  * getValueType('10px') → 'dimension'
  * getValueType('auto') → 'keyword'
@@ -101,7 +101,7 @@ function isValueLink(input: string): boolean {
  * getValueType('#fff') → 'color'
  * getValueType('"https://example.com"') → 'link'
  */
-function getValueType(input: string): CSSTokenGroups | undefined {
+function getValueType(input: string): StyleTokenType | undefined {
 	// IMPORTANT: The order of these checks matters!
 	if (isValueLink(input)) return 'link';
 	if (isValueDimension(input)) return 'dimension';
@@ -174,8 +174,8 @@ function getValueTokens(values: string[]): string[] {
  * isValueValid('display', 'flex') → true
  */
 function isValueValid(property: string, value: string): boolean {
-	// Fetch the property definition from the CSSPropertyDefs
-	const propertyDef = CSSPropertyDefs[property];
+	// Fetch the property definition from the StylePropertyDefinitions
+	const propertyDef = StylePropertyDefinitions[property];
 	if (!propertyDef) return false;
 
 	// Fetch the normalized syntax variations for the property
@@ -183,7 +183,7 @@ function isValueValid(property: string, value: string): boolean {
 	if (!syntaxNormalized) return false;
 
 	// Split the value into its components
-	const values = splitAdvanced(value, ValueSeparators);
+	const values = splitAdvanced(value, ValueSeparatorDefaults);
 	// Convert the values to their token representations
 	const valueTokens = getValueTokens(values).join(' ');
 	if (valueTokens.length === 0) return false;

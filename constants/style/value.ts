@@ -1,9 +1,7 @@
 // Types
-import type { CSSDimensionGroups } from '@/types/style/dimension';
+import type { ValueSeparator } from '@/types/style/value';
 
-export const DimensionGroups: CSSDimensionGroups[] = ['length', 'percentage', 'angle', 'flex'];
-
-export const CSSFunctionDefaults: Record<string, string> = {
+export const ValueFunctionDefaults: Record<string, string> = {
 	minmax: 'minmax(0px,0px)',
 	'fit-content': 'fit-content(0px)',
 	repeat: 'repeat(1,1fr)',
@@ -26,3 +24,5 @@ export const CSSFunctionDefaults: Record<string, string> = {
 
 	url: 'url("https://example.com")',
 };
+
+export const ValueSeparatorDefaults: ValueSeparator[] = [' ', ',', '/'];

@@ -1,4 +1,4 @@
-import { memo, ReactElement } from 'react';
+import { memo, ReactElement } from "react";
 
 // Components
 import Group from '@/editors/style/components/group/component';

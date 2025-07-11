@@ -1,8 +1,8 @@
-import type { CSSProperty } from '@/types/style/property';
+import type { StylePropertyData } from '@/types/style/property';
 
 export interface ValueProps {
 	/** The CSS property definition as an object */
-	property: CSSProperty;
+	property: StylePropertyData;
 
 	/** The current value of the property */
 	value: string;

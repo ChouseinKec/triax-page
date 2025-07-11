@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const useHover = (delay = 200) => {
 	const [isHovered, setisHovered] = useState(false);

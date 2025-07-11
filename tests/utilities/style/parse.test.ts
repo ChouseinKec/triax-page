@@ -1,6 +1,7 @@
-import { normalizeSyntax, parse, expandTokens } from '@/utilities/style/parse';
-import { parseDoubleBar, parseDoubleAmp,parseSingleBar } from '@/utilities/style/parse-combinator';
-import {parseBrackets} from '@/utilities/style/parse-bracket';
+import { normalizeSyntax, parse } from '@/utilities/style/parse';
+import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/utilities/style/parse-combinator';
+import { parseBrackets } from '@/utilities/style/parse-bracket';
+import { expandTokens } from '@/utilities/style/token';
 
 import { parseSequence } from '@/utilities/style/parse-combinator';
 import { parseMultiplier } from '@/utilities/style/parse-multiplier';

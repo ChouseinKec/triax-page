@@ -1,18 +1,18 @@
-import {CSSPropertyDefs} from '@/constants/style/property';
+import {StylePropertyDefinitions} from '@/constants/style/property';
 
 /**
  * All valid CSS property names supported by the style system.
  * These correspond to official CSS property names (e.g. 'width', 'color', 'display').
  * Used for type-safe property lookup and validation.
  */
-export type CSSProperties = keyof typeof CSSPropertyDefs;
+export type StylePropertyKeys = keyof typeof StylePropertyDefinitions;
 
 /**
  * Represents a single CSS property definition, including its name, description, category,
  * and value definition syntax (raw, expanded, and parsed forms).
  * Used for property lookup, validation, and UI rendering.
  */
-export interface CSSProperty {
+export interface StylePropertyData {
 	/**
 	 * The name of the CSS property (e.g. 'color', 'font-size').
 	 * This is used for matching against user input and for validation.

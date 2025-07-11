@@ -1,14 +1,14 @@
 // Types
-import { CSSToken, CSSTokens } from '@/types/style/token';
+import { StyleTokenData, StyleTokenKeys } from '@/types/style/token';
 
-const createToken = (type: CSSTokens, syntax: string): CSSToken => {
+const createToken = (type: StyleTokenKeys, syntax: string): StyleTokenData => {
 	return {
 		type,
 		syntax,
 	};
 };
 
-export const CSSTokenDefs: Partial<Record<string, CSSToken>> = {
+export const StyleTokenDefinitions: Partial<Record<string, StyleTokenData>> = {
 	// === Generic Types ===
 	'<number>': createToken('<number>', '<number>'),
 	'<integer>': createToken('<integer>', '<integer>'),
@@ -81,7 +81,7 @@ export const CSSTokenDefs: Partial<Record<string, CSSToken>> = {
 	'<box-shadow-spread>': createToken('<box-shadow-spread>', '<length>'),
 };
 
-export const CSSTokenDefaults: Record<string, string> = {
+export const StyleTokenDefaults: Record<string, string> = {
 	'<length>': '0px',
 	'<angle>': '0deg',
 	'<percentage>': '0%',

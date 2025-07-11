@@ -1,12 +1,11 @@
 import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
 
 // Types
-import { BLOCK_EDITOR_STORE, STYLE, BLOCK } from './types';
+import type { BlockEditorStoreProps } from './types';
+import type { BlockStyleData, BlockData } from '@/types/block/block';
 
-// Stores
-
-// Helper function to create consistent block structure
-function createDefaultBlock(id: string): BLOCK {
+function createBlockDefaultStyles(): BlockStyleData {
 	const emptyPseudo = {
 		default: {},
 		active: {},
@@ -19,66 +18,70 @@ function createDefaultBlock(id: string): BLOCK {
 		landscape: emptyPseudo,
 	};
 
+	const devices = {
+		default: emptyOrientation,
+		mobile: emptyOrientation,
+		tablet: emptyOrientation,
+		desktop: emptyOrientation,
+	};
+
+	return devices;
+}
+
+function createDefaultBlock(parentBlock: string | null): BlockData {
 	return {
-		id,
-		styles: {
-			default: emptyOrientation,
-			mobile: emptyOrientation,
-			tablet: emptyOrientation,
-			desktop: emptyOrientation,
-		},
+		id: uuidv4(),
+		styles: createBlockDefaultStyles(),
+		parent: parentBlock,
+		children: [],
 	};
 }
 
 /**
  * Zustand hook for accessing and updating the block editor state.
  */
-const useBlockStore = create<BLOCK_EDITOR_STORE>((set, get) => ({
+const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * The currently selected block ID.
 	 */
-	selectedBlock: '1',
+	selectedBlock: null,
 
 	/**
-	 * A record of all blocks with their associated styles.
+	 * A record of all allBlocks with their associated styles.
 	 */
-	blocks: {
-		1: createDefaultBlock('1'),
-		2: createDefaultBlock('2'),
-	},
+	allBlocks: {},
 
 	/**
 	 * Sets the currently selected block by ID.
 	 *
 	 * @param {string} id - The ID of the block to select.
 	 */
-	setSelected: (id: string): void => set({ selectedBlock: id }),
+	setSelected: (blockID: string): void => set({ selectedBlock: blockID }),
 
 	getSelected: (): string | null => get().selectedBlock ?? null,
 
-	getBlock: (id?: string): BLOCK | null => {
-		const _id = id ?? get().selectedBlock;
-		return _id ? get().blocks[_id] ?? null : null;
+	getBlock: (blockID: string): BlockData | undefined => {
+		if (!blockID) return undefined;
+
+		return get().allBlocks[blockID];
 	},
 
 	/**
 	 * Updates the style object for the currently selected block.
 	 *
-	 * @param {STYLE} styles - The updated style object.
+	 * @param {BlockStyleData} styles - The updated style object.
 	 */
-	setBlockStyles: (styles: STYLE, id?: string): void => {
+	setBlockStyles: (blockID: string, styles: BlockStyleData): void => {
 		set((state) => {
-			const _id = id ?? state.selectedBlock;
-			if (!_id) return state; // Return unchanged state if invalid
+			if (!blockID) return state; // Return unchanged state if invalid
 
-			const block = _id ? state.blocks[_id] : null;
-
+			const block = get().getBlock(blockID);
 			if (!block) return state; // Return unchanged state if invalid
 
 			return {
-				blocks: {
-					...state.blocks,
-					[_id]: {
+				allBlocks: {
+					...state.allBlocks,
+					[blockID]: {
 						...block,
 						styles,
 					},
@@ -90,20 +93,20 @@ const useBlockStore = create<BLOCK_EDITOR_STORE>((set, get) => ({
 	/**
 	 * Retrieves the style object of the currently selected block.
 	 *
-	 * @returns {STYLE | null} - The current style object, or null if no block is selected.
+	 * @returns {BlockStyleData | null} - The current style object, or null if no block is selected.
 	 */
-	getBlockStyles: (id?: string): STYLE | null => {
-		const _id = id ?? get().selectedBlock;
-		if (!_id) return null;
-		return get().blocks[_id]?.styles ?? null;
+	getBlockStyles: (blockID: string): BlockStyleData | undefined => {
+		const block = get().getBlock(blockID);
+		if (!block) return undefined;
+
+		return block.styles;
 	},
 
-	setBlockStyle: (device: string, orientation: string, pseudo: string, property: string, value: string, id: string): void => {
+	setBlockStyle: (blockID: string, device: string, orientation: string, pseudo: string, property: string, value: string): void => {
 		set((state) => {
-			const blockId = id ?? state.selectedBlock;
-			if (!blockId) return state;
+			if (!blockID) return state;
 
-			const block = state.blocks[blockId];
+			const block = get().getBlock(blockID);
 			if (!block) return state;
 
 			const updatedStyles = {
@@ -121,9 +124,9 @@ const useBlockStore = create<BLOCK_EDITOR_STORE>((set, get) => ({
 			};
 
 			return {
-				blocks: {
-					...state.blocks,
-					[blockId]: {
+				allBlocks: {
+					...state.allBlocks,
+					[blockID]: {
 						...block,
 						styles: updatedStyles,
 					},
@@ -131,6 +134,19 @@ const useBlockStore = create<BLOCK_EDITOR_STORE>((set, get) => ({
 			};
 		});
 	},
+
+	addBlock: (parentID?: string): void =>
+		set((state) => {
+			const newBlock = createDefaultBlock(parentID ?? null);
+
+			return {
+				allBlocks: {
+					...state.allBlocks,
+					[newBlock.id]: newBlock,
+				},
+				selectedBlock: newBlock.id, // Automatically select the new block
+			};
+		}),
 }));
 
 export default useBlockStore;

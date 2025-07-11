@@ -1,8 +1,8 @@
 // Type
-import type { CSSTokenGroups } from '@/types/style/token';
+import type { StyleTokenType, StyleTokenKeys } from '@/types/style/token';
 
 // Constants
-import { CSSTokenDefaults } from '@/constants/style/token';
+import { StyleTokenDefaults, StyleTokenDefinitions } from '@/constants/style/token';
 
 // Utilities
 import { extractBetween } from '@/utilities/string/string';
@@ -122,7 +122,7 @@ function isTokenLink(input: string): boolean {
  * getTokenType('<number>') → 'number'
  * getTokenType('<link>') → 'link'
  */
-function getTokenType(input: string): CSSTokenGroups | undefined {
+function getTokenType(input: string): StyleTokenType | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
 	if (isTokenDimension(input)) return 'dimension';
 	if (isTokenColor(input)) return 'color';
@@ -246,7 +246,7 @@ function getTokenValue(token: string): string | undefined {
 	const tokenCanonical = getTokenCanonical(token);
 	if (!tokenCanonical) return undefined;
 
-	const tokenValue = CSSTokenDefaults[tokenCanonical];
+	const tokenValue = StyleTokenDefaults[tokenCanonical];
 	return tokenValue ? tokenValue : undefined;
 }
 
@@ -261,5 +261,56 @@ function getTokenValues(tokens: string[]): string[] {
 	return tokens.map(getTokenValue).filter((token): token is string => token !== undefined);
 }
 
+/**
+ * Recursively expands all <token> references in a CSS syntax string using StyleTokenDefinitions.
+ * If a token is not found, it is left as-is.
+ * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
+ * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
+ * @returns The syntax string with all known tokens recursively expanded
+ * @example
+ * expandTokens('auto || <ratio>') → 'auto || <number> / <number>'
+ */
+function expandTokens(syntax: string, seen = new Set<string>()): string {
+	// Start with the input syntax string
+	let result = syntax;
+	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
+	const tokens = result.match(/<[^>]+>/g);
+
+	// Iterate over each matched token
+	for (const token of tokens || []) {
+		// Extract the base type from the token (e.g., 'length' from '<length>')
+		const tokenBase = getTokenBase(token);
+		if (!tokenBase) continue; // Skip if no base type
+
+		// Get the canonical form of the token (e.g., '<length>')
+		const tokenCanonical = getTokenCanonical(token);
+		if (!tokenCanonical) continue; // Skip if no canonical form
+		if (seen.has(tokenCanonical)) continue; // Prevent infinite recursion (circular references)
+
+		// Extract range/constraint (e.g., [0,100]) if present
+		const range = getTokenRange(token);
+
+		// Look up the token definition in StyleTokenDefinitions
+		const def = StyleTokenDefinitions[tokenCanonical as StyleTokenKeys];
+
+		if (def?.syntax) {
+			// Mark this token as seen to prevent recursion
+			seen.add(tokenCanonical);
+			// Recursively expand the definition's syntax
+			let expanded = expandTokens(def.syntax, seen);
+
+			// If the original token had a range, propagate it to all <...> tokens in the expanded string
+			if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
+			// Replace the token in the result string with its expanded form
+			result = result.replace(token, expanded);
+
+			// Remove from seen set after expansion
+			seen.delete(tokenCanonical);
+		}
+	}
+	// Return the fully expanded syntax string
+	return result;
+}
+
 // Export the new helpers
-export { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };
+export { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam, expandTokens };

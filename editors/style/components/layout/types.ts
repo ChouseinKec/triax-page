@@ -1,5 +1,5 @@
 import { LayoutGroup } from '@/editors/style/components/group/types';
-import { ReactElement } from 'react';
+import { ReactElement } from "react";
 
 /**
  * Represents a layout section within the style editor.

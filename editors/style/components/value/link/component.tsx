@@ -1,5 +1,5 @@
 // External imports
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo } from "react";
 
 // Styles
 import CSS from './styles.module.css';

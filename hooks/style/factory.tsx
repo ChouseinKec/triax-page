@@ -1,10 +1,10 @@
-import { useCallback, ReactElement } from 'react';
+import { useCallback, ReactElement } from "react";
 
 // Constantss
-import { CSSPropertyDefs } from '@/constants/style/property'
+import { StylePropertyDefinitions } from '@/constants/style/property'
 
 // Types
-import type { CSSProperties } from '@/types/style/property';
+import type { StylePropertyKeys } from '@/types/style/property';
 import type { Side, Corner } from '@/components/select/position/types';
 
 // Components
@@ -19,8 +19,8 @@ import SizeView from '@/editors/style/components/view/size/component';
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
 
-interface StyleFactoryProps {
-	renderValue: (propertyName: CSSProperties) => ReactElement | null;
+interface StyleFactory {
+	renderValue: (propertyName: StylePropertyKeys) => ReactElement | null;
 	renderDisplayView: () => ReactElement;
 	renderBackgroundView: () => ReactElement;
 	renderBorderView: () => ReactElement;
@@ -30,37 +30,34 @@ interface StyleFactoryProps {
 	renderPositionSelect: (setCurrentSide: (side: Side) => void, setCurrentCorner: (corner: Corner) => void, isCornerSelectable: boolean, isCenterSelectable: boolean) => ReactElement;
 }
 
-
-export const useStyleFactory = (): StyleFactoryProps => {
+export const useStyleFactory = (): StyleFactory => {
 	const { getStyle, setStyle } = useStyleManager();
 
+	const handleValueChange = useCallback((propertyName: StylePropertyKeys, value: string) => {
+		// If the value is not a string, log an error
+		if (typeof value !== 'string') {
+			console.error(`Invalid value for property ${propertyName}:`, value);
+			return;
+		}
 
-	const handleValueChange = useCallback(
-		(propertyName: CSSProperties, value: string) => {
-			// If the value is not a string, log an error
-			if (typeof value !== 'string') {
-				console.error(`Invalid value for property ${propertyName}:`, value);
-				return;
-			}
+		// If the value is an empty string, reset the style
+		if (value === '') {
+			setStyle(propertyName, '');
+			return;
+		}
 
-			// If the value is an empty string, reset the style
-			if (value === '') {
-				setStyle(propertyName, '');
-				return;
-			}
-
-			// Set the style with the new value
-			setStyle(propertyName, value);
-		},
+		// Set the style with the new value
+		setStyle(propertyName, value);
+	},
 		[setStyle]
 	);
 
-	const renderValue = useCallback<StyleFactoryProps['renderValue']>((propertyName) => {
+	const renderValue = useCallback<StyleFactory['renderValue']>((propertyName) => {
 		const value = getStyle(propertyName);
-		const property = CSSPropertyDefs[propertyName];
+		const property = StylePropertyDefinitions[propertyName];
 
 		if (!property) {
-			console.warn(`Property ${propertyName} is not defined in CSSPropertyDefs`);
+			console.warn(`Property ${propertyName} is not defined in StylePropertyDefinitions`);
 			return null;
 		}
 
@@ -71,7 +68,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		[getStyle, handleValueChange]
 	);
 
-	const renderDisplayView = useCallback<StyleFactoryProps['renderDisplayView']>(() => {
+	const renderDisplayView = useCallback<StyleFactory['renderDisplayView']>(() => {
 		const display = getStyle('display');
 
 		return <DisplayView
@@ -101,8 +98,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-
-	const renderBackgroundView = useCallback<StyleFactoryProps['renderBackgroundView']>(() => {
+	const renderBackgroundView = useCallback<StyleFactory['renderBackgroundView']>(() => {
 		return <BackgroundView
 			styles={{
 				backgroundColor: getStyle('background-color'),
@@ -129,7 +125,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderBorderView = useCallback<StyleFactoryProps['renderBorderView']>(() => {
+	const renderBorderView = useCallback<StyleFactory['renderBorderView']>(() => {
 		return <BackgroundView
 			styles={{
 				borderTopLeftRadius: getStyle('border-top-left-radius'),
@@ -156,7 +152,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderTextView = useCallback<StyleFactoryProps['renderTextView']>(() => {
+	const renderTextView = useCallback<StyleFactory['renderTextView']>(() => {
 		return <TextView
 			styles={{
 				fontSize: getStyle('font-size'),
@@ -199,7 +195,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderPositionView = useCallback<StyleFactoryProps['renderPositionView']>(() => {
+	const renderPositionView = useCallback<StyleFactory['renderPositionView']>(() => {
 		return <PositionView
 			styles={{
 				position: getStyle('position'),
@@ -224,7 +220,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 	}, [getStyle]
 	);
 
-	const renderPositionSelect = useCallback<StyleFactoryProps['renderPositionSelect']>((setCurrentSide, setCurrentCorner, isCornerSelectable, isCenterSelectable) => {
+	const renderPositionSelect = useCallback<StyleFactory['renderPositionSelect']>((setCurrentSide, setCurrentCorner, isCornerSelectable, isCenterSelectable) => {
 		return (
 			<PositionSelect
 				onChangeSide={setCurrentSide}
@@ -237,7 +233,7 @@ export const useStyleFactory = (): StyleFactoryProps => {
 		[handleValueChange]
 	);
 
-	const renderSizeView = useCallback<StyleFactoryProps['renderSizeView']>(() => {
+	const renderSizeView = useCallback<StyleFactory['renderSizeView']>(() => {
 		return <SizeView
 			styles={{
 				width: getStyle('width'),

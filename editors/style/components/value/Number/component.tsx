@@ -1,5 +1,5 @@
 // External imports
-import React, { useCallback, memo, useMemo } from 'react';
+import React, { useCallback, memo, useMemo } from "react";
 
 // Styles
 import CSS from './styles.module.css';
@@ -15,7 +15,7 @@ import { NumberValueProps } from './types';
 import { devLog } from '@/utilities/dev';
 
 // Constants
-import { CSSIconDefs } from '@/constants/style/icon';
+import { StyleIconDefinitions } from '@/constants/style/icon';
 
 // Hooks
 import useSize from '@/hooks/interface/useSize';
@@ -195,7 +195,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
                 onChange={handleOptionChange}
                 searchable={true}
                 grouped={true}
-                placeholder={CSSIconDefs.number || 'NUM'}
+                placeholder={StyleIconDefinitions.number || 'NUM'}
                 forcePlaceholder={true}
                 isDisabled={options.length <= 1}
                 ariaLabel="Change Value Type"

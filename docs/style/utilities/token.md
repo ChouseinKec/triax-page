@@ -98,7 +98,7 @@ Determines the group of a CSS data token based on its format.
 
 - **Parameters:**
   - `input: string` — The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
-- **Returns:** `CSSTokenGroups | undefined` — The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
+- **Returns:** `StyleTokenType | undefined` — The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
 - **Example:**
   - `getTokenType('auto') → 'keyword'`
   - `getTokenType('<length>') → 'dimension'`

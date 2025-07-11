@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-export const CSSIconDefs: Record<string, ReactElement> = {
+export const StyleIconDefinitions: Record<string, ReactElement> = {
     'flex-direction-column': (
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" /></svg>
     ),
@@ -971,4 +971,4 @@ export const CSSIconDefs: Record<string, ReactElement> = {
     )
 };
 
-export type CSSIcons = keyof typeof CSSIconDefs;
+export type CSSIcons = keyof typeof StyleIconDefinitions;

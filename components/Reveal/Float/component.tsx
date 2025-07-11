@@ -24,7 +24,6 @@ import { devLog } from "@/utilities/dev";
  * @param {Position} [props.position='top'] - Preferred position relative to target
  * @param {React.ReactNode} props.children - Content to display in the float
  * @param {boolean} [props.isOpen] - External control override (undefined = hover controlled)
- * @param {React.CSSProperties} [props.style={}] - Additional styles for the float container
  * @param {number} [props.hoverDelay=200] - Delay for hover show/hide in milliseconds
  * @param {boolean} [props.closeOnEscape=true] - Whether to close on Escape key
  * @param {function} [props.onVisibilityChange] - Callback when visibility changes

@@ -1,6 +1,4 @@
-import type { CSSProperties, ReactElement } from 'react';
-import type { CSSDimensionGroups } from './style/dimension';
-import type { CSSTokenGroups } from './style/token';
+import type { ReactElement } from "react";
 
 /** Represents a single option in a select/radio/dropdown component. */
 export interface OptionData {
@@ -8,34 +6,33 @@ export interface OptionData {
 	name: string;
 	/** The value of the option (used for selection) */
 	value: string;
-	/** The type of the option, e.g., 'keyword', 'function', 'dimension', 'color', 'number' etc. */
-	type?: CSSTokenGroups;
 	/** Optional category to group the option under */
 	category?: string;
 	/** Optional icon for the option (SVG element) */
 	icon?: ReactElement;
-	/** Optional inline style for the option */
-	style?: CSSProperties;
 }
 
 export interface KeywordOptionData extends OptionData {
 	category: 'keyword';
+	type: 'keyword';
 }
 
 export interface FunctionOptionData extends OptionData {
 	category: 'function';
+	type: 'function';
 	syntax: string;
 }
 
 export interface DimensionOptionData extends OptionData {
 	category: 'dimension';
-	group: CSSDimensionGroups;
+	type: 'dimension';
 	min?: number;
 	max?: number;
 }
 
 export interface OtherOptionData extends OptionData {
 	category: 'other';
+	type: string;
 	min?: number;
 	max?: number;
 }

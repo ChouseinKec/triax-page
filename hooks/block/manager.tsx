@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
 // Utilities
 import { devLog } from '@/utilities/dev';
@@ -8,12 +8,15 @@ import useBlockStore from '@/stores/block/store';
 import useDeviceStore from '@/stores/device/store';
 import useOrientationStore from '@/stores/orientation/store';
 
-interface BLOCK_STATE {
-    generateBlockStyles: (id?: string) => string | null;
+// Types
+import { BlockStyleData } from "@/types/block/block";
+interface BlockManager {
+    generateBlockStyles: (blockID: string, styles: BlockStyleData) => string | null;
+    addBlock: (parentID?: string) => void;
 }
 
-
-export const useBlockEditor = (): BLOCK_STATE => {
+export const useBlockManager = (): BlockManager => {
+    const _addBlock = useBlockStore(state => state.addBlock);
 
     /**
      * Generates CSS for a block by processing its style configuration.
@@ -47,16 +50,8 @@ export const useBlockEditor = (): BLOCK_STATE => {
      *     background: blue;
      *   }
      */
-    const generateBlockStyles = useCallback<BLOCK_STATE['generateBlockStyles']>((id?: string): string | null => {
-        // Get the target block
-        const _id = id || useBlockStore.getState().getSelected();
-        if (!_id) return null;
-
-        const block = useBlockStore.getState().getBlock(_id);
-        if (!block) return null;
-
-        const { styles } = block;
-        if (!styles) return null;
+    const generateBlockStyles = useCallback<BlockManager['generateBlockStyles']>((blockID: string, styles: BlockStyleData): string | null => {
+        if (!styles || !blockID) return null;
 
         // Get devices and orientations
         const devices = useDeviceStore.getState().getDevices();
@@ -95,13 +90,13 @@ export const useBlockEditor = (): BLOCK_STATE => {
                     const selector = pseudoName === 'default' ? '' : `:${pseudoName}`;
 
                     // Generate class name based on block ID only
-                    css += `  .block-${_id}${selector} {\n`;
+                    css += `  #block-${blockID}${selector} {\n`;
 
                     // Add each style property
                     for (const [property, value] of Object.entries(pseudoStyles)) {
                         if (!value) continue;
-                        const cssProperty = property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-                        css += `    ${cssProperty}: ${value};\n`;
+                        const StylePropertyData = property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+                        css += `    ${StylePropertyData}: ${value};\n`;
                     }
 
                     css += '  }\n';
@@ -112,11 +107,21 @@ export const useBlockEditor = (): BLOCK_STATE => {
         }
 
         return css;
-    }, []);
+    }, []
+    );
 
+    /**
+     * Adds a new block to the editor.
+     * This function generates a unique ID for the new block and adds it to the store.
+     */
+    const addBlock = useCallback<BlockManager['addBlock']>((parentID?: string) => {
+        _addBlock(parentID);
+    }, [_addBlock]
+    );
 
     return {
         generateBlockStyles,
+        addBlock,
     }
 
 }

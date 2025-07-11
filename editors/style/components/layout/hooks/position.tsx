@@ -1,10 +1,10 @@
 // React hook for managing local state
-import { useState } from 'react';
+import { useState } from "react";
 
 // Types
 import type { LayoutProps } from '@/editors/style/components/layout/types';
 import type { Side, Corner } from '@/components/select/position/types';
-import type { CSSProperties } from '@/types/style/property';
+import type { StylePropertyKeys } from '@/types/style/property';
 
 // Hooks
 import { useStyleFactory } from '@/hooks/style/factory';
@@ -62,8 +62,8 @@ export const usePositionLayout = (): LayoutProps => {
                     {
                         label: currentSide || '...',
                         disabled: !['absolute', 'fixed', 'sticky'].includes(getStyle('position')) || !currentSide,
-                        property: currentSide ? currentSide.toLowerCase() as CSSProperties : 'top',
-                        component: () => renderValue(currentSide?.toLowerCase() as CSSProperties || 'top'),
+                        property: currentSide ? currentSide.toLowerCase() as StylePropertyKeys : 'top',
+                        component: () => renderValue(currentSide?.toLowerCase() as StylePropertyKeys || 'top'),
                     },
 
                     // Padding dynamic based on current side selected.

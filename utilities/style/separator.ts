@@ -1,8 +1,8 @@
 // Constants
-import { ValueSeparators as ValueSeparatorConst } from '@/constants/style/separator';
+import { ValueSeparatorDefaults } from '@/constants/style/value';
 
 // Types
-import type { ValueSeparators } from '@/types/style/separator';
+import type { ValueSeparator } from '@/types/style/value';
 
 /**
  * Extracts separators from a single variation string.
@@ -36,14 +36,14 @@ function extractSeparator(variation: string): string[] {
 		.trim();
 
 	// Build a regex to match all possible separators
-	const separatorPattern = ValueSeparatorConst.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
+	const separatorPattern = ValueSeparatorDefaults.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
 	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
 
 	// Extract separators
 	const separators: string[] = [];
 	let match;
 	while ((match = separatorRegex.exec(cleaned)) !== null) {
-		separators.push(match[1] as ValueSeparators);
+		separators.push(match[1] as ValueSeparator);
 	}
 	return separators;
 }

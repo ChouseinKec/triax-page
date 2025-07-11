@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 
 // Styles
 import CSS from './styles.module.css';
@@ -33,7 +33,7 @@ import useHover from '@/hooks/interface/useHover';
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
     // Hover state management with configurable delay
-    const {isHovered, handleTargetEnter, handleTargetLeave} = useHover(300);
+    const { isHovered, handleTargetEnter, handleTargetLeave } = useHover(300);
 
     // Guard Clause
     if (!options || options.length === 0) {
@@ -68,6 +68,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
         return options[0]?.type;
     }, [allTypes, options]
     );
+
 
     /**
      * Determine the value type for this slot.

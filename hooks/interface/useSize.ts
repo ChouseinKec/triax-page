@@ -1,4 +1,4 @@
-import { useState, useEffect, RefObject, useCallback } from 'react';
+import { useState, useEffect, RefObject, useCallback } from "react";
 import { useDebouncedCallback } from '../hooks';
 
 type Size = { width: number; height: number };

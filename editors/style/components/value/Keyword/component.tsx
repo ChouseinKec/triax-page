@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo } from "react";
 
 // Styles
 import CSS from './styles.module.css';

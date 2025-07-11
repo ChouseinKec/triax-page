@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement } from "react";
 
 // Components
 import Category from '@/editors/style/components/category/component';

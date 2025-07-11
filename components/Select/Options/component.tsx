@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, useState, useMemo, useCallback } from 'react';
+import React, { memo, ReactElement, useState, useMemo, useCallback } from "react";
 
 // Styles
 import CSS from './styles.module.css';
@@ -32,15 +32,6 @@ import { devLog } from '@/utilities/dev';
  * @param {boolean} [props.prioritizeIcons=false] - Display icons prominently over text labels
  * @param {string} [props.ariaRole='radio'] - ARIA role for individual options (radio/option/menuitem)
  * @returns {ReactElement} Memoized OptionsSelect component
- * 
- * @example
- * <OptionsSelect
- *   options={[{name: 'Option 1', value: 'opt1', category: 'group1'}]}
- *   value="opt1"
- *   onChange={(value) => console.log(value)}
- *   searchable={true}
- *   grouped={true}
- * />
  */
 const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) => {
     const {

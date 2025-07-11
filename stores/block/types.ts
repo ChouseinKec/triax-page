@@ -1,39 +1,15 @@
-// Constants
-import { CSSProperties } from '@/types/style/property';
-/**
- * Represents the full style configuration for a block.
- *
- * Styles are nested by device name, orientation, and pseudo state.
- *
- * @param {string} deviceName - The name of the device (e.g., 'desktop', 'tablet').
- * @param {string} orientationName - The orientation (e.g., 'portrait', 'landscape').
- * @param {string} pseudoName - The pseudo selector (e.g., 'hover', 'active').
- * @param {CSSProperties} key - A style property key (e.g., 'margin', 'color').
- */
-export type STYLE = {
-	[deviceName: string]: {
-		[orientationName: string]: {
-			[pseudoName: string]: {
-				[key in CSSProperties]?: string;
-			};
-		};
-	};
-};
+import { BlockData, BlockStyleData } from '@/types/block/block';
 
-export type BLOCK = {
-	id: string;
-	styles: STYLE;
-};
-
-export interface BLOCK_EDITOR_STORE {
+export interface BlockEditorStoreProps {
 	selectedBlock: string | null;
-	blocks: Record<string, BLOCK>;
+	allBlocks: Record<string, BlockData>;
 
 	getSelected: () => string | null;
-	setSelected: (id: string) => void;
-	getBlock: (id?: string) => BLOCK | null;
+	setSelected: (blockID: string) => void;
+	getBlock: (blockID: string) => BlockData | undefined;
+	addBlock: (parentID?: string) => void;
 
-	getBlockStyles: (id?: string) => STYLE | null;
-	setBlockStyles: (style: STYLE, id?: string) => void;
-	setBlockStyle: (device: string, orientation: string, pseudo: string, property: string, value: string, id: string) => void;
+	getBlockStyles: (blockID: string) => BlockStyleData | undefined;
+	setBlockStyles: (blockID: string, style: BlockStyleData) => void;
+	setBlockStyle: (blockID: string, device: string, orientation: string, pseudo: string, property: string, value: string) => void;
 }

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useRef } from 'react';
+import React, { Fragment, useCallback, useRef } from "react";
 
 // Styles
 import CSS from './styles.module.css';

@@ -1,7 +1,8 @@
-import { CSSPropertyDefs } from './property';
+import { StylePropertyKeys } from '@/types/style/property';
+
 
 // New: Centralized descriptions for all CSS properties
-export const CSSPropertyDesc: Record<keyof typeof CSSPropertyDefs, string> = {
+export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	// ============ Display & Layout =============
 	display: 'Controls the element’s display type and how it participates in layout.',
 

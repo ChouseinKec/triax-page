@@ -29,7 +29,7 @@ The `constants/style/property.ts` file serves as the main lookup table for CSS p
 ## Example Structure
 
 ```ts
-export const CSSPropertyDefs = {
+export const StylePropertyDefinitions = {
   'aspect-ratio': {
     name: 'aspect-ratio',
     description: 'Specifies the preferred aspect ratio of the box',
