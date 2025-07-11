@@ -4,11 +4,11 @@ import { memo, useCallback, useMemo } from "react";
 import type { ValueProps } from './types';
 
 // Utilities
-import { splitAdvanced, joinAdvanced } from '@/utilities/string/string';
+import { splitAdvanced, joinAdvanced } from '@/utilities/string';
 import { createOptionsTable } from '@/utilities/style/option';
 import { getValueTokens } from '@/utilities/style/value';
 import { getTokenValues } from '@/utilities/style/token';
-import { mergeArrays } from '@/utilities/array/array';
+import { mergeArrays } from '@/utilities/array';
 
 // Constants
 import { ValueSeparatorDefaults } from '@/constants/style/value';

@@ -1,4 +1,4 @@
-import { generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets, groupBy, mergeArrays } from '@/utilities/array/array';
+import { generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets, groupBy, mergeArrays } from '@/utilities/array';
 
 
 describe('generateCrossProduct', () => {

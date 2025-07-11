@@ -1,9 +1,9 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
-
 .DropdownReveal {
 	position: relative;
 
 	[class*='Float'] {
+		padding: var(--size-md);
 		border-top: 4px solid var(--color-black--lighter);
 	}
 }

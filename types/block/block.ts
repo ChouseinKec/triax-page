@@ -1,5 +1,5 @@
-// Constants
-import { StylePropertyKeys } from '@/types/style/property';
+// Types
+import type { StylePropertyKeys } from '@/types/style/property';
 
 export type BlockStyleData = {
 	[deviceName: string]: {

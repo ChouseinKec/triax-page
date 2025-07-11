@@ -1,5 +1,5 @@
-import { splitAdvanced } from '@/utilities/string/string';
-import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
+import { splitAdvanced } from '@/utilities/string';
+import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array';
 import { parse } from './parse';
 
 /**
