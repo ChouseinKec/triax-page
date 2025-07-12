@@ -5,9 +5,10 @@ export interface BlockEditorStoreProps {
 	allBlocks: Record<string, BlockData>;
 
 	getSelected: () => string | null;
-	setSelected: (blockID: string) => void;
+	selectBlock: (blockID: string) => void;
 	getBlock: (blockID: string) => BlockData | undefined;
 	addBlock: (parentID?: string) => void;
+	deleteBlock: (blockID: string) => void;
 
 	getBlockStyles: (blockID: string) => BlockStyleData | undefined;
 	setBlockStyles: (blockID: string, style: BlockStyleData) => void;

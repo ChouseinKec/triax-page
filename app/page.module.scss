@@ -1,19 +1,5 @@
-.main {
-	display: grid;
-	grid-template-columns: 450px auto;
-	// grid-template-columns: 3fr 3fr;
-	gap: 25px;
-}
-
-.blocks {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 25px;
-}
-
 .version {
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	bottom: -1%;
 	transform: translateX(-50%);
@@ -26,4 +12,3 @@
 	background: var(--color-black);
 	color: var(--color-white);
 }
-

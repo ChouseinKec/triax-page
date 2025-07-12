@@ -1,51 +1,94 @@
-import React, { useCallback, memo, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import CSS from './styles.module.css';
 
-// Stores
-import useBlockStore from "@/stores/block/store";
-
 // Types 
-import { BlocksProps } from "./types";
+import type { BlocksProps } from "./types";
 
 // Components
 import Block from "../block/component";
 
-// Hooks
+// Hooks & Context
 import { useBlockManager } from "@/hooks/block/manager";
+import { BlockEditorContext } from "./context";
 
-const Blocks: React.FC<BlocksProps> = (props: BlocksProps) => {
-    const setSelected = useBlockStore(state => state.setSelected);
-    const selectedBlock = useBlockStore(state => state.selectedBlock);
-    const allBlocks = useBlockStore(state => state.allBlocks);
+/**
+ * Blocks Component
+ * Provides context and renders all root blocks in the editor.
+ * Handles block actions and state via context for all nested Block components.
+ */
+const Blocks: React.FC<BlocksProps> = memo(() => {
+    // Get all block actions and state from the block manager hook
+    const {
+        addBlock,
+        selectBlock,
+        deleteBlock,
+        getBlockChildren,
+        getBlockParent,
+        getBlockCSS,
+        getBlock,
+        getAllBlocks,
+        getSelectedBlockID,
+        getBlockSelectedChild,
+        getBlockStyles,
+    } = useBlockManager();
 
-    const { addBlock } = useBlockManager();
+    // Get current selected block ID and all blocks
+    const selectedBlockID = getSelectedBlockID();
+    const allBlocks = getAllBlocks();
 
-    const renderBlocks = useMemo(() => {
-        const blocks = Object.values(allBlocks);
+    // Compute root blocks (blocks without a parent)
+    const rootBlocks = useMemo(() =>
+        Object.values(allBlocks).filter(block => block.parent == null),
+        [allBlocks]
+    );
 
-        return blocks.map(block => (
-            <Block key={block.id} isSelected={selectedBlock === block.id} {...block} />
-        ));
-    }, [allBlocks, selectedBlock]);
-
-
-    /**
-     * Handles adding a new block to the editor.
-     * This function is called when the user clicks the add block button.
-    */
-    const handleAddBlock = useCallback(() => {
-        addBlock();
-    }, [addBlock]);
+    // Memoize context value to avoid unnecessary re-renders
+    const contextValue = useMemo(() => ({
+        allBlocks,
+        selectedBlockID,
+        addBlock,
+        selectBlock,
+        getBlock,
+        deleteBlock,
+        getBlockChildren,
+        getBlockParent,
+        getBlockCSS,
+        getBlockSelectedChild,
+        getBlockStyles,
+    }), [
+        allBlocks,
+        selectedBlockID,
+        addBlock,
+        selectBlock,
+        getBlock,
+        deleteBlock,
+        getBlockChildren,
+        getBlockParent,
+        getBlockCSS,
+        getBlockSelectedChild,
+        getBlockStyles,
+    ]);
 
     return (
-        <div className={`${CSS.Blocks}`} >
-            {renderBlocks}
-            <button className={CSS.Blocks__addButton} onClick={handleAddBlock}>
+        <BlockEditorContext.Provider value={contextValue}>
+
+            {/* Render all root blocks recursively */}
+            {rootBlocks.map(block => (
+                <Block
+                    key={block.id}
+                    id={block.id}
+                />
+            ))}
+
+            {/* Button to add a new root block */}
+            <button
+                className={CSS.Blocks__addButton}
+                onClick={() => addBlock()}
+            >
                 Add Block
             </button>
-        </div>
-    )
+        </BlockEditorContext.Provider>
+    );
+});
 
-};
-
-export default memo(Blocks);
+export default Blocks;
