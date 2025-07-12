@@ -5,7 +5,7 @@ import type { StyleTokenType, StyleTokenKeys } from '@/types/style/token';
 import { StyleTokenDefaults, StyleTokenDefinitions } from '@/constants/style/token';
 
 // Utilities
-import { extractBetween } from '@/utilities/string';
+import { extractBetween } from '@/utilities/string/string';
 
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').

@@ -7,7 +7,7 @@ import CSS from './styles.module.css';
 import { ColorSelectProps } from '@/components/select/color/types';
 
 // Utilities
-import { clearSpaces } from '@/utilities/string';
+import { clearSpaces } from '@/utilities/string/string';
 
 // Hooks
 import { useDebouncedCallback } from '@/hooks/hooks';

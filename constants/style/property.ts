@@ -6,8 +6,8 @@ import { ValueSeparatorDefaults } from './value';
 import { StylePropertyDescription } from './property-description';
 
 // Utilities
-import { getColumnSets } from '@/utilities/array';
-import { splitAdvanced } from '@/utilities/string';
+import { getColumnSets } from '@/utilities/array/array';
+import { splitAdvanced } from '@/utilities/string/string';
 import { getTokenCanonical, expandTokens } from '@/utilities/style/token';
 import { parse } from '@/utilities/style/parse';
 import { extractSeparators } from '@/utilities/style/separator';

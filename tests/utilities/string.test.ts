@@ -1,4 +1,4 @@
-import { splitAdvanced } from '@/utilities/string';
+import { splitAdvanced } from '@/utilities/string/string';
 
 describe('splitAdvanced', () => {
 	it('splits at top level only', () => {

@@ -1,9 +1,0 @@
-@use '../../../mixins//mixins.module.scss' as inputMixins;
-
-.ActionGroup {
-	@include inputMixins.components--container;
-	padding: var(--size-sm);
-
-	display: flex;
-	gap: var(--size-xs);
-}
