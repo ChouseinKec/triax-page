@@ -133,22 +133,22 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
      * Renders all current slots and the next slot dropdown, optionally inside a dropdown reveal.
      */
     const render = useCallback(() => {
-        // Calculate the number of available slots (slots with valid options)
-        const maxSlots = options.filter(opt => opt?.length > 0).length;
+        // // Calculate the number of available slots (slots with valid options)
+        // const maxSlots = options.filter(opt => opt?.length > 0).length;
 
-        // Use dropdown reveal for complex scenarios (multiple slots and many values)
-        const shouldUseDropdown = maxSlots > 1 && valuesLength > 4;
+        // // Use dropdown reveal for complex scenarios (multiple slots and many values)
+        // const shouldUseDropdown = maxSlots > 1 && valuesLength > 4;
 
-        if (shouldUseDropdown) {
-            return (
-                <DropdownReveal placeholder={values.join(' ')} >
-                    <div className={CSS.SlotsInner}>
-                        {renderCurrentSlots()}
-                        {renderNextSlot()}
-                    </div>
-                </DropdownReveal>
-            );
-        }
+        // if (shouldUseDropdown) {
+        //     return (
+        //         <DropdownReveal placeholder={values.join(' ')} closeOnChange={false} title='Edit Values'>
+        //             <div className={CSS.SlotsInner}>
+        //                 {renderCurrentSlots()}
+        //                 {renderNextSlot()}
+        //             </div>
+        //         </DropdownReveal>
+        //     );
+        // }
 
         // Default inline rendering for simple scenarios
         return (
@@ -166,10 +166,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
 
     return (
-        <div
-            className={CSS.Slots}
-            role='presentation'
-        >
+        <div className={CSS.Slots} role='presentation'>
             {render()}
         </div>
     );

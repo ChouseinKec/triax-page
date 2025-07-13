@@ -15,7 +15,7 @@
 	> [class*='DropdownReveal'] {
 		flex: 0 0 auto;
 
-		> button {
+		> button[title*='Select Next Slot'] {
 			@include inputMixins.components--button-toggle($isRound: true);
 		}
 	}
@@ -24,7 +24,8 @@
 .SlotsInner {
 	display: flex;
 	flex-direction: row;
-	gap: var(--size-xs);
+	gap: var(--size-sm);
+	width: max-content;
 }
 
 .Values {
