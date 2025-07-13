@@ -1,10 +1,10 @@
-import React, { useRef, ReactElement, useCallback, Fragment } from "react";
+import React, { useRef, useCallback, Fragment } from "react";
 
 // Types
 import type { ErrorProps } from './types';
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import FloatReveal from '@/components/reveal/float/component';
@@ -36,50 +36,6 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
     // Fallback for empty messages
     const displayMessage = message?.trim() || 'An unknown error occurred';
 
-    /**
-     * Handles error button click for keyboard accessibility
-     * Ensures the floating tooltip can be activated via keyboard
-     * 
-     * @param {React.MouseEvent} event - Click event from the error button
-     */
-    const handleErrorClick = useCallback((event: React.MouseEvent<HTMLButtonElement>): void => {
-        // Prevent any default button behavior
-        event.preventDefault();
-
-        // Focus the button to ensure accessibility
-        if (buttonRef.current) {
-            buttonRef.current.focus();
-        }
-
-        devLog.info('[Error] Error button clicked, tooltip should be visible');
-    },
-        []
-    );
-
-    /**
-     * Handles keyboard events for accessibility
-     * Provides keyboard navigation support for the error tooltip
-     * 
-     * @param {React.KeyboardEvent} event - Keyboard event from the error button
-     */
-    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>): void => {
-        // Show tooltip on Enter or Space key
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            // The FloatReveal component should handle the visibility
-        }
-
-        // Close on Escape key
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            if (buttonRef.current) {
-                buttonRef.current.blur();
-            }
-        }
-    },
-        []
-    );
-
 
     return (
         <Fragment>
@@ -87,12 +43,11 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
             <button
                 className={CSS.Error}
                 ref={buttonRef}
-                onClick={handleErrorClick}
-                onKeyDown={handleKeyDown}
                 type="button"
                 aria-label={`Error: ${displayMessage}`}
                 aria-expanded="false"
                 title="Hover to view error details"
+                role="alert"
             >
                 <span>⚠ Error</span>
             </button>

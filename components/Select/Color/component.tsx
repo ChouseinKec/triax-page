@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Types
 import { ColorSelectProps } from '@/components/select/color/types';

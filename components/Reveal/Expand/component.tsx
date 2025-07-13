@@ -1,7 +1,7 @@
-import React, { ReactElement, useCallback, useState, useMemo } from "react";
+import React, {  useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import HorizontalDivider from '@/components/divider/horizontal/component';

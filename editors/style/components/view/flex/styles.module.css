@@ -1,1 +1,60 @@
-.DisplayView{width:100%;min-width:80px;height:80px;overflow:hidden;padding:5px;position:relative;background:var(--color-black--lighter);border:none;outline:none;border-radius:var(--size-sm);border:var(--border-generic);cursor:default}.DisplayView_Dots{width:100%;height:100%;padding:var(--size-sm);aspect-ratio:1/1;display:grid;grid-template-columns:repeat(3, 1fr);grid-template-rows:repeat(3, 1fr);gap:var(--size-md);position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:0}.DisplayView_Dot{position:relative}.DisplayView_Dot::after{content:"";display:block;width:var(--size-xs);height:var(--size-xs);position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);background:var(--color-gray);border-radius:50%}.DisplayView_Box{height:auto;min-height:10px;width:10px;background:var(--color-white);z-index:0}.DisplayView_Box[data-index="2"]{min-height:15px;width:15px;background:var(--color-info)}.DisplayView_Box[data-index="3"]{min-height:20px}
+.DisplayView {
+  border-radius: var(--size-sm);
+  box-shadow: var(--shadow-inset);
+  font-size: var(--font-size-sm);
+  position: relative;
+  padding: var(--size-xs);
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  background: var(--color-black--lighter);
+  color: var(--color-white);
+}
+
+.DisplayView_Dots {
+  width: 100%;
+  height: 100%;
+  padding: var(--size-sm);
+  aspect-ratio: 1/1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--size-md);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.DisplayView_Dot {
+  position: relative;
+}
+.DisplayView_Dot::after {
+  content: "";
+  display: block;
+  width: var(--size-xs);
+  height: var(--size-xs);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-gray);
+  border-radius: 50%;
+}
+
+.DisplayView_Box {
+  height: auto;
+  min-height: 10px;
+  width: 10px;
+  background: var(--color-white);
+  z-index: 0;
+}
+.DisplayView_Box[data-index="2"] {
+  min-height: 15px;
+  width: 15px;
+  background: var(--color-info);
+}
+.DisplayView_Box[data-index="3"] {
+  min-height: 20px;
+}/*# sourceMappingURL=styles.module.css.map */

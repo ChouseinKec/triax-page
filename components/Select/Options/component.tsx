@@ -1,14 +1,13 @@
 import React, { memo, ReactElement, useState, useMemo, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import Option from './option/component';
 
 // Types
 import type { OptionsSelectProps } from './types';
-import type { OptionData } from '@/types/option';
 
 // Hooks
 import { useDebouncedValue } from '@/hooks/hooks';
@@ -123,7 +122,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         if (!searchable || options.length < 10) return null;
         return (
             <input
-                className={CSS.OptionsSelect_Search}
+                className={CSS.Search}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder='SEARCH'
                 role='searchbox'
@@ -141,7 +140,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     const childrenElements = (() => {
         // If the search result is null
         if (filteredOptions.length === 0) {
-            return <div className={CSS.OptionsSelect_Empty}>No options found.</div>;
+            return <div className={CSS.Empty}>No options found.</div>;
         }
 
         // If options are grouped
@@ -150,20 +149,18 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
             const categoryCount = Object.keys(groupedOptions).length;
             // Calculate the number of columns based on the number of categories
             const columns = Object.keys(groupedOptions).map(() => 'auto').join(' ');
-            // Create a style object for CSS variables
-            const style = { "--category-columns": columns } as React.CSSProperties;
 
             return (
-                <div className={CSS.OptionsSelect_Categories} style={style}>
+                <div className={CSS.Categories}>
                     {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
-                        <div key={category} className={CSS.OptionsSelect_Category}>
+                        <div key={category} className={CSS.Category}>
 
                             {categoryCount > 1 &&
-                                <span className={CSS.OptionsSelect_CategoryTitle}>{category}</span>
+                                <span className={CSS.CategoryTitle}>{category}</span>
                             }
 
-                            <div className={CSS.OptionsSelect_CategoryItems}>
-                                {categoryOptions?.map((option: OptionData, index) => {
+                            <div className={CSS.CategoryItems}>
+                                {categoryOptions?.map((option, index) => {
                                     return (
                                         <Option
                                             key={index}
@@ -186,7 +183,8 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
 
 
         // If options are basic
-        return (filteredOptions.map((option: OptionData, index) => {
+        // E.g for a simple list of options without grouping like radio buttons
+        return (filteredOptions.map((option, index) => {
             return (
                 <Option
                     key={index}

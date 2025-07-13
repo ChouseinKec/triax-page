@@ -1,7 +1,7 @@
 import { memo, ReactElement, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Types
 import { OptionProps } from './types';
@@ -23,7 +23,6 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         name,
         value,
         icon,
-        style,
         isSelected,
         onChange,
         prioritizeIcons = false,
@@ -52,11 +51,10 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
     const iconElement = icon ? icon : '';
     const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
-        <i
+        <button
             className={CSS.Option}
             onClick={() => handleChange(value)}
             data-is-selected={isSelected}
-            style={style}
             title={name}
             aria-label={`Select ${name}`}
             role={ariaRole}
@@ -64,7 +62,7 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
 
             {iconElement}
             {textElement}
-        </i>
+        </button>
     )
 };
 

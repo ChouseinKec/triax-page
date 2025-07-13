@@ -11,12 +11,6 @@ export interface GenericInputProps {
 	/** Placeholder text for the input */
 	placeholder?: string;
 
-	/** Prefix text to display before the input value */
-	prefix?: string;
-
-	/** Suffix text to display after the input value */
-	suffix?: string;
-
 	/** Minimum value (for number types) or minimum length (for text types) */
 	min?: number;
 

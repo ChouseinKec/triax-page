@@ -1,5 +1,5 @@
-import React, { useCallback, memo, useMemo, useRef } from "react";
-import CSS from './styles.module.css';
+import React, { useCallback, memo, useRef } from "react";
+import CSS from './styles.module.scss';
 
 // Types
 import type { BlockProps } from "./types";
@@ -82,7 +82,7 @@ const Block: React.FC<BlockProps> = memo(({ id }) => {
 
             {/* Floating toolbar for block actions */}
             <FloatReveal isOpen={isSelected} targetRef={containerRef} position="top">
-                <div className={CSS.Toolbar}>{ToolbarActions}</div>
+                {ToolbarActions}
             </FloatReveal>
         </div>
     );

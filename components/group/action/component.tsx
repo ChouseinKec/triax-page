@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Types
 import type { ActionGroupProps } from './types';

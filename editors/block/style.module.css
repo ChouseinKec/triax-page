@@ -1,1 +1,0 @@
-.BlockEditor *[id*=block-][data-is-selected=false]{opacity:.5}.BlockEditor *[id*=block-][data-is-selected=true],.BlockEditor *[id*=block-][data-has-selected-child=true]{opacity:1}.BlockEditor *[id*=block-][data-is-selected=true]{border:1px solid #6a8fad}

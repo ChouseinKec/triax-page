@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import RadioSelect from '@/components/select/radio/component';

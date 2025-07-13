@@ -29,13 +29,6 @@
   --color-focus: var(--color-gray--darker);
   --color-active: var(--color-gray);
 
-
-  --color-hover: var(--color-white--darker);
-  --color-selected: var(--color-black--lighter);
-  --color-focus: var(--color-gray--darker);
-  --color-active: var(--color-gray);
-
-
   --size-xs: 2.5px;
   --size-sm: 5px;
   --size-md: 10px;
@@ -43,9 +36,10 @@
   --size-xl: 20px;
   --size-2xl: 25px;
 
-  --shadow-inset: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
-  --shadow-outset: 0 0.5px 2px 1px rgb(0 0 0 / 40%);
-  --shadow-selected:inset 0px 0px 0px 1px var(--color-gray);
+  --shadow-inset: 0px 0px 0px 1px var(--color-white--darker) inset;
+  --shadow-outset: 0px 0px 0px 1px var(--color-white--darker);
+
+  --shadow-selected: inset 0px 0px 0px 1px var(--color-gray);
 
   --border-generic: 1px solid var(--color-white--darker);
 }
@@ -80,11 +74,3 @@ a {
   background: var(--color-white--darker);
 }
 
-[class*='StyleEditor'] {
-  height: 100%;
-  width: 300px;
-  position: fixed;
-  top: 0;
-  right: 0;
-  overflow: hidden;
-}

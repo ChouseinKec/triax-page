@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useRef } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import Options from '@/components/select/options/component';

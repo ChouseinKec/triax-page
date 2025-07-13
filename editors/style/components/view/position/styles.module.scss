@@ -4,14 +4,7 @@ $padding_color: var(--color-success);
 $margin_color: var(--color-warning);
 
 .PositionView {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	padding: 5px;
-	background: var(--color-black--lighter);
-	@include inputMixins.components--container($background: false);
-	color: var(--color-white);
-	position: relative;
+	@include inputMixins.components--view();
 }
 
 .PositionView_Position {

@@ -1,18 +1,7 @@
 @use '../../../../../mixins//mixins.module.scss' as inputMixins;
 
 .DisplayView {
-	width: 100%;
-	min-width: 80px;
-	height: 80px;
-
-	overflow: hidden;
-
-	padding: 5px;
-
-	position: relative;
-
-	background: var(--color-black--lighter);
-	@include inputMixins.components--container($background: false);
+	@include inputMixins.components--view();
 }
 
 .DisplayView_Dots {

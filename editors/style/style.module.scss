@@ -1,19 +1,17 @@
+@use '../../mixins/mixins.module.scss' as inputMixins;
+
 .StyleEditor {
+	height: 100vh;
+	width: 300px;
+	overflow: hidden;
+
 	display: flex;
 	flex-direction: column;
-	background: rgba(255, 255, 255, 0.3);
-	border: 1px solid var(--color-white--darker);
-	overflow: visible;
+
+	position: relative;
 	z-index: 9999;
-	transition: width 0.25s;
 
-	&[data-is-collapsed='true'] {
-		width: 0px;
-
-		.Toggle svg {
-			transform: rotate(180deg);
-		}
-	}
+	@include inputMixins.components--container();
 
 	[class*='TabGroup'] {
 		> *:nth-of-type(1) {
@@ -26,42 +24,6 @@
 	display: flex;
 	gap: var(--size-sm);
 
-	padding: var(--size-sm);
-
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border: var(--border-generic);
-
-	background: var(--color-white);
+	@include inputMixins.components--container();
 	z-index: 10;
-}
-
-.Toggle {
-	position: absolute;
-	top: 50%;
-	left: 0;
-	overflow: hidden;
-	padding: var(--size-xs);
-	transform: translateX(-26px);
-	aspect-ratio: 1/1.5;
-
-	background: var(--color-white);
-	border: var(--border-generic);
-
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-
-	&:hover {
-		background: var(--color-white--darker);
-	}
-	svg {
-		width: 20px;
-		height: 20px;
-		transition: transform 0.4s;
-	}
 }

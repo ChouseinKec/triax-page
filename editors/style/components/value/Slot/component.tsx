@@ -1,7 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
-// Styles
-import CSS from './styles.module.css';
 
 // Components
 import DimensionValue from '../dimension/component';
@@ -9,7 +7,7 @@ import FunctionValue from '../function/component';
 import KeywordValue from '../keyword/component';
 import NumberValue from '../number/component';
 import LinkValue from '../link/component';
-import ColorSelect from '@/components/select/color/component';
+import ColorValue from '../color/component';
 import Error from '../error/component';
 
 // Types
@@ -18,9 +16,6 @@ import type { SlotProps } from './types';
 // Utilities
 import { getValueType } from '@/utilities/style/value';
 import { devLog } from '@/utilities/dev';
-
-// Hooks
-import useHover from '@/hooks/interface/useHover';
 
 /**
  * Slot Component
@@ -32,8 +27,6 @@ import useHover from '@/hooks/interface/useHover';
  */
 const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     const { value, options, onChange } = props;
-    // Hover state management with configurable delay
-    const { isHovered, handleTargetEnter, handleTargetLeave } = useHover(300);
 
     // Guard Clause
     if (!options || options.length === 0) {
@@ -100,7 +93,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                 );
             case 'color':
                 return (
-                    <ColorSelect value={value} onChange={onChange} />
+                    <ColorValue value={value} onChange={onChange} />
                 );
             case 'link':
                 return (
@@ -115,9 +108,7 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     );
 
     return (
-        <div data-is-hovered={isHovered} className={CSS.Slot} onMouseEnter={handleTargetEnter} onMouseLeave={handleTargetLeave} >
-            {slot}
-        </div>
+        slot
     );
 };
 

@@ -7,8 +7,8 @@ export const BlockStyleDefaults = {
 
 		'margin-top': '10px',
 		'margin-bottom': '10px',
-		'margin-left': '10px',
-		'margin-right': '10px',
+		// 'margin-left': '10px',
+		// 'margin-right': '10px',
 
 		background: 'rgba(111, 155, 191, 0.3)',
 
@@ -26,6 +26,8 @@ export const BlockStyleDefaults = {
 		'border-bottom-color': '#ffffff',
 		'border-left-color': '#ffffff',
 		'border-right-color': '#ffffff',
+
+		'font-size': '10px',
 	},
 	active: {},
 	hover: {},

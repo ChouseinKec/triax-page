@@ -2,7 +2,7 @@
 import React, { useCallback, memo, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import GenericInput from '@/components/input/generic/component';
@@ -17,8 +17,6 @@ import { devLog } from '@/utilities/dev';
 // Constants
 import { StyleIconDefinitions } from '@/constants/style/icon';
 
-// Hooks
-import useSize from '@/hooks/interface/useSize';
 
 /**
  * NumberValue Component
@@ -44,8 +42,6 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         forceInteger = false,
     } = props;
 
-    const targetRef = React.useRef<HTMLDivElement>(null);
-    const sizeState = useSize(targetRef);
 
     if (!options || options.length === 0) {
         devLog.error('[NumberValue] No options provided');
@@ -162,18 +158,13 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
         [onChange]
     );
 
-    const isCollapsed = useMemo(() => {
-        // Default to not collapsed if no target ref
-        if (!targetRef.current) {
-            return false;
-        }
-        // Collapse if the width is less than 40px
-        return sizeState.size.width < 50;
-    }, [sizeState.size.width]
-    );
+    const showDropdown = useMemo(() => {
+        // Show dropdown only if there are multiple options available   
+        return options.length > 1;
+    }, [options.length]);
 
     return (
-        <div className={CSS.NumberValue} role="presentation" ref={targetRef} data-is-collapsed={isCollapsed}>
+        <div className={CSS.NumberValue} role="presentation" data-has-dropdown={showDropdown} >
 
             {/* Numeric input for float values */}
             <GenericInput
@@ -189,18 +180,21 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
             />
 
             {/* Options dropdown for alternative values */}
-            <SelectDropdown
-                options={options}
-                value={"number"}
-                onChange={handleOptionChange}
-                searchable={true}
-                grouped={true}
-                placeholder={StyleIconDefinitions.number || 'NUM'}
-                forcePlaceholder={true}
-                isDisabled={options.length <= 1}
-                ariaLabel="Change Value Type"
-                title="Change Value Type"
-            />
+
+            {showDropdown && (
+                <SelectDropdown
+                    options={options}
+                    value={"number"}
+                    onChange={handleOptionChange}
+                    searchable={true}
+                    grouped={true}
+                    placeholder={StyleIconDefinitions.number || 'NUM'}
+                    forcePlaceholder={true}
+                    isDisabled={options.length <= 1}
+                    ariaLabel="Change Value Type"
+                    title="Change Value Type"
+                />
+            )}
 
         </div>
     );

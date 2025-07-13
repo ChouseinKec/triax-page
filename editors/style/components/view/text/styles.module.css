@@ -1,14 +1,12 @@
 .TextView {
+  border-radius: var(--size-sm);
+  box-shadow: var(--shadow-inset);
+  font-size: var(--font-size-sm);
+  position: relative;
+  padding: var(--size-xs);
   width: 100%;
   height: 100px;
   overflow: hidden;
-  padding: var(--size-md);
-  position: relative;
   background: var(--color-black--lighter);
-  border: none;
-  outline: none;
-  border-radius: var(--size-sm);
-  border: var(--border-generic);
-  cursor: default;
   color: var(--color-white);
 }/*# sourceMappingURL=styles.module.css.map */

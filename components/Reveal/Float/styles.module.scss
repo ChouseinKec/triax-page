@@ -4,13 +4,7 @@
 	min-width: min-content;
 	max-width: 500px;
 
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-md);
 
-	position: fixed;
-	z-index: 9999;
-
-	@include inputMixins.components--container;
+	@include inputMixins.components--flex-vertical;
+	@include inputMixins.components--float;
 }
-

@@ -1,7 +1,7 @@
 import { memo, ReactElement, useRef } from "react";
 
 // Styles
-import CSS from '@/editors/style/components/property/styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import FloatReveal from '@/components/reveal/float/component';
@@ -81,23 +81,23 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
         <>
             {/* Render the label if provided */}
             {label && (
-                <div className={CSS.Property_Label}>
+                <div className={CSS.Label}>
                     <span ref={labelRef} aria-label='Property Label'>
                         {label}
                     </span>
 
                     <FloatReveal targetRef={labelRef} position='top'>
 
-                        <div className={CSS.Property_Float__Title} aria-label='Property Name'>
+                        <div className={CSS.FloatTitle} aria-label='Property Name'>
                             {propertyName}
                         </div>
 
-                        <div className={CSS.Property_Float__Description} aria-label='Property Description'>
+                        <div className={CSS.FloatDescription} aria-label='Property Description'>
                             {propertyDescription}
                         </div>
 
                         {property &&
-                            <div className={CSS.Property_Float__Tools} id={`${property}-tools`} role='group' aria-label='Property Actions'>
+                            <div className={CSS.FloatActions} id={`${property}-tools`} role='group' aria-label='Property Actions'>
                                 <button title="Copy Property" onClick={() => copyStyle(property)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z" /></svg>
                                 </button>
@@ -117,12 +117,8 @@ const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): React
             )}
 
 
-            <div className={CSS.Property_Content}>
-                {label &&
-                    <span aria-hidden="true" className={CSS.Property_Separator}>————————————————————————————————————————————————</span>
-                }
-                {component()}
-            </div>
+
+            {component()}
         </>
     )
 

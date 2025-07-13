@@ -1,7 +1,7 @@
 import { memo, ReactElement } from "react";
 
 // Styles
-import CSS from '@/editors/style/components/group/styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import Property from '@/editors/style/components/property/components';

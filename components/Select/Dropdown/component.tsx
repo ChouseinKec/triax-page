@@ -1,6 +1,4 @@
-import React, { memo, ReactElement, useCallback, useMemo } from "react";
-// Styles
-import CSS from './styles.module.css';
+import React, { memo,  useCallback, useMemo } from "react";
 
 // Types
 import { DropdownSelectProps } from '@/components/select/dropdown/types';
@@ -100,14 +98,14 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         value,
         placeholder: forcePlaceholder ? placeholder : value || 'N/A',
         title,
-    }), [value, placeholder, title]
+        isDisabled,
+        ariaLabel
+    }), [value, placeholder, title, isDisabled, ariaLabel]
     );
 
     return (
-        <DropdownReveal ariaLabel={ariaLabel} {...dropdownProps} isDisabled={isDisabled}>
-            <div className={CSS.Options}>
-                <Options {...optionsProps} />
-            </div>
+        <DropdownReveal  {...dropdownProps} >
+            <Options {...optionsProps} />
         </DropdownReveal>
     );
 };

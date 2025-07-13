@@ -1,7 +1,7 @@
-import React, { useCallback, ReactElement, memo, useState, useRef, useMemo, useReducer } from "react";
+import React, { useCallback, memo, useRef, useMemo, useReducer } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import FloatReveal from '@/components/reveal/float/component';
@@ -34,8 +34,6 @@ import { useSafeCallback } from '@/hooks/utility/useSafeCallback';
  * @param {function} [props.onChange] - Value change callback
  * @param {function} [props.onFocus] - Focus event callback
  * @param {function} [props.onBlur] - Blur event callback
- * @param {string|ReactElement} [props.prefix=''] - Prefix element/text
- * @param {string|ReactElement} [props.suffix=''] - Suffix element/text
  * @returns {ReactElement} The rendered GenericInput component
  */
 const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => {
@@ -60,8 +58,6 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
         onValidate,
 
         // Visual
-        prefix = '',
-        suffix = '',
     } = props;
 
     // Guard Clause
@@ -284,20 +280,13 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
     );
 
     return (
-        <div className={CSS.GenericInput} role="presentation" >
-            {/* Prefix element for visual enhancement */}
-            {prefix && (
-                <span className={CSS.Prefix} aria-hidden="true">
-                    {prefix}
-                </span>
-            )}
-
+        <>
             {/* Main input element with comprehensive attributes */}
             <input
                 ref={inputRef}
                 type={type}
                 defaultValue={value.toString()}
-                className={CSS.Input}
+                className={CSS.GenericInput}
 
                 // Spread computed attributes for cleaner code
                 {...accessibilityAttributes}
@@ -311,13 +300,6 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
                 onKeyDown={handleKeyDown}
             />
 
-            {/* Suffix element for visual enhancement */}
-            {suffix && (
-                <span className={CSS.Suffix} aria-hidden="true">
-                    {suffix}
-                </span>
-            )}
-
             {/* Error message tooltip - only shown when there's an error */}
             <FloatReveal
                 position="bottom"
@@ -326,16 +308,12 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
                 role="alertdialog"
                 ariaLabel="Input Validation Error"
             >
-                <div className={CSS.ErrorMessage} role="alert">
-
-                    <span className={CSS.ErrorIcon} aria-hidden="true">
-                        ✖
-                    </span>
-
-                    <span>{validationState.message}</span>
-                </div>
+                <span className={CSS.ErrorMessage} role="alert">
+                    <span className={CSS.ErrorIcon} aria-hidden="true">✖</span>
+                    {validationState.message}
+                </span>
             </FloatReveal>
-        </div>
+        </>
     );
 };
 

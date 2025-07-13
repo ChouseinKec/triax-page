@@ -42,7 +42,7 @@ function createBlockDefaultStyles(): BlockStyleData {
 	return devices;
 }
 
-function createDefaultBlock(parentBlock?: string): BlockData {
+function createDefaultBlock(parentBlock?: string,): BlockData {
 	return {
 		id: uuidv4(),
 		styles: createBlockDefaultStyles(),
@@ -263,6 +263,7 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 			};
 		});
 	},
+
 }));
 
 export default useBlockStore;

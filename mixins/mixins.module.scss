@@ -1,59 +1,77 @@
-@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false, $error: false) {
+@mixin states(
+	// Element states
+	$hover: true,
+	$focus: true,
+	$active: true,
+	$selected: true,
+	$disabled: false,
+	$open: false,
+	$error: false,
+	$placeholder: false
+) {
+	// Hover state is used for buttons and links
+	// It indicates that the element is currently being hovered over
 	@if $hover {
 		&:hover {
-			background: var(--color-hover);
+			background: var(--color-white--darker);
+			color: var(--color-dark--lighter);
+
+			@if $placeholder {
+				&::placeholder {
+					color: var(--color-dark--lighter);
+				}
+			}
 		}
 	}
 
+	// Focus state is used for inputs and buttons
+	// It indicates that the element is currently focused
 	@if $focus {
 		&:focus {
-			background: var(--color-focus);
+			background: var(--color-gray);
 			color: var(--color-white);
-			* {
-				color: var(--color-white);
-			}
 
-			@if $svg {
-				svg [fill]:not([fill='none']) {
-					fill: var(--color-white);
-				}
+			svg [fill]:not([fill='none']) {
+				fill: var(--color-white);
 			}
 		}
 	}
 
+	// Active state is used for buttons
+	// It indicates that the button is currently being pressed
 	@if $active {
 		&:active {
-			background: var(--color-active);
+			background: var(--color-gray--darker);
 			color: var(--color-white);
 
-			* {
-				color: var(--color-white);
-			}
-			@if $svg {
-				svg path {
-					fill: var(--color-white);
-				}
+			svg [fill]:not([fill='none']) {
+				fill: var(--color-white);
 			}
 		}
 	}
 
+	// Selected state is used for option elements
+	// It indicates that the option is currently selected
 	@if $selected {
 		&[data-is-selected='true'] {
-			// color: var(--color-white);
-			box-shadow: var(--shadow-selected);
+			background: var(--color-black--lighter);
+			color: var(--color-white);
+
+			svg [fill]:not([fill='none']) {
+				fill: var(--color-white);
+			}
 		}
 	}
 
-	@if $open {
-		&[data-is-open='true'] {
-			color: var(--color-white);
-			background: var(--color-selected);
-			box-shadow: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
+	// Disabled state is used for buttons and inputs
+	// It indicates that the element is currently disabled and cannot be interacted with
+	@if $disabled {
+		&[data-is-disabled='true'] {
+			pointer-events: none;
+			opacity: 0.5;
 
-			@if $svg {
-				svg path {
-					fill: var(--color-white);
-				}
+			&::after {
+				content: none;
 			}
 		}
 	}
@@ -66,68 +84,121 @@
 }
 
 @mixin components--container($background: true) {
-	outline: none;
 	border-radius: var(--size-sm);
-	border: var(--border-generic);
-
-	cursor: default;
+	box-shadow: var(--shadow-inset);
+	font-size: var(--font-size-sm);
+	position: relative;
+	padding: var(--size-xs);
 
 	@if $background {
 		background: var(--color-white);
 	}
 }
 
-@mixin components--button {
-	height: 25px;
-	padding: var(--size-sm);
-
-	outline: none;
+// This mixin is used for float components
+// E.g DropdownReveal,DropdownSelect in Style Editor
+@mixin components--float {
 	border-radius: var(--size-sm);
+	box-shadow: var(--shadow-inset);
+	font-size: var(--font-size-md);
 	background: var(--color-white);
-	border: var(--border-generic);
+	position: fixed;
+	padding: var(--size-md);
+	z-index: 9999;
 
-	font-size: var(--font-size-sm);
-	text-transform: uppercase;
-	cursor: pointer;
-
-	@include states($open: true, $svg: true);
+	&[role='alertdialog'] {
+		border-top: 3px solid var(--color-error);
+	}
 }
 
-@mixin components--input {
+// This mixin is used for the view component
+// E.g FlexView,PositionSelect, in Style Editor
+@mixin components--view {
+	@include components--container($background: false);
+
+	width: 100%;
+	height: 100px;
+	overflow: hidden;
+	background: var(--color-black--lighter);
+	color: var(--color-white);
+}
+
+// This mixin is used for input components
+// E.g Search,Dimension,Number in Style Editor
+@mixin components--input($padding: true) {
 	height: 25px;
 
-	padding: var(--size-sm) var(--size-md);
-
-	outline: none;
-	border-radius: var(--size-sm);
-	background: var(--color-white);
-	border: var(--border-generic);
-
-	* {
-		font-size: var(--font-size-md);
+	@if $padding {
+		padding: var(--size-sm) var(--size-md);
 	}
 
-	@include states($error: true);
+	outline: none;
+	border: none;
+	border-radius: var(--size-sm);
+	background: var(--color-white);
+	box-shadow: var(--shadow-inset);
+
+	font-size: var(--font-size-sm);
+	text-align: center;
+
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	-moz-appearance: textfield;
+	appearance: textfield;
+
+	@include states($error: true, $placeholder: true);
 }
 
-@mixin components--option {
-	min-height: 20px;
-	padding: 0 var(--size-sm);
+// This mixin is used for vertical flex stack
+// E.g Options
+@mixin components--flex-vertical($gap: var(--size-sm), $align: baseline) {
 	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: $align;
+	gap: $gap;
+}
+
+// This mixin is used for vertical flex stack
+// E.g Options
+@mixin components--flex-horizontal($gap: var(--size-sm), $align: baseline, $justify: center) {
+	display: flex;
+	flex-direction: row;
+	justify-content: $justify;
+	align-items: $align;
+	gap: $gap;
+}
+
+// This mixin is used for button-like components
+// It can be used for buttons, options, and other interactive elements
+// It includes styles for hover, focus, active, selected, and disabled states
+@mixin components--button($height: 25px, $shadow: true) {
+	height: $height;
+
+	padding: var(--size-xs);
+	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-
-	border: none;
+	gap: var(--size-xs);
 	outline: none;
-	background: transparent;
 	border-radius: var(--size-sm);
+	border: none;
+
+	@if $shadow {
+		box-shadow: var(--shadow-inset);
+	}
+	background: var(--color-white);
 
 	font-size: var(--font-size-sm);
 	color: var(--color-black);
 	text-transform: uppercase;
-
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	cursor: pointer;
-	@include states($selected: true, $svg: true);
 
 	svg {
 		max-width: 15px;
@@ -137,6 +208,37 @@
 			fill: var(--color-black);
 		}
 	}
+
+	@include states($selected: true, $disabled: true);
+}
+
+// This mixin is used for buttons that toggle a dropdown or a menu
+// It includes an arrow icon that indicates the toggle state
+@mixin components--button-toggle($isRound: false) {
+	@if $isRound {
+		font-size: var(--font-size-lg);
+		padding: var(--size-xs);
+		width: auto;
+		height: 25px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		&::before,
+		&::after {
+			content: none;
+		}
+	} @else {
+		width: 100%;
+
+		@include icon-arrow;
+		@include components--button();
+
+		> span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			width: 100%;
+		}
+	}
 }
 
 @mixin icon-arrow {
@@ -144,18 +246,14 @@
 		content: '';
 		width: 7px;
 		height: 5px;
-		margin-top: 5px;
-		margin-left: 5px;
 		display: block;
 
-		transform: translateY(-50%);
+		transform: translateY(-5%);
 
 		clip-path: polygon(50% 100%, 0 0, 100% 0);
 		background: var(--color-black);
 
 		transition: all 0.5s;
-		position: absolute;
-		right: 5%;
 	}
 
 	&[data-is-open='true'] {

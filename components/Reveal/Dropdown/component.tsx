@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Types
 import { DropdownRevealProps } from '@/components/reveal/dropdown/types';
@@ -11,6 +11,9 @@ import FloatReveal from '@/components/reveal/float/component'
 
 // Utilities
 import { devLog } from '@/utilities/dev';
+
+// Hooks
+import useSize from '@/hooks/interface/useSize';
 
 /**
  * Dropdown Component
@@ -42,6 +45,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
     // Component state management
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const { size } = useSize(dropdownRef);
 
     /**
      * Handles clicks outside the dropdown container.
@@ -83,18 +87,25 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
     }, []
     );
 
+    const isCollapsed = size.width ? size.width < 25 : false;
+
     return (
         <div className={CSS.DropdownReveal} ref={dropdownRef}>
             {/* Toggle button to open/close the dropdown */}
             <button
-                className={CSS.ToggleButton}
+                className={CSS.Toggle}
                 onClick={handleToggle}
-                data-is-open={isOpen}
+                data-is-selected={isOpen}
                 data-is-disabled={isDisabled}
                 title={title}
                 aria-label={ariaLabel}
             >
-                {placeholder}
+
+                {!isCollapsed &&
+                    <span>
+                        {placeholder}
+                    </span>
+                }
             </button>
 
             {/* Conditionally render the dropdown content */}

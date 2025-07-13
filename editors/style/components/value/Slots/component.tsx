@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useRef } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import Slot from '../slot/component';
@@ -29,7 +29,6 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         onChange,
     } = props;
 
-    const slotsRef = useRef<HTMLDivElement>(null);
 
     // Guard Clause
     if (!options || options.length === 0) {
@@ -42,11 +41,11 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         return null;
     }
 
-
     const valuesLength = values.length;
+    const nextOptions = options[valuesLength];
     const slotsLength = options.length;
+    const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
 
-    const separatorElement = <span aria-hidden="true" className={CSS.Separator}>–</span>;
 
     /**
      * Handles a change in a single slot, updating the overall slot values array.
@@ -76,8 +75,6 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
         // Render all existing slots with separators between them
         return values.map((slotValue, slotIndex) => {
-            const isLastSlot = slotIndex === valuesLength - 1;
-
             return (
                 <Fragment key={slotIndex}>
                     <Slot
@@ -85,9 +82,6 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
                         options={options[slotIndex]}
                         onChange={val => handleSlotChange(val, slotIndex)}
                     />
-
-                    {/* Add separator between slots (but not after the last one) */}
-                    {!isLastSlot && (separatorElement)}
                 </Fragment>
             );
         });
@@ -99,14 +93,8 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
      * Renders an extra dropdown for the next possible slot (if any).
      */
     const renderNextSlot = useCallback(() => {
-        // Early return if no values exist
-        if (!values || valuesLength === 0) return null;
-
-        const nextOptions = options[valuesLength];
-
         // Check if there are valid options for the next slot
-        const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
-        if (!hasNext) return null;
+        if (!values || valuesLength === 0 || !hasNext) return null;
 
         // Determine if the next options are a single keyword type
         const optionsLength = nextOptions.length;
@@ -115,33 +103,27 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
             return (
-                <Fragment>
-                    {separatorElement}
-                    <Slot
-                        value={''}
-                        options={nextOptions}
-                        onChange={(val: string) => handleSlotChange(val, valuesLength)}
-                    />
-                </Fragment>
+                <Slot
+                    value={''}
+                    options={nextOptions}
+                    onChange={(val: string) => handleSlotChange(val, valuesLength)}
+                />
             );
         }
 
         // Render dropdown select for multiple options or complex types
         return (
-            <Fragment key={valuesLength}>
-                {separatorElement}
-                <DropdownSelect
-                    value=''
-                    forcePlaceholder={true}
-                    options={nextOptions}
-                    placeholder="+"
-                    searchable={false}
-                    grouped={true}
-                    title="Select Next Slot"
-                    ariaLabel="Select Next Slot"
-                    onChange={(val: string) => handleSlotChange(val, valuesLength)}
-                />
-            </Fragment>
+            <DropdownSelect
+                value=''
+                forcePlaceholder={true}
+                options={nextOptions}
+                placeholder="+"
+                searchable={false}
+                grouped={true}
+                title="Select Next Slot"
+                ariaLabel="Select Next Slot"
+                onChange={(val: string) => handleSlotChange(val, valuesLength)}
+            />
         );
 
     }, [values, options, handleSlotChange]
@@ -171,7 +153,11 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Default inline rendering for simple scenarios
         return (
             <>
-                {renderCurrentSlots()}
+                <span aria-hidden="true" className={CSS.Separator}>————————————————————————————————————————————————</span>
+
+                <div className={CSS.Values}>
+                    {renderCurrentSlots()}
+                </div>
                 {renderNextSlot()}
             </>
         );
@@ -180,7 +166,10 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
 
     return (
-        <div className={CSS.Slots} role='presentation' ref={slotsRef}>
+        <div
+            className={CSS.Slots}
+            role='presentation'
+        >
             {render()}
         </div>
     );

@@ -29,6 +29,7 @@ export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	direction: 'Specifies the base writing direction for text and layout.',
 	'box-sizing': 'Controls how the total width and height of an element are calculated.',
 	'object-fit': 'Specifies how replaced content should be resized to fit its container.',
+	'object-position': 'Defines the alignment of replaced content within its box.',
 	float: 'Removes the element from normal flow and positions it to the left or right.',
 	clear: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
 	visibility: 'Specifies whether the element is visible, hidden, or collapses its space.',

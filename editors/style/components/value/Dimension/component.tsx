@@ -2,7 +2,7 @@
 import React, { memo, useCallback, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import GenericInput from '@/components/input/generic/component';
@@ -14,9 +14,6 @@ import { DimensionValueProps } from './types';
 // Utilities
 import { extractNumber, extractUnit } from '@/utilities/style/dimension';
 import { devLog } from '@/utilities/dev';
-
-// Hooks
-import useSize from '@/hooks/interface/useSize';
 
 /**
  * DimensionValue Component
@@ -43,8 +40,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 
 	} = props;
 
-	const targetRef = React.useRef<HTMLDivElement>(null);
-	const sizeState = useSize(targetRef);
 
 
 	// Guard Clause
@@ -228,18 +223,9 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		[onChange, options, extractedValue.number, defaults.number]
 	);
 
-	const isCollapsed = useMemo(() => {
-		// Default to not collapsed if no target ref
-		if (!targetRef.current) {
-			return false;
-		}
-		// Collapse if the width is less than 40px
-		return sizeState.size.width < 50;
-	}, [sizeState.size.width]
-	);
 
 	return (
-		<div className={CSS.DimensionValue} role="representation" ref={targetRef} data-is-collapsed={isCollapsed}>
+		<div className={CSS.DimensionValue} role="representation">
 			{/* Numeric input for the value component */}
 			<GenericInput
 				value={extractedValue.number || ""}

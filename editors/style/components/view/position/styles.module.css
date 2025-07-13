@@ -1,16 +1,14 @@
 .PositionView {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  padding: 5px;
-  background: var(--color-black--lighter);
-  border: none;
-  outline: none;
   border-radius: var(--size-sm);
-  border: var(--border-generic);
-  cursor: default;
-  color: var(--color-white);
+  box-shadow: var(--shadow-inset);
+  font-size: var(--font-size-sm);
   position: relative;
+  padding: var(--size-xs);
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  background: var(--color-black--lighter);
+  color: var(--color-white);
 }
 
 .PositionView_Position {

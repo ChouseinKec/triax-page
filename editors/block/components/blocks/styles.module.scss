@@ -1,0 +1,4 @@
+@use '../../../../mixins/mixins.module.scss' as inputMixins;
+.AddBlock {
+	@include inputMixins.components--button();
+}

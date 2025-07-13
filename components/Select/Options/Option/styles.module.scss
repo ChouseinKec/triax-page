@@ -1,10 +1,5 @@
 @use '../../../../mixins/mixins.module.scss' as inputMixins;
 
 .Option {
-	width: 100%;
-	font-style: normal;
-	text-wrap: nowrap;
-	@include inputMixins.components--option;
-
-	gap: var(--size-sm);
+	@include inputMixins.components--button($height: 20px, $shadow: false);
 }

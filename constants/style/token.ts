@@ -50,7 +50,7 @@ export const StyleTokenDefinitions: Partial<Record<string, StyleTokenData>> = {
 	'<generic-incomplete>': createToken('<generic-incomplete>', 'ui-serif|ui-sans-serif|ui-monospace|ui-rounded'),
 
 	// === Text Types ===
-	'<text-decoration-line>': createToken('<text-decoration-line>', 'none|underline|overline|line-through|blink'),
+	'<text-decoration-line>': createToken('<text-decoration-line>', 'none|underline|overline|line-through'),
 	'<text-decoration-style>': createToken('<text-decoration-style>', 'solid|double|dotted|dashed|wavy'),
 	'<text-decoration-color>': createToken('<text-decoration-color>', '<color>'),
 	'<text-decoration-thickness>': createToken('<text-decoration-thickness>', 'auto|from-font|<length-percentage>'),

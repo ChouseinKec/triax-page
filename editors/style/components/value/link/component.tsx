@@ -2,7 +2,7 @@
 import React, { useCallback, memo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Components
 import GenericInput from '@/components/input/generic/component';
@@ -92,7 +92,6 @@ const LinkValue: React.FC<LinkValueProps> = (props: LinkValueProps) => {
     return (
         <div className={CSS.LinkValue}>
             <GenericInput
-                prefix="https://"
                 value={safeValue}
                 type="text"
                 onChange={handleValueChange}

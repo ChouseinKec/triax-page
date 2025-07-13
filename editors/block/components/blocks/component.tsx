@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from "react";
-import CSS from './styles.module.css';
+import CSS from "./styles.module.scss";
 
 // Types 
 import type { BlocksProps } from "./types";
@@ -71,23 +71,32 @@ const Blocks: React.FC<BlocksProps> = memo(() => {
 
     return (
         <BlockEditorContext.Provider value={contextValue}>
+            <div className={CSS.Blocks}>
+                {/* Render all root blocks recursively */}
+                {rootBlocks.map(block => (
+                    <Block
+                        key={block.id}
+                        id={block.id}
+                    />
+                ))}
 
-            {/* Render all root blocks recursively */}
-            {rootBlocks.map(block => (
-                <Block
-                    key={block.id}
-                    id={block.id}
-                />
-            ))}
+                {/* Button to add a new root block */}
+                <button
+                    className={CSS.AddBlock}
+                    onClick={() => addBlock()}
+                >
+                    Add Block
+                </button>
 
-            {/* Button to add a new root block */}
-            <button
-                className={CSS.Blocks__addButton}
-                onClick={() => addBlock()}
-            >
-                Add Block
-            </button>
+                {/* <button
+                    className={CSS.AddBlock}
+                    onClick={() => console.log(allBlocks)}
+                >
+                    Print Blocks
+                </button> */}
+            </div >
         </BlockEditorContext.Provider>
+
     );
 });
 

@@ -1,26 +1,23 @@
+@use '../../../../../mixins//mixins.module.scss' as inputMixins;
+
 .Slots {
-	width: 95%;
+	width: 100%;
 
 	display: flex;
 	align-items: center;
-	flex: 1;
-	gap: var(--size-sm);
+	gap: var(--size-md);
+	justify-content: flex-end;
 
-	[title='Select Next Slot'] {
-		font-size: var(--font-size-lg);
-		padding: var(--size-xs);
-		min-width: auto;
-		aspect-ratio: 1;
-		border-radius: 50%;
+	overflow: hidden;
+	position: relative;
 
-		&::before,
-		&::after {
-			content: none;
+	// Next slot dropdown button
+	> [class*='DropdownReveal'] {
+		flex: 0 0 auto;
+
+		> button {
+			@include inputMixins.components--button-toggle($isRound: true);
 		}
-	}
-
-	> * {
-		flex: auto;
 	}
 }
 
@@ -30,12 +27,26 @@
 	gap: var(--size-xs);
 }
 
-.Separator {
-	width: 3px;
-	color: var(--color-gray);
-
+.Values {
+	flex: 1 1 auto;
+	overflow: hidden;
 	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
+	min-width: 35px;
+
+	justify-content: flex-end;
+	gap: var(--size-md);
+}
+
+.Separator {
+	min-width: 10px;
+
+	color: var(--color-gray);
+	font-size: var(--font-size-md);
+
+	white-space: nowrap;
+	overflow: hidden;
+	flex: auto;
+	opacity: 0.3;
+
+	position: absolute;
 }

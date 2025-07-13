@@ -1,46 +1,14 @@
 @use '../../../mixins/mixins.module.scss' as inputMixins;
 
 .GenericInput {
-	display: flex;
-	align-items: center;
-
-	position: relative;
-	@include inputMixins.components--input;
-}
-
-.Prefix{
-	opacity: 0.5;
-}
-
-.Input {
-	width: 100%;
-	height: 100%;
-
-	text-align: center;
-
-	&::-webkit-outer-spin-button,
-	&::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
-	outline: none;
-	border: none;
-	background: none;
-	-moz-appearance: textfield;
-	appearance: textfield;
+	@include inputMixins.components--input($padding: false);
 }
 
 .ErrorMessage {
-	width: max-content;
-
-	font-size: var(--size-md);
-	word-break: keep-all;
-	text-wrap: nowrap;
+	white-space: nowrap;
+	@include inputMixins.components--flex-horizontal;
 }
 
 .ErrorIcon {
 	color: var(--color-error);
-	padding-right: var(--size-sm);
-	font-size: var(--font-size-md);
 }

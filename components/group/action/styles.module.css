@@ -1,1 +1,1 @@
-.ActionGroup{outline:none;border-radius:var(--size-sm);border:var(--border-generic);cursor:default;background:var(--color-white);padding:var(--size-sm);display:flex;gap:var(--size-xs)}
+.ActionGroup{display:flex;flex-direction:row;justify-content:center;align-items:baseline;gap:var(--size-sm)}

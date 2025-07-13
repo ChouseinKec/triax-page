@@ -2,49 +2,13 @@
 
 .DropdownReveal {
 	position: relative;
-
+	overflow: hidden;
 	[class*='Float'] {
-		padding: var(--size-md);
 		border-top: 4px solid var(--color-black--lighter);
 	}
 }
 
-.ToggleButton {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-
-	height: 100%;
-	width: 100%;
-	min-width: 30px;
-
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-
-	&::before {
-		content: '';
-		display: block;
-	}
-
-	> svg {
-		width: 15px;
-		height: 15px;
-	}
-
-	@include inputMixins.icon-arrow;
-	@include inputMixins.components--button;
-
-	padding-right: var(--size-md);
-	&[data-is-disabled='true'] {
-		pointer-events: none;
-		opacity: 0.5;
-
-		&::after {
-			opacity: 0;
-			margin: 0;
-			width: 0;
-		}
-	}
+.Toggle {
+	@include inputMixins.components--button-toggle;
 }
+

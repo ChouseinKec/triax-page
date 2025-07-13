@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss'
 
 // Components
 import DropdownSelect from '@/components/select/dropdown/component';
@@ -45,24 +45,27 @@ const KeywordValue: React.FC<KeywordValueProps> = memo((props: KeywordValueProps
 
     // Render radio group if all options have icons, otherwise render dropdown
     return (
-        hasIcon ? (
-            <RadioSelect
-                value={value}
-                options={options}
-                onChange={onChange}
-            />
-        ) : (
-            <DropdownSelect
-                value={value}
-                options={options}
-                placeholder="N/A"
-                searchable={false}
-                grouped={true}
-                onChange={onChange}
-                title="Change Value Type"
-                ariaLabel="Change Value Type"
-            />
-        )
+        <div className={CSS.KeywordValue} data-type={hasIcon ? 'radio' : 'dropdown'} role="presentation">
+            {hasIcon ? (
+                <RadioSelect
+                    value={value}
+                    options={options}
+                    onChange={onChange}
+                />
+            ) : (
+                <DropdownSelect
+                    value={value}
+                    options={options}
+                    placeholder="N/A"
+                    searchable={false}
+                    grouped={true}
+                    onChange={onChange}
+                    title="Change Value Type"
+                    ariaLabel="Change Value Type"
+                />
+            )}
+
+        </div>
 
     )
 });

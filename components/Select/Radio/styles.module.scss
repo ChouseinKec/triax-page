@@ -2,21 +2,19 @@
 
 .RadioSelect {
 	height: 25px;
-
-	padding: var(--size-xs);
-
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: var(--size-xs);
-
 	position: relative;
 	@include inputMixins.components--container;
+	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
+	overflow: hidden;
 
 	[class*='FloatReveal'] {
 		display: flex;
 		flex-direction: row;
 		padding: var(--size-xs);
-		// background-color: var(--color-gray);
+	}
+
+	[class*='Option'] {
+		background: transparent;
+		width: 100%;
 	}
 }
