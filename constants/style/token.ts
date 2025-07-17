@@ -1,6 +1,11 @@
 // Types
 import { StyleTokenData, StyleTokenKeys } from '@/types/style/token';
 
+/** Creates a new CSS data type token definition.
+ * @param {StyleTokenKeys} type - The canonical name of the CSS data type (e.g. '<number>', '<length>').
+ * @param {string} syntax - The value definition syntax for this data type (may reference other data types).
+ * @returns {StyleTokenData} The created token definition.
+ */
 const createToken = (type: StyleTokenKeys, syntax: string): StyleTokenData => {
 	return {
 		type,
@@ -8,7 +13,11 @@ const createToken = (type: StyleTokenKeys, syntax: string): StyleTokenData => {
 	};
 };
 
-export const StyleTokenDefinitions: Partial<Record<string, StyleTokenData>> = {
+/**
+ * A lookup table of all supported CSS data type tokens and their definitions.
+ * Each entry is a StyleTokenData object describing the token's name and syntax.
+ */
+export const StyleTokenDefinitions: Record<StyleTokenKeys, StyleTokenData> = {
 	// === Generic Types ===
 	'<number>': createToken('<number>', '<number>'),
 	'<integer>': createToken('<integer>', '<integer>'),
@@ -79,9 +88,13 @@ export const StyleTokenDefinitions: Partial<Record<string, StyleTokenData>> = {
 	'<box-shadow-offset>': createToken('<box-shadow-offset>', '<length> <length>'),
 	'<box-shadow-blur>': createToken('<box-shadow-blur>', '<length [0,∞]>'),
 	'<box-shadow-spread>': createToken('<box-shadow-spread>', '<length>'),
-};
+} as const;
 
-export const StyleTokenDefaults: Record<string, string> = {
+/**
+ * Default values for common CSS data types.
+ * Used for initializing properties and ensuring valid defaults.
+ */
+export const StyleTokenDefaults: Partial<Record<StyleTokenKeys, string>> = {
 	'<length>': '0px',
 	'<angle>': '0deg',
 	'<percentage>': '0%',
@@ -91,4 +104,4 @@ export const StyleTokenDefaults: Record<string, string> = {
 	'<flex>': '1fr',
 	'<ratio>': '1/1',
 	'<link>': '"https://example.com/image.png"',
-};
+} as const;

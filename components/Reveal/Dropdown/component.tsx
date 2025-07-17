@@ -36,12 +36,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         ariaLabel = 'Dropdown reveal',
     } = props;
 
-    // Guard Clause
-    if (!children) {
-        devLog.warn('[DropdownReveal] No children provided');
-        return null;
-    }
-
     // Component state management
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -86,6 +80,12 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         setIsOpen((prev) => !prev);
     }, []
     );
+
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[DropdownReveal] No children provided');
+        return null;
+    }
 
     const isCollapsed = size.width ? size.width < 25 : false;
 

@@ -4,9 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 // Types
 import type { BlockEditorStoreProps } from './types';
 import type { BlockStyleData, BlockData } from '@/types/block/block';
+import type { BlockTagKeys } from '@/types/block/tag';
 
 // Constants
 import { BlockStyleDefaults } from '@/constants/block/style';
+import { BlockTagDefinitions } from '@/constants/block/tag';
 
 function createBlockDefaultStyles(): BlockStyleData {
 	const defaults = {
@@ -42,14 +44,32 @@ function createBlockDefaultStyles(): BlockStyleData {
 	return devices;
 }
 
-function createDefaultBlock(parentBlock?: string,): BlockData {
+function createDefaultBlock(tag: BlockTagKeys, parentBlock?: string): BlockData {
+	const permittedContent = BlockTagDefinitions[tag]?.permittedContent || [];
+	const permittedParent = BlockTagDefinitions[tag]?.permittedParent || [];
+
 	return {
 		id: uuidv4(),
 		styles: createBlockDefaultStyles(),
-		parent: parentBlock ?? null,
-		children: [],
+		parentID: parentBlock ?? null,
+		contentIDs: [],
+		tag,
+		permittedContent,
+		permittedParent,
 	};
 }
+
+const defaultBlocks = {
+	'dc829b55-db25-432b-a835-9d1c8515b310': {
+		id: 'dc829b55-db25-432b-a835-9d1c8515b310',
+		styles: createBlockDefaultStyles(),
+		parentID: null,
+		contentIDs: [],
+		tag: 'div',
+		permittedContent: BlockTagDefinitions.div?.permittedContent || [],
+		permittedParent: [],
+	} as BlockData,
+};
 
 /**
  * Zustand hook for accessing and updating the block editor state.
@@ -58,33 +78,19 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * The currently selected block ID.
 	 */
-	selectedBlock: null,
+	selectedBlockID: 'dc829b55-db25-432b-a835-9d1c8515b310',
 
 	/**
 	 * A record of all allBlocks with their associated styles.
 	 */
-	allBlocks: {
-		'dc829b55-db25-432b-a835-9d1c8515b310': {
-			id: 'dc829b55-db25-432b-a835-9d1c8515b310',
-			styles: createBlockDefaultStyles(),
-			parent: null,
-			children: [],
-		},
-	},
+	allBlocks: defaultBlocks,
 
 	/**
 	 * Sets the currently selected block by ID.
 	 *
 	 * @param {string} id - The ID of the block to select.
 	 */
-	selectBlock: (blockID: string): void => set({ selectedBlock: blockID }),
-
-	/**
-	 * Retrieves the ID of the currently selected block.
-	 *
-	 * @returns {string | null} - The ID of the selected block, or null if no block is selected.
-	 */
-	getSelected: (): string | null => get().selectedBlock ?? null,
+	selectBlock: (blockID: string): void => set({ selectedBlockID: blockID }),
 
 	/**
 	 * Retrieves the block data for a given block ID.
@@ -120,18 +126,6 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 				},
 			};
 		});
-	},
-
-	/**
-	 * Retrieves the style object of the currently selected block.
-	 *
-	 * @returns {BlockStyleData | null} - The current style object, or null if no block is selected.
-	 */
-	getBlockStyles: (blockID: string): BlockStyleData | undefined => {
-		const block = get().getBlock(blockID);
-		if (!block) return undefined;
-
-		return block.styles;
 	},
 
 	/**
@@ -183,15 +177,15 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	 * @param parentID - Optional ID of the parent block to add the new block under.
 	 * @returns
 	 */
-	addBlock: (parentID?: string): void => {
+	addBlock: (tag: BlockTagKeys, parentID?: string): void => {
 		set((state) => {
-			const newBlock = createDefaultBlock(parentID);
+			const newBlock = createDefaultBlock(tag, parentID);
 
 			// If a parent ID is provided, add the new block to the parent's children
 			if (parentID) {
 				const parentBlock = get().getBlock(parentID);
 				if (parentBlock) {
-					parentBlock.children.push(newBlock.id);
+					parentBlock.contentIDs.push(newBlock.id);
 				}
 			}
 
@@ -221,15 +215,15 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 			if (!block) return state;
 
 			// Create a shallow copy of allBlocks
-			const updatedBlocks = { ...state.allBlocks };
+			let updatedBlocks = { ...state.allBlocks };
 
 			// Remove this block from its parent's children array (immutably)
-			if (block.parent) {
-				const parentBlock = updatedBlocks[block.parent];
+			if (block.parentID) {
+				const parentBlock = updatedBlocks[block.parentID];
 				if (parentBlock) {
-					updatedBlocks[block.parent] = {
+					updatedBlocks[block.parentID] = {
 						...parentBlock,
-						children: parentBlock.children.filter((childID) => childID !== blockID),
+						contentIDs: parentBlock.contentIDs.filter((childID) => childID !== blockID),
 					};
 				}
 			}
@@ -239,31 +233,34 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 				childrenIDs.forEach((childID) => {
 					const childBlock = updatedBlocks[childID];
 					if (childBlock) {
-						if (childBlock.children && childBlock.children.length > 0) {
-							removeChildren(childBlock.children);
+						if (childBlock.contentIDs && childBlock.contentIDs.length > 0) {
+							removeChildren(childBlock.contentIDs);
 						}
 						delete updatedBlocks[childID];
 					}
 				});
 			};
 
-			if (block.children && block.children.length > 0) {
-				removeChildren(block.children);
+			if (block.contentIDs && block.contentIDs.length > 0) {
+				removeChildren(block.contentIDs);
 			}
 
 			// Delete the block itself
 			delete updatedBlocks[blockID];
 
 			// If the deleted block was selected, clear selection
-			const selectedBlock = state.selectedBlock === blockID ? null : state.selectedBlock;
+			const selectedBlockID = state.selectedBlockID === blockID ? null : state.selectedBlockID;
+
+			if (Object.keys(updatedBlocks).length === 0) {
+				updatedBlocks = defaultBlocks;
+			}
 
 			return {
 				allBlocks: updatedBlocks,
-				selectedBlock,
+				selectedBlockID,
 			};
 		});
 	},
-
 }));
 
 export default useBlockStore;

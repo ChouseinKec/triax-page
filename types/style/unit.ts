@@ -1,11 +1,9 @@
-import { StyleUnitDefinitions } from '@/constants/style/unit';
-
 /**
  * All valid CSS unit names supported by the style system.
  * These correspond to official CSS units (e.g. 'px', 'em', 'vh', 'deg').
  * Used for type-safe unit lookup and validation.
  */
-export type StyleUnitKeys = keyof typeof StyleUnitDefinitions;
+export type StyleUnitKeys = 'fr' | 'px' | 'em' | 'rem' | 'vh' | 'vw' | 'vmax' | 'vmin' | 'deg' | 'grad' | 'rad' | 'turn' | '%';
 
 /**
  * Groups of CSS dimensions based on their functional use.

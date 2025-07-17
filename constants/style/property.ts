@@ -19,7 +19,7 @@ import { extractSeparators } from '@/utilities/style/separator';
  * @param category - The property category for grouping/filtering in the UI.
  * @returns A StylePropertyData object with all metadata fields populated, including expanded and parsed syntax.
  */
-export const createProperty = (name: string, syntax: string): StylePropertyData => {
+export const createProperty = (name: StylePropertyKeys, syntax: string): StylePropertyData => {
 	let _expanded: string | undefined;
 	let _parsed: string[] | undefined;
 	let _set: Set<string>[] | undefined;
@@ -74,9 +74,8 @@ export const createProperty = (name: string, syntax: string): StylePropertyData 
 /**
  * A lookup table of all supported CSS properties and their metadata.
  * Each entry is a StylePropertyData object describing the property's name, syntax, description, and category.
- * Used for property validation, UI dropdowns, and documentation.
  */
-export const StylePropertyDefinitions: Record<string, StylePropertyData> = {
+export const StylePropertyDefinitions: Record<StylePropertyKeys, StylePropertyData> = {
 	// ============ Display & Layout =============
 	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
 
@@ -255,13 +254,16 @@ export const StylePropertyDefinitions: Record<string, StylePropertyData> = {
 	transform: createProperty('transform', 'none|[<transform-function>]{1,4}'),
 	'box-shadow': createProperty('box-shadow', '<spread-shadow>'),
 	opacity: createProperty('opacity', '<number [0,1]>'),
-};
+} as const;
 
+/**
+ * A lookup table of CSS shorthand properties and their expanded definitions.
+ * Each entry maps a shorthand property to an array of its longhand properties.
+ */
 export const StylePropertyShorthandDefinitions: Partial<Record<StylePropertyKeys, StylePropertyKeys[]>> = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],
 	margin: ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'],
 	padding: ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
-	// Add more as needed
-};
+} as const;

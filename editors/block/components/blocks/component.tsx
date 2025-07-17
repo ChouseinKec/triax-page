@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useRef, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Types 
@@ -9,7 +9,11 @@ import Block from "../block/component";
 
 // Hooks & Context
 import { useBlockManager } from "@/hooks/block/manager";
+import { useStyleManager } from "@/hooks/style/manager";
 import { BlockEditorContext } from "./context";
+
+// Utilitie
+import { treeBlocks } from "@/utilities/block/block";
 
 /**
  * Blocks Component
@@ -22,78 +26,47 @@ const Blocks: React.FC<BlocksProps> = memo(() => {
         addBlock,
         selectBlock,
         deleteBlock,
-        getBlockChildren,
-        getBlockParent,
-        getBlockCSS,
-        getBlock,
         getAllBlocks,
-        getSelectedBlockID,
-        getBlockSelectedChild,
-        getBlockStyles,
+        getSelectedBlock,
+        hasBlockSelectedChild,
     } = useBlockManager();
 
-    // Get current selected block ID and all blocks
-    const selectedBlockID = getSelectedBlockID();
-    const allBlocks = getAllBlocks();
+    const {
+        generateCSS
+    } = useStyleManager();
 
-    // Compute root blocks (blocks without a parent)
-    const rootBlocks = useMemo(() =>
-        Object.values(allBlocks).filter(block => block.parent == null),
-        [allBlocks]
-    );
+    // Get current selected block ID and all blocks
+    const selectedBlockID = getSelectedBlock()?.id || null;
+    const allBlocks = getAllBlocks();
+    const [blocksNode, setBlocksNode] = useState<HTMLDivElement | null>(null);
 
     // Memoize context value to avoid unnecessary re-renders
     const contextValue = useMemo(() => ({
-        allBlocks,
-        selectedBlockID,
         addBlock,
         selectBlock,
-        getBlock,
         deleteBlock,
-        getBlockChildren,
-        getBlockParent,
-        getBlockCSS,
-        getBlockSelectedChild,
-        getBlockStyles,
+        generateCSS,
+        blocksNode,
     }), [
-        allBlocks,
-        selectedBlockID,
         addBlock,
         selectBlock,
-        getBlock,
         deleteBlock,
-        getBlockChildren,
-        getBlockParent,
-        getBlockCSS,
-        getBlockSelectedChild,
-        getBlockStyles,
+        generateCSS,
+        blocksNode,
     ]);
+
+    const nestedBlocks = useMemo(() => treeBlocks(allBlocks, selectedBlockID, hasBlockSelectedChild), [allBlocks, selectedBlockID, hasBlockSelectedChild]);
 
     return (
         <BlockEditorContext.Provider value={contextValue}>
-            <div className={CSS.Blocks}>
-                {/* Render all root blocks recursively */}
-                {rootBlocks.map(block => (
+            <div className={CSS.Blocks} ref={node => setBlocksNode(node)}
+            >
+                {nestedBlocks.map(block => (
                     <Block
                         key={block.id}
-                        id={block.id}
+                        {...block}
                     />
                 ))}
-
-                {/* Button to add a new root block */}
-                <button
-                    className={CSS.AddBlock}
-                    onClick={() => addBlock()}
-                >
-                    Add Block
-                </button>
-
-                {/* <button
-                    className={CSS.AddBlock}
-                    onClick={() => console.log(allBlocks)}
-                >
-                    Print Blocks
-                </button> */}
             </div >
         </BlockEditorContext.Provider>
 

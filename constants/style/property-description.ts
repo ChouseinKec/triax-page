@@ -175,4 +175,4 @@ export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	'box-shadow': 'Adds shadow effects around the element’s frame.',
 	transform: 'Transforms the element in 2D or 3D space.',
 	opacity: 'Sets the transparency level of the element, affecting its content and children.',
-};
+} as const satisfies Record<StylePropertyKeys, string>;

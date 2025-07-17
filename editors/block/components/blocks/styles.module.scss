@@ -1,4 +1,22 @@
 @use '../../../../mixins/mixins.module.scss' as inputMixins;
-.AddBlock {
-	@include inputMixins.components--button();
+.Blocks {
+	font-size: var(--size-font-md);
+
+	> *[class*='FloatReveal'] {
+		padding: var(--size-sm);
+
+		[class*='ActionGroup'] {
+			gap: var(--size-sm);
+			button {
+				@include inputMixins.components--button;
+				aspect-ratio: 1;
+			}
+
+			svg {
+				width: 15px;
+				height: 15px;
+				fill: #201d1d;
+			}
+		}
+	}
 }

@@ -1,5 +1,9 @@
-export const BlockStyleDefaults = {
-	default: {
+import type { StylePropertyKeys } from '@/types/style/property';
+
+type BlockStyleState = 'default' | 'active' | 'hover';
+
+export const BlockStyleDefaults: Record<BlockStyleState, Partial<Record<StylePropertyKeys, string>>> = {
+	'default': {
 		'padding-top': '10px',
 		'padding-bottom': '10px',
 		'padding-left': '10px',
@@ -10,7 +14,7 @@ export const BlockStyleDefaults = {
 		// 'margin-left': '10px',
 		// 'margin-right': '10px',
 
-		background: 'rgba(111, 155, 191, 0.3)',
+		'background-color': 'rgba(111, 155, 191, 0.3)',
 
 		'border-top-style': 'solid',
 		'border-bottom-style': 'solid',
@@ -29,6 +33,6 @@ export const BlockStyleDefaults = {
 
 		'font-size': '10px',
 	},
-	active: {},
-	hover: {},
+	'active': {},
+	'hover': {},
 };

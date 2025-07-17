@@ -1,19 +1,14 @@
 import { createContext, useContext } from 'react';
-import type { BlockData, BlockStyleData } from '@/types/block/block';
+import type { BlockStyleData } from '@/types/block/block';
+import type { BlockTagKeys } from '@/types/block/tag';
 
 export interface BlockEditorContextType {
-	allBlocks: Record<string, BlockData>;
-	selectedBlockID: string | null;
-	addBlock: (parentID?: string) => void;
+	addBlock: (tag: BlockTagKeys, parentID?: string) => void;
 	selectBlock: (blockID: string) => void;
 	deleteBlock: (blockID: string) => void;
-	getBlock: (blockID: string) => BlockData | undefined;
-	getBlockStyles: (blockID: string) => BlockStyleData | undefined;
-	getBlockCSS: (blockID: string) => string | null;
 
-	getBlockChildren: (blockID: string) => string[] | undefined;
-	getBlockParent: (blockID: string) => string | null;
-	getBlockSelectedChild: (blockID: string) => string | null;
+	generateCSS: (blockID: string, styles: BlockStyleData) => string | null;
+	blocksNode: HTMLDivElement | null;
 }
 
 export const BlockEditorContext = createContext<BlockEditorContextType | undefined>(undefined);

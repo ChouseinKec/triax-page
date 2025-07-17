@@ -59,13 +59,6 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
 
         // Visual
     } = props;
-
-    // Guard Clause
-    if (value == null) {
-        devLog.warn('[GenericInput] Invalid value provided, expected a string');
-        return null;
-    }
-
     // Component state management
     const inputRef = useRef<HTMLInputElement>(null);
     const [validationState, validationDispatch] = useReducer(validationReducer, { isError: false, message: '' });
@@ -96,7 +89,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             'data-type': type,
         };
     },
-        [type, ariaLabel, validationState]
+        [type, ariaLabel, validationState, title,]
     );
 
     /**
@@ -201,7 +194,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
         }
 
     },
-        [onChange, onValidate, value]
+        [onChange, onValidate, value, safeOnValidate]
     );
 
     /**
@@ -259,7 +252,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             validationDispatch({ type: 'VALIDATION_FAILURE', payload: { message: validationResult.message } });
         }
     },
-        [onValidate]
+        [safeOnValidate]
     );
 
     /**
@@ -278,6 +271,12 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
     },
         [handleReset, onBlur]
     );
+
+    // Guard Clause
+    if (value == null) {
+        devLog.warn('[GenericInput] Invalid value provided, expected a string');
+        return null;
+    }
 
     return (
         <>

@@ -1,4 +1,6 @@
 import { useCallback } from 'react';
+// Types
+import type { BlockStyleData } from '@/types/block/block';
 
 // Constants
 import { StylePropertyKeys } from '@/types/style/property';
@@ -21,15 +23,19 @@ interface StyleManager {
 	copyStyle: (property: StylePropertyKeys) => void;
 	pasteStyle: (property: StylePropertyKeys) => void;
 	resetStyle: (property: StylePropertyKeys) => void;
+
+	generateCSS: (blockID: string, styles: BlockStyleData) => string | null;
 }
 
 export const useStyleManager = (): StyleManager => {
 	const setBlockStyle = useBlockStore((state) => state.setBlockStyle);
-	const selectedBlock = useBlockStore((state) => state.selectedBlock);
-	const blockStyles = useBlockStore((state) => (selectedBlock ? state.allBlocks[selectedBlock]?.styles : undefined));
+	const selectedBlockID = useBlockStore((state) => state.selectedBlockID);
+	const blockStyles = useBlockStore((state) => (selectedBlockID ? state.allBlocks[selectedBlockID]?.styles : undefined));
 	const device = useDeviceStore((state) => state.currentDevice.name);
 	const orientation = useOrientationStore((state) => state.currentOrientation.name);
 	const pseudo = usePseudoStore((state) => state.currentPseudo.name);
+	const devices = useDeviceStore.getState().getDevices();
+	const orientations = useOrientationStore.getState().getOrientations();
 
 	/**
 	 * Gets a style property value with CSS cascade fallback logic
@@ -100,11 +106,11 @@ export const useStyleManager = (): StyleManager => {
 	 */
 	const _setStyle = useCallback(
 		(property: StylePropertyKeys, value: string): void => {
-			if (!selectedBlock) return;
+			if (!selectedBlockID) return;
 
-			setBlockStyle(selectedBlock, device, orientation, pseudo, property, value);
+			setBlockStyle(selectedBlockID, device, orientation, pseudo, property, value);
 		},
-		[setBlockStyle, selectedBlock, device, orientation, pseudo]
+		[setBlockStyle, selectedBlockID, device, orientation, pseudo]
 	);
 
 	/**
@@ -243,6 +249,72 @@ export const useStyleManager = (): StyleManager => {
 		[_setStyle]
 	);
 
+	/**
+	 * Generates CSS for a block by processing its style configuration.
+	 *
+	 * @param {string} blockID - The ID of the block to generate CSS for.
+	 * @returns {string | null} - The generated CSS, or null if it cannot be generated.
+	 */
+	const generateCSS = useCallback<StyleManager['generateCSS']>(
+		(blockID: string, styles: BlockStyleData): string | null => {
+			if (!styles) return null;
+
+			// Get devices and orientations
+
+			let css = '';
+
+			// Process each device (breakpoint)
+			for (const [deviceName, deviceStyles] of Object.entries(styles)) {
+				if (!deviceStyles) continue;
+
+				// Process each orientation
+				for (const [orientationName, orientationStyles] of Object.entries(deviceStyles)) {
+					if (!orientationStyles) continue;
+
+					// Get media queries for device + orientation
+					const device = devices.find((d) => d.value === deviceName);
+					const orientation = orientations.find((o) => o.value === orientationName);
+					if (!device || !orientation) continue;
+
+					// Build media query
+					let mediaQuery = '';
+					if (deviceName !== 'default') {
+						mediaQuery = `@media ${device.media}`;
+						mediaQuery += orientationName !== 'default' ? ` and (orientation: ${orientationName})` : ')';
+					} else if (orientationName !== 'default') {
+						mediaQuery = `@media (orientation: ${orientationName})`;
+					}
+
+					if (mediaQuery) css += `${mediaQuery} {\n`;
+
+					// Process each pseudo state
+					for (const [pseudoName, pseudoStyles] of Object.entries(orientationStyles)) {
+						if (!pseudoStyles || Object.keys(pseudoStyles).length === 0) continue;
+
+						const selector = pseudoName === 'default' ? '' : `:${pseudoName}`;
+
+						// Generate class name based on block ID only
+						css += `  #block-${blockID}${selector} {\n`;
+
+						// Add each style property
+						for (const [property, value] of Object.entries(pseudoStyles)) {
+							if (!value) continue;
+							const StylePropertyData = property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+							css += `    ${StylePropertyData}: ${value};\n`;
+						}
+
+						css += '  }\n';
+					}
+
+					if (mediaQuery) css += '}\n';
+				}
+			}
+
+			return css;
+		},
+		[useDeviceStore, useOrientationStore]
+	);
+
 	// Return the style manager methods
 	return {
 		getStyle,
@@ -250,5 +322,6 @@ export const useStyleManager = (): StyleManager => {
 		copyStyle,
 		pasteStyle,
 		resetStyle,
+		generateCSS,
 	};
 };

@@ -1,4 +1,4 @@
-import React, { memo,  useCallback, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 
 // Types
 import { DropdownSelectProps } from '@/components/select/dropdown/types';
@@ -44,18 +44,6 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         ariaLabel = 'Dropdown select',
     } = props;
 
-    // Guard Clause
-    if (!options || options.length === 0) {
-        devLog.warn('[DropdownSelect] No options provided');
-        return null;
-    }
-
-    if (value == null) {
-        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
-        return null;
-    }
-
-
     /**
      * Handles option selection with validation and error handling
      * Ensures the selected value exists in the options array
@@ -100,8 +88,19 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         title,
         isDisabled,
         ariaLabel
-    }), [value, placeholder, title, isDisabled, ariaLabel]
+    }), [value, placeholder, title, isDisabled, ariaLabel,forcePlaceholder]
     );
+
+    // Guard Clause
+    if (!options || options.length === 0) {
+        devLog.warn('[DropdownSelect] No options provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        return null;
+    }
 
     return (
         <DropdownReveal  {...dropdownProps} >

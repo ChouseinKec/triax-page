@@ -1,5 +1,6 @@
 // Types
 import type { StylePropertyKeys } from '@/types/style/property';
+import type { BlockTagKeys } from './tag';
 
 export type BlockStyleData = {
 	[deviceName: string]: {
@@ -14,6 +15,10 @@ export type BlockStyleData = {
 export interface BlockData {
 	id: string;
 	styles: BlockStyleData;
-	parent: string | null;
-	children: string[];
+	parentID: string | null;
+	contentIDs: string[];
+
+	tag: BlockTagKeys;
+	permittedContent: BlockTagKeys[] | null;
+	permittedParent: BlockTagKeys[] | null;
 }

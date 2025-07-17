@@ -1,4 +1,4 @@
-import React, {  useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 
 // Styles
 import CSS from './styles.module.scss';
@@ -27,12 +27,6 @@ import { devLog } from '@/utilities/dev';
  */
 const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => {
     const { children, title = '' } = props;
-
-    // Guard Clause
-    if (!children) {
-        devLog.warn('[ExpandReveal] No children provided');
-        return null;
-    }
 
     // Component state managment
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -76,6 +70,13 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
         'role': 'button' as const,
     }), [isOpen, title]
     );
+
+
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[ExpandReveal] No children provided');
+        return null;
+    }
 
     return (
         <div className={CSS.ExpandReveal} data-is-open={isOpen}>

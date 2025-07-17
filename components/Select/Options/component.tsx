@@ -43,16 +43,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         ariaRole = 'radio',
     } = props;
 
-    if (!options || options.length === 0) {
-        devLog.warn('[DropdownSelect] No options provided');
-        return null;
-    }
-
-    if (value == null) {
-        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
-        return null;
-    }
-
     const [getSearch, setSearch] = useState<string>('');
     const debouncedSearch = useDebouncedValue(getSearch, 100);
 
@@ -132,6 +122,16 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     }, [handleSearch, searchable, options.length]
     );
 
+    if (!options || options.length === 0) {
+        devLog.warn('[DropdownSelect] No options provided');
+        return null;
+    }
+
+    if (value == null) {
+        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        return null;
+    }
+
     /**
     * Renders the list of options or grouped options based on the filtered data.
     * 
@@ -147,8 +147,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         if (groupedOptions) {
             // Count the number of categories
             const categoryCount = Object.keys(groupedOptions).length;
-            // Calculate the number of columns based on the number of categories
-            const columns = Object.keys(groupedOptions).map(() => 'auto').join(' ');
 
             return (
                 <div className={CSS.Categories}>

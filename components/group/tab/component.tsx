@@ -32,11 +32,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         ariaDescription = 'Tab list for navigating between sections',
     } = props;
 
-    // Guard Clause
-    if (!items || items.length === 0) {
-        devLog.warn('[TabGroup] No items provided');
-        return null;
-    }
+
 
     // State management for active tab selection
     // Default to first tab (index 0) for consistent behavior
@@ -114,6 +110,12 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         };
     }, [ariaLabel, ariaDescription]
     );
+
+    // Guard Clause
+    if (!items || items.length === 0) {
+        devLog.warn('[TabGroup] No items provided');
+        return null;
+    }
 
     return (
         <div className={CSS.TabGroup} {...accessibilityProps}>

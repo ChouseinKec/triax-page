@@ -52,17 +52,6 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         ariaModal = false,
     } = props;
 
-    // Guard Clause
-    if (!children) {
-        devLog.warn('[FloatReveal] No children provided');
-        return null;
-    }
-
-    if(!targetRef){
-        devLog.warn('[FloatReveal] Target reference is not provided');
-        return null;
-    }
-
     // Refs for DOM elements
     const floatRef = useRef<HTMLDivElement | null>(null);
 
@@ -87,13 +76,12 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
      * @returns {Object} Computed accessibility attributes
      */
     const accessibilityAttributes = useMemo(() => {
-        const attrs: Record<string, any> = {
+        const attrs: Record<string, string> = {
             'role': role,
         };
 
         // Only add attributes that have values
         if (ariaLabel) attrs['aria-label'] = ariaLabel;
-        if (ariaModal) attrs['aria-modal'] = ariaModal;
 
         return attrs;
     },
@@ -212,6 +200,17 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         [isVisible, onVisibilityChange, isOpen]
     );
 
+    // Guard Clause
+    if (!children) {
+        devLog.warn('[FloatReveal] No children provided');
+        return null;
+    }
+
+    if (!targetRef) {
+        devLog.warn('[FloatReveal] Target reference is not provided');
+        return null;
+    }
+
     // Early return if not visible - prevents unnecessary DOM rendering
     if (!isVisible) {
         return null;
@@ -230,6 +229,9 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
             {...accessibilityAttributes}
             {...dataAttributes}
             {...eventHandlers}
+            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
+            onPointerDown={e => e.stopPropagation()}
         >
             {children}
         </div>

@@ -1,5 +1,5 @@
 export type Position = "top" | "bottom" | "left" | "right";
-
+export type Role = 'tooltip' | 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'group' | 'region';
 export interface FloatRevealProps {
     /** Reference to the target element that triggers the float */
     targetRef: React.RefObject<HTMLElement | null>;
@@ -20,7 +20,7 @@ export interface FloatRevealProps {
     closeOnEscape?: boolean;
 
     /** ARIA role for the floating element */
-    role?: 'tooltip' | 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'group' | 'region';
+    role?: Role;
 
     /** ARIA label for the floating element */
     ariaLabel?: string;

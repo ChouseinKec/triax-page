@@ -6,28 +6,11 @@
 	}
 
 	&[data-is-selected='true'],
-	&[data-has-selected-child='true'] {
+	&[data-has-selected-descendant='true'] {
 		opacity: 1;
 	}
 
 	&[data-is-selected='true'] {
 		border: 1px solid rgb(72, 101, 124) !important;
-	}
-
-	[class*='FloatReveal'] {
-		padding: var(--size-xs);
-	}
-
-	[class*='ActionGroup'] {
-		button {
-			@include inputMixins.components--button;
-			aspect-ratio: 1;
-		}
-
-		svg {
-			width: 15px;
-			height: 15px;
-			fill: #201d1d;
-		}
 	}
 }

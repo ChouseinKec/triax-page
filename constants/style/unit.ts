@@ -36,9 +36,8 @@ function createUnitOption(name: StyleUnitKeys): DimensionOptionData {
 /**
  * A lookup table of all supported CSS units and their metadata.
  * Each entry is a StyleUnitData object describing the unit's name, category, and support status.
- * Used for unit validation, UI dropdowns, and documentation.
  */
-export const StyleUnitDefinitions: Partial<Record<string, StyleUnitData>> = {
+export const StyleUnitDefinitions: Partial<Record<StyleUnitKeys, StyleUnitData>> = {
 	fr: createUnit('fr', 'flex'),
 	px: createUnit('px', 'length'),
 	em: createUnit('em', 'length'),
@@ -54,7 +53,7 @@ export const StyleUnitDefinitions: Partial<Record<string, StyleUnitData>> = {
 	turn: createUnit('turn', 'angle'),
 
 	'%': createUnit('%', 'percentage'),
-};
+} as const;
 
 /**
  * StyleUnitOptions: Maps each StyleUnitType value to an array of DimensionOptionData objects for UI selection.

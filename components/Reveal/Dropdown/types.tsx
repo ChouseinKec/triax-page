@@ -5,7 +5,7 @@ export interface DropdownRevealProps {
     /** If true, closes the dropdown when a selection is made. */
     closeOnChange?: boolean;
   
-    /** Placeholder text to display when no value is selected. */
+    /** Placeholder text to display */
     placeholder?: string | React.ReactNode;
 
     /** If true, disables the dropdown interaction. */
