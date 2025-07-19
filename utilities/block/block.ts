@@ -59,9 +59,9 @@ function nestBlocks(idToNode: Record<string, BlockProps & { content: BlockProps[
  * @param hasBlockSelectedChild - Function to determine if a block has a selected descendant
  * @returns Array of root BlockProps, each with nested content
  */
-function treeBlocks(blocks: Record<string, BlockData>, selectedID: string | null, hasBlockSelectedChild: (id: string) => boolean): BlockProps[] {
+function treeifyBlocks(blocks: Record<string, BlockData>, selectedID: string | null, hasBlockSelectedChild: (id: string) => boolean): BlockProps[] {
 	const idToNode = initializeBlocks(blocks, selectedID, hasBlockSelectedChild);
 	return nestBlocks(idToNode);
 }
 
-export { treeBlocks, initializeBlocks, nestBlocks };
+export { treeifyBlocks, initializeBlocks, nestBlocks };

@@ -10,7 +10,6 @@ import type { TabGroupItemsProps } from '@/components/group/tab/types';
 // Hooks
 import { useDisplayLayout } from '@/editors/style/components/layout/hooks/display';
 import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
-import { usePositionLayout } from '@/editors/style/components/layout/hooks/position';
 import { useFontLayout } from '@/editors/style/components/layout/hooks/font';
 import { useBorderLayout } from '@/editors/style/components/layout/hooks/border';
 import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
@@ -25,7 +24,6 @@ import { useBackgroundLayout } from '@/editors/style/components/layout/hooks/bac
 const Layout: React.FC = ({ }): ReactElement => {
     const displayLayout = useDisplayLayout();
     const sizeLayout = useSizeLayout();
-    const positionLayout = usePositionLayout();
     const fontLayout = useFontLayout();
     const backgroundLayout = useBackgroundLayout();
     const borderLayout = useBorderLayout();
@@ -34,7 +32,6 @@ const Layout: React.FC = ({ }): ReactElement => {
     const layouts: LayoutProps[] = [
         displayLayout,
         sizeLayout,
-        positionLayout,
         fontLayout,
         backgroundLayout,
         borderLayout,

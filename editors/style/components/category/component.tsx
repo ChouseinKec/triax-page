@@ -25,7 +25,7 @@ const Category: React.FC<LayoutCategoryProps> = ({ groups }): ReactElement => {
                     properties={group.properties}
                     hidden={group.hidden}
                     isExpandable={group.isExpandable}
-                    expandTitle={group.expandTitle}
+                    dividerTitle={group.dividerTitle}
                     styles={group.styles}
                 />
             ))}

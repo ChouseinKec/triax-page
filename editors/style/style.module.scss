@@ -1,8 +1,8 @@
 @use '../../mixins/mixins.module.scss' as inputMixins;
 
 .StyleEditor {
-	height: 100vh;
-	width: 300px;
+	height: 100%;
+	width: 100%;
 	overflow: hidden;
 
 	display: flex;
@@ -10,14 +10,17 @@
 
 	position: relative;
 	z-index: 9999;
-
-	@include inputMixins.components--container();
+	color:var(--color-white);
+	
+	// @include inputMixins.components--container();
 
 	[class*='TabGroup'] {
 		> *:nth-of-type(1) {
 			padding-top: var(--size-md);
 		}
 	}
+
+	background: transparent;
 }
 
 .Controls {

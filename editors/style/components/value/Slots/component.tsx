@@ -153,11 +153,9 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Default inline rendering for simple scenarios
         return (
             <>
-                <span aria-hidden="true" className={CSS.Separator}>————————————————————————————————————————————————</span>
+                {/* <span aria-hidden="true" className={CSS.Separator}>————————————————————————————————————————————————</span> */}
 
-                <div className={CSS.Values}>
-                    {renderCurrentSlots()}
-                </div>
+                {renderCurrentSlots()}
                 {renderNextSlot()}
             </>
         );

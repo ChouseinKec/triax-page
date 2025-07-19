@@ -1,6 +1,6 @@
 .TextView {
   border-radius: var(--size-sm);
-  box-shadow: var(--shadow-inset);
+  box-shadow: var(--theme-shadow--border);
   font-size: var(--font-size-sm);
   position: relative;
   padding: var(--size-xs);

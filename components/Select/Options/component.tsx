@@ -169,6 +169,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                                             icon={option.icon}
                                             prioritizeIcons={prioritizeIcons}
                                             ariaRole={ariaRole}
+                                            category={category}
                                         />
                                     )
                                 }) ?? []}
@@ -186,7 +187,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
             return (
                 <Option
                     key={index}
-
                     name={option.name}
                     value={option.value}
                     icon={option.icon}

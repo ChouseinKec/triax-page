@@ -97,6 +97,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                 onClick={handleToggle}
                 data-is-selected={isOpen}
                 data-is-disabled={isDisabled}
+                data-is-open={isOpen}
                 title={title}
                 aria-label={ariaLabel}
             >

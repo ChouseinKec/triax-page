@@ -1,7 +1,7 @@
 import React, { useMemo, CSSProperties } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from './styles.module.scss';
 
 // Types
 import { PositionViewProps } from './types';

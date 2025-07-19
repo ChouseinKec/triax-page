@@ -12,26 +12,16 @@ import { useStyleFactory } from '@/hooks/style/factory';
  * @returns {LayoutProps} The layout configuration for background settings.
  */
 export const useBackgroundLayout = (): LayoutProps => {
-    const { renderValue, renderBackgroundView } = useStyleFactory();
+    const { renderValue } = useStyleFactory();
 
     const icon = <svg aria-label='Background & Mask Icon' xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V158.75l-26.07-26.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L40,149.37V56ZM40,172l52-52,80,80H40Zm176,28H194.63l-36-36,20-20L216,181.38V200ZM144,100a12,12,0,1,1,12,12A12,12,0,0,1,144,100Z" /></svg>;
 
     return {
         label: icon,
-        title: 'Background&Mask',
+        title: 'Background & Mask',
         groups: [
             {
-                styles: { gridTemplateColumns: '1fr', position: 'sticky', top: '0', zIndex: 1, boxShadow: 'inset 0 0 20px 20px #ffffff' },
-                properties: [
-                    {
-                        styles: { position: 'sticky', top: '0', zIndex: 1 },
-                        label: null,
-                        component: () => renderBackgroundView(),
-                    },
-                ]
-            },
-            {
-                styles: { gridTemplateColumns: '1fr' },
+                styles: { gridTemplateColumns: 'repeat(3,minmax(0, 1fr))' },
                 properties: [
                     // Background-Image
                     {
@@ -58,6 +48,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Repeat',
                         property: 'background-repeat',
+                        styles: { gridColumn: '1/-1' },
                         component: () => renderValue('background-repeat'),
                     },
 
@@ -93,6 +84,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Position',
                         property: 'background-position',
+                        styles: { gridColumn: '2/-1' },
                         component: () => renderValue('background-position'),
                     },
 
@@ -101,8 +93,8 @@ export const useBackgroundLayout = (): LayoutProps => {
 
             {
 
-                styles: { gridTemplateColumns: '1fr' },
-                expandTitle: 'Mask',
+                styles: { gridTemplateColumns: 'repeat(3,minmax(0, 1fr))' },
+                dividerTitle: 'Mask',
                 properties: [
                     // Mask-Image
                     {
@@ -125,10 +117,20 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderValue('mask-mode'),
                     },
 
+
+                    // Mask-Clip
+                    {
+                        label: 'Clip',
+                        property: 'mask-clip',
+                        styles: { gridColumn: '1/-1' },
+                        component: () => renderValue('mask-clip'),
+                    },
+
                     // Mask-Repeat
                     {
                         label: 'Repeat',
                         property: 'mask-repeat',
+                        styles: { gridColumn: '1/-1' },
                         component: () => renderValue('mask-repeat'),
                     },
 
@@ -139,17 +141,12 @@ export const useBackgroundLayout = (): LayoutProps => {
                         component: () => renderValue('mask-composite'),
                     },
 
-                    // Mask-Clip
-                    {
-                        label: 'Clip',
-                        property: 'mask-clip',
-                        component: () => renderValue('mask-clip'),
-                    },
 
                     // Mask-Origin
                     {
                         label: 'Origin',
                         property: 'mask-origin',
+                        styles: { gridColumn: '2/-1' },
                         component: () => renderValue('mask-origin'),
                     },
 
@@ -164,6 +161,7 @@ export const useBackgroundLayout = (): LayoutProps => {
                     {
                         label: 'Position',
                         property: 'mask-position',
+                        styles: { gridColumn: '2/-1' },
                         component: () => renderValue('mask-position'),
                     },
 

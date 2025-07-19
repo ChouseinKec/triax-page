@@ -18,7 +18,7 @@ import { generatePropertyName } from '@/utilities/style/property';
  * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
 export const useBorderLayout = (): LayoutProps => {
-    const { renderValue, renderPositionSelect, renderBorderView } = useStyleFactory();
+    const { renderValue, renderPositionSelect } = useStyleFactory();
 
     const [currentSide, setCurrentSide] = useState<Side>('top');
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
@@ -32,29 +32,17 @@ export const useBorderLayout = (): LayoutProps => {
 
     return {
         label: icon,
-        title: 'Border&Outline',
+        title: 'Border & Outline',
         groups: [
             {
-                styles: { gridTemplateColumns: '0.5fr 1fr', position: 'sticky', top: '0', zIndex: 1, boxShadow: 'inset 0 0 20px 20px #ffffff' },
+                styles: { gridTemplateColumns: 'repeat(3,minmax(0, 1fr))' },
                 properties: [
-                    {
-                        label: null,
-                        column: '1',
-                        row: '1',
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true, true),
-                    },
 
                     {
                         label: null,
-                        column: '2/-1',
-                        row: '1',
-                        component: () => renderBorderView(),
+                        styles: { gridColumn: '1', gridRow: '1/3' },
+                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true, true),
                     },
-                ]
-            },
-            {
-                styles: { gridTemplateColumns: '1fr' },
-                properties: [
 
                     // Border Width
                     {
@@ -72,14 +60,6 @@ export const useBorderLayout = (): LayoutProps => {
                         component: () => renderValue(borderStyle),
                     },
 
-                    // Border Color
-                    {
-                        label: 'Color',
-                        property: borderColor,
-                        disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(borderColor),
-                    },
-
                     // Border Radius
                     {
                         label: 'Radius',
@@ -88,6 +68,15 @@ export const useBorderLayout = (): LayoutProps => {
                         component: () => renderValue(borderRadius),
                     },
 
+                    // Border Color
+                    {
+                        label: 'Color',
+                        property: borderColor,
+                        disabled: currentSide === null && currentCorner !== null,
+                        component: () => renderValue(borderColor),
+                    },
+
+
                     // Border Image Source
                     {
                         label: 'Image Source',
@@ -95,10 +84,19 @@ export const useBorderLayout = (): LayoutProps => {
                         component: () => renderValue('border-image-source'),
                     },
 
+                    // Border Image Repeat
+                    {
+                        label: 'Image Repeat',
+                        property: 'border-image-repeat',
+                        styles: { gridColumn: '2/-1' },
+                        component: () => renderValue('border-image-repeat'),
+                    },
+
                     // Border Image Slice
                     {
                         label: 'Image Slice',
                         property: 'border-image-slice',
+                        styles: { gridColumn: '1/-1' },
                         component: () => renderValue('border-image-slice'),
                     },
 
@@ -106,6 +104,7 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: 'Image Width',
                         property: 'border-image-width',
+                        styles: { gridColumn: '1/-1' },
                         component: () => renderValue('border-image-width'),
                     },
 
@@ -113,22 +112,18 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: 'Image Outset',
                         property: 'border-image-outset',
+                        styles: { gridColumn: '1/-1' },
                         component: () => renderValue('border-image-outset'),
                     },
 
-                    // Border Image Repeat
-                    {
-                        label: 'Image Repeat',
-                        property: 'border-image-repeat',
-                        component: () => renderValue('border-image-repeat'),
-                    },
+
 
                 ],
             },
 
             {
-                styles: { gridTemplateColumns: '1fr' },
-                expandTitle: 'Outline',
+                styles: { gridTemplateColumns: 'repeat(4,minmax(0,1fr))' },
+                dividerTitle: 'Outline',
                 properties: [
 
                     // Outline Width
@@ -137,6 +132,14 @@ export const useBorderLayout = (): LayoutProps => {
                         property: 'outline-width',
                         component: () => renderValue('outline-width'),
                     },
+
+                    // Outline Offset
+                    {
+                        label: 'Offset',
+                        property: 'outline-offset',
+                        component: () => renderValue('outline-offset'),
+                    },
+
 
                     // Outline Style
                     {
@@ -150,13 +153,6 @@ export const useBorderLayout = (): LayoutProps => {
                         label: 'Color',
                         property: 'outline-color',
                         component: () => renderValue('outline-color'),
-                    },
-
-                    // Outline Offset
-                    {
-                        label: 'Offset',
-                        property: 'outline-offset',
-                        component: () => renderValue('outline-offset'),
                     },
 
                 ],

@@ -5,14 +5,14 @@
 
 		[class*='RadioSelect'] {
 			width: 100%;
-			max-width: max-content;
+			// max-width: max-content;
 		}
 	}
 
 	&[data-type='dropdown'] {
 		[class*='DropdownReveal'] {
 			width: 100%;
-			max-width: max-content;
+			// max-width: max-content;
 			min-width: 40px;
 		}
 	}

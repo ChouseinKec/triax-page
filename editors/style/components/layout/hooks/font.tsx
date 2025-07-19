@@ -5,27 +5,15 @@ import type { LayoutProps } from '@/editors/style/components/layout/types';
 import { useStyleFactory } from '@/hooks/style/factory';
 
 export const useFontLayout = (): LayoutProps => {
-    const { renderValue, renderTextView } = useStyleFactory();
+    const { renderValue } = useStyleFactory();
     const icon = <svg aria-label='Font & Text Icon' xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
     return {
         label: icon,
-        title: 'Font&Text',
+        title: 'Font & Text',
         groups: [
-            {
-                styles: { gridTemplateColumns: '1fr', position: 'sticky', top: '0', zIndex: 1, boxShadow: 'inset 0 0 20px 20px #ffffff' },
-                properties: [
-                    // Text View
-                    {
-                        label: null,
-                        column: 'auto',
-                        component: () => renderTextView()
-                    },
-
-                ],
-            },
 
             {
-                styles: { gridTemplateColumns: '1fr' },
+                styles: { gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' },
                 properties: [
 
                     // Size
@@ -63,21 +51,22 @@ export const useFontLayout = (): LayoutProps => {
                         property: 'font-style',
                         component: () => renderValue('font-style')
                     },
+
+                    // Color
+                    {
+                        label: 'Color',
+                        property: 'color',
+                        component: () => renderValue('color'),
+                    },
+
                 ],
             },
 
             {
-                styles: { gridTemplateColumns: '1fr' },
-                expandTitle: 'Text',
+                styles: { gridTemplateColumns: 'repeat(3,minmax(0, 1fr))' },
+                dividerTitle: 'Text',
                 properties:
                     [
-                        // Color
-                        {
-                            label: 'Color',
-                            property: 'color',
-                            component: () => renderValue('color'),
-                        },
-
 
                         // Align
                         {
@@ -86,19 +75,11 @@ export const useFontLayout = (): LayoutProps => {
                             component: () => renderValue('text-align')
                         },
 
-
-                        // Decoration
+                        // Text Align Last
                         {
-                            label: 'Decoration',
-                            property: 'text-decoration',
-                            component: () => renderValue('text-decoration')
-                        },
-
-                        // Text Shadow
-                        {
-                            label: 'Shadow',
-                            property: 'text-shadow',
-                            component: () => renderValue('text-shadow')
+                            label: 'Align Last',
+                            property: 'text-align-last',
+                            component: () => renderValue('text-align-last'),
                         },
 
                         // Transform
@@ -108,11 +89,11 @@ export const useFontLayout = (): LayoutProps => {
                             component: () => renderValue('text-transform')
                         },
 
-                        // Text Indent
+                        // Text Combine Upright
                         {
-                            label: 'Indent',
-                            property: 'text-indent',
-                            component: () => renderValue('text-indent')
+                            label: 'Combine Upright',
+                            property: 'text-combine-upright',
+                            component: () => renderValue('text-combine-upright'),
                         },
 
                         // Text Overflow
@@ -129,61 +110,76 @@ export const useFontLayout = (): LayoutProps => {
                             component: () => renderValue('text-orientation'),
                         },
 
-
-                        // Text Align Last
+                        // Decoration
                         {
-                            label: 'Align Last',
-                            property: 'text-align-last',
-                            component: () => renderValue('text-align-last'),
+                            label: 'Decoration',
+                            property: 'text-decoration',
+                            styles: { gridColumn: '1/-1' },
+                            component: () => renderValue('text-decoration')
                         },
 
-                        // Text Combine Upright
+                        // Text Shadow
                         {
-                            label: 'Combine Upright',
-                            property: 'text-combine-upright',
-                            component: () => renderValue('text-combine-upright'),
+                            label: 'Shadow',
+                            property: 'text-shadow',
+                            styles: { gridColumn: '1/-1' },
+                            component: () => renderValue('text-shadow')
                         },
 
 
+                        // Text Indent
+                        {
+                            label: 'Indent',
+                            property: 'text-indent',
+                            styles: { gridColumn: '1/3' },
+                            component: () => renderValue('text-indent')
+                        },
                     ],
             },
 
             {
-                expandTitle: 'Spacing',
-                styles: { gridTemplateColumns: '1fr' },
+                dividerTitle: 'Spacing',
+                styles: { gridTemplateColumns: 'repeat(4,minmax(0, 1fr))' },
                 properties: [
                     // Writing Mode
                     {
                         label: 'Writing Mode',
                         property: 'writing-mode',
+                        styles: { gridColumn: '1/3' },
                         component: () => renderValue('writing-mode'),
+                    },
+
+
+                    // White-Space
+                    {
+                        label: 'White Space',
+                        property: 'white-space',
+                        styles: { gridColumn: '3/-1' },
+                        component: () => renderValue('white-space'),
                     },
 
                     // Word-Break
                     {
-                        label: 'Word-Break',
+                        label: 'Word Break',
                         property: 'word-break',
+                        styles: { gridColumn: '1/3' },
                         component: () => renderValue('word-break'),
                     },
 
                     // Line-Break
                     {
-                        label: 'Line-Break',
+                        label: 'Line Break',
                         property: 'line-break',
+                        styles: { gridColumn: '3/-1' },
                         component: () => renderValue('line-break'),
                     },
 
-                    // White-Space
-                    {
-                        label: 'White-Space',
-                        property: 'white-space',
-                        component: () => renderValue('white-space'),
-                    },
 
                     // Letter Spacing
                     {
                         label: 'Letter Spacing',
                         property: 'letter-spacing',
+                        styles: { gridColumn: '1/3' },
                         component: () => renderValue('letter-spacing')
                     },
 
@@ -191,6 +187,7 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Word Spacing',
                         property: 'word-spacing',
+                        styles: { gridColumn: '3/-1' },
                         component: () => renderValue('word-spacing'),
                     },
                 ],
@@ -198,14 +195,15 @@ export const useFontLayout = (): LayoutProps => {
 
             {
                 isExpandable: true,
-                expandTitle: 'Column',
-                styles: { gridTemplateColumns: '1fr' },
+                dividerTitle: 'Column',
+                styles: { gridTemplateColumns: 'repeat(3,minmax(0, 1fr))' },
                 properties: [
 
                     // Column Count
                     {
                         label: 'Count',
                         property: 'column-count',
+                        styles: { gridColumn: '1' },
                         component: () => renderValue('column-count'),
                     },
 
@@ -213,6 +211,7 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Width',
                         property: 'column-width',
+                        styles: { gridColumn: '2' },
                         component: () => renderValue('column-width'),
                     },
 
@@ -220,6 +219,7 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: 'Gap',
                         property: 'column-gap',
+                        styles: { gridColumn: '3' },
                         component: () => renderValue('column-gap'),
                     },
 

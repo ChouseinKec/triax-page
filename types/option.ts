@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 export interface OptionData {
 	/** The display name of the option */
 	name: string;
-	/** The value of the option (used for selection) */
+	/** The value of the option*/
 	value: string;
 	/** Optional category to group the option under */
 	category?: string;

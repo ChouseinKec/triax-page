@@ -12,7 +12,7 @@ export type LayoutGroup = {
     /** Optional flag indicating whether the group is expandable. */
     isExpandable?: boolean;
     /** Optional title for the expandable group. */
-    expandTitle?: string;
+    dividerTitle?: string;
     /** Optional CSS styles to apply to the group container. */
     styles?: React.CSSProperties;
 };

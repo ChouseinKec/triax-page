@@ -13,14 +13,7 @@
 	// It indicates that the element is currently being hovered over
 	@if $hover {
 		&:hover {
-			background: var(--color-white--darker);
-			color: var(--color-dark--lighter);
-
-			@if $placeholder {
-				&::placeholder {
-					color: var(--color-dark--lighter);
-				}
-			}
+			box-shadow: var(--theme-shadow--hover);
 		}
 	}
 
@@ -28,12 +21,7 @@
 	// It indicates that the element is currently focused
 	@if $focus {
 		&:focus {
-			background: var(--color-gray);
-			color: var(--color-white);
-
-			svg [fill]:not([fill='none']) {
-				fill: var(--color-white);
-			}
+			background: var(--theme-background-color--hover);
 		}
 	}
 
@@ -41,12 +29,7 @@
 	// It indicates that the button is currently being pressed
 	@if $active {
 		&:active {
-			background: var(--color-gray--darker);
-			color: var(--color-white);
-
-			svg [fill]:not([fill='none']) {
-				fill: var(--color-white);
-			}
+			background: var(--theme-background-color--hover);
 		}
 	}
 
@@ -54,12 +37,7 @@
 	// It indicates that the option is currently selected
 	@if $selected {
 		&[data-is-selected='true'] {
-			background: var(--color-black--lighter);
-			color: var(--color-white);
-
-			svg [fill]:not([fill='none']) {
-				fill: var(--color-white);
-			}
+			background: var(--theme-background-color--selected);
 		}
 	}
 
@@ -83,15 +61,21 @@
 	}
 }
 
-@mixin components--container($background: true) {
-	border-radius: var(--size-sm);
-	box-shadow: var(--shadow-inset);
+@mixin components--container($background: true, $radius: true, $shadow: true) {
 	font-size: var(--font-size-sm);
 	position: relative;
 	padding: var(--size-xs);
 
 	@if $background {
-		background: var(--color-white);
+		background: var(--theme-background-color--secondary);
+	}
+
+	@if $radius {
+		border-radius: var(--size-md);
+	}
+
+	@if $shadow {
+		box-shadow: var(--theme-shadow--border);
 	}
 }
 
@@ -99,9 +83,9 @@
 // E.g DropdownReveal,DropdownSelect in Style Editor
 @mixin components--float {
 	border-radius: var(--size-sm);
-	box-shadow: var(--shadow-inset);
+	box-shadow: var(--theme-shadow--border);
 	font-size: var(--font-size-md);
-	background: var(--color-white);
+	background: var(--theme-background-color--secondary);
 	position: fixed;
 	padding: var(--size-md);
 	z-index: 9999;
@@ -117,9 +101,10 @@
 	@include components--container($background: false);
 
 	width: 100%;
-	height: 100px;
+	height: 100%;
+	max-height: 150px;
 	overflow: hidden;
-	background: var(--color-black--lighter);
+	background: var(--theme-background-color--secondary);
 	color: var(--color-white);
 }
 
@@ -135,9 +120,10 @@
 	outline: none;
 	border: none;
 	border-radius: var(--size-sm);
-	background: var(--color-white);
-	box-shadow: var(--shadow-inset);
+	background: var(--theme-background-color--secondary);
+	box-shadow: var(--theme-shadow--border);
 
+	color: var(--color-white);
 	font-size: var(--font-size-sm);
 	text-align: center;
 
@@ -178,7 +164,7 @@
 @mixin components--button($height: 25px, $shadow: true) {
 	height: $height;
 
-	padding: var(--size-xs);
+	padding: var(--size-sm);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -189,12 +175,12 @@
 	border: none;
 
 	@if $shadow {
-		box-shadow: var(--shadow-inset);
+		box-shadow: var(--theme-shadow--border);
 	}
-	background: var(--color-white);
+	background: var(--theme-background-color--secondary);
 
 	font-size: var(--font-size-sm);
-	color: var(--color-black);
+	color: var(--color-white);
 	text-transform: uppercase;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -205,7 +191,7 @@
 		max-height: 15px;
 
 		[fill]:not([fill='none']) {
-			fill: var(--color-black);
+			fill: var(--color-white);
 		}
 	}
 
@@ -239,6 +225,13 @@
 			width: 100%;
 		}
 	}
+
+	svg {
+		max-width: 15px;
+		max-height: 15px;
+
+		fill: var(--color-white);
+	}
 }
 
 @mixin icon-arrow {
@@ -251,7 +244,7 @@
 		transform: translateY(-5%);
 
 		clip-path: polygon(50% 100%, 0 0, 100% 0);
-		background: var(--color-black);
+		background: var(--color-white);
 
 		transition: all 0.5s;
 	}

@@ -9,10 +9,6 @@ import type { CSSProperties } from "react";
 export interface LayoutProps {
 	/** The label for the property, displayed in the UI */
 	label: string | null;
-	/** The grid column position for the property in the layout */
-	column?: string;
-	/** The grid row position for the property in the layout */
-	row?: string;
 	/** Whether the property is hidden in the UI */
 	hidden?: boolean;
 	/** Whether the property is disabled in the UI */

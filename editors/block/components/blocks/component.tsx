@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Types 
@@ -13,7 +13,7 @@ import { useStyleManager } from "@/hooks/style/manager";
 import { BlockEditorContext } from "./context";
 
 // Utilitie
-import { treeBlocks } from "@/utilities/block/block";
+import { treeifyBlocks } from "@/utilities/block/block";
 
 /**
  * Blocks Component
@@ -55,7 +55,7 @@ const Blocks: React.FC<BlocksProps> = memo(() => {
         blocksNode,
     ]);
 
-    const nestedBlocks = useMemo(() => treeBlocks(allBlocks, selectedBlockID, hasBlockSelectedChild), [allBlocks, selectedBlockID, hasBlockSelectedChild]);
+    const nestedBlocks = useMemo(() => treeifyBlocks(allBlocks, selectedBlockID, hasBlockSelectedChild), [allBlocks, selectedBlockID, hasBlockSelectedChild]);
 
     return (
         <BlockEditorContext.Provider value={contextValue}>

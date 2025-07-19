@@ -1,4 +1,4 @@
-import { useCallback, ReactElement, useMemo } from "react";
+import { useCallback, ReactElement } from "react";
 
 // Components
 import DropdownSelect from '@/components/select/dropdown/component';
@@ -7,8 +7,11 @@ import DropdownSelect from '@/components/select/dropdown/component';
 import useDeviceStore from '@/stores/device/store';
 
 // Types
+import { Device } from '@/stores/device/types';
+
 interface useDeviceRenderProps {
     renderDeviceSelect: () => ReactElement;
+    currentDevice: Device;
 }
 
 
@@ -27,8 +30,8 @@ export const useDeviceRender = (): useDeviceRenderProps => {
     );
 
 
-
-    return useMemo(() => ({
-        renderDeviceSelect
-    }), [renderDeviceSelect]);
+    return {
+        renderDeviceSelect,
+        currentDevice
+    };
 };

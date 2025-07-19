@@ -26,7 +26,11 @@ import { devLog } from '@/utilities/dev';
  * @returns {ReactElement} The rendered ExpandReveal component
  */
 const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => {
-    const { children, title = '' } = props;
+    const {
+        children,
+        title = '',
+        contentStyles
+    } = props;
 
     // Component state managment
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -92,7 +96,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
 
             {/* Conditionally render content when expanded */}
             {isOpen && (
-                <div className={CSS.Content} role="region">
+                <div className={CSS.Content} style={contentStyles} role="region">
                     {children}
                 </div>
             )}

@@ -17,8 +17,6 @@
 	padding-bottom: var(--size-md);
 	padding-top: var(--size-lg);
 
-
-	display: flex;
-	flex-direction: column;
+	display: grid;
 	gap: var(--size-lg);
 }

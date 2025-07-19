@@ -4,4 +4,7 @@ export type ExpandRevealProps = {
     
     /** Optional title for the expand section */
     title?: string;
+    
+    /** Optional styles for the expand section */
+    contentStyles?: React.CSSProperties;
 };

@@ -27,9 +27,10 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
         properties = [],
         hidden = false,
         isExpandable = false,
-        expandTitle = '',
+        dividerTitle,
         styles = {},
     } = props;
+
 
     // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
     if (hidden === true) return <></>;
@@ -40,19 +41,19 @@ const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
         const _properties = properties.map((property, index) => (
             <Property
                 key={index}
-                {...property} // Spread all property attributes (e.g., label, column, component, etc.)
+                {...property}
             />
         ))
 
         if (!isExpandable) return (
             <>
-                {expandTitle && <HorizontalDivider title={expandTitle} />}
+                {dividerTitle !== undefined && <HorizontalDivider title={dividerTitle} />}
                 {_properties}
             </>
         );
 
         return (
-            <ExpandReveal title={expandTitle}>
+            <ExpandReveal title={dividerTitle} contentStyles={styles}>
                 {_properties}
             </ExpandReveal>
         )
