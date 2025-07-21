@@ -1,18 +1,19 @@
+"use client";
+
 import React, { Fragment, useCallback, useRef } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import Slot from '../slot/component';
-import DropdownSelect from '@/components/select/dropdown/component';
-import DropdownReveal from '@/components/reveal/dropdown/component';
+import Slot from "../slot/component";
+import DropdownSelect from "@/components/select/dropdown/component";
 
 // Types
-import type { SlotsProps } from './types';
+import type { SlotsProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * Slots Component
@@ -32,12 +33,12 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
     // Guard Clause
     if (!options || options.length === 0) {
-        devLog.error('[Slots] No options provided');
+        devLog.error("[Slots] No options provided");
         return null;
     }
 
     if (values == null) {
-        devLog.error('[Slots] Invalid value provided, expected a string');
+        devLog.error("[Slots] Invalid value provided, expected a string");
         return null;
     }
 
@@ -66,7 +67,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
             return (
                 <Slot
                     key={0}
-                    value={''}
+                    value={""}
                     options={options[0]}
                     onChange={val => handleSlotChange(val, 0)}
                 />
@@ -98,13 +99,13 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
         // Determine if the next options are a single keyword type
         const optionsLength = nextOptions.length;
-        const isSingleKeyword = optionsLength === 1 && nextOptions[0].type === 'keyword';
+        const isSingleKeyword = optionsLength === 1 && nextOptions[0].type === "keyword";
 
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
             return (
                 <Slot
-                    value={''}
+                    value={""}
                     options={nextOptions}
                     onChange={(val: string) => handleSlotChange(val, valuesLength)}
                 />
@@ -114,7 +115,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Render dropdown select for multiple options or complex types
         return (
             <DropdownSelect
-                value=''
+                value=""
                 forcePlaceholder={true}
                 options={nextOptions}
                 placeholder="+"
@@ -141,7 +142,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
         // if (shouldUseDropdown) {
         //     return (
-        //         <DropdownReveal placeholder={values.join(' ')} closeOnChange={false} title='Edit Values'>
+        //         <DropdownReveal placeholder={values.join(" ")} closeOnChange={false} title="Edit Values">
         //             <div className={CSS.SlotsInner}>
         //                 {renderCurrentSlots()}
         //                 {renderNextSlot()}
@@ -164,7 +165,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
 
 
     return (
-        <div className={CSS.Slots} role='presentation'>
+        <div className={CSS.Slots} role="presentation">
             {render()}
         </div>
     );

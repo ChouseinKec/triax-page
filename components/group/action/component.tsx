@@ -1,13 +1,15 @@
+"use client";
+
 import React, { memo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Types
-import type { ActionGroupProps } from './types';
+import type { ActionGroupProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * ActionGroup Component
@@ -23,7 +25,7 @@ const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
 
     // Guard Clause
     if (!children || (Array.isArray(children) && children.length === 0)) {
-        devLog.warn('[ActionGroup] No children provided');
+        devLog.warn("[ActionGroup] No children provided");
         return null;
     }
 

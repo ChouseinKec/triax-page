@@ -1,70 +1,36 @@
-"use client";
+'use client';
+// Registry
+import "@/blocks/registry/init";
 
 // Styles
 import CSS from "./page.module.scss";
 
 // Components
-import StyleEditor from "@/editors/style/component";
-import BlockEditor from "@/editors/block/component";
+import BottomPanel from "@/layout/bottom/component";
+import LeftPanel from "@/layout/left/component";
+import RightPanel from "@/layout/right/component";
+import ViewPanel from "@/layout/view/component";
 
-// Hooks
-import { useDeviceRender } from '@/hooks/device/hooks';
-import { useOrientationRender } from '@/hooks/orientation/hooks';
-import { usePseudoRender } from '@/hooks/pseudo/hooks';
-import { useMemo } from "react";
+// Context
+import { LayoutProvider } from "@/context/layout/provider";
 
 export default function Home() {
-  const { renderDeviceSelect, currentDevice } = useDeviceRender();
-  const { renderOrientationSelect } = useOrientationRender();
-  const { renderPseudoSelect } = usePseudoRender();
-
-  const deviceSelect = useMemo(() => renderDeviceSelect(), [renderDeviceSelect]);
-  const orientationSelect = useMemo(() => renderOrientationSelect(), [renderOrientationSelect]);
-  const pseudoSelect = useMemo(() => renderPseudoSelect(), [renderPseudoSelect]);
-
-
   const version = process.env.NEXT_PUBLIC_APP_VERSION;
+
   return (
-    <main className={CSS.main}>
-      {/* Block Editor */}
-
-
-
-      <div className={CSS.version}>
-        <p>v{version}</p>
-      </div>
-
-
-
-      <div className={CSS.TopBar}>
-        <div className={CSS.Devices}>
-          {deviceSelect}
-          {orientationSelect}
-          {pseudoSelect}
+    <LayoutProvider>
+      <main className={CSS.main}>
+        <div className={CSS.version}>
+          <p>v{version}</p>
         </div>
-      </div>
 
-      <div className={CSS.HierarchyPanel}>
+        <ViewPanel />
+        <LeftPanel />
+        <RightPanel />
+        <BottomPanel />
 
-      </div>
-
-
-      <div className={CSS.InspectorPanel}>
-        <StyleEditor />
-      </div>
-
-
-      <div className={CSS.ViewPanel}>
-        <BlockEditor />
-      </div>
-
-
-    </main>
-
-
-
-
-
+      </main>
+    </LayoutProvider>
   );
 
 

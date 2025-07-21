@@ -1,0 +1,12 @@
+.ViewPanel {
+	grid-row: 1/-1;
+	grid-column: 2;
+
+	padding: var(--size-lg);
+
+	background-image: radial-gradient(circle at 1px 1px, var(--theme-background-color--tertiary) 1.5px, transparent 0);
+	background-size: 30px 30px;
+
+	overflow: hidden;
+	z-index: 0;
+}

@@ -1,13 +1,12 @@
-import type { BlockData, BlockStyleData } from '@/types/block/block';
-import type { BlockTagKeys } from '@/types/block/tag';
+import type { BlockInstance, BlockStyleData, BlockType, BlockTag } from '@/types/block/block';
 
 export interface BlockEditorStoreProps {
 	selectedBlockID: string | null;
-	allBlocks: Record<string, BlockData>;
+	allBlocks: Record<string, BlockInstance>;
 
-	selectBlock: (blockID: string) => void;
-	getBlock: (blockID: string) => BlockData | undefined;
-	addBlock: (tag: BlockTagKeys, parentID?: string) => void;
+	selectBlock: (blockID: string | null) => void;
+	getBlock: (blockID: string) => BlockInstance | undefined;
+	addBlock: (type: BlockType, parentID?: string) => void;
 	deleteBlock: (blockID: string) => void;
 
 	setBlockStyles: (blockID: string, style: BlockStyleData) => void;

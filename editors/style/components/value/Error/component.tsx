@@ -1,16 +1,18 @@
+"use client";
+
 import React, { useRef, useCallback, Fragment } from "react";
 
 // Types
-import type { ErrorProps } from './types';
+import type { ErrorProps } from "./types";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import FloatReveal from '@/components/reveal/float/component';
+import FloatReveal from "@/components/reveal/float/component";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * Error Component
@@ -26,15 +28,15 @@ import { devLog } from '@/utilities/dev';
 const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
     const { message } = props;
 
-    if (!message || message.trim() === '') {
-        devLog.warn('[Error] Empty or missing error message provided');
+    if (!message || message.trim() === "") {
+        devLog.warn("[Error] Empty or missing error message provided");
         return null;
     }
 
     // Ref for the error trigger button (target for floating tooltip)
     const buttonRef = useRef<HTMLButtonElement>(null);
     // Fallback for empty messages
-    const displayMessage = message?.trim() || 'An unknown error occurred';
+    const displayMessage = message?.trim() || "An unknown error occurred";
 
 
     return (
@@ -53,7 +55,7 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
             </button>
 
             {/* Floating error message tooltip */}
-            <FloatReveal targetRef={buttonRef} role='tooltip' aria-label="Error Message">
+            <FloatReveal targetRef={buttonRef} role="tooltip" aria-label="Error Message">
                 <p className={CSS.ErrorMessage}>
                     {displayMessage}
                 </p>

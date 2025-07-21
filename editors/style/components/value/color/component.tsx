@@ -1,28 +1,30 @@
+"use client";
+
 // External imports
 import React, { memo, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import ColorSelect from '@/components/select/color/component';
+import ColorSelect from "@/components/select/color/component";
 
 // Types
-import { ColorValueProps } from './types';
+import { ColorValueProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * ColorValue Component
  * 
- * A controlled input component for CSS dimension values (e.g., '10px', '2rem', '100%').
+ * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
  * Intelligently splits values into numeric and unit components for separate editing.
  * Supports grouped unit categories and validation for numeric ranges.
  *
  * @component
  * @param {ColorValueProps} props - Component properties
- * @param {string} [props.value=''] - Current CSS dimension value (e.g., '10px')
+ * @param {string} [props.value=""] - Current CSS dimension value (e.g., "10px")
  * @param {function} [props.onChange] - Callback for value changes
  * @param {Array} [props.options=[]] - Available unit options with categories
  * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
@@ -38,7 +40,7 @@ const ColorValue: React.FC<ColorValueProps> = (props: ColorValueProps) => {
 	} = props;
 
 	if (value == null) {
-		devLog.error('[ColorValue] Invalid value provided, expected a string');
+		devLog.error("[ColorValue] Invalid value provided, expected a string");
 		return null;
 	}
 

@@ -1,21 +1,22 @@
+"use client";
+
 import React, { useMemo } from "react";
 
-
 // Components
-import DimensionValue from '../dimension/component';
-import FunctionValue from '../function/component';
-import KeywordValue from '../keyword/component';
-import NumberValue from '../number/component';
-import LinkValue from '../link/component';
-import ColorValue from '../color/component';
-import Error from '../error/component';
+import DimensionValue from "../dimension/component";
+import FunctionValue from "../function/component";
+import KeywordValue from "../keyword/component";
+import NumberValue from "../number/component";
+import LinkValue from "../link/component";
+import ColorValue from "../color/component";
+import Error from "../error/component";
 
 // Types
-import type { SlotProps } from './types';
+import type { SlotProps } from "./types";
 
 // Utilities
-import { getValueType } from '@/utilities/style/value';
-import { devLog } from '@/utilities/dev';
+import { getValueType } from "@/utilities/style/value";
+import { devLog } from "@/utilities/dev";
 
 /**
  * Slot Component
@@ -30,12 +31,12 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
 
     // Guard Clause
     if (!options || options.length === 0) {
-        devLog.error('[Slot] No options provided');
+        devLog.error("[Slot] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.error('[Slot] Invalid value provided, expected a string');
+        devLog.error("[Slot] Invalid value provided, expected a string");
         return null;
     }
 
@@ -50,14 +51,14 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     /**
      * Determine the default type to use when value is empty.
      * Priority: dimension > keyword > color > function  first available type.
-     * If no types are available, fallback to the first option's type.
+     * If no types are available, fallback to the first option"s type.
      * Because the value can be empty, we need to determine a default type based on available options.
      */
     const defaultType = useMemo(() => {
-        if (allTypes.has('dimension')) return 'dimension';
-        if (allTypes.has('keyword')) return 'keyword';
-        if (allTypes.has('color')) return 'color';
-        if (allTypes.has('function')) return 'function';
+        if (allTypes.has("dimension")) return "dimension";
+        if (allTypes.has("keyword")) return "keyword";
+        if (allTypes.has("color")) return "color";
+        if (allTypes.has("function")) return "function";
         return options[0]?.type;
     }, [allTypes, options]
     );
@@ -71,31 +72,31 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
 
     const slot = useMemo(() => {
         switch (valueType) {
-            case 'function':
+            case "function":
                 return (
                     <FunctionValue value={value} options={options} onChange={onChange} />
                 );
-            case 'keyword':
+            case "keyword":
                 return (
                     <KeywordValue value={value} options={options} onChange={onChange} />
                 );
-            case 'dimension':
+            case "dimension":
                 return (
                     <DimensionValue value={value} options={options} onChange={onChange} />
                 );
-            case 'integer':
+            case "integer":
                 return (
                     <NumberValue value={value} options={options} onChange={onChange} forceInteger={true} />
                 );
-            case 'number':
+            case "number":
                 return (
                     <NumberValue value={value} options={options} onChange={onChange} />
                 );
-            case 'color':
+            case "color":
                 return (
                     <ColorValue value={value} onChange={onChange} />
                 );
-            case 'link':
+            case "link":
                 return (
                     <LinkValue value={value} onChange={onChange} />
                 );

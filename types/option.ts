@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { ReactNode } from 'react';
 
 /** Represents a single option in a select/radio/dropdown component. */
 export interface OptionData {
@@ -9,7 +9,7 @@ export interface OptionData {
 	/** Optional category to group the option under */
 	category?: string;
 	/** Optional icon for the option (SVG element) */
-	icon?: ReactElement;
+	icon?: ReactNode;
 }
 
 export interface KeywordOptionData extends OptionData {

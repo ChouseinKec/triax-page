@@ -1,19 +1,21 @@
+"use client";
+
 import React, { memo, ReactElement, useState, useMemo, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import Option from './option/component';
+import Option from "./option/component";
 
 // Types
-import type { OptionsSelectProps } from './types';
+import type { OptionsSelectProps } from "./types";
 
 // Hooks
-import { useDebouncedValue } from '@/hooks/hooks';
+import { useDebouncedValue } from "@/hooks/hooks";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * OptionsSelect Component
@@ -29,7 +31,7 @@ import { devLog } from '@/utilities/dev';
  * @param {boolean} [props.searchable=false] - Enable search/filter functionality for large option sets
  * @param {boolean} [props.grouped=false] - Group options by category for better organization
  * @param {boolean} [props.prioritizeIcons=false] - Display icons prominently over text labels
- * @param {string} [props.ariaRole='radio'] - ARIA role for individual options (radio/option/menuitem)
+ * @param {string} [props.ariaRole="radio"] - ARIA role for individual options (radio/option/menuitem)
  * @returns {ReactElement} Memoized OptionsSelect component
  */
 const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) => {
@@ -40,10 +42,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         searchable = false,
         grouped = false,
         prioritizeIcons = false,
-        ariaRole = 'radio',
+        ariaRole = "radio",
     } = props;
 
-    const [getSearch, setSearch] = useState<string>('');
+    const [getSearch, setSearch] = useState<string>("");
     const debouncedSearch = useDebouncedValue(getSearch, 100);
 
     /**
@@ -54,7 +56,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     */
     const handleChange = useCallback((option: string): void => {
         if (value === option) {
-            onChange('');  // Clear selection if the same option is clicked
+            onChange("");  // Clear selection if the same option is clicked
             return;
         }
         onChange(option); // Otherwise, select the new option
@@ -97,7 +99,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     */
     const groupedOptions = useMemo(() => {
         return grouped
-            ? Object.groupBy(filteredOptions, ({ category }) => category || 'uncategorized')
+            ? Object.groupBy(filteredOptions, ({ category }) => category || "uncategorized")
             : null;
     }, [filteredOptions, grouped]
     );
@@ -114,21 +116,21 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
             <input
                 className={CSS.Search}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder='SEARCH'
-                role='searchbox'
-                aria-label='Search Options'
+                placeholder="SEARCH"
+                role="searchbox"
+                aria-label="Search Options"
             />
         );
     }, [handleSearch, searchable, options.length]
     );
 
     if (!options || options.length === 0) {
-        devLog.warn('[DropdownSelect] No options provided');
+        devLog.warn("[DropdownSelect] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
         return null;
     }
 

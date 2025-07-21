@@ -1,10 +1,12 @@
+"use client";
+
 import { memo, ReactElement, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Types
-import { OptionProps } from './types';
+import { OptionProps } from "./types";
 
 /**
  * Option Component
@@ -25,9 +27,9 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         icon,
         isSelected,
         onChange,
-        category = 'other',
+        category = "other",
         prioritizeIcons = false,
-        ariaRole = 'radio',
+        ariaRole = "radio",
     } = props;
 
     /**
@@ -35,21 +37,21 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
      *
      * Best practice: Use useCallback to memoize event handlers for performance.
      *
-     * If the option is already selected, clicking will deselect it (calls onChange with '').
-     * Otherwise, clicking will select it (calls onChange with the option's value).
+     * If the option is already selected, clicking will deselect it (calls onChange with "").
+     * Otherwise, clicking will select it (calls onChange with the option"s value).
      *
      * @param {string} value - The value of the option to select/deselect.
      */
     const handleChange = useCallback((value: string): void => {
         if (isSelected) {
-            onChange(''); // Deselect the option if it's already selected
+            onChange(""); // Deselect the option if it"s already selected
             return;
         }
-        onChange(value); // Select the option if it's not already selected
+        onChange(value); // Select the option if it"s not already selected
     }, [isSelected, onChange]
     );
 
-    const iconElement = icon ? icon : '';
+    const iconElement = icon ? icon : "";
     const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
         <button

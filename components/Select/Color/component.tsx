@@ -1,16 +1,18 @@
+"use client";
+
 import React, { memo, ReactElement, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Types
-import { ColorSelectProps } from '@/components/select/color/types';
+import { ColorSelectProps } from "@/components/select/color/types";
 
 // Utilities
-import { clearSpaces } from '@/utilities/string';
+import { clearSpaces } from "@/utilities/string";
 
 // Hooks
-import { useDebouncedCallback } from '@/hooks/hooks';
+import { useDebouncedCallback } from "@/hooks/hooks";
 
 /**
  * ColorSelect Component
@@ -22,7 +24,7 @@ import { useDebouncedCallback } from '@/hooks/hooks';
  * @param {ColorSelectProps} props - Component props
  * @param {string} props.value - The current color value (in RGBA format)
  * @param {(value: string) => void} props.onChange - Handler function for when the color changes
- * @param {string} [props.placeholder='Pick'] - Placeholder text for the DropdownReveal toggle
+ * @param {string} [props.placeholder="Pick"] - Placeholder text for the DropdownReveal toggle
  * @returns {ReactElement} - The rendered color picker component
  */
 const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): ReactElement => {
@@ -41,7 +43,7 @@ const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): React
 
     return (
         <div className={CSS.ColorSelect} style={{ backgroundColor: value }}>
-            <input className={CSS.Input} type='color' value={value} onChange={handleChange} />
+            <input className={CSS.Input} type="color" value={value} onChange={handleChange} />
         </div>
     );
 

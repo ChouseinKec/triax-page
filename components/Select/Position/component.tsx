@@ -1,33 +1,35 @@
+"use client";
+
 import React, { ReactElement, useCallback, useState } from "react";
-import { PositionSelectProps, Positions, Side, Corner } from '@/components/select/position/types';
-import CSS from './styles.module.scss';
+import { PositionSelectProps, Positions, Side, Corner } from "@/components/select/position/types";
+import CSS from "./styles.module.scss";
 
 const POSITIONS: Positions[] = [
-    'top-left',
-    'top',
-    'top-right',
+    "top-left",
+    "top",
+    "top-right",
 
-    'left',
-    'all',
-    'right',
+    "left",
+    "all",
+    "right",
 
-    'bottom-left',
-    'bottom',
-    'bottom-right',
+    "bottom-left",
+    "bottom",
+    "bottom-right",
 ]
 
 const SIDES: Side[] = [
-    'top',
-    'right',
-    'bottom',
-    'left',
+    "top",
+    "right",
+    "bottom",
+    "left",
 ]
 
 const CORNERS: Corner[] = [
-    'top-left',
-    'top-right',
-    'bottom-left',
-    'bottom-right',
+    "top-left",
+    "top-right",
+    "bottom-left",
+    "bottom-right",
 ]
 
 
@@ -40,8 +42,8 @@ const isPositionCorner = (value: Positions): value is Corner => {
     return CORNERS.includes(value as Corner);
 };
 
-const isPositionAll = (value: Positions): value is 'all' => {
-    return value === 'all';
+const isPositionAll = (value: Positions): value is "all" => {
+    return value === "all";
 };
 
 const isPositionSelected = (value: Positions, currentPosition: Positions) => {
@@ -58,7 +60,7 @@ const isPositionSelected = (value: Positions, currentPosition: Positions) => {
  * @param {PositionSelectProps} props - The component props.
  * @param {function} props.onChangeSide - Callback for when a side position is selected.
  * @param {function} props.onChangeCorner - Callback for when a corner position is selected.
- * @param {string} [props.defaultValue='top'] - The default selected position.
+ * @param {string} [props.defaultValue="top"] - The default selected position.
  * @param {boolean} [props.isCornerSelectable=true] - Flag to control whether corners should be visible.
  * @returns {ReactElement} - The rendered position select component.
 */
@@ -66,7 +68,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
     const {
         onChangeSide,
         onChangeCorner,
-        defaultValue = 'top',
+        defaultValue = "top",
         isCornerSelectable = false,
         isCenterSelectable = false,
     } = props;
@@ -85,12 +87,12 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
 
         // Ensure callbacks are defined
         if (isPositionSide(value)) {
-            onChangeSide(value); // Update the side if it's a side position
+            onChangeSide(value); // Update the side if it"s a side position
             onChangeCorner(null); // Reset the corner
         }
         else if (isPositionCorner(value)) {
             onChangeSide(null); // Reset the side
-            onChangeCorner(value); // Update the corner if it's a corner position
+            onChangeCorner(value); // Update the corner if it"s a corner position
         }
         else if (isPositionAll(value)) {
             if (!isCenterSelectable) return;

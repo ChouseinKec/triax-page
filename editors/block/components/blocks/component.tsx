@@ -1,4 +1,6 @@
-import React, { memo, useMemo, useState } from "react";
+"use client";
+
+import React, { memo, useMemo } from "react";
 import CSS from "./styles.module.scss";
 
 // Types 
@@ -7,13 +9,9 @@ import type { BlocksProps } from "./types";
 // Components
 import Block from "../block/component";
 
-// Hooks & Context
+// Hooks
 import { useBlockManager } from "@/hooks/block/manager";
-import { useStyleManager } from "@/hooks/style/manager";
-import { BlockEditorContext } from "./context";
 
-// Utilitie
-import { treeifyBlocks } from "@/utilities/block/block";
 
 /**
  * Blocks Component
@@ -21,55 +19,21 @@ import { treeifyBlocks } from "@/utilities/block/block";
  * Handles block actions and state via context for all nested Block components.
  */
 const Blocks: React.FC<BlocksProps> = memo(() => {
-    // Get all block actions and state from the block manager hook
-    const {
-        addBlock,
-        selectBlock,
-        deleteBlock,
-        getAllBlocks,
-        getSelectedBlock,
-        hasBlockSelectedChild,
-    } = useBlockManager();
+    const { getAllBlocks } = useBlockManager();
 
-    const {
-        generateCSS
-    } = useStyleManager();
+    const allBlocks = useMemo(() => getAllBlocks(), [getAllBlocks]);
 
-    // Get current selected block ID and all blocks
-    const selectedBlockID = getSelectedBlock()?.id || null;
-    const allBlocks = getAllBlocks();
-    const [blocksNode, setBlocksNode] = useState<HTMLDivElement | null>(null);
-
-    // Memoize context value to avoid unnecessary re-renders
-    const contextValue = useMemo(() => ({
-        addBlock,
-        selectBlock,
-        deleteBlock,
-        generateCSS,
-        blocksNode,
-    }), [
-        addBlock,
-        selectBlock,
-        deleteBlock,
-        generateCSS,
-        blocksNode,
-    ]);
-
-    const nestedBlocks = useMemo(() => treeifyBlocks(allBlocks, selectedBlockID, hasBlockSelectedChild), [allBlocks, selectedBlockID, hasBlockSelectedChild]);
+    const rootBlocks = useMemo(
+        () => Object.values(allBlocks).filter(block => !block.parentID),
+        [allBlocks]
+    );
 
     return (
-        <BlockEditorContext.Provider value={contextValue}>
-            <div className={CSS.Blocks} ref={node => setBlocksNode(node)}
-            >
-                {nestedBlocks.map(block => (
-                    <Block
-                        key={block.id}
-                        {...block}
-                    />
-                ))}
-            </div >
-        </BlockEditorContext.Provider>
-
+        <div className={CSS.Blocks} >
+            {rootBlocks.map(block => (
+                <Block key={block.id} blockID={block.id} />
+            ))}
+        </div >
     );
 });
 

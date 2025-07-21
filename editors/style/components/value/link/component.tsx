@@ -1,3 +1,5 @@
+"use client";
+
 // External imports
 import React, { useCallback, memo } from "react";
 

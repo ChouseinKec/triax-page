@@ -1,34 +1,37 @@
+"use client";
+
 import React, { memo, useCallback, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Types
-import type { FunctionValueProps } from './types';
+import type { FunctionValueProps } from "./types";
+import type { StylePropertyKeys } from "@/types/style/property";
 
 // Components
-import Value from '@/editors/style/components/value/component';
-import DropdownReveal from '@/components/reveal/dropdown/component';
-import DropdownSelect from '@/components/select/dropdown/component';
-import Error from '@/editors/style/components/value/error/component';
+import Value from "@/editors/style/components/value/component";
+import DropdownReveal from "@/components/reveal/dropdown/component";
+import DropdownSelect from "@/components/select/dropdown/component";
+import Error from "@/editors/style/components/value/error/component";
 
 // Constants
-import { createProperty } from '@/constants/style/property';
+import { createProperty } from "@/constants/style/property";
 
 // Utilities
-import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
-import { getValueToken } from '@/utilities/style/value';
-import { devLog } from '@/utilities/dev';
+import { extractFunctionName, extractFunctionValue } from "@/utilities/style/function";
+import { getValueToken } from "@/utilities/style/value";
+import { devLog } from "@/utilities/dev";
 
 /**
  * FunctionValue Component
  * 
- * A controlled input component for CSS function values (e.g., 'repeat(2, 1fr)', 'calc(100% - 20px)').
+ * A controlled input component for CSS function values (e.g., "repeat(2, 1fr)", "calc(100% - 20px)").
  * Intelligently parses function names and arguments, providing separate controls for each.
  * Supports function selection from categorized options and dynamic argument validation.
  * 
  * @param {FunctionValueProps} props - Component properties
- * @param {string} props.value - Current CSS function value (e.g., 'repeat(2, 1fr)')
+ * @param {string} props.value - Current CSS function value (e.g., "repeat(2, 1fr)")
  * @param {Array} props.options - Available function options with categories and syntax
  * @param {function} props.onChange - Callback for value changes
  * @returns {ReactElement} The rendered FunctionValue component
@@ -43,12 +46,12 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
 
     // Guard Clause
     if (!options || options.length === 0) {
-        devLog.error('[DimensionValue] No options provided');
+        devLog.error("[DimensionValue] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.error('[DimensionValue] Invalid value provided, expected a string');
+        devLog.error("[DimensionValue] Invalid value provided, expected a string");
         return null;
     }
 
@@ -59,10 +62,10 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
      * @returns {Array} Filtered array of function options
      */
     const functionOptions = useMemo(() => {
-        const filtered = options.filter(opt => opt.category === 'function');
+        const filtered = options.filter(opt => opt.category === "function");
 
         if (filtered.length === 0) {
-            devLog.warn('[FunctionValue] No function category options found');
+            devLog.warn("[FunctionValue] No function category options found");
         }
 
         return filtered;
@@ -106,7 +109,7 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
         if (!currentOption) return undefined;
 
         try {
-            return createProperty(currentOption.name, currentOption.syntax);
+            return createProperty(currentOption.name as StylePropertyKeys, currentOption.syntax);
         } catch (error) {
             devLog.error(`[FunctionValue] Failed to create property for ${currentOption.name}:`, error);
             return undefined;
@@ -142,13 +145,13 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
      */
     const handleArgumentsChange = useCallback((newValue: string): void => {
         if (!extractedValue.name) {
-            devLog.warn('[FunctionValue] No function name available for value change');
+            devLog.warn("[FunctionValue] No function name available for value change");
             return;
         }
 
         // Handle empty input - clear the entire function value
-        if (newValue === '' || newValue === null || newValue === undefined) {
-            onChange('');
+        if (newValue === "" || newValue === null || newValue === undefined) {
+            onChange("");
             return;
         }
 
@@ -168,7 +171,7 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
      */
     const handleFunctionChange = useCallback((newOptionValue: string): void => {
         if (!newOptionValue) {
-            onChange('');
+            onChange("");
             return;
         }
 
@@ -183,19 +186,19 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
     }
 
     if (!currentOption) {
-        devLog.error('[FunctionValue] No matching function option available.');
+        devLog.error("[FunctionValue] No matching function option available.");
         return null;
     }
 
     if (!property) {
-        devLog.error('[FunctionValue] Property creation failed - invalid syntax definition.');
+        devLog.error("[FunctionValue] Property creation failed - invalid syntax definition.");
         return null;
     }
 
     return (
         <DropdownReveal closeOnChange={false} placeholder={`${extractedValue.name}()`} title="Edit Function">
 
-            <div className={CSS.FunctionValue} role='presentation'>
+            <div className={CSS.FunctionValue} role="presentation">
                 {/* Function selection dropdown */}
                 <DropdownSelect
                     options={options}

@@ -51,7 +51,6 @@
 
   --theme-shadow--hover: 0px 0px 0px 2px var(--theme-background-color--selected) inset;
   --theme-shadow--border: 0px 0px 0px 2px var(--theme-background-color--tertiary) inset;
-
 }
 
 body {

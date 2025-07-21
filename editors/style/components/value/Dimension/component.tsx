@@ -1,30 +1,32 @@
+"use client";
+
 // External imports
 import React, { memo, useCallback, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import GenericInput from '@/components/input/generic/component';
-import SelectDropdown from '@/components/select/dropdown/component';
+import GenericInput from "@/components/input/generic/component";
+import SelectDropdown from "@/components/select/dropdown/component";
 
 // Types
-import { DimensionValueProps } from './types';
+import { DimensionValueProps } from "./types";
 
 // Utilities
-import { extractNumber, extractUnit } from '@/utilities/style/dimension';
-import { devLog } from '@/utilities/dev';
+import { extractNumber, extractUnit } from "@/utilities/style/dimension";
+import { devLog } from "@/utilities/dev";
 
 /**
  * DimensionValue Component
  * 
- * A controlled input component for CSS dimension values (e.g., '10px', '2rem', '100%').
+ * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
  * Intelligently splits values into numeric and unit components for separate editing.
  * Supports grouped unit categories and validation for numeric ranges.
  *
  * @component
  * @param {DimensionValueProps} props - Component properties
- * @param {string} [props.value=''] - Current CSS dimension value (e.g., '10px')
+ * @param {string} [props.value=""] - Current CSS dimension value (e.g., "10px")
  * @param {function} [props.onChange] - Callback for value changes
  * @param {Array} [props.options=[]] - Available unit options with categories
  * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
@@ -44,21 +46,21 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 
 	// Guard Clause
 	if (!options || options.length === 0) {
-		devLog.error('[DimensionValue] No options provided');
+		devLog.error("[DimensionValue] No options provided");
 		return null;
 	}
 
 	if (value == null) {
-		devLog.error('[DimensionValue] Invalid value provided, expected a string');
+		devLog.error("[DimensionValue] Invalid value provided, expected a string");
 		return null;
 	}
 
 	/**
-	 * Finds the first dimension category unit as default, fallback to 'px'
+	 * Finds the first dimension category unit as default, fallback to "px"
 	 */
 	const defaults = useMemo(() => {
-		const unit = options.find(option => option.category === 'dimension')?.name || 'px';
-		const number = '0';
+		const unit = options.find(option => option.category === "dimension")?.name || "px";
+		const number = "0";
 
 		return { unit, number };
 	},
@@ -66,7 +68,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	);
 
 	/**
-	 * Computes the valid numeric range based on the first option's min/max values
+	 * Computes the valid numeric range based on the first option"s min/max values
 	 * Defaults to -Infinity and Infinity if not specified
 	 * 
 	 * @returns {object} Range object with min and max properties
@@ -76,8 +78,8 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		const option = options[0];
 
 		// Ensure min and max are valid numbers if present
-		const validMin = (option && 'min' in option && typeof option.min === 'number') ? option.min : -Infinity;
-		const validMax = (option && 'max' in option && typeof option.max === 'number') ? option.max : Infinity;
+		const validMin = (option && "min" in option && typeof option.min === "number") ? option.min : -Infinity;
+		const validMax = (option && "max" in option && typeof option.max === "number") ? option.max : Infinity;
 
 		return {
 			min: validMin,
@@ -110,18 +112,18 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	*/
 	const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
 		// Allow empty values
-		if (inputValue === '' || inputValue === null || inputValue === undefined) {
-			return { status: true, message: '' };
+		if (inputValue === "" || inputValue === null || inputValue === undefined) {
+			return { status: true, message: "" };
 		}
 
 		// Parse the numeric value
 		const numericValue = parseFloat(inputValue);
 
-		// Check if it's a valid number
+		// Check if it"s a valid number
 		if (isNaN(numericValue) || !isFinite(numericValue)) {
 			return {
 				status: false,
-				message: 'Please enter a valid number'
+				message: "Please enter a valid number"
 			};
 		}
 
@@ -141,7 +143,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			};
 		}
 
-		return { status: true, message: '' };
+		return { status: true, message: "" };
 	},
 		[range]
 	);
@@ -155,8 +157,8 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	 */
 	const handleNumberChange = useCallback((inputNumber: string): void => {
 		// Handle empty input - clear the entire value
-		if (inputNumber === '' || inputNumber === null || inputNumber === undefined) {
-			onChange('');
+		if (inputNumber === "" || inputNumber === null || inputNumber === undefined) {
+			onChange("");
 			return;
 		}
 
@@ -186,7 +188,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	const handleUnitChange = useCallback((selectedUnit: string): void => {
 		// Handle empty selection
 		if (!selectedUnit) {
-			onChange('');
+			onChange("");
 			return;
 		}
 
@@ -198,8 +200,8 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 			return;
 		}
 
-		// Handle non-dimension categories (e.g., 'auto', 'inherit', etc.)
-		if (selectedOption.category !== 'dimension') {
+		// Handle non-dimension categories (e.g., "auto", "inherit", etc.)
+		if (selectedOption.category !== "dimension") {
 			// For non-dimensional values, use the unit value directly
 			onChange(selectedUnit);
 			return;
@@ -210,7 +212,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 
 		// Handle empty unit
 		if (!unitValue) {
-			onChange('');
+			onChange("");
 			return;
 		}
 

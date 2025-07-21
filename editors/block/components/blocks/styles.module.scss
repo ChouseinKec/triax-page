@@ -19,4 +19,15 @@
 			}
 		}
 	}
+
+	*[id*='block'] {
+		&[data-is-selected='false'] {
+			opacity: 0.5;
+		}
+
+		&[data-is-selected='true'],
+		&[data-has-selected-descendant='true'] {
+			opacity: 1;
+		}
+	}
 }

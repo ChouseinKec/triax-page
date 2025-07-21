@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, ReactElement } from "react";
 
 // Components

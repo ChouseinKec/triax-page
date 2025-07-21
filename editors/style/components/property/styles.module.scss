@@ -23,11 +23,8 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
-		letter-spacing: -0.5px;
 		font-size: calc(var(--font-size-lg) * 0.8);
-		letter-spacing: 1px;
 		text-transform: capitalize;
-		font-family: 'Geist';
 		cursor: help;
 	}
 }

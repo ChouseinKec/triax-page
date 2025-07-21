@@ -1,0 +1,14 @@
+.BottomPanel {
+	grid-row: 3;
+	grid-column: 2;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: var(--size-md);
+	background: var(--theme-background-color--primary);
+	box-shadow: var(--theme-shadow--border);
+
+	z-index: 1;
+}

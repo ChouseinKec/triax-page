@@ -1,19 +1,21 @@
+"use client";
+
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Types
-import { DropdownRevealProps } from '@/components/reveal/dropdown/types';
+import { DropdownRevealProps } from "@/components/reveal/dropdown/types";
 
 // Components
-import FloatReveal from '@/components/reveal/float/component'
+import FloatReveal from "@/components/reveal/float/component"
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 // Hooks
-import useSize from '@/hooks/interface/useSize';
+import useSize from "@/hooks/interface/useSize";
 
 /**
  * Dropdown Component
@@ -27,13 +29,13 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
         children,
 
         // Optional props
-        placeholder = 'Toggle',
+        placeholder = "Toggle",
         closeOnChange,
         isDisabled,
 
         // Accessibility and UX
-        title = 'Toggle Dropdown',
-        ariaLabel = 'Dropdown reveal',
+        title = "Toggle Dropdown",
+        ariaLabel = "Dropdown reveal",
     } = props;
 
     // Component state management
@@ -54,12 +56,12 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
         // Add event listener when the dropdown is open
         if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener("mousedown", handleClickOutside);
         }
 
         // Clean up the event listener
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isOpen]
     );
@@ -83,7 +85,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
     // Guard Clause
     if (!children) {
-        devLog.warn('[DropdownReveal] No children provided');
+        devLog.warn("[DropdownReveal] No children provided");
         return null;
     }
 
@@ -113,7 +115,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
             {isDisabled !== true && (
                 <FloatReveal
                     targetRef={dropdownRef}
-                    position='bottom'
+                    position="bottom"
                     isOpen={isOpen}
                 >
                     {children}

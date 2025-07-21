@@ -1,17 +1,19 @@
+"use client";
+
 import React, { memo, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss'
+import CSS from "./styles.module.scss"
 
 // Components
-import DropdownSelect from '@/components/select/dropdown/component';
-import RadioSelect from '@/components/select/radio/component';
+import DropdownSelect from "@/components/select/dropdown/component";
+import RadioSelect from "@/components/select/radio/component";
 
 // Types
-import { KeywordValueProps } from './types';
+import { KeywordValueProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * KeywordValue Component
@@ -27,12 +29,12 @@ const KeywordValue: React.FC<KeywordValueProps> = memo((props: KeywordValueProps
 
     // Guard Clause
     if (!options || options.length === 0) {
-        devLog.error('[KeywordValue] No options provided');
+        devLog.error("[KeywordValue] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.error('[KeywordValue] Invalid value provided, expected a string');
+        devLog.error("[KeywordValue] Invalid value provided, expected a string");
         return null;
     }
 
@@ -45,7 +47,7 @@ const KeywordValue: React.FC<KeywordValueProps> = memo((props: KeywordValueProps
 
     // Render radio group if all options have icons, otherwise render dropdown
     return (
-        <div className={CSS.KeywordValue} data-type={hasIcon ? 'radio' : 'dropdown'} role="presentation">
+        <div className={CSS.KeywordValue} data-type={hasIcon ? "radio" : "dropdown"} role="presentation">
             {hasIcon ? (
                 <RadioSelect
                     value={value}

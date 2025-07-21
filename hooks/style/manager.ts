@@ -24,7 +24,7 @@ interface StyleManager {
 	pasteStyle: (property: StylePropertyKeys) => void;
 	resetStyle: (property: StylePropertyKeys) => void;
 
-	generateCSS: (blockID: string, styles: BlockStyleData) => string | null;
+	generateCSS: (blockID: string, styles: BlockStyleData) => string | undefined;
 }
 
 export const useStyleManager = (): StyleManager => {
@@ -120,7 +120,7 @@ export const useStyleManager = (): StyleManager => {
 	 * @throws {Error} If property conversion fails or value is invalid
 	 */
 	const setStyle = useCallback<StyleManager['setStyle']>(
-		(property: StylePropertyKeys, value: string): void => {
+		(property, value) => {
 			if (!isPropertyValid(property)) return devLog.error(`Error setting style property: ${property} is not valid`);
 
 			// If value is not empty and value is not valid
@@ -146,7 +146,7 @@ export const useStyleManager = (): StyleManager => {
 	 * @throws {Error} If property conversion fails
 	 */
 	const getStyle = useCallback<StyleManager['getStyle']>(
-		(property: StylePropertyKeys): string => {
+		(property) => {
 			if (!isPropertyValid(property)) {
 				devLog.error(`Error getting single-style property: ${property} is not valid`);
 				return '';
@@ -176,7 +176,7 @@ export const useStyleManager = (): StyleManager => {
 	 * @returns {string} The copied value or empty string if not found
 	 */
 	const copyStyle = useCallback<StyleManager['copyStyle']>(
-		(property: StylePropertyKeys): void => {
+		(property) => {
 			const value = getStyle(property);
 
 			// If property is not valid
@@ -204,7 +204,7 @@ export const useStyleManager = (): StyleManager => {
 	 * @returns {void}
 	 */
 	const pasteStyle = useCallback<StyleManager['pasteStyle']>(
-		(property: StylePropertyKeys): void => {
+		(property) => {
 			navigator.clipboard
 				.readText()
 				.then((text) => {
@@ -236,7 +236,7 @@ export const useStyleManager = (): StyleManager => {
 	 * @returns {void}
 	 */
 	const resetStyle = useCallback<StyleManager['resetStyle']>(
-		(property: StylePropertyKeys): void => {
+		(property) => {
 			// If property is not valid
 			if (!isPropertyValid(property)) {
 				devLog.error(`Error resetting style: ${property} is not valid`);
@@ -256,8 +256,8 @@ export const useStyleManager = (): StyleManager => {
 	 * @returns {string | null} - The generated CSS, or null if it cannot be generated.
 	 */
 	const generateCSS = useCallback<StyleManager['generateCSS']>(
-		(blockID: string, styles: BlockStyleData): string | null => {
-			if (!styles) return null;
+		(blockID, styles) => {
+			if (!styles) return undefined;
 
 			// Get devices and orientations
 

@@ -1,19 +1,22 @@
-import React, { ReactElement } from "react";
+"use client";
+
+import React, { ReactElement, useMemo } from "react";
 
 // Components
-import Category from '@/editors/style/components/category/component';
-import TabGroup from '@/components/group/tab/component';
+import Category from "@/editors/style/components/category/component";
+import TabGroup from "@/components/group/tab/component";
 
 // Types 
-import { LayoutProps } from '@/editors/style/components/layout/types';
-import type { TabGroupItemsProps } from '@/components/group/tab/types';
+import { LayoutProps } from "@/editors/style/components/layout/types";
+import type { TabGroupItemsProps } from "@/components/group/tab/types";
+
 // Hooks
-import { useDisplayLayout } from '@/editors/style/components/layout/hooks/display';
-import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
-import { useFontLayout } from '@/editors/style/components/layout/hooks/font';
-import { useBorderLayout } from '@/editors/style/components/layout/hooks/border';
-import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
-import { useBackgroundLayout } from '@/editors/style/components/layout/hooks/background';
+import { useDisplayLayout } from "@/editors/style/components/layout/hooks/display";
+import { useSizeLayout } from "@/editors/style/components/layout/hooks/size";
+import { useFontLayout } from "@/editors/style/components/layout/hooks/font";
+import { useBorderLayout } from "@/editors/style/components/layout/hooks/border";
+import { useEffectLayout } from "@/editors/style/components/layout/hooks/effect";
+import { useBackgroundLayout } from "@/editors/style/components/layout/hooks/background";
 
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
@@ -38,11 +41,13 @@ const Layout: React.FC = ({ }): ReactElement => {
         effectLayout,
     ];
 
-    const TabItems: TabGroupItemsProps[] = layouts.map((category, idx) => ({
-        label: <>{category.label}</>,
-        title: category.title,
-        content: <Category key={idx} groups={category.groups} />,
-    }));
+    const TabItems: TabGroupItemsProps[] = useMemo(() =>
+        layouts.map((category, idx) => ({
+            label: <>{category.label}</>,
+            title: category.title,
+            content: <Category key={idx} groups={category.groups} />,
+        }))
+        , [layouts]);
 
     return (
         <TabGroup

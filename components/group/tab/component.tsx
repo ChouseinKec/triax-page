@@ -1,17 +1,19 @@
-import React, { memo, ReactElement, useCallback, useState, useMemo } from "react";
+"use client";
+
+import React, { memo, ReactNode, useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import RadioSelect from '@/components/select/radio/component';
+import RadioSelect from "@/components/select/radio/component";
 
 // Types
-import type { TabGroupProps } from './types';
-import type { OptionData } from '@/types/option';
+import type { TabGroupProps } from "./types";
+import type { OptionData } from "@/types/option";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * TabGroup Component
@@ -19,24 +21,22 @@ import { devLog } from '@/utilities/dev';
  * A controlled tab navigation component that displays content based on selected tab.
  * Provides accessible tab navigation with radio button selection interface.
  * 
- * @param {TabGroupProps} props - Component properties
- * @param {TabGroupItemsProps[]} props.items - Array of tab configurations
- * @param {string} [props.ariaLabel] - ARIA label for the tab group
- * @param {string} [props.ariaDescription] - Optional description for the tab group
- * @returns {ReactElement} Memoized TabGroup component
+ * @param  props - Component properties
+ * @param  props.items - Array of tab configurations
+ * @param  props.ariaLabel - ARIA label for the tab group
+ * @param  props.ariaDescription - Optional description for the tab group
+ * @returns Memoized TabGroup component
  */
 const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const {
         items,
-        ariaLabel = 'Tab List',
-        ariaDescription = 'Tab list for navigating between sections',
+        ariaLabel = "Tab List",
+        ariaDescription = "Tab list for navigating between sections",
     } = props;
-
-
 
     // State management for active tab selection
     // Default to first tab (index 0) for consistent behavior
-    const [selectedIndex, setSelectedIndex] = useState<string>('0');
+    const [selectedIndex, setSelectedIndex] = useState<string>("0");
 
     /**
      * Handles tab selection changes with validation
@@ -48,11 +48,11 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         const index = parseInt(value, 10);
 
         // Validate index is within bounds
-        if (isNaN(index) || index < 0 || index >= items.length) {
-            devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
-            setSelectedIndex('0');
-            return;
-        }
+        // if (isNaN(index) || index < 0 || index >= items.length) {
+        //     devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
+        //     setSelectedIndex("0");
+        //     return;
+        // }
 
         setSelectedIndex(value);
     }, [items.length]
@@ -66,7 +66,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const tabOptions = useMemo((): OptionData[] => {
         return items.map((item, index) => ({
             name: item.title || `Tab ${index + 1}`,
-            icon: typeof item.label === 'object' ? item.label : undefined,
+            icon: typeof item.label === "object" ? item.label : undefined,
             value: index.toString(),
         }));
     },
@@ -76,9 +76,9 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     /**
      * Returns content for currently selected tab with error boundary
      * 
-     * @returns {ReactElement} The content of the active tab
+     * @returns {ReactNode} The content of the active tab
      */
-    const activeContent = useMemo((): ReactElement => {
+    const activeContent = useMemo((): ReactNode => {
         const index = parseInt(selectedIndex, 10);
 
         // Validate index and return content or fallback
@@ -86,6 +86,8 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
             return items[index].content;
         }
 
+
+        return <></>
         // Fallback content for missing or invalid content
         return (
             <div className={CSS.TabContentError} role="alert">
@@ -103,17 +105,17 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     */
     const accessibilityProps = useMemo((): React.HTMLAttributes<HTMLDivElement> => {
         return {
-            role: 'tablist',
-            'aria-label': ariaLabel,
-            'aria-multiselectable': 'false' as const,
-            'aria-description': ariaDescription,
+            role: "tablist",
+            "aria-label": ariaLabel,
+            "aria-multiselectable": "false" as const,
+            "aria-description": ariaDescription,
         };
     }, [ariaLabel, ariaDescription]
     );
 
     // Guard Clause
     if (!items || items.length === 0) {
-        devLog.warn('[TabGroup] No items provided');
+        devLog.warn("[TabGroup] No items provided");
         return null;
     }
 
@@ -127,7 +129,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
                 options={tabOptions}
                 value={selectedIndex}
                 onChange={handleTabChange}
-                ariaLabel={'List Selection'}
+                ariaLabel={"List Selection"}
             />
         </div>
     );

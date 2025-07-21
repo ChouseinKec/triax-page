@@ -1,17 +1,19 @@
+"use client";
+
 import React, { memo, ReactElement, useRef } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import Options from '@/components/select/options/component';
-import FloatReveal from '@/components/reveal/float/component';
+import Options from "@/components/select/options/component";
+import FloatReveal from "@/components/reveal/float/component";
 
 // Types
-import { RadioSelectProps } from '@/components/select/radio/types';
+import { RadioSelectProps } from "@/components/select/radio/types";
 
 // Hooks
-import useSize from '@/hooks/interface/useSize';
+import useSize from "@/hooks/interface/useSize";
 
 /**
  * RadioSelect Component
@@ -30,23 +32,23 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
         value,
         options,
         onChange,
-        ariaLabel = 'Radio Select',
+        ariaLabel = "Radio Select",
     } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { isOverflowing } = useSize(containerRef);
 
     return (
-        <div ref={containerRef} aria-label={ariaLabel} role='radiogroup' className={CSS.RadioSelect} data-is-collapsed={isOverflowing}>
-            <Options prioritizeIcons={true} ariaRole={'radio'} value={value} options={options} onChange={onChange} />
+        <div ref={containerRef} aria-label={ariaLabel} role="radiogroup" className={CSS.RadioSelect} data-is-collapsed={isOverflowing}>
+            <Options prioritizeIcons={true} ariaRole={"radio"} value={value} options={options} onChange={onChange} />
 
             {isOverflowing &&
                 <FloatReveal
                     targetRef={containerRef}
-                    position='top'
+                    position="top"
                     hoverDelay={600}
                 >
-                    <Options prioritizeIcons={true} ariaRole={'radio'} value={value} options={options} onChange={onChange} />
+                    <Options prioritizeIcons={true} ariaRole={"radio"} value={value} options={options} onChange={onChange} />
                 </FloatReveal>
             }
         </div>

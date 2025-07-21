@@ -3,14 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Types
 import type { BlockEditorStoreProps } from './types';
-import type { BlockStyleData, BlockData } from '@/types/block/block';
-import type { BlockTagKeys } from '@/types/block/tag';
+import type { BlockStyleData, BlockInstance, BlockType, BlockTag } from '@/types/block/block';
 
 // Constants
 import { BlockStyleDefaults } from '@/constants/block/style';
-import { BlockTagDefinitions } from '@/constants/block/tag';
 
-function createBlockDefaultStyles(): BlockStyleData {
+function createBlockStyles(): BlockStyleData {
 	const defaults = {
 		...BlockStyleDefaults,
 		default: {
@@ -44,32 +42,22 @@ function createBlockDefaultStyles(): BlockStyleData {
 	return devices;
 }
 
-function createDefaultBlock(tag: BlockTagKeys, parentBlock?: string): BlockData {
-	const permittedContent = BlockTagDefinitions[tag]?.permittedContent || [];
-	const permittedParent = BlockTagDefinitions[tag]?.permittedParent || [];
+function createBlock(type: BlockType, parentBlock?: string): BlockInstance {
+	const permittedContent = null;
+	const permittedParent = null;
 
 	return {
 		id: uuidv4(),
-		styles: createBlockDefaultStyles(),
+		styles: createBlockStyles(),
 		parentID: parentBlock ?? null,
 		contentIDs: [],
-		tag,
+		tag: 'div',
+		tags: [],
 		permittedContent,
 		permittedParent,
+		type,
 	};
 }
-
-const defaultBlocks = {
-	'dc829b55-db25-432b-a835-9d1c8515b310': {
-		id: 'dc829b55-db25-432b-a835-9d1c8515b310',
-		styles: createBlockDefaultStyles(),
-		parentID: null,
-		contentIDs: [],
-		tag: 'div',
-		permittedContent: BlockTagDefinitions.div?.permittedContent || [],
-		permittedParent: [],
-	} as BlockData,
-};
 
 /**
  * Zustand hook for accessing and updating the block editor state.
@@ -83,22 +71,22 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * A record of all allBlocks with their associated styles.
 	 */
-	allBlocks: defaultBlocks,
+	allBlocks: {},
 
 	/**
 	 * Sets the currently selected block by ID.
 	 *
-	 * @param {string} id - The ID of the block to select.
+	 * @param  blockID - The ID of the block to select.
 	 */
-	selectBlock: (blockID: string): void => set({ selectedBlockID: blockID }),
+	selectBlock: (blockID) => set({ selectedBlockID: blockID }),
 
 	/**
 	 * Retrieves the block data for a given block ID.
 	 *
-	 * @param {string} blockID - The ID of the block to retrieve.
-	 * @returns {BlockData | undefined} - The block data if found, otherwise undefined.
+	 * @param blockID - The ID of the block to retrieve.
+	 * @returns - The block data if found, otherwise undefined.
 	 */
-	getBlock: (blockID: string): BlockData | undefined => {
+	getBlock: (blockID) => {
 		if (!blockID) return undefined;
 
 		return get().allBlocks[blockID];
@@ -107,9 +95,11 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * Updates the style object for the currently selected block.
 	 *
-	 * @param {BlockStyleData} styles - The updated style object.
+	 * @param blockID - The ID of the block to update.
+	 * @param styles - The updated style object.
+	 * @return - The updated block instance with new styles.
 	 */
-	setBlockStyles: (blockID: string, styles: BlockStyleData): void => {
+	setBlockStyles: (blockID, styles) => {
 		set((state) => {
 			if (!blockID) return state; // Return unchanged state if invalid
 
@@ -131,19 +121,22 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * Sets a specific style property for the currently selected block.
 	 *
-	 * @param {string} blockID - The ID of the block to update.
-	 * @param {string} device - The device type (e.g., 'desktop', 'mobile').
-	 * @param {string} orientation - The orientation (e.g., 'portrait', 'landscape').
-	 * @param {string} pseudo - The pseudo-class (e.g., 'default', 'hover', 'active').
-	 * @param {string} property - The CSS property to set.
-	 * @param {string} value - The value to set for the CSS property.
+	 * @param blockID - The ID of the block to update.
+	 * @param device - The device type (e.g., 'desktop', 'mobile').
+	 * @param orientation - The orientation (e.g., 'portrait', 'landscape').
+	 * @param pseudo - The pseudo-class (e.g., 'default', 'hover', 'active').
+	 * @param property - The CSS property to set.
+	 * @param value - The value to set for the CSS property.
+	 * @return - The updated block instance with the new style property.
 	 */
-	setBlockStyle: (blockID: string, device: string, orientation: string, pseudo: string, property: string, value: string): void => {
+	setBlockStyle: (blockID, device, orientation, pseudo, property, value) => {
 		set((state) => {
 			if (!blockID) return state;
 
 			const block = get().getBlock(blockID);
 			if (!block) return state;
+
+			if (!block.styles) return state;
 
 			const updatedStyles = {
 				...block.styles,
@@ -175,11 +168,11 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	 * Adds a new block to the editor.
 	 *
 	 * @param parentID - Optional ID of the parent block to add the new block under.
-	 * @returns
+	 * @returns - The newly created block instance.
 	 */
-	addBlock: (tag: BlockTagKeys, parentID?: string): void => {
+	addBlock: (type, parentID) => {
 		set((state) => {
-			const newBlock = createDefaultBlock(tag, parentID);
+			const newBlock = createBlock(type, parentID);
 
 			// If a parent ID is provided, add the new block to the parent's children
 			if (parentID) {
@@ -205,9 +198,9 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 	/**
 	 * Deletes a block from the editor.
 	 *
-	 * @param {string} blockID - The ID of the block to delete.
+	 * @param blockID - The ID of the block to delete.
 	 */
-	deleteBlock: (blockID: string): void => {
+	deleteBlock: (blockID) => {
 		set((state) => {
 			if (!blockID) return state;
 
@@ -215,7 +208,7 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 			if (!block) return state;
 
 			// Create a shallow copy of allBlocks
-			let updatedBlocks = { ...state.allBlocks };
+			const updatedBlocks = { ...state.allBlocks };
 
 			// Remove this block from its parent's children array (immutably)
 			if (block.parentID) {
@@ -250,10 +243,6 @@ const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
 
 			// If the deleted block was selected, clear selection
 			const selectedBlockID = state.selectedBlockID === blockID ? null : state.selectedBlockID;
-
-			if (Object.keys(updatedBlocks).length === 0) {
-				updatedBlocks = defaultBlocks;
-			}
 
 			return {
 				allBlocks: updatedBlocks,

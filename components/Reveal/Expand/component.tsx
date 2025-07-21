@@ -1,16 +1,18 @@
+"use client";
+
 import React, { useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import HorizontalDivider from '@/components/divider/horizontal/component';
+import HorizontalDivider from "@/components/divider/horizontal/component";
 
 // Types
-import { ExpandRevealProps } from './types';
+import { ExpandRevealProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 /**
  * ExpandReveal Component
@@ -22,13 +24,13 @@ import { devLog } from '@/utilities/dev';
  * @component
  * @param {ExpandRevealProps} props - Component properties
  * @param {React.ReactNode} props.children - Content displayed inside the expandable section
- * @param {string} [props.title=''] - Optional title for the expand section
+ * @param {string} [props.title=""] - Optional title for the expand section
  * @returns {ReactElement} The rendered ExpandReveal component
  */
 const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => {
     const {
         children,
-        title = '',
+        title = "",
         contentStyles
     } = props;
 
@@ -48,7 +50,7 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
      * Supports Enter and Space keys for toggle action.
      */
     const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>): void => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             handleToggle();
         }
@@ -59,8 +61,8 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
      * Provides contextual title that changes with expand state.
      */
     const dividerTitle = useMemo((): string => {
-        if (title) return `${title} ${isOpen ? '(Expanded)' : '(Collapsed)'}`;
-        return isOpen ? 'Collapse' : 'Expand';
+        if (title) return `${title} ${isOpen ? "(Expanded)" : "(Collapsed)"}`;
+        return isOpen ? "Collapse" : "Expand";
     }, [title, isOpen]
     );
 
@@ -69,16 +71,16 @@ const ExpandReveal: React.FC<ExpandRevealProps> = (props: ExpandRevealProps) => 
      * Ensures proper ARIA labeling and state announcement.
      */
     const accessibilityProps = useMemo(() => ({
-        'aria-expanded': isOpen,
-        'aria-label': title ? `Toggle ${title} section` : 'Toggle expandable content',
-        'role': 'button' as const,
+        "aria-expanded": isOpen,
+        "aria-label": title ? `Toggle ${title} section` : "Toggle expandable content",
+        "role": "button" as const,
     }), [isOpen, title]
     );
 
 
     // Guard Clause
     if (!children) {
-        devLog.warn('[ExpandReveal] No children provided');
+        devLog.warn("[ExpandReveal] No children provided");
         return null;
     }
 

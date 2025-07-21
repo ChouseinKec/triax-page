@@ -161,7 +161,14 @@
 // This mixin is used for button-like components
 // It can be used for buttons, options, and other interactive elements
 // It includes styles for hover, focus, active, selected, and disabled states
-@mixin components--button($height: 25px, $shadow: true) {
+
+@mixin components--button(
+	//
+	$height: 25px,
+	$radius: var(--size-sm),
+	$shadow: var(--theme-shadow--border),
+	$background: var(--theme-background-color--secondary)
+) {
 	height: $height;
 
 	padding: var(--size-sm);
@@ -171,13 +178,12 @@
 	justify-content: center;
 	gap: var(--size-xs);
 	outline: none;
-	border-radius: var(--size-sm);
+	border-radius: $radius;
 	border: none;
 
-	@if $shadow {
-		box-shadow: var(--theme-shadow--border);
-	}
-	background: var(--theme-background-color--secondary);
+	box-shadow: $shadow;
+
+	background: $background;
 
 	font-size: var(--font-size-sm);
 	color: var(--color-white);

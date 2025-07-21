@@ -1,14 +1,16 @@
+"use client";
+
 import React, { memo, useCallback, useMemo } from "react";
 
 // Types
-import { DropdownSelectProps } from '@/components/select/dropdown/types';
+import { DropdownSelectProps } from "@/components/select/dropdown/types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 // Components
-import DropdownReveal from '@/components/reveal/dropdown/component';
-import Options from '@/components/select/options/component';
+import DropdownReveal from "@/components/reveal/dropdown/component";
+import Options from "@/components/select/options/component";
 
 /**
  * DropdownSelect Component
@@ -33,15 +35,15 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         options,
         onChange,
 
-        placeholder = 'N/A',
+        placeholder = "N/A",
         forcePlaceholder = false,
         grouped = false,
         searchable = false,
         isDisabled = false,
 
         // Accessibility
-        title = 'Toggle Dropdown',
-        ariaLabel = 'Dropdown select',
+        title = "Toggle Dropdown",
+        ariaLabel = "Dropdown select",
     } = props;
 
     /**
@@ -52,7 +54,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
      */
     const handleOptionChange = useCallback((selectedValue: string): void => {
         // If no value is selected, clear the selection
-        if (selectedValue === '') return onChange('');
+        if (selectedValue === "") return onChange("");
 
         // Validate that the selected value exists in options
         const isValidOption = options.some(option => option.value === selectedValue);
@@ -84,7 +86,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
     */
     const dropdownProps = useMemo(() => ({
         value,
-        placeholder: forcePlaceholder ? placeholder : value || 'N/A',
+        placeholder: forcePlaceholder ? placeholder : value || "N/A",
         title,
         isDisabled,
         ariaLabel
@@ -93,12 +95,12 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
 
     // Guard Clause
     if (!options || options.length === 0) {
-        devLog.warn('[DropdownSelect] No options provided');
+        devLog.warn("[DropdownSelect] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.warn('[DropdownSelect] Invalid value provided, expected a string');
+        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
         return null;
     }
 

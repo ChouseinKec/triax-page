@@ -1,10 +1,12 @@
+"use client";
+
 import { memo, ReactElement } from "react";
 
 // Components
-import Group from '@/editors/style/components/group/component';
+import Group from "@/editors/style/components/group/component";
 
 // Types
-import { LayoutCategoryProps } from '@/editors/style/components/category/type';
+import { LayoutCategoryProps } from "@/editors/style/components/category/type";
 
 
 /**

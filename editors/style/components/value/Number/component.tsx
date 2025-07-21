@@ -1,21 +1,23 @@
+"use client";
+
 // External imports
 import React, { useCallback, memo, useMemo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "./styles.module.scss";
 
 // Components
-import GenericInput from '@/components/input/generic/component';
-import SelectDropdown from '@/components/select/dropdown/component';
+import GenericInput from "@/components/input/generic/component";
+import SelectDropdown from "@/components/select/dropdown/component";
 
 // Types
-import { NumberValueProps } from './types';
+import { NumberValueProps } from "./types";
 
 // Utilities
-import { devLog } from '@/utilities/dev';
+import { devLog } from "@/utilities/dev";
 
 // Constants
-import { StyleIconDefinitions } from '@/constants/style/icon';
+import { StyleIconDefinitions } from "@/constants/style/icon";
 
 
 /**
@@ -26,7 +28,7 @@ import { StyleIconDefinitions } from '@/constants/style/icon';
  * Automatically formats decimal numbers and validates range constraints.
  * 
  * @param {NumberValueProps} props - Component properties
- * @param {string} [props.value=''] - Current numeric value as string
+ * @param {string} [props.value=""] - Current numeric value as string
  * @param {function} [props.onChange] - Callback for value changes
  * @param {Array} [props.options=[]] - Available alternative options (keywords, etc.)
  * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
@@ -36,7 +38,7 @@ import { StyleIconDefinitions } from '@/constants/style/icon';
  */
 const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
     const {
-        value = '',
+        value = "",
         onChange = () => { },
         options = [],
         forceInteger = false,
@@ -44,22 +46,22 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
 
 
     if (!options || options.length === 0) {
-        devLog.error('[NumberValue] No options provided');
+        devLog.error("[NumberValue] No options provided");
         return null;
     }
 
     if (value == null) {
-        devLog.error('[NumberValue] Invalid value provided, expected a string');
+        devLog.error("[NumberValue] Invalid value provided, expected a string");
         return null;
     }
 
 
     // Extracts min and max from options if available, otherwise defaults to -Infinity and Infinity
     const range = useMemo(() => {
-        const option = options.find(opt => opt.name === 'number' || opt.name === 'integer');
+        const option = options.find(opt => opt.name === "number" || opt.name === "integer");
         // Ensure min and max are valid numbers if present
-        const validMin = (option && 'min' in option && typeof option.min === 'number') ? option.min : -Infinity;
-        const validMax = (option && 'max' in option && typeof option.max === 'number') ? option.max : Infinity;
+        const validMin = (option && "min" in option && typeof option.min === "number") ? option.min : -Infinity;
+        const validMax = (option && "max" in option && typeof option.max === "number") ? option.max : Infinity;
 
         // Return the range as an object
         return {
@@ -78,18 +80,18 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
     */
     const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
         // Allow empty values
-        if (inputValue === '' || inputValue === null || inputValue === undefined) {
-            return { status: true, message: '' };
+        if (inputValue === "" || inputValue === null || inputValue === undefined) {
+            return { status: true, message: "" };
         }
 
         // Parse the numeric value
         const numericValue = parseFloat(inputValue);
 
-        // Check if it's a valid number
+        // Check if it"s a valid number
         if (isNaN(numericValue) || !isFinite(numericValue)) {
             return {
                 status: false,
-                message: 'Please enter a valid number'
+                message: "Please enter a valid number"
             };
         }
 
@@ -109,7 +111,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
             };
         }
 
-        return { status: true, message: '' };
+        return { status: true, message: "" };
     },
         [range]
     );
@@ -122,18 +124,18 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
      */
     const handleNumberChange = useCallback((inputValue: string): void => {
         // Handle empty input
-        if (inputValue === '' || inputValue === null || inputValue === undefined) return onChange('');
+        if (inputValue === "" || inputValue === null || inputValue === undefined) return onChange("");
 
 
         let safeValue: string;
         if (forceInteger) {
             // Convert to integer, fallback to empty if invalid
             const intValue = parseInt(inputValue, 10);
-            safeValue = isNaN(intValue) ? '' : intValue.toString();
+            safeValue = isNaN(intValue) ? "" : intValue.toString();
         } else {
             // Convert to float with one decimal (0.0), fallback to empty if invalid
             const floatValue = parseFloat(inputValue);
-            safeValue = isNaN(floatValue) ? '' : floatValue.toFixed(1);
+            safeValue = isNaN(floatValue) ? "" : floatValue.toFixed(1);
         }
 
         onChange(safeValue);
@@ -149,7 +151,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
      */
     const handleOptionChange = useCallback((selectedOption: string): void => {
         if (!selectedOption) {
-            onChange('');
+            onChange("");
             return;
         }
 
@@ -188,7 +190,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
                     onChange={handleOptionChange}
                     searchable={true}
                     grouped={true}
-                    placeholder={StyleIconDefinitions.number || 'NUM'}
+                    placeholder={StyleIconDefinitions.number || "NUM"}
                     forcePlaceholder={true}
                     isDisabled={options.length <= 1}
                     ariaLabel="Change Value Type"
