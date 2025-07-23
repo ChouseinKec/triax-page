@@ -41,10 +41,10 @@
   --theme-background-color--primary: #181826;
   --theme-background-color--secondary: #13131e;
   --theme-background-color--tertiary: #212132;
-  --theme-background-color--quaternary: #2e2e44;
+  --theme-background-color--quaternary: #232345;
 
   --theme-background-color--hover: var(--theme-background-color--tertiary);
-  --theme-background-color--selected: #2e2e44;
+  --theme-background-color--selected: var(--theme-background-color--quaternary);
   --theme-background-color--focus: var(--color-gray--darker);
   --theme-background-color--active: var(--color-gray);
 

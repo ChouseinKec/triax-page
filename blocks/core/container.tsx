@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, ReactNode } from 'react';
 
 // Types
 import type { BlockDefinition, BlockInstance } from '@/types/block/block';
@@ -13,7 +13,7 @@ import { useBlockManager } from '@/hooks/block/manager';
  * @param children - Child blocks to render inside this container
  * @returns JSX element representing the container block
  */
-function renderContainer(instance: BlockInstance, children?: React.ReactNode): React.ReactElement {
+function renderBlock(instance: BlockInstance, children?: ReactNode) {
 	const { selectBlock, renderBlockStyles, getSelectedBlock, hasSelectedChild } = useBlockManager();
 
 
@@ -42,9 +42,6 @@ function renderContainer(instance: BlockInstance, children?: React.ReactNode): R
 			{/* Render child blocks */}
 			{children}
 
-			{/* Debug: Show block ID (remove in production) */}
-			{instance.id}
-
 			{/* Inject block-specific styles */}
 			<style>
 				{renderBlockStyles(instance.id)}
@@ -69,7 +66,7 @@ const container: BlockDefinition = {
 	permittedContent: null, // Can contain any block type
 	permittedParent: null,  // Can be placed in any parent
 	icon,
-	render: renderContainer,
+	render: renderBlock,
 };
 
 export default container;

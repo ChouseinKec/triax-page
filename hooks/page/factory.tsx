@@ -18,6 +18,8 @@ export const usePageFactory = (): PageFactory => {
 
 		return (
 			<DropdownSelect
+				searchable={true}
+				grouped={true}
 				placeholder={icon}
 				forcePlaceholder={true}
 				options={allDevices}

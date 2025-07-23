@@ -2,12 +2,15 @@ import { useCallback } from "react";
 
 // Stores
 import useBlockStore from "@/stores/block/store";
+import usePageStore from '@/stores/page/store';
 
-// Hooks
-import { useStyleManager } from "@/hooks/style/manager";
 
 // Types
-import type { BlockInstance, BlockStyleData, BlockType, BlockTag } from "@/types/block/block";
+import type { BlockInstance, BlockStyleData, BlockType, BlockTag, BlockAttributeValue } from "@/types/block/block";
+
+// Utilities
+import { getAllStylesWithFallback } from "@/utilities/style/cascade";
+import { getBlockSelector, generateCSSRule } from "@/utilities/style/css";
 
 /**
  * BlockManager interface defines all actions and selectors for block management.
@@ -23,10 +26,14 @@ interface BlockManager {
     getBlock: (blockID: string) => BlockInstance | null;
     getSelectedBlock: () => BlockInstance | null;
     getBlockStyles: (blockID: string) => BlockStyleData | null;
-    renderBlockStyles: (blockID: string) => string | undefined;
     getBlockTag: (blockID: string) => BlockTag | undefined;
     getBlockContentIDs: (blockID: string) => string[] | undefined;
     hasSelectedChild: (blockID: string) => boolean;
+
+    renderBlockStyles: (blockID: string) => string | undefined;
+
+    setBlockAttribute: (blockID: string, attribute: string, value: BlockAttributeValue) => void;
+    getBlockAttribute: (blockID: string, attribute: string) => BlockAttributeValue | undefined;
 }
 
 /**
@@ -39,49 +46,53 @@ export const useBlockManager = (): BlockManager => {
     const _deleteBlock = useBlockStore(state => state.deleteBlock);
     const _selectBlock = useBlockStore(state => state.selectBlock);
     const _getBlock = useBlockStore(state => state.getBlock);
+    const _setBlockAttribute = useBlockStore(state => state.setBlockAttribute);
 
     // Store state
     const _allBlocks = useBlockStore(state => state.allBlocks);
     const _selectedBlockID = useBlockStore(state => state.selectedBlockID);
 
-    // Style manager
-    const { generateCSS } = useStyleManager();
+
+    // Page state
+    const device = usePageStore((state) => state.currentDevice.value);
+    const orientation = usePageStore((state) => state.currentOrientation.value);
+    const pseudo = usePageStore((state) => state.currentPseudo.value);
 
     /**
      * Adds a new block to the editor.
      * @param tag - The tag of the block to add.
      * @param parentID - Optional parent block ID.
      */
-    const addBlock = useCallback<BlockManager['addBlock']>(
-        (type, parentID) => _addBlock(type, parentID),
-        [_addBlock]
+    const addBlock = useCallback<BlockManager['addBlock']>((type, parentID) => {
+        _addBlock(type, parentID);
+    }, [_addBlock]
     );
 
     /**
      * Deletes a block by its ID.
      * @param blockID - The ID of the block to delete.
      */
-    const deleteBlock = useCallback<BlockManager['deleteBlock']>(
-        (blockID) => _deleteBlock(blockID),
-        [_deleteBlock]
+    const deleteBlock = useCallback<BlockManager['deleteBlock']>((blockID) => {
+        _deleteBlock(blockID);
+    }, [_deleteBlock]
     );
 
     /**
      * Selects a block by its ID.
      * @param blockID - The ID of the block to select.
      */
-    const selectBlock = useCallback<BlockManager['selectBlock']>(
-        (blockID) => _selectBlock(blockID),
-        [_selectBlock]
+    const selectBlock = useCallback<BlockManager['selectBlock']>((blockID) => {
+        _selectBlock(blockID);
+    }, [_selectBlock]
     );
 
     /**
      * Retrieves all blocks from the store.
      * @returns All blocks keyed by their IDs.
      */
-    const getAllBlocks = useCallback<BlockManager['getAllBlocks']>(
-        () => _allBlocks,
-        [_allBlocks]
+    const getAllBlocks = useCallback<BlockManager['getAllBlocks']>(() => {
+        return _allBlocks;
+    }, [_allBlocks]
     );
 
     /**
@@ -89,18 +100,18 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block to retrieve.
      * @returns The block data or null if not found.
      */
-    const getBlock = useCallback<BlockManager['getBlock']>(
-        (blockID) => _allBlocks[blockID] || null,
-        [_allBlocks]
+    const getBlock = useCallback<BlockManager['getBlock']>((blockID) => {
+        return _allBlocks[blockID] || null;
+    }, [_allBlocks]
     );
 
     /**
      * Retrieves the currently selected block.
      * @returns The selected block data or null if none selected.
      */
-    const getSelectedBlock = useCallback<BlockManager['getSelectedBlock']>(
-        () => (_selectedBlockID ? _allBlocks[_selectedBlockID] || null : null),
-        [_selectedBlockID, _allBlocks]
+    const getSelectedBlock = useCallback<BlockManager['getSelectedBlock']>(() => {
+        return (_selectedBlockID ? _allBlocks[_selectedBlockID] || null : null);
+    }, [_selectedBlockID, _allBlocks]
     );
 
     /**
@@ -108,23 +119,9 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block.
      * @returns The block's styles or undefined if not found.
      */
-    const getBlockStyles = useCallback<BlockManager['getBlockStyles']>(
-        (blockID) => _allBlocks[blockID]?.styles,
-        [_allBlocks]
-    );
-
-    /**
-     * Generates CSS styles for a block by its ID.
-     * @param blockID - The ID of the block.
-     * @returns The generated CSS string or undefined if block not found.
-     */
-    const renderBlockStyles = useCallback<BlockManager['renderBlockStyles']>(
-        (blockID) => {
-            const block = _allBlocks[blockID];
-            if (!block || !block.styles) return undefined;
-            return generateCSS(blockID, block.styles);
-        },
-        [_allBlocks, generateCSS]
+    const getBlockStyles = useCallback<BlockManager['getBlockStyles']>((blockID) => {
+        return _allBlocks[blockID]?.styles;
+    }, [_allBlocks]
     );
 
     /**
@@ -132,9 +129,9 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block.
      * @returns The block's tag or undefined if not found.
      */
-    const getBlockTag = useCallback<BlockManager['getBlockTag']>(
-        (blockID) => _allBlocks[blockID]?.tag,
-        [_allBlocks]
+    const getBlockTag = useCallback<BlockManager['getBlockTag']>((blockID) => {
+        return _allBlocks[blockID]?.tag;
+    }, [_allBlocks]
     );
 
     /**
@@ -142,9 +139,9 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block.
      * @returns Array of child block IDs or undefined if not found.
      */
-    const getBlockContentIDs = useCallback<BlockManager['getBlockContentIDs']>(
-        (blockID) => _allBlocks[blockID]?.contentIDs,
-        [_allBlocks]
+    const getBlockContentIDs = useCallback<BlockManager['getBlockContentIDs']>((blockID) => {
+        return _allBlocks[blockID]?.contentIDs;
+    }, [_allBlocks]
     );
 
     /**
@@ -152,21 +149,68 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block to check.
      * @returns True if the selected block is a descendant, false otherwise.
      */
-    const hasSelectedChild = useCallback<BlockManager['hasSelectedChild']>(
-        (blockID) => {
-            if (!_selectedBlockID || _selectedBlockID === blockID) return false;
+    const hasSelectedChild = useCallback<BlockManager['hasSelectedChild']>((blockID) => {
+        if (!_selectedBlockID || _selectedBlockID === blockID) return false;
 
-            // Recursive helper to check descendants
-            const isDescendant = (parentID: string, targetID: string): boolean => {
-                const block = _getBlock(parentID);
-                if (!block?.contentIDs) return false;
-                if (block.contentIDs.includes(targetID)) return true;
-                return block.contentIDs.some(childID => isDescendant(childID, targetID));
-            };
+        // Recursive helper to check descendants
+        const isDescendant = (parentID: string, targetID: string): boolean => {
+            const block = _getBlock(parentID);
+            if (!block?.contentIDs) return false;
+            if (block.contentIDs.includes(targetID)) return true;
+            return block.contentIDs.some(childID => isDescendant(childID, targetID));
+        };
 
-            return isDescendant(blockID, _selectedBlockID);
-        },
+        return isDescendant(blockID, _selectedBlockID);
+    },
         [_selectedBlockID, _getBlock]
+    );
+
+    /**
+     * Renders the styles for a block based on the current context.
+     * Uses the utility function to resolve styles with CSS cascade logic.
+     * @param blockID - The ID of the block to render styles for.
+     * @returns The resolved CSS styles as a string or undefined if no styles found.
+    */
+    const renderBlockStyles = useCallback<BlockManager['renderBlockStyles']>((blockID) => {
+        const styles = _allBlocks[blockID]?.styles;
+        if (!styles) return undefined;
+
+        const resolvedStyles = getAllStylesWithFallback(
+            styles,
+            device,
+            orientation,
+            pseudo
+        );
+
+        if (Object.keys(resolvedStyles).length === 0) return undefined;
+
+        // Generate CSS
+        const selector = getBlockSelector(blockID, pseudo);
+        return generateCSSRule(selector, resolvedStyles);
+
+    }, [_allBlocks, device, orientation, pseudo]
+    );
+
+    /**
+     * Sets an attribute on a block instance.
+     * @param blockID - The ID of the block to update.
+     * @param attribute - The attribute name to set.
+     * @param value - The value to set for the attribute.
+     */
+    const setBlockAttribute = useCallback<BlockManager['setBlockAttribute']>((blockID, attribute, value) => {
+        _setBlockAttribute(blockID, attribute, value);
+    }, [_setBlockAttribute]
+    );
+
+    /**
+     * Gets an attribute value from a block instance.
+     * @param blockID - The ID of the block to query.
+     * @param attribute - The attribute name to retrieve.
+     * @returns The attribute value or undefined if not found.
+     */
+    const getBlockAttribute = useCallback<BlockManager['getBlockAttribute']>((blockID, attribute) => {
+        return _allBlocks[blockID]?.attributes?.[attribute];
+    }, [_allBlocks]
     );
 
     return {
@@ -180,9 +224,11 @@ export const useBlockManager = (): BlockManager => {
         getBlock,
         getSelectedBlock,
         getBlockStyles,
-        renderBlockStyles,
         getBlockTag,
         getBlockContentIDs,
         hasSelectedChild,
+        renderBlockStyles,
+        setBlockAttribute,
+        getBlockAttribute,
     };
 };

@@ -1,4 +1,7 @@
+@use '../../mixins/mixins.module.scss' as inputMixins;
+
 .BottomPanel {
+	margin-bottom: var(--size-md);
 	grid-row: 3;
 	grid-column: 2;
 
@@ -6,9 +9,9 @@
 	justify-content: center;
 	align-items: center;
 
-	border-radius: var(--size-md);
-	background: var(--theme-background-color--primary);
-	box-shadow: var(--theme-shadow--border);
-
 	z-index: 1;
+
+	button {
+		@include inputMixins.components--button;
+	}
 }

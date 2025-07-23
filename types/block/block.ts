@@ -10,7 +10,9 @@ export const BlockDefinitions = CoreBlocks;
  */
 export type BlockTag = 'a' | 'abbr' | 'address' | 'article' | 'aside' | 'audio' | 'b' | 'blockquote' | 'br' | 'button' | 'code' | 'data' | 'del' | 'div' | 'dl' | 'em' | 'footer' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'header' | 'hgroup' | 'hr' | 'i' | 'image' | 'input' | 'ins' | 'kbd' | 'label' | 'main' | 'mark' | 'menu' | 'meter' | 'nav' | 'section' | 'ol' | 'output' | 'p' | 'picture' | 'pre' | 'q' | 'samp' | 'small' | 'span' | 'strong' | 'sub' | 'sup' | 'table' | 'textarea' | 'time' | 'u' | 'var' | 'wbr' | 'video' | 'ul' | 'li' | 'dt' | 'dd' | 'caption' | 'colgroup' | 'col' | 'thead' | 'tbody' | 'tfoot' | 'tr' | 'td' | 'th' | 'form' | 'select' | 'fieldset' | 'legend' | 'optgroup' | 'option' | 'progress' | 'img' | 's' | 'cite';
 
-export type BlockType = keyof typeof BlockDefinitions;
+export type BlockType = 'text' | 'container' | 'media';
+
+export type BlockAttributeValue = string | number | boolean | null;
 
 /**
  * Block style data structure for responsive and pseudo-class styles.
@@ -23,6 +25,10 @@ export type BlockStyleData = {
 			};
 		};
 	};
+};
+
+export type BlockAttributeData = {
+	[key: string]: BlockAttributeValue;
 };
 
 /**
@@ -50,6 +56,8 @@ export interface BlockInstance {
 	type: BlockType;
 
 	styles: BlockStyleData | null;
+	attributes: BlockAttributeData | null;
+
 	parentID: string | null;
 	contentIDs: string[];
 

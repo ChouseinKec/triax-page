@@ -17,9 +17,6 @@ export interface GenericInputProps {
 	/** Maximum value (for number types) or maximum length (for text types) */
 	max?: number;
 
-	/** ARIA label for the input - primary accessible name */
-	ariaLabel?: string;
-
 	/** Optional title attribute for additional context */
 	title?: string; // Optional title attribute for additional context
 

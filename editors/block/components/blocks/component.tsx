@@ -28,6 +28,8 @@ const Blocks: React.FC<BlocksProps> = memo(() => {
         [allBlocks]
     );
 
+    console.log(allBlocks);
+
     return (
         <div className={CSS.Blocks} >
             {rootBlocks.map(block => (

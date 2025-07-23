@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 // Types
 import type { BlockProps } from "./types";
@@ -8,6 +8,9 @@ import type { BlockProps } from "./types";
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
 import { getRegisteredBlocks } from "@/blocks/registry/block";
+
+// Context
+import { BottomPanel } from "@/context/layout/manager";
 
 /**
  * Block Component
@@ -17,8 +20,9 @@ import { getRegisteredBlocks } from "@/blocks/registry/block";
  */
 const Block: React.FC<BlockProps> = ({ blockID }) => {
     // Get block instance data from the store
-    const { getBlock } = useBlockManager();
+    const { getBlock, deleteBlock, getSelectedBlock } = useBlockManager();
     const block = getBlock(blockID);
+    const selectedBlock = getSelectedBlock();
 
     // Early return if block doesn't exist
     if (!block) return null;
@@ -26,6 +30,7 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
     // Get all registered block definitions
     const BlockDefinitions = getRegisteredBlocks();
     const definition = BlockDefinitions[block.type];
+    const { addItem: addToBottom, removeItem: removeFromBottom } = BottomPanel.usePanel();
 
     // Handle unknown block types gracefully
     if (!definition) {
@@ -35,6 +40,29 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
             </div>
         );
     }
+
+    const actions = useMemo(
+        () => (
+            <button onClick={() => deleteBlock(blockID)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M176,128a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,128Zm56,0A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+            </button>
+
+        ),
+        [blockID, deleteBlock]
+    );
+
+
+    useEffect(() => {
+        if (selectedBlock && selectedBlock.id === blockID) addToBottom({ id: `delete-${blockID}`, component: actions, priority: 1, icon: '' });
+
+        // Cleanup on unmount
+        return () => {
+            removeFromBottom(`delete-${blockID}`);
+        };
+    }, [selectedBlock, addToBottom, removeFromBottom, actions]
+    );
+
+
 
     /**
      * Render child blocks recursively.

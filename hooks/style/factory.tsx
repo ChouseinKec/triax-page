@@ -18,6 +18,7 @@ import SizeView from '@/editors/style/components/view/size/component';
 
 // Store
 import { useStyleManager } from '@/hooks/style/manager';
+import { useBlockManager } from "@/hooks/block/manager";
 
 interface StyleFactory {
 	renderValue: (propertyName: StylePropertyKeys) => ReactElement | null;
@@ -32,6 +33,11 @@ interface StyleFactory {
 
 export const useStyleFactory = (): StyleFactory => {
 	const { getStyle, setStyle } = useStyleManager();
+	const { getSelectedBlock } = useBlockManager();
+
+	const selectedBlock = getSelectedBlock();
+
+
 
 	const handleValueChange = useCallback((propertyName: StylePropertyKeys, value: string) => {
 		// If the value is not a string, log an error

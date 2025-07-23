@@ -2,7 +2,7 @@ import type { StylePropertyKeys } from '@/types/style/property';
 
 import type { PseudoName } from '@/types/page/pseudo';
 
-export const BlockStyleDefaults: Record<PseudoName, Partial<Record<StylePropertyKeys, string>>> = {
+export const BlockStyleDefaults: Partial<Record<PseudoName, Partial<Record<StylePropertyKeys, string>>>> = {
 	all: {
 		'padding-top': '10px',
 		'padding-bottom': '10px',
@@ -34,6 +34,4 @@ export const BlockStyleDefaults: Record<PseudoName, Partial<Record<StyleProperty
 
 		'font-size': '10px',
 	},
-	active: {},
-	hover: {},
 };

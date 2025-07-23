@@ -10,6 +10,7 @@ import { StylePropertyShorthandDefinitions as PropertyShorthands } from '@/const
 import { devLog } from '@/utilities/dev';
 import { isPropertyValid } from '@/utilities/style/property';
 import { isValueValid } from '@/utilities/style/value';
+import { getStyleWithFallback } from '@/utilities/style/cascade';
 
 // Stores
 import usePageStore from '@/stores/page/store';
@@ -36,6 +37,7 @@ export const useStyleManager = (): StyleManager => {
 	const orientation = usePageStore((state) => state.currentOrientation.value);
 	const orientations = usePageStore((state) => state.allOrientations);
 
+	const pseudos = usePageStore((state) => state.allPseudos);
 	const pseudo = usePageStore((state) => state.currentPseudo.value);
 
 	/**
@@ -67,29 +69,13 @@ export const useStyleManager = (): StyleManager => {
 	 */
 	const _getStyle = useCallback(
 		(property: StylePropertyKeys): string => {
-			const defaultPseudo = devices[0].value;
+			const defaultPseudo = pseudos[0].value;
 			const defaultOrientation = orientations[0].value;
 			const defaultDevice = devices[0].value;
 
 			if (!blockStyles) return '';
 
-			return (
-				// 1. Exact match
-				blockStyles[device]?.[orientation]?.[pseudo]?.[property] ??
-				// 2. Same context, default pseudo
-				blockStyles[device]?.[orientation]?.[defaultPseudo]?.[property] ??
-				// 3. Default orientation
-				blockStyles[device]?.[defaultOrientation]?.[pseudo]?.[property] ??
-				blockStyles[device]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-				// 4. Default device
-				blockStyles[defaultDevice]?.[orientation]?.[pseudo]?.[property] ??
-				blockStyles[defaultDevice]?.[orientation]?.[defaultPseudo]?.[property] ??
-				blockStyles[defaultDevice]?.[defaultOrientation]?.[pseudo]?.[property] ??
-				// 5. Global fallback
-				blockStyles[defaultDevice]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-				// 6. Empty string if nothing found
-				''
-			);
+			return getStyleWithFallback(blockStyles, property, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
 		},
 		[blockStyles, device, orientation, pseudo]
 	);

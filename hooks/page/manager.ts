@@ -7,13 +7,13 @@ import type { Device, DeviceName } from '@/types/page/device';
 import usePageStore from '@/stores/page/store';
 
 interface PageManager {
-	getDevice: () => DeviceName;
+	getDevice: () => Device;
 	setDevice: (device: DeviceName) => void;
 	getDevices: () => Device[];
 }
 
 export const usePageManager = (): PageManager => {
-	const device = usePageStore((state) => state.currentDevice.value);
+	const device = usePageStore((state) => state.currentDevice);
 	const devices = usePageStore((state) => state.allDevices);
 
 	const setStoreDevice = usePageStore((state) => state.setDevice);

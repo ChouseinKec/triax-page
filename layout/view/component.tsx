@@ -11,17 +11,22 @@ import { ViewPanel as ViewPanelContext } from "@/context/layout/manager";
 import BlockEditor from "@/editors/block/component";
 
 // Hooks
-
+import { usePageManager } from "@/hooks/page/manager";
 
 export default function ViewPanel() {
     const { items } = ViewPanelContext.usePanel();
     const [zoom, setZoom] = useState(0.5);
-    const [pan, setPan] = useState({ x: 0, y: 0 });
+    const [pan, setPan] = useState({ x: 450, y: 150 });
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 });
+    const { getDevice } = usePageManager();
+
 
     // Ref for the canvas element
     const canvasRef = useRef<HTMLDivElement>(null);
+    const { template: { width: deviceWidth, height: deviceHeight } } = getDevice();
+
+
 
     /**
      * Use native event listener to properly prevent default on wheel events
@@ -128,8 +133,8 @@ export default function ViewPanel() {
                     transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
                     transformOrigin: '0 0',
                     transition: isPanning ? 'none' : 'transform 0.1s ease-out',
-                    width: '1920px',
-                    height: '1080px',
+                    width: `${deviceWidth}px`,
+                    height: `${deviceHeight}px`,
                     position: 'relative',
                 }}
             >

@@ -43,7 +43,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 	} = props;
 
 
-
 	// Guard Clause
 	if (!options || options.length === 0) {
 		devLog.error("[DimensionValue] No options provided");
@@ -225,7 +224,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 		[onChange, options, extractedValue.number, defaults.number]
 	);
 
-
 	return (
 		<div className={CSS.DimensionValue} role="representation">
 			{/* Numeric input for the value component */}
@@ -238,7 +236,6 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 				onValidate={validateNumber}
 				onChange={handleNumberChange}
 				title="Enter Dimension Value"
-				ariaLabel="Enter Dimension Value"
 			/>
 
 
