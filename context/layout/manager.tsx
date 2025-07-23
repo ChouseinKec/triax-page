@@ -55,3 +55,4 @@ export const LeftPanel = createPanelContext();
 export const RightPanel = createPanelContext();
 export const BottomPanel = createPanelContext();
 export const ViewPanel = createPanelContext();
+export const TopPanel = createPanelContext();

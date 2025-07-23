@@ -7,7 +7,6 @@ import Layout from '@/editors/style/components/layout/component';
 // Types 
 import { StyleEditorProps } from './types';
 
-
 const StyleEditor: React.FC<StyleEditorProps> = (props: StyleEditorProps): ReactElement => {
     return (
         <div className={CSS.StyleEditor} >

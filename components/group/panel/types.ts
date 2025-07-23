@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 /**
  * Represents a single tab item with a title and collapsible content.
  */
-export type TabGroupItemsProps = {
+export type PanelGroupItemsProps = {
 	/** The label for the tab, displayed in the tab header */
 	label: string | ReactNode;
 
@@ -16,7 +16,10 @@ export type TabGroupItemsProps = {
 /**
  * Represents a group of tab items to be rendered together.
  */
-export type TabGroupProps = {
+export type PanelGroupProps = {
 	/** List of tab items to display */
-	items: TabGroupItemsProps[];
+	items: PanelGroupItemsProps[];
+
+	/** The position of the tab controls */
+	tabPosition?: 'right' | 'left';
 };

@@ -1,11 +1,10 @@
 .RightPanel {
-    grid-row: 1 / -1;
-    grid-column: 3 / -1;
+	height: 100%;
+	max-width: 350px;
 
-	width: 300px;
+	grid-column: 3;
+	grid-row: 1/-1;
+
 	overflow: hidden;
-
-	border-radius: var(--size-md);
-	background: var(--theme-background-color--primary);
-	box-shadow: var(--theme-shadow--border);
+	z-index: 9999;
 }

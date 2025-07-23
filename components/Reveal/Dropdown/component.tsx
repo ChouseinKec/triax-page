@@ -35,7 +35,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
         // Accessibility and UX
         title = "Toggle Dropdown",
-        ariaLabel = "Dropdown reveal",
     } = props;
 
     // Component state management
@@ -101,7 +100,6 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
                 data-is-disabled={isDisabled}
                 data-is-open={isOpen}
                 title={title}
-                aria-label={ariaLabel}
             >
 
                 {!isCollapsed &&

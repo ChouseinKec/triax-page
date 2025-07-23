@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 
 // Types
-import type { BlockEditorStoreProps } from './types';
+import type { BlockStoreProps } from './types';
 import type { BlockStyleData, BlockInstance, BlockType, BlockTag } from '@/types/block/block';
 
 // Constants
@@ -11,8 +11,8 @@ import { BlockStyleDefaults } from '@/constants/block/style';
 function createBlockStyles(): BlockStyleData {
 	const defaults = {
 		...BlockStyleDefaults,
-		default: {
-			...BlockStyleDefaults.default,
+		all: {
+			...BlockStyleDefaults.all,
 		},
 	};
 
@@ -28,7 +28,7 @@ function createBlockStyles(): BlockStyleData {
 		landscape: pseudos,
 	};
 
-	const devices = {
+	return {
 		default: {
 			default: defaults,
 			portrait: pseudos,
@@ -38,8 +38,6 @@ function createBlockStyles(): BlockStyleData {
 		tablet: orientations,
 		desktop: orientations,
 	};
-
-	return devices;
 }
 
 function createBlock(type: BlockType, parentBlock?: string): BlockInstance {
@@ -62,7 +60,7 @@ function createBlock(type: BlockType, parentBlock?: string): BlockInstance {
 /**
  * Zustand hook for accessing and updating the block editor state.
  */
-const useBlockStore = create<BlockEditorStoreProps>((set, get) => ({
+const useBlockStore = create<BlockStoreProps>((set, get) => ({
 	/**
 	 * The currently selected block ID.
 	 */

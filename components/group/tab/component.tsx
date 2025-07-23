@@ -30,8 +30,6 @@ import { devLog } from "@/utilities/dev";
 const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const {
         items,
-        ariaLabel = "Tab List",
-        ariaDescription = "Tab list for navigating between sections",
     } = props;
 
     // State management for active tab selection
@@ -48,11 +46,11 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         const index = parseInt(value, 10);
 
         // Validate index is within bounds
-        // if (isNaN(index) || index < 0 || index >= items.length) {
-        //     devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
-        //     setSelectedIndex("0");
-        //     return;
-        // }
+        if (isNaN(index) || index < 0 || index >= items.length) {
+            devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
+            setSelectedIndex("0");
+            return;
+        }
 
         setSelectedIndex(value);
     }, [items.length]
@@ -87,7 +85,6 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         }
 
 
-        return <></>
         // Fallback content for missing or invalid content
         return (
             <div className={CSS.TabContentError} role="alert">
@@ -98,21 +95,6 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
         [items, selectedIndex]
     );
 
-    /**
-     * Accessibility props for the tab group 
-     * 
-     * @returns {React.HTMLAttributes<HTMLDivElement>} Accessibility attributes for the tab group
-    */
-    const accessibilityProps = useMemo((): React.HTMLAttributes<HTMLDivElement> => {
-        return {
-            role: "tablist",
-            "aria-label": ariaLabel,
-            "aria-multiselectable": "false" as const,
-            "aria-description": ariaDescription,
-        };
-    }, [ariaLabel, ariaDescription]
-    );
-
     // Guard Clause
     if (!items || items.length === 0) {
         devLog.warn("[TabGroup] No items provided");
@@ -120,7 +102,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     }
 
     return (
-        <div className={CSS.TabGroup} {...accessibilityProps}>
+        <div className={CSS.TabGroup}>
             {/* Content area - displays selected tab content */}
             {activeContent}
 

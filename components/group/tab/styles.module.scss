@@ -4,20 +4,13 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden auto;
-
-	> * {
-		padding: 0 var(--size-md) var(--size-md) var(--size-md);
-	}
+	padding: var(--size-lg);
 
 	> [class*='RadioSelect'] {
 		width: 96%;
 		position: absolute;
 		bottom: 1%;
 		right: 2%;
-	}
-
-	* svg {
-		fill: white;
 	}
 }
 

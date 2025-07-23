@@ -42,7 +42,9 @@ const BlockAdd: React.FC = () => {
             const blockType = block.type as BlockType;
             return (
                 <div className={CSS.BlockButtonContainer} key={blockType}>
-                    <button className={CSS.BlockButton} onClick={() => handleAddBlock(blockType)} />
+                    <button className={CSS.BlockButton} onClick={() => handleAddBlock(blockType)} >
+                        {block.icon}
+                    </button>
                     <p className={CSS.BlockButtonTitle}>{blockType}</p>
                 </div>
             )

@@ -48,10 +48,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         closeOnEscape = true,
         onVisibilityChange,
 
-        // Accessibility
-        role = "tooltip",
-        ariaLabel,
-        ariaModal = false,
+       
     } = props;
 
     // Refs for DOM elements
@@ -71,24 +68,6 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
     // Position management hook
     usePosition(targetRef, floatRef, position, isVisible);
 
-    /**
-     * Computes ARIA and accessibility attributes for the float element
-     * Filters out undefined values to keep DOM clean
-     * 
-     * @returns {Object} Computed accessibility attributes
-     */
-    const accessibilityAttributes = useMemo(() => {
-        const attrs: Record<string, string> = {
-            "role": role,
-        };
-
-        // Only add attributes that have values
-        if (ariaLabel) attrs["aria-label"] = ariaLabel;
-
-        return attrs;
-    },
-        [role, ariaLabel, ariaModal]
-    );
 
     /**
      * Computes data attributes for styling and debugging
@@ -228,7 +207,6 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         <div
             ref={floatRef}
             className={CSS.FloatReveal}
-            {...accessibilityAttributes}
             {...dataAttributes}
             {...eventHandlers}
             onClick={e => e.stopPropagation()}

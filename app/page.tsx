@@ -10,6 +10,7 @@ import BottomPanel from "@/layout/bottom/component";
 import LeftPanel from "@/layout/left/component";
 import RightPanel from "@/layout/right/component";
 import ViewPanel from "@/layout/view/component";
+import TopPanel from "@/layout/top/component";
 
 // Context
 import { LayoutProvider } from "@/context/layout/provider";
@@ -24,8 +25,9 @@ export default function Home() {
           <p>v{version}</p>
         </div>
 
-        <ViewPanel />
+        <TopPanel />
         <LeftPanel />
+        <ViewPanel />
         <RightPanel />
         <BottomPanel />
 

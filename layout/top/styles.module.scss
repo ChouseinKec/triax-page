@@ -1,0 +1,11 @@
+.TopPanel {
+	margin-top: var(--size-md);
+	grid-row: 1;
+	grid-column: 2;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	z-index: 1;
+}

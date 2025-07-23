@@ -3,11 +3,10 @@
 .main {
 	height: 100vh;
 	width: 100vw;
-	padding: var(--size-md);
+
 	display: grid;
 	grid-template-columns: auto 1fr auto;
-	grid-template-rows: 25px 1fr 40px;
-	gap: var(--size-md);
+	grid-template-rows: auto 1fr auto;
 
 	overflow: hidden;
 	background: var(--theme-background-color--secondary);
@@ -29,21 +28,4 @@
 
 	background: var(--color-black);
 	color: var(--color-white);
-}
-
-.TopBar {
-	grid-row: 1;
-	grid-column: 2;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	z-index: 1;
-}
-
-.Devices {
-	display: flex;
-	flex-direction: row;
-	gap: var(--size-md);
 }

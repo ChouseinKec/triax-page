@@ -3,12 +3,14 @@
 .BlockList {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: flex-start;
+
+	gap: var(--size-md);
 	padding: var(--size-md);
 }
 
 .BlockButtonContainer {
-	width: 30%;
+	width: 20%;
 
 	display: flex;
 	flex-direction: column;
@@ -17,14 +19,23 @@
 }
 
 .BlockButton {
-	padding: var(--size-md);
+	@include inputMixins.components--button($background: var(--theme-background-color--quaternary), $radius: var(--size-lg), $shadow: 0px 0px 2px 2px var(--theme-background-color--secondary) inset);
 
-	@include inputMixins.components--button($background: false, $radius: var(--size-lg), $shadow: 0px 0px 2px 2px var(--theme-background-color--secondary) inset);
-
-	background: var(--theme-background-color--quaternary);
 	height: auto;
 	width: 100%;
 	aspect-ratio: 1/1;
+
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+
+		width: 85%;
+		height: 85%;
+
+		* {
+			fill: #474663 !important;
+		}
+	}
 }
 
 .BlockButtonTitle {

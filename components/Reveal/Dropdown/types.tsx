@@ -13,7 +13,4 @@ export interface DropdownRevealProps {
 
     /** Optional title for the dropdown button. */
     title?: string;
-
-    /** Optional ARIA label for accessibility. */
-    ariaLabel?: string;
 };

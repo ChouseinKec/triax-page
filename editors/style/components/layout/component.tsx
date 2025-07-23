@@ -50,11 +50,7 @@ const Layout: React.FC = ({ }): ReactElement => {
         , [layouts]);
 
     return (
-        <TabGroup
-            ariaLabel="Property List"
-            ariaDescription="Navigate between different CSS property lists"
-            items={TabItems}
-        />
+        <TabGroup items={TabItems} />
     );
 
 };

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useLayoutEffect, RefObject } from "react";
+import { useLayoutEffect, RefObject } from 'react';
 
-type Position = "top" | "bottom" | "left" | "right";
+type Position = 'top' | 'bottom' | 'left' | 'right';
 
 const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObject<HTMLElement | null>, position: Position, isVisible: boolean) => {
 	const offset = 5;
@@ -16,19 +16,19 @@ const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObje
 		let left = 0;
 
 		switch (position) {
-			case "top":
+			case 'top':
 				top = targetRect.top - floatRect.height - offset;
 				left = targetRect.left;
 				break;
-			case "bottom":
+			case 'bottom':
 				top = targetRect.bottom + offset;
 				left = targetRect.left;
 				break;
-			case "left":
+			case 'left':
 				top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
 				left = targetRect.left - floatRect.width;
 				break;
-			case "right":
+			case 'right':
 				top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
 				left = targetRect.right;
 				break;

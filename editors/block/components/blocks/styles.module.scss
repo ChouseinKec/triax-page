@@ -1,24 +1,7 @@
 @use '../../../../mixins/mixins.module.scss' as inputMixins;
 .Blocks {
-	font-size: var(--size-font-md);
-
-	> *[class*='FloatReveal'] {
-		padding: var(--size-sm);
-
-		[class*='ActionGroup'] {
-			gap: var(--size-sm);
-			button {
-				@include inputMixins.components--button;
-				aspect-ratio: 1;
-			}
-
-			svg {
-				width: 15px;
-				height: 15px;
-				fill: #201d1d;
-			}
-		}
-	}
+	width: 100%;
+	height: 100%;
 
 	*[id*='block'] {
 		&[data-is-selected='false'] {
@@ -31,3 +14,5 @@
 		}
 	}
 }
+
+

@@ -1,9 +1,9 @@
 import type { StylePropertyKeys } from '@/types/style/property';
 
-type BlockStyleState = 'default' | 'active' | 'hover';
+import type { PseudoName } from '@/types/page/pseudo';
 
-export const BlockStyleDefaults: Record<BlockStyleState, Partial<Record<StylePropertyKeys, string>>> = {
-	'default': {
+export const BlockStyleDefaults: Record<PseudoName, Partial<Record<StylePropertyKeys, string>>> = {
+	all: {
 		'padding-top': '10px',
 		'padding-bottom': '10px',
 		'padding-left': '10px',
@@ -15,6 +15,7 @@ export const BlockStyleDefaults: Record<BlockStyleState, Partial<Record<StylePro
 		// 'margin-right': '10px',
 
 		'background-color': 'rgba(111, 155, 191, 0.3)',
+		// 'background-color': 'rgba(255, 255, 255, 1)',
 
 		'border-top-style': 'solid',
 		'border-bottom-style': 'solid',
@@ -33,6 +34,6 @@ export const BlockStyleDefaults: Record<BlockStyleState, Partial<Record<StylePro
 
 		'font-size': '10px',
 	},
-	'active': {},
-	'hover': {},
+	active: {},
+	hover: {},
 };

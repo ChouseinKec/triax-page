@@ -1,6 +1,9 @@
-import type { BlockInstance, BlockStyleData, BlockType, BlockTag } from '@/types/block/block';
+import type { BlockInstance, BlockStyleData, BlockType } from '@/types/block/block';
+import type { DeviceName } from '@/types/page/device';
+import type { PseudoName } from '@/types/page/pseudo';
+import type { OrientationName } from '@/types/page/orientation';
 
-export interface BlockEditorStoreProps {
+export interface BlockStoreProps {
 	selectedBlockID: string | null;
 	allBlocks: Record<string, BlockInstance>;
 
@@ -10,5 +13,5 @@ export interface BlockEditorStoreProps {
 	deleteBlock: (blockID: string) => void;
 
 	setBlockStyles: (blockID: string, style: BlockStyleData) => void;
-	setBlockStyle: (blockID: string, device: string, orientation: string, pseudo: string, property: string, value: string) => void;
+	setBlockStyle: (blockID: string, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, property: string, value: string) => void;
 }

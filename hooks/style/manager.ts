@@ -12,10 +12,8 @@ import { isPropertyValid } from '@/utilities/style/property';
 import { isValueValid } from '@/utilities/style/value';
 
 // Stores
-import useDeviceStore from '@/stores/device/store';
+import usePageStore from '@/stores/page/store';
 import useBlockStore from '@/stores/block/store';
-import useOrientationStore from '@/stores/orientation/store';
-import usePseudoStore from '@/stores/pseudo/store';
 
 interface StyleManager {
 	getStyle: (property: StylePropertyKeys) => string;
@@ -31,11 +29,14 @@ export const useStyleManager = (): StyleManager => {
 	const setBlockStyle = useBlockStore((state) => state.setBlockStyle);
 	const selectedBlockID = useBlockStore((state) => state.selectedBlockID);
 	const blockStyles = useBlockStore((state) => (selectedBlockID ? state.allBlocks[selectedBlockID]?.styles : undefined));
-	const device = useDeviceStore((state) => state.currentDevice.name);
-	const orientation = useOrientationStore((state) => state.currentOrientation.name);
-	const pseudo = usePseudoStore((state) => state.currentPseudo.name);
-	const devices = useDeviceStore.getState().getDevices();
-	const orientations = useOrientationStore.getState().getOrientations();
+
+	const device = usePageStore((state) => state.currentDevice.value);
+	const devices = usePageStore((state) => state.allDevices);
+
+	const orientation = usePageStore((state) => state.currentOrientation.value);
+	const orientations = usePageStore((state) => state.allOrientations);
+
+	const pseudo = usePageStore((state) => state.currentPseudo.value);
 
 	/**
 	 * Gets a style property value with CSS cascade fallback logic
@@ -66,9 +67,9 @@ export const useStyleManager = (): StyleManager => {
 	 */
 	const _getStyle = useCallback(
 		(property: StylePropertyKeys): string => {
-			const defaultPseudo = 'default';
-			const defaultOrientation = 'default';
-			const defaultDevice = 'default';
+			const defaultPseudo = devices[0].value;
+			const defaultOrientation = orientations[0].value;
+			const defaultDevice = devices[0].value;
 
 			if (!blockStyles) return '';
 
@@ -259,60 +260,140 @@ export const useStyleManager = (): StyleManager => {
 		(blockID, styles) => {
 			if (!styles) return undefined;
 
-			// Get devices and orientations
+			/**
+			 * Builds a media query string for device and orientation
+			 */
+			const getMediaQuery = (deviceName: string, orientationName: string): string => {
+				const device = devices.find((d) => d.value === deviceName);
+				const orientation = orientations.find((o) => o.value === orientationName);
 
+				if (!device || !orientation) return '';
+
+				// No media query for 'all' device and 'all' orientation
+				if (deviceName === 'all' && orientationName === 'all') return '';
+
+				// Device-only media query
+				if (deviceName !== 'all' && orientationName === 'all') {
+					return `@media (min-width: ${device.media.min}px)${device.media.max === Infinity ? '' : ` and (max-width: ${device.media.max}px)`}`;
+				}
+
+				// Orientation-only media query
+				if (deviceName === 'all' && orientationName !== 'all') {
+					return `@media (orientation: ${orientationName})`;
+				}
+
+				// Combined device + orientation media query
+				if (deviceName !== 'all' && orientationName !== 'all') {
+					return `@media (min-width: ${device.media.min}px)${device.media.max === Infinity ? '' : ` and (max-width: ${device.media.max}px)`} and (orientation: ${orientationName})`;
+				}
+
+				return '';
+			};
+
+			/**
+			 * Generates CSS selector with pseudo-state
+			 */
+			const getSelector = (blockID: string, pseudoName: string): string => {
+				const pseudoSelector = pseudoName === 'all' ? '' : `:${pseudoName}`;
+				return `#block-${blockID}${pseudoSelector}`;
+			};
+
+			/**
+			 * Converts camelCase CSS property to kebab-case
+			 */
+			const formatCSSProperty = (property: string): string => {
+				return property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+			};
+
+			/**
+			 * Generates CSS properties block
+			 */
+			const generateCSSProperties = (styles: Record<string, string>, indentLevel = 1): string => {
+				const indent = '  '.repeat(indentLevel);
+				let css = '';
+
+				for (const [property, value] of Object.entries(styles)) {
+					if (!value) continue;
+					const cssProperty = formatCSSProperty(property);
+					css += `${indent}${cssProperty}: ${value};\n`;
+				}
+
+				return css;
+			};
+
+			/**
+			 * Generates CSS rules for a specific pseudo state
+			 */
+			const generatePseudoRules = (blockID: string, pseudoName: string, pseudoStyles: Record<string, string>, indentLevel = 0): string => {
+				if (!pseudoStyles || Object.keys(pseudoStyles).length === 0) return '';
+
+				const indent = '  '.repeat(indentLevel);
+				const selector = getSelector(blockID, pseudoName);
+
+				let css = `${indent}${selector} {\n`;
+				css += generateCSSProperties(pseudoStyles, indentLevel + 1);
+				css += `${indent}}\n`;
+
+				return css;
+			};
+
+			/**
+			 * Generates CSS rules for a specific orientation
+			 */
+			const generateOrientationRules = (blockID: string, orientationName: string, orientationStyles: Record<string, Record<string, string>>): string => {
+				if (!orientationStyles) return '';
+
+				let css = '';
+
+				// Process each pseudo state within this orientation
+				for (const [pseudoName, pseudoStyles] of Object.entries(orientationStyles)) {
+					css += generatePseudoRules(blockID, pseudoName, pseudoStyles, 1);
+				}
+
+				return css;
+			};
+
+			/**
+			 * Generates CSS rules for a specific device
+			 */
+			const generateDeviceRules = (blockID: string, deviceName: string, deviceStyles: Record<string, Record<string, Record<string, string>>>): string => {
+				if (!deviceStyles) return '';
+
+				let css = '';
+
+				// Process each orientation within this device
+				for (const [orientationName, orientationStyles] of Object.entries(deviceStyles)) {
+					if (!orientationStyles) continue;
+
+					const mediaQuery = getMediaQuery(deviceName, orientationName);
+					const orientationCSS = generateOrientationRules(blockID, orientationName, orientationStyles);
+
+					if (!orientationCSS) continue;
+
+					if (mediaQuery) {
+						css += `${mediaQuery} {\n`;
+						css += orientationCSS;
+						css += '}\n';
+					} else {
+						// No media query needed (default styles)
+						css += orientationCSS;
+					}
+				}
+
+				return css;
+			};
+
+			// Main CSS generation logic
 			let css = '';
 
 			// Process each device (breakpoint)
 			for (const [deviceName, deviceStyles] of Object.entries(styles)) {
-				if (!deviceStyles) continue;
-
-				// Process each orientation
-				for (const [orientationName, orientationStyles] of Object.entries(deviceStyles)) {
-					if (!orientationStyles) continue;
-
-					// Get media queries for device + orientation
-					const device = devices.find((d) => d.value === deviceName);
-					const orientation = orientations.find((o) => o.value === orientationName);
-					if (!device || !orientation) continue;
-
-					// Build media query
-					let mediaQuery = '';
-					if (deviceName !== 'default') {
-						mediaQuery = `@media ${device.media}`;
-						mediaQuery += orientationName !== 'default' ? ` and (orientation: ${orientationName})` : ')';
-					} else if (orientationName !== 'default') {
-						mediaQuery = `@media (orientation: ${orientationName})`;
-					}
-
-					if (mediaQuery) css += `${mediaQuery} {\n`;
-
-					// Process each pseudo state
-					for (const [pseudoName, pseudoStyles] of Object.entries(orientationStyles)) {
-						if (!pseudoStyles || Object.keys(pseudoStyles).length === 0) continue;
-
-						const selector = pseudoName === 'default' ? '' : `:${pseudoName}`;
-
-						// Generate class name based on block ID only
-						css += `  #block-${blockID}${selector} {\n`;
-
-						// Add each style property
-						for (const [property, value] of Object.entries(pseudoStyles)) {
-							if (!value) continue;
-							const StylePropertyData = property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-							css += `    ${StylePropertyData}: ${value};\n`;
-						}
-
-						css += '  }\n';
-					}
-
-					if (mediaQuery) css += '}\n';
-				}
+				css += generateDeviceRules(blockID, deviceName, deviceStyles);
 			}
 
 			return css;
 		},
-		[useDeviceStore, useOrientationStore]
+		[devices, orientations]
 	);
 
 	// Return the style manager methods

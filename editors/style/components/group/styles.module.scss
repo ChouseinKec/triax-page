@@ -8,20 +8,11 @@
 		grid-column: 1/-1;
 	}
 
-	[class*='ExpandReveal_Content'] {
-		display: grid;
-		grid-template-columns: var(--group-columns);
-		grid-template-rows: var(--group-rows);
-
-		justify-content: flex-start;
-		align-items: flex-start;
-		gap: var(--size-md);
-	}
-
 	[class*='HorizontalDivider'] {
 		background: transparent;
 		box-shadow: var(--theme-shadow--border);
 		grid-column: 1/-1;
+		margin-top: var(--size-2xl);
 
 		&::after {
 			background: var(--theme-background-color--primary) !important;

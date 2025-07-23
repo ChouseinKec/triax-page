@@ -1,0 +1,51 @@
+.PanelGroup {
+	height: 100%;
+	width: max-content;
+
+	padding: var(--size-md);
+
+	position: relative;
+
+	> [class*='RadioSelect'] {
+		flex-direction: column;
+		height: auto;
+		width: auto;
+		padding: var(--size-sm);
+
+		position: absolute;
+		top: 50%;
+	}
+
+	&[data-tab-position='right'] {
+		padding-right: 40px;
+
+		> [class*='RadioSelect'] {
+			right: 0%;
+		}
+	}
+
+	&[data-tab-position='left'] {
+		padding-left: 40px;
+
+		> [class*='RadioSelect'] {
+			left: 0%;
+		}
+	}
+
+	&[data-collapsed='true'] {
+		.Content {
+			width: 0;
+		}
+	}
+}
+
+.Content {
+	width: 300px;
+	height: 100%;
+
+	border-radius: var(--size-md);
+	background: var(--theme-background-color--primary);
+	box-shadow: var(--theme-shadow--border);
+
+	transition: width 0.25s;
+}

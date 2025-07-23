@@ -90,9 +90,6 @@
 	padding: var(--size-md);
 	z-index: 9999;
 
-	&[role='alertdialog'] {
-		border-top: 3px solid var(--color-error);
-	}
 }
 
 // This mixin is used for the view component

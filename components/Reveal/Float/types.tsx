@@ -19,15 +19,6 @@ export interface FloatRevealProps {
     /** Whether to close the float when Escape key is pressed */
     closeOnEscape?: boolean;
 
-    /** ARIA role for the floating element */
-    role?: Role;
-
-    /** ARIA label for the floating element */
-    ariaLabel?: string;
-
-    /** Whether the float is modal (traps focus) */
-    ariaModal?: boolean;
-
     /** Callback function when visibility state changes */
     onVisibilityChange?: (isVisible: boolean) => void;
 }

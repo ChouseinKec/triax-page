@@ -1,13 +1,10 @@
 .LeftPanel {
-	grid-row: 1 / -1;
+	height: 100%;
+	max-width: 350px;
+
 	grid-column: 1;
-	width: 250px;
+	grid-row: 1/-1;
 
 	overflow: hidden;
-
-	position: relative;
-
-	border-radius: var(--size-md);
-	background: var(--theme-background-color--primary);
-	box-shadow: var(--theme-shadow--border);
+	z-index: 9999;
 }
