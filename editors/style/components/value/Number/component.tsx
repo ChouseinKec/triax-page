@@ -178,7 +178,6 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
                 onValidate={validateNumber}
                 onChange={handleNumberChange}
                 title="Enter Numeric Value"
-                ariaLabel="Enter Numeric Value"
             />
 
             {/* Options dropdown for alternative values */}

@@ -4,7 +4,7 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden auto;
-	padding: var(--size-lg);
+	// padding: var(--size-lg);
 
 	> [class*='RadioSelect'] {
 		width: 96%;

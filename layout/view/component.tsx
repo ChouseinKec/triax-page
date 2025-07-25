@@ -15,8 +15,8 @@ import { usePageManager } from "@/hooks/page/manager";
 
 export default function ViewPanel() {
     const { items } = ViewPanelContext.usePanel();
-    const [zoom, setZoom] = useState(0.5);
-    const [pan, setPan] = useState({ x: 450, y: 150 });
+    const [zoom, setZoom] = useState(0.8);
+    const [pan, setPan] = useState({ x: 350, y: 50 });
     const [isPanning, setIsPanning] = useState(false);
     const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 });
     const { getDevice } = usePageManager();

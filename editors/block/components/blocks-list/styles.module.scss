@@ -19,7 +19,7 @@
 }
 
 .BlockButton {
-	@include inputMixins.components--button($background: var(--theme-background-color--quaternary), $radius: var(--size-lg), $shadow: 0px 0px 2px 2px var(--theme-background-color--secondary) inset);
+	@include inputMixins.components--button();
 
 	height: auto;
 	width: 100%;

@@ -46,8 +46,6 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
                 className={CSS.Error}
                 ref={buttonRef}
                 type="button"
-                aria-label={`Error: ${displayMessage}`}
-                aria-expanded="false"
                 title="Hover to view error details"
                 role="alert"
             >
@@ -55,7 +53,7 @@ const Error: React.FC<ErrorProps> = (props: ErrorProps) => {
             </button>
 
             {/* Floating error message tooltip */}
-            <FloatReveal targetRef={buttonRef} role="tooltip" aria-label="Error Message">
+            <FloatReveal targetRef={buttonRef}>
                 <p className={CSS.ErrorMessage}>
                     {displayMessage}
                 </p>

@@ -9,6 +9,7 @@ import type { StyleTokenType } from '@/types/style/token';
 // Constants
 import { StylePropertyDefinitions } from '@/constants/style/property';
 import { ValueSeparatorDefaults } from '@/constants/style/value';
+import { StylePropertyKeys } from '@/types/style/property';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -173,7 +174,7 @@ function getValueTokens(values: string[]): string[] {
  * isValueValid('color', '#fff') → true
  * isValueValid('display', 'flex') → true
  */
-function isValueValid(property: string, value: string): boolean {
+function isValueValid(property: StylePropertyKeys, value: string): boolean {
 	// Fetch the property definition from the StylePropertyDefinitions
 	const propertyDef = StylePropertyDefinitions[property];
 	if (!propertyDef) return false;

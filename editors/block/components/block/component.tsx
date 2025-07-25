@@ -5,6 +5,9 @@ import React, { useEffect, useMemo } from "react";
 // Types
 import type { BlockProps } from "./types";
 
+// Components
+import ActionGroup from "@/components/group/action/component";
+
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
 import { getRegisteredBlocks } from "@/blocks/registry/block";
@@ -43,10 +46,11 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
 
     const actions = useMemo(
         () => (
-            <button onClick={() => deleteBlock(blockID)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M176,128a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,128Zm56,0A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
-            </button>
-
+            <ActionGroup>
+                <button onClick={() => deleteBlock(blockID)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M176,128a8,8,0,0,1-8,8H88a8,8,0,0,1,0-16h80A8,8,0,0,1,176,128Zm56,0A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+                </button>
+            </ActionGroup>
         ),
         [blockID, deleteBlock]
     );

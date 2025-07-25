@@ -1,5 +1,12 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
 
 .ActionGroup {
-	@include inputMixins.components--flex-horizontal($gap: var(--size-xs));
+	@include inputMixins.components--container;
+	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
+
+	button {
+		@include inputMixins.components--button;
+		background:transparent;
+		box-shadow: none;
+	}
 }

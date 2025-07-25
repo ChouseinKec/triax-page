@@ -1,1 +1,1 @@
-export interface BlockAddProps {}
+export interface BlockListProps {}

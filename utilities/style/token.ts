@@ -243,7 +243,7 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 function getTokenValue(token: string): string | undefined {
 	if (isTokenKeyword(token)) return token;
 
-	const tokenCanonical = getTokenCanonical(token);
+	const tokenCanonical = getTokenCanonical(token) as StyleTokenKeys | undefined;
 	if (!tokenCanonical) return undefined;
 
 	const tokenValue = StyleTokenDefaults[tokenCanonical];

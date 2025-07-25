@@ -1,9 +1,9 @@
 @use '../../mixins/mixins.module.scss' as inputMixins;
 
 .BottomPanel {
-	margin-bottom: var(--size-md);
-	grid-row: 3;
-	grid-column: 2;
+	position: fixed;
+	bottom: 0;
+	left: 50%;
 
 	display: flex;
 	justify-content: center;
@@ -11,7 +11,4 @@
 
 	z-index: 1;
 
-	button {
-		@include inputMixins.components--button;
-	}
 }

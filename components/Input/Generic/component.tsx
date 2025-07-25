@@ -64,7 +64,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
         "title": title,
         "data-is-error": validationState.isError,
         "data-type": type,
-    }), [type, validationState]
+    }), [type, validationState, title]
     );
 
     // Input attributes

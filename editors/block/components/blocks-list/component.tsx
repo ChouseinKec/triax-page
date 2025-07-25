@@ -13,11 +13,11 @@ import { getRegisteredBlocks } from "@/blocks/registry/block";
 import { BlockType } from "@/types/block/block";
 
 /**
- * BlockAdd Component
+ * BlockList Component
  * - Renders a list of all registered blocks as buttons.
  * - Allows users to add a block by clicking its button.
  */
-const BlockAdd: React.FC = () => {
+const BlockList: React.FC = () => {
     // Get all registered block definitions
     const allBlocks = getRegisteredBlocks();
     // Access the addBlock function from block manager
@@ -57,4 +57,4 @@ const BlockAdd: React.FC = () => {
     );
 };
 
-export default BlockAdd;
+export default BlockList;
