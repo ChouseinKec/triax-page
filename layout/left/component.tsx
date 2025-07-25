@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 
+
 // Components
 import PanelGroup from "@/components/group/panel/component";
 
@@ -12,9 +13,8 @@ export default function LeftPanel() {
     const { items } = LeftPanelContext.usePanel();
 
     // Panel layout constants
-    const panelWidth = 300;
-    const panelOffset = 30;
-    const panelHeight = 175;
+    const initialSize = { width: '250px', height: '250px', minWidth: 250, minHeight: 250 };
+    const initialPosition = { top: '2%', left: '1%' };
 
     // Memoize panel item components for performance
     const panelItems = useMemo(() =>
@@ -31,16 +31,8 @@ export default function LeftPanel() {
 
     return (
         <PanelGroup
-            initialPosition={{
-                top: panelOffset / 2,
-                left: panelOffset / 2,
-            }}
-            initialSize={{
-                width: panelWidth,
-                height: panelHeight,
-                minWidth: 250,
-                minHeight: 200,
-            }}
+            initialPosition={initialPosition}
+            initialSize={initialSize}
         >
             {panelItems}
         </PanelGroup>

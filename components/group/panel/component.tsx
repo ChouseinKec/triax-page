@@ -1,194 +1,163 @@
 "use client";
 
-import React, { memo, useEffect, useCallback, useState, useMemo, useRef } from "react";
+import React, {
+    useRef,
+    memo,
+    useEffect,
+    useCallback,
+    useMemo,
+    useState,
+    useLayoutEffect,
+} from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import type { PanelGroupProps, Position, Side } from "./types";
+import type { PanelGroupProps, Side } from "./types";
+
+// Hooks
+import { useDrag } from "@/hooks/interface/useDrag";
+import { useResize } from "@/hooks/interface/useResize";
 
 /**
  * PanelGroup Component
- * 
- * Draggable and resizable panel group using event delegation.
+ *
+ * A draggable and resizable panel group using event delegation for resize handles.
+ * - Uses CSS for initial layout, then takes control after measuring the DOM node.
+ * - Supports resizing from all sides/corners and dragging the panel.
+ *
+ * @component
+ * @param  props - The component props
+ * @param  props.children - The content to render inside the panel group
+ * @param  props.minWidth=250 - Minimum width of the panel
+ * @param  props.minHeight=250 - Minimum height of the panel
+ * @param  props.className - Optional CSS class name for the panel
+ * @returns The rendered panel group or null if no children
  */
-const PanelGroup: React.FC<PanelGroupProps> = (props) => {
+const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
     const {
         children,
-        initialPosition = { top: 0, left: 0 },
-        initialSize = { width: 320, height: 240, minWidth: 250, minHeight: 250 }
+        initialPosition = { top: '0px', left: '0px' },
+        initialSize = { width: '250px', height: '250px', minWidth: 250, minHeight: 250 },
     } = props;
 
-    // State for position and size
-    const [position, setPosition] = useState<Position>(initialPosition);
-    const [size, setSize] = useState(initialSize);
+    // Ref for the panel DOM element
+    const panelRef = useRef<HTMLDivElement>(null);
 
-    // Refs for drag/resize state
-    const dragging = useRef(false);
-    const resizing = useRef(false);
-    const dragOffset = useRef({ x: 0, y: 0 });
-    const resizeStart = useRef({ width: 0, height: 0, x: 0, y: 0, side: "bottom-right" as Side });
+    // Hydration flag: false until measured, then true
+    const [hydrated, setHydrated] = useState(false);
 
-    // Memoized styles for the panel
-    const styles = useMemo(() => ({
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-    }), [position, size]
+    // State for panel position and size (controlled after hydration)
+    const [position, setPosition] = useState({ left: 0, top: 0 });
+    const [size, setSize] = useState({ width: 250, height: 250 });
+
+    // Drag logic (position is updated by setPosition)
+    const {
+        startDrag,
+        stopDrag,
+        handleMouseMove: handleDragMouseMove,
+        dragging,
+    } = useDrag(position, setPosition);
+
+    // Resize logic (size and position are updated by setSize/setPosition)
+    const {
+        startResize,
+        stopResize,
+        handleMouseMove: handleResizeMouseMove,
+        resizing,
+    } = useResize(initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition);
+
+    /**
+      * On mount, measure the element and set initial position/size.
+      * This allows CSS to control layout before React takes over.
+      */
+    useLayoutEffect(() => {
+        if (!panelRef.current) return;
+        const rect = panelRef.current.getBoundingClientRect();
+        setPosition({ left: rect.left, top: rect.top });
+        setSize({ width: rect.width, height: rect.height });
+        setHydrated(true);
+    }, []
+    );
+
+    /**
+     * Memoized inline styles for the panel.
+     * Only applied after hydration, so CSS can control initial layout.
+     */
+    const styles = useMemo(
+        () =>
+            hydrated
+                ? {
+                    top: `${position.top}px`,
+                    left: `${position.left}px`,
+                    width: `${size.width}px`,
+                    height: `${size.height}px`,
+                }
+                : {
+                    top: initialPosition.top,
+                    left: initialPosition.left,
+                    width: initialSize.width,
+                    height: initialSize.height,
+                },
+        [hydrated, position, size]
     );
 
     /**
      * Handles mouse down events for both dragging and resizing using event delegation.
      * If a resize handle is clicked, starts resizing; otherwise, starts dragging.
+     *
+     * @param {React.MouseEvent<HTMLDivElement>} e
      */
     const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLElement;
+        // Uses data-position attribute for event delegation
         const side = target.dataset.position as Side | undefined;
 
         if (side) {
-            // Start resizing
+            // Start resizing from the specified side/corner
             e.stopPropagation();
-            resizing.current = true;
-            resizeStart.current = {
-                width: size.width,
-                height: size.height,
-                x: e.clientX,
-                y: e.clientY,
-                side,
-            };
-            document.body.style.cursor = "nwse-resize";
+            startResize(e, side);
         } else {
-            // Start dragging
-            dragging.current = true;
-            dragOffset.current = {
-                x: e.clientX - (position.left ?? 0),
-                y: e.clientY - (position.top ?? 0),
-            };
-            document.body.style.cursor = "move";
+            // Start dragging the panel
+            startDrag(e);
         }
-    }, [position, size]
+    },
+        [startDrag, startResize]
     );
 
     /**
-     * Handles mouse up events to stop dragging/resizing.
+     * Handles mouse up events to stop dragging or resizing.
      */
     const handleMouseUp = useCallback(() => {
-        dragging.current = false;
-        resizing.current = false;
-        document.body.style.cursor = "";
-    }, []
+        stopDrag();
+        stopResize();
+    }, [stopDrag, stopResize]
     );
 
     /**
-    * Handles global mouse move events for dragging and resizing.
-    */
+     * Handles global mouse move events for dragging and resizing.
+     * Delegates to the appropriate handler.
+     *
+     * @param {MouseEvent} e
+     */
     const handleMouseMove = useCallback((e: MouseEvent) => {
-        // Dragging logic
         if (dragging.current) {
-            setPosition({
-                top: e.clientY - dragOffset.current.y,
-                left: e.clientX - dragOffset.current.x,
-            });
-            return; // Only one operation at a time
-        }
-
-        // Resizing logic
-        if (resizing.current) {
-            const minWidth = initialSize.minWidth;
-            const minHeight = initialSize.minHeight;
-
-            const side = resizeStart.current.side;
-            const dx = e.clientX - resizeStart.current.x;
-            const dy = e.clientY - resizeStart.current.y;
-
-            let newWidth = resizeStart.current.width;
-            let newHeight = resizeStart.current.height;
-            let newTop = position.top;
-            let newLeft = position.left;
-
-            // Use switch for clarity
-            switch (side) {
-                case "bottom-right":
-                    newWidth = Math.max(minWidth, resizeStart.current.width + dx);
-                    newHeight = Math.max(minHeight, resizeStart.current.height + dy);
-                    break;
-
-                case "bottom-left":
-                    newWidth = Math.max(minWidth, resizeStart.current.width - dx);
-                    newHeight = Math.max(minHeight, resizeStart.current.height + dy);
-                    // Prevent shrinking past min width and moving the panel further left
-                    if (newWidth > minWidth) {
-                        newLeft = resizeStart.current.x + dx;
-                    }
-                    break;
-
-                case "top-right":
-                    newWidth = Math.max(minWidth, resizeStart.current.width + dx);
-                    newHeight = Math.max(minHeight, resizeStart.current.height - dy);
-                    if (newHeight > minHeight) {
-                        newTop = resizeStart.current.y + dy;
-                    }
-                    break;
-
-                case "top-left":
-                    newWidth = Math.max(minWidth, resizeStart.current.width - dx);
-                    newHeight = Math.max(minHeight, resizeStart.current.height - dy);
-
-                    if (newWidth > minWidth) {
-                        newLeft = resizeStart.current.x + dx;
-                    }
-                    if (newHeight > minHeight) {
-                        newTop = resizeStart.current.y + dy;
-                    }
-                    break;
-
-                case "top":
-                    newHeight = Math.max(minHeight, resizeStart.current.height - dy);
-                    if (newHeight > minHeight) {
-                        newTop = resizeStart.current.y + dy;
-                    }
-                    break;
-
-                case "right":
-                    newWidth = Math.max(minWidth, resizeStart.current.width + dx);
-                    break;
-
-                case "bottom":
-                    newHeight = Math.max(minHeight, resizeStart.current.height + dy);
-                    break;
-
-                case "left":
-                    newWidth = Math.max(minWidth, resizeStart.current.width - dx);
-                    // Prevent shrinking past min width and moving the panel further left
-                    if (newWidth > minWidth) {
-                        newLeft = resizeStart.current.x + dx;
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-
-            setSize({
-                width: newWidth,
-                height: newHeight,
-                minWidth: initialSize.minWidth,
-                minHeight: initialSize.minHeight,
-            });
-
-            setPosition({
-                left: newLeft,
-                top: newTop,
-            });
+            handleDragMouseMove(e);
             return;
         }
-
-    }, [position, initialSize]
+        if (resizing.current) {
+            handleResizeMouseMove(e);
+            return;
+        }
+    },
+        [handleDragMouseMove, handleResizeMouseMove, dragging, resizing]
     );
 
-    // Attach global mouse listeners for dragging/resizing
+    /**
+     * Attach global mouse listeners for dragging/resizing.
+     * Cleans up listeners on unmount or dependency change.
+     */
     useEffect(() => {
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
@@ -199,8 +168,16 @@ const PanelGroup: React.FC<PanelGroupProps> = (props) => {
     }, [handleMouseMove, handleMouseUp]
     );
 
+    // Guard clause: if no children, render nothing
+    if (!children) return null;
+
     return (
-        <div className={CSS.PanelGroup} style={styles} onMouseDown={handleMouseDown}>
+        <div
+            className={CSS.PanelGroup}
+            ref={panelRef}
+            style={styles}
+            onMouseDown={handleMouseDown}
+        >
             {children}
 
             {/* Render all resize handles with data-position for event delegation */}
@@ -215,5 +192,6 @@ const PanelGroup: React.FC<PanelGroupProps> = (props) => {
         </div>
     );
 };
+
 
 export default memo(PanelGroup);

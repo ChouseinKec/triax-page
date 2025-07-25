@@ -1,26 +1,20 @@
 "use client";
 import React, { useMemo } from "react";
 
+
 // Components
 import PanelGroup from "@/components/group/panel/component";
-
-// Hooks
-import useWindowSize from "@/hooks/interface/useWindowSize";
 
 // Context
 import { RightPanel as RightPanelContext } from "@/context/layout/manager";
 
 export default function RightPanel() {
-    // Get right panel items from context
+    // Get Right panel items from context
     const { items } = RightPanelContext.usePanel();
 
-    // Get current window size
-    const { width: windowWidth, height: windowHeight } = useWindowSize();
-
     // Panel layout constants
-    const panelWidth = 300;
-    const panelOffset = 30;
-    const panelHeight = windowHeight - panelOffset;
+    const initialSize = { width: '250px', height: '96%', minWidth: 250, minHeight: 250 };
+    const initialPosition = { top: '2%', left: '83%' };
 
     // Memoize panel item components for performance
     const panelItems = useMemo(() =>
@@ -37,16 +31,8 @@ export default function RightPanel() {
 
     return (
         <PanelGroup
-            initialPosition={{
-                top: panelOffset / 2,
-                left: windowWidth - panelWidth - panelOffset / 2,
-            }}
-            initialSize={{
-                width: panelWidth,
-                height: panelHeight,
-                minWidth: 250,
-                minHeight: 250,
-            }}
+            initialPosition={initialPosition}
+            initialSize={initialSize}
         >
             {panelItems}
         </PanelGroup>
