@@ -5,7 +5,6 @@
   --font-size-xl: 13.5px;
   --font-size-2xl: 15px;
 
-
   --color-warning: rgb(255, 141, 2);
 
   --color-error--light: rgb(190, 0, 0);
@@ -16,15 +15,8 @@
   --color-info: rgb(0, 82, 133);
 
   --color-white: rgb(255, 255, 255);
-  --color-white--darker: rgb(200 200 200);
-
   --color-gray: rgb(150 150 150);
-  --color-gray--darker: rgb(100 100 100);
-
-  --color-black--lighter: rgb(50 50 50);
   --color-black: rgb(0 0 0);
-
-
 
   --size-xs: 2.5px;
   --size-sm: 5px;
@@ -33,24 +25,12 @@
   --size-xl: 20px;
   --size-2xl: 25px;
 
+  --theme-color-primary: #1c1c1c;
+  --theme-color-primary-shade: #282828;
+  --theme-color-primary-tint: #2d2d2d;
 
-
-
-
-
-  --theme-background-color--primary: #181826;
-  --theme-background-color--secondary: #13131e;
-  --theme-background-color--tertiary: #212132;
-  --theme-background-color--quaternary: #232345;
-
-  --theme-background-color--hover: var(--theme-background-color--tertiary);
-  --theme-background-color--selected: var(--theme-background-color--quaternary);
-  --theme-background-color--focus: var(--color-gray--darker);
-  --theme-background-color--active: var(--color-gray);
-
-
-  --theme-shadow--hover: 0px 0px 0px 2px var(--theme-background-color--selected) inset;
-  --theme-shadow--border: 0px 0px 0px 2px var(--theme-background-color--tertiary) inset;
+  --theme-color-secondary: #1875fe;
+  --theme-shadow-border: 0px 0px 0px 1px var(--theme-color-primary-shade) inset;
 }
 
 body {
@@ -63,6 +43,8 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+
+  user-select: none;
 }
 
 a {

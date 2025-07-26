@@ -9,7 +9,7 @@
  * @example
  * generateCrossProduct([[1, 2], ['a', 'b']]) → [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
  */
-function generateCrossProduct<T>(arrays: T[][]): T[][] {
+export function generateCrossProduct<T>(arrays: T[][]): T[][] {
 	if (!arrays.length) return [[]];
 	const [first, ...rest] = arrays;
 	const restProduct = generateCrossProduct(rest);
@@ -32,7 +32,7 @@ function generateCrossProduct<T>(arrays: T[][]): T[][] {
  * generateAllSubsets(['a', 'b']) → [[], ['a'], ['b'], ['a', 'b']]
  *
  */
-function generateAllSubsets<T>(arr: T[]): T[][] {
+export function generateAllSubsets<T>(arr: T[]): T[][] {
 	const result: T[][] = [];
 	const total = 1 << arr.length;
 	for (let i = 0; i < total; i++) {
@@ -52,7 +52,7 @@ function generateAllSubsets<T>(arr: T[]): T[][] {
  * @example
  * generatePermutations(['a', 'b']) → [['a', 'b'], ['b', 'a']]
  */
-function generatePermutations(arr: string[]): string[][] {
+export function generatePermutations(arr: string[]): string[][] {
 	if (arr.length === 0) return [[]];
 	const result: string[][] = [];
 	for (let i = 0; i < arr.length; i++) {
@@ -80,7 +80,7 @@ function generatePermutations(arr: string[]): string[][] {
  * ]) // [['a', 'd'], ['b', 'c']]
  * → [['a', 'd'], ['b', 'c']]
  */
-function getColumnSets<T>(rows: T[][]): T[][] {
+export function getColumnSets<T>(rows: T[][]): T[][] {
 	if (!rows.length) return [];
 	const maxCols = Math.max(...rows.map((row) => row.length));
 	const columns: T[][] = Array.from({ length: maxCols }, () => []);
@@ -103,7 +103,7 @@ function getColumnSets<T>(rows: T[][]): T[][] {
  * groupBy([{type: 'a'}, {type: 'b'}, {type: 'a'}], 'type')
  * → { a: [{type: 'a'}, {type: 'a'}], b: [{type: 'b'}] }
  */
-function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
+export function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
 	return arr.reduce((acc, item) => {
 		const key = String(item[prop]);
 		if (!acc[key]) acc[key] = [];
@@ -124,11 +124,9 @@ function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record
  * mergeArrays([undefined, 'b', null, ''], ['a', 'b', 'c', 'd']) → ['a', 'b', 'c', 'd']
  * mergeArrays(['x'], ['a', 'b', 'c']) → ['x', 'b', 'c']
  */
-function mergeArrays<T>(target: (T | undefined | null | '')[], reference: T[]): T[] {
+export function mergeArrays<T>(target: (T | undefined | null | '')[], reference: T[]): T[] {
 	return reference.map((ref, index) => {
 		const item = target[index];
 		return item == null || item === '' ? ref : item;
 	});
 }
-
-export { groupBy, generateCrossProduct, generateAllSubsets, generatePermutations, getColumnSets, mergeArrays };

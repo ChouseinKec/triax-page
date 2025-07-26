@@ -20,8 +20,8 @@ export type DropdownSelectProps = {
   /** Whether the dropdown supports searching options */
   searchable?: boolean;
 
-  /** Whether the options should be displayed in grouped sections */
-  grouped?: boolean;
+  /** Whether the options should be displayed in groupable sections */
+  groupable?: boolean;
 
   /** Optional title for the dropdown button */
   title?: string;

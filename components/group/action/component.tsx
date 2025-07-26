@@ -21,7 +21,10 @@ import { devLog } from "@/utilities/dev";
  * @param {React.ReactNode[]} props.children - Child components to render within the action group
 */
 const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
-    const { children } = props;
+    const {
+        children,
+        direction = 'horizontal'
+    } = props;
 
     // Guard Clause
     if (!children || (Array.isArray(children) && children.length === 0)) {
@@ -30,7 +33,7 @@ const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
     }
 
     return (
-        <div className={CSS.ActionGroup}>
+        <div className={CSS.ActionGroup} data-direction={direction}>
             {children}
         </div>
     );

@@ -27,7 +27,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
         value,
         type = "text",
         placeholder = `Enter ${type}`,
-
+        style = {},
         // Validation
         min = -Infinity,
         max = Infinity,
@@ -95,6 +95,9 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
     const handleCommit = useCallback((): void => {
         const inputValue = internalValue.trim();
         const validationResult = safeOnValidate(inputValue);
+
+        // If input is empty, clear the value
+        if (inputValue === "") return onChange("");
 
         if (validationResult === undefined && onValidate) return;
 
@@ -175,6 +178,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
                 onFocus={onFocus}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                style={style}
             />
 
             {/* Error message tooltip - only shown when there's an error */}

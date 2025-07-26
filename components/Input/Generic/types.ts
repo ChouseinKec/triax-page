@@ -1,3 +1,5 @@
+import {CSSProperties} from "react";
+
 export interface GenericInputProps {
 	/** The current value of the input */
 	value: string;
@@ -19,6 +21,9 @@ export interface GenericInputProps {
 
 	/** Optional title attribute for additional context */
 	title?: string; // Optional title attribute for additional context
+
+	/** Optional inline styles for the input */
+	style?: CSSProperties;
 
 	/**
 	 * Optional validation function.

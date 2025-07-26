@@ -20,7 +20,7 @@ import { devLog } from "@/utilities/dev";
  * 
  * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
  * Intelligently splits values into numeric and unit components for separate editing.
- * Supports grouped unit categories and validation for numeric ranges.
+ * Supports groupable unit categories and validation for numeric ranges.
  *
  * @component
  * @param {ColorValueProps} props - Component properties

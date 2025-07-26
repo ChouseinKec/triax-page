@@ -13,25 +13,25 @@ import BlockList from "./components/blocks-list/component";
 import StyleEditor from "@/editors/style/component";
 
 // Context
-import { LeftPanel, RightPanel } from "@/context/layout/manager";
+import { BlocksPanel, InspectorPanel } from "@/context/layout/manager";
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
 
 /**
  * BlockEditor Component
  * - Renders the main block editor UI.
- * - Registers the block add/list UI to the LeftPanel via context.
+ * - Registers the block add/list UI to the BlocksPanel via context.
  */
 const BlockEditor: React.FC<BlockEditorProps> = (props: BlockEditorProps): ReactElement => {
-    // Access the LeftPanel context setter to register panel content
+    // Access the BlocksPanel context setter to register panel content
     const { selectBlock } = useBlockManager();
 
     // Memoize the block list UI so it doesn't change on every render
     const blocksList = useMemo(() => <BlockList key='block-list' />, []);
     const styleEditor = useMemo(() => <StyleEditor key='style-editor' />, []);
 
-    const { addItem: addToLeft, removeItem: removeFromLeft } = LeftPanel.usePanel();
-    const { addItem: addToRight, removeItem: removeFromRight } = RightPanel.usePanel();
+    const { addItem: addToLeft, removeItem: removeFromLeft } = BlocksPanel.usePanel();
+    const { addItem: addToRight, removeItem: removeFromRight } = InspectorPanel.usePanel();
 
     useEffect(() => {
         const blockListIcon = <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm48-88a8,8,0,0,1-8,8H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32A8,8,0,0,1,176,128Z" /></svg>;

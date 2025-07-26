@@ -43,6 +43,7 @@ export interface BlockDefinition {
 	permittedParent?: BlockTag[] | null;
 	icon?: string | ReactNode;
 	styles?: BlockStyleData | null;
+	category?: string; 
 	render: (instance: BlockInstance, children?: ReactNode) => ReactNode;
 }
 

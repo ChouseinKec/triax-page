@@ -120,7 +120,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
                 options={nextOptions}
                 placeholder="+"
                 searchable={false}
-                grouped={true}
+                groupable={true}
                 title="Select Next Slot"
                 ariaLabel="Select Next Slot"
                 onChange={(val: string) => handleSlotChange(val, valuesLength)}

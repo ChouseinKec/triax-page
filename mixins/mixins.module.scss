@@ -4,78 +4,62 @@
 	$focus: true,
 	$active: true,
 	$selected: true,
-	$disabled: false,
-	$open: false,
-	$error: false,
-	$placeholder: false
+	$disabled: false
 ) {
-	// Hover state is used for buttons and links
-	// It indicates that the element is currently being hovered over
-	@if $hover {
-		&:hover {
-			box-shadow: var(--theme-shadow--hover);
+	&:hover {
+		box-shadow: 0px 0px 0px 1px var(--theme-color-secondary) inset;
+
+		color: var(--theme-color-secondary);
+
+		[fill]:not([fill='none']) {
+			fill: var(--theme-color-secondary);
 		}
 	}
 
-	// Focus state is used for inputs and buttons
-	// It indicates that the element is currently focused
-	@if $focus {
-		&:focus {
-			background: var(--theme-background-color--hover);
+	&[data-is-active='true'] {
+		[fill]:not([fill='none']) {
+			fill: var(--theme-color-secondary);
 		}
 	}
 
-	// Active state is used for buttons
-	// It indicates that the button is currently being pressed
-	@if $active {
-		&:active {
-			background: var(--theme-background-color--hover);
+	&[data-is-selected='true'] {
+		background: var(--theme-color-secondary);
+		color: var(--color-white);
+
+		[fill]:not([fill='none']) {
+			fill: var(--color-white);
 		}
 	}
 
-	// Selected state is used for option elements
-	// It indicates that the option is currently selected
-	@if $selected {
-		&[data-is-selected='true'] {
-			background: var(--theme-background-color--selected);
-		}
+	&:focus {
+		box-shadow: 0px 0px 0px 1px var(--theme-color-secondary) inset;
 	}
 
-	// Disabled state is used for buttons and inputs
-	// It indicates that the element is currently disabled and cannot be interacted with
-	@if $disabled {
-		&[data-is-disabled='true'] {
-			pointer-events: none;
-			opacity: 0.5;
-
-			&::after {
-				content: none;
-			}
-		}
+	&:active {
+		box-shadow: 0px 0px 0px 1px var(--theme-color-secondary) inset;
 	}
 
-	@if $error {
-		&[data-is-error='true'] {
-			border-bottom: 3px solid var(--color-error);
-		}
+	&[data-is-disabled='true'] {
+		pointer-events: none;
+		opacity: 0.5;
 	}
 }
 
-@mixin components--container($background: true, $radius: true, $shadow: true) {
+@mixin components--container($background: var(--theme-color-primary-tint), $radius: var(--size-md), $shadow: var(--theme-shadow-border)) {
 	font-size: var(--font-size-sm);
 	position: relative;
 	padding: var(--size-xs);
 
 	@if $background {
-		background: var(--theme-background-color--secondary);
+		background: $background;
 	}
 
 	@if $radius {
-		border-radius: var(--size-md);
+		border-radius: $radius;
 	}
 
 	@if $shadow {
-		box-shadow: var(--theme-shadow--border);
+		box-shadow: $shadow;
 	}
 }
 
@@ -83,13 +67,12 @@
 // E.g DropdownReveal,DropdownSelect in Style Editor
 @mixin components--float {
 	border-radius: var(--size-sm);
-	box-shadow: var(--theme-shadow--border);
+	box-shadow: var(--theme-shadow-border);
 	font-size: var(--font-size-md);
-	background: var(--theme-background-color--secondary);
+	background: var(--theme-color-primary);
 	position: fixed;
 	padding: var(--size-md);
 	z-index: 9999;
-
 }
 
 // This mixin is used for the view component
@@ -101,15 +84,15 @@
 	height: 100%;
 	max-height: 150px;
 	overflow: hidden;
-	background: var(--theme-background-color--secondary);
+	background: var(--theme-color-primary-tint);
 	color: var(--color-white);
 }
 
 // This mixin is used for input components
 // E.g Search,Dimension,Number in Style Editor
-@mixin components--input($padding: true) {
+@mixin components--input($padding: true, $background: var(--theme-color-primary-tint)) {
 	height: 25px;
-
+	min-height: 25px;
 	@if $padding {
 		padding: var(--size-sm) var(--size-md);
 	}
@@ -117,8 +100,8 @@
 	outline: none;
 	border: none;
 	border-radius: var(--size-sm);
-	background: var(--theme-background-color--secondary);
-	box-shadow: var(--theme-shadow--border);
+	background: $background;
+	box-shadow: var(--theme-shadow-border);
 
 	color: var(--color-white);
 	font-size: var(--font-size-sm);
@@ -132,15 +115,19 @@
 	-moz-appearance: textfield;
 	appearance: textfield;
 
-	@include states($error: true, $placeholder: true);
+	@include states();
+
+	&[data-is-error='true'] {
+		border-bottom: 3px solid var(--color-error);
+	}
 }
 
 // This mixin is used for vertical flex stack
 // E.g Options
-@mixin components--flex-vertical($gap: var(--size-sm), $align: baseline) {
+@mixin components--flex-vertical($gap: var(--size-sm), $align: baseline, $justify: center) {
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-start;
+	justify-content: $justify;
 	align-items: $align;
 	gap: $gap;
 }
@@ -163,12 +150,13 @@
 	//
 	$height: 25px,
 	$radius: var(--size-sm),
-	$shadow: var(--theme-shadow--border),
-	$background: var(--theme-background-color--secondary)
+	$background: var(--theme-color-primary-tint),
+	$fill: var(--color-white),
+	$padding: var(--size-sm),
 ) {
 	height: $height;
 
-	padding: var(--size-sm);
+	padding: $padding;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -177,8 +165,6 @@
 	outline: none;
 	border-radius: $radius;
 	border: none;
-
-	box-shadow: $shadow;
 
 	background: $background;
 
@@ -194,16 +180,16 @@
 		max-height: 15px;
 
 		[fill]:not([fill='none']) {
-			fill: var(--color-white);
+			fill: $fill;
 		}
 	}
 
-	@include states($selected: true, $disabled: true);
+	@include states();
 }
 
 // This mixin is used for buttons that toggle a dropdown or a menu
 // It includes an arrow icon that indicates the toggle state
-@mixin components--button-toggle($isRound: false) {
+@mixin components--button-dropdown($isRound: false) {
 	@if $isRound {
 		font-size: var(--font-size-lg);
 		padding: var(--size-xs);

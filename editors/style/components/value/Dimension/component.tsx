@@ -22,7 +22,7 @@ import { devLog } from "@/utilities/dev";
  * 
  * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
  * Intelligently splits values into numeric and unit components for separate editing.
- * Supports grouped unit categories and validation for numeric ranges.
+ * Supports groupable unit categories and validation for numeric ranges.
  *
  * @component
  * @param {DimensionValueProps} props - Component properties
@@ -246,7 +246,7 @@ const DimensionValue: React.FC<DimensionValueProps> = (props: DimensionValueProp
 				placeholder="N/A"
 				onChange={handleUnitChange}
 				searchable={true}
-				grouped={true}
+				groupable={true}
 				ariaLabel="Change Value Type"
 				title="Change Value Type"
 			/>

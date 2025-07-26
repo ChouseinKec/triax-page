@@ -14,7 +14,7 @@
 	// Next slot dropdown button
 	> [class*='DropdownReveal'] {
 		> button[title*='Select Next Slot'] {
-			@include inputMixins.components--button-toggle($isRound: true);
+			@include inputMixins.components--button-dropdown($isRound: true);
 		}
 	}
 

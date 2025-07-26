@@ -1,17 +1,21 @@
 "use client";
 import React, { ReactNode } from "react";
-import { LeftPanel, RightPanel, BottomPanel, ViewPanel } from "./manager";
+import { BlocksPanel, InspectorPanel, BottomPanel, ViewPanel, TopBar, LeftBar } from "./manager";
 
 export function LayoutProvider({ children }: { children: ReactNode }) {
     return (
         <ViewPanel.Provider>
-            <LeftPanel.Provider>
-                <RightPanel.Provider>
+            <BlocksPanel.Provider>
+                <InspectorPanel.Provider>
                     <BottomPanel.Provider>
-                        {children}
+                        <LeftBar.Provider>
+                            <TopBar.Provider>
+                                {children}
+                            </TopBar.Provider>
+                        </LeftBar.Provider>
                     </BottomPanel.Provider>
-                </RightPanel.Provider>
-            </LeftPanel.Provider>
+                </InspectorPanel.Provider>
+            </BlocksPanel.Provider>
         </ViewPanel.Provider>
     );
 }

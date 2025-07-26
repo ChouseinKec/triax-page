@@ -10,13 +10,13 @@
 
 	[class*='HorizontalDivider'] {
 		background: transparent;
-		box-shadow: var(--theme-shadow--border);
+		box-shadow: var(--theme-shadow-border);
 		grid-column: 1/-1;
 		margin-top: var(--size-2xl);
 
 		&::after {
-			background: var(--theme-background-color--primary) !important;
-			color: var(--theme-background-color--tertiary) !important;
+			background: var(--theme-color-primary) !important;
+			color: var(--theme-color-primary-shade) !important;
 		}
 	}
 

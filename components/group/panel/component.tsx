@@ -10,6 +10,9 @@ import React, {
     useLayoutEffect,
 } from "react";
 
+// Components
+import ActionGroup from "@/components/group/action/component";
+
 // Styles
 import CSS from "./styles.module.scss";
 
@@ -40,6 +43,10 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
         children,
         initialPosition = { top: '0px', left: '0px' },
         initialSize = { width: '250px', height: '250px', minWidth: 250, minHeight: 250 },
+        initialLocked = true,
+        title = 'Panel',
+        onClose = () => { },
+        isOpen = true,
     } = props;
 
     // Ref for the panel DOM element
@@ -51,6 +58,8 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
     // State for panel position and size (controlled after hydration)
     const [position, setPosition] = useState({ left: 0, top: 0 });
     const [size, setSize] = useState({ width: 250, height: 250 });
+    const [locked, setLocked] = useState(initialLocked);
+
 
     // Drag logic (position is updated by setPosition)
     const {
@@ -83,8 +92,8 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
 
     /**
      * Memoized inline styles for the panel.
-     * Only applied after hydration, so CSS can control initial layout.
-     */
+     * Uses hydrated state to determine if we should use measured values or initial props.
+    */
     const styles = useMemo(
         () =>
             hydrated
@@ -110,6 +119,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
      * @param {React.MouseEvent<HTMLDivElement>} e
      */
     const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        if (locked) return;
         const target = e.target as HTMLElement;
         // Uses data-position attribute for event delegation
         const side = target.dataset.position as Side | undefined;
@@ -123,7 +133,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
             startDrag(e);
         }
     },
-        [startDrag, startResize]
+        [startDrag, startResize, locked]
     );
 
     /**
@@ -135,6 +145,18 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
     }, [stopDrag, stopResize]
     );
 
+    const handleLock = useCallback(() => {
+        setLocked((prev) => !prev);
+    }, []
+    );
+
+    const handleClose = useCallback(() => {
+        console.log("Closing panel");
+        console.log(onClose);
+        onClose();
+    }, [onClose]
+    );
+
     /**
      * Handles global mouse move events for dragging and resizing.
      * Delegates to the appropriate handler.
@@ -142,6 +164,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
      * @param {MouseEvent} e
      */
     const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (locked) return;
         if (dragging.current) {
             handleDragMouseMove(e);
             return;
@@ -151,7 +174,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
             return;
         }
     },
-        [handleDragMouseMove, handleResizeMouseMove, dragging, resizing]
+        [handleDragMouseMove, handleResizeMouseMove, dragging, resizing, locked]
     );
 
     /**
@@ -169,7 +192,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
     );
 
     // Guard clause: if no children, render nothing
-    if (!children) return null;
+    if (!children || !isOpen) return null;
 
     return (
         <div
@@ -178,17 +201,39 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
             style={styles}
             onMouseDown={handleMouseDown}
         >
+
+            <div className={CSS.TopBar}>
+                <span className={CSS.Title}>{title}</span>
+
+                <ActionGroup >
+                    <button title="Lock" data-is-active={locked} onClick={handleLock}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z"></path></svg>
+                    </button>
+
+                    <button onClick={handleClose} title="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+                    </button>
+                </ActionGroup>
+
+            </div>
+
             {children}
 
             {/* Render all resize handles with data-position for event delegation */}
-            <div className={CSS.ResizeHandle} data-position="top-right" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="top-left" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="bottom-left" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="bottom-right" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="top" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="right" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="bottom" title="Resize" />
-            <div className={CSS.ResizeHandle} data-position="left" title="Resize" />
+            {!locked
+                &&
+                <>
+                    <div className={CSS.ResizeHandle} data-position="top-right" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="top-left" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="bottom-left" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="bottom-right" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="top" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="right" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="bottom" title="Resize" />
+                    <div className={CSS.ResizeHandle} data-position="left" title="Resize" />
+                </>
+            }
+
         </div>
     );
 };

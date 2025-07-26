@@ -1,10 +1,5 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
 
-.Search {
-	@include inputMixins.components--input;
-	width: 100%;
-}
-
 .Empty {
 	width: 100%;
 	padding: var(--size-md);
@@ -27,8 +22,7 @@
 	text-align: center;
 	font-size: var(--font-size-lg);
 	text-transform: capitalize;
-	color: var(--theme-background-color--quaternary);
-	filter: brightness(2);
+	color: var(--color-white);
 	padding-top: var(--size-lg);
 }
 

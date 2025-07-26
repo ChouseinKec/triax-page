@@ -15,8 +15,8 @@ export interface OptionsSelectProps {
     /** Enables search functionality within the dropdown (default: false) */
     searchable?: boolean;
 
-    /** Whether to display options in grouped sections (default: false) */
-    grouped?: boolean;
+    /** Whether to display options in groupable sections (default: false) */
+    groupable?: boolean;
 
     /** Whether to prioritize icons over text in the dropdown options (default: false) */
     prioritizeIcons?: boolean;

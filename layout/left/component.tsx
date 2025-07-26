@@ -1,40 +1,27 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 
+// Styles
+import CSS from "./styles.module.scss";
 
 // Components
-import PanelGroup from "@/components/group/panel/component";
+import ActionGroup from "@/components/group/action/component";
 
 // Context
-import { LeftPanel as LeftPanelContext } from "@/context/layout/manager";
+import { LeftBar as LeftBarContext } from "@/context/layout/manager";
 
-export default function LeftPanel() {
-    // Get Left panel items from context
-    const { items } = LeftPanelContext.usePanel();
-
-    // Panel layout constants
-    const initialSize = { width: '250px', height: '250px', minWidth: 250, minHeight: 250 };
-    const initialPosition = { top: '2%', left: '1%' };
-
-    // Memoize panel item components for performance
-    const panelItems = useMemo(() =>
-        items
-            .filter(item => item.component !== undefined)
-            .map(item => item.component),
-        [items]
-    );
-
-    // If there are no items, render nothing
-    if (!panelItems || panelItems.length === 0) {
-        return null;
-    }
+export default function LeftBar() {
+    const { items } = LeftBarContext.usePanel();
 
     return (
-        <PanelGroup
-            initialPosition={initialPosition}
-            initialSize={initialSize}
-        >
-            {panelItems}
-        </PanelGroup>
+        <div className={CSS.LeftBar}>
+            <ActionGroup direction="vertical">
+                {items.sort((a, b) => a.order - b.order).map(item => (
+                    <React.Fragment key={item.id}>
+                        {item.component}
+                    </React.Fragment>
+                ))}
+            </ActionGroup>
+        </div>
     );
 }

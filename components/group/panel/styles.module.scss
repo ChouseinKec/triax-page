@@ -1,15 +1,11 @@
 .PanelGroup {
-	height: 100%;
-	width: max-content;
-
 	padding: var(--size-md);
+	padding-top: calc(var(--size-2xl) * 2);
 	position: fixed;
 
-	user-select: none;
-
 	border-radius: var(--size-md);
-	background: var(--theme-background-color--primary);
-	box-shadow: var(--theme-shadow--border);
+	background: var(--theme-color-primary);
+	box-shadow: var(--theme-shadow-border);
 	z-index: 99999;
 }
 
@@ -73,4 +69,33 @@
 		cursor: ew-resize;
 		height: 50%;
 	}
+}
+
+.TopBar {
+	width: 100%;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	padding: var(--size-sm);
+	background: var(--theme-color-primary-shade);
+	border-top-left-radius: var(--size-md);
+	border-top-right-radius: var(--size-md);
+
+	*[class*='ActionGroup'] {
+		background: transparent;
+	}
+}
+
+.Title {
+	font-size: var(--font-size-lg);
+	font-weight: 600;
+	color: var(--color-white);
+	padding-left: var(--size-md);
 }

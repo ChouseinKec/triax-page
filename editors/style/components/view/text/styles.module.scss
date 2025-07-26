@@ -1,5 +1,0 @@
-@use '../../../../../mixins//mixins.module.scss' as inputMixins;
-
-.TextView {
-	@include inputMixins.components--view();
-}

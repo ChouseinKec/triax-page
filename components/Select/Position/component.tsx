@@ -111,7 +111,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
         return POSITIONS.map((value) => (
             <i
                 key={value}
-                className={CSS.PositionSelect_Position}
+                className={CSS.Position}
                 onClick={() => handleChange(value)}
                 data-is-selected={isPositionSelected(value, currentPosition)}
                 data-value={value}
@@ -121,7 +121,7 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
 
     return (
         <div className={CSS.PositionSelect}>
-            <div className={CSS.PositionSelect_Positions} data-corners={isCornerSelectable} data-center={isCenterSelectable}>
+            <div className={CSS.Positions} data-corners={isCornerSelectable} data-center={isCenterSelectable}>
                 {renderDots(currentPosition)}
             </div>
 

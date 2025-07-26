@@ -207,7 +207,7 @@ const FunctionValue: React.FC<FunctionValueProps> = (props: FunctionValueProps) 
                     title="Change Value Type"
                     placeholder="↺"
                     forcePlaceholder={true}
-                    grouped={true}
+                    groupable={true}
                     aria-label="Change Value Type"
                 />
 

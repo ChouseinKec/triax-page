@@ -8,7 +8,7 @@
 		flex: 0 0 auto;
 
 		> button {
-			@include inputMixins.components--button-toggle($isRound: true);
+			@include inputMixins.components--button-dropdown($isRound: true);
 		}
 	}
 
@@ -19,5 +19,5 @@
 
 .Separator {
 	color: var(--color-gray);
-	font-size:var(--font-size-2xl);
+	font-size: var(--font-size-2xl);
 }

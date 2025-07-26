@@ -3,7 +3,7 @@
 .RadioSelect {
 	height: 25px;
 	position: relative;
-	@include inputMixins.components--container;
+	@include inputMixins.components--container($radius: var(--size-sm));
 	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
 	overflow: hidden;
 

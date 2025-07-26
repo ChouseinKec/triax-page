@@ -6,6 +6,7 @@ type PanelItem = {
     component: ReactNode;
     priority?: number; // For ordering
     icon?: ReactNode; // Optional icon for the panel item
+    order: number; // For sorting items
 };
 
 type PanelContextType = {
@@ -51,8 +52,9 @@ function createPanelContext() {
 }
 
 // Create contexts for each panel
-export const LeftPanel = createPanelContext();
-export const RightPanel = createPanelContext();
+export const BlocksPanel = createPanelContext();
+export const InspectorPanel = createPanelContext();
 export const BottomPanel = createPanelContext();
 export const ViewPanel = createPanelContext();
-export const TopPanel = createPanelContext();
+export const TopBar = createPanelContext();
+export const LeftBar = createPanelContext();

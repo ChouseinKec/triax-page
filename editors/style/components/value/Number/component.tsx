@@ -188,7 +188,7 @@ const NumberValue: React.FC<NumberValueProps> = memo((props: NumberValueProps) =
                     value={"number"}
                     onChange={handleOptionChange}
                     searchable={true}
-                    grouped={true}
+                    groupable={true}
                     placeholder={StyleIconDefinitions.number || "NUM"}
                     forcePlaceholder={true}
                     isDisabled={options.length <= 1}

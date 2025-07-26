@@ -5,22 +5,19 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Context
-import { TopPanel as TopPanelContext } from "@/context/layout/manager";
+import { TopBar as TopBarContext } from "@/context/layout/manager";
 
 // Hooks
 import { usePageFactory } from "@/hooks/page/factory";
 
-export default function TopPanel() {
-    const { items } = TopPanelContext.usePanel();
+export default function TopBar() {
+    const { items } = TopBarContext.usePanel();
     const { renderDeviceSelect } = usePageFactory();
     const deviceSelect = renderDeviceSelect();
-    
-    // if (!items || items.length === 0) {
-    //     return null;
-    // }
+    const version = process.env.NEXT_PUBLIC_APP_VERSION;
 
     return (
-        <div className={CSS.TopPanel}>
+        <div className={CSS.TopBar}>
             {deviceSelect}
 
             {items.map(item => (
@@ -28,6 +25,10 @@ export default function TopPanel() {
                     {item.component}
                 </React.Fragment>
             ))}
+
+            <div className={CSS.Version}>
+                v{version}
+            </div>
         </div>
     );
 }

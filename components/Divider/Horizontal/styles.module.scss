@@ -7,7 +7,7 @@
 	border: 0;
 	outline: 0;
 
-	background: var(--color-white--darker);
+	background: var(--color-white);
 	
 
 	&[data-title] {
@@ -24,7 +24,7 @@
 
 			font-size: calc(var(--size-lg) * 0.8);
 
-			color: var(--color-white--darker);
+			color: var(--color-white);
 			background: var(--color-white);
 		}
 	}

@@ -23,7 +23,7 @@ import Options from "@/components/select/options/component";
  * @param {string} props.value - The currently selected value.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected.
  * @param {string} props.placeholder - Placeholder text to display when no value is selected.
- * @param {boolean} [props.grouped=false] - Whether the options should be grouped.
+ * @param {boolean} [props.groupable=false] - Whether the options should be groupable.
  * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
  * @returns {ReactElement} - The rendered dropdown select component.
  *
@@ -37,7 +37,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
 
         placeholder = "N/A",
         forcePlaceholder = false,
-        grouped = false,
+        groupable = false,
         searchable = false,
         isDisabled = false,
 
@@ -74,11 +74,11 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
      */
     const optionsProps = useMemo(() => ({
         searchable,
-        grouped,
+        groupable,
         value,
         options,
         onChange: handleOptionChange
-    }), [searchable, grouped, value, options, handleOptionChange]
+    }), [searchable, groupable, value, options, handleOptionChange]
     );
 
     /**
