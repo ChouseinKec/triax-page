@@ -1,14 +1,16 @@
-import React, { memo, ReactElement, useCallback } from 'react';
-// Styles
-import CSS from './styles.module.css';
+"use client";
+
+import React, { memo, useCallback, useMemo } from "react";
 
 // Types
-import { DropdownSelectProps } from '@/components/select/dropdown/types';
+import { DropdownSelectProps } from "@/components/select/dropdown/types";
 
+// Utilities
+import { devLog } from "@/utilities/dev";
 
 // Components
-import DropdownReveal from '@/components/reveal/dropdown/component';
-import Options from '@/components/select/options/component';
+import DropdownReveal from "@/components/reveal/dropdown/component";
+import Options from "@/components/select/options/component";
 
 /**
  * DropdownSelect Component
@@ -21,44 +23,90 @@ import Options from '@/components/select/options/component';
  * @param {string} props.value - The currently selected value.
  * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected.
  * @param {string} props.placeholder - Placeholder text to display when no value is selected.
- * @param {boolean} [props.grouped=false] - Whether the options should be grouped.
+ * @param {boolean} [props.groupable=false] - Whether the options should be groupable.
  * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
  * @returns {ReactElement} - The rendered dropdown select component.
- * 
- * @example
- * <DropdownSelect 
- *   value="option1"
- *   options={[{ name: 'Option 1', value: 'option1' }, { name: 'Option 2', value: 'option2' }]}
- *   onChange={(value) => setSelectedValue(value)}
- * />
+ *
  */
-const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps): ReactElement => {
-
+const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps) => {
     const {
+        // Core
         value,
         options,
         onChange,
-        placeholder = 'Select an option',
-        grouped = false,
+
+        placeholder = "N/A",
+        forcePlaceholder = false,
+        groupable = false,
         searchable = false,
-        buttonStyle = {},
-        buttonTitle = 'Toggle Dropdown',
+        isDisabled = false,
+
+        // Accessibility
+        title = "Toggle Dropdown",
+        ariaLabel = "Dropdown select",
     } = props;
 
     /**
-    * Handles the onChange event for when an option is selected from the dropdown.
-    * Memoized to prevent unnecessary re-creations.
-    */
-    const handleOptionChange = useCallback((selectedValue: string) => {
-        onChange(selectedValue);
-    }, [onChange]);
+     * Handles option selection with validation and error handling
+     * Ensures the selected value exists in the options array
+     * 
+     * @param {string} selectedValue - The value of the selected option
+     */
+    const handleOptionChange = useCallback((selectedValue: string): void => {
+        // If no value is selected, clear the selection
+        if (selectedValue === "") return onChange("");
 
+        // Validate that the selected value exists in options
+        const isValidOption = options.some(option => option.value === selectedValue);
+
+        if (!isValidOption) {
+            devLog.warn(`[DropdownSelect] Invalid option selected: ${selectedValue}`);
+            return;
+        }
+
+        onChange(selectedValue);
+    }, [options, onChange]
+    );
+
+    /**
+     * Options container props for performance
+     * Reduces re-renders when parent component updates
+     */
+    const optionsProps = useMemo(() => ({
+        searchable,
+        groupable,
+        value,
+        options,
+        onChange: handleOptionChange
+    }), [searchable, groupable, value, options, handleOptionChange]
+    );
+
+    /**
+     * Dropdown properties for the reveal component
+    */
+    const dropdownProps = useMemo(() => ({
+        value,
+        placeholder: forcePlaceholder ? placeholder : value || "N/A",
+        title,
+        isDisabled,
+        ariaLabel
+    }), [value, placeholder, title, isDisabled, ariaLabel,forcePlaceholder]
+    );
+
+    // Guard Clause
+    if (!options || options.length === 0) {
+        devLog.warn("[DropdownSelect] No options provided");
+        return null;
+    }
+
+    if (value == null) {
+        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
+        return null;
+    }
 
     return (
-        <DropdownReveal value={value || placeholder} buttonStyle={buttonStyle} buttonTitle={buttonTitle}>
-            <div className={CSS.DropdownSelect_Options}>
-                <Options searchable={searchable} grouped={grouped} value={value} options={options} onChange={handleOptionChange} />
-            </div>
+        <DropdownReveal  {...dropdownProps} >
+            <Options {...optionsProps} />
         </DropdownReveal>
     );
 };

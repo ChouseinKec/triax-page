@@ -1,10 +1,12 @@
-import { memo, ReactElement, useCallback } from 'react';
+"use client";
+
+import { memo, ReactElement, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from "./styles.module.scss";
 
 // Types
-import { OptionProps } from './types';
+import { OptionProps } from "./types";
 
 /**
  * Option Component
@@ -18,41 +20,53 @@ import { OptionProps } from './types';
  * @param {OptionProps} props - The props for the option item.
  * @returns {ReactElement} - The rendered option element.
  */
-const Option: React.FC<OptionProps> = (props): ReactElement => {
-    const { name, value, icon, style, isSelected, onChange } = props;
+const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
+    const {
+        name,
+        value,
+        icon,
+        isSelected,
+        onChange,
+        category = "other",
+        prioritizeIcons = false,
+        ariaRole = "radio",
+    } = props;
 
     /**
      * Handles the selection or deselection of this option.
      *
      * Best practice: Use useCallback to memoize event handlers for performance.
      *
-     * If the option is already selected, clicking will deselect it (calls onChange with '').
-     * Otherwise, clicking will select it (calls onChange with the option's value).
+     * If the option is already selected, clicking will deselect it (calls onChange with "").
+     * Otherwise, clicking will select it (calls onChange with the option"s value).
      *
      * @param {string} value - The value of the option to select/deselect.
      */
     const handleChange = useCallback((value: string): void => {
         if (isSelected) {
-            onChange(''); // Deselect the option if it's already selected
+            onChange(""); // Deselect the option if it"s already selected
             return;
         }
-        onChange(value); // Select the option if it's not already selected
+        onChange(value); // Select the option if it"s not already selected
     }, [isSelected, onChange]
     );
 
-
+    const iconElement = icon ? icon : "";
+    const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
-        <i
+        <button
             className={CSS.Option}
             onClick={() => handleChange(value)}
-            data-selected={isSelected}
-            style={style}
+            data-is-selected={isSelected}
             title={name}
+            aria-label={`Select ${name}`}
+            role={ariaRole}
+            data-category={category}
         >
-            
-            {icon}
-            {!icon && name}
-        </i>
+
+            {iconElement}
+            {textElement}
+        </button>
     )
 };
 

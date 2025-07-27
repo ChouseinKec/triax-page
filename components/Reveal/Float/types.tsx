@@ -1,15 +1,24 @@
-/**
- * Props for the FloatReveal component.
- * 
- * @param {React.ReactNode} children - Content to be revealed when expanded
-*/
 export type Position = "top" | "bottom" | "left" | "right";
-
-
+export type Role = 'tooltip' | 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'group' | 'region';
 export interface FloatRevealProps {
+    /** Reference to the target element that triggers the float */
     targetRef: React.RefObject<HTMLElement | null>;
-    position?: Position;
+
+    /** Content to display in the floating element */
     children: React.ReactNode;
-    style?: React.CSSProperties;
-    isOpen?: boolean; // Parent-controlled state
+
+    /** Preferred position relative to the target element */
+    position?: Position;
+
+    /** External control override (undefined = hover controlled, boolean = parent controlled) */
+    isOpen?: boolean;
+
+    /** Delay for hover show/hide transitions in milliseconds */
+    hoverDelay?: number;
+
+    /** Whether to close the float when Escape key is pressed */
+    closeOnEscape?: boolean;
+
+    /** Callback function when visibility state changes */
+    onVisibilityChange?: (isVisible: boolean) => void;
 }

@@ -1,9 +1,11 @@
+"use client";
+
 // Types
-import type { LayoutProps } from '@/editors/style/components/layout/types';
+import type { LayoutProps } from "@/editors/style/components/layout/types";
 
 // Hooks
-import { useStyleFactory } from '@/hooks/style/factory';
-import { useStyleManager } from '@/hooks/style/manager';
+import { useStyleFactory } from "@/hooks/style/factory";
+import { useStyleManager } from "@/hooks/style/manager";
 
 
 /**
@@ -13,256 +15,251 @@ import { useStyleManager } from '@/hooks/style/manager';
  * @returns {LayoutProps} The layout configuration for display and layout settings.
  */
 export const useDisplayLayout = (): LayoutProps => {
-    const { renderValue, renderFlexView, renderGridView } = useStyleFactory();
+    const { renderValue } = useStyleFactory();
     const { getStyle } = useStyleManager();
+    const icon = <svg aria-label="Display & Layout Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" /></svg>;
+
     return {
-        label: 'Display & Layout',
+        label: icon,
+        title: "Display & Layout",
         groups: [
             // Display 
             {
-                columns: '1fr',
+                styles: { gridTemplateColumns: "minmax(0,1fr)" },
                 properties: [
                     // Display (e.g., block, inline, flex, grid)
                     {
-                        label: null,
-                        column: '1/-1',
-                        direction: 'column',
-                        component: () => renderValue('display')
+                        label: "Display",
+                        property: "display",
+                        component: () => renderValue("display")
                     },
+
                 ],
             },
 
             // Flex 
             {
-                hidden: getStyle('display') !== 'flex', // Hide if the selected display type is 'flex'
-                columns: 'minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)',
+                dividerTitle: "",
+                hidden: getStyle("display") !== "flex", // Hide if the selected display type is "flex"
+                styles: { gridTemplateColumns: "repeat(2,minmax(0, 1fr))" },
                 properties: [
-                    // Flex View component (for visualizing flex properties)
-                    {
-                        label: null,
-                        row: '1',
-                        column: '1/-1',
-                        component: () => renderFlexView(),
-                    },
 
                     // Flex Direction (row, column, etc.)
                     {
-                        label: 'Direction',
-                        direction: 'column',
-                        column: '2/-1',
-                        property: 'flex-direction',
-                        component: () => renderValue('flex-direction'),
-                    },
-
-                    // Align Items (flex-start, center, etc.)
-                    {
-                        label: 'Align Items',
-                        direction: 'column',
-                        column: '2/-1',
-                        property: 'align-items',
-                        component: () => renderValue('align-items'),
-                    },
-
-                    // Align Content (flex-start, center, etc.)
-                    {
-                        hidden: getStyle('flex-wrap') === 'nowrap' || getStyle('flex-wrap') === '', // Hide if flex-direction is column
-                        label: 'Align Content',
-                        direction: 'column',
-                        column: '2/-1',
-                        property: 'align-content',
-                        component: () => renderValue('align-content'),
+                        label: "Direction",
+                        property: "flex-direction",
+                        component: () => renderValue("flex-direction"),
                     },
 
                     // Flex Wrap (wrap, no-wrap, etc.)
                     {
-                        label: 'Wrap',
-                        row: '2',
-                        column: '1',
-                        direction: 'column',
-                        property: 'flex-wrap',
-                        component: () => renderValue('flex-wrap'),
+                        label: "Wrap",
+                        property: "flex-wrap",
+                        component: () => renderValue("flex-wrap"),
                     },
 
+                    // Align Items (flex-start, center, etc.)
+                    {
+                        label: "Align Items",
+                        property: "align-items",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("align-items"),
+                    },
+
+                    // Align Content (flex-start, center, etc.)
+                    {
+                        disabled: getStyle("flex-wrap") === "nowrap" || getStyle("flex-wrap") === "", // Hide if flex-direction is column
+                        label: "Align Content",
+                        property: "align-content",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("align-content"),
+                    },
 
 
                     // Justify Content (flex-start, center, etc.)
                     {
-                        label: 'Justify Content',
-                        direction: 'column',
-                        row: '4',
-                        column: '2/-1',
-                        property: 'justify-content',
-                        component: () => renderValue('justify-content'),
+                        label: "Justify Content",
+                        property: "justify-content",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("justify-content"),
                     },
 
                     // Row Gap for flex container
                     {
-                        label: 'Row Gap',
-                        column: '1',
-                        row: '3',
-                        direction: 'column',
-                        property: 'row-gap',
-                        component: () => renderValue('row-gap')
+                        label: "Row Gap",
+                        property: "row-gap",
+                        component: () => renderValue("row-gap")
                     },
 
                     // Column Gap for flex container
                     {
-                        label: 'Column Gap',
-                        column: '1',
-                        row: '4',
-                        direction: 'column',
-                        property: 'column-gap',
-                        component: () => renderValue('column-gap')
+                        label: "Column Gap",
+                        property: "column-gap",
+                        component: () => renderValue("column-gap")
                     },
                 ],
             },
 
-            // Grid section
+            // Grid 
             {
-                hidden: getStyle('display') !== 'grid', // Hide if the selected display type is 'grid'
-                columns: 'repeat(4,minmax(0, 1fr))',
+                dividerTitle: "",
+                hidden: getStyle("display") !== "grid", // Hide if the selected display type is "grid"
+                styles: { gridTemplateColumns: "repeat(2,minmax(0,1fr))" },
                 properties: [
-                    // Grid View (for visualizing grid properties)
+                    // Justify Content 
                     {
-                        label: null,
-                        row: '1',
-                        column: '1/-1',
-                        component: () => renderGridView(),
+                        label: "Justify Content",
+                        property: "justify-content",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("justify-content"),
                     },
 
-                    // Justify Content (grid-specific)
+                    // Justify Items 
                     {
-                        label: 'Justify Content',
-                        column: '2/-1',
-                        direction: 'column',
-                        property: 'justify-content',
-                        component: () => renderValue('justify-content'),
+                        label: "Justify Items",
+                        property: "justify-items",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("justify-items"),
                     },
 
-                    // Align Content (grid-specific)
+                    // Align Content 
                     {
-                        label: 'Align Content',
-                        column: '2/-1',
-                        direction: 'column',
-                        property: 'align-content',
-                        component: () => renderValue('align-content'),
+                        label: "Align Content",
+                        property: "align-content",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("align-content"),
                     },
 
-                    // Justify Items (grid-specific)
+                    // Align Items 
                     {
-                        label: 'Justify Items',
-                        column: '2/-1',
-                        direction: 'column',
-                        property: 'justify-items',
-                        component: () => renderValue('justify-items'),
+                        label: "Align Items",
+                        property: "align-items",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("align-items"),
                     },
 
-                    // Align Items (grid-specific)
+                    // Auto Flow 
                     {
-                        label: 'Align Items',
-                        column: '2/-1',
-                        direction: 'column',
-                        property: 'align-items',
-                        component: () => renderValue('align-items'),
+                        label: "Auto Flow",
+                        property: "grid-auto-flow",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("grid-auto-flow"),
                     },
 
-
-
-                    // Auto Flow (grid-specific)
+                    // Auto Rows 
                     {
-                        label: 'Auto Flow',
-                        row: '2',
-                        column: '1',
-                        direction: 'column',
-                        property: 'grid-auto-flow',
-                        component: () => renderValue('grid-auto-flow'),
+                        label: "Auto Rows",
+                        property: "grid-auto-rows",
+                        component: () => renderValue("grid-auto-rows"),
                     },
 
-                    // Auto Columns (grid-specific)
+                    // Auto Columns 
                     {
-                        label: 'Auto Columns',
-                        column: '3/-1',
-                        row: '6',
-                        direction: 'column',
-                        property: 'grid-auto-columns',
-                        component: () => renderValue('grid-auto-columns'),
+                        label: "Auto Columns",
+                        property: "grid-auto-columns",
+                        component: () => renderValue("grid-auto-columns"),
                     },
 
-                    // Auto Rows (grid-specific)
+                    // Template Rows 
                     {
-                        label: 'Auto Rows',
-                        column: '1/3',
-                        row: '6',
-                        direction: 'column',
-                        property: 'grid-auto-rows',
-                        component: () => renderValue('grid-auto-rows'),
+                        label: "Template Rows",
+                        property: "grid-template-rows",
+                        component: () => renderValue("grid-template-rows"),
+                    },
+
+                    // Template Columns 
+                    {
+                        label: "Template Columns",
+                        property: "grid-template-columns",
+                        component: () => renderValue("grid-template-columns"),
                     },
 
 
-
-                    // Template Rows (grid-specific)
-                    {
-                        label: 'Template Rows',
-                        column: '1/3',
-                        row: '7',
-                        direction: 'column',
-                        property: 'grid-template-rows',
-                        component: () => renderValue('grid-template-rows'),
-                    },
-
-                    // Template Columns (grid-specific)
-                    {
-                        label: 'Template Columns',
-                        column: '3/-1',
-                        row: '7',
-                        direction: 'column',
-                        property: 'grid-template-columns',
-                        component: () => renderValue('grid-template-columns'),
-                    },
 
                     // Row Gap for grid container
                     {
-                        label: 'Row Gap',
-                        row: '3',
-                        column: '1',
-                        direction: 'column',
-                        property: 'row-gap',
-                        component: () => renderValue('row-gap')
+                        label: "Row Gap",
+                        property: "row-gap",
+                        styles: { gridColumn: "1" },
+                        component: () => renderValue("row-gap")
                     },
 
                     // Column Gap for grid container
                     {
-                        label: 'Column Gap',
-                        row: '4',
-                        column: '1',
-                        direction: 'column',
-                        property: 'column-gap',
-                        component: () => renderValue('column-gap')
+                        label: "Column Gap",
+                        property: "column-gap",
+                        styles: { gridColumn: "2" },
+                        component: () => renderValue("column-gap")
                     },
+
+
                 ],
             },
 
+            // Generic
             {
-                isExpandable: true,
+                dividerTitle: "",
+                styles: { gridTemplateColumns: "repeat(2,minmax(0,1fr))" },
                 properties: [
-
                     // Direction
                     {
-                        label: 'Direction',
-                        direction: 'column',
-                        column: 'auto',
-                        property: 'direction',
-                        component: () => renderValue('direction')
+                        label: "Direction",
+                        property: "direction",
+                        component: () => renderValue("direction")
                     },
 
-                    // Box-Sizing(e.g., border-box, content-box).
+                    // Box-Sizing
                     {
-                        label: 'Box-Sizing',
-                        column: 'auto',
-                        direction: 'column',
-                        property: 'box-sizing',
-                        component: () => renderValue('box-sizing'),
+                        label: "Box Sizing",
+                        property: "box-sizing",
+                        component: () => renderValue("box-sizing"),
                     },
+
+                    // Visibility
+                    {
+                        label: "Visibility",
+                        property: "visibility",
+                        component: () => renderValue("visibility"),
+                    },
+
+                    // Float
+                    {
+                        label: "Float",
+                        property: "float",
+                        component: () => renderValue("float"),
+                    },
+
+
+                    // Clear
+                    {
+                        label: "Clear",
+                        property: "clear",
+                        component: () => renderValue("clear"),
+                    },
+
+
+
+                    // Object-Position
+                    {
+                        label: "Object Position",
+                        property: "object-position",
+                        styles: { gridColumn: "2/-1" },
+                        component: () => renderValue("object-position"),
+                    },
+
+
+                    // Object-Fit 
+                    {
+                        label: "Object Fit",
+                        property: "object-fit",
+                        styles: { gridColumn: "1/-1" },
+                        component: () => renderValue("object-fit"),
+                    },
+
+
+
+
+
                 ]
             },
         ],

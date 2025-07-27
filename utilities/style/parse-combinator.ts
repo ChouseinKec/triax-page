@@ -1,5 +1,5 @@
-import { splitAdvanced } from '@/utilities/string/string';
-import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array/array';
+import { splitAdvanced } from '@/utilities/string';
+import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/utilities/array';
 import { parse } from './parse';
 
 /**
@@ -9,9 +9,8 @@ import { parse } from './parse';
  * @return boolean - Returns true if the input contains a double bar combinator, false otherwise.
  * @example
  * hasDoubleBar('a || b') → true
- * hasDoubleBar('a && b') → false
  */
-export function hasDoubleBar(input: string): boolean {
+function hasDoubleBar(input: string): boolean {
 	return splitAdvanced(input, '||').length > 1;
 }
 
@@ -22,9 +21,8 @@ export function hasDoubleBar(input: string): boolean {
  * @return boolean - Returns true if the input contains a double ampersand combinator, false otherwise.
  * @example
  * hasDoubleAmp('a && b') → true
- * hasDoubleAmp('a || b') → false
  */
-export function hasDoubleAmp(input: string): boolean {
+function hasDoubleAmp(input: string): boolean {
 	return splitAdvanced(input, '&&').length > 1;
 }
 
@@ -35,9 +33,8 @@ export function hasDoubleAmp(input: string): boolean {
  * @return boolean - Returns true if the input contains a single bar combinator, false otherwise.
  * @example
  * hasSingleBar('a | b') → true
- * hasSingleBar('a && b') → false
  */
-export function hasSingleBar(input: string): boolean {
+function hasSingleBar(input: string): boolean {
 	return splitAdvanced(input, '|').length > 1;
 }
 
@@ -45,8 +42,10 @@ export function hasSingleBar(input: string): boolean {
  * Checks if the input contains a top-level comma (,) separator.
  * @param input - The input string to check for comma separators.
  * @return boolean - Returns true if the input contains a comma separator, false otherwise.
+ * @example
+ * hasComma('a, b') → true
  */
-export function hasComma(input: string): boolean {
+function hasComma(input: string): boolean {
 	return splitAdvanced(input, ',').length > 1;
 }
 
@@ -59,7 +58,7 @@ export function hasComma(input: string): boolean {
  * @example
  * parseComma('a,b+') → ['a,b', 'a,b b', 'a,b b b']
  */
-export function parseComma(input: string): string[] {
+function parseComma(input: string): string[] {
 	const parts = splitAdvanced(input, ',');
 	if (parts.length > 1) {
 		const parsedParts = parts.map((part) => parse(part.trim()));
@@ -69,14 +68,16 @@ export function parseComma(input: string): string[] {
 }
 
 /**
- * Checks if the input contains a sequence combinator (space, comma, or slash) at the top level.
+ * Checks if the input contains a sequence combinator (space) at the top level.
  * @param input - The input string to check for sequence combinators.
  * @return boolean - Returns true if the input contains a sequence combinator, false otherwise.
+ * @example
+ * hasSequence('a b') → true
+ * hasSequence('a,b') → false
+ * hasSequence('a/b') → false
  */
-export function hasSequence(input: string): boolean {
-	return (
-		splitAdvanced(input, ' ').length > 1 
-	);
+function hasSequence(input: string): boolean {
+	return splitAdvanced(input, ' ').length > 1;
 }
 
 /**
@@ -88,7 +89,7 @@ export function hasSequence(input: string): boolean {
  * @example
  * parseDoubleBar('a || b c') → ['a b c', 'a c b', 'b c a', 'c b a']
  */
-export function parseDoubleBar(input: string): string[] {
+function parseDoubleBar(input: string): string[] {
 	const parts = splitAdvanced(input, '||');
 	if (parts.length > 1) {
 		// Generate all non-empty subsets and their permutations
@@ -114,9 +115,8 @@ export function parseDoubleBar(input: string): string[] {
  * @return string[] - Returns an array of all possible combinations as strings.
  * @example
  * parseDoubleAmp('a && b c') → ['a b c', 'a c b', 'b c a', 'c b a']
- * parseDoubleAmp('a && b && c') → ['a b c', 'a c b', 'b c a', 'c b a']
  */
-export function parseDoubleAmp(input: string): string[] {
+function parseDoubleAmp(input: string): string[] {
 	const parts = splitAdvanced(input, '&&');
 	if (parts.length > 1) {
 		const combos = generatePermutations(parts).map((perm) => perm.join(' '));
@@ -136,20 +136,20 @@ export function parseDoubleAmp(input: string): string[] {
  * @param input - The input string to parse.
  * @return string[] - Returns an array of all possible combinations as strings.
  * @example
- * parseSingleBar('a | b c') → ['a b c', 'a c b', 'b c a', 'c b a']
- * parseSingleBar('a | b | c') → ['a b c', 'a c b', 'b c a', 'c b a']
+ * parseSingleBar('a | b c') → ['a', 'b c']
  */
-export function parseSingleBar(input: string): string[] {
+function parseSingleBar(input: string): string[] {
 	const parts = splitAdvanced(input, '|');
 	if (parts.length > 1) {
 		const results = parts.flatMap((part) => parse(part.trim()));
-		return results.sort((a, b) => a.length - b.length);
+		// Remove duplicates and sort by length
+		return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
 	}
 	return [parts.join(' ')];
 }
 
 /**
- * Parses a sequence separated by space, comma, or slash.
+ * Parses a sequence separated by space.
  * Recursively parses each part and generates the cross product of all possible combinations,
  * then joins each combination with the original separator.
  * This ensures that multipliers and nested syntax are expanded for each part.
@@ -157,16 +157,22 @@ export function parseSingleBar(input: string): string[] {
  * @return string[] - Returns all possible combinations as strings.
  * @example
  * parseSequence('a b+') → ['a', 'a b', 'a b b']
- * parseSequence('a/b+') → ['a/b', 'a/b b', 'a/b b b']
  */
-export function parseSequence(input: string): string[] {
+function parseSequence(input: string): string[] {
 	let sep = null;
 	if (splitAdvanced(input, ' ').length > 1) sep = ' ';
 	else if (splitAdvanced(input, '/').length > 1) sep = '/';
 	if (sep) {
 		const parts = splitAdvanced(input, sep);
 		const parsedParts = parts.map((part) => parse(part.trim()));
-		return generateCrossProduct(parsedParts).map((arr) => arr.join(sep).replace(new RegExp(`\\s*${sep}\\s*`, 'g'), sep).trim());
+		return generateCrossProduct(parsedParts).map((arr) =>
+			arr
+				.join(sep)
+				.replace(new RegExp(`\\s*${sep}\\s*`, 'g'), sep)
+				.trim()
+		);
 	}
 	return [input];
 }
+
+export { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence };

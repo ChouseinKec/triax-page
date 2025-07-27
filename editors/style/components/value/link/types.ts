@@ -1,12 +1,12 @@
-
-export type IntegerValueProps = {
+export type LinkValueProps = {
 	/**
-	 * The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)".
+	 * The current value of the link.
+	 * This should be a valid URL or a string representing the link.
 	 */
-	value?: string;
+	value: string;
 
 	/**
 	 * Callback function to handle value changes.
 	 */
-	onChange?: (value: string) => void;
+	onChange: (value: string) => void;
 };

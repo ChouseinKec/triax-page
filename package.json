@@ -1,6 +1,6 @@
 {
   "name": "triax-page",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "author": "Chousein Kechagia chouseinkechagia@outlook.com",
   "license": "MIT",
   "scripts": {
@@ -8,15 +8,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "update-version-env": "node scripts/update-version-env.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
     "next": "^15.3.1",
     "react": "^19.0.0",
-    "react-color": "^2.19.3",
     "react-dom": "^19.0.0",
-    "react-redux": "^9.2.0",
+    "sass": "^1.89.2",
+    "uuid": "^11.1.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

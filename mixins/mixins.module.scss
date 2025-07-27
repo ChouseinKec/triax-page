@@ -1,4 +1,4 @@
-@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false, $error: false) {
+@mixin states($hover: true, $focus: true, $active: true, $selected: true, $open: false, $svg: false) {
 	@if $hover {
 		&:hover {
 			background: var(--color-hover);
@@ -9,12 +9,8 @@
 		&:focus {
 			background: var(--color-focus);
 			color: var(--color-white);
-			* {
-				color: var(--color-white);
-			}
-
 			@if $svg {
-				svg *[fill]:not([fill='none']) {
+				svg path {
 					fill: var(--color-white);
 				}
 			}
@@ -25,10 +21,6 @@
 		&:active {
 			background: var(--color-active);
 			color: var(--color-white);
-
-			* {
-				color: var(--color-white);
-			}
 			@if $svg {
 				svg path {
 					fill: var(--color-white);
@@ -43,7 +35,7 @@
 			background: var(--color-selected);
 			box-shadow: inset 0px 0.5px 2px 1px rgb(0 0 0 / 40%);
 			@if $svg {
-				svg *[fill]:not([fill='none']) {
+				svg path {
 					fill: var(--color-white);
 				}
 			}
@@ -71,9 +63,9 @@
 	}
 }
 
-@mixin components--container($background: true) {
-	border: none;
-	outline: none;
+// This mixin is used for float components
+// E.g DropdownReveal,DropdownSelect in Style Editor
+@mixin components--float {
 	border-radius: var(--size-sm);
 	box-shadow: var(--shadow-outset);
 
@@ -85,26 +77,31 @@
 }
 
 @mixin components--button {
-	height: 25px;
+	min-height: 25px;
 	padding: var(--size-sm);
 
-	border: none;
 	outline: none;
+	border: none;
 	border-radius: var(--size-sm);
-	background: var(--color-white);
-	box-shadow: var(--shadow-outset);
+	background: $background;
+	box-shadow: var(--theme-shadow-border);
+
+	color: var(--color-white);
 	font-size: var(--font-size-sm);
-	text-transform: uppercase;
-	cursor: pointer;
+	text-align: center;
 
-	@include states($open: true, $svg: true);
-
-	&:hover {
-		box-shadow: var(--shadow-inset);
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
 	}
+	-moz-appearance: textfield;
+	appearance: textfield;
 
-	&:focus {
-		box-shadow: var(--shadow-inset);
+	@include states();
+
+	&[data-is-error='true'] {
+		border-bottom: 3px solid var(--color-error);
 	}
 
 	&:active {
@@ -113,7 +110,7 @@
 }
 
 @mixin components--input {
-	height: 25px;
+	min-height: 25px;
 	padding: var(--size-sm) var(--size-md);
 
 	border: none;
@@ -121,40 +118,36 @@
 	border-radius: var(--size-sm);
 	background: var(--color-white);
 	box-shadow: var(--shadow-inset);
+	font-size: var(--font-size-md);
 
-	* {
-		font-size: var(--font-size-md);
-	}
-
-	@include states($error: true);
+	@include states($selected: false);
 }
 
 @mixin components--option {
 	min-height: 20px;
 	padding: 0 var(--size-sm);
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-
-	border: none;
+	gap: var(--size-xs);
 	outline: none;
-	background: transparent;
-	border-radius: var(--size-sm);
+	border-radius: $radius;
+	border: none;
+
+	background: $background;
 
 	font-size: var(--font-size-sm);
-	color: var(--color-black);
+	color: var(--color-white);
 	text-transform: uppercase;
-
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	cursor: pointer;
-	@include states($selected: true, $svg: true);
+	@include states;
 
 	svg {
-		max-width: 15px;
-		max-height: 15px;
-
-		*[fill]:not([fill='none']) {
-			fill: var(--color-black);
-		}
+		width: 15px;
+		height: 15px;
 	}
 }
 
@@ -163,21 +156,23 @@
 		content: '';
 		width: 7px;
 		height: 5px;
-		margin-top: 5px;
-		margin-left: 5px;
 		display: block;
+
+		// position: absolute;
+		// top: 53%;
+		// right: var(--size-sm);
 
 		transform: translateY(-50%);
 
 		clip-path: polygon(50% 100%, 0 0, 100% 0);
-		background: var(--color-black);
+		background: var(--color-white);
 
 		transition: all 0.5s;
 		position: absolute;
 		right: 5%;
 	}
 
-	&[data-isopen='true'] {
+	&[data-is-open='true'] {
 		&::after {
 			clip-path: polygon(50% 0, 0 100%, 100% 100%);
 			background: var(--color-white);

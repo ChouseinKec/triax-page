@@ -1,13 +1,33 @@
 .NumberValue {
-	width: 100%;
-	display: grid;
-	min-height: 25px;
-
 	position: relative;
+	// max-width: 50px;
 
-	[class$='DropdownReveal'] {
+	&[data-has-dropdown='true'] {
+		max-width: 100px;
+
+		[class*='GenericInput'] {
+			padding-right: 40%;
+		}
+	}
+
+	[class*='GenericInput'] {
+		width: 100%;
+	}
+
+	[class*='DropdownReveal'] {
+		width: 40%;
+		height: 80%;
 		position: absolute;
-		right: 0;
-		max-width: 40px;
+		top: 10%;
+		right: 2%;
+
+		[class*='Toggle'] {
+			height: 100%;
+			
+			svg {
+				width: 10px;
+				height: 10px;
+			}
+		}
 	}
 }

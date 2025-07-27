@@ -1,13 +1,23 @@
 @use '../../../../../mixins/mixins.module.scss' as inputMixins;
 
 .FunctionValue {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: var(--size-md);
+	@include inputMixins.components--flex-horizontal($align: center);
+
+	// Function Change Dropdown
+	> [class*='DropdownReveal'] {
+		flex: 0 0 auto;
+
+		> button {
+			@include inputMixins.components--button-dropdown($isRound: true);
+		}
+	}
+
+	[class*='Slots'] {
+		width: max-content;
+	}
 }
 
 .Separator {
 	color: var(--color-gray);
+	font-size: var(--font-size-2xl);
 }

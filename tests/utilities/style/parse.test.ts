@@ -1,4 +1,7 @@
-import { normalizeSyntax, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseBrackets, parse, expandTokens } from '@/utilities/style/parse';
+import { normalizeSyntax, parse } from '@/utilities/style/parse';
+import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/utilities/style/parse-combinator';
+import { parseBrackets } from '@/utilities/style/parse-bracket';
+import { expandTokens } from '@/utilities/style/token';
 
 import { parseSequence } from '@/utilities/style/parse-combinator';
 import { parseMultiplier } from '@/utilities/style/parse-multiplier';
@@ -8,7 +11,7 @@ describe('expandTokens', () => {
 		expect(expandTokens('<length-percentage>')).toMatch(/<length>|<percentage>/);
 	});
 	it('should preserve ranges on expansion', () => {
-		expect(expandTokens('<length-percentage [0,∞]>')).toMatch('<length [0,∞]> | <percentage [0,∞]>');
+		expect(expandTokens('<length-percentage [0,∞]>')).toMatch('<length [0,∞]>|<percentage [0,∞]>');
 	});
 	it('should not expand unknown data types', () => {
 		expect(expandTokens('<foo>')).toBe('<foo>');

@@ -1,15 +1,13 @@
 @use '../../../mixins//mixins.module.scss' as inputMixins;
 
 .PositionSelect {
-	width: 100%;
-	min-width: 80px;
-	max-width: 150px;
-	background: var(--color-black--lighter);
-
-	@include inputMixins.components--container($background: false);
+	@include inputMixins.components--view();
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 
-.PositionSelect_Positions {
+.Positions {
 	padding: var(--size-sm);
 	aspect-ratio: 1/1;
 
@@ -36,7 +34,7 @@
 	}
 }
 
-.PositionSelect_Position {
+.Position {
 	position: relative;
 	cursor: pointer;
 	border-radius: var(--size-sm);
@@ -57,18 +55,25 @@
 		border-radius: 50%;
 	}
 
-	&:hover,
-	&[data-selected='true'] {
-		background: var(--color-gray);
+	&:hover::after,
+	&[data-is-selected='true']::after {
+		background: var(--theme-color-secondary);
 	}
 }
 
 .PositionSelect_Current {
 	width: 100%;
-	color: var(--color-gray--darker);
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	color: var(--color-gray);
 	text-align: center;
 	text-transform: uppercase;
 	font-size: var(--font-size-sm);
-	padding: var(--size-sm);
-	border-top: 1px solid var(--color-gray--darker);
+	padding: var(--size-md);
+	padding-top: var(--size-lg);
+	border-top: 1px solid var(--color-gray);
 }

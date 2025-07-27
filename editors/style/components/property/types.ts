@@ -1,5 +1,5 @@
-import type { CSSProperties } from '@/types/style/property';
-
+import type { StylePropertyKeys } from '@/types/style/property';
+import type { CSSProperties } from "react";
 /**
  * Represents a single layout property within the style editor.
  * This type defines the structure of a layout property, including its label,
@@ -9,20 +9,14 @@ import type { CSSProperties } from '@/types/style/property';
 export interface LayoutProps {
 	/** The label for the property, displayed in the UI */
 	label: string | null;
-	/** The alignment of the label in the UI */
-	labelAlign?: string;
-	/** The grid column position for the property in the layout */
-	column?: string;
-	/** The grid row position for the property in the layout */
-	row?: string;
-	/** The direction of the property in the layout (e.g., 'horizontal', 'vertical') */
-	direction?: string;
 	/** Whether the property is hidden in the UI */
 	hidden?: boolean;
 	/** Whether the property is disabled in the UI */
 	disabled?: boolean;
 	/** The CSS property associated with this layout property */
-	property?: CSSProperties;
+	property?: StylePropertyKeys;
+	/** The CSS styles applied to the property in the UI */
+	styles?: CSSProperties;
 	/** The component that renders the property in the UI */
 	component: () => React.ReactNode;
 }
@@ -33,5 +27,5 @@ export interface LayoutContentProps {
 	/** The label for the property, displayed in the UI */
 	label: string | null;
 	/** The CSS property associated with this layout property */
-    property?: CSSProperties;
+    property?: StylePropertyKeys;
 }

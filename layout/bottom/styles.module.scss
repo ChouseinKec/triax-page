@@ -1,0 +1,14 @@
+@use '../../mixins/mixins.module.scss' as inputMixins;
+
+.BottomPanel {
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	z-index: 1;
+
+}

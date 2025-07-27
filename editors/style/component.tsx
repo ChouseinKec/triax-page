@@ -1,35 +1,25 @@
-import React, { ReactElement, useMemo } from 'react';
-import CSS from './style.module.css';
+import React, { useMemo } from "react";
+import CSS from './style.module.scss';
 
 // Components
 import Layout from '@/editors/style/components/layout/component';
 
 // Types 
-import { STYLE_EDITOR } from '@/editors/style/types';
+import { StyleEditorProps } from './types';
 
 // Hooks
-import { useDeviceRender } from '@/hooks/device/hooks';
-import { useOrientationRender } from '@/hooks/orientation/hooks';
-import { usePseudoRender } from '@/hooks/pseudo/hooks';
+import { useBlockManager } from '@/hooks/block/manager';
 
-const StyleEditor: React.FC<STYLE_EDITOR> = ({ className }): ReactElement => {
-    const { renderDeviceSelect } = useDeviceRender();
-    const { renderOrientationSelect } = useOrientationRender();
-    const { renderPseudoSelect } = usePseudoRender();
+const StyleEditor: React.FC<StyleEditorProps> = () => {
+    const { getSelectedBlock } = useBlockManager();
 
-    const deviceSelect = useMemo(() => renderDeviceSelect(), [renderDeviceSelect]);
-    const orientationSelect = useMemo(() => renderOrientationSelect(), [renderOrientationSelect]);
-    const pseudoSelect = useMemo(() => renderPseudoSelect(), [renderPseudoSelect]);
+    const selectedBlock = getSelectedBlock();
+
+
+    if (!selectedBlock) return null;
 
     return (
-        <div className={`${CSS.Styles} ${className}`}>
-
-            <div className={CSS.Styles_Controls}>
-                {deviceSelect}
-                {orientationSelect}
-                {pseudoSelect}
-            </div>
-
+        <div className={CSS.StyleEditor} >
             <Layout />
         </div>
     );

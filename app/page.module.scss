@@ -1,33 +1,16 @@
-html {
-	height: 100%;
-}
-body {
-	height: 100%;
-}
+@use '../mixins/mixins.module.scss' as inputMixins;
 
 .main {
+	height: 100vh;
+	width: 100vw;
+
 	display: grid;
-	grid-template-columns: 450px auto;
-	// grid-template-columns: 3fr 3fr;
-	gap: 25px;
-}
+	grid-template-columns: auto 1fr auto;
+	grid-template-rows: auto 1fr auto;
 
-.fieldset {
-	height: 100%;
-	padding: 25px;
-	background: rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	background: var(--theme-color-primary-tint);
 
-	scrollbar-color: rgba(0, 0, 0, 0.3) rgba(255, 166, 0, 0);
-	scrollbar-width: thin;
-
-	legend {
-		text-align: center;
-		padding: 0px 10px;
-	}
-}
-.blocks {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 25px;
+	letter-spacing: 1px;
+	font-family: 'Geist';
 }
