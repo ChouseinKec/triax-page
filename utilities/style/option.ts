@@ -1,7 +1,7 @@
 // Constants
-import { DimensionGroups } from '@/constants/style/value';
-import { CSSUnitOptions } from '@/constants/style/units';
-import { CSSIconDefs, CSSIcons } from '@/constants/style/icon';
+import { ValueFunctionDefaults } from '@/constants/style/value';
+import { StyleUnitOptions } from '@/constants/style/unit';
+import { StyleIconDefinitions, CSSIcons } from '@/constants/style/icon';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical } from '@/utilities/style/token';
@@ -10,7 +10,7 @@ import { getValueTokens } from '@/utilities/style/value';
 
 // Types
 import type { InputOptionData, OtherOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
-import type { CSSDimensionGroups } from '@/types/style/dimension';
+import type { StyleUnitType } from '@/types/style/unit';
 
 /**
  * Creates a FunctionOptionData object for a given function token.
@@ -18,7 +18,7 @@ import type { CSSDimensionGroups } from '@/types/style/dimension';
  * @param token - The function token string (e.g., 'calc(<length>|<percentage>)')
  * @returns FunctionOptionData | undefined - The created function option or undefined if invalid.
  * @example
- * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function' }
+ * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function', type: 'function' }
  */
 function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// Check if the token is empty or undefined
@@ -32,10 +32,16 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If any of these are undefined or empty, return undefined
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
+	// Get the default function value from the constants
+	const defaultValue = ValueFunctionDefaults[baseName];
+
+	// If no default value is defined for this function, return undefined
+	if (!defaultValue) return undefined;
+
 	// Create and return the FunctionOptionData object
 	return {
 		name: canonicalName,
-		value: `${baseName}()`, // Use the syntax as the initial value
+		value: defaultValue, // Use the syntax as the initial value
 		syntax,
 		category: 'function',
 		type: 'function',
@@ -55,14 +61,14 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
 	if (!token) return undefined;
 
 	// Get the base name of the token and check if it's a valid dimension group
-	const baseName = getTokenBase(token) as CSSDimensionGroups;
+	const baseName = getTokenBase(token) as StyleUnitType;
 
 	// If the base name is not a valid dimension group, return undefined
-	if (!DimensionGroups.includes(baseName)) return undefined;
+	if (!StyleUnitOptions[baseName]) return undefined;
 
 	// Get the range parameters for the token, and retrieve the unit options for the base name
 	const range = getTokenParam(token);
-	const unitOptions = CSSUnitOptions[baseName] || [];
+	const unitOptions = StyleUnitOptions[baseName] || [];
 
 	// If no range is specified, return the unit options as is
 	if (!range) return unitOptions as DimensionOptionData[];
@@ -82,13 +88,13 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
  * @param propertyName - The name of the CSS property being edited (for keyword options)
  * @returns KeywordOptionData | undefined - The created keyword option or undefined if empty.
  * @example
- * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword' }
+ * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword', icon: <Icon />, type: 'keyword' }
  */
 function createKeywordOption(token: string, propertyName: string): KeywordOptionData | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
-	const icon = CSSIconDefs?.[`${propertyName}-${token}` as CSSIcons];
+	const icon = StyleIconDefinitions?.[`${propertyName}-${token}` as CSSIcons];
 
 	// Create and return the KeywordOptionData object for the keyword
 	return {
@@ -106,7 +112,7 @@ function createKeywordOption(token: string, propertyName: string): KeywordOption
  * @param token - The number token string (e.g., '<number [0,25]>')
  * @returns NumberOptionData | undefined - The created number option or undefined if invalid.
  * @example
- * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'number' }
+ * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'other', type: 'number' }
  */
 function createNumberOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
@@ -118,6 +124,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		icon: StyleIconDefinitions?.number,
 		type: 'number',
 	};
 }
@@ -128,7 +135,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
  * @param token - The integer token string (e.g., '<integer [0,100]>')
  * @returns NumberOptionData | undefined - The created integer option or undefined if invalid.
  * @example
- * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'number' }
+ * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'other', type: 'integer' }
  */
 function createIntegerOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
@@ -139,10 +146,19 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
+		icon: StyleIconDefinitions?.number,
 		type: 'integer',
 	};
 }
 
+/**
+ * Creates a color option for a given token (e.g., 'color').
+ *
+ * @param token - The color token string (e.g., 'color')
+ * @returns OtherOptionData | undefined - The created color option or undefined if empty.
+ * @example
+ * createColorOption('color') → { name: 'color', value: '#000000', category: 'other', type: 'color' }
+ */
 function createColorOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
 	return {
@@ -153,6 +169,14 @@ function createColorOption(token: string): OtherOptionData | undefined {
 	};
 }
 
+/**
+ * Creates a link option for a given token (e.g., 'link').
+ *
+ * @param token - The link token string (e.g., 'link')
+ * @returns OtherOptionData | undefined - The created link option or undefined if empty.
+ * @example
+ * createLinkOption('link') → { name: 'link', value: 'https://example.com', category: 'other', type: 'link' }
+ */
 function createLinkOption(token: string): OtherOptionData | undefined {
 	if (!token) return undefined;
 	return {
@@ -161,6 +185,34 @@ function createLinkOption(token: string): OtherOptionData | undefined {
 		category: 'other',
 		type: 'link',
 	};
+}
+
+/**
+ * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
+ *
+ * @param token - The candidate token for the slot (e.g., 'auto', '<number>')
+ * @param slotIndex - The index of the slot being checked
+ * @param validValueSet - Set of all valid value strings (normalized)
+ * @param currentTokens - The current value tokens for all slots (canonicalized)
+ * @returns True if the token is valid for this slot in the current context
+ * @example
+ * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
+ */
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
+	const tokenCanonical = getTokenCanonical(token);
+	if (!tokenCanonical) return false;
+
+	// Always allow if the current value for this slot matches the candidate token
+	if (currentTokens[slotIndex] === tokenCanonical) return true;
+
+	// Replace only the relevant slot and check validity
+	const testTokens = currentTokens.slice();
+	testTokens[slotIndex] = tokenCanonical;
+	const testString = testTokens.join(' ').trim();
+	const matches = validValueSet.find((value) => value.startsWith(testString));
+
+	if (!matches) return false;
+	return true;
 }
 
 /**
@@ -193,37 +245,6 @@ function createOption(token: string, propertyName: string): InputOptionData | In
 }
 
 /**
- * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
- *
- * @param token - The candidate token for the slot (e.g., 'auto', '<number>')
- * @param slotIndex - The index of the slot being checked
- * @param validValueSet - Set of all valid value strings (normalized)
- * @param currentTokens - The current value tokens for all slots (canonicalized)
- * @returns True if the token is valid for this slot in the current context
- * @example
- * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
- */
-function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[], propertyName: string): boolean {
-	// console.log(validValueSet);
-	const tokenCanonical = getTokenCanonical(token);
-	if (!tokenCanonical) return false;
-
-	// Always allow if the current value for this slot matches the candidate token
-	if (currentTokens[slotIndex] === tokenCanonical) return true;
-
-	// Replace only the relevant slot and check validity
-	const testTokens = currentTokens.slice();
-	testTokens[slotIndex] = tokenCanonical;
-	const testString = testTokens.join(' ').trim();
-
-	if (propertyName === 'text-shadow') {
-		// console.log(validValueSet);
-		// console.log(`${slotIndex} - ${tokenCanonical} ? ${testString} → ${new Set(validValueSet).has(testString)}`);
-	}
-	return new Set(validValueSet).has(testString);
-}
-
-/**
  * Builds a 2D options table for slot-based value editors.
  * Each slot (column) contains only the valid options for the current context.
  * Optimized to use a Set for valid value strings.
@@ -247,7 +268,7 @@ function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[]
 			if (!tokenCanonical) return [];
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens, propertyName)) {
+			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
 				const option = createOption(token, propertyName);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}

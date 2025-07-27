@@ -1,8 +1,11 @@
 // Type
-import { CSSTokenGroups } from '@/types/style/token';
+import type { StyleTokenType, StyleTokenKeys } from '@/types/style/token';
+
+// Constants
+import { StyleTokenDefaults, StyleTokenDefinitions } from '@/constants/style/token';
 
 // Utilities
-import { normalizeSyntax } from './parse';
+import { extractBetween } from '@/utilities/string';
 
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
@@ -14,7 +17,9 @@ import { normalizeSyntax } from './parse';
  * isTokenKeyword('10px') → false
  */
 function isTokenKeyword(input: string): boolean {
-	return /^[a-zA-Z-]+$/.test(input);
+	const canonical = getTokenCanonical(input);
+	if (!canonical) return false;
+	return /^[a-zA-Z-]+$/.test(canonical);
 }
 
 /**
@@ -31,9 +36,7 @@ function isTokenDimension(input: string): boolean {
 	const canonical = getTokenCanonical(input);
 	if (!canonical) return false;
 
-	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(canonical)) {
-		return true;
-	}
+	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(canonical)) return true;
 
 	return false;
 }
@@ -74,13 +77,11 @@ function isTokenNumber(input: string): boolean {
  * isTokenFunction('10px') → false
  */
 function isTokenFunction(input: string): boolean {
-	const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
-	if (fnMatch) {
-		const functionName = fnMatch[1];
-		// Check if the function name is a valid CSS function
-		return /^[a-zA-Z-]+$/.test(functionName);
-	}
-	return false;
+	const canonical = getTokenCanonical(input);
+	if (!canonical) return false;
+
+	// Check if the input is a function format
+	return /^([a-zA-Z0-9-]+)\((.*)\)$/.test(canonical);
 }
 
 /**
@@ -119,8 +120,9 @@ function isTokenLink(input: string): boolean {
  * getTokenType('fit-content(10px)') → 'function'
  * getTokenType('<integer>') → 'integer'
  * getTokenType('<number>') → 'number'
+ * getTokenType('<link>') → 'link'
  */
-function getTokenType(input: string): CSSTokenGroups | undefined {
+function getTokenType(input: string): StyleTokenType | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
 	if (isTokenDimension(input)) return 'dimension';
 	if (isTokenColor(input)) return 'color';
@@ -143,13 +145,10 @@ function getTokenType(input: string): CSSTokenGroups | undefined {
  * getTokenCanonical('10') → undefined
  */
 function getTokenCanonical(input: string): string | undefined {
-	if (input.startsWith('(') && input.endsWith(')')) {
-		// console.log(input, getTokenCanonical(input.replaceAll('(', '').replaceAll(')', '')));
-	}
 	if (!input) return undefined;
 
 	// Function: e.g. fit-content(<length [10,20]>)
-	const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
+	const fnMatch = input.match(/^([a-zA-Z0-9-]+)\((.*)\)$/);
 	if (fnMatch) return `${fnMatch[1]}()`;
 
 	// Dimension: e.g. <length [0,10]>
@@ -189,12 +188,8 @@ function getTokenBase(input: string): string | undefined {
  * getTokenRange('fit-content(<length> <percentage>)') → undefined
  */
 function getTokenRange(input: string): string | undefined {
-	// Match the range part in square brackets
-	const rangeMatch = input.match(/\[([^\]]+)\]/);
-	if (rangeMatch) {
-		return rangeMatch[0].trim(); // Return the content inside the brackets
-	}
-	return undefined; // No range found
+	const range = extractBetween(input, '[]');
+	return range ? `[${range}]` : undefined;
 }
 
 /**
@@ -208,46 +203,27 @@ function getTokenRange(input: string): string | undefined {
  *
  */
 function getTokenParam(input: string): Record<string, any> | undefined {
-	// Determine the token group/type
 	const group = getTokenType(input);
 
 	switch (group) {
 		case 'function': {
-			// Extract function arguments inside the parentheses
-			const fnMatch = input.match(/^([a-zA-Z-]+)\((.*)\)$/);
-			if (fnMatch) {
-				const param = fnMatch[2].trim();
-				if (param) {
-					return { syntax: param };
-				}
-			}
-			return undefined;
+			const param = extractBetween(input, '()');
+			return param ? { syntax: param } : undefined;
 		}
 		case 'dimension':
-		case 'number': {
-			// Extract range/step from dimension or number tokens
-			const dimMatch = input.match(/^<([a-zA-Z0-9-]+)(\s*\[([^\]]+)\])?>$/);
-			if (dimMatch?.[3]) {
-				const range = dimMatch[3].split(',').map((s: string) => s.trim());
-				if (range.length === 2) {
-					const [min, max] = range;
-					return { min: parseFloat(min), max: parseFloat(max) };
-				}
-			}
-			return undefined;
-		}
+		case 'number':
 		case 'integer': {
-			// For integer, extract range if present
-			const intMatch = input.match(/^<integer>(\s*\[([^\]]+)\])?$/);
-			if (intMatch?.[2]) {
-				const range = intMatch[2].split(',').map((s: string) => s.trim());
-				if (range.length === 2) {
-					const [min, max] = range;
-					return { min: parseInt(min, 10), max: parseInt(max, 10) };
+			// Extract range/step from dimension or number tokens
+			const range = getTokenRange(input);
+			if (range) {
+				const rangeValues = range.replace(/[\[\]]/g, '').split(',');
+				if (rangeValues.length === 2) {
+					return { min: parseFloat(rangeValues[0]), max: parseFloat(rangeValues[1]) };
 				}
 			}
 			return undefined;
 		}
+
 		default:
 			return undefined;
 	}
@@ -264,35 +240,77 @@ function getTokenParam(input: string): Record<string, any> | undefined {
  * getTokenValue('<percentage>') → '0%'
  * getTokenValue('<number>') → '0.0'
  */
-function getTokenValue(token: string): string {
-	const valueMap: Record<string, string> = {
-		length: '0px',
-		angle: '0deg',
-		percentage: '0%',
-		color: '#ffffff',
-		number: '0.0',
-		integer: '0',
-		flex: '1fr',
-		ratio: '1/1',
-		link: '"https://example.com/image.png"',
-	};
-	return valueMap[token] ?? `<${token}>`;
+function getTokenValue(token: string): string | undefined {
+	if (isTokenKeyword(token)) return token;
+
+	const tokenCanonical = getTokenCanonical(token) as StyleTokenKeys | undefined;
+	if (!tokenCanonical) return undefined;
+
+	const tokenValue = StyleTokenDefaults[tokenCanonical];
+	return tokenValue ? tokenValue : undefined;
 }
 
 /**
- * Converts all tokens in a syntax string to their default values.
- * @param syntax - The CSS value definition syntax string
- * @returns The string with all tokens replaced by their default values
+ * Converts an array of tokens to their default values.
+ * @param tokens - An array of token strings (e.g., ['<length>', '<color>', '<angle>'])
+ * @returns An array of default values for the tokens, filtering out any undefined values
  * @example
- * getTokenValues('auto || <length>') → 'auto || 0px'
- * getTokenValues('fit-content(<length> <percentage>)') → 'fit-content(0px 0%)'
+ * getTokenValues(['<length>', '<color>', '<angle>']) → ['0px', '#ffffff', '0deg']
  */
-function getTokenValues(syntax: string): string {
-	syntax = normalizeSyntax(syntax);
-	return syntax.replace(/<([a-zA-Z0-9_-]+)(?:\s*\[[^\]]*\])?>/g, (_, token) => {
-		return getTokenValue(token);
-	});
+function getTokenValues(tokens: string[]): string[] {
+	return tokens.map(getTokenValue).filter((token): token is string => token !== undefined);
+}
+
+/**
+ * Recursively expands all <token> references in a CSS syntax string using StyleTokenDefinitions.
+ * If a token is not found, it is left as-is.
+ * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
+ * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
+ * @returns The syntax string with all known tokens recursively expanded
+ * @example
+ * expandTokens('auto || <ratio>') → 'auto || <number> / <number>'
+ */
+function expandTokens(syntax: string, seen = new Set<string>()): string {
+	// Start with the input syntax string
+	let result = syntax;
+	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
+	const tokens = result.match(/<[^>]+>/g);
+
+	// Iterate over each matched token
+	for (const token of tokens || []) {
+		// Extract the base type from the token (e.g., 'length' from '<length>')
+		const tokenBase = getTokenBase(token);
+		if (!tokenBase) continue; // Skip if no base type
+
+		// Get the canonical form of the token (e.g., '<length>')
+		const tokenCanonical = getTokenCanonical(token);
+		if (!tokenCanonical) continue; // Skip if no canonical form
+		if (seen.has(tokenCanonical)) continue; // Prevent infinite recursion (circular references)
+
+		// Extract range/constraint (e.g., [0,100]) if present
+		const range = getTokenRange(token);
+
+		// Look up the token definition in StyleTokenDefinitions
+		const def = StyleTokenDefinitions[tokenCanonical as StyleTokenKeys];
+
+		if (def?.syntax) {
+			// Mark this token as seen to prevent recursion
+			seen.add(tokenCanonical);
+			// Recursively expand the definition's syntax
+			let expanded = expandTokens(def.syntax, seen);
+
+			// If the original token had a range, propagate it to all <...> tokens in the expanded string
+			if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
+			// Replace the token in the result string with its expanded form
+			result = result.replace(token, expanded);
+
+			// Remove from seen set after expansion
+			seen.delete(tokenCanonical);
+		}
+	}
+	// Return the fully expanded syntax string
+	return result;
 }
 
 // Export the new helpers
-export { getTokenValue, getTokenValues, isTokenKeyword, isTokenDimension, isTokenFunction, isTokenInteger, isTokenNumber, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam };
+export { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam, expandTokens };

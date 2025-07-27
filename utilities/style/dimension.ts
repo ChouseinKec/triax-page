@@ -1,6 +1,6 @@
-import { CSSUnitDefs } from '@/constants/style/units';
-import { CSSDimensionGroups } from '@/types/style/dimension';
-import { CSSUnits } from '@/types/style/units';
+import { StyleUnitDefinitions } from '@/constants/style/unit';
+import { StyleUnitType } from '@/types/style/unit';
+import { StyleUnitKeys } from '@/types/style/unit';
 
 /**
  * Extracts the numeric value from a CSS dimension string (e.g., '10px', '25%', '0.1rem').
@@ -49,8 +49,8 @@ function isValueDimension(input: string): boolean {
 	// If no number or no unit, not a valid dimension
 	if (value === undefined || !unit) return false;
 
-	// Ensure unit is a valid CSSUnits value
-	if (!(unit in CSSUnitDefs)) return false;
+	// Ensure unit is a valid StyleUnitKeys value
+	if (!(unit in StyleUnitDefinitions)) return false;
 	return true;
 }
 
@@ -66,27 +66,27 @@ function isValueDimension(input: string): boolean {
  * getDimensionType('180deg') → 'angle'
  * getDimensionType('1fr') → 'flex'
  */
-function getDimensionType(input: string): CSSDimensionGroups | undefined {
+function getDimensionType(input: string): StyleUnitType | undefined {
 	if (!isValueDimension(input)) return undefined;
-	const unit = extractUnit(input) as CSSUnits;
-	const unitDef = unit ? CSSUnitDefs[unit] : undefined;
-	return unitDef?.dimensionGroup;
+	const unit = extractUnit(input) as StyleUnitKeys;
+	const unitDef = unit ? StyleUnitDefinitions[unit] : undefined;
+	return unitDef?.type;
 }
 
 /**
  * Clamps a CSS value to a maximum of 10px.
  * Extracts the numeric part and returns it as px, limited to 10.
  * @param value - The CSS value (e.g., '10rem', '5vh', '12px')
- * @param maxPx - The maximum px value allowed (default: 10)
+ * @param max - The maximum px value allowed (default: 10)
  * @returns {string | undefined} - The clamped value in px, or undefined if input is invalid
  */
-function clampDimension(value: string, maxPx = 15): string | undefined {
+function clampDimension(value: string, max = 15): string | undefined {
 	if (value == null) return undefined;
 	const num = extractNumber(value);
 	if (!num) return undefined;
 
 	const safeNum = parseFloat(num);
-	return `${Math.min(safeNum, maxPx)}px`;
+	return `${Math.min(safeNum, max)}px`;
 }
 
 export { clampDimension, getDimensionType, extractNumber, extractUnit, isValueDimension };

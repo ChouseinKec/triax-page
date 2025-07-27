@@ -2,39 +2,9 @@
 
 .DropdownReveal {
 	position: relative;
+	overflow: hidden;
 }
 
-.DropdownReveal_Button {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-
-	height: 100%;
-	width: 100%;
-	min-width: 30px;
-
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-
-	&::before {
-		content: '';
-		display: block;
-	}
-
-	@include inputMixins.icon-arrow;
-	@include inputMixins.components--button;
-
-	padding-right: var(--size-lg);
-	&[data-isdisabled='true'] {
-		pointer-events: none;
-		opacity: 0.5;
-
-		&::after {
-			opacity: 0;
-			margin: 0;
-			width: 0;
-		}
-	}
+.Toggle {
+	@include inputMixins.components--button-dropdown;
 }

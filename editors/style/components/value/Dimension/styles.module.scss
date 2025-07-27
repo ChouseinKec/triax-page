@@ -1,12 +1,25 @@
 .DimensionValue {
-	width: 100%;
-	display: grid;
-	min-height: 25px;
-
 	position: relative;
+	// max-width: 100px;
 
-	[class$='DropdownReveal'] {
+	> [class*='GenericInput'] {
+		width: 100%;
+		padding-right: 40%;
+	}
+
+	[class*='DropdownReveal'] {
+		width: 40%;
+		height: 80%;
 		position: absolute;
-		right: 0;
+		top: 10%;
+		right: 2%;
+
+		[class*='Toggle'] {
+			height:100%;
+			svg {
+				width: 10px;
+				height: 10px;
+			}
+		}
 	}
 }

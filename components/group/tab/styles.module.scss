@@ -1,0 +1,20 @@
+.TabGroup {
+	height: 95%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden auto;
+	// padding: var(--size-lg);
+
+	> [class*='RadioSelect'] {
+		width: 96%;
+		position: absolute;
+		bottom: 1%;
+		right: 2%;
+	}
+}
+
+.TabContent {
+	width: 100%;
+	position: relative;
+}

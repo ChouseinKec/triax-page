@@ -1,56 +1,31 @@
-.OptionsSelect_Search {
-	width: 100%;
+@use '../../../mixins//mixins.module.scss' as inputMixins;
 
-	border: none;
-	outline: none;
-	border-bottom: 1px solid var(--color-white--darker);
-	text-align: center;
-	padding: var(--size-xs);
-
-	&::placeholder {
-		font-size: var(--font-size-md);
-		color: var(--color-white--darker);
-	}
-}
-
-.OptionsSelect_Empty {
+.Empty {
 	width: 100%;
 	padding: var(--size-md);
-	
+
 	font-size: var(--font-size-lg);
 	color: var(--color-gray);
 	text-align: center;
 }
 
-.OptionsSelect_Categories {
+.Categories {
 	width: 100%;
-
-	display: grid;
-	grid-template-columns: var(--category-columns);
-	gap: var(--size-xl);
+	@include inputMixins.components--flex-horizontal($gap: var(--size-xl));
 }
 
-.OptionsSelect_Category {
-	width: 100%;
-
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-md);
+.Category {
+	@include inputMixins.components--flex-vertical($align: center);
 }
 
-.OptionsSelect_CategoryTitle {
+.CategoryTitle {
 	text-align: center;
 	font-size: var(--font-size-lg);
 	text-transform: capitalize;
-	color: var(--color-gray);
+	color: var(--color-white);
 	padding-top: var(--size-lg);
-
 }
 
-.OptionsSelect_CategoryItems {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
-	gap: var(--size-sm);
+.CategoryItems {
+	@include inputMixins.components--flex-vertical($align: center);
 }

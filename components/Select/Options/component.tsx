@@ -1,44 +1,49 @@
-import { memo, ReactElement, useState, useMemo, useCallback } from 'react';
+"use client";
+
+import React, { memo, ReactElement, useState, useMemo, useCallback } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from "./styles.module.scss";
 
 // Components
-import Option from '@/components/select/options/Option/component';
+import Option from "./option/component";
+import GenericInput from "../../input/generic/component";
 
 // Types
-import type { OptionsSelectProps } from './types';
-import type { OptionData } from '@/types/option';
+import type { OptionsSelectProps } from "./types";
 
-// Hooks
-import { useDebouncedValue } from '@/hooks/hooks';
+// Utilities
+import { devLog } from "@/utilities/dev";
 
 /**
  * OptionsSelect Component
  * 
- * A reusable component for displaying and selecting options from a list. It supports search functionality,
- * option grouping, and selection handling.
+ * A comprehensive options selection component with advanced filtering and grouping capabilities.
+ * Supports real-time search, category-based grouping.
+ * Optimized for performance with memoization and debounced search functionality.
  * 
- * @param {OptionsSelectProps} props - The component props.
- * @param {string} props.value - The currently selected value.
- * @param {Array<Option>} props.options - The list of options to display in the dropdown.
- * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected or cleared.
- * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
- * @param {boolean} [props.grouped=false] - Whether the options should be grouped by category.
- * @returns {ReactElement} - The rendered options component.
- *
-*/
-const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps): ReactElement | ReactElement[] => {
+ * @param {OptionsSelectProps} props - Component properties
+ * @param {string} props.value - Currently selected option value
+ * @param {OptionData[]} props.options - Array of selectable options with name/value/category
+ * @param {function} props.onChange - Callback fired when selection changes (value or empty string)
+ * @param {boolean} [props.searchable=false] - Enable search/filter functionality for large option sets
+ * @param {boolean} [props.groupable=false] - Group options by category for better organization
+ * @param {boolean} [props.prioritizeIcons=false] - Display icons prominently over text labels
+ * @param {string} [props.ariaRole="radio"] - ARIA role for individual options (radio/option/menuitem)
+ * @returns {ReactElement} Memoized OptionsSelect component
+ */
+const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) => {
     const {
         value,
         options,
         onChange,
         searchable = false,
-        grouped = false
+        groupable = false,
+        prioritizeIcons = false,
+        ariaRole = "radio",
     } = props;
 
-    const [getSearch, setSearch] = useState<string>('');
-    const debouncedSearch = useDebouncedValue(getSearch, 100);
+    const [search, setSearch] = useState<string>("");
 
     /**
      * Handles the selection of an option.
@@ -48,7 +53,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
     */
     const handleChange = useCallback((option: string): void => {
         if (value === option) {
-            onChange('');  // Clear selection if the same option is clicked
+            onChange("");  // Clear selection if the same option is clicked
             return;
         }
         onChange(option); // Otherwise, select the new option
@@ -76,24 +81,24 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
         if (!searchable) return options;
 
         return options.filter((option) =>
-            option.name && option.name.toLowerCase().includes(debouncedSearch.toString().toLowerCase())
+            option.name && option.name.toLowerCase().includes(search.toLowerCase())
         );
 
     },
-        [debouncedSearch, searchable, options]
+        [search, searchable, options]
     );
 
     /**
      * Groups the filtered options by category if grouping is enabled.
      * Memoized to optimize performance when filtered options change.
      * 
-     * @returns {Record<string, Option[]> | null} - The grouped options or null.
+     * @returns {Record<string, Option[]> | null} - The groupable options or null.
     */
     const groupedOptions = useMemo(() => {
-        return grouped
-            ? Object.groupBy(filteredOptions, ({ category }) => category || 'uncategorized')
+        return groupable
+            ? Object.groupBy(filteredOptions, ({ category }) => category || "uncategorized")
             : null;
-    }, [filteredOptions, grouped]
+    }, [filteredOptions, groupable]
     );
 
     /**
@@ -102,48 +107,58 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
     * 
     * @returns {ReactElement | null} - The rendered search input element.
     */
-    const renderSearchElement = useMemo((): ReactElement | null => {
+    const searchElement = useMemo((): ReactElement | null => {
         if (!searchable || options.length < 10) return null;
         return (
-            <input
-                className={CSS.OptionsSelect_Search}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder='SEARCH'
+
+            <GenericInput
+                value={search}
+                onChange={handleSearch}
+                placeholder="Search"
+                type="text"
+                style={{ width: "100%" }}
             />
         );
-    }, [handleSearch, searchable, options.length]
+    }, [handleSearch, searchable, options.length, search]
     );
 
+    if (!options || options.length === 0) {
+        devLog.warn("[DropdownSelect] No options provided");
+        return null;
+    }
+
+    if (value == null) {
+        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
+        return null;
+    }
+
     /**
-    * Renders the list of options or grouped options based on the filtered data.
+    * Renders the list of options or groupable options based on the filtered data.
     * 
     * @returns {ReactElement | ReactElement[]} - The rendered options list.
     */
-    const childrenElements = (() => {
+    const optionElements = (() => {
         // If the search result is null
         if (filteredOptions.length === 0) {
-            return <div className={CSS.OptionsSelect_Empty}>No options found.</div>;
+            return <div className={CSS.Empty}>No options found.</div>;
         }
 
-        // If options are grouped
+        // If options are groupable
         if (groupedOptions) {
             // Count the number of categories
             const categoryCount = Object.keys(groupedOptions).length;
-            // Calculate the number of columns based on the number of categories
-            const columns = Object.keys(groupedOptions).map(() => 'auto').join(' ');
-            // Create a style object for CSS variables
-            const style = { "--category-columns": columns } as React.CSSProperties;
+
             return (
-                <div className={CSS.OptionsSelect_Categories} style={style}>
+                <div className={CSS.Categories}>
                     {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
-                        <div key={category} className={CSS.OptionsSelect_Category}>
+                        <div key={category} className={CSS.Category}>
 
                             {categoryCount > 1 &&
-                                <span className={CSS.OptionsSelect_CategoryTitle}>{category}</span>
+                                <span className={CSS.CategoryTitle}>{category}</span>
                             }
 
-                            <div className={CSS.OptionsSelect_CategoryItems}>
-                                {categoryOptions?.map((option: OptionData, index) => {
+                            <div className={CSS.CategoryItems}>
+                                {categoryOptions?.map((option, index) => {
                                     return (
                                         <Option
                                             key={index}
@@ -151,6 +166,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
                                             value={option.value}
                                             isSelected={value.length > 0 && option.name === value}
                                             onChange={handleChange}
+                                            icon={option.icon}
+                                            prioritizeIcons={prioritizeIcons}
+                                            ariaRole={ariaRole}
+                                            category={category}
                                         />
                                     )
                                 }) ?? []}
@@ -161,16 +180,18 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
             );
         }
 
-
         // If options are basic
-        return (filteredOptions.map((option: OptionData, index) => {
+        // E.g for a simple list of options without grouping like radio buttons
+        return (filteredOptions.map((option, index) => {
             return (
                 <Option
+                    key={index}
                     name={option.name}
                     value={option.value}
                     icon={option.icon}
-                    key={index}
-                    isSelected={value === option.name}
+                    prioritizeIcons={prioritizeIcons}
+                    ariaRole={ariaRole}
+                    isSelected={value === option.name || value === option.value}
                     onChange={handleChange}
                 />
             )
@@ -179,11 +200,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps):
 
     return (
         <>
-            {renderSearchElement}
-            {childrenElements}
+            {searchElement}
+            {optionElements}
         </>
     )
 };
-
 
 export default memo(OptionsSelect);

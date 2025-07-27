@@ -1,18 +1,20 @@
 @use '../../../mixins/mixins.module.scss' as inputMixins;
 
 .RadioSelect {
-	height: max-content;
-	padding: var(--size-xs);
+	height: 25px;
+	position: relative;
+	@include inputMixins.components--container($radius: var(--size-sm));
+	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
+	overflow: hidden;
 
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-	gap: var(--size-sm);
+	[class*='FloatReveal'] {
+		display: flex;
+		flex-direction: row;
+		padding: var(--size-xs);
+	}
 
-	@include inputMixins.components--container;
-}
-
-.RadioSelect_Option{
-	text-align: center;
+	[class*='Option'] {
+		background: transparent;
+		width: 100%;
+	}
 }

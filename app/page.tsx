@@ -1,53 +1,35 @@
-"use client";
+'use client';
+// Registry
+import "@/blocks/registry/init";
+
 // Styles
-import pageStyles from "./page.module.css";
+import CSS from "./page.module.scss";
 
 // Components
-import StyleEditor from "@/editors/style/component";
+import BottomPanel from "@/layout/bottom/component";
+import BlocksPanel from "@/layout/blocks/component";
+import InspectorPanel from "@/layout/inspector/component";
+import ViewPanel from "@/layout/view/component";
+import TopBar from "@/layout/top/component";
+import LeftBar from "@/layout/left/component";
 
-// Hooks
-import { useBlockEditor } from "@/editors/block/hooks/state";
-
-// Stores
-import useBlockStore from "@/stores/block/store";
-
-import { test } from '@/utilities/style/parse';
+// Context
+import { LayoutProvider } from "@/context/layout/provider";
 
 export default function Home() {
-  const { setSelected } = useBlockStore();
-  const { generateBlockStyles } = useBlockEditor();
-  const selectedBlock = useBlockStore(state => state.selectedBlock);
-  test();
+
   return (
-    <main className={pageStyles.main}>
-      {/* Styles */}
-      <StyleEditor className='CSS' />
-
-      <div className={pageStyles.blocks}>
-
-        <div data-selected={selectedBlock === "1"} className='block-1' onClick={() => setSelected("1")}>
-          <p>Block 1A</p>
-          <p>Block 1B</p>
-          <p>Block 1C</p>
-          <style>{generateBlockStyles('1')}</style>
-        </div>
-
-        <div data-selected={selectedBlock === "2"} className='block-2' onClick={() => setSelected("2")}>
-          <p>Block 2A</p>
-          <p>Block 2B</p>
-          <p>Block 2C</p>
-          <style>{generateBlockStyles('2')}</style>
-        </div>
-
-
-      </div>
-
-    </main>
-
-
-
+    <LayoutProvider>
+      <main className={CSS.main}>
+        <TopBar />
+        <LeftBar />
+        <BlocksPanel />
+        <ViewPanel />
+        <InspectorPanel />
+        <BottomPanel />
+      </main>
+    </LayoutProvider>
   );
-
 
 }
 

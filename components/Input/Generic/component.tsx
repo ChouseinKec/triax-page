@@ -1,168 +1,198 @@
-import React, { useCallback, ReactElement, memo, useState, useRef } from 'react';
+"use client";
+
+import React, { useCallback, memo, useRef, useMemo, useReducer, useEffect, useState } from "react";
 
 // Styles
-import CSS from './styles.module.css';
+import CSS from "./styles.module.scss";
 
 // Components
-import FloatReveal from '@/components/reveal/float/component';
+import FloatReveal from "@/components/reveal/float/component";
 
 // Types
-import type { GenericInputProps } from './types';
+import type { GenericInputProps } from "./types";
+
+// Utilities
+import { devLog } from "@/utilities/dev";
+import { validationReducer } from "./reducer";
+
+// Hooks
+import { useSafeCallback } from "@/hooks/utility/useSafeCallback";
 
 /**
- * GenericInput Component - Base component for input fields with validation
- * 
- * @param {GenericInputProps} props - Component props
- * @returns {ReactElement} - Input element with validation
+ * GenericInput Component (Controlled, idiomatic React)
  */
-const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps): ReactElement => {
+const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => {
     const {
-        value = '',
+        // Core
+        value,
+        type = "text",
+        placeholder = `Enter ${type}`,
+        style = {},
+        // Validation
         min = -Infinity,
         max = Infinity,
-        type = 'text',
-        placeholder,
-        validate,
-        onChange = () => { },
+
+        // Accessibility
+        title = "Enter Value",
+
+        // Event
+        onChange,
         onFocus = () => { },
         onBlur = () => { },
-        prefix = '',
-        suffix = '',
+        onValidate,
     } = props;
 
+    // Internal state for editing
+    const [internalValue, setInternalValue] = useState(value ?? "");
     const inputRef = useRef<HTMLInputElement>(null);
-    const [isError, setIsError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [validationState, validationDispatch] = useReducer(validationReducer, { isError: false, message: "" });
 
-    /**
-     * Resets the input field to its initial value and clears any error state
-     * This is useful for resetting the input after validation or when the user cancels changes.
-     * @returns {void}
-     */
-    const handleReset = useCallback(() => {
-        const inputEl = inputRef.current;
-        if (!inputEl) return;
+    // Safe validator
+    const safeOnValidate = useSafeCallback(onValidate, () =>
+        validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } })
+    );
 
-        inputEl.value = value;
-        setIsError(false);
-        setErrorMessage('');
-    }, [value]);
+    // Sync internal value with prop when value changes (e.g. block switch)
+    useEffect(() => {
+        setInternalValue(value ?? "");
+    }, [value]
+    );
 
-    /**
-     * Commits the current input value after validation
-     * If the input is empty or invalid, it resets the input or calls onChange with an empty string.
-     * @param {boolean} resetInput - Whether to reset the input field after committing
-     * @returns {void}
-     */
-    const handleCommit = useCallback(() => {
-        const inputEl = inputRef.current;
-        const inputValue = inputEl?.value.trim() || '';
 
-        // Validate the input value if a validation function is provided
-        // If validation fails, set error state and reset input if required
-        if (validate) {
-            const validationResult = validate(inputValue);
-            if (!validationResult.status) {
-                setIsError(true);
-                setErrorMessage(validationResult.message);
-                onChange('');
-                return;
-            }
+    // Data attributes for styling
+    const dataAttributes = useMemo(() => ({
+        "title": title,
+        "data-is-error": validationState.isError,
+        "data-type": type,
+    }), [type, validationState, title]
+    );
+
+    // Input attributes
+    const inputAttributes = useMemo(() => {
+        const isNumberType = type === "number";
+        const isTextType = type === "text";
+        const hasValidMin = min > -Infinity;
+        const hasValidMax = max < Infinity;
+
+        return {
+            min: isNumberType && hasValidMin ? min : undefined,
+            max: isNumberType && hasValidMax ? max : undefined,
+            minLength: isTextType && hasValidMin ? min : undefined,
+            maxLength: isTextType && hasValidMax ? max : undefined,
+            placeholder
+        };
+    }, [type, min, max, placeholder]
+    );
+
+    // Reset input to prop value and clear error
+    const handleReset = useCallback((): void => {
+        setInternalValue(value ?? "");
+        validationDispatch({ type: "CLEAR" });
+    }, [value]
+    );
+
+    // Commit value to parent (on blur/enter)
+    const handleCommit = useCallback((): void => {
+        const inputValue = internalValue.trim();
+        const validationResult = safeOnValidate(inputValue);
+
+        // If input is empty, clear the value
+        if (inputValue === "") return onChange("");
+
+        if (validationResult === undefined && onValidate) return;
+
+        if (validationResult && !validationResult.status) {
+            validationDispatch({ type: "VALIDATION_FAILURE", payload: { message: validationResult.message } });
+            onChange("");
+            devLog.warn(`[GenericInput] Validation failed: ${validationResult.message}`);
+            return;
+        }
+
+        if (validationResult?.status) {
+            validationDispatch({ type: "VALIDATION_SUCCESS" });
         }
 
         if (inputValue !== value) {
             onChange(inputValue);
         }
-    }, [onChange, validate, value]
+    }, [internalValue, value, onChange, onValidate, safeOnValidate]
     );
 
-    /**
-     * Handles key down events for the input field
-     * - On 'Enter', commits the current value
-     * - On 'Escape', blurs the input field
-     * @param {React.KeyboardEvent} e - The keyboard event
-     * @return {void}
-     */
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleCommit();
-        } else if (e.key === 'Escape') {
-            inputRef.current?.blur();
+    // Keyboard events
+    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
+        switch (event.key) {
+            case "Enter":
+                event.preventDefault();
+                handleCommit();
+                break;
+            case "Escape":
+                event.preventDefault();
+                handleReset();
+                inputRef.current?.blur();
+                break;
+            default:
+                break;
         }
-    }, [handleCommit]
+    }, [handleCommit, handleReset]
     );
 
-    /**
-     * Handles input changes and validates the current value
-     * If validation fails, sets an error state and message.
-     * @param {React.ChangeEvent} e - The change event
-     * @return {void}
-    */
-    const handleChange = useCallback(() => {
-        if (!validate) return;
-        const inputValue = inputRef.current?.value || '';
-        const validationResult = validate(inputValue);
-        setIsError(!validationResult.status);
-        setErrorMessage(validationResult.message);
-    }, [validate]
+    // Real-time validation on change
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+        const newValue = e.target.value;
+        setInternalValue(newValue);
+
+        const validationResult = safeOnValidate(newValue);
+        if (validationResult === undefined) return;
+
+        if (validationResult.status) {
+            validationDispatch({ type: "VALIDATION_SUCCESS" });
+        } else {
+            validationDispatch({ type: "VALIDATION_FAILURE", payload: { message: validationResult.message } });
+        }
+    }, [safeOnValidate]
     );
 
-    /**
-     * Handles blur events for the input field
-     * Resets the error state and commits the current value.
-     * @return {void}
-     */
-    const handleBlur = useCallback(() => {
+    // Blur handler: commit and reset
+    const handleBlur = useCallback((): void => {
         onBlur();
-        handleReset();
-    }, [handleReset]
+        handleCommit();
+    }, [onBlur, handleCommit]
     );
 
+    // Guard Clause
+    if (value == null) {
+        devLog.warn("[GenericInput] Invalid value provided, expected a string");
+        return null;
+    }
 
     return (
-        <div className={CSS.GenericInput}>
-
-            {prefix &&
-                <span className={CSS.Prefix}>
-                    {prefix}
-                </span>
-            }
-
+        <>
             <input
-                type={type}
-                defaultValue={value.toString()}
-                className={CSS.Input}
-                placeholder={placeholder || `Enter ${type}`}
                 ref={inputRef}
-
-                min={type === 'number' && min > -Infinity ? min : undefined}
-                max={type === 'number' && max < Infinity ? max : undefined}
-                minLength={type === 'text' && min > -Infinity ? min : undefined}
-                maxLength={type === 'text' && max < Infinity ? max : undefined}
-
-                data-iserror={isError}
-
+                type={type}
+                value={internalValue}
+                className={CSS.GenericInput}
+                {...inputAttributes}
+                {...dataAttributes}
                 onBlur={handleBlur}
                 onFocus={onFocus}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                style={style}
             />
 
-            {suffix &&
-                <span className={CSS.Suffix}>
-                    {suffix}
+            {/* Error message tooltip - only shown when there's an error */}
+            <FloatReveal
+                position="bottom"
+                targetRef={inputRef}
+                isOpen={validationState.isError}
+            >
+                <span className={CSS.ErrorMessage} role="alert">
+                    <span className={CSS.ErrorIcon} aria-hidden="true">✖</span>
+                    {validationState.message}
                 </span>
-            }
-
-
-            {/* Render error message if input is in error state */}
-            <FloatReveal position='bottom' targetRef={inputRef} isOpen={isError}>
-                <p className={CSS.ErrorMessage}><i className={CSS.ErrorIcon}>✖</i>{errorMessage}</p>
             </FloatReveal>
-
-        </div>
-
+        </>
     );
 };
 

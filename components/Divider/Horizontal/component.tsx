@@ -1,14 +1,52 @@
-import React, { ReactElement } from 'react';
-// Style
-import CSS from '@/components/Divider/Horizontal/styles.module.css';
+"use client";
+
+import React, { useMemo } from "react";
+
+// Styles
+import CSS from "./styles.module.scss";
 
 // Types
-import { HorizontalDividerProps } from '@/components/divider/horizontal/types';
+import { HorizontalDividerProps } from "./types";
 
+/**
+ * HorizontalDivider Component
+ * 
+ * A semantic horizontal divider/separator element with optional title.
+ * Uses CSS custom properties for title display and provides proper accessibility.
+ * Rendered as a semantic separator with appropriate ARIA attributes.
+ * 
+ * @param {HorizontalDividerProps} props - Component properties
+ * @param {string} [props.title] - Optional title text displayed on the divider
+ * @returns {ReactNode} The rendered HorizontalDivider component
+ */
+const HorizontalDivider: React.FC<HorizontalDividerProps> = (props: HorizontalDividerProps) => {
+    const { title } = props;
 
-const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ type = 'straight' }: HorizontalDividerProps): ReactElement => {
+    /**
+     * Provides proper ARIA labeling for screen readers
+     */
+    const accessibilityProps = useMemo(() => ({
+        role: "separator",
+        "aria-label": title ? `Section separator: ${title}` : "Section separator",
+        "aria-orientation": "horizontal" as const
+    }), [title]
+    );
+
+    /**
+     * Style and data attributes.
+    */
+    const customProps = useMemo(() => ({
+        style: { "--divider-title": title ? `"${title}"` : '""' } as React.CSSProperties,
+        "data-title": title,
+    }), [title]
+    );
+
     return (
-        <div className={CSS.HorizontalDivider} data-type={type} />
+        <div
+            className={CSS.HorizontalDivider}
+            {...customProps}
+            {...accessibilityProps}
+        />
     );
 };
 

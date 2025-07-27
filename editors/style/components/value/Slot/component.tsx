@@ -1,23 +1,22 @@
-import React, { useMemo } from 'react';
+"use client";
 
-// Styles
-import CSS from './styles.module.css';
+import React, { useMemo } from "react";
 
 // Components
-import DimensionValue from '../dimension/component';
-import FunctionValue from '../function/component';
-import KeywordValue from '../keyword/component';
-import NumberValue from '../number/component';
-import IntegerValue from '../integer/component';
-import LinkValue from '../link/component';
-import ColorSelect from '@/components/select/color/component';
-import Error from '../error/component';
+import DimensionValue from "../dimension/component";
+import FunctionValue from "../function/component";
+import KeywordValue from "../keyword/component";
+import NumberValue from "../number/component";
+import LinkValue from "../link/component";
+import ColorValue from "../color/component";
+import Error from "../error/component";
 
 // Types
-import type { SlotProps } from './types';
+import type { SlotProps } from "./types";
 
 // Utilities
-import { getValueType } from '@/utilities/style/value';
+import { getValueType } from "@/utilities/style/value";
+import { devLog } from "@/utilities/dev";
 
 /**
  * Slot Component
@@ -27,7 +26,20 @@ import { getValueType } from '@/utilities/style/value';
  * @param props - SlotProps containing value, options, and onChange callback
  * @returns ReactElement - The rendered input for the slot
  */
-const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
+const Slot: React.FC<SlotProps> = (props: SlotProps) => {
+    const { value, options, onChange } = props;
+
+    // Guard Clause
+    if (!options || options.length === 0) {
+        devLog.error("[Slot] No options provided");
+        return null;
+    }
+
+    if (value == null) {
+        devLog.error("[Slot] Invalid value provided, expected a string");
+        return null;
+    }
+
     /**
      * Compute all unique types available in the options.
      */
@@ -36,19 +48,21 @@ const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
     }, [options]
     );
 
-
     /**
      * Determine the default type to use when value is empty.
-     * Priority: dimension > keyword > function > color > first available type.
+     * Priority: dimension > keyword > color > function  first available type.
+     * If no types are available, fallback to the first option"s type.
+     * Because the value can be empty, we need to determine a default type based on available options.
      */
     const defaultType = useMemo(() => {
-        if (allTypes.has('dimension')) return 'dimension';
-        if (allTypes.has('keyword')) return 'keyword';
-        if (allTypes.has('function')) return 'function';
-        if (allTypes.has('color')) return 'color';
+        if (allTypes.has("dimension")) return "dimension";
+        if (allTypes.has("keyword")) return "keyword";
+        if (allTypes.has("color")) return "color";
+        if (allTypes.has("function")) return "function";
         return options[0]?.type;
     }, [allTypes, options]
     );
+
 
     /**
      * Determine the value type for this slot.
@@ -56,36 +70,33 @@ const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
      */
     const valueType = value.length === 0 ? defaultType : getValueType(value);
 
-    /**
-     * Render the appropriate input component based on the value type.
-     */
-    const slotInput = useMemo(() => {
+    const slot = useMemo(() => {
         switch (valueType) {
-            case 'function':
+            case "function":
                 return (
                     <FunctionValue value={value} options={options} onChange={onChange} />
                 );
-            case 'keyword':
+            case "keyword":
                 return (
                     <KeywordValue value={value} options={options} onChange={onChange} />
                 );
-            case 'dimension':
+            case "dimension":
                 return (
                     <DimensionValue value={value} options={options} onChange={onChange} />
                 );
-            case 'integer':
+            case "integer":
                 return (
-                    <IntegerValue value={value} options={options} onChange={onChange} />
+                    <NumberValue value={value} options={options} onChange={onChange} forceInteger={true} />
                 );
-            case 'number':
+            case "number":
                 return (
                     <NumberValue value={value} options={options} onChange={onChange} />
                 );
-            case 'color':
+            case "color":
                 return (
-                    <ColorSelect value={value} onChange={onChange} />
+                    <ColorValue value={value} onChange={onChange} />
                 );
-            case 'link':
+            case "link":
                 return (
                     <LinkValue value={value} onChange={onChange} />
                 );
@@ -94,12 +105,11 @@ const Slot: React.FC<SlotProps> = ({ value, options, onChange }) => {
                     <Error message={`[Slot] Unknown value type: ${String(valueType)}`} />
                 );
         }
-    }, [valueType, value, onChange, options]);
+    }, [valueType, value, onChange, options]
+    );
 
     return (
-        <div className={CSS.Slot}>
-            {slotInput}
-        </div>
+        slot
     );
 };
 

@@ -1,33 +1,15 @@
-import { InputOptionData } from 'types/option';
+import type { InputOptionData } from 'types/option';
 
-export type NumberValueProps = {
-	/**
-	 * The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)".
-	 */
-	value?: string;
+export interface NumberValueProps {
+	/** The current value of the length input, e.g., "10px", "auto", "repeat(1, 20px)". */
+	value: string;
 
-	/**
-	 * The minimum numeric value allowed, default is -Infinity.
-	 */
-	minValue?: number;
+	/** Array of options for the unit dropdown, each option should have a value and category. */
+	options: InputOptionData[];
 
-	/**
-	 * The maximum numeric value allowed, default is Infinity.
-	 */
-	maxValue?: number;
+	/** Callback function to handle value changes. */
+	onChange: (value: string) => void;
 
-	/**
-	 * Array of options for the unit dropdown, each option should have a value and category.
-	 */
-	options?: InputOptionData[];
-
-	/**
-	 * If true, empty inputs are replaced with defaults, default is false.
-	 */
-	isStrict?: boolean;
-
-	/**
-	 * Callback function to handle value changes.
-	 */
-	onChange?: (value: string) => void;
-};
+	/** Indicates if the value is an integer. */
+	forceInteger?: boolean;
+}

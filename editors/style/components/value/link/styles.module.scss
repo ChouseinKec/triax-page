@@ -1,8 +1,8 @@
-.NumberValue {
+.LinkValue {
 	width: 100%;
 	display: grid;
 	min-height: 25px;
-
+	min-width: 100px;
 	position: relative;
 
 	[class$='DropdownReveal'] {

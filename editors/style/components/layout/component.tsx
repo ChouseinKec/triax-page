@@ -1,19 +1,22 @@
-import React, { ReactElement } from 'react';
+"use client";
+
+import React, { ReactElement, useMemo } from "react";
 
 // Components
-import Category from '@/editors/style/components/category/component';
-import AccordionGroup from '@/components/group/accordion/component';
+import Category from "@/editors/style/components/category/component";
+import TabGroup from "@/components/group/tab/component";
 
 // Types 
-import { LayoutProps } from '@/editors/style/components/layout/types';
+import { LayoutProps } from "@/editors/style/components/layout/types";
+import type { TabGroupItemsProps } from "@/components/group/tab/types";
 
 // Hooks
-import { useDisplayLayout } from '@/editors/style/components/layout/hooks/display';
-import { useSizeLayout } from '@/editors/style/components/layout/hooks/size';
-import { usePositionLayout } from '@/editors/style/components/layout/hooks/position';
-import { useFontLayout } from '@/editors/style/components/layout/hooks/font';
-import { useBackgroundLayout } from '@/editors/style/components/layout/hooks/background';
-import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect';
+import { useDisplayLayout } from "@/editors/style/components/layout/hooks/display";
+import { useSizeLayout } from "@/editors/style/components/layout/hooks/size";
+import { useFontLayout } from "@/editors/style/components/layout/hooks/font";
+import { useBorderLayout } from "@/editors/style/components/layout/hooks/border";
+import { useEffectLayout } from "@/editors/style/components/layout/hooks/effect";
+import { useBackgroundLayout } from "@/editors/style/components/layout/hooks/background";
 
 /**
  * Layout component renders various style categories (e.g., display, size, position, font, border) 
@@ -24,27 +27,30 @@ import { useEffectLayout } from '@/editors/style/components/layout/hooks/effect'
 const Layout: React.FC = ({ }): ReactElement => {
     const displayLayout = useDisplayLayout();
     const sizeLayout = useSizeLayout();
-    const positionLayout = usePositionLayout();
     const fontLayout = useFontLayout();
     const backgroundLayout = useBackgroundLayout();
-    // const effectLayout = useEffectLayout();
+    const borderLayout = useBorderLayout();
+    const effectLayout = useEffectLayout();
 
     const layouts: LayoutProps[] = [
         displayLayout,
         sizeLayout,
-        positionLayout,
         fontLayout,
         backgroundLayout,
-        // effectLayout,
+        borderLayout,
+        effectLayout,
     ];
 
-    const AccordionItems = layouts.map((category) => ({
-        title: <span>{category.label}</span>,
-        content: <Category key={category.label} groups={category.groups} />,
-    }));
+    const TabItems: TabGroupItemsProps[] = useMemo(() =>
+        layouts.map((category, idx) => ({
+            label: <>{category.label}</>,
+            title: category.title,
+            content: <Category key={idx} groups={category.groups} />,
+        }))
+        , [layouts]);
 
     return (
-        <AccordionGroup items={AccordionItems} />
+        <TabGroup items={TabItems} />
     );
 
 };

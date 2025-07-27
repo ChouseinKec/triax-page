@@ -1,40 +1,19 @@
-// Constants
-import { STYLE_PROPERTIES } from '@/editors/style/constants/styles';
+import type { BlockInstance, BlockStyleData, BlockType, BlockAttributeValue } from '@/types/block/block';
+import type { DeviceName } from '@/types/page/device';
+import type { PseudoName } from '@/types/page/pseudo';
+import type { OrientationName } from '@/types/page/orientation';
 
-/**
- * Represents the full style configuration for a block.
- *
- * Styles are nested by device name, orientation, and pseudo state.
- *
- * @param {string} deviceName - The name of the device (e.g., 'desktop', 'tablet').
- * @param {string} orientationName - The orientation (e.g., 'portrait', 'landscape').
- * @param {string} pseudoName - The pseudo selector (e.g., 'hover', 'active').
- * @param {STYLE_PROPERTIES} key - A style property key (e.g., 'margin', 'color').
- */
-export type STYLE = {
-	[deviceName: string]: {
-		[orientationName: string]: {
-			[pseudoName: string]: {
-				[key in STYLE_PROPERTIES]?: string;
-			};
-		};
-	};
-};
+export interface BlockStoreProps {
+	selectedBlockID: string | null;
+	allBlocks: Record<string, BlockInstance>;
 
-export type BLOCK = {
-	id: string;
-	styles: STYLE;
-};
+	selectBlock: (blockID: string | null) => void;
+	getBlock: (blockID: string) => BlockInstance | undefined;
+	addBlock: (type: BlockType, parentID?: string) => void;
+	deleteBlock: (blockID: string) => void;
 
-export interface BLOCK_EDITOR_STORE {
-	selectedBlock: string | null;
-	blocks: Record<string, BLOCK>;
+	setBlockStyles: (blockID: string, style: BlockStyleData) => void;
+	setBlockStyle: (blockID: string, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, property: string, value: BlockAttributeValue) => void;
 
-	getSelected: () => string | null;
-	setSelected: (id: string) => void;
-	getBlock: (id?: string) => BLOCK | null;
-
-	getBlockStyles: (id?: string) => STYLE | null;
-	setBlockStyles: (style: STYLE, id?: string) => void;
-	setBlockStyle: (device: string, orientation: string, pseudo: string, property: string, value: string, id: string) => void;
+	setBlockAttribute: (blockID: string, attribute: string, value: BlockAttributeValue) => void;
 }

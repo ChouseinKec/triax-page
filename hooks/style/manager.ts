@@ -1,34 +1,49 @@
 import { useCallback } from 'react';
+// Types
+import type { BlockStyleData } from '@/types/block/block';
 
 // Constants
-import { CSSProperties } from '@/types/style/property';
-import { CSSShorthandsDefs } from '@/constants/style/style';
+import { StylePropertyKeys } from '@/types/style/property';
+import { StylePropertyShorthandDefinitions as PropertyShorthands } from '@/constants/style/property';
 
 // Utilities
 import { devLog } from '@/utilities/dev';
+import { isPropertyValid } from '@/utilities/style/property';
+import { isValueValid } from '@/utilities/style/value';
+import { getStyleWithFallback } from '@/utilities/style/cascade';
 
 // Stores
-import useDeviceStore from '@/stores/device/store';
+import usePageStore from '@/stores/page/store';
 import useBlockStore from '@/stores/block/store';
-import useOrientationStore from '@/stores/orientation/store';
-import usePseudoStore from '@/stores/pseudo/store';
 
-interface StyleManagerProps {
-	getStyle: (property: CSSProperties) => string;
-	setStyle: (property: CSSProperties, value: string) => void;
-	copyStyle: (property: CSSProperties) => void;
-	pasteStyle: (property: CSSProperties) => void;
-	resetStyle: (property: CSSProperties) => void;
+interface StyleManager {
+	getStyle: (property: StylePropertyKeys) => string;
+	setStyle: (property: StylePropertyKeys, value: string) => void;
+	copyStyle: (property: StylePropertyKeys) => void;
+	pasteStyle: (property: StylePropertyKeys) => void;
+	resetStyle: (property: StylePropertyKeys) => void;
+
 }
 
-export const useStyleManager = (): StyleManagerProps => {
+export const useStyleManager = (): StyleManager => {
 	const setBlockStyle = useBlockStore((state) => state.setBlockStyle);
-	const getBlockStyles = useBlockStore((state) => state.getBlockStyles);
+	const selectedBlockID = useBlockStore((state) => state.selectedBlockID);
+	const blockStyles = useBlockStore((state) => (selectedBlockID ? state.allBlocks[selectedBlockID]?.styles : undefined));
+
+	const device = usePageStore((state) => state.currentDevice.value);
+	const devices = usePageStore((state) => state.allDevices);
+
+	const orientation = usePageStore((state) => state.currentOrientation.value);
+	const orientations = usePageStore((state) => state.allOrientations);
+
+	const pseudos = usePageStore((state) => state.allPseudos);
+	const pseudo = usePageStore((state) => state.currentPseudo.value);
 
 	/**
 	 * Gets a style property value with CSS cascade fallback logic
-	 *
-	 * @param {CSSProperties} property - The style property to lookup (e.g. 'color', 'fontSize')
+	 * Internal function that handles the actual lookup logic.
+	 * Should not be used directly outside this hook as it does not validate properties.
+	 * @param {StylePropertyKeys} property - The style property to lookup (e.g. 'color', 'fontSize')
 	 * @returns {string} The resolved value or empty string if not found
 	 *
 	 * @example
@@ -51,44 +66,24 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * // With responsive fallback
 	 * <div style={{ color: _getStyle('textColor') || 'black' }}>
 	 */
-	const _getStyle = useCallback((property: CSSProperties): string => {
-		const selectedBlock = useBlockStore.getState().selectedBlock;
-		const device = useDeviceStore.getState().currentDevice.name;
-		const orientation = useOrientationStore.getState().currentOrientation.name;
-		const pseudo = usePseudoStore.getState().currentPseudo.name;
+	const _getStyle = useCallback(
+		(property: StylePropertyKeys): string => {
+			const defaultPseudo = pseudos[0].value;
+			const defaultOrientation = orientations[0].value;
+			const defaultDevice = devices[0].value;
 
-		const defaultPseudo = 'default';
-		const defaultOrientation = 'default';
-		const defaultDevice = 'default';
+			if (!blockStyles) return '';
 
-		if (!selectedBlock) return '';
-
-		const blockStyles = getBlockStyles(selectedBlock);
-		if (!blockStyles) return '';
-
-		return (
-			// 1. Exact match
-			blockStyles[device]?.[orientation]?.[pseudo]?.[property] ??
-			// 2. Same context, default pseudo
-			blockStyles[device]?.[orientation]?.[defaultPseudo]?.[property] ??
-			// 3. Default orientation
-			blockStyles[device]?.[defaultOrientation]?.[pseudo]?.[property] ??
-			blockStyles[device]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-			// 4. Default device
-			blockStyles[defaultDevice]?.[orientation]?.[pseudo]?.[property] ??
-			blockStyles[defaultDevice]?.[orientation]?.[defaultPseudo]?.[property] ??
-			blockStyles[defaultDevice]?.[defaultOrientation]?.[pseudo]?.[property] ??
-			// 5. Global fallback
-			blockStyles[defaultDevice]?.[defaultOrientation]?.[defaultPseudo]?.[property] ??
-			// 6. Empty string if nothing found
-			''
-		);
-	}, []);
+			return getStyleWithFallback(blockStyles, property, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
+		},
+		[blockStyles, device, orientation, pseudo]
+	);
 
 	/**
 	 * Sets a style property value for the current device/orientation/pseudo context
-	 *
-	 * @param {CSSProperties} property - The style property to set (e.g. 'color', 'fontSize')
+	 * Internal function that handles the actual setting logic.
+	 * Should not be used directly outside this hook as it does not validate properties or values.
+	 * @param {StylePropertyKeys} property - The style property to set (e.g. 'color', 'fontSize')
 	 * @param {string} value - The value to set for the property
 	 *
 	 * @example
@@ -96,77 +91,78 @@ export const useStyleManager = (): StyleManagerProps => {
 	 * _setStyle('backgroundColor', '#ff0000');
 	 */
 	const _setStyle = useCallback(
-		(property: CSSProperties, value: string): void => {
-			const selectedBlock = useBlockStore.getState().selectedBlock;
-			const device = useDeviceStore.getState().currentDevice.name;
-			const orientation = useOrientationStore.getState().currentOrientation.name;
-			const pseudo = usePseudoStore.getState().currentPseudo.name;
+		(property: StylePropertyKeys, value: string): void => {
+			if (!selectedBlockID) return;
 
-			if (!selectedBlock) return;
-
-			setBlockStyle(device, orientation, pseudo, property, value, selectedBlock);
+			setBlockStyle(selectedBlockID, device, orientation, pseudo, property, value);
 		},
-		[setBlockStyle]
+		[setBlockStyle, selectedBlockID, device, orientation, pseudo]
 	);
 
 	/**
 	 * Sets a single style property value for current _device/_pseudo
-	 * @param {CSSProperties} property - The style property to set
+	 * @param {StylePropertyKeys} property - The style property to set
 	 * @param {string} value - The value to set for the property
 	 * @throws {Error} If property conversion fails or value is invalid
 	 */
-	const setStyle = useCallback<StyleManagerProps['setStyle']>((property: CSSProperties, value: string): void => {
-		// if (!isPropertyValid(property)) return devLog.error(`Error setting style property: ${property} is not valid`);
+	const setStyle = useCallback<StyleManager['setStyle']>(
+		(property, value) => {
+			if (!isPropertyValid(property)) return devLog.error(`Error setting style property: ${property} is not valid`);
 
-		// If value is not empty and value is not valid
-		// if (value !== '' && !isValueValid(property, value)) return devLog.error(`Error setting style value: ${value} is not valid`);
+			// If value is not empty and value is not valid
+			if (value !== '' && !isValueValid(property, value)) return devLog.error(`Error setting style value: ${value} is not valid`);
 
-		// If the property is a CSS shorthand (e.g. 'margin', 'padding'), set all its longhand properties
-		if (CSSShorthandsDefs[property]) {
-			CSSShorthandsDefs[property].forEach((longhand) => {
-				_setStyle(longhand, value);
-			});
-		} else {
-			// Otherwise, set the single property directly
-			_setStyle(property, value);
-		}
-	}, []);
+			// If the property is a CSS shorthand (e.g. 'margin', 'padding'), set all its longhand properties
+			if (PropertyShorthands[property]) {
+				PropertyShorthands[property].forEach((longhand) => {
+					_setStyle(longhand, value);
+				});
+			} else {
+				// Otherwise, set the single property directly
+				_setStyle(property, value);
+			}
+		},
+		[_setStyle]
+	);
 
 	/**
 	 * Gets a style with CSS-like cascading behavior
-	 * @param {CSSProperties} property - The style property to get
+	 * @param {StylePropertyKeys} property - The style property to get
 	 * @returns {string} The current property value or empty string if not found
 	 * @throws {Error} If property conversion fails
 	 */
-	const getStyle = useCallback<StyleManagerProps['getStyle']>((property: CSSProperties): string => {
-		// if (!isPropertyValid(property)) {
-		//     devLog.error(`Error getting single-style property: ${property} is not valid`);
-		//     return ''
-		// };
-
-		if (CSSShorthandsDefs[property]) {
-			const values = CSSShorthandsDefs[property].map((longhand) => _getStyle(longhand as CSSProperties));
-            
-            const uniqueValues = Array.from(new Set(values.filter(Boolean)));
-			if (uniqueValues.length === 1) {
-				return uniqueValues[0]; // All sides are the same
-			} else if (uniqueValues.length === 0) {
-				return ''; // All sides are empty
-			} else {
-				return values[0]; // Sides have different values
+	const getStyle = useCallback<StyleManager['getStyle']>(
+		(property) => {
+			if (!isPropertyValid(property)) {
+				devLog.error(`Error getting single-style property: ${property} is not valid`);
+				return '';
 			}
-		}
 
-		return _getStyle(property);
-	}, []);
+			if (PropertyShorthands[property]) {
+				const values = PropertyShorthands[property].map((longhand) => _getStyle(longhand as StylePropertyKeys));
+
+				const uniqueValues = Array.from(new Set(values.filter(Boolean)));
+				if (uniqueValues.length === 1) {
+					return uniqueValues[0]; // All sides are the same
+				} else if (uniqueValues.length === 0) {
+					return ''; // All sides are empty
+				} else {
+					return values[0]; // Sides have different values
+				}
+			}
+
+			return _getStyle(property);
+		},
+		[_getStyle]
+	);
 
 	/**
 	 * Copies a style property value to clipboard
-	 * @param {CSSProperties} property - The style property to copy
+	 * @param {StylePropertyKeys} property - The style property to copy
 	 * @returns {string} The copied value or empty string if not found
 	 */
-	const copyStyle = useCallback(
-		(property: CSSProperties): void => {
+	const copyStyle = useCallback<StyleManager['copyStyle']>(
+		(property) => {
 			const value = getStyle(property);
 
 			// If property is not valid
@@ -190,25 +186,25 @@ export const useStyleManager = (): StyleManagerProps => {
 
 	/**
 	 * Pastes a style property value from clipboard
-	 * @param {CSSProperties} property - The style property to paste
+	 * @param {StylePropertyKeys} property - The style property to paste
 	 * @returns {void}
 	 */
-	const pasteStyle = useCallback(
-		(property: CSSProperties): void => {
+	const pasteStyle = useCallback<StyleManager['pasteStyle']>(
+		(property) => {
 			navigator.clipboard
 				.readText()
 				.then((text) => {
-					// // If property is not valid
-					// if (!isPropertyValid(property)) {
-					//     devLog.error(`Error pasting style: ${property} is not valid`);
-					//     return;
-					// }
+					// If property is not valid
+					if (!isPropertyValid(property)) {
+						devLog.error(`Error pasting style: ${property} is not valid`);
+						return;
+					}
 
 					// If value is not valid
-					// if (text !== '' && !isValueValid(property, text)) {
-					//     devLog.error(`Error pasting style: ${text} is not valid for ${property}`);
-					//     return;
-					// }
+					if (text !== '' && !isValueValid(property, text)) {
+						devLog.error(`Error pasting style: ${text} is not valid for ${property}`);
+						return;
+					}
 
 					_setStyle(property, text);
 					devLog.info(`Pasted style ${property}: ${text}`);
@@ -222,22 +218,24 @@ export const useStyleManager = (): StyleManagerProps => {
 
 	/**
 	 * Resets a style property value to empty string
-	 * @param {CSSProperties} property - The style property to reset
+	 * @param {StylePropertyKeys} property - The style property to reset
 	 * @returns {void}
 	 */
-	const resetStyle = useCallback(
-		(property: CSSProperties): void => {
+	const resetStyle = useCallback<StyleManager['resetStyle']>(
+		(property) => {
 			// If property is not valid
-			// if (!isPropertyValid(property)) {
-			//     devLog.error(`Error resetting style: ${property} is not valid`);
-			//     return;
-			// }
+			if (!isPropertyValid(property)) {
+				devLog.error(`Error resetting style: ${property} is not valid`);
+				return;
+			}
 
 			// Reset the style to empty string
 			_setStyle(property, '');
 		},
 		[_setStyle]
 	);
+
+
 
 	// Return the style manager methods
 	return {

@@ -3,14 +3,11 @@
 .Error {
 	@include inputMixins.components--button;
 
+	gap: var(--size-sm);
+
 	color: var(--color-white);
 	background: var(--color-error);
-	filter: brightness(1.4);
-
-	&:hover {
-		background: var(--color-error--dark);
-		filter: brightness(1);
-	}
+	
 }
 
 .ErrorMessage {

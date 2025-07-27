@@ -1,0 +1,73 @@
+@use '../../../../mixins//mixins.module.scss' as inputMixins;
+
+.BlockList {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: var(--size-md);
+
+	overflow: hidden auto;
+}
+
+.Category {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-sm);
+
+	padding-top: var(--size-lg);
+}
+
+.CategoryTitle {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-sm);
+
+	padding-bottom: var(--size-md);
+
+	text-transform: capitalize;
+	font-size: var(--font-size-md);
+	color: var(--color-gray);
+
+	border-bottom: 1px solid var(--theme-color-primary-tint);
+}
+
+.Blocks {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+
+	gap: var(--size-md);
+	padding-top: var(--size-sm);
+}
+
+.BlockContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--size-sm);
+}
+
+.BlockButton {
+	@include inputMixins.components--button;
+
+	height: auto;
+	width: 100%;
+	aspect-ratio: 1/1;
+
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+
+		width: 85%;
+		height: 85%;
+	}
+}
+
+.BlockTitle {
+	text-transform: capitalize;
+	font-size: var(--font-size-sm);
+	color: var(--color-white);
+}
