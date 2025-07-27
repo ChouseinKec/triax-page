@@ -121,3 +121,16 @@ Converts an array of CSS value strings to an array of tokens. Uses getValueToken
 - **Example:**
   - `getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']`
 
+
+### isValueValid
+Validates if a given value is valid for a specific CSS property. Uses the property's `syntaxNormalized` to check if the value matches any of the defined syntaxes.
+
+- **Parameters:**
+  - `property: StylePropertyKeys` — The CSS property name (e.g., 'margin', 'padding').
+  - `value: string` — The CSS value string to validate (e.g., '10px auto').
+- **Returns:** `boolean` — True if the value is valid for the property, false otherwise.
+- **Example:**
+  - `isValueValid('margin', '10px auto') → true`
+  - `isValueValid('padding', '10px') → true`
+  - `isValueValid('color', '#fff') → true`
+  - `isValueValid('display', 'flex') → true`

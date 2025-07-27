@@ -109,7 +109,7 @@ const PanelGroup: React.FC<PanelGroupProps> = (props: PanelGroupProps) => {
                     width: initialSize.width,
                     height: initialSize.height,
                 },
-        [hydrated, position, size]
+        [hydrated, position, size, initialPosition, initialSize]
     );
 
     /**

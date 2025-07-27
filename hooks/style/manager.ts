@@ -23,7 +23,6 @@ interface StyleManager {
 	pasteStyle: (property: StylePropertyKeys) => void;
 	resetStyle: (property: StylePropertyKeys) => void;
 
-	generateCSS: (blockID: string, styles: BlockStyleData) => string | undefined;
 }
 
 export const useStyleManager = (): StyleManager => {
@@ -236,151 +235,7 @@ export const useStyleManager = (): StyleManager => {
 		[_setStyle]
 	);
 
-	/**
-	 * Generates CSS for a block by processing its style configuration.
-	 *
-	 * @param {string} blockID - The ID of the block to generate CSS for.
-	 * @returns {string | null} - The generated CSS, or null if it cannot be generated.
-	 */
-	const generateCSS = useCallback<StyleManager['generateCSS']>(
-		(blockID, styles) => {
-			if (!styles) return undefined;
 
-			/**
-			 * Builds a media query string for device and orientation
-			 */
-			const getMediaQuery = (deviceName: string, orientationName: string): string => {
-				const device = devices.find((d) => d.value === deviceName);
-				const orientation = orientations.find((o) => o.value === orientationName);
-
-				if (!device || !orientation) return '';
-
-				// No media query for 'all' device and 'all' orientation
-				if (deviceName === 'all' && orientationName === 'all') return '';
-
-				// Device-only media query
-				if (deviceName !== 'all' && orientationName === 'all') {
-					return `@media (min-width: ${device.media.min}px)${device.media.max === Infinity ? '' : ` and (max-width: ${device.media.max}px)`}`;
-				}
-
-				// Orientation-only media query
-				if (deviceName === 'all' && orientationName !== 'all') {
-					return `@media (orientation: ${orientationName})`;
-				}
-
-				// Combined device + orientation media query
-				if (deviceName !== 'all' && orientationName !== 'all') {
-					return `@media (min-width: ${device.media.min}px)${device.media.max === Infinity ? '' : ` and (max-width: ${device.media.max}px)`} and (orientation: ${orientationName})`;
-				}
-
-				return '';
-			};
-
-			/**
-			 * Generates CSS selector with pseudo-state
-			 */
-			const getSelector = (blockID: string, pseudoName: string): string => {
-				const pseudoSelector = pseudoName === 'all' ? '' : `:${pseudoName}`;
-				return `#block-${blockID}${pseudoSelector}`;
-			};
-
-			/**
-			 * Converts camelCase CSS property to kebab-case
-			 */
-			const formatCSSProperty = (property: string): string => {
-				return property.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
-			};
-
-			/**
-			 * Generates CSS properties block
-			 */
-			const generateCSSProperties = (styles: Record<string, string>, indentLevel = 1): string => {
-				const indent = '  '.repeat(indentLevel);
-				let css = '';
-
-				for (const [property, value] of Object.entries(styles)) {
-					if (!value) continue;
-					const cssProperty = formatCSSProperty(property);
-					css += `${indent}${cssProperty}: ${value};\n`;
-				}
-
-				return css;
-			};
-
-			/**
-			 * Generates CSS rules for a specific pseudo state
-			 */
-			const generatePseudoRules = (blockID: string, pseudoName: string, pseudoStyles: Record<string, string>, indentLevel = 0): string => {
-				if (!pseudoStyles || Object.keys(pseudoStyles).length === 0) return '';
-
-				const indent = '  '.repeat(indentLevel);
-				const selector = getSelector(blockID, pseudoName);
-
-				let css = `${indent}${selector} {\n`;
-				css += generateCSSProperties(pseudoStyles, indentLevel + 1);
-				css += `${indent}}\n`;
-
-				return css;
-			};
-
-			/**
-			 * Generates CSS rules for a specific orientation
-			 */
-			const generateOrientationRules = (blockID: string, orientationName: string, orientationStyles: Record<string, Record<string, string>>): string => {
-				if (!orientationStyles) return '';
-
-				let css = '';
-
-				// Process each pseudo state within this orientation
-				for (const [pseudoName, pseudoStyles] of Object.entries(orientationStyles)) {
-					css += generatePseudoRules(blockID, pseudoName, pseudoStyles, 1);
-				}
-
-				return css;
-			};
-
-			/**
-			 * Generates CSS rules for a specific device
-			 */
-			const generateDeviceRules = (blockID: string, deviceName: string, deviceStyles: Record<string, Record<string, Record<string, string>>>): string => {
-				if (!deviceStyles) return '';
-
-				let css = '';
-
-				// Process each orientation within this device
-				for (const [orientationName, orientationStyles] of Object.entries(deviceStyles)) {
-					if (!orientationStyles) continue;
-
-					const mediaQuery = getMediaQuery(deviceName, orientationName);
-					const orientationCSS = generateOrientationRules(blockID, orientationName, orientationStyles);
-
-					if (!orientationCSS) continue;
-
-					if (mediaQuery) {
-						css += `${mediaQuery} {\n`;
-						css += orientationCSS;
-						css += '}\n';
-					} else {
-						// No media query needed (default styles)
-						css += orientationCSS;
-					}
-				}
-
-				return css;
-			};
-
-			// Main CSS generation logic
-			let css = '';
-
-			// Process each device (breakpoint)
-			for (const [deviceName, deviceStyles] of Object.entries(styles)) {
-				css += generateDeviceRules(blockID, deviceName, deviceStyles);
-			}
-
-			return css;
-		},
-		[devices, orientations]
-	);
 
 	// Return the style manager methods
 	return {
@@ -389,6 +244,5 @@ export const useStyleManager = (): StyleManager => {
 		copyStyle,
 		pasteStyle,
 		resetStyle,
-		generateCSS,
 	};
 };

@@ -5,17 +5,6 @@ Main parser for CSS value definition syntax. Handles token expansion, normalizat
 
 ## Main Functions
 
-### expandTokens
-Recursively expands all <token> references in a CSS syntax string using StyleTokenDefinitions.
-- **Parameters:**
-  - `syntax: string` — The CSS property syntax string (e.g. `'auto |<ratio>'`)
-  - `seen?: Set<string>` — (internal) Set of already expanded tokens to prevent infinite recursion
-- **Returns:** `string` — The syntax string with all known tokens recursively expanded
-- **Example:**
-  - `parse('auto || <ratio>') → 'auto || <number> / <number>'`
-
----
-
 ### normalizeSyntax
 Normalizes a CSS syntax string by adjusting spaces
 - **Parameters:**

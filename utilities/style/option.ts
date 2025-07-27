@@ -70,7 +70,6 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
 	const range = getTokenParam(token);
 	const unitOptions = StyleUnitOptions[baseName] || [];
 
-
 	// If no range is specified, return the unit options as is
 	if (!range) return unitOptions as DimensionOptionData[];
 
@@ -189,6 +188,34 @@ function createLinkOption(token: string): OtherOptionData | undefined {
 }
 
 /**
+ * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
+ *
+ * @param token - The candidate token for the slot (e.g., 'auto', '<number>')
+ * @param slotIndex - The index of the slot being checked
+ * @param validValueSet - Set of all valid value strings (normalized)
+ * @param currentTokens - The current value tokens for all slots (canonicalized)
+ * @returns True if the token is valid for this slot in the current context
+ * @example
+ * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
+ */
+function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
+	const tokenCanonical = getTokenCanonical(token);
+	if (!tokenCanonical) return false;
+
+	// Always allow if the current value for this slot matches the candidate token
+	if (currentTokens[slotIndex] === tokenCanonical) return true;
+
+	// Replace only the relevant slot and check validity
+	const testTokens = currentTokens.slice();
+	testTokens[slotIndex] = tokenCanonical;
+	const testString = testTokens.join(' ').trim();
+	const matches = validValueSet.find((value) => value.startsWith(testString));
+
+	if (!matches) return false;
+	return true;
+}
+
+/**
  * Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
  *
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
@@ -215,34 +242,6 @@ function createOption(token: string, propertyName: string): InputOptionData | In
 		default:
 			return undefined;
 	}
-}
-
-/**
- * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
- *
- * @param token - The candidate token for the slot (e.g., 'auto', '<number>')
- * @param slotIndex - The index of the slot being checked
- * @param validValueSet - Set of all valid value strings (normalized)
- * @param currentTokens - The current value tokens for all slots (canonicalized)
- * @returns True if the token is valid for this slot in the current context
- * @example
- * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
- */
-function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
-	const tokenCanonical = getTokenCanonical(token);
-	if (!tokenCanonical) return false;
-
-	// Always allow if the current value for this slot matches the candidate token
-	if (currentTokens[slotIndex] === tokenCanonical) return true;
-
-	// Replace only the relevant slot and check validity
-	const testTokens = currentTokens.slice();
-	testTokens[slotIndex] = tokenCanonical;
-	const testString = testTokens.join(' ').trim();
-	const matches = validValueSet.find((value) => value.startsWith(testString));
-
-	if (!matches) return false;
-	return true;
 }
 
 /**

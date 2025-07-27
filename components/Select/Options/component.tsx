@@ -119,7 +119,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                 style={{ width: "100%" }}
             />
         );
-    }, [handleSearch, searchable, options.length]
+    }, [handleSearch, searchable, options.length, search]
     );
 
     if (!options || options.length === 0) {

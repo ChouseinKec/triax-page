@@ -83,16 +83,6 @@ Creates a link option for a given token (e.g., 'link').
 
 ---
 
-### createOption
-Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
-
-- **Parameters:**
-  - `token: string` — The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)').
-  - `propertyName: string` — The name of the CSS property being edited (for keyword options).
-- **Returns:** `InputOptionData | InputOptionData[] | undefined`
-
----
-
 ### isSlotOptionValid (Internal)
 Checks if a token is a valid option for a given slot, given the current values and all valid variations.
 
@@ -107,6 +97,17 @@ Checks if a token is a valid option for a given slot, given the current values a
   - `isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true`
 
 ---
+
+### createOption (Internal)
+Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
+
+- **Parameters:**
+  - `token: string` — The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)').
+  - `propertyName: string` — The name of the CSS property being edited (for keyword options).
+- **Returns:** `InputOptionData | InputOptionData[] | undefined`
+
+---
+
 
 ### createOptionsTable
 Builds a 2D options table for slot-based value editors. Each slot (column) contains only the valid options for the current context.
