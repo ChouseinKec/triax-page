@@ -106,22 +106,18 @@ All tests are located in the [`tests/`](tests/) folder.
    ```sh
    git clone https://github.com/ChouseinKec/triax-page.git
    ```
-
 2. **Navigate to the project directory:**  
    ```sh
    cd triax-page
    ```
-
 3. **Install dependencies:**  
    ```sh
    npm install
    ```
-
 4. **Run the development server:**  
    ```sh
    npm run dev
    ```
-
 5. **Run tests:**  
    ```sh
    npm test

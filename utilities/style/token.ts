@@ -223,7 +223,6 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 			}
 			return undefined;
 		}
-
 		default:
 			return undefined;
 	}

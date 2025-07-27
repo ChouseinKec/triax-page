@@ -63,7 +63,6 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
     }, [allTypes, options]
     );
 
-
     /**
      * Determine the value type for this slot.
      * If value is empty, use the default type.

@@ -1,5 +1,4 @@
 import { MAX_MULTIPLIER_DEPTH } from './parse';
-
 /**
  * Duplicates a token up to maxDepth times, joining with spaces (for + and * multipliers).
  * This is used to generate all possible combinations for multipliers that allow one or more occurrences.
