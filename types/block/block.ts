@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import type { StylePropertyKeys } from '@/types/style/property';
-import * as CoreBlocks from '@/blocks/core';
+import * as CoreBlocks from '@/registry/blocks/core';
 
 export const BlockDefinitions = CoreBlocks;
 

@@ -16,11 +16,14 @@ const StyleEditor: React.FC<StyleEditorProps> = () => {
     const selectedBlock = getSelectedBlock();
 
 
-    if (!selectedBlock) return null;
 
     return (
         <div className={CSS.StyleEditor} >
-            <Layout />
+            {
+                selectedBlock
+                    ? <Layout />
+                    : <p className={CSS.Fallback}>No block selected. Please select a block to see block-specific settings.</p>
+            }
         </div>
     );
 };

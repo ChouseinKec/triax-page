@@ -10,10 +10,8 @@ import ActionGroup from "@/components/group/action/component";
 
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
-import { getRegisteredBlocks } from "@/blocks/registry/block";
+import { getRegisteredBlocks } from "@/registry/blocks/registry";
 
-// Context
-import { BottomPanel } from "@/context/layout/manager";
 
 /**
  * Block Component
@@ -41,7 +39,7 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
     const definition = BlockDefinitions[block.type];
 
     // Bottom panel context for registering actions
-    const { addItem: addToBottom, removeItem: removeFromBottom } = BottomPanel.usePanel();
+    // const { addItem: addToBottom, removeItem: removeFromBottom } = BottomPanel.usePanel();
 
     // Handle unknown block types gracefully
     if (!definition) {
@@ -71,21 +69,21 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
      * Register block actions in the bottom panel when selected.
      * Cleanup on unmount or when selection changes.
      */
-    useEffect(() => {
-        if (selectedBlock && selectedBlock.id === blockID) {
-            addToBottom({
-                id: `delete-${blockID}`,
-                component: actions,
-                priority: 1,
-                icon: '',
-                order: 10
-            });
-        }
-        return () => {
-            removeFromBottom(`delete-${blockID}`);
-        };
-    }, [selectedBlock, addToBottom, removeFromBottom, actions, blockID]
-    );
+    // useEffect(() => {
+    //     if (selectedBlock && selectedBlock.id === blockID) {
+    //         addToBottom({
+    //             id: `delete-${blockID}`,
+    //             component: actions,
+    //             priority: 1,
+    //             icon: '',
+    //             order: 10
+    //         });
+    //     }
+    //     return () => {
+    //         removeFromBottom(`delete-${blockID}`);
+    //     };
+    // }, [selectedBlock, addToBottom, removeFromBottom, actions, blockID]
+    // );
 
     /**
      * Render child blocks recursively.

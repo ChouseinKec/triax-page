@@ -7,7 +7,7 @@ import CSS from "./styles.module.scss";
 
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
-import { getRegisteredBlocks } from "@/blocks/registry/block";
+import { getRegisteredBlocks } from "@/registry/blocks/registry";
 
 // Components
 import GenericInput from "@/components/input/generic/component";

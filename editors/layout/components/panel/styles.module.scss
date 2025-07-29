@@ -1,0 +1,114 @@
+.Panel {
+	padding: var(--size-md);
+	padding-top: calc(var(--size-2xl) * 2);
+	position: fixed;
+
+	border-radius: var(--size-md);
+	background: var(--theme-color-primary);
+	box-shadow: var(--theme-shadow-border);
+	z-index: 99999;
+
+	> [class*='ActionGroup'] {
+		background: var(--theme-color-primary);
+		padding: var(--size-xs);
+		position: absolute;
+		top: 50%;
+		left: -29px;
+		width: 30px;
+		transform: translateY(-25%);
+		border-top-left-radius: 7px;
+		border-bottom-left-radius: 7px;
+		gap: var(--size-sm);
+	}
+}
+
+.ResizeHandle {
+	position: absolute;
+
+	width: 16px;
+	height: 16px;
+	background: transparent;
+	z-index: 2;
+
+	&[data-position='top-left'] {
+		left: 0;
+		top: 0;
+		cursor: nwse-resize;
+		border-top-left-radius: var(--size-md);
+	}
+	&[data-position='top-right'] {
+		right: 0;
+		top: 0;
+		cursor: nesw-resize;
+		border-top-right-radius: var(--size-md);
+	}
+	&[data-position='bottom-left'] {
+		left: 0;
+		bottom: 0;
+		cursor: nesw-resize;
+		border-bottom-left-radius: var(--size-md);
+	}
+	&[data-position='bottom-right'] {
+		right: 0;
+		bottom: 0;
+		cursor: nwse-resize;
+		border-bottom-right-radius: var(--size-md);
+	}
+	&[data-position='top'] {
+		left: 50%;
+		top: 0;
+		transform: translateX(-50%);
+		cursor: ns-resize;
+		width: 50%;
+	}
+	&[data-position='right'] {
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		cursor: ew-resize;
+		height: 50%;
+	}
+	&[data-position='bottom'] {
+		left: 50%;
+		bottom: 0;
+		transform: translateX(-50%);
+		cursor: ns-resize;
+		width: 50%;
+	}
+	&[data-position='left'] {
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		cursor: ew-resize;
+		height: 50%;
+	}
+}
+
+.TopBar {
+	width: 100%;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	padding: var(--size-sm);
+	background: var(--theme-color-primary-shade);
+	border-top-left-radius: var(--size-md);
+	border-top-right-radius: var(--size-md);
+
+	*[class*='ActionGroup'] {
+		background: transparent;
+	}
+}
+
+.Title {
+	font-size: var(--font-size-lg);
+	font-weight: 600;
+	color: var(--color-white);
+	padding-left: var(--size-md);
+}
