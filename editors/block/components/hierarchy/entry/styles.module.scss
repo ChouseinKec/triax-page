@@ -5,14 +5,6 @@
 
 	> :global(.EntryButtonReveal) {
 		gap: var(--size-md);
-
-		> button {
-			background: transparent !important;
-		}
-	}
-
-	> :global(.EntryButtonRevealPrimary) {
-		gap: var(--size-md);
 	}
 }
 
@@ -30,7 +22,7 @@
 		height: 100%;
 
 		position: absolute;
-		left: 5%;
+		left: 5px;
 		top: 0%;
 
 		background-color: var(--theme-color-primary-tint);

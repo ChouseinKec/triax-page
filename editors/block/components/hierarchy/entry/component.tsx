@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, memo } from "react";
+import React, { useMemo, memo, useCallback } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -22,57 +22,61 @@ import { getRegisteredBlocks } from "@/registry/blocks/registry";
 
 /**
  * Entry Component
- * 
+ *
  * Renders a single block node in the block hierarchy tree, including its children recursively.
  * Highlights if selected, and shows an icon based on block type.
  *
- * @param  blockID - The ID of the block to render.
- * @returns  The rendered Entry node, or null if block not found.
+ * @param {string} blockID - The ID of the block to render.
+ * @returns {React.ReactElement|null} The rendered Entry node, or null if block not found.
  */
 const Entry: React.FC<EntryProps> = ({ blockID }) => {
-    const { getBlock, getSelectedBlock } = useBlockManager();
+    const { getBlock, getSelectedBlock, selectBlock } = useBlockManager();
 
-    // Memoized block and selection state
-    const block = useMemo(() => getBlock(blockID), [blockID, getBlock]);
-    const selectedBlock = useMemo(() => getSelectedBlock(), [getSelectedBlock]);
-    const registeredBlocks = useMemo(() => getRegisteredBlocks(), []);
+    // Get block data and selection state
+    const block = getBlock(blockID);
+    const selectedBlock = getSelectedBlock();
+    const registeredBlocks = getRegisteredBlocks();
 
-    // Early return if block doesn't exist
+    // Early exit if block doesn't exist
     if (!block) {
         devLog.error(`[Entry] Block with ID ${blockID} not found`);
         return null;
     }
 
-    // Get icon for block type
+    // Block properties
     const blockIcon = registeredBlocks[block.type]?.icon || null;
-
-    // Determine if this block has a parent and if it is selected
-    const hasParent = block.parentID !== null;
     const isSelected = selectedBlock?.id === block.id;
 
-    // Choose class for ButtonReveal based on hierarchy level
-    const buttonRevealClass = hasParent ? "EntryButtonReveal" : "EntryButtonRevealPrimary";
-
     // Recursively render children entries
-    const children = useMemo(
-        () => block.contentIDs.map(childID => <Entry key={childID} blockID={childID} />),
-        [block.contentIDs]
+    const hasChildren = block.contentIDs.length > 0;
+    const children = hasChildren ? (
+        <div className={CSS.Content}>
+            {block.contentIDs.map(childID => (
+                <Entry key={childID} blockID={childID} />
+            ))}
+        </div>
+    ) : null;
+
+    // Handle block selection
+    const handleSelect = useCallback(() => {
+        if (selectedBlock?.id === block.id) {
+            selectBlock(null);
+        } else {
+            selectBlock(block.id);
+        }
+    }, [block.id, selectBlock, selectedBlock]
     );
-    const hasChildren = children.length > 0;
 
     return (
-        <div className={CSS.Entry} data-has-parent={hasParent}>
+        <div className={CSS.Entry}>
             <ButtonReveal
-                className={buttonRevealClass}
+                className="EntryButtonReveal"
                 title={block.id}
                 icon={blockIcon}
                 isSelected={isSelected}
+                onButtonClick={handleSelect}
             >
-                {hasChildren && (
-                    <div className={CSS.Content}>
-                        {children}
-                    </div>
-                )}
+                {children}
             </ButtonReveal>
         </div>
     );

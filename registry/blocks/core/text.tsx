@@ -64,7 +64,7 @@ function render(instance: BlockInstance, children?: ReactNode) {
 const text: BlockDefinition = {
 	tag: "p",
 	type: "text",
-	permittedContent: null,
+	permittedContent: [],
 	permittedParent: null,
 	icon: (
 		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256">

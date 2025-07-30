@@ -4,6 +4,8 @@ import { useCallback } from "react";
 import useBlockStore from "@/stores/block/store";
 import usePageStore from '@/stores/page/store';
 
+// Registry
+import { getRegisteredBlocks } from "@/registry/blocks/registry";
 
 // Types
 import type { BlockInstance, BlockStyleData, BlockType, BlockTag, BlockAttributeValue } from "@/types/block/block";
@@ -212,6 +214,7 @@ export const useBlockManager = (): BlockManager => {
         return _allBlocks[blockID]?.attributes?.[attribute];
     }, [_allBlocks]
     );
+
 
     return {
         // Actions

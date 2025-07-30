@@ -11,6 +11,7 @@ import ActionGroup from "@/components/group/action/component";
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
 import { getRegisteredBlocks } from "@/registry/blocks/registry";
+import { useLayoutManager } from "@/hooks/layout/manager";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
@@ -30,6 +31,8 @@ import { devLog } from "@/utilities/dev";
 const Block: React.FC<BlockProps> = ({ blockID }) => {
     // Block manager hooks for block data and actions
     const { getBlock, deleteBlock, getSelectedBlock } = useBlockManager();
+    const { registerTab, unregisterTab } = useLayoutManager();
+
     const block = getBlock(blockID);
     const selectedBlock = getSelectedBlock();
 
@@ -43,8 +46,6 @@ const Block: React.FC<BlockProps> = ({ blockID }) => {
     const BlockDefinitions = getRegisteredBlocks();
     const definition = BlockDefinitions[block.type];
 
-    // Bottom panel context for registering actions
-    // const { addItem: addToBottom, removeItem: removeFromBottom } = BottomPanel.usePanel();
 
     // Handle unknown block types gracefully
     if (!definition) {

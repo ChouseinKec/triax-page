@@ -31,6 +31,7 @@ const BlockEditor: React.FC<BlockEditorProps> = (props: BlockEditorProps): React
     const blocksList = useMemo(() => <List key="block-list" />, []);
     const blockHierarchy = useMemo(() => <Hierarchy key="block-hierarchy" />, []);
     const styleEditor = useMemo(() => <StyleEditor key="style-editor" />, []);
+
     // Get tab registration methods from layout manager
     const { registerTab, unregisterTab } = useLayoutManager();
 

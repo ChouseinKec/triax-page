@@ -45,22 +45,12 @@ body {
   margin: 0;
 
   user-select: none;
+
+  scrollbar-color: #444 #ffffff00;
+  scrollbar-width: thin;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-}
-
-
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-::-webkit-scrollbar-track-piece {
-  background: var(--color-white)
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-white--darker);
 }

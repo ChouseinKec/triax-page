@@ -152,7 +152,7 @@
 	$radius: var(--size-sm),
 	$background: var(--theme-color-primary-tint),
 	$fill: var(--color-white),
-	$padding: var(--size-sm),
+	$padding: var(--size-sm)
 ) {
 	height: $height;
 
@@ -235,13 +235,21 @@
 		clip-path: polygon(50% 100%, 0 0, 100% 0);
 		background: var(--color-white);
 
-		transition: all 0.5s;
+		box-shadow: none !important;
+		
+		transition: clip-path 0.5s;
 	}
 
 	&[data-is-open='true'] {
 		&::after {
 			clip-path: polygon(50% 0, 0 100%, 100% 100%);
 			background: var(--color-white);
+		}
+	}
+
+	&:hover {
+		&::after {
+			background: var(--theme-color-secondary);
 		}
 	}
 }

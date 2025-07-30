@@ -5,6 +5,8 @@
 	flex-direction: column;
 	overflow: hidden auto;
 
+	scrollbar-width: none;
+
 	& :global(.TabGroupRadioSelect) {
 		width: 96%;
 		position: absolute;

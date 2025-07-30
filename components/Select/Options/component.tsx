@@ -43,6 +43,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         className = "",
     } = props;
 
+
     const [search, setSearch] = useState<string>("");
 
     /**
@@ -122,16 +123,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     }, [handleSearch, searchable, options.length, search]
     );
 
-    if (!options || options.length === 0) {
-        devLog.warn("[DropdownSelect] No options provided");
-        return null;
-    }
-
-    if (value == null) {
-        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
-        return null;
-    }
-
     /**
     * Renders the list of options or groupable options based on the filtered data.
     * 
@@ -197,7 +188,19 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
             )
         }));
 
-    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons, className]);
+    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons, className]
+    );
+
+    // Guard clauses for required props
+    if (!options || options.length === 0) {
+        devLog.warn("[DropdownSelect] No options provided");
+        return;
+    }
+
+    if (value == null) {
+        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
+        return;
+    }
 
     return (
         <>

@@ -15,6 +15,9 @@ import GenericInput from "@/components/input/generic/component";
 // Types
 import { BlockDefinition, BlockType } from "@/types/block/block";
 
+// Registry
+import { isChildPermitted } from "@/registry/blocks/registry";
+
 /**
  * List Component
  * - Renders a list of all registered blocks as buttons.
@@ -23,52 +26,66 @@ import { BlockDefinition, BlockType } from "@/types/block/block";
  */
 const List: React.FC = () => {
     // Get all registered block definitions
-    const allBlocks = getRegisteredBlocks();
+    const registeredBlocks = getRegisteredBlocks();
 
     // Access the addBlock function from block manager
     const { addBlock, getSelectedBlock } = useBlockManager();
     const [search, setSearch] = useState("");
+    const selectedBlock = getSelectedBlock();
 
     /**
      * Handles adding a new block, optionally nesting inside the selected block.
      * @param blockType - The type of block to add.
      */
     const handleAddBlock = useCallback((blockType: BlockType) => {
-        const selectedBlock = getSelectedBlock();
         if (!selectedBlock?.id) return addBlock(blockType);
         addBlock(blockType, selectedBlock.id);
     }, [addBlock, getSelectedBlock]
     );
 
     /**
-     * Filters blocks based on the search term.
-     * @returns {Array<Block>} - The filtered list of blocks.
+     * Filters blocks based on the selected block's permitted content.
+     * If no permitted content is defined, returns all registered blocks.
+     * @return - Filtered blocks keyed by their IDs.
     */
     const filteredBlocks = useMemo(() => {
+        if (selectedBlock?.permittedContent == null) return registeredBlocks;
+
+        return Object.values(registeredBlocks).filter(block => {
+            return isChildPermitted(selectedBlock.type, block.type);
+        });
+
+    }, [selectedBlock, registeredBlocks, isChildPermitted]
+    );
+
+    /**
+     * Filters blocks based on the search term.
+     * @returns - The filtered list of blocks.
+    */
+    const searchedBlocks = useMemo(() => {
         const term = search.trim().toLowerCase();
-        if (!term) return Object.values(allBlocks);
-        return Object.values(allBlocks).filter(
+        if (!term) return Object.values(filteredBlocks);
+        return Object.values(filteredBlocks).filter(
             block =>
                 block.type &&
                 block.type.toLowerCase().startsWith(term)
         );
-    }, [search, allBlocks]
+    }, [search, filteredBlocks]
     );
 
     /**
      * Groups the filtered blocks by category.
-     * @returns {Partial<Record<string, typeof filteredBlocks>>} - Grouped blocks by category.
+     * @returns - Grouped blocks by category.
      */
     const groupedBlocks = useMemo(() => {
-        return Object.groupBy(filteredBlocks, ({ category }) => category || "Uncategorized");
-    }, [filteredBlocks]
+        return Object.groupBy(searchedBlocks, ({ category }) => category || "Uncategorized");
+    }, [searchedBlocks]
     );
-
 
     /**
      * Renders a button for each block type.
      * @param block - The block definition to render.
-     * @returns {JSX.Element} - The rendered button element for the block.
+     * @returns - The rendered button element for the block.
     */
     const createBlockButton = useCallback((block: BlockDefinition) => {
         const blockType = block.type as BlockType;
@@ -85,15 +102,23 @@ const List: React.FC = () => {
 
     /**
      * Renders block buttons, grouped by category if there are multiple categories.
+     * If no blocks match the search, shows an empty state.
+     * If only one category or no grouping, renders as a flat list.
+     * If multiple categories are present, renders grouped by category.
+     * @returns - The rendered block elements.
     */
     const blockElements = useMemo(() => {
-        const categories = Object.keys(groupedBlocks);
+        // If no blocks match the search, show an empty state
+        if (searchedBlocks.length === 0) {
+            return <div className={CSS.Empty}>No blocks found.</div>;
+        }
 
         // If only one category or no grouping, render as a flat list
+        const categories = Object.keys(groupedBlocks);
         if (categories.length < 1) {
             return (
                 <div className={CSS.Blocks}>
-                    {filteredBlocks.map(createBlockButton)}
+                    {searchedBlocks.map(createBlockButton)}
                 </div>
             );
         }
@@ -111,8 +136,19 @@ const List: React.FC = () => {
                 </div>
             </div>
         ));
-    }, [filteredBlocks, groupedBlocks, handleAddBlock]
+    }, [searchedBlocks, groupedBlocks, handleAddBlock]
     );
+
+    // If no blocks are registered, show an empty state
+    if (Object.keys(registeredBlocks).length === 0) {
+        return <div className={CSS.Empty}>No blocks available.</div>;
+    }
+
+    // If selected block permitted content is empty,
+    // or does not match any blocks, show an empty state
+    if (Object.keys(filteredBlocks).length === 0) {
+        return <div className={CSS.Empty}>The selected block <b>{'<'}{selectedBlock?.type}{'>'}</b> does not allow any child blocks.</div>;
+    }
 
     return (
         <div className={CSS.List}>

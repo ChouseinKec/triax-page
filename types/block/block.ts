@@ -39,8 +39,8 @@ export interface BlockDefinition {
 	type: BlockType;
 	tag: BlockTag;
 	tags?: BlockTag[];
-	permittedContent?: BlockTag[] | null;
-	permittedParent?: BlockTag[] | null;
+	permittedContent?: BlockType[] | null;
+	permittedParent?: BlockType[] | null;
 	icon?: string | ReactNode;
 	styles?: BlockStyleData | null;
 	category?: string; 

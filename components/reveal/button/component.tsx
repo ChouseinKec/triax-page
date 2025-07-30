@@ -29,41 +29,53 @@ const ButtonReveal: React.FC<ButtonRevealProps> = ({
     className = "ButtonReveal",
     isSelected = false,
     onButtonClick = () => { },
-    onArrowClick = () => { },
+    onArrowClick,
 }) => {
 
     // State for open/collapse
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+
+    const handleButtonClick = useCallback(() => {
+        onButtonClick();
+    }, [onButtonClick]
+    );
 
     // Toggle handler for expanding/collapsing content
-    const handleToggle = useCallback(() => {
+    const handleArrowClick = useCallback(() => {
+        if (onArrowClick) {
+            onArrowClick();
+            return;
+        }
+
         setIsOpen(prev => !prev);
-    }, [setIsOpen]
+    }, [setIsOpen, onButtonClick]
     );
 
-    // Data attributes for state and content presence
-    const dataAttributes = useMemo(
-        () => ({
-            "data-is-open": isOpen,
-            "data-has-children": !!children,
-        }),
-        [isOpen, children]
-    );
+    const hasChildren = useMemo(() => !!children, [children]);
+
 
     return (
-        <div className={`${CSS.ButtonReveal} ${className}`} {...dataAttributes}>
+        <div className={`${CSS.ButtonReveal} ${className}`} data-has-children={hasChildren}>
             {/* Toggle button to expand/collapse the content */}
             <button
                 className={CSS.Button}
-                onClick={handleToggle}
                 data-is-selected={isSelected}
-                type="button"
+                onClick={handleButtonClick}
             >
                 <span>
                     {icon}
                     {title}
                 </span>
             </button>
+
+            {hasChildren &&
+                <button
+                    className={CSS.Arrow}
+                    onClick={handleArrowClick}
+                    data-is-open={isOpen}
+                />
+            }
+
 
             {/* Render expandable content if open */}
             {isOpen && children}

@@ -64,6 +64,7 @@ export type StylePropertyKeys =
 	| 'margin-bottom'
 	| 'margin-left'
 	| 'margin'
+	| 'background'
 	| 'background-color'
 	| 'background-image'
 	| 'background-position'

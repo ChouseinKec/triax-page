@@ -155,6 +155,7 @@ export const StylePropertyDefinitions: Record<StylePropertyKeys, StylePropertyDa
 
 	// ============ Background & Mask =============
 	'background-color': createProperty('background-color', '<color>'),
+	background: createProperty('background', '<color>'),
 
 	'background-image': createProperty('background-image', 'none|<bg-image>'),
 	'background-position': createProperty('background-position', '<bg-position>'),
