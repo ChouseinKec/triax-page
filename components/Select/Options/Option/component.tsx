@@ -29,7 +29,7 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         onChange,
         category = "other",
         prioritizeIcons = false,
-        ariaRole = "radio",
+        className = "Option"
     } = props;
 
     /**
@@ -55,12 +55,11 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
     const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
         <button
-            className={CSS.Option}
+            className={`${CSS.Option} ${className}`}
             onClick={() => handleChange(value)}
             data-is-selected={isSelected}
             title={name}
             aria-label={`Select ${name}`}
-            role={ariaRole}
             data-category={category}
         >
 

@@ -43,7 +43,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
 
         // Accessibility
         title = "Toggle Dropdown",
-        ariaLabel = "Dropdown select",
+        className = "DropdownSelect"
     } = props;
 
     /**
@@ -89,8 +89,8 @@ const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProp
         placeholder: forcePlaceholder ? placeholder : value || "N/A",
         title,
         isDisabled,
-        ariaLabel
-    }), [value, placeholder, title, isDisabled, ariaLabel,forcePlaceholder]
+        className
+    }), [value, placeholder, title, isDisabled, forcePlaceholder, className]
     );
 
     // Guard Clause

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -20,34 +20,16 @@ import { HorizontalDividerProps } from "./types";
  * @returns {ReactNode} The rendered HorizontalDivider component
  */
 const HorizontalDivider: React.FC<HorizontalDividerProps> = (props: HorizontalDividerProps) => {
-    const { title } = props;
-
-    /**
-     * Provides proper ARIA labeling for screen readers
-     */
-    const accessibilityProps = useMemo(() => ({
-        role: "separator",
-        "aria-label": title ? `Section separator: ${title}` : "Section separator",
-        "aria-orientation": "horizontal" as const
-    }), [title]
-    );
-
-    /**
-     * Style and data attributes.
-    */
-    const customProps = useMemo(() => ({
-        style: { "--divider-title": title ? `"${title}"` : '""' } as React.CSSProperties,
-        "data-title": title,
-    }), [title]
-    );
+    const {
+        title,
+        className = "HorizontalDivider"
+    } = props;
 
     return (
-        <div
-            className={CSS.HorizontalDivider}
-            {...customProps}
-            {...accessibilityProps}
-        />
+        <span className={`${CSS.HorizontalDivider} ${className}`} data-title={title || null}>
+            {title ? title : ""}
+        </span>
     );
 };
 
-export default HorizontalDivider;
+export default memo(HorizontalDivider);

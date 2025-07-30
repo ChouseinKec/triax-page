@@ -40,7 +40,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         searchable = false,
         groupable = false,
         prioritizeIcons = false,
-        ariaRole = "radio",
+        className = "",
     } = props;
 
     const [search, setSearch] = useState<string>("");
@@ -137,7 +137,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     * 
     * @returns {ReactElement | ReactElement[]} - The rendered options list.
     */
-    const optionElements = (() => {
+    const optionElements = useMemo(() => {
         // If the search result is null
         if (filteredOptions.length === 0) {
             return <div className={CSS.Empty}>No options found.</div>;
@@ -168,8 +168,8 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                                             onChange={handleChange}
                                             icon={option.icon}
                                             prioritizeIcons={prioritizeIcons}
-                                            ariaRole={ariaRole}
                                             category={category}
+                                            className={`${className}Option`}
                                         />
                                     )
                                 }) ?? []}
@@ -190,13 +190,14 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                     value={option.value}
                     icon={option.icon}
                     prioritizeIcons={prioritizeIcons}
-                    ariaRole={ariaRole}
                     isSelected={value === option.name || value === option.value}
                     onChange={handleChange}
+                    className={`${className}Option`}
                 />
             )
         }));
-    })()
+
+    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons, className]);
 
     return (
         <>

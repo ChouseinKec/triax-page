@@ -74,7 +74,7 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props: LayoutEditorProps): Re
 
                 {/* Render only if there are action elements */}
                 {actionElements.length > 0 &&
-                    <ActionGroup direction="vertical">
+                    <ActionGroup direction="vertical" className="LayoutEditorBarActionGroup">
                         {actionElements}
                     </ActionGroup>
                 }

@@ -1,10 +1,10 @@
-# BlockList Component
+# List Component
 
-The `BlockList` component provides a searchable, categorized list of all registered block types in the editor. It allows users to quickly browse, filter, and add new blocks to the layout, either as root blocks or as children of the currently selected block.
+The `List` component provides a searchable, categorized list of all registered block types in the editor. It allows users to quickly browse, filter, and add new blocks to the layout, either as root blocks or as children of the currently selected block.
 
-## What is BlockList?
+## What is List?
 
-- `BlockList` is a React functional component that displays all available block types as buttons.
+- `List` is a React functional component that displays all available block types as buttons.
 - Users can search for blocks by type, and the list updates in real time.
 - Blocks are grouped by category for easier navigation.
 - Clicking a block button adds it to the editor, optionally as a child of the currently selected block.
@@ -26,15 +26,15 @@ The `BlockList` component provides a searchable, categorized list of all registe
 ## Usage
 
 ```tsx
-import BlockList from "@/editors/block/components/blocks-list/component";
+import List from "@/editors/block/components/blocks-list/component";
 
-<BlockList />
+<List />
 ```
 
 ## Example
 
 ```tsx
-<BlockList />
+<List />
 ```
 
 ## How it Works

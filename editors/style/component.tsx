@@ -22,7 +22,7 @@ const StyleEditor: React.FC<StyleEditorProps> = () => {
             {
                 selectedBlock
                     ? <Layout />
-                    : <p className={CSS.Fallback}>No block selected. Please select a block to see block-specific settings.</p>
+                    : <p className={CSS.Fallback}>No block selected. Please select a block to see style-specific settings.</p>
             }
         </div>
     );

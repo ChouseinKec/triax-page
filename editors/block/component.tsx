@@ -9,7 +9,8 @@ import type { BlockEditorProps } from "./types";
 
 // Components
 import Blocks from "./components/blocks/component";
-import BlockList from "./components/blocks-list/component";
+import List from "./components/list/component";
+import Hierarchy from "./components/hierarchy/component";
 import StyleEditor from "@/editors/style/component";
 
 // Hooks
@@ -27,9 +28,9 @@ const BlockEditor: React.FC<BlockEditorProps> = (props: BlockEditorProps): React
     const { selectBlock } = useBlockManager();
 
     // Memoize block list and style editor components for performance
-    const blocksList = useMemo(() => <BlockList key="block-list" />, []);
+    const blocksList = useMemo(() => <List key="block-list" />, []);
+    const blockHierarchy = useMemo(() => <Hierarchy key="block-hierarchy" />, []);
     const styleEditor = useMemo(() => <StyleEditor key="style-editor" />, []);
-
     // Get tab registration methods from layout manager
     const { registerTab, unregisterTab } = useLayoutManager();
 
@@ -55,6 +56,13 @@ const BlockEditor: React.FC<BlockEditorProps> = (props: BlockEditorProps): React
             id: "block-list",
             content: blocksList,
             title: "Block List",
+            icon: blockListIcon,
+            order: 10,
+        });
+        registerTab("block-hierarchy", {
+            id: "block-hierarchy",
+            content: blockHierarchy,
+            title: "Block Hierarchy",
             icon: blockListIcon,
             order: 10,
         });

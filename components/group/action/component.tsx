@@ -23,7 +23,8 @@ import { devLog } from "@/utilities/dev";
 const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
     const {
         children,
-        direction = 'horizontal'
+        direction = "horizontal",
+        className = "ActionGroup"
     } = props;
 
     // Guard Clause
@@ -33,7 +34,7 @@ const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
     }
 
     return (
-        <div className={CSS.ActionGroup} data-direction={direction}>
+        <div className={`${CSS.ActionGroup} ${className}`} data-direction={direction}>
             {children}
         </div>
     );

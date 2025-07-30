@@ -50,9 +50,10 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
     const initialPanels: PanelRecord = Object.fromEntries(
         Object.values(getRegisteredPanels()).map(panelDef => [
             panelDef.id,
-            { ...panelDef, tabs: {} }
+            { ...panelDef, tabs: {}, isOpen: panelDef.initialOpen, isLocked: panelDef.initialLocked },
         ])
     );
+
 
     // State to hold all panels
     const [panels, setPanels] = useState<PanelRecord>(initialPanels);
@@ -115,6 +116,11 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
                 devLog.error(`[LayoutProvider] Panel with ID "${panelId}" not found. Skipping toggle.`);
                 return prev;
             }
+
+            // if (panel. === undefined) {
+            //     devLog.warn(`[LayoutProvider] Panel with ID "${panelId}" does not have an "isOpen" property. Defaulting to false.`);
+            // }
+
             return {
                 ...prev,
                 [panelId]: {

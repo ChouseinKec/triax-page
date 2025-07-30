@@ -1,0 +1,56 @@
+@use '../../../../../../mixins//mixins.module.scss' as inputMixins;
+
+.Slots {
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	gap: var(--size-md);
+	// justify-content: flex-end;
+
+	overflow: hidden;
+	position: relative;
+
+	:global(.NextSlotDropdownToggle) {
+		@include inputMixins.components--button-dropdown($isRound: true);
+	}
+
+	> * {
+		flex: auto;
+	}
+}
+
+.SlotsInner {
+	display: flex;
+	flex-direction: row;
+	gap: var(--size-sm);
+	width: max-content;
+}
+
+.Values {
+	// flex: 1 1 auto;
+	overflow: hidden;
+	display: flex;
+	min-width: 35px;
+	width: 100%;
+	// justify-content: flex-end;
+	gap: var(--size-md);
+
+	> * {
+		flex: auto;
+	}
+}
+
+.Separator {
+	min-width: 10px;
+
+	color: var(--color-gray);
+	font-size: var(--font-size-md);
+
+	white-space: nowrap;
+	overflow: hidden;
+	flex: auto;
+	opacity: 0.3;
+
+	position: absolute;
+}

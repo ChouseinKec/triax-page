@@ -35,6 +35,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
 
         // Accessibility and UX
         title = "Toggle Dropdown",
+        className = "DropdownReveal"
     } = props;
 
     // Component state management
@@ -91,10 +92,10 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
     const isCollapsed = size.width ? size.width < 25 : false;
 
     return (
-        <div className={CSS.DropdownReveal} ref={dropdownRef}>
+        <div className={`${CSS.DropdownReveal} ${className}`} ref={dropdownRef}>
             {/* Toggle button to open/close the dropdown */}
             <button
-                className={CSS.Toggle}
+                className={`${CSS.Toggle} ${className}Toggle`}
                 onClick={handleToggle}
                 data-is-selected={isOpen}
                 data-is-disabled={isDisabled}

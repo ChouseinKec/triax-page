@@ -19,4 +19,7 @@ export type TabGroupItemsProps = {
 export type TabGroupProps = {
 	/** List of tab items to display */
 	items: TabGroupItemsProps[];
+
+	/** Optional class name for custom styling */
+	className?: string;
 };

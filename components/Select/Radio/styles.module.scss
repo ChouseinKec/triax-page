@@ -7,13 +7,12 @@
 	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
 	overflow: hidden;
 
-	[class*='FloatReveal'] {
-		display: flex;
-		flex-direction: row;
-		padding: var(--size-xs);
+	:global(.RadioSelectFloat) {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
 	}
 
-	[class*='Option'] {
+	:global(.RadioSelectOption) {
 		background: transparent;
 		width: 100%;
 	}

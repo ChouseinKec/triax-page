@@ -30,6 +30,7 @@ import { devLog } from "@/utilities/dev";
 const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const {
         items,
+        className = "TabGroup"
     } = props;
 
     // State management for active tab selection
@@ -102,7 +103,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     }
 
     return (
-        <div className={CSS.TabGroup}>
+        <div className={`${CSS.TabGroup} ${className}`}>
             {/* Content area - displays selected tab content */}
             {activeContent}
 
@@ -111,7 +112,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
                 options={tabOptions}
                 value={selectedIndex}
                 onChange={handleTabChange}
-                ariaLabel={"List Selection"}
+                className="TabGroupRadioSelect"
             />
         </div>
     );

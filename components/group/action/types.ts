@@ -6,4 +6,7 @@ export type ActionGroupProps = {
 
 	/** The direction of the action group */
 	direction?: 'horizontal' | 'vertical';
+
+	/** Optional class name for additional styling */
+	className?: string;
 };

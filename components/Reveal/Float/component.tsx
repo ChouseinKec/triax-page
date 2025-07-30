@@ -39,6 +39,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         // Core
         children,
         targetRef,
+
         // Positioning
         position = "top",
 
@@ -47,8 +48,8 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         hoverDelay = 200,
         closeOnEscape = true,
         onVisibilityChange,
+        className = "",
 
-       
     } = props;
 
     // Refs for DOM elements
@@ -206,7 +207,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
     return (
         <div
             ref={floatRef}
-            className={CSS.FloatReveal}
+            className={`${CSS.FloatReveal} ${className}`}
             {...dataAttributes}
             {...eventHandlers}
             onClick={e => e.stopPropagation()}

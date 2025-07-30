@@ -8,7 +8,7 @@
 	box-shadow: var(--theme-shadow-border);
 	z-index: 99999;
 
-	> [class*='ActionGroup'] {
+	:global(.PanelTabActions) {
 		background: var(--theme-color-primary);
 		padding: var(--size-xs);
 		position: absolute;
@@ -84,7 +84,7 @@
 	}
 }
 
-.TopBar {
+.Header {
 	width: 100%;
 
 	display: flex;
@@ -100,10 +100,6 @@
 	background: var(--theme-color-primary-shade);
 	border-top-left-radius: var(--size-md);
 	border-top-right-radius: var(--size-md);
-
-	*[class*='ActionGroup'] {
-		background: transparent;
-	}
 }
 
 .Title {

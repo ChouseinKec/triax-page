@@ -32,23 +32,36 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
         value,
         options,
         onChange,
-        ariaLabel = "Radio Select",
+        className = "RadioSelect"
     } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { isOverflowing } = useSize(containerRef);
 
     return (
-        <div ref={containerRef} aria-label={ariaLabel} role="radiogroup" className={CSS.RadioSelect} data-is-collapsed={isOverflowing}>
-            <Options prioritizeIcons={true} ariaRole={"radio"} value={value} options={options} onChange={onChange} />
+        <div className={`${CSS.RadioSelect} ${className}`} data-is-collapsed={isOverflowing} ref={containerRef}>
+            <Options
+                prioritizeIcons={true}
+                value={value}
+                options={options}
+                onChange={onChange}
+                className="RadioSelect"
+            />
 
             {isOverflowing &&
                 <FloatReveal
                     targetRef={containerRef}
                     position="top"
                     hoverDelay={600}
+                    className="RadioSelectFloat"
                 >
-                    <Options prioritizeIcons={true} ariaRole={"radio"} value={value} options={options} onChange={onChange} />
+                    <Options
+                        prioritizeIcons={true}
+                        value={value}
+                        options={options}
+                        onChange={onChange}
+                        className="RadioSelect"
+                    />
                 </FloatReveal>
             }
         </div>

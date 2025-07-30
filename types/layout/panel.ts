@@ -58,16 +58,16 @@ export interface PanelDefinition {
 	initialLocked: boolean;
 
 	/**
+	 * Optional initial open state of the panel
+	 * @default true
+	*/
+	initialOpen: boolean;
+
+	/**
 	 * Title of the panel, displayed in the header
 	 * @default "Panel"
 	 */
 	title: string;
-
-	/**
-	 * Whether the panel group is open or closed
-	 * @default true
-	 */
-	isOpen: boolean;
 
 	/**
 	 * Order of the panel in the layout, used for sorting
@@ -95,6 +95,18 @@ export interface PanelDefinition {
 export interface PanelInstance extends PanelDefinition {
 	/** The content (panel items) to render inside the group */
 	tabs: Record<string, PanelTabInstance>;
+
+	/**
+	 * Whether the panel is currently locked
+	 * @default true
+	 */
+	isLocked: boolean;
+
+	/**
+	 * Whether the panel group is open or closed
+	 * @default true
+	 */
+	isOpen: boolean;
 }
 
 /**

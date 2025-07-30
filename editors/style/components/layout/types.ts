@@ -1,4 +1,4 @@
-import { LayoutGroup } from '@/editors/style/components/group/types';
+import { LayoutGroup } from '@/editors/style/components/layout/group/types';
 import { ReactElement } from "react";
 
 /**

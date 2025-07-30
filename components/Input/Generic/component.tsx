@@ -34,6 +34,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
 
         // Accessibility
         title = "Enter Value",
+        className = "GenericInput",
 
         // Event
         onChange,
@@ -171,7 +172,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
                 ref={inputRef}
                 type={type}
                 value={internalValue}
-                className={CSS.GenericInput}
+                className={`${CSS.GenericInput} ${className}`}
                 {...inputAttributes}
                 {...dataAttributes}
                 onBlur={handleBlur}

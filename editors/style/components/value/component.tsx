@@ -16,7 +16,7 @@ import { mergeArrays } from "@/utilities/array";
 import { ValueSeparatorDefaults } from "@/constants/style/value";
 
 // Components
-import Slots from "./slots/component";
+import Slots from "./components/slots/component";
 
 // Utilities
 import { devLog } from "@/utilities/dev";

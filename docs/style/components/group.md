@@ -52,7 +52,7 @@ import Group from "@/editors/style/components/group/component";
 ## How it Works
 
 - If `hidden` is `true`, the group is not rendered.
-- If `isExpandable` is `true`, the group is wrapped in an `ExpandReveal` component, allowing it to be expanded or collapsed.
+- If `isExpandable` is `true`, the group is wrapped in an `DividerReveal` component, allowing it to be expanded or collapsed.
 - If `dividerTitle` is provided, a `HorizontalDivider` with the title is rendered above the group.
 - Each property in the `properties` array is rendered using the `Property` component.
 - The group container uses a CSS module for styling and accepts custom styles via the `styles` prop.

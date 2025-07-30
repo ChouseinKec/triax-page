@@ -1,0 +1,6 @@
+@use '../../../../mixins//mixins.module.scss' as inputMixins;
+
+.Hierarchy {
+	display: flex;
+	flex-direction: column;
+}

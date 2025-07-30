@@ -21,6 +21,7 @@ export interface OptionsSelectProps {
     /** Whether to prioritize icons over text in the dropdown options (default: false) */
     prioritizeIcons?: boolean;
 
-    /** ARIA role for the dropdown options */
-    ariaRole?: 'radio' | 'option' | 'menuitem';
+
+    /** Optional class name for custom styling */
+    className?: string;
 }

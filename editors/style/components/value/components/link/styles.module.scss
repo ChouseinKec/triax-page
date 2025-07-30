@@ -1,0 +1,13 @@
+.Link {
+	width: 100%;
+	display: grid;
+	min-height: 25px;
+	min-width: 100px;
+	position: relative;
+
+	[class$='DropdownReveal'] {
+		position: absolute;
+		right: 0;
+		max-width: 50px;
+	}
+}

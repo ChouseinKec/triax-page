@@ -246,7 +246,7 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
             onMouseDown={handleMouseDown}
         >
             {/* Top bar with title and actions */}
-            <div className={CSS.TopBar}>
+            <div className={CSS.Header}>
                 <span className={CSS.Title}>{title}</span>
                 <ActionGroup>
                     <button title="Lock" data-is-active={locked} onClick={handleLock}>
@@ -278,7 +278,7 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
 
             {/* Render tab elements if there are multiple tabs */}
             {tabElements.length > 1 && (
-                <ActionGroup direction="vertical">
+                <ActionGroup className="PanelTabActions" direction="vertical">
                     {tabElements}
                 </ActionGroup>
             )}

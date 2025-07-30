@@ -1,0 +1,33 @@
+@use '../../../mixins//mixins.module.scss' as inputMixins;
+
+.ButtonReveal {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+
+	// Support for icon and text alignment
+	> .Button {
+		span {
+			width: auto;
+			display: flex;
+			align-items: center;
+			gap: var(--size-sm);
+		}
+	}
+
+	&[data-has-children='true'] {
+		> .Button {
+			@include inputMixins.components--button-dropdown();
+		}
+	}
+
+	&[data-has-children='false'] {
+		> .Button {
+			@include inputMixins.components--button();
+		}
+	}
+}
+
+.Button {
+	justify-content: space-between !important;
+}

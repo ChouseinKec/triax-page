@@ -3,11 +3,8 @@
 import React, { memo, useMemo } from "react";
 import CSS from "./styles.module.scss";
 
-// Types
-import type { BlocksProps } from "./types";
-
 // Components
-import Block from "../block/component";
+import Block from "./block/component";
 
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
@@ -22,7 +19,7 @@ import { useBlockManager } from "@/hooks/block/manager";
  * @param  props - The props for the Blocks component (currently unused).
  * @returns  The rendered list of root blocks.
  */
-const Blocks: React.FC<BlocksProps> = () => {
+const Blocks: React.FC = () => {
     // Retrieve the block manager's getAllBlocks function
     const { getAllBlocks } = useBlockManager();
 

@@ -7,12 +7,12 @@ The value components in `editors/style/components/value` provide a modular, slot
 - **Value**: Main entry point for rendering a value editor for a CSS property. Handles parsing, slotting, and incremental UI for property values.
 - **Slots**: Renders a row of slot editors for each value slot, plus an extra dropdown for the next possible slot.
 - **Slot**: Renders the appropriate input component for a single value slot based on its type.
-- **DimensionValue**: Input for CSS dimension values (e.g., `10px`, `2rem`), with numeric and unit selection.
-- **NumberValue**: Input for numeric values, with optional alternative options (keywords, etc.).
-- **KeywordValue**: Selector for keyword values, using a radio group or dropdown.
-- **FunctionValue**: Editor for CSS function values (e.g., `repeat(2, 1fr)`), with function selection and argument editing.
-- **ColorValue**: Input for CSS color values, using a color picker.
-- **LinkValue**: Input for URL/link values, with validation.
+- **Dimension**: Input for CSS dimension values (e.g., `10px`, `2rem`), with numeric and unit selection.
+- **Number**: Input for numeric values, with optional alternative options (keywords, etc.).
+- **Keyword**: Selector for keyword values, using a radio group or dropdown.
+- **Function**: Editor for CSS function values (e.g., `repeat(2, 1fr)`), with function selection and argument editing.
+- **Color**: Input for CSS color values, using a color picker.
+- **Link**: Input for URL/link values, with validation.
 - **Error**: Displays error messages in a floating tooltip.
 
 ---
@@ -70,7 +70,7 @@ Renders the appropriate input component for a single value slot based on its typ
 
 ---
 
-## DimensionValue
+## Dimension
 
 **File:** `value/dimension/component.tsx`
 
@@ -86,7 +86,7 @@ Input for CSS dimension values (e.g., `10px`, `2rem`). Splits values into numeri
 
 ---
 
-## NumberValue
+## Number
 
 **File:** `value/number/component.tsx`
 
@@ -103,7 +103,7 @@ Input for numeric values, with optional alternative options (keywords, etc.). Su
 
 ---
 
-## KeywordValue
+## Keyword
 
 **File:** `value/keyword/component.tsx`
 
@@ -119,7 +119,7 @@ Selector for keyword values, using a radio group (if all options have icons) or 
 
 ---
 
-## FunctionValue
+## Function
 
 **File:** `value/function/component.tsx`
 
@@ -135,7 +135,7 @@ Editor for CSS function values (e.g., `repeat(2, 1fr)`). Allows function selecti
 
 ---
 
-## ColorValue
+## Color
 
 **File:** `value/color/component.tsx`
 
@@ -150,7 +150,7 @@ Input for CSS color values, using a color picker.
 
 ---
 
-## LinkValue
+## Link
 
 **File:** `value/link/component.tsx`
 
@@ -182,7 +182,7 @@ Displays error messages in a floating tooltip for invalid or malformed values.
 ## How They Work Together
 
 - The `Value` component is the main entry point and uses `Slots` to render each slot in a multi-part value.
-- Each `Slot` determines the value type and renders the appropriate value component (`DimensionValue`, `NumberValue`, `KeywordValue`, `FunctionValue`, `ColorValue`, `LinkValue`).
+- Each `Slot` determines the value type and renders the appropriate value component (`Dimension`, `Number`, `Keyword`, `Function`, `Color`, `Link`).
 - The system supports complex CSS value patterns, incremental editing, and robust validation for each value type.
 
 ---

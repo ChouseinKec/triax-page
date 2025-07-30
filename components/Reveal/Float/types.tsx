@@ -19,6 +19,9 @@ export interface FloatRevealProps {
     /** Whether to close the float when Escape key is pressed */
     closeOnEscape?: boolean;
 
+    /** Optional class name for custom styling */
+    className?: string;
+
     /** Callback function when visibility state changes */
     onVisibilityChange?: (isVisible: boolean) => void;
 }

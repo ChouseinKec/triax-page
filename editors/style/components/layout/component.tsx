@@ -3,7 +3,7 @@
 import React, { ReactElement, useMemo } from "react";
 
 // Components
-import Category from "@/editors/style/components/category/component";
+import Category from "@/editors/style/components/layout/components/category/component";
 import TabGroup from "@/components/group/tab/component";
 
 // Types 

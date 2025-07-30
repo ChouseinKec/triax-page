@@ -12,13 +12,13 @@
 	z-index: 9999;
 	color: var(--color-white);
 
-	[class*='TabGroup'] {
+	:global(.TabGroup) {
+		height: 93%;
+
 		> *:nth-of-type(1) {
 			padding-top: var(--size-md);
 		}
 	}
-
-	background: transparent;
 }
 
 .Fallback {

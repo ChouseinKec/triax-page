@@ -26,9 +26,9 @@ export type DropdownSelectProps = {
   /** Optional title for the dropdown button */
   title?: string;
 
-  /** Optional ARIA label for accessibility */
-  ariaLabel?: string;
-
   /** Whether the dropdown is disabled */
   isDisabled?: boolean;
+
+  /** Optional class name for the dropdown */
+  className?: string;
 };
