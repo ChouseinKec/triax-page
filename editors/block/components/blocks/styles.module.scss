@@ -19,3 +19,25 @@
 		}
 	}
 }
+.BlockActions {
+	@include inputMixins.components--container($background: var(--theme-color-primary));
+
+	position: fixed;
+	bottom: 1%;
+	left: 50%;
+	transform: translateX(-50%);
+
+	width: 300px;
+
+	svg {
+		max-width: 15px !important;
+		max-height: 15px !important;
+	}
+}
+
+.ActionsDivider {
+	width: 1px;
+	height: 20px;
+	background: var(--color-white);
+	opacity: 0.5;
+}

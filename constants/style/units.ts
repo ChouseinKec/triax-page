@@ -1,6 +1,6 @@
 import { CSSUnits, CSSUnit, CSSUnitCategory, CSSUnitSupported } from '@/types/style/units';
 import { CSSDimensionGroups } from '@/types/style/dimension';
-import { OptionData } from '@/types/option';
+import { DimensionOptionData } from '@/types/option';
 
 /**
  * Helper function to create a CSSUnit object.
@@ -21,13 +21,13 @@ function createUnit(name: CSSUnits, category: CSSUnitCategory, dimensionGroup: C
 }
 
 /**
- * Helper function to create an OptionData object for a CSS unit.
+ * Helper function to create an DimensionOptionData object for a CSS unit.
  * Used for populating dropdowns, radio selects, etc. with dimension options.
  *
  * @param name - The canonical name of the unit (e.g. 'px', 'em').
- * @returns An OptionData object with name, value, and category: 'dimension'.
+ * @returns An DimensionOptionData object with name, value, and category: 'dimension'.
  */
-function createUnitOption(name: CSSUnits): OptionData {
+function createUnitOption(name: CSSUnits): DimensionOptionData {
 	return {
 		name,
 		value: `0${name}`,
@@ -61,15 +61,15 @@ export const CSSUnitDefs: Partial<Record<CSSUnits, CSSUnit>> = {
 };
 
 /**
- * CSSUnitOptions: Maps each CSSDimensionGroups value to an array of OptionData objects for UI selection.
+ * CSSUnitOptions: Maps each CSSDimensionGroups value to an array of DimensionOptionData objects for UI selection.
  *
  * This is used to group units by their dimension group (e.g., 'length', 'angle', 'percentage', 'flex').
- * Each key is a CSSDimensionGroups value, and the value is an array of OptionData objects for that group.
+ * Each key is a CSSDimensionGroups value, and the value is an array of DimensionOptionData objects for that group.
  */
-export const CSSUnitOptions: Record<CSSDimensionGroups, OptionData[]> = Object.entries(CSSUnitDefs).reduce((acc, [unit, def]) => {
+export const CSSUnitOptions: Record<CSSDimensionGroups, DimensionOptionData[]> = Object.entries(CSSUnitDefs).reduce((acc, [unit, def]) => {
 	if (def?.dimensionGroup) {
 		if (!acc[def.dimensionGroup]) acc[def.dimensionGroup] = [];
 		acc[def.dimensionGroup].push(createUnitOption(unit as CSSUnits));
 	}
 	return acc;
-}, {} as Record<CSSDimensionGroups, OptionData[]>);
+}, {} as Record<CSSDimensionGroups, DimensionOptionData[]>);

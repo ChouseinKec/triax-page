@@ -1,6 +1,5 @@
 import { StylePropertyKeys } from '@/types/style/property';
 
-
 // New: Centralized descriptions for all CSS properties
 export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	// ============ Display & Layout =============
@@ -76,8 +75,8 @@ export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	'margin-left': 'Sets the space outside the element’s left border.',
 	margin: 'Sets the space outside all the element’s borders.',
 
-
 	// ============ Background & Mask =============
+	background: 'Shorthand for setting all background properties in one declaration.',
 	'background-color': 'Sets the background color of the element.',
 	'background-position': 'Positions the background image within the element.',
 	'background-size': 'Resizes the background image of the element.',

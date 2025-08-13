@@ -1,11 +1,20 @@
 import type { PanelDefinition } from '@/types/layout/panel';
 
-const registry: Record<string, PanelDefinition> = {};
+const panelRegistry: Record<string, PanelDefinition> = {};
 
+/**
+ * Registers a panel definition in the layout context.
+ * @param panel - The panel definition to register.
+ */
 export function registerPanel(panel: PanelDefinition) {
-	registry[panel.id] = panel;
+	panelRegistry[panel.id] = panel;
 }
 
+/**
+ * Retrieves all registered panels.
+ * @returns A record of panel definitions keyed by their IDs.
+ */
 export function getRegisteredPanels(): Record<string, PanelDefinition> {
-	return registry;
+	return panelRegistry;
 }
+

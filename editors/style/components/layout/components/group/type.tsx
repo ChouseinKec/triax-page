@@ -1,14 +1,14 @@
-import { LayoutProps } from '@/editors/style/components/layout/components/property/types';
+import { PropertyProps } from '../property/type';
 
 /**
  * Represents a group of style properties in the layout editor.
  * Each group can define its grid layout and visibility state.
  */
-export type LayoutGroup = {
+export type GroupProps = {
     /** Optional flag indicating whether the group should be hidden. */
     hidden?: boolean;
     /** An array of style properties within this group. */
-    properties: LayoutProps[];
+    properties: PropertyProps[];
     /** Optional flag indicating whether the group is expandable. */
     isExpandable?: boolean;
     /** Optional title for the expandable group. */

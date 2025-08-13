@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 // Types
-import { LayoutProps } from "@/editors/style/components/layout/types";
+import { LayoutProps } from "../type";
 import type { Side, Corner } from "@/components/select/position/types";
 import type { StylePropertyKeys } from "@/types/style/property";
 

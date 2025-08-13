@@ -1,7 +1,7 @@
 "use client";
 
 // Types
-import type { LayoutProps } from "@/editors/style/components/layout/types";
+import type { LayoutProps } from "../type";
 
 // Hooks
 import { useStyleFactory } from "@/hooks/style/factory";

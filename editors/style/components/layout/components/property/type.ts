@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
  * alignment, grid position, visibility, and the component used to render it.
  * It is used to create a consistent interface for layout properties in the style editor.
  */
-export interface LayoutProps {
+export interface PropertyProps {
 	/** The label for the property, displayed in the UI */
 	label: string | null;
 	/** Whether the property is hidden in the UI */
@@ -21,7 +21,7 @@ export interface LayoutProps {
 	component: () => React.ReactNode;
 }
 
-export interface LayoutContentProps {
+export interface PropertyContentProps {
 	/** The component to render within the layout */
 	component: () => React.ReactNode;
 	/** The label for the property, displayed in the UI */

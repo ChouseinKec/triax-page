@@ -48,7 +48,7 @@ const ButtonReveal: React.FC<ButtonRevealProps> = ({
         }
 
         setIsOpen(prev => !prev);
-    }, [setIsOpen, onButtonClick]
+    }, [setIsOpen, onArrowClick]
     );
 
     const hasChildren = useMemo(() => !!children, [children]);

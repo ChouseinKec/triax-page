@@ -7,7 +7,7 @@ import Category from "@/editors/style/components/layout/components/category/comp
 import TabGroup from "@/components/group/tab/component";
 
 // Types 
-import { LayoutProps } from "@/editors/style/components/layout/types";
+import { LayoutProps } from "./type";
 import type { TabGroupItemsProps } from "@/components/group/tab/types";
 
 // Hooks

@@ -10,7 +10,6 @@ import { getRegisteredPanels } from "@/registry/layout/registry";
 // Utilities
 import { devLog } from "@/utilities/dev";
 
-
 /**
  * Record of all panels by their ID.
  */
@@ -22,10 +21,10 @@ type PanelRecord = Record<string, PanelInstance>;
 type PanelContextType = {
     panels: PanelRecord;
     registerPanel: (panel: PanelInstance) => void;
-    unregisterPanel: (panelId: string) => void;
-    togglePanel: (panelId: string) => void;
-    registerPanelTab: (panelId: string, tab: PanelTabInstance) => void;
-    unregisterPanelTab: (panelId: string, tabId: string) => void;
+    unregisterPanel: (panelID: string) => void;
+    togglePanel: (panelID: string) => void;
+    registerPanelTab: (panelID: string, tab: PanelTabInstance) => void;
+    unregisterPanelTab: (panelID: string, tabID: string) => void;
 };
 
 /**
@@ -53,7 +52,6 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
             { ...panelDef, tabs: {}, isOpen: panelDef.initialOpen, isLocked: panelDef.initialLocked },
         ])
     );
-
 
     // State to hold all panels
     const [panels, setPanels] = useState<PanelRecord>(initialPanels);
@@ -83,19 +81,19 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
     /**
      * Unregister (remove) a panel by its ID.
-     * @param panelId - The ID of the panel to remove.
+     * @param panelID - The ID of the panel to remove.
      */
-    const unregisterPanel = useCallback((panelId: string) => {
-        if (!panelId || typeof panelId !== "string") {
+    const unregisterPanel = useCallback((panelID: string) => {
+        if (!panelID || typeof panelID !== "string") {
             devLog.error("[LayoutProvider] Panel ID is required to unregister a panel.");
             return;
         }
-        if (!panels[panelId]) {
-            devLog.warn(`[LayoutProvider] Panel with ID "${panelId}" does not exist. Nothing to remove.`);
+        if (!panels[panelID]) {
+            devLog.warn(`[LayoutProvider] Panel with ID "${panelID}" does not exist. Nothing to remove.`);
             return;
         }
         setPanels(prev => {
-            const { [panelId]: _, ...rest } = prev;
+            const { [panelID]: _, ...rest } = prev;
             return rest;
         });
     }, [panels]
@@ -103,27 +101,27 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
     /**
      * Toggle the open/closed state of a panel.
-     * @param panelId - The ID of the panel to toggle.
+     * @param panelID - The ID of the panel to toggle.
      */
-    const togglePanel = useCallback((panelId: string) => {
-        if (!panelId || typeof panelId !== "string") {
+    const togglePanel = useCallback((panelID: string) => {
+        if (!panelID || typeof panelID !== "string") {
             devLog.error("[LayoutProvider] Panel ID is required to toggle a panel.");
             return;
         }
         setPanels(prev => {
-            const panel = prev[panelId];
+            const panel = prev[panelID];
             if (!panel) {
-                devLog.error(`[LayoutProvider] Panel with ID "${panelId}" not found. Skipping toggle.`);
+                devLog.error(`[LayoutProvider] Panel with ID "${panelID}" not found. Skipping toggle.`);
                 return prev;
             }
 
             // if (panel. === undefined) {
-            //     devLog.warn(`[LayoutProvider] Panel with ID "${panelId}" does not have an "isOpen" property. Defaulting to false.`);
+            //     devLog.warn(`[LayoutProvider] Panel with ID "${panelID}" does not have an "isOpen" property. Defaulting to false.`);
             // }
 
             return {
                 ...prev,
-                [panelId]: {
+                [panelID]: {
                     ...panel,
                     isOpen: !panel.isOpen,
                 },
@@ -134,11 +132,11 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
     /**
      * Register a tab for a specific panel.
-     * @param panelId - The ID of the panel.
+     * @param panelID - The ID of the panel.
      * @param tab - The PanelTabInstance to add.
      */
-    const registerPanelTab = useCallback((panelId: string, tab: PanelTabInstance) => {
-        if (!panelId || typeof panelId !== "string") {
+    const registerPanelTab = useCallback((panelID: string, tab: PanelTabInstance) => {
+        if (!panelID || typeof panelID !== "string") {
             devLog.error("[LayoutProvider] Panel ID is required to register a tab.");
             return;
         }
@@ -151,17 +149,17 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
             return;
         }
         setPanels(prev => {
-            const panel = prev[panelId];
+            const panel = prev[panelID];
             if (!panel) {
-                devLog.error(`[LayoutProvider] Panel with ID "${panelId}" not found. Skipping tab registration.`);
+                devLog.error(`[LayoutProvider] Panel with ID "${panelID}" not found. Skipping tab registration.`);
                 return prev;
             }
             if (panel.tabs[tab.id]) {
-                devLog.warn(`[LayoutProvider] Tab with ID "${tab.id}" already exists in panel "${panelId}". Overwriting.`);
+                devLog.warn(`[LayoutProvider] Tab with ID "${tab.id}" already exists in panel "${panelID}". Overwriting.`);
             }
             return {
                 ...prev,
-                [panelId]: {
+                [panelID]: {
                     ...panel,
                     tabs: {
                         ...panel.tabs,
@@ -175,32 +173,32 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
 
     /**
      * Unregister (remove) a tab from a panel.
-     * @param panelId - The ID of the panel.
-     * @param tabId - The ID of the tab to remove.
+     * @param panelID - The ID of the panel.
+     * @param tabID - The ID of the tab to remove.
      */
-    const unregisterPanelTab = useCallback((panelId: string, tabId: string) => {
-        if (!panelId || typeof panelId !== "string") {
+    const unregisterPanelTab = useCallback((panelID: string, tabID: string) => {
+        if (!panelID || typeof panelID !== "string") {
             devLog.error("[LayoutProvider] Panel ID is required to unregister a tab.");
             return;
         }
-        if (!tabId || typeof tabId !== "string") {
+        if (!tabID || typeof tabID !== "string") {
             devLog.error("[LayoutProvider] Tab ID is required to unregister a tab.");
             return;
         }
         setPanels(prev => {
-            const panel = prev[panelId];
+            const panel = prev[panelID];
             if (!panel) {
-                devLog.error(`[LayoutProvider] Panel with ID "${panelId}" not found. Skipping tab unregistration.`);
+                devLog.error(`[LayoutProvider] Panel with ID "${panelID}" not found. Skipping tab unregistration.`);
                 return prev;
             }
-            if (!panel.tabs[tabId]) {
-                devLog.warn(`[LayoutProvider] Tab with ID "${tabId}" does not exist in panel "${panelId}". Nothing to remove.`);
+            if (!panel.tabs[tabID]) {
+                devLog.warn(`[LayoutProvider] Tab with ID "${tabID}" does not exist in panel "${panelID}". Nothing to remove.`);
                 return prev;
             }
-            const { [tabId]: _, ...restTabs } = panel.tabs;
+            const { [tabID]: _, ...restTabs } = panel.tabs;
             return {
                 ...prev,
-                [panelId]: {
+                [panelID]: {
                     ...panel,
                     tabs: restTabs,
                 },
@@ -230,4 +228,10 @@ export const LayoutProvider = ({ children }: { children: ReactNode }) => {
  * Custom hook to access the LayoutContext.
  * @returns PanelContextType
  */
-export const useLayoutContext = () => useContext(LayoutContext);
+export const useLayoutContext = () => {
+    const context = useContext(LayoutContext);
+    if (!context) {
+        throw new Error("useLayoutContext must be used within a LayoutProvider.");
+    }
+    return context;
+};

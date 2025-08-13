@@ -6,12 +6,12 @@ import { memo, ReactElement } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import Property from "@/editors/style/components/layout/components/property/components";
+import Property from "../property/component";
 import DividerReveal from "@/components/reveal/divider/component";
 import HorizontalDivider from "@/components/divider/horizontal/component";
 
 // Types
-import type { LayoutGroup } from "@/editors/style/components/layout/components/group/types";
+import type { GroupProps } from "./type";
 
 /**
  * Group component renders a grid layout of properties within a style editor.
@@ -24,7 +24,7 @@ import type { LayoutGroup } from "@/editors/style/components/layout/components/g
  * @param {boolean} [props.hidden] - Flag to determine if the group should be visible.
  * @returns {ReactElement} The rendered Group component.
 */
-const Group: React.FC<LayoutGroup> = (props: LayoutGroup): ReactElement => {
+const Group: React.FC<GroupProps> = (props: GroupProps): ReactElement => {
     const {
         properties = [],
         hidden = false,

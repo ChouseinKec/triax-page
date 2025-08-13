@@ -2,10 +2,7 @@ import { useCallback } from "react";
 
 // Stores
 import useBlockStore from "@/stores/block/store";
-import usePageStore from '@/stores/page/store';
-
-// Registry
-import { getRegisteredBlocks } from "@/registry/blocks/registry";
+import usePageStore from "@/stores/page/store";
 
 // Types
 import type { BlockInstance, BlockStyleData, BlockType, BlockTag, BlockAttributeValue } from "@/types/block/block";
@@ -13,17 +10,21 @@ import type { BlockInstance, BlockStyleData, BlockType, BlockTag, BlockAttribute
 // Utilities
 import { getAllStylesWithFallback } from "@/utilities/style/cascade";
 import { getBlockSelector, generateCSSRule } from "@/utilities/style/css";
+import { devLog } from "@/utilities/dev";
+
+// Context
+import { useBlockContext } from "@/editors/block/context"
+import { BlockActionProps } from "@/editors/block/types";
+
 
 /**
  * BlockManager interface defines all actions and selectors for block management.
  */
 interface BlockManager {
-    // Actions
+    // Store
     addBlock: (type: BlockType, parentID?: string) => void;
     deleteBlock: (blockID: string) => void;
     selectBlock: (blockID: string | null) => void;
-
-    // Selectors
     getAllBlocks: () => Record<string, BlockInstance>;
     getBlock: (blockID: string) => BlockInstance | null;
     getSelectedBlock: () => BlockInstance | null;
@@ -31,18 +32,35 @@ interface BlockManager {
     getBlockTag: (blockID: string) => BlockTag | undefined;
     getBlockContentIDs: (blockID: string) => string[] | undefined;
     hasSelectedChild: (blockID: string) => boolean;
-
     renderBlockStyles: (blockID: string) => string | undefined;
-
     setBlockAttribute: (blockID: string, attribute: string, value: BlockAttributeValue) => void;
     getBlockAttribute: (blockID: string, attribute: string) => BlockAttributeValue | undefined;
+
+    // Context
+    registerAction: (action: BlockActionProps) => void;
+    unregisterAction: (actionID: string) => void;
+    getAllActions: () => Record<string, BlockActionProps>;
+    resetActions: () => void;
 }
 
 /**
  * useBlockManager
  * Centralizes all block actions and selectors for use throughout the app.
+ * Provides a consistent interface for managing blocks, styles, and actions.
+ * Uses the block store for state management and the block context for actions.
+ * Context is optional, if not in BlockProvider context it will use the store directly.
+ * @returns An object containing all block management functions and selectors.
  */
 export const useBlockManager = (): BlockManager => {
+    // Context is optional, used for actions management
+    // If not in BlockProvider context, it will use the store directly
+    let context: ReturnType<typeof useBlockContext> | null = null;
+    try {
+        context = useBlockContext();
+    } catch {
+        devLog.warn("[useBlockManager] Not in BlockProvider context, using store directly.");
+    }
+
     // Store actions
     const _addBlock = useBlockStore(state => state.addBlock);
     const _deleteBlock = useBlockStore(state => state.deleteBlock);
@@ -53,7 +71,6 @@ export const useBlockManager = (): BlockManager => {
     // Store state
     const _allBlocks = useBlockStore(state => state.allBlocks);
     const _selectedBlockID = useBlockStore(state => state.selectedBlockID);
-
 
     // Page state
     const device = usePageStore((state) => state.currentDevice.value);
@@ -84,8 +101,14 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block to select.
      */
     const selectBlock = useCallback<BlockManager['selectBlock']>((blockID) => {
+        // If blockID is the same as currently selected, do nothing
+        if (blockID === _selectedBlockID) return;
+
+        // Unregister all actions before selecting a new block
+        if (context) context.resetActions();
+
         _selectBlock(blockID);
-    }, [_selectBlock]
+    }, [_selectBlock, context]
     );
 
     /**
@@ -216,13 +239,64 @@ export const useBlockManager = (): BlockManager => {
     );
 
 
+    // Context actions
+    const registerAction = useCallback<BlockManager['registerAction']>((action) => {
+        if (context) {
+            context.registerAction(action);
+        } else {
+            devLog.warn("[useBlockManager] Not in BlockProvider context, skipping action registration.");
+        }
+    }, [context]
+    );
+
+    /**
+     * Unregisters an action by its ID.
+     * @param actionID - The ID of the action to unregister.
+    */
+    const unregisterAction = useCallback<BlockManager['unregisterAction']>((actionID) => {
+        if (context) {
+            context.unregisterAction(actionID);
+        }
+        else {
+            devLog.warn("[useBlockManager] Not in BlockProvider context, skipping action unregistration.");
+        }
+    }, [context]
+    );
+
+    /**
+     * Retrieves all registered actions.
+     * @returns An object containing all actions keyed by their IDs.
+    */
+    const getAllActions = useCallback<BlockManager['getAllActions']>(() => {
+        if (context) {
+            return context.getAllActions();
+        }
+        else {
+            devLog.warn("[useBlockManager] Not in BlockProvider context, skipping action retrieval.");
+            return {};
+        }
+    }, [context]
+    );
+
+    /**
+     * Resets all registered actions.
+     * This is useful when switching blocks to clear previous actions.
+    */
+    const resetActions = useCallback<BlockManager['resetActions']>(() => {
+        if (context) {
+            context.resetActions();
+        }
+        else {
+            devLog.warn("[useBlockManager] Not in BlockProvider context, skipping action reset.");
+        }
+    }, [context]
+    );
+
     return {
-        // Actions
+        // Store
         addBlock,
         deleteBlock,
         selectBlock,
-
-        // Selectors
         getAllBlocks,
         getBlock,
         getSelectedBlock,
@@ -233,5 +307,11 @@ export const useBlockManager = (): BlockManager => {
         renderBlockStyles,
         setBlockAttribute,
         getBlockAttribute,
+
+        // Context
+        registerAction,
+        unregisterAction,
+        getAllActions,
+        resetActions
     };
 };

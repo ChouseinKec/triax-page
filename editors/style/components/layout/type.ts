@@ -1,5 +1,5 @@
-import { LayoutGroup } from '@/editors/style/components/layout/group/types';
-import { ReactElement } from "react";
+import { GroupProps } from './components/group/type';
+import { ReactElement } from 'react';
 
 /**
  * Represents a layout section within the style editor.
@@ -11,5 +11,5 @@ import { ReactElement } from "react";
 export type LayoutProps = {
 	label: string | ReactElement;
 	title: string;
-	groups: LayoutGroup[];
+	groups: GroupProps[];
 };

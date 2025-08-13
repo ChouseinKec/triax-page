@@ -6,7 +6,7 @@ import { memo, ReactElement } from "react";
 import Group from "@/editors/style/components/layout/components/group/component";
 
 // Types
-import { LayoutCategoryProps } from "@/editors/style/components/layout/components/category/type";
+import { CategoryProps } from "./type";
 
 
 /**
@@ -17,7 +17,7 @@ import { LayoutCategoryProps } from "@/editors/style/components/layout/component
  * @param {LayoutGroup[]} props.groups - The groups to render in the category.
  * @returns {ReactElement} The rendered Category component.
  */
-const Category: React.FC<LayoutCategoryProps> = ({ groups }): ReactElement => {
+const Category: React.FC<CategoryProps> = ({ groups }): ReactElement => {
     return (
         <>
             {/* Map through the `groups` array and render a `Group` component for each group */}

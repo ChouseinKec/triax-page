@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import type { BlockDefinition, BlockType } from '@/types/block/block';
 
 const registry: Record<string, BlockDefinition> = {};
@@ -20,4 +22,14 @@ export function isChildPermitted(parentType: BlockType, childType: BlockType): b
 
 	if (parentBlock.permittedContent == null) return true;
 	return parentBlock.permittedContent.includes(childType);
+}
+
+export function blockIcon(type: BlockType): ReactNode | null {
+	const blocks = getRegisteredBlocks();
+	if (!blocks || !type) return null;
+
+	const block = blocks[type];
+	if (!block) return null;
+
+	return block.icon || null;
 }

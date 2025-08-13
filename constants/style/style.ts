@@ -1,6 +1,6 @@
-import { CSSProperties } from '@/types/style/property';
+import { StylePropertyKeys } from '@/types/style/property';
 
-export const CSSShorthandsDefs: Partial<Record<CSSProperties, CSSProperties[]>> = {
+export const CSSShorthandsDefs: Partial<Record<StylePropertyKeys, StylePropertyKeys[]>> = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],

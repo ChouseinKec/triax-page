@@ -17,6 +17,9 @@ import StyleEditor from "@/editors/style/component";
 import { useBlockManager } from "@/hooks/block/manager";
 import { useLayoutManager } from "@/hooks/layout/manager";
 
+// Context
+import { BlockProvider } from "./context";
+
 /**
  * BlockEditor Component
  * Renders the main block editor UI and registers block-related tabs to the layout panels.
@@ -98,7 +101,9 @@ const BlockEditor: React.FC<BlockEditorProps> = (props: BlockEditorProps): React
 
     return (
         <div className={CSS.BlockEditor} onClick={handleClick}>
-            <Blocks />
+            <BlockProvider>
+                <Blocks />
+            </BlockProvider>
         </div>
     );
 };

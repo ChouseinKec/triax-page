@@ -9,7 +9,7 @@ import CSS from "./styles.module.scss";
 import FloatReveal from "@/components/reveal/float/component";
 
 // Types
-import type { LayoutProps, LayoutContentProps } from "@/editors/style/components/layout/components/property/types";
+import type { PropertyProps, PropertyContentProps } from "./type";
 
 // Constants
 import { StylePropertyDefinitions } from "@/constants/style/property";
@@ -21,7 +21,7 @@ import { useStyleManager } from "@/hooks/style/manager";
  * Property component represents an individual style input field within a group.
  * It includes a label and a component (e.g., input, dropdown) for user interaction.
  * 
- * @param {LayoutProps} props - The props for the Property component.
+ * @param {PropertyProps} props - The props for the Property component.
  * @param {React.ReactNode} props.component - The component to render (e.g., input, dropdown, etc.).
  * @param {string} [props.column="auto"] - The column layout for the property.
  * @param {string} [props.row="auto"] - The row layout for the property.
@@ -30,7 +30,7 @@ import { useStyleManager } from "@/hooks/style/manager";
  * @param {boolean} [props.disabled] - Flag to disable the property input.
  * @returns {ReactElement} The rendered Property component.
 */
-const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
+const Property: React.FC<PropertyProps> = (props: PropertyProps): ReactElement => {
     const {
         component,
         label = null,
@@ -60,7 +60,7 @@ const Property: React.FC<LayoutProps> = (props: LayoutProps): ReactElement => {
     );
 };
 
-const Content: React.FC<LayoutContentProps> = (props: LayoutContentProps): ReactElement => {
+const Content: React.FC<PropertyContentProps> = (props: PropertyContentProps): ReactElement => {
     const { component, label, property } = props;
     const labelRef = useRef<HTMLLabelElement>(null);
 
