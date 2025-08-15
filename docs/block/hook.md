@@ -97,7 +97,7 @@ Retrieves the child block IDs for a block.
 
 ---
 
-### hasSelectedChild
+### hasBlockSelectedContent
 Checks if the currently selected block is a descendant of the given block.
 
 - **Parameters:**

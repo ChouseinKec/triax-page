@@ -18,7 +18,6 @@ export type ButtonRevealProps = {
     /** Optional variation for the button style */
     variation?: "primary" | "secondary";
 
-
     /** Optional click handler for the button */
     onButtonClick?: () => void;
 

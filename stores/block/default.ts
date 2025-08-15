@@ -23,7 +23,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		},
 		attributes: {},
 		parentID: null,
-		contentIDs: ['hero', 'features', 'footer'],
+		contentIDs: ['hero', 'footer', 'features', 'timeline'],
 		tag: 'div',
 		tags: [],
 		permittedContent: null,
@@ -221,6 +221,140 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 			text: 'Made with ❤️ using Triax. Edit this page or add your own blocks!',
 		},
 		parentID: 'root',
+		contentIDs: [],
+		tag: 'p',
+		tags: [],
+		permittedContent: [],
+		permittedParent: null,
+		type: 'text',
+	},
+
+	// Timeline
+	timeline: {
+		id: 'timeline',
+		styles: {
+			all: {
+				all: {
+					all: {
+						width: '100%',
+						'max-width': '900px',
+						margin: '0 0 24px 0',
+						padding: '18px',
+						background: '#f3f6fd', // soft blue background
+						'border-radius': '10px',
+						'box-shadow': '0 2px 8px rgba(0,0,0,0.03)',
+						'text-align': 'left',
+						color: '#334155',
+						'font-size': '1rem',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'root',
+		contentIDs: ['timeline-title', 'timeline-date-2025-08-13'],
+		tag: 'div',
+		tags: [],
+		permittedContent: null,
+		permittedParent: null,
+		type: 'container',
+	},
+	'timeline-title': {
+		id: 'timeline-title',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1.5rem', // match Features title size
+						'font-weight': 'bold',
+						'margin-bottom': '10px',
+						'text-align': 'center', // center like Features
+						color: '#0ea5e9', // match Features accent color
+					},
+				},
+			},
+		},
+		attributes: {
+			text: '🕒 Timeline', // match Features icon and rename
+		},
+		parentID: 'timeline',
+		contentIDs: [],
+		tag: 'p',
+		tags: [],
+		permittedContent: [],
+		permittedParent: null,
+		type: 'text',
+	},
+	'timeline-date-2025-08-13': {
+		id: 'timeline-date-2025-08-13',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'margin-bottom': '8px',
+						padding: '8px 0 0 0',
+						'border-left-width': '3px',
+						'border-left-style': 'solid',
+						'border-left-color': '#2563eb', // blue accent
+						background: '#f8fafc', // very light background
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline',
+		contentIDs: ['timeline-date-2025-08-13-title', 'timeline-entry-1'],
+		tag: 'div',
+		tags: [],
+		permittedContent: null,
+		permittedParent: null,
+		type: 'container',
+	},
+	'timeline-date-2025-08-13-title': {
+		id: 'timeline-date-2025-08-13-title',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1.1rem',
+						'font-weight': 'bold',
+						color: '#2563eb', // blue accent
+						'margin-bottom': '4px',
+						'padding-left': '12px',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: ' 2025-08-13',
+		},
+		parentID: 'timeline-date-2025-08-13',
+		contentIDs: [],
+		tag: 'p',
+		tags: [],
+		permittedContent: [],
+		permittedParent: null,
+		type: 'text',
+	},
+	'timeline-entry-1': {
+		id: 'timeline-entry-1',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'line-height': '1.7',
+						color: '#334155',
+						'margin-bottom': '4px',
+						'padding-left': '12px',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: '• Added ArrowUp/ArrowDown block selection in Block Hierarchy.',
+		},
+		parentID: 'timeline-date-2025-08-13',
 		contentIDs: [],
 		tag: 'p',
 		tags: [],

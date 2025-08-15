@@ -31,10 +31,15 @@ interface BlockManager {
     getBlockStyles: (blockID: string) => BlockStyleData | null;
     getBlockTag: (blockID: string) => BlockTag | undefined;
     getBlockContentIDs: (blockID: string) => string[] | undefined;
-    hasSelectedChild: (blockID: string) => boolean;
+    hasBlockSelectedContent: (blockID: string) => boolean;
     renderBlockStyles: (blockID: string) => string | undefined;
     setBlockAttribute: (blockID: string, attribute: string, value: BlockAttributeValue) => void;
     getBlockAttribute: (blockID: string, attribute: string) => BlockAttributeValue | undefined;
+    getBlockPreviousSibling: (blockID: string) => BlockInstance | null;
+    getBlockNextSibling: (blockID: string) => BlockInstance | null;
+
+    getNextBlock: () => BlockInstance | null;
+    getPreviousBlock: () => BlockInstance | null;
 
     // Context
     registerAction: (action: BlockActionProps) => void;
@@ -174,7 +179,7 @@ export const useBlockManager = (): BlockManager => {
      * @param blockID - The ID of the block to check.
      * @returns True if the selected block is a descendant, false otherwise.
      */
-    const hasSelectedChild = useCallback<BlockManager['hasSelectedChild']>((blockID) => {
+    const hasBlockSelectedContent = useCallback<BlockManager['hasBlockSelectedContent']>((blockID) => {
         if (!_selectedBlockID || _selectedBlockID === blockID) return false;
 
         // Recursive helper to check descendants
@@ -238,6 +243,134 @@ export const useBlockManager = (): BlockManager => {
     }, [_allBlocks]
     );
 
+    /**
+     * Retrieves the previous sibling block of a given block.
+     * If the block has no parent or is the first child, returns null.
+     * @param blockID - The ID of the block to find the previous sibling for.
+     * @returns The previous sibling block instance or null if not found.
+    */
+    const getBlockPreviousSibling = useCallback<BlockManager['getBlockPreviousSibling']>((blockID) => {
+        // If no blockID is provided, return null
+        if (!blockID) return null;
+
+        // Get the block instance
+        const block = _allBlocks[blockID];
+        if (!block) return null;
+
+        // If the block has no parent, return null
+        if (!block.parentID) return null;
+
+        // Get the parent block
+        const parentBlock = _allBlocks[block.parentID];
+        if (!parentBlock) return null;
+
+        // Find the index of the current block in the parent's content IDs
+        const currentIndex = parentBlock.contentIDs.indexOf(blockID);
+        if (currentIndex === -1) return null;
+
+        // Return the previous sibling block if it exists
+        const previousSiblingID = parentBlock.contentIDs[currentIndex - 1];
+        return previousSiblingID ? _allBlocks[previousSiblingID] : null;
+
+    }, [_allBlocks]
+    );
+
+    /**
+     * Retrieves the next sibling block of a given block.
+     * If the block has no parent or is the last child, returns null.
+     * @param blockID - The ID of the block to find the next sibling for.
+     * @returns The next sibling block instance or null if not found.
+    */
+    const getBlockNextSibling = useCallback<BlockManager['getBlockNextSibling']>((blockID) => {
+        // If no blockID is provided, return null   
+        if (!blockID) return null;
+
+        // Get the block instance
+        const block = _allBlocks[blockID];
+        if (!block) return null;
+
+        // If the block has no parent, return null
+        if (!block.parentID) return null;
+
+        // Get the parent block
+        const parentBlock = _allBlocks[block.parentID];
+        if (!parentBlock) return null;
+
+        // Find the index of the current block in the parent's content IDs
+        const currentIndex = parentBlock.contentIDs.indexOf(blockID);
+        if (currentIndex === -1) return null;
+
+        // Return the next sibling block if it exists
+        const nextSiblingID = parentBlock.contentIDs[currentIndex + 1];
+        return nextSiblingID ? _allBlocks[nextSiblingID] : null;
+
+    }, [_allBlocks]
+    );
+
+    /**
+     * Retrieves the next block in the hierarchy.
+     * This function checks for children first, then siblings, and finally parents.
+     * @returns The next block instance or null if not found.
+    */
+    const getNextBlock = useCallback<BlockManager['getNextBlock']>(() => {
+        // If no selected block, return null
+        if (!_selectedBlockID) return null;
+
+        // Get the selected block
+        const selectedBlock = _allBlocks[_selectedBlockID];
+        if (!selectedBlock) return null;
+
+        // If it has children, return the first child
+        const childIDs = selectedBlock.contentIDs;
+        if (childIDs && childIDs.length > 0) return _allBlocks[childIDs[0]];
+
+        // If no children, get the next sibling
+        const nextSibling = getBlockNextSibling(_selectedBlockID);
+        if (nextSibling) return nextSibling;
+
+        // If no next sibling, check the parent's next sibling
+        const parentID = selectedBlock.parentID;
+        if (parentID) return getBlockNextSibling(parentID);
+
+        // If no next sibling, return null
+        return null;
+
+    }, [_allBlocks, _selectedBlockID, getBlockNextSibling]
+    );
+
+    /**
+     * Retrieves the previous block in the hierarchy.
+     * This function checks for children first, then siblings, and finally parents.
+     * @returns The previous block instance or null if not found.
+     */
+    const getPreviousBlock = useCallback<BlockManager['getPreviousBlock']>(() => {
+        // If no selected block, return null
+        if (!_selectedBlockID) return null;
+
+        // Get the selected block
+        const selectedBlock = _allBlocks[_selectedBlockID];
+        if (!selectedBlock) return null;
+
+        // Get previous sibling
+        const previousSibling = getBlockPreviousSibling(_selectedBlockID);
+        if (previousSibling) {
+            // If previous sibling has children, return its last child
+            const prevSiblingChildren = previousSibling.contentIDs;
+            if (prevSiblingChildren && prevSiblingChildren.length > 0) {
+                return _allBlocks[prevSiblingChildren[prevSiblingChildren.length - 1]];
+            }
+            // Otherwise, return previous sibling itself
+            return previousSibling;
+        }
+
+        // If no previous sibling, check the parent block
+        const parentID = selectedBlock.parentID;
+        if (parentID) return _allBlocks[parentID] || null;
+
+        // If no previous block found, return null
+        return null;
+    }, [_allBlocks, _selectedBlockID, getBlockPreviousSibling]
+    );
 
     // Context actions
     const registerAction = useCallback<BlockManager['registerAction']>((action) => {
@@ -303,10 +436,15 @@ export const useBlockManager = (): BlockManager => {
         getBlockStyles,
         getBlockTag,
         getBlockContentIDs,
-        hasSelectedChild,
+        hasBlockSelectedContent,
         renderBlockStyles,
         setBlockAttribute,
         getBlockAttribute,
+        getBlockPreviousSibling,
+        getBlockNextSibling,
+
+        getNextBlock,
+        getPreviousBlock,
 
         // Context
         registerAction,

@@ -15,13 +15,13 @@ import { useBlockManager } from '@/hooks/block/manager';
  * @returns JSX element representing the container block
  */
 function render(instance: BlockInstance, children?: ReactNode) {
-	const { selectBlock, renderBlockStyles, getSelectedBlock, hasSelectedChild } = useBlockManager();
+	const { selectBlock, renderBlockStyles, getSelectedBlock, hasBlockSelectedContent } = useBlockManager();
 
 
 	// Get the currently selected block
 	const selectedBlock = getSelectedBlock();
 	const isSelected = selectedBlock?.id === instance.id;
-	const hasChildSelected = hasSelectedChild(instance.id);
+	const hasChildSelected = hasBlockSelectedContent(instance.id);
 
 	/**
 	 * Handles block selection when clicked.

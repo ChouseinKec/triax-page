@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useCallback } from "react";
 import { createPortal } from "react-dom";
 
 // Styles
@@ -16,6 +16,7 @@ import { useBlockManager } from "@/hooks/block/manager";
 // Registry
 import { blockIcon } from "@/registry/blocks/registry";
 
+
 /**
  * Blocks Component
  *
@@ -28,7 +29,7 @@ import { blockIcon } from "@/registry/blocks/registry";
  */
 const Blocks: React.FC = () => {
     // Retrieve the block manager's getAllBlocks function
-    const { getAllBlocks, getAllActions, getSelectedBlock } = useBlockManager();
+    const { getAllBlocks, getAllActions, getSelectedBlock} = useBlockManager();
     const allActions = getAllActions();
     const selectedBlock = getSelectedBlock();
 
@@ -44,7 +45,7 @@ const Blocks: React.FC = () => {
     const rootBlocks = useMemo(() => Object.values(allBlocks).filter(block => !block.parentID), [allBlocks]);
 
     return (
-        <div className={CSS.Blocks}>
+        <div className={CSS.Blocks}        >
             {/* Render each root block */}
             {rootBlocks.map(block => (
                 <Block key={block.id} blockID={block.id} />
@@ -58,7 +59,7 @@ const Blocks: React.FC = () => {
                             <button data-is-disabled={true}>
                                 {blockIcon(selectedBlock.type)}
                             </button>
-                            <span className={CSS.ActionsDivider}/>
+                            <span className={CSS.ActionsDivider} />
                             {Object.values(allActions).map(action => (
                                 <button title={action.title} key={action.id} onClick={action.onClick}>
                                     {action.icon}
@@ -69,7 +70,7 @@ const Blocks: React.FC = () => {
                     </ActionGroup>,
                     document.body
                 )}
-                
+
 
         </div>
     );

@@ -11,14 +11,14 @@ function render(instance: BlockInstance, children?: ReactNode) {
 		selectBlock,
 		renderBlockStyles,
 		getSelectedBlock,
-		hasSelectedChild,
+		hasBlockSelectedContent,
 		getBlockAttribute,
 		setBlockAttribute,
 	} = useBlockManager();
 
 	const selectedBlock = getSelectedBlock();
 	const isSelected = selectedBlock?.id === instance.id;
-	const hasChildSelected = hasSelectedChild(instance.id);
+	const hasChildSelected = hasBlockSelectedContent(instance.id);
 
 	// Get the current text value from attributes
 	const text = getBlockAttribute(instance.id, "text") || "Enter something...";
