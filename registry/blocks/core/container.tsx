@@ -15,7 +15,7 @@ import { useBlockManager } from '@/hooks/block/manager';
  * @returns JSX element representing the container block
  */
 function render(instance: BlockInstance, children?: ReactNode) {
-	const { selectBlock, renderBlockStyles, getSelectedBlock, hasBlockSelectedContent } = useBlockManager();
+	const { selectBlock, renderBlockStyles, getSelectedBlock, hasBlockSelectedContent, getBlockAttributes } = useBlockManager();
 
 
 	// Get the currently selected block
@@ -39,6 +39,7 @@ function render(instance: BlockInstance, children?: ReactNode) {
 			data-block-type="container"
 			data-is-selected={isSelected}
 			data-has-selected-descendant={hasChildSelected}
+			{...getBlockAttributes(instance.id)}
 		>
 			{/* Render child blocks */}
 			{children}

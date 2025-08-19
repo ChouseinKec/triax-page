@@ -86,7 +86,7 @@ Determines the type of a CSS value based on its format. Uses specific checks for
 
 - **Parameters:**
   - `input: string` — The CSS value string to classify.
-- **Returns:** `StyleTokenType | undefined` — The detected value type or undefined if not recognized.
+- **Returns:** `CSSTokenType | undefined` — The detected value type or undefined if not recognized.
 - **Example:**
   - `getValueType('10px') → 'dimension'`
   - `getValueType('auto') → 'keyword'`
@@ -126,7 +126,7 @@ Converts an array of CSS value strings to an array of tokens. Uses getValueToken
 Validates if a given value is valid for a specific CSS property. Uses the property's `syntaxNormalized` to check if the value matches any of the defined syntaxes.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The CSS property name (e.g., 'margin', 'padding').
+  - `property: CSSPropertyKey` — The CSS property name (e.g., 'margin', 'padding').
   - `value: string` — The CSS value string to validate (e.g., '10px auto').
 - **Returns:** `boolean` — True if the value is valid for the property, false otherwise.
 - **Example:**

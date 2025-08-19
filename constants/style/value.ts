@@ -1,5 +1,5 @@
 // Types
-import type { ValueSeparator } from '@/types/style/value';
+import type { ValueSeparator } from '@/types/block/style/value';
 
 export const ValueFunctionDefaults: Record<string, string> = {
 	minmax: 'minmax(0px,0px)',

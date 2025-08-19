@@ -3,12 +3,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Types
 import type { BlockStoreProps } from './types';
-import type { BlockStyleData, BlockInstance, BlockType } from '@/types/block/block';
+import type { BlockStyleDefinition, BlockInstance, BlockType } from '@/types/block/block';
 
 // Constants
 import { BlockStyleDefaults } from '@/constants/block/style';
 import { DefaultBlocks } from './default';
-function createBlockStyles(): BlockStyleData {
+
+// Utilities
+import { devLog } from '@/utilities/dev';
+
+function createBlockStyles(): BlockStyleDefinition {
 	const defaults = {
 		...BlockStyleDefaults,
 		all: {
@@ -24,9 +28,6 @@ function createBlockStyles(): BlockStyleData {
 }
 
 function createBlock(type: BlockType, parentBlock?: string): BlockInstance {
-	const permittedContent = null;
-	const permittedParent = null;
-
 	return {
 		id: uuidv4(),
 		styles: createBlockStyles(),
@@ -34,9 +35,6 @@ function createBlock(type: BlockType, parentBlock?: string): BlockInstance {
 		parentID: parentBlock ?? null,
 		contentIDs: [],
 		tag: 'div',
-		tags: [],
-		permittedContent,
-		permittedParent,
 		type,
 	};
 }
@@ -170,10 +168,16 @@ const useBlockStore = create<BlockStoreProps>((set, get) => ({
 	 */
 	setBlockStyles: (blockID, styles) => {
 		set((state) => {
-			if (!blockID) return state; // Return unchanged state if invalid
+			if (!blockID) {
+				devLog.error('[BlockStore] setBlockStyles called with invalid blockID');
+				return state;
+			}
 
 			const block = get().getBlock(blockID);
-			if (!block) return state; // Return unchanged state if invalid
+			if (!block) {
+				devLog.error('[BlockStore] setBlockStyles: block not found');
+				return state;
+			}
 
 			return {
 				allBlocks: {
@@ -200,13 +204,21 @@ const useBlockStore = create<BlockStoreProps>((set, get) => ({
 	 */
 	setBlockStyle: (blockID, device, orientation, pseudo, property, value) => {
 		set((state) => {
-			if (!blockID) return state;
+			if (!blockID) {
+				devLog.error('[BlockStore] setBlockStyle called with invalid blockID');
+				return state;
+			}
 
 			const block = get().getBlock(blockID);
-			if (!block) return state;
+			if (!block) {
+				devLog.error('[BlockStore] setBlockStyle: block not found');
+				return state;
+			}
 
-			if (!block.styles) return state;
-
+			if (!block.styles) {
+				devLog.error('[BlockStore] setBlockStyle: block.styles missing');
+				return state;
+			}
 			const updatedStyles = {
 				...block.styles,
 				[device]: {
@@ -242,10 +254,16 @@ const useBlockStore = create<BlockStoreProps>((set, get) => ({
 	 */
 	setBlockAttribute: (blockID, attribute, value) => {
 		set((state) => {
-			if (!blockID) return state;
+			if (!blockID) {
+				devLog.error('[BlockStore] setBlockAttribute called with invalid blockID');
+				return state;
+			}
 
 			const block = get().getBlock(blockID);
-			if (!block) return state;
+			if (!block) {
+				devLog.error('[BlockStore] setBlockAttribute: block not found');
+				return state;
+			}
 
 			return {
 				allBlocks: {
@@ -256,6 +274,36 @@ const useBlockStore = create<BlockStoreProps>((set, get) => ({
 							...block.attributes,
 							[attribute]: value,
 						},
+					},
+				},
+			};
+		});
+	},
+
+	/**
+	 * Sets the tag for a specific block.
+	 * @param blockID - The ID of the block to update.
+	 * @param tag - The new tag to set for the block.
+	 */
+	setBlockTag: (blockID, tag) => {
+		set((state) => {
+			if (!blockID) {
+				devLog.error('[BlockStore] setBlockTag called with invalid blockID');
+				return state;
+			}
+
+			const block = get().getBlock(blockID);
+			if (!block) {
+				devLog.error('[BlockStore] setBlockTag: block not found');
+				return state;
+			}
+
+			return {
+				allBlocks: {
+					...state.allBlocks,
+					[blockID]: {
+						...block,
+						tag,
 					},
 				},
 			};

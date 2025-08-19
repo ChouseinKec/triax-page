@@ -5,7 +5,9 @@ import useBlockStore from "@/stores/block/store";
 import usePageStore from "@/stores/page/store";
 
 // Types
-import type { BlockInstance, BlockStyleData, BlockType, BlockTag, BlockAttributeValue } from "@/types/block/block";
+import type { BlockInstance, BlockStyleDefinition, BlockType } from "@/types/block/block";
+import type { HTMLElementTag } from "@/types/block/element";
+import type { HTMLPropertyKey } from "@/types/block/attribute/property";
 
 // Utilities
 import { getAllStylesWithFallback } from "@/utilities/style/cascade";
@@ -28,16 +30,20 @@ interface BlockManager {
     getAllBlocks: () => Record<string, BlockInstance>;
     getBlock: (blockID: string) => BlockInstance | null;
     getSelectedBlock: () => BlockInstance | null;
-    getBlockStyles: (blockID: string) => BlockStyleData | null;
-    getBlockTag: (blockID: string) => BlockTag | undefined;
     getBlockContentIDs: (blockID: string) => string[] | undefined;
     hasBlockSelectedContent: (blockID: string) => boolean;
+
+    getBlockStyles: (blockID: string) => BlockStyleDefinition | null;
     renderBlockStyles: (blockID: string) => string | undefined;
-    setBlockAttribute: (blockID: string, attribute: string, value: BlockAttributeValue) => void;
-    getBlockAttribute: (blockID: string, attribute: string) => BlockAttributeValue | undefined;
+
+    setBlockAttribute: (blockID: string, attribute: HTMLPropertyKey, value: string) => void;
+    getBlockAttribute: (blockID: string, attribute: HTMLPropertyKey) => string | undefined;
+    getBlockAttributes: (blockID: string) => Record<string, string | boolean> | null;
+    getBlockTag: (blockID: string) => HTMLElementTag | undefined;
+    setBlockTag: (blockID: string, tag: HTMLElementTag) => void;
+
     getBlockPreviousSibling: (blockID: string) => BlockInstance | null;
     getBlockNextSibling: (blockID: string) => BlockInstance | null;
-
     getNextBlock: () => BlockInstance | null;
     getPreviousBlock: () => BlockInstance | null;
 
@@ -72,6 +78,7 @@ export const useBlockManager = (): BlockManager => {
     const _selectBlock = useBlockStore(state => state.selectBlock);
     const _getBlock = useBlockStore(state => state.getBlock);
     const _setBlockAttribute = useBlockStore(state => state.setBlockAttribute);
+    const _setBlockTag = useBlockStore(state => state.setBlockTag);
 
     // Store state
     const _allBlocks = useBlockStore(state => state.allBlocks);
@@ -239,8 +246,32 @@ export const useBlockManager = (): BlockManager => {
      * @returns The attribute value or undefined if not found.
      */
     const getBlockAttribute = useCallback<BlockManager['getBlockAttribute']>((blockID, attribute) => {
-        return _allBlocks[blockID]?.attributes?.[attribute];
+        const raw = _allBlocks[blockID]?.attributes?.[attribute];
+        if (raw === 'true') return true as unknown as string; // return boolean as allowed by consumers expecting truthy value
+        if (raw === 'false') return false as unknown as string;
+        return raw;
     }, [_allBlocks]
+    );
+
+    const getBlockAttributes = useCallback<BlockManager['getBlockAttributes']>((blockID) => {
+        const attrs = _allBlocks[blockID]?.attributes;
+        if (!attrs) return null;
+
+        // Convert string 'true'/'false' to boolean true/false, leave other values untouched
+        const converted: Record<string, string | boolean> = {};
+        Object.entries(attrs).forEach(([k, v]) => {
+            if (v === 'true') converted[k] = true;
+            else if (v === 'false') converted[k] = false;
+            else converted[k] = v;
+        });
+
+        return converted;
+    }, [_allBlocks]
+    );
+
+    const setBlockTag = useCallback<BlockManager['setBlockTag']>((blockID, tag) => {
+        _setBlockTag(blockID, tag);
+    }, [_setBlockTag]
     );
 
     /**
@@ -425,6 +456,8 @@ export const useBlockManager = (): BlockManager => {
     }, [context]
     );
 
+    
+
     return {
         // Store
         addBlock,
@@ -442,6 +475,8 @@ export const useBlockManager = (): BlockManager => {
         getBlockAttribute,
         getBlockPreviousSibling,
         getBlockNextSibling,
+        setBlockTag,
+        getBlockAttributes,
 
         getNextBlock,
         getPreviousBlock,

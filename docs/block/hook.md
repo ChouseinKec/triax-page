@@ -75,7 +75,7 @@ Retrieves the style data for a block.
 
 - **Parameters:**
   - `blockID: string` — The ID of the block.
-- **Returns:** `BlockStyleData | null`
+- **Returns:** `BlockStyleDefinition | null`
 
 ---
 
@@ -84,7 +84,7 @@ Retrieves the tag of a block.
 
 - **Parameters:**
   - `blockID: string` — The ID of the block.
-- **Returns:** `BlockTag | undefined`
+- **Returns:** `HTMLElementTag | undefined`
 
 ---
 
@@ -121,7 +121,7 @@ Sets a custom attribute on a block.
 - **Parameters:**
   - `blockID: string` — The ID of the block.
   - `attribute: string` — The attribute name.
-  - `value: BlockAttributeValue` — The value to set.
+  - `value: HTMLValueSyntax` — The value to set.
 
 ---
 
@@ -131,7 +131,7 @@ Retrieves a custom attribute from a block.
 - **Parameters:**
   - `blockID: string` — The ID of the block.
   - `attribute: string` — The attribute name.
-- **Returns:** `BlockAttributeValue | undefined`
+- **Returns:** `HTMLValueSyntax | undefined`
 
 ---
 

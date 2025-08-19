@@ -3,14 +3,14 @@
 import React, { memo, ReactNode, useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "./style.module.scss";
 
 // Components
 import RadioSelect from "@/components/select/radio/component";
 
 // Types
-import type { TabGroupProps } from "./types";
-import type { OptionData } from "@/types/option";
+import type { TabGroupProps } from "./type";
+import type { OptionDefinition } from "@/types/option";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
@@ -60,9 +60,9 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     /**
      * Transforms tab items into RadioSelect-compatible options
      * 
-     * @returns {OptionData[]} Array of options for RadioSelect
+     * @returns {OptionDefinition[]} Array of options for RadioSelect
      */
-    const tabOptions = useMemo((): OptionData[] => {
+    const tabOptions = useMemo((): OptionDefinition[] => {
         return items.map((item, index) => ({
             name: item.title || `Tab ${index + 1}`,
             icon: typeof item.label === "object" ? item.label : undefined,

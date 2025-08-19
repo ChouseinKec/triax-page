@@ -3,13 +3,13 @@
 import React, { useCallback, memo, useRef, useMemo, useReducer, useEffect, useState } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "./style.module.scss";
 
 // Components
 import FloatReveal from "@/components/reveal/float/component";
 
 // Types
-import type { GenericInputProps } from "./types";
+import type { GenericInputProps } from "./type";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
@@ -109,13 +109,9 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             return;
         }
 
-        if (validationResult?.status) {
-            validationDispatch({ type: "VALIDATION_SUCCESS" });
-        }
+        if (validationResult?.status) validationDispatch({ type: "VALIDATION_SUCCESS" });
+        if (inputValue !== value) onChange(inputValue);
 
-        if (inputValue !== value) {
-            onChange(inputValue);
-        }
     }, [internalValue, value, onChange, onValidate, safeOnValidate]
     );
 
@@ -129,7 +125,6 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             case "Escape":
                 event.preventDefault();
                 handleReset();
-                inputRef.current?.blur();
                 break;
             default:
                 break;

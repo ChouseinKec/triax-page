@@ -9,8 +9,8 @@ Helpers for resolving CSS property values with cascade logic, supporting device,
 Gets a style property value with CSS cascade fallback logic.
 
 - **Parameters:**
-  - `styles: BlockStyleData` — The block's complete style data.
-  - `property: StylePropertyKeys` — The style property to lookup.
+  - `styles: BlockStyleDefinition` — The block's complete style data.
+  - `property: CSSPropertyKey` — The style property to lookup.
   - `device: DeviceName` — Current device context.
   - `orientation: OrientationName` — Current orientation context.
   - `pseudo: PseudoName` — Current pseudo context.
@@ -27,7 +27,7 @@ Gets a style property value with CSS cascade fallback logic.
 Gets all properties with their resolved values for the current context. Useful for rendering context-specific styles.
 
 - **Parameters:**
-  - `styles: BlockStyleData` — The block's complete style data.
+  - `styles: BlockStyleDefinition` — The block's complete style data.
   - `device: DeviceName` — Current device context.
   - `orientation: OrientationName` — Current orientation context.
   - `pseudo: PseudoName` — Current pseudo context.

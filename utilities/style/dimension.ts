@@ -1,6 +1,6 @@
 import { StyleUnitDefinitions } from '@/constants/style/unit';
-import { StyleUnitType } from '@/types/style/unit';
-import { StyleUnitKeys } from '@/types/style/unit';
+import { CSSUnitType } from '@/types/block/style/unit';
+import { CSSUnitKey } from '@/types/block/style/unit';
 
 /**
  * Extracts the numeric value from a CSS dimension string (e.g., '10px', '25%', '0.1rem').
@@ -49,7 +49,7 @@ function isValueDimension(input: string): boolean {
 	// If no number or no unit, not a valid dimension
 	if (value === undefined || !unit) return false;
 
-	// Ensure unit is a valid StyleUnitKeys value
+	// Ensure unit is a valid CSSUnitKey value
 	if (!(unit in StyleUnitDefinitions)) return false;
 	return true;
 }
@@ -66,9 +66,9 @@ function isValueDimension(input: string): boolean {
  * getDimensionType('180deg') → 'angle'
  * getDimensionType('1fr') → 'flex'
  */
-function getDimensionType(input: string): StyleUnitType | undefined {
+function getDimensionType(input: string): CSSUnitType | undefined {
 	if (!isValueDimension(input)) return undefined;
-	const unit = extractUnit(input) as StyleUnitKeys;
+	const unit = extractUnit(input) as CSSUnitKey;
 	const unitDef = unit ? StyleUnitDefinitions[unit] : undefined;
 	return unitDef?.type;
 }

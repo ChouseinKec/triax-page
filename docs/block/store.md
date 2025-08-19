@@ -63,7 +63,7 @@ Updates the entire style object for a specific block.
 
 - **Parameters:**
   - `blockID: string` — The ID of the block to update.
-  - `styles: BlockStyleData` — The new style object.
+  - `styles: BlockStyleDefinition` — The new style object.
 
 ---
 

@@ -25,7 +25,7 @@ The `hooks/style/manager.ts` file provides the main React hook for managing CSS 
 Gets a style property value for the current block, device, orientation, and pseudo-state, with CSS-like cascade and shorthand support.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The style property to get.
+  - `property: CSSPropertyKey` — The style property to get.
 - **Returns:** `string` — The resolved value or empty string if not found.
 
 ---
@@ -35,7 +35,7 @@ Gets a style property value for the current block, device, orientation, and pseu
 Sets a style property value for the current block, device, orientation, and pseudo-state. Handles shorthands and validates property and value.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The style property to set.
+  - `property: CSSPropertyKey` — The style property to set.
   - `value: string` — The value to set for the property.
 
 ---
@@ -45,7 +45,7 @@ Sets a style property value for the current block, device, orientation, and pseu
 Copies a style property value to the clipboard.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The style property to copy.
+  - `property: CSSPropertyKey` — The style property to copy.
 
 ---
 
@@ -54,7 +54,7 @@ Copies a style property value to the clipboard.
 Pastes a style property value from the clipboard.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The style property to paste into.
+  - `property: CSSPropertyKey` — The style property to paste into.
 
 ---
 
@@ -63,7 +63,7 @@ Pastes a style property value from the clipboard.
 Resets a style property value to an empty string for the current context.
 
 - **Parameters:**
-  - `property: StylePropertyKeys` — The style property to reset.
+  - `property: CSSPropertyKey` — The style property to reset.
 
 ---
 

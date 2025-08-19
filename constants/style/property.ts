@@ -1,5 +1,5 @@
 // Types
-import type { StylePropertyData, StylePropertyKeys } from '@/types/style/property';
+import type { CSSPropertyDefinition, CSSPropertyKey } from '@/types/block/style/property';
 
 // Constants
 import { ValueSeparatorDefaults } from './value';
@@ -13,13 +13,13 @@ import { parse } from '@/utilities/style/parse';
 import { extractSeparators } from '@/utilities/style/separator';
 
 /**
- * Helper function to create a StylePropertyData object.
+ * Helper function to create a CSSPropertyDefinition object.
  * @param name - The canonical name of the CSS property (e.g. 'color', 'font-size').
  * @param syntax - The raw CSS Value Definition Syntax string (may contain data-type references).
  * @param category - The property category for grouping/filtering in the UI.
- * @returns A StylePropertyData object with all metadata fields populated, including expanded and parsed syntax.
+ * @returns A CSSPropertyDefinition object with all metadata fields populated, including expanded and parsed syntax.
  */
-export const createProperty = (name: StylePropertyKeys, syntax: string): StylePropertyData => {
+export const createProperty = (name: CSSPropertyKey, syntax: string): CSSPropertyDefinition => {
 	let _expanded: string | undefined;
 	let _parsed: string[] | undefined;
 	let _set: Set<string>[] | undefined;
@@ -28,7 +28,7 @@ export const createProperty = (name: StylePropertyKeys, syntax: string): StylePr
 
 	return {
 		name,
-		description: StylePropertyDescription[name as keyof typeof StylePropertyDefinitions] ?? '',
+		description: StylePropertyDescription[name as keyof typeof CSSPropertyDefinitions] ?? '',
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
 			if (_expanded === undefined) _expanded = expandTokens(syntax);
@@ -73,9 +73,9 @@ export const createProperty = (name: StylePropertyKeys, syntax: string): StylePr
 
 /**
  * A lookup table of all supported CSS properties and their metadata.
- * Each entry is a StylePropertyData object describing the property's name, syntax, description, and category.
+ * Each entry is a CSSPropertyDefinition object describing the property's name, syntax, description, and category.
  */
-export const StylePropertyDefinitions: Record<StylePropertyKeys, StylePropertyData> = {
+export const CSSPropertyDefinitions: Record<CSSPropertyKey, CSSPropertyDefinition> = {
 	// ============ Display & Layout =============
 	display: createProperty('display', 'block | inline | inline-block | flex | grid | none | ...'),
 
@@ -261,7 +261,7 @@ export const StylePropertyDefinitions: Record<StylePropertyKeys, StylePropertyDa
  * A lookup table of CSS shorthand properties and their expanded definitions.
  * Each entry maps a shorthand property to an array of its longhand properties.
  */
-export const StylePropertyShorthandDefinitions: Partial<Record<StylePropertyKeys, StylePropertyKeys[]>> = {
+export const CSSPropertyShortDefinitions: Partial<Record<CSSPropertyKey, CSSPropertyKey[]>> = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],

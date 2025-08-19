@@ -4,12 +4,12 @@ import { isValueDimension, getDimensionType } from '@/utilities/style/dimension'
 import { splitAdvanced } from '@/utilities/string';
 import { isColor } from '@/utilities/color';
 // Types
-import type { StyleTokenType } from '@/types/style/token';
+import type { CSSTokenType } from '@/types/block/style/token';
 
 // Constants
-import { StylePropertyDefinitions } from '@/constants/style/property';
+import { CSSPropertyDefinitions } from '@/constants/style/property';
 import { ValueSeparatorDefaults } from '@/constants/style/value';
-import { StylePropertyKeys } from '@/types/style/property';
+import { CSSPropertyKey } from '@/types/block/style/property';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -92,7 +92,7 @@ function isValueLink(input: string): boolean {
  * Determines the type of a CSS value based on its format.
  * Uses specific checks for dimension, keyword, function, and number.
  * @param input - The CSS value string to classify.
- * @returns {StyleTokenType | undefined} The detected value type or undefined if not recognized.
+ * @returns {CSSTokenType | undefined} The detected value type or undefined if not recognized.
  * @example
  * getValueType('10px') → 'dimension'
  * getValueType('auto') → 'keyword'
@@ -102,7 +102,7 @@ function isValueLink(input: string): boolean {
  * getValueType('#fff') → 'color'
  * getValueType('"https://example.com"') → 'link'
  */
-function getValueType(input: string): StyleTokenType | undefined {
+function getValueType(input: string): CSSTokenType | undefined {
 	// IMPORTANT: The order of these checks matters!
 	if (isValueLink(input)) return 'link';
 	if (isValueDimension(input)) return 'dimension';
@@ -174,9 +174,9 @@ function getValueTokens(values: string[]): string[] {
  * isValueValid('color', '#fff') → true
  * isValueValid('display', 'flex') → true
  */
-function isValueValid(property: StylePropertyKeys, value: string): boolean {
-	// Fetch the property definition from the StylePropertyDefinitions
-	const propertyDef = StylePropertyDefinitions[property];
+function isValueValid(property: CSSPropertyKey, value: string): boolean {
+	// Fetch the property definition from the CSSPropertyDefinitions
+	const propertyDef = CSSPropertyDefinitions[property];
 	if (!propertyDef) return false;
 
 	// Fetch the normalized syntax variations for the property

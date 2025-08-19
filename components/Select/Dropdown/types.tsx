@@ -1,4 +1,4 @@
-import { OptionData } from "@/types/option";
+import { OptionDefinition } from "@/types/option";
 import React from "react";
 
 export type DropdownSelectProps = {
@@ -6,7 +6,7 @@ export type DropdownSelectProps = {
   value: string;
 
   /** The list of options to display in the dropdown */
-  options: OptionData[];
+  options: OptionDefinition[];
 
   /** Callback function triggered when an option is selected */
   onChange: (value: string) => void;

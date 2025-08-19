@@ -1,5 +1,5 @@
-import type { BlockStyleData } from '@/types/block/block';
-import type { StylePropertyKeys } from '@/types/style/property';
+import type { BlockStyleDefinition } from '@/types/block/block';
+import type { CSSPropertyKey } from '@/types/block/style/property';
 import type { DeviceName } from '@/types/page/device';
 import type { OrientationName } from '@/types/page/orientation';
 import type { PseudoName } from '@/types/page/pseudo';
@@ -16,7 +16,7 @@ import type { PseudoName } from '@/types/page/pseudo';
  * @param defaultPseudo - Default pseudo fallback (usually 'all')
  * @returns The resolved value or empty string if not found
  */
-export const getStyleWithFallback = (styles: BlockStyleData, property: StylePropertyKeys, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): string => {
+export const getStyleWithFallback = (styles: BlockStyleDefinition, property: CSSPropertyKey, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): string => {
 	return (
 		// 1. Exact match
 		styles[device]?.[orientation]?.[pseudo]?.[property] ??
@@ -40,7 +40,7 @@ export const getStyleWithFallback = (styles: BlockStyleData, property: StyleProp
  * Gets all properties with their resolved values for current context
  * Useful for rendering context-specific styles
  */
-export const getAllStylesWithFallback = (styles: BlockStyleData, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): Record<string, string> => {
+export const getAllStylesWithFallback = (styles: BlockStyleDefinition, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): Record<string, string> => {
 	// Get all possible properties from all contexts
 	const allProperties = new Set<string>();
 	Object.values(styles).forEach((deviceStyles) => Object.values(deviceStyles).forEach((orientationStyles) => Object.values(orientationStyles).forEach((pseudoStyles) => Object.keys(pseudoStyles).forEach((prop) => allProperties.add(prop)))));
@@ -48,7 +48,7 @@ export const getAllStylesWithFallback = (styles: BlockStyleData, device: DeviceN
 	// Build CSS with fallback values
 	const resolvedStyles: Record<string, string> = {};
 	allProperties.forEach((property) => {
-		const value = getStyleWithFallback(styles, property as StylePropertyKeys, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
+		const value = getStyleWithFallback(styles, property as CSSPropertyKey, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
 		if (value) resolvedStyles[property] = value;
 	});
 

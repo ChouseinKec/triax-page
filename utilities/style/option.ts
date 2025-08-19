@@ -9,18 +9,18 @@ import { getTokenBase } from '@/utilities/style/token';
 import { getValueTokens } from '@/utilities/style/value';
 
 // Types
-import type { InputOptionData, OtherOptionData, KeywordOptionData, FunctionOptionData, DimensionOptionData } from '@/types/option';
-import type { StyleUnitType } from '@/types/style/unit';
+import type { CSSInputOptionDefinition, CSSGenericOptionDefinition, CSSKeywordOptionDefinition, CSSFunctionOptionDefinition, CSSDimensionOptionDefinition } from '@/types/block/style/option';
+import type { CSSUnitType } from '@/types/block/style/unit';
 
 /**
- * Creates a FunctionOptionData object for a given function token.
+ * Creates a CSSFunctionOptionDefinition object for a given function token.
  *
  * @param token - The function token string (e.g., 'calc(<length>|<percentage>)')
- * @returns FunctionOptionData | undefined - The created function option or undefined if invalid.
+ * @returns CSSFunctionOptionDefinition | undefined - The created function option or undefined if invalid.
  * @example
  * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function', type: 'function' }
  */
-function createFunctionOption(token: string): FunctionOptionData | undefined {
+function createFunctionOption(token: string): CSSFunctionOptionDefinition | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
@@ -38,7 +38,7 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 	// If no default value is defined for this function, return undefined
 	if (!defaultValue) return undefined;
 
-	// Create and return the FunctionOptionData object
+	// Create and return the CSSFunctionOptionDefinition object
 	return {
 		name: canonicalName,
 		value: defaultValue, // Use the syntax as the initial value
@@ -49,19 +49,19 @@ function createFunctionOption(token: string): FunctionOptionData | undefined {
 }
 
 /**
- * Creates an array of DimensionOptionData objects for a given dimension token.
+ * Creates an array of CSSDimensionOptionDefinition objects for a given dimension token.
  *
  * @param token - The dimension token string (e.g., '<length [0,100]>')
- * @returns DimensionOptionData[] | undefined - An array of dimension options or undefined if invalid.
+ * @returns CSSDimensionOptionDefinition[] | undefined - An array of dimension options or undefined if invalid.
  * @example
  * createDimensionOptions('<length [0,100]>') → [{ name: 'px', value: '0px', type: 'length', min: 0, max: 100 }, ...]
  */
-function createDimensionOptions(token: string): DimensionOptionData[] | undefined {
+function createDimensionOptions(token: string): CSSDimensionOptionDefinition[] | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
 	// Get the base name of the token and check if it's a valid dimension group
-	const baseName = getTokenBase(token) as StyleUnitType;
+	const baseName = getTokenBase(token) as CSSUnitType;
 
 	// If the base name is not a valid dimension group, return undefined
 	if (!StyleUnitOptions[baseName]) return undefined;
@@ -71,14 +71,14 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
 	const unitOptions = StyleUnitOptions[baseName] || [];
 
 	// If no range is specified, return the unit options as is
-	if (!range) return unitOptions as DimensionOptionData[];
+	if (!range) return unitOptions as CSSDimensionOptionDefinition[];
 
-	// Map the unit options to include the min and max range values, creating and returning DimensionOptionData objects
+	// Map the unit options to include the min and max range values, creating and returning CSSDimensionOptionDefinition objects
 	return unitOptions.map((unit) => ({
 		...unit,
 		min: range.min,
 		max: range.max,
-	})) as DimensionOptionData[];
+	})) as CSSDimensionOptionDefinition[];
 }
 
 /**
@@ -86,17 +86,17 @@ function createDimensionOptions(token: string): DimensionOptionData[] | undefine
  *
  * @param token - The keyword token string (e.g., 'auto')
  * @param propertyName - The name of the CSS property being edited (for keyword options)
- * @returns KeywordOptionData | undefined - The created keyword option or undefined if empty.
+ * @returns CSSKeywordOptionDefinition | undefined - The created keyword option or undefined if empty.
  * @example
  * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword', icon: <Icon />, type: 'keyword' }
  */
-function createKeywordOption(token: string, propertyName: string): KeywordOptionData | undefined {
+function createKeywordOption(token: string, propertyName: string): CSSKeywordOptionDefinition | undefined {
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
 	const icon = StyleIconDefinitions?.[`${propertyName}-${token}` as CSSIcons];
 
-	// Create and return the KeywordOptionData object for the keyword
+	// Create and return the CSSKeywordOptionDefinition object for the keyword
 	return {
 		name: token,
 		value: token,
@@ -114,7 +114,7 @@ function createKeywordOption(token: string, propertyName: string): KeywordOption
  * @example
  * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'other', type: 'number' }
  */
-function createNumberOption(token: string): OtherOptionData | undefined {
+function createNumberOption(token: string): CSSGenericOptionDefinition | undefined {
 	if (!token) return undefined;
 	const range = getTokenParam(token);
 
@@ -137,7 +137,7 @@ function createNumberOption(token: string): OtherOptionData | undefined {
  * @example
  * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'other', type: 'integer' }
  */
-function createIntegerOption(token: string): OtherOptionData | undefined {
+function createIntegerOption(token: string): CSSGenericOptionDefinition | undefined {
 	if (!token) return undefined;
 	const range = getTokenParam(token);
 	return {
@@ -155,11 +155,11 @@ function createIntegerOption(token: string): OtherOptionData | undefined {
  * Creates a color option for a given token (e.g., 'color').
  *
  * @param token - The color token string (e.g., 'color')
- * @returns OtherOptionData | undefined - The created color option or undefined if empty.
+ * @returns CSSGenericOptionDefinition | undefined - The created color option or undefined if empty.
  * @example
  * createColorOption('color') → { name: 'color', value: '#000000', category: 'other', type: 'color' }
  */
-function createColorOption(token: string): OtherOptionData | undefined {
+function createColorOption(token: string): CSSGenericOptionDefinition | undefined {
 	if (!token) return undefined;
 	return {
 		name: 'color',
@@ -173,11 +173,11 @@ function createColorOption(token: string): OtherOptionData | undefined {
  * Creates a link option for a given token (e.g., 'link').
  *
  * @param token - The link token string (e.g., 'link')
- * @returns OtherOptionData | undefined - The created link option or undefined if empty.
+ * @returns CSSGenericOptionDefinition | undefined - The created link option or undefined if empty.
  * @example
  * createLinkOption('link') → { name: 'link', value: 'https://example.com', category: 'other', type: 'link' }
  */
-function createLinkOption(token: string): OtherOptionData | undefined {
+function createLinkOption(token: string): CSSGenericOptionDefinition | undefined {
 	if (!token) return undefined;
 	return {
 		name: 'link',
@@ -216,13 +216,13 @@ function isSlotOptionValid(token: string, slotIndex: number, validValueSet: stri
 }
 
 /**
- * Creates an InputOptionData object (or array) for a given token, using the correct factory based on type.
+ * Creates an CSSInputOptionDefinition object (or array) for a given token, using the correct factory based on type.
  *
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
  * @param propertyName - The name of the CSS property being edited (for keyword options)
- * @returns InputOptionData | InputOptionData[] | undefined
+ * @returns CSSInputOptionDefinition | CSSInputOptionDefinition[] | undefined
  */
-function createOption(token: string, propertyName: string): InputOptionData | InputOptionData[] | undefined {
+function createOption(token: string, propertyName: string): CSSInputOptionDefinition | CSSInputOptionDefinition[] | undefined {
 	const type = getTokenType(token);
 	switch (type) {
 		case 'color':
@@ -253,9 +253,9 @@ function createOption(token: string, propertyName: string): InputOptionData | In
  * @param slotTokenSets - Array of arrays, each containing all possible tokens for that slot
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @param propertyName - The name of the CSS property being edited (for keyword options)
- * @returns 2D array of InputOptionData for each slot
+ * @returns 2D array of CSSInputOptionDefinition for each slot
  */
-function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], propertyName: string): InputOptionData[][] {
+function createOptionsTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], propertyName: string): CSSInputOptionDefinition[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
 	// Build the options table for each slot

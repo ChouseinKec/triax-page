@@ -1,4 +1,4 @@
-import type { OptionData } from "@/types/option";
+import type { OptionDefinition } from "@/types/option";
 /**
  * Props for the OptionsSelect component.
  */
@@ -7,7 +7,7 @@ export interface OptionsSelectProps {
     value: string;
 
     /** List of available options */
-    options: OptionData[];
+    options: OptionDefinition[];
 
     /** Event handler triggered when the selected option changes */
     onChange: (value: string) => void;

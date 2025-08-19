@@ -1,4 +1,4 @@
-import type { OptionData } from '@/types/option';
+import type { OptionDefinition } from '@/types/option';
 
 /**
  * Props for the RadioSelect component.
@@ -9,7 +9,7 @@ export type RadioSelectProps = {
     value: string;
 
     /** The list of options available for selection. */
-    options: OptionData[];
+    options: OptionDefinition[];
 
     /** Callback function to handle changes in the selected value. */
     onChange: (value: string) => void;

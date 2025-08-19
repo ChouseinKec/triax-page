@@ -1,5 +1,5 @@
 // Type
-import type { StyleTokenType, StyleTokenKeys } from '@/types/style/token';
+import type { CSSTokenType, CSSTokenKeys } from '@/types/block/style/token';
 
 // Constants
 import { StyleTokenDefaults, StyleTokenDefinitions } from '@/constants/style/token';
@@ -122,7 +122,7 @@ function isTokenLink(input: string): boolean {
  * getTokenType('<number>') → 'number'
  * getTokenType('<link>') → 'link'
  */
-function getTokenType(input: string): StyleTokenType | undefined {
+function getTokenType(input: string): CSSTokenType | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
 	if (isTokenDimension(input)) return 'dimension';
 	if (isTokenColor(input)) return 'color';
@@ -242,7 +242,7 @@ function getTokenParam(input: string): Record<string, any> | undefined {
 function getTokenValue(token: string): string | undefined {
 	if (isTokenKeyword(token)) return token;
 
-	const tokenCanonical = getTokenCanonical(token) as StyleTokenKeys | undefined;
+	const tokenCanonical = getTokenCanonical(token) as CSSTokenKeys | undefined;
 	if (!tokenCanonical) return undefined;
 
 	const tokenValue = StyleTokenDefaults[tokenCanonical];
@@ -290,7 +290,7 @@ function expandTokens(syntax: string, seen = new Set<string>()): string {
 		const range = getTokenRange(token);
 
 		// Look up the token definition in StyleTokenDefinitions
-		const def = StyleTokenDefinitions[tokenCanonical as StyleTokenKeys];
+		const def = StyleTokenDefinitions[tokenCanonical as CSSTokenKeys];
 
 		if (def?.syntax) {
 			// Mark this token as seen to prevent recursion

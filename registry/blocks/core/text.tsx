@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 
 // Types
 import type { BlockDefinition, BlockInstance } from "@/types/block/block";
@@ -6,7 +6,7 @@ import type { BlockDefinition, BlockInstance } from "@/types/block/block";
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";
 
-function render(instance: BlockInstance, children?: ReactNode) {
+function render(instance: BlockInstance) {
 	const {
 		selectBlock,
 		renderBlockStyles,
@@ -14,6 +14,7 @@ function render(instance: BlockInstance, children?: ReactNode) {
 		hasBlockSelectedContent,
 		getBlockAttribute,
 		setBlockAttribute,
+		getBlockAttributes
 	} = useBlockManager();
 
 	const selectedBlock = getSelectedBlock();
@@ -53,6 +54,7 @@ function render(instance: BlockInstance, children?: ReactNode) {
 				data-has-selected-descendant={hasChildSelected}
 				contentEditable
 				suppressContentEditableWarning
+				{...getBlockAttributes(instance.id)}
 			>
 				{text}
 			</p>
@@ -63,6 +65,27 @@ function render(instance: BlockInstance, children?: ReactNode) {
 
 const text: BlockDefinition = {
 	tag: "p",
+	tags: [
+		"p",
+		"span",
+		"b",
+		"strong",
+		"i",
+		"em",
+		"u",
+		"small",
+		"mark",
+		"sub",
+		"sup",
+		"code",
+		"abbr",
+		"s",
+		"del",
+		"ins",
+		"q",
+		"cite",
+		"dfn"
+	],
 	type: "text",
 	permittedContent: [],
 	permittedParent: null,

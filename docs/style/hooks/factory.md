@@ -23,7 +23,7 @@ The `hooks/style/factory.tsx` file provides a custom React hook for rendering st
 Renders a `Value` component for a given style property.
 
 - **Parameters:**
-  - `propertyName: StylePropertyKeys` — The key of the style property to render.
+  - `propertyName: CSSPropertyKey` — The key of the style property to render.
 - **Returns:** `ReactElement | null` — The rendered `Value` component, or `null` if the property is not defined.
 - **Behavior:**  
   - Looks up the property definition and current value.
@@ -68,5 +68,5 @@ const PositionSelector = renderPositionSelect(
 ## Notes
 
 - The hook uses the style manager for getting and setting property values.
-- Property definitions are sourced from `StylePropertyDefinitions`.
+- Property definitions are sourced from `CSSPropertyDefinitions`.
 - Use this hook in style panels or property editors to keep UI

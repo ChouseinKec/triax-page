@@ -21,13 +21,10 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 				},
 			},
 		},
-		attributes: {},
+		attributes: null,
 		parentID: null,
 		contentIDs: ['hero', 'footer', 'features', 'timeline'],
 		tag: 'div',
-		tags: [],
-		permittedContent: null,
-		permittedParent: null,
 		type: 'container',
 	},
 
@@ -53,13 +50,11 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 				},
 			},
 		},
-		attributes: {},
+		attributes: null,
 		parentID: 'root',
 		contentIDs: ['hero-title', 'hero-desc'],
 		tag: 'div',
-		tags: [],
-		permittedContent: null,
-		permittedParent: null,
+
 		type: 'container',
 	},
 	'hero-title': {
@@ -83,9 +78,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'hero',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 	'hero-desc': {
@@ -108,9 +101,6 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'hero',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
 		type: 'text',
 	},
 
@@ -136,13 +126,11 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 				},
 			},
 		},
-		attributes: {},
+		attributes: null,
 		parentID: 'root',
 		contentIDs: ['features-title', 'features-list'],
 		tag: 'div',
-		tags: [],
-		permittedContent: null,
-		permittedParent: null,
+
 		type: 'container',
 	},
 	'features-title': {
@@ -166,9 +154,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'features',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 	'features-list': {
@@ -191,9 +177,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'features',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 
@@ -223,9 +207,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'root',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 
@@ -250,13 +232,11 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 				},
 			},
 		},
-		attributes: {},
+		attributes: null,
 		parentID: 'root',
 		contentIDs: ['timeline-title', 'timeline-date-2025-08-13'],
 		tag: 'div',
-		tags: [],
-		permittedContent: null,
-		permittedParent: null,
+
 		type: 'container',
 	},
 	'timeline-title': {
@@ -280,9 +260,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'timeline',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 	'timeline-date-2025-08-13': {
@@ -301,13 +279,11 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 				},
 			},
 		},
-		attributes: {},
+		attributes: null,
 		parentID: 'timeline',
 		contentIDs: ['timeline-date-2025-08-13-title', 'timeline-entry-1'],
 		tag: 'div',
-		tags: [],
-		permittedContent: null,
-		permittedParent: null,
+
 		type: 'container',
 	},
 	'timeline-date-2025-08-13-title': {
@@ -331,9 +307,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'timeline-date-2025-08-13',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 	'timeline-entry-1': {
@@ -357,9 +331,7 @@ export const DefaultBlocks: Record<string, BlockInstance> = {
 		parentID: 'timeline-date-2025-08-13',
 		contentIDs: [],
 		tag: 'p',
-		tags: [],
-		permittedContent: [],
-		permittedParent: null,
+
 		type: 'text',
 	},
 };

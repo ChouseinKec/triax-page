@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, memo } from "react";
+import React, { useEffect, memo } from "react";
 
 // Types
 import type { BlockProps } from "./types";
-
-// Components
-import ActionGroup from "@/components/group/action/component";
 
 // Hooks
 import { useBlockManager } from "@/hooks/block/manager";

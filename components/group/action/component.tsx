@@ -3,10 +3,10 @@
 import React, { memo } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "./style.module.scss";
 
 // Types
-import type { ActionGroupProps } from "./types";
+import type { ActionGroupProps } from "./type";
 
 // Utilities
 import { devLog } from "@/utilities/dev";

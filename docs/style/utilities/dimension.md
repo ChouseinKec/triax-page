@@ -23,7 +23,7 @@ Checks if a string is a valid CSS dimension (number + unit).
 ### getDimensionType
 Determines the CSS dimension group (e.g., 'length', 'percentage') for a given value.
 - **Parameters:** `input: string`
-- **Returns:** `StyleUnitType | undefined`
+- **Returns:** `CSSUnitType | undefined`
 
 ### clampDimension
 Clamps a CSS value to a maximum px value (default: 15px).

@@ -1,6 +1,6 @@
-import type { OptionData } from "@/types/option";
+import type { OptionDefinition } from "@/types/option";
 
-export interface OptionProps extends OptionData {
+export interface OptionProps extends OptionDefinition {
     /** Whether this option is currently selected */
     isSelected: boolean;
 

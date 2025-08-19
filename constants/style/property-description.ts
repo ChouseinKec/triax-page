@@ -1,7 +1,7 @@
-import { StylePropertyKeys } from '@/types/style/property';
+import { CSSPropertyKey } from '@/types/block/style/property';
 
 // New: Centralized descriptions for all CSS properties
-export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
+export const StylePropertyDescription: Record<CSSPropertyKey, string> = {
 	// ============ Display & Layout =============
 	display: 'Controls the element’s display type and how it participates in layout.',
 
@@ -174,4 +174,4 @@ export const StylePropertyDescription: Record<StylePropertyKeys, string> = {
 	'box-shadow': 'Adds shadow effects around the element’s frame.',
 	transform: 'Transforms the element in 2D or 3D space.',
 	opacity: 'Sets the transparency level of the element, affecting its content and children.',
-} as const satisfies Record<StylePropertyKeys, string>;
+} as const satisfies Record<CSSPropertyKey, string>;

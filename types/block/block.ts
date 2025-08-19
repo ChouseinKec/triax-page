@@ -1,34 +1,20 @@
 import { ReactNode } from 'react';
-import type { StylePropertyKeys } from '@/types/style/property';
-import * as CoreBlocks from '@/registry/blocks/core';
-
-export const BlockDefinitions = CoreBlocks;
-
-/**
- * All valid HTML block-level tags supported by the system.
- * These correspond to official HTML tags (e.g. 'div', 'p', 'section').
- */
-export type BlockTag = 'a' | 'abbr' | 'address' | 'article' | 'aside' | 'audio' | 'b' | 'blockquote' | 'br' | 'button' | 'code' | 'data' | 'del' | 'div' | 'dl' | 'em' | 'footer' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'header' | 'hgroup' | 'hr' | 'i' | 'image' | 'input' | 'ins' | 'kbd' | 'label' | 'main' | 'mark' | 'menu' | 'meter' | 'nav' | 'section' | 'ol' | 'output' | 'p' | 'picture' | 'pre' | 'q' | 'samp' | 'small' | 'span' | 'strong' | 'sub' | 'sup' | 'table' | 'textarea' | 'time' | 'u' | 'var' | 'wbr' | 'video' | 'ul' | 'li' | 'dt' | 'dd' | 'caption' | 'colgroup' | 'col' | 'thead' | 'tbody' | 'tfoot' | 'tr' | 'td' | 'th' | 'form' | 'select' | 'fieldset' | 'legend' | 'optgroup' | 'option' | 'progress' | 'img' | 's' | 'cite';
-
+import type { CSSPropertyKey } from '@/types/block/style/property';
+import type { HTMLPropertyKey } from './attribute/property';
+import type { HTMLElementTag } from './element';
 export type BlockType = 'text' | 'container' | 'media';
-
-export type BlockAttributeValue = string | number | boolean | null;
 
 /**
  * Block style data structure for responsive and pseudo-class styles.
  */
-export type BlockStyleData = {
+export type BlockStyleDefinition = {
 	[deviceName: string]: {
 		[orientationName: string]: {
 			[pseudoName: string]: {
-				[key in StylePropertyKeys]?: string;
+				[key in CSSPropertyKey]?: string;
 			};
 		};
 	};
-};
-
-export type BlockAttributeData = {
-	[key: string]: BlockAttributeValue;
 };
 
 /**
@@ -37,13 +23,13 @@ export type BlockAttributeData = {
  */
 export interface BlockDefinition {
 	type: BlockType;
-	tag: BlockTag;
-	tags?: BlockTag[];
+	tag: HTMLElementTag;
+	tags: HTMLElementTag[];
 	permittedContent?: BlockType[] | null;
 	permittedParent?: BlockType[] | null;
 	icon?: string | ReactNode;
-	styles?: BlockStyleData | null;
-	category?: string; 
+	styles?: BlockStyleDefinition | null;
+	category?: string;
 	render: (instance: BlockInstance, children?: ReactNode) => ReactNode;
 }
 
@@ -52,16 +38,13 @@ export interface BlockDefinition {
  */
 export interface BlockInstance {
 	id: string;
-	tag: BlockTag;
-	tags?: BlockTag[];
+	tag: HTMLElementTag;
 	type: BlockType;
 
-	styles: BlockStyleData | null;
-	attributes: BlockAttributeData | null;
+	styles: BlockStyleDefinition | null;
+	attributes: Partial<Record<HTMLPropertyKey, string> | null>;
 
 	parentID: string | null;
 	contentIDs: string[];
 
-	permittedContent: BlockTag[] | null;
-	permittedParent: BlockTag[] | null;
 }

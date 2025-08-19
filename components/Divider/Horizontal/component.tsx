@@ -3,10 +3,10 @@
 import React, { memo } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "./style.module.scss";
 
 // Types
-import { HorizontalDividerProps } from "./types";
+import { HorizontalDividerProps } from "./type";
 
 /**
  * HorizontalDivider Component

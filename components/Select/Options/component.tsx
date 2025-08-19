@@ -24,7 +24,7 @@ import { devLog } from "@/utilities/dev";
  * 
  * @param {OptionsSelectProps} props - Component properties
  * @param {string} props.value - Currently selected option value
- * @param {OptionData[]} props.options - Array of selectable options with name/value/category
+ * @param {OptionDefinition[]} props.options - Array of selectable options with name/value/category
  * @param {function} props.onChange - Callback fired when selection changes (value or empty string)
  * @param {boolean} [props.searchable=false] - Enable search/filter functionality for large option sets
  * @param {boolean} [props.groupable=false] - Group options by category for better organization

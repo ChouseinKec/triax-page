@@ -2,7 +2,7 @@
 import { ValueSeparatorDefaults } from '@/constants/style/value';
 
 // Types
-import type { ValueSeparator } from '@/types/style/value';
+import type { ValueSeparator } from '@/types/block/style/value';
 
 /**
  * Extracts separators from a single variation string.
