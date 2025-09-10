@@ -1,5 +1,5 @@
 @use '../../../../../mixins//mixins.module.scss' as inputMixins;
-.Entry {
+.BlocksHierarchyEntry {
 	display: flex;
 	flex-direction: column;
 
@@ -8,7 +8,7 @@
 	}
 }
 
-.Content {
+.BlocksHierarchyEntry__Content {
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-md);

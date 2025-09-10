@@ -1,67 +1,57 @@
 "use client";
 
-import { memo, useCallback, useMemo } from "react";
+import { memo } from "react";
 
 // Types
-import type { ValueProps } from "./types";
+import type { StylesEditorValue } from "@/editors/block/types/component";
+
+// Constants
+import { StyleDefinitions } from "@/constants/style/style";
+import { StyleValueSeparatorDefaults } from "@/constants/style/value";
+
+// Managers
+import { setStyle, useStyle } from "@/editors/block/managers/style";
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/utilities/string";
-import { createOptionsTable } from "@/utilities/style/option";
-import { getValueTokens } from "@/utilities/style/value";
-import { getTokenValues } from "@/utilities/style/token";
+import { createOptionTable } from "@/editors/block/utilities/style/option";
+import { getValueTokens } from "@/editors/block/utilities/style/value";
+import { getTokenValues } from "@/editors/block/utilities/style/token";
 import { mergeArrays } from "@/utilities/array";
-
-// Constants
-import { ValueSeparatorDefaults } from "@/constants/style/value";
+import { devRender } from "@/utilities/dev";
 
 // Components
-import Slots from "./slots/component";
-
-// Utilities
-import { devLog } from "@/utilities/dev";
+import StylesEditorSlots from "@/editors/block/components/style/value/slots/component";
 
 
 /**
- * Value Component
+ * StylesEditorValue Component
  * Main entry for rendering a CSS property value editor.
  * Handles parsing, slotting, and incremental UI for property values.
  *
- * @param property - The CSS property definition (with syntaxSet and syntaxNormalized)
- * @param value - The current value string for the property (e.g., "auto 10px")
- * @param onChange - Callback to update the value
+ * @param blockID - The ID of the block
+ * @param propertyName - The CSS property key
  * @returns ReactElement - The rendered value editor UI for the property.
  */
-const Value: React.FC<ValueProps> = (props: ValueProps) => {
-    const { property, value, onChange } = props;
-
-    // Guard Clause
-    if (property == null) {
-        devLog.error("[Value] No property provided");
-        return null;
-    }
-
-    if (value == null) {
-        devLog.error("[Value] Invalid value provided, expected a string");
-        return null;
-    }
+const StylesEditorValue: React.FC<StylesEditorValue> = ({ value, onChange, property }) => {
+    if (typeof value !== "string") return devRender.error("[StylesEditorValue] No value provided", { value });
+    if (!property || typeof property !== "object") return devRender.error("[StylesEditorValue] No property provided", { property });
+    if (!onChange || typeof onChange !== "function") return devRender.error("[StylesEditorValue] Invalid onChange callback", { onChange });
 
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
-    const syntaxSet = useMemo(() => property.syntaxSet, [property.syntaxSet]);
-    const syntaxParsed = useMemo(() => property.syntaxParsed, [property.syntaxParsed]);
-    const syntaxNormalized = useMemo(() => property.syntaxNormalized, [property.syntaxNormalized]);
-    const syntaxSeparators = useMemo(() => property.syntaxSeparators, [property.syntaxSeparators]);
+    const syntaxSet = property.syntaxSet;
+    const syntaxParsed = property.syntaxParsed;
+    const syntaxNormalized = property.syntaxNormalized;
+    const syntaxSeparators = property.syntaxSeparators;
 
     // Split the value string into slots (e.g., ["10px", "auto"])
-    const values = useMemo(() => splitAdvanced(value, [...ValueSeparatorDefaults]), [value]);
+    const values = splitAdvanced(value, [...StyleValueSeparatorDefaults]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
-    const slotsOptions = useMemo(() => createOptionsTable(syntaxNormalized, syntaxSet, values, property.name),
-        [syntaxNormalized, syntaxSet, values, property.name]
-    );
+    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, property.name);
 
     // Handler to update slot values and join with correct separators
-    const handleSlotsChange = useCallback((input: string[]) => {
+    const handleSlotsChange = (input: string[]) => {
         if (!input || (input.length === 1 && input[0] === "")) return onChange("");
 
         // Normalize updated values to canonical tokens
@@ -93,12 +83,11 @@ const Value: React.FC<ValueProps> = (props: ValueProps) => {
 
         // Trigger the change callback
         onChange(joinedValue);
-    }, [onChange, syntaxNormalized, syntaxSeparators]
-    );
+    }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <Slots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <StylesEditorSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
-export default memo(Value);
+export default memo(StylesEditorValue);
 

@@ -1,0 +1,52 @@
+@use '../../../../../mixins//mixins.module.scss' as inputMixins;
+
+.AttributeEditorProperty {
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	align-items: flex-start;
+	gap: var(--size-md);
+
+	&[data-disabled='true'] {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	&:not([data-label]) {
+		grid-template-columns: auto;
+	}
+}
+
+.AttributeEditorProperty__Label {
+	width: 100px;
+	flex: 0 1 auto;
+	> span {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: calc(var(--font-size-lg) * 0.8);
+		text-transform: capitalize;
+		cursor: help;
+	}
+}
+
+.AttributeEditorProperty__FloatTitle {
+	text-transform: capitalize;
+	font-size: var(--font-size-lg);
+	font-weight: 600;
+}
+
+.AttributeEditorProperty__FloatDescription {
+	font-size: var(--font-size-md);
+	line-height: var(--size-xl);
+	max-width: 200px;
+}
+
+
+.AttributeEditorProperty__Value {
+	width: 100%;
+	> * {
+		width: 100%;
+	}
+}

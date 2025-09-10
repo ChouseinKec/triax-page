@@ -1,68 +1,53 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 
 // Types
-import type { LayoutProps } from "../type";
-import type { HTMLPropertyKey } from "@/types/block/attribute/property";
-
-// Hooks
-import { useAttributeFactory } from "@/hooks/block/attribute/factory";
+import type { AttributesEditorLayoutProps } from "@/editors/block/types/component";
+import type { AttributeKeys } from "@/editors/block/types/core/attribute";
 
 // Constants
-import { HTMLPropertyDefinitions } from "@/constants/block/attribute";
+import { getPropertyGroup } from "@/constants/block/attribute";
+
+// Managers
+import { useSelectedBlockID } from "@/editors/block/managers/block";
+
+// Components
+import AttributesEditorValue from "@/editors/block/components/attribute/value/component";
+
 
 /**
- * Custom hook to render the layout for global attributes.
- * This hook generates the structure and behavior of the "Global" section in the attributes panel.
+ * useGlobalLayout Hook
+ * Provides the global attributes layout with reactive updates for better user experience.
  *
+ * @returns The layout props with icon, title, and global attribute components
  */
-export const useGlobalLayout = (): LayoutProps => {
-    const { renderValue } = useAttributeFactory();
+export const useGlobalLayout = (): AttributesEditorLayoutProps => {
+    const selectedBlockID = useSelectedBlockID();
+    const layoutIcon = <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"        >            <path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" />  </svg>;
 
-    const icon = useMemo(() => (
-        <svg
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            fill="black"
-            viewBox="0 0 256 256"
-        >
-            <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" />
-        </svg>
-    ),
-        []
-    );
+    if (!selectedBlockID) return { label: layoutIcon, title: "Global", groups: [] };
 
-    // Collect global properties from registry once
-    const globalProps = useMemo(() =>
-        Object.values(HTMLPropertyDefinitions)
-            .filter((p) => p?.category === "global" && p.name !== "id")
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((p) => {
-                const key = p.name as HTMLPropertyKey;
-                return {
-                    label: p.name,
-                    property: p.name,
-                    component: () => renderValue(key),
-                };
-            }),
-        [renderValue]
-    );
+    const globalProps = getPropertyGroup("global")
+        .filter((p) => p.name !== "id")
+        .map((p) => {
+            const key = p.name as AttributeKeys;
+            return {
+                label: p.name,
+                property: p.name,
+                component: () => <AttributesEditorValue blockID={selectedBlockID} attribute={key} />,
+            };
+        });
 
-    // Final layout object (memoized)
-    return useMemo(
-        () => ({
-            label: icon,
-            title: "Global",
-            groups: [
-                {
-                    styles: { gridTemplateColumns: "minmax(0,1fr)" },
-                    properties: globalProps.length ? globalProps : [],
-                },
-            ],
-        }),
-        [icon, globalProps]
-    );
+
+    return {
+        label: layoutIcon,
+        title: "Global",
+        groups: [
+            {
+                styles: { gridTemplateColumns: "minmax(0,1fr)" },
+                properties: globalProps,
+            },
+        ],
+    }
 };

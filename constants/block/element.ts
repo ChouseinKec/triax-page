@@ -1,14 +1,15 @@
-import type { HTMLPropertyKey } from '@/types/block/attribute/property';
-import type { HTMLElementDefinition, HTMLElementTag } from '@/types/block/element';
+import type { AttributeKeys, ElementDefinition, ElementTags } from '@/editors/block/types/core/attribute';
 
-export const createElement = (attributes: HTMLPropertyKey[], allowedContent: HTMLElementTag[] | null, description: string): HTMLElementDefinition => ({
-	attributes,
-	allowedContent,
-	description,
-});
+export function createElement(attributes: AttributeKeys[], allowedContent: ElementTags[] | null, description: string): ElementDefinition {
+	return {
+		attributes,
+		allowedContent,
+		description,
+	};
+}
 
 // Common global attributes for all elements
-const globalAttributes: HTMLPropertyKey[] = [
+export const GlobalAttributes: AttributeKeys[] = [
 	'accessKey',
 	'autoFocus',
 	'class',
@@ -62,37 +63,37 @@ const globalAttributes: HTMLPropertyKey[] = [
 ];
 
 // Definitions for text-related tags (from text.tsx)
-const textTags: HTMLElementTag[] = ['p', 'span', 'b', 'strong', 'i', 'em', 'u', 'small', 'mark', 'sub', 'sup', 'code', 'abbr', 's', 'del', 'ins', 'q', 'cite', 'dfn'];
+export const TextTags: ElementTags[] = ['p', 'span', 'b', 'strong', 'i', 'em', 'u', 'small', 'mark', 'sub', 'sup', 'code', 'abbr', 's', 'del', 'ins', 'q', 'cite', 'dfn'];
 
 // Definitions for container-related tags (from container.tsx)
-const containerTags: HTMLElementTag[] = ['div', 'section', 'article', 'aside', 'nav'];
+export const ContainerTags: ElementTags[] = ['div', 'section', 'article', 'aside', 'nav'];
 
-export const HTMLElementDefinitions: Record<HTMLElementTag, HTMLElementDefinition> = {
+export const ElementDefinitions: Record<ElementTags, ElementDefinition> = {
 	// Text tags
-	p: createElement(globalAttributes, textTags, 'Paragraph element for text content.'),
-	span: createElement(globalAttributes, textTags, 'Generic inline container for phrasing content.'),
-	b: createElement(globalAttributes, textTags, 'Bold text.'),
-	strong: createElement(globalAttributes, textTags, 'Strong importance text.'),
-	i: createElement(globalAttributes, textTags, 'Italic text.'),
-	em: createElement(globalAttributes, textTags, 'Emphasized text.'),
-	u: createElement(globalAttributes, textTags, 'Underlined text.'),
-	small: createElement(globalAttributes, textTags, 'Smaller text.'),
-	mark: createElement(globalAttributes, textTags, 'Marked or highlighted text.'),
-	sub: createElement(globalAttributes, textTags, 'Subscript text.'),
-	sup: createElement(globalAttributes, textTags, 'Superscript text.'),
-	code: createElement(globalAttributes, textTags, 'Inline code fragment.'),
-	abbr: createElement([...globalAttributes, 'title'], textTags, 'Abbreviation or acronym.'),
-	s: createElement(globalAttributes, textTags, 'Strikethrough text.'),
-	del: createElement([...globalAttributes, 'cite', 'datetime'], textTags, 'Deleted text.'),
-	ins: createElement([...globalAttributes, 'cite', 'datetime'], textTags, 'Inserted text.'),
-	q: createElement([...globalAttributes, 'cite'], textTags, 'Short inline quotation.'),
-	cite: createElement(globalAttributes, textTags, 'Citation or reference.'),
-	dfn: createElement([...globalAttributes, 'title'], textTags, 'Definition term.'),
+	p: createElement(GlobalAttributes, TextTags, 'Paragraph element for text content.'),
+	span: createElement(GlobalAttributes, TextTags, 'Generic inline container for phrasing content.'),
+	b: createElement(GlobalAttributes, TextTags, 'Bold text.'),
+	strong: createElement(GlobalAttributes, TextTags, 'Strong importance text.'),
+	i: createElement(GlobalAttributes, TextTags, 'Italic text.'),
+	em: createElement(GlobalAttributes, TextTags, 'Emphasized text.'),
+	u: createElement(GlobalAttributes, TextTags, 'Underlined text.'),
+	small: createElement(GlobalAttributes, TextTags, 'Smaller text.'),
+	mark: createElement(GlobalAttributes, TextTags, 'Marked or highlighted text.'),
+	sub: createElement(GlobalAttributes, TextTags, 'Subscript text.'),
+	sup: createElement(GlobalAttributes, TextTags, 'Superscript text.'),
+	code: createElement(GlobalAttributes, TextTags, 'Inline code fragment.'),
+	abbr: createElement([...GlobalAttributes, 'title'], TextTags, 'Abbreviation or acronym.'),
+	s: createElement(GlobalAttributes, TextTags, 'Strikethrough text.'),
+	del: createElement([...GlobalAttributes, 'cite', 'datetime'], TextTags, 'Deleted text.'),
+	ins: createElement([...GlobalAttributes, 'cite', 'datetime'], TextTags, 'Inserted text.'),
+	q: createElement([...GlobalAttributes, 'cite'], TextTags, 'Short inline quotation.'),
+	cite: createElement(GlobalAttributes, TextTags, 'Citation or reference.'),
+	dfn: createElement([...GlobalAttributes, 'title'], TextTags, 'Definition term.'),
 
 	// Container tags
-	div: createElement(globalAttributes, containerTags, 'Generic container for flow content.'),
-	section: createElement(globalAttributes, containerTags, 'Section of content.'),
-	article: createElement(globalAttributes, containerTags, 'Self-contained composition.'),
-	aside: createElement(globalAttributes, containerTags, 'Content aside from the main content.'),
-	nav: createElement(globalAttributes, containerTags, 'Navigation links container.'),
+	div: createElement(GlobalAttributes, ContainerTags, 'Generic container for flow content.'),
+	section: createElement(GlobalAttributes, ContainerTags, 'Section of content.'),
+	article: createElement(GlobalAttributes, ContainerTags, 'Self-contained composition.'),
+	aside: createElement(GlobalAttributes, ContainerTags, 'Content aside from the main content.'),
+	nav: createElement(GlobalAttributes, ContainerTags, 'Navigation links container.'),
 } as const;

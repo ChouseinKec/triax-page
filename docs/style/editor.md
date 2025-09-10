@@ -140,8 +140,8 @@ The style editor dynamically generates valid options for each value slot using a
   - Each property definition in `property.ts` includes `syntaxSet` (all possible tokens for each slot) and `syntaxNormalized` (all valid value token strings for each variation).
   - These tables are generated from the CSS value definition syntax and allow the editor to efficiently determine which options are valid at any editing step.
 
-- **Option Generation with `createOptionsTable`:**
-  - The `createOptionsTable` function takes `syntaxSet` and `syntaxNormalized` and, for each slot, checks the current and previous slot values (joined as a string) against all valid variations.
+- **Option Generation with `createOptionTable`:**
+  - The `createOptionTable` function takes `syntaxSet` and `syntaxNormalized` and, for each slot, checks the current and previous slot values (joined as a string) against all valid variations.
   - An option is only shown if inserting it at the current slot position would result in a value string that matches (or could match) a valid syntax variation.
   - This ensures that only contextually valid options are presented, preventing invalid combinations and guiding the user toward valid CSS values.
 

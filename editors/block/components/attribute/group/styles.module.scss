@@ -1,0 +1,15 @@
+.AttributeEditorGroup {
+	display: grid;
+	align-items: flex-start;
+	gap: var(--size-lg);
+	position: relative;
+
+	:global(.AttributeEditorGroup__Reveal) {
+		grid-column: 1/-1;
+	}
+
+	:global(.AttributeEditorGroup__Divider) {
+		grid-column: 1/-1;
+		margin-top: var(--size-2xl);
+	}
+}

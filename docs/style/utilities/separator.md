@@ -16,11 +16,11 @@ Extracts separators between tokens for each variation in an array of CSS value v
 
 ---
 
-### extractSeparator (Internal)
+### extractStyleSeparator (Internal)
 Extracts separators from a single variation string. Used internally by `extractSeparators`.
 
 - **Parameters:**
   - `variation: string` — The variation string to extract separators from.
 - **Returns:** `string[]` — An array of separators found in the string.
 - **Example:**
-  - `extractSeparator('a b / c') → [' ', '/']`
+  - `extractStyleSeparator('a b / c') → [' ', '/']`

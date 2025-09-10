@@ -1,85 +1,75 @@
 "use client";
 
-import React, { useMemo, memo, useCallback } from "react";
+import React, { memo, useMemo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Hooks
-import { useBlockManager } from "@/hooks/block/manager";
+import { useBlockType, useBlockContentIDs, selectBlock, useIsBlockSelected } from "@/editors/block/managers/block";
 
 // Types
-import type { EntryProps } from "./types";
-
-// Utilities
-import { devLog } from "@/utilities/dev";
+import type { BlocksHierarchyEntryProps } from "@/editors/block/types/component/hierarchy";
 
 // Components
 import ButtonReveal from "@/components/reveal/button/component";
 
 // Registry
-import { getRegisteredBlocks } from "@/registry/blocks/registry";
+import { getRegisteredBlockIcon } from "../../../registry/registry";
+
+// Utilities
+import { devRender } from "@/utilities/dev";
 
 /**
- * Entry Component
+ * BlocksHierarchyEntry Component
+ * Renders the block hierarchy entry with children for better user experience.
  *
- * Renders a single block node in the block hierarchy tree, including its children recursively.
- * Highlights if selected, and shows an icon based on block type.
- *
- * @param {string} blockID - The ID of the block to render.
- * @returns {React.ReactElement|null} The rendered Entry node, or null if block not found.
+ * @param blockID - The block identifier
+ * @returns The rendered entry with children for hierarchy navigation
  */
-const Entry: React.FC<EntryProps> = ({ blockID }) => {
-    const { getBlock, getSelectedBlock, selectBlock } = useBlockManager();
+const BlocksHierarchyEntry: React.FC<BlocksHierarchyEntryProps> = ({ blockID }) => {
+    if (!blockID) return devRender.error("[BlocksHierarchyEntry] No blockID provided");
 
-    // Get block data and selection state
-    const block = getBlock(blockID);
-    const selectedBlock = getSelectedBlock();
-    const registeredBlocks = getRegisteredBlocks();
-
-    // Early exit if block doesn't exist
-    if (!block) {
-        devLog.error(`[Entry] Block with ID ${blockID} not found`);
-        return null;
-    }
-
-    // Block properties
-    const blockIcon = registeredBlocks[block.type]?.icon || null;
-    const isSelected = selectedBlock?.id === block.id;
-
-    // Recursively render children entries
-    const hasChildren = block.contentIDs.length > 0;
-    const children = hasChildren ? (
-        <div className={CSS.Content}>
-            {block.contentIDs.map(childID => (
-                <Entry key={childID} blockID={childID} />
-            ))}
-        </div>
-    ) : null;
+    const blockType = useBlockType(blockID);
+    const blockContentIDs = useBlockContentIDs(blockID);
+    const isBlockSelected = useIsBlockSelected(blockID);
+    const blockIcon = blockType ? getRegisteredBlockIcon(blockType) : undefined;
 
     // Handle block selection
-    const handleSelect = useCallback(() => {
-        if (selectedBlock?.id === block.id) {
+    const handleSelect = () => {
+        if (isBlockSelected) {
             selectBlock(null);
         } else {
-            selectBlock(block.id);
+            selectBlock(blockID);
         }
-    }, [block.id, selectBlock, selectedBlock]
+    }
+
+    // Render child entries recursively
+    const renderChildren = useMemo(() => {
+        if (!blockContentIDs || blockContentIDs.length <= 0) return null;
+        return (
+            <div className={CSS.BlocksHierarchyEntry__Content}>
+                {blockContentIDs.map((childID) => (
+                    <BlocksHierarchyEntry key={childID} blockID={childID} />
+                ))}
+            </div>
+        );
+    }, [blockContentIDs]
     );
 
     return (
-        <div className={CSS.Entry}>
+        <div className={CSS.BlocksHierarchyEntry} >
             <ButtonReveal
                 className="EntryButtonReveal"
-                title={block.id}
+                title={blockID}
                 icon={blockIcon}
-                isSelected={isSelected}
+                isSelected={isBlockSelected}
                 onButtonClick={handleSelect}
             >
-                {children}
+                {renderChildren}
             </ButtonReveal>
         </div>
     );
 };
 
-export default memo(Entry);
+export default memo(BlocksHierarchyEntry);

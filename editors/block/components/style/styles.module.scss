@@ -1,0 +1,34 @@
+@use '../../../../mixins/mixins.module.scss' as inputMixins;
+
+.StylesEditor {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+
+	position: relative;
+	z-index: 9999;
+	color: var(--color-white);
+
+	:global(.TabGroup) {
+		height: 93%;
+
+		> *:nth-of-type(1) {
+			padding-top: var(--size-md);
+		}
+	}
+}
+
+.StylesEditor__Empty {
+	width: 100%;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	font-size: var(--font-size-md);
+	font-family: 'Geist';
+}

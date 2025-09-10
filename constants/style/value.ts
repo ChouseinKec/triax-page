@@ -1,5 +1,5 @@
 // Types
-import type { ValueSeparator } from '@/types/block/style/value';
+import type { StyleValueSeparator } from '@/editors/block/types/core/style/value';
 
 export const ValueFunctionDefaults: Record<string, string> = {
 	minmax: 'minmax(0px,0px)',
@@ -25,4 +25,4 @@ export const ValueFunctionDefaults: Record<string, string> = {
 	url: 'url("https://example.com")',
 };
 
-export const ValueSeparatorDefaults: ValueSeparator[] = [' ', ',', '/'];
+export const StyleValueSeparatorDefaults: StyleValueSeparator[] = [' ', ',', '/'];

@@ -1,71 +1,58 @@
 "use client";
 
-import { memo, ReactElement } from "react";
+import { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
-import Property from "../property/component";
+import StylesEditorProperty from "../property/component";
 import DividerReveal from "@/components/reveal/divider/component";
 import HorizontalDivider from "@/components/divider/horizontal/component";
 
 // Types
-import type { GroupProps } from "./type";
+import type { StylesEditorGroupProps } from "@/editors/block/types";
+
+// Utilities
+import { devRender } from "@/utilities/dev";
 
 /**
- * Group component renders a grid layout of properties within a style editor.
- * Each property is rendered as a separate component within the grid structure.
- * 
- * @param {LayoutGroup} props - The props for the Group component.
- * @param {LayoutProps[]} props.properties - The properties to render in the group.
- * @param {string} [props.columns="1fr 1fr"] - The grid column layout.
- * @param {string} [props.rows="auto"] - The grid row layout.
- * @param {boolean} [props.hidden] - Flag to determine if the group should be visible.
- * @returns {ReactElement} The rendered Group component.
-*/
-const Group: React.FC<GroupProps> = (props: GroupProps): ReactElement => {
-    const {
-        properties = [],
-        hidden = false,
-        isExpandable = false,
-        dividerTitle,
-        styles = {},
-    } = props;
-
-
-    // If the `hidden` prop is explicitly set to `false`, return nothing (hide the group)
+ * StylesEditorGroup Component
+ * Renders a grid layout of properties within a style editor for better user experience.
+ *
+ * @param properties - The properties to render in the group
+ * @param hidden - Flag to determine if the group should be visible
+ * @param isExpandable - Whether the group should be expandable
+ * @param dividerTitle - Title for the divider if applicable
+ * @param styles - Custom styles for the group
+ * @returns The rendered group with properties
+ */
+const StylesEditorGroup: React.FC<StylesEditorGroupProps> = ({ properties, hidden, isExpandable, dividerTitle, styles }) => {
+    if (!properties || !Array.isArray(properties) || properties.length === 0) return devRender.error("[StylesEditorGroup] No properties to render");
     if (hidden === true) return <></>;
 
-
-
-    const render = () => {
-        const _properties = properties.map((property, index) => (
-            <Property
-                key={index}
-                {...property}
-            />
-        ))
-
-        if (!isExpandable) return (
-            <>
-                {dividerTitle !== undefined && <HorizontalDivider className="GroupDivider" title={dividerTitle} />}
-                {_properties}
-            </>
-        );
-
-        return (
-            <DividerReveal className="GroupDividerReveal" title={dividerTitle} contentStyles={styles}>
-                {_properties}
-            </DividerReveal>
-        )
-    }
+    // Map properties to StylesEditorProperty components
+    const propertyInstances = properties.map((property, index) => (
+        <StylesEditorProperty
+            key={property.label || index}
+            {...property}
+        />
+    ));
 
     return (
-        <div className={CSS.Group} style={styles}>
-            {render()}
+        <div className={CSS.StylesEditorGroup} style={styles}>
+            {isExpandable ?
+                <DividerReveal className="StylesEditorGroup__Reveal" title={dividerTitle} contentStyles={styles}>
+                    {propertyInstances}
+                </DividerReveal>
+                :
+                <>
+                    {dividerTitle !== undefined && <HorizontalDivider className="StylesEditorGroup__Divider" title={dividerTitle} />}
+                    {propertyInstances}
+                </>
+            }
         </div>
     );
 };
 
-export default memo(Group);
+export default memo(StylesEditorGroup);

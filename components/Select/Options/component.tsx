@@ -43,7 +43,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         className = "",
     } = props;
 
-
     const [search, setSearch] = useState<string>("");
 
     /**

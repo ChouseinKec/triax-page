@@ -5,7 +5,7 @@ import React, { ReactElement, useMemo } from "react";
 import CSS from "./style.module.scss";
 
 // Types
-import type { PageEditorProps } from "./type";
+import type { PageEditorProps } from "./types";
 
 // Editors
 import ViewEditor from "@/editors/view/component";

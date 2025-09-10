@@ -1,4 +1,4 @@
-import { extractFunctionName, extractFunctionValue } from '@/utilities/style/function';
+import { extractFunctionName, extractFunctionArgs } from '@/editors/block/utilities/style/function';
 
 describe('extractFunctionName', () => {
   it('extracts function name from valid CSS function', () => {
@@ -18,20 +18,20 @@ describe('extractFunctionName', () => {
   });
 });
 
-describe('extractFunctionValue', () => {
+describe('extractFunctionArgs', () => {
   it('extracts function value from valid CSS function', () => {
-    expect(extractFunctionValue('fit-content(100px)')).toBe('100px');
-    expect(extractFunctionValue('repeat(1,100px)')).toBe('1,100px');
-    expect(extractFunctionValue('minmax(10px, 1fr)')).toBe('10px, 1fr');
-    expect(extractFunctionValue('rgb(255, 0, 0)')).toBe('255, 0, 0');
-    expect(extractFunctionValue('foo-bar(abc)')).toBe('abc');
-    expect(extractFunctionValue('func123(abc)')).toBe('abc');
-    expect(extractFunctionValue('foo()')).toBe('');
+    expect(extractFunctionArgs('fit-content(100px)')).toBe('100px');
+    expect(extractFunctionArgs('repeat(1,100px)')).toBe('1,100px');
+    expect(extractFunctionArgs('minmax(10px, 1fr)')).toBe('10px, 1fr');
+    expect(extractFunctionArgs('rgb(255, 0, 0)')).toBe('255, 0, 0');
+    expect(extractFunctionArgs('foo-bar(abc)')).toBe('abc');
+    expect(extractFunctionArgs('func123(abc)')).toBe('abc');
+    expect(extractFunctionArgs('foo()')).toBe('');
   });
   it('returns undefined for invalid function', () => {
-    expect(extractFunctionValue('notAFunction')).toBeUndefined();
-    expect(extractFunctionValue('foo bar(abc)')).toBeUndefined();
-    expect(extractFunctionValue('()')).toBeUndefined();
-    expect(extractFunctionValue('')).toBeUndefined();
+    expect(extractFunctionArgs('notAFunction')).toBeUndefined();
+    expect(extractFunctionArgs('foo bar(abc)')).toBeUndefined();
+    expect(extractFunctionArgs('()')).toBeUndefined();
+    expect(extractFunctionArgs('')).toBeUndefined();
   });
 });

@@ -14,10 +14,10 @@ import React, {
 import ActionGroup from "@/components/group/action/component";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "./style.module.scss";
 
 // Types
-import type { PanelProps, Side } from "./types";
+import type { PanelProps, Side } from "@/editors/layout/types/components/panel";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
@@ -205,7 +205,7 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
     /**
      * Memoized tab button elements.
      */
-    const tabElements = useMemo(() => {
+    const tabActions = useMemo(() => {
         return Object.values(tabs).map((tab) => (
             <button
                 key={tab.id}
@@ -225,12 +225,28 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
      * If no tab is selected, defaults to the first tab.
      */
     const currentTabContent = useMemo(() => {
-
         const content = tabs[currentTabID]?.content;
         if (!content) return <p>Tab content not available</p>;
         return content;
     }, [currentTabID, tabs]
     );
+
+    const headerActions = useMemo(() => {
+        return (
+            <>
+                <button title="Lock" data-is-active={locked} onClick={handleLock}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
+                        <path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z" />
+                    </svg>
+                </button>
+                <button onClick={handleClose} title="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
+                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
+                    </svg>
+                </button>
+            </>
+        )
+    }, [locked, handleLock, handleClose])
 
     // Guard clause: if no tabs, render nothing
     if (!tabs || Object.keys(tabs).length === 0) {
@@ -249,16 +265,7 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
             <div className={CSS.Header}>
                 <span className={CSS.Title}>{title}</span>
                 <ActionGroup>
-                    <button title="Lock" data-is-active={locked} onClick={handleLock}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
-                            <path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z" />
-                        </svg>
-                    </button>
-                    <button onClick={handleClose} title="Close">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
-                            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
-                        </svg>
-                    </button>
+                    {headerActions}
                 </ActionGroup>
             </div>
 
@@ -277,9 +284,9 @@ const Panel: React.FC<PanelProps> = (props: PanelProps) => {
             )}
 
             {/* Render tab elements if there are multiple tabs */}
-            {tabElements.length > 1 && (
+            {tabActions.length > 1 && (
                 <ActionGroup className="PanelTabActions" direction="vertical">
-                    {tabElements}
+                    {tabActions}
                 </ActionGroup>
             )}
 

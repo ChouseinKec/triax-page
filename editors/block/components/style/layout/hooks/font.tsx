@@ -1,16 +1,29 @@
 "use client";
 
 // Types
-import type { LayoutProps } from "../type";
+import type { StylesEditorLayoutProps } from "@/editors/block/types/component";
 
-// Hooks
-import { useStyleFactory } from "@/hooks/block/style/factory";
+// Factory
+import { StyleValueRenderer } from "@/editors/block/components/style/layout/hooks/factory";
 
-export const useFontLayout = (): LayoutProps => {
-    const { renderValue } = useStyleFactory();
-    const icon = <svg aria-label="Font & Text Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
+// Managers
+import { useSelectedBlockID } from "@/editors/block/managers/block";
+
+/**
+ * useFontLayout Hook
+ * Custom hook for the Font & Text section configuration in the style editor.
+ * This defines the structure and properties for typography and text styling.
+ *
+ * @returns {StylesEditorLayoutProps} The layout configuration for font and text settings.
+ */
+export const useFontLayout = (): StylesEditorLayoutProps => {
+    const selectedBlockID = useSelectedBlockID();
+    const layoutIcon = <svg aria-label="Font & Text Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
+
+    if (!selectedBlockID) return { label: layoutIcon, title: "Font & Text", groups: [] };
+
     return {
-        label: icon,
+        label: layoutIcon,
         title: "Font & Text",
         groups: [
 
@@ -22,28 +35,28 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: "Size",
                         property: "font-size",
-                        component: () => renderValue("font-size")
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="font-size" />,
                     },
 
                     // Weight
                     {
                         label: "Weight",
                         property: "font-weight",
-                        component: () => renderValue("font-weight"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="font-weight" />,
                     },
 
                     // Height
                     {
                         label: "Height",
                         property: "line-height",
-                        component: () => renderValue("line-height")
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="line-height" />,
                     },
 
                     // Family
                     {
                         label: "Family",
                         property: "font-family",
-                        component: () => renderValue("font-family"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="font-family" />,
                     },
 
 
@@ -51,14 +64,14 @@ export const useFontLayout = (): LayoutProps => {
                     {
                         label: "Style",
                         property: "font-style",
-                        component: () => renderValue("font-style")
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="font-style" />,
                     },
 
                     // Color
                     {
                         label: "Color",
                         property: "color",
-                        component: () => renderValue("color"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="color" />,
                     },
 
                 ],
@@ -74,42 +87,42 @@ export const useFontLayout = (): LayoutProps => {
                         {
                             label: "Align",
                             property: "text-align",
-                            component: () => renderValue("text-align")
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-align" />,
                         },
 
                         // Text Align Last
                         {
                             label: "Align Last",
                             property: "text-align-last",
-                            component: () => renderValue("text-align-last"),
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-align-last" />,
                         },
 
                         // Transform
                         {
                             label: "Transform",
                             property: "text-transform",
-                            component: () => renderValue("text-transform")
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-transform" />,
                         },
 
                         // Text Combine Upright
                         {
                             label: "Combine Upright",
                             property: "text-combine-upright",
-                            component: () => renderValue("text-combine-upright"),
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-combine-upright" />,
                         },
 
                         // Text Overflow
                         {
                             label: "Overflow",
                             property: "text-overflow",
-                            component: () => renderValue("text-overflow"),
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-overflow" />,
                         },
 
                         // Text Orientation
                         {
                             label: "Orientation",
                             property: "text-orientation",
-                            component: () => renderValue("text-orientation"),
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-orientation" />,
                         },
 
                         // Decoration
@@ -117,7 +130,7 @@ export const useFontLayout = (): LayoutProps => {
                             label: "Decoration",
                             property: "text-decoration",
                             styles: { gridColumn: "1/-1" },
-                            component: () => renderValue("text-decoration")
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-decoration" />,
                         },
 
                         // Text Shadow
@@ -125,7 +138,7 @@ export const useFontLayout = (): LayoutProps => {
                             label: "Shadow",
                             property: "text-shadow",
                             styles: { gridColumn: "1/-1" },
-                            component: () => renderValue("text-shadow")
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-shadow" />,
                         },
 
 
@@ -134,7 +147,7 @@ export const useFontLayout = (): LayoutProps => {
                             label: "Indent",
                             property: "text-indent",
                             styles: { gridColumn: "1/3" },
-                            component: () => renderValue("text-indent")
+                            component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="text-indent" />,
                         },
                     ],
             },
@@ -148,7 +161,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Writing Mode",
                         property: "writing-mode",
                         styles: { gridColumn: "1/3" },
-                        component: () => renderValue("writing-mode"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="writing-mode" />,
                     },
 
 
@@ -157,7 +170,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "White Space",
                         property: "white-space",
                         styles: { gridColumn: "3/-1" },
-                        component: () => renderValue("white-space"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="white-space" />,
                     },
 
                     // Word-Break
@@ -165,7 +178,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Word Break",
                         property: "word-break",
                         styles: { gridColumn: "1/3" },
-                        component: () => renderValue("word-break"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="word-break" />,
                     },
 
                     // Line-Break
@@ -173,7 +186,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Line Break",
                         property: "line-break",
                         styles: { gridColumn: "3/-1" },
-                        component: () => renderValue("line-break"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="line-break" />,
                     },
 
 
@@ -182,7 +195,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Letter Spacing",
                         property: "letter-spacing",
                         styles: { gridColumn: "1/3" },
-                        component: () => renderValue("letter-spacing")
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="letter-spacing" />,
                     },
 
                     // Word Spacing
@@ -190,7 +203,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Word Spacing",
                         property: "word-spacing",
                         styles: { gridColumn: "3/-1" },
-                        component: () => renderValue("word-spacing"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="word-spacing" />,
                     },
                 ],
             },
@@ -206,7 +219,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Count",
                         property: "column-count",
                         styles: { gridColumn: "1" },
-                        component: () => renderValue("column-count"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-count" />,
                     },
 
                     // Column Width
@@ -214,7 +227,7 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Width",
                         property: "column-width",
                         styles: { gridColumn: "2" },
-                        component: () => renderValue("column-width"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-width" />,
                     },
 
                     // Column Gap
@@ -222,63 +235,63 @@ export const useFontLayout = (): LayoutProps => {
                         label: "Gap",
                         property: "column-gap",
                         styles: { gridColumn: "3" },
-                        component: () => renderValue("column-gap"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-gap" />,
                     },
 
                     // Column Rule Width
                     {
                         label: "Rule Width",
                         property: "column-rule-width",
-                        component: () => renderValue("column-rule-width"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-rule-width" />,
                     },
 
                     // Column Rule Style
                     {
                         label: "Rule Style",
                         property: "column-rule-style",
-                        component: () => renderValue("column-rule-style"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-rule-style" />,
                     },
 
                     // Column Rule Color
                     {
                         label: "Rule Color",
                         property: "column-rule-color",
-                        component: () => renderValue("column-rule-color"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-rule-color" />,
                     },
 
                     // Break Before
                     {
                         label: "Break Before",
                         property: "break-before",
-                        component: () => renderValue("break-before"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="break-before" />,
                     },
 
                     // Break Inside
                     {
                         label: "Break Inside",
                         property: "break-inside",
-                        component: () => renderValue("break-inside"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="break-inside" />,
                     },
 
                     // Break After
                     {
                         label: "Break After",
                         property: "break-after",
-                        component: () => renderValue("break-after"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="break-after" />,
                     },
 
                     // Column Span
                     {
                         label: "Column Span",
                         property: "column-span",
-                        component: () => renderValue("column-span"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-span" />,
                     },
 
                     // Column Fill
                     {
                         label: "Column Fill",
                         property: "column-fill",
-                        component: () => renderValue("column-fill"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-fill" />,
                     },
                 ],
             },

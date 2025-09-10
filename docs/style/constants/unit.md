@@ -28,7 +28,7 @@ The `constants/style/units.ts` file serves as the main lookup table for CSS unit
 ## Example Structure
 
 ```ts
-export const StyleUnitDefinitions = {
+export const UnitDefinitions = {
   px: {
      type: 'unit',
      name: 'px',

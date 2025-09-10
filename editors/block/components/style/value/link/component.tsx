@@ -1,43 +1,37 @@
 "use client";
-
-// External imports
 import React, { useCallback, memo } from "react";
 
 // Styles
-import CSS from './styles.module.scss';
+import CSS from "@/editors/block/components/style/value/link/styles.module.scss";
 
 // Components
-import GenericInput from '@/components/input/generic/component';
+import GenericInput from "@/components/input/generic/component";
 
 // Types
-import { LinkValueProps } from './types';
+import { StylesEditorValueLinkProps } from "@/editors/block/types/component";
+
+// Utilities
+import { devRender } from "@/utilities/dev";
 
 /**
- * Link Component
- *
+ * StylesEditorValueLink Component
  * Renders a text input for editing a URL value.
  * Ensures the value is always formatted as "https://example.com" (with quotes).
+ *
+ * @param props - StylesEditorValueLinkProps containing value and onChange callback
+ * @returns The rendered link input component
  */
-const Link: React.FC<LinkValueProps> = (props: LinkValueProps) => {
-    const {
-        value,
-        onChange
-    } = props;
+const StylesEditorValueLink: React.FC<StylesEditorValueLinkProps> = ({ value, onChange }) => {
+    // Validate input props
+    if (typeof value !== 'string') return devRender.error("[StylesEditorValueLink] No value provided", { value });
+    if (!onChange || typeof onChange !== 'function') return devRender.error("[StylesEditorValueLink] Invalid onChange callback", { onChange });
 
-    // Remove quotes and "https://" prefix for display in the input
+    // Prepare value for display by removing quotes and protocol
     const safeValue = value.replaceAll('"', '').replace(/^https:\/\//, '');
 
-    /**
-     * Validates a URL input for use in the Link component.
-     * - Requires a valid domain (no protocol like https://)
-     * - Disallows local files (no file://, localhost, or IPs)
-     * - Allows optional www, path, query, and hash
-     * - Returns user-friendly error messages
-     *
-     * @param {string} inputValue - The input value to validate
-     * @returns {{ status: boolean; message: string }} Validation result
-     */
+    // Validate URL input and return error messages
     const validateLink = useCallback((inputValue: string): { status: boolean; message: string } => {
+
         // Allow empty values
         if (!inputValue || inputValue.trim() === '') {
             return { status: true, message: '' };
@@ -52,11 +46,7 @@ const Link: React.FC<LinkValueProps> = (props: LinkValueProps) => {
         }
 
         // Disallow local files and localhost/IPs
-        if (
-            /^file:/.test(inputValue) ||
-            /^localhost\b/.test(inputValue) ||
-            /^\d{1,3}(\.\d{1,3}){3}/.test(inputValue)
-        ) {
+        if (/^file:/.test(inputValue) || /^localhost\b/.test(inputValue) || /^\d{1,3}(\.\d{1,3}){3}/.test(inputValue)) {
             return {
                 status: false,
                 message: 'Local files and IP addresses are not allowed.'
@@ -74,25 +64,23 @@ const Link: React.FC<LinkValueProps> = (props: LinkValueProps) => {
         }
 
         return { status: true, message: '' };
-    }, []);
+    }, []
+    );
 
-
-    /**
-     * Handles changes to the input field.
-     * Sanitizes input by removing quotes and "https://", then formats as a quoted URL.
-     */
+    // Handle input changes and format as quoted URL
     const handleValueChange = useCallback((input: string): void => {
-        if (input === '') {
-            onChange('');
-            return;
-        }
+        if (input === '') return onChange('');
+
         // Remove quotes and any "https://" prefix, then format as quoted URL
         const sanitizedInput = input.replaceAll('"', '').replace(/^https:\/\//, '');
         onChange(`"https://${sanitizedInput}"`);
-    }, [onChange]);
+    }, [onChange]
+    );
 
+    // Render the link input component
     return (
-        <div className={CSS.Link}>
+        <div className={CSS.StylesEditorValueLink}>
+            {/* URL input field with validation */}
             <GenericInput
                 value={safeValue}
                 type="text"
@@ -104,4 +92,4 @@ const Link: React.FC<LinkValueProps> = (props: LinkValueProps) => {
     );
 };
 
-export default memo(Link);
+export default memo(StylesEditorValueLink);

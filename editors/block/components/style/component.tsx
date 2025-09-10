@@ -1,30 +1,35 @@
-import React from "react";
-import CSS from './style.module.scss';
+"use client";
+
+import React, { memo } from "react";
+
+// Styles
+import CSS from "@/editors/block/components/style/styles.module.scss";
 
 // Components
-import Layout from './layout/component';
+import StylesEditorLayouts from "@/editors/block/components/style/layout/component"; 
 
-// Types 
-import { BlockStyleProps } from './types';
+// Types
+import type { StylesEditorProps } from "@/editors/block/types/component";
 
-// Hooks
-import { useBlockManager } from '@/hooks/block/manager';
+// Managers
+import { useSelectedBlockID } from "@/editors/block/managers/block";
 
 /**
- * BlockStyle displays style controls for the currently selected block.
- * If no block is selected, it shows a fallback message.
+ * StylesEditor Component
+ * Displays style controls for the currently selected block.
+ * Shows a fallback message when no block is selected.
+ *
+ * @returns The rendered style controls or fallback message
  */
-const BlockStyles: React.FC<BlockStyleProps> = () => {
-    // Get the currently selected block from the block manager
-    const { getSelectedBlock } = useBlockManager();
-    const selectedBlock = getSelectedBlock();
-
+const StylesEditor: React.FC<StylesEditorProps> = () => {
+    // Get the currently selected block ID
+    const selectedBlockID = useSelectedBlockID();
     return (
-        <div className={CSS.BlockStyles}>
+        <div className={CSS.StylesEditor}>
             {/* Render style layout if a block is selected, otherwise show fallback */}
-            {selectedBlock
-                ? <Layout />
-                : <p className={CSS.Fallback}>
+            {selectedBlockID
+                ? <StylesEditorLayouts />
+                : <p className={CSS.StylesEditor__Empty}>
                     No block selected. Select a block to see style-specific settings.
                 </p>
             }
@@ -32,4 +37,4 @@ const BlockStyles: React.FC<BlockStyleProps> = () => {
     );
 };
 
-export default BlockStyles;
+export default memo(StylesEditor);

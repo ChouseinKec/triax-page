@@ -1,28 +1,34 @@
 "use client";
 
-import { memo, ReactElement } from "react";
+import { memo } from "react";
+
+// Styles
+import CSS from "./styles.module.scss";
 
 // Components
-import Group from "../group/component";
+import StylesEditorGroup from "../group/component";
 
 // Types
-import { CategoryProps } from "./type";
+import { StylesEditorCategoryProps } from "@/editors/block/types/component";
 
+// Utilities
+import { devRender } from "@/utilities/dev";
 
 /**
- * Category component renders a list of groups in a category layout.
- * Each group represents a set of properties that define the layout structure.
- * 
- * @param {LayoutCategoryProps} props - The props for the Category component.
- * @param {LayoutGroup[]} props.groups - The groups to render in the category.
- * @returns {ReactElement} The rendered Category component.
+ * StylesEditorCategory Component
+ * Renders a list of style groups in a category layout for better user experience.
+ *
+ * @param groups - The groups to render in the category
+ * @returns The rendered category with style groups
  */
-const Category: React.FC<CategoryProps> = ({ groups }): ReactElement => {
+const StylesEditorCategory: React.FC<StylesEditorCategoryProps> = ({ groups }) => {
+    if (!groups || !Array.isArray(groups) || groups.length === 0) return devRender.error("[StylesEditorCategory] No groups to render");
+
     return (
-        <>
-            {/* Map through the `groups` array and render a `Group` component for each group */}
+        <div className={CSS.StylesEditorCategory}>
+            {/* Render each group in the category */}
             {groups.map((group, index) => (
-                <Group
+                <StylesEditorGroup
                     key={index}
                     properties={group.properties}
                     hidden={group.hidden}
@@ -31,8 +37,8 @@ const Category: React.FC<CategoryProps> = ({ groups }): ReactElement => {
                     styles={group.styles}
                 />
             ))}
-        </>
+        </div>
     );
 };
 
-export default memo(Category);
+export default memo(StylesEditorCategory);

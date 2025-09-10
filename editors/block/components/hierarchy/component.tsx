@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useMemo, memo, useCallback } from "react";
+import React, { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
-// Hooks
-import { useBlockManager } from "@/hooks/block/manager";
+// Types
+import { BlocksHierarchyProps } from "@/editors/block/types/component";
+
+// Managers
+import { useRootBlocks, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlockID } from "@/editors/block/managers/block";
 
 // Components
 import Entry from "./entry/component";
@@ -14,82 +17,71 @@ import Entry from "./entry/component";
 // Utilities
 import { devLog } from "@/utilities/dev";
 
-const Hierarchy: React.FC = () => {
-    // Retrieve the block manager's getAllBlocks function
-    const { getAllBlocks, getNextBlock, selectBlock, getSelectedBlock, getPreviousBlock } = useBlockManager();
+/**
+ * BlocksHierarchy Component
+ * Renders the block editor hierarchy with keyboard navigation for better user experience.
+ *
+ * @returns The rendered hierarchy with keyboard navigation for block editing
+ */
+const BlocksHierarchy: React.FC<BlocksHierarchyProps> = () => {
+    const rootBlocks = useRootBlocks();
 
-    /**
-     * Memoized object containing all blocks in the editor.
-    */
-    const allBlocks = useMemo(() => getAllBlocks(), [getAllBlocks]);
-
-    /**
-     * Memoized array of root blocks (blocks without a parent).
-    */
-    const rootBlocks = useMemo(() => Object.values(allBlocks).filter(block => !block.parentID), [allBlocks]);
-
-
-    /**
-     * Handles selecting the next block in the hierarchy when the down arrow key is pressed.
-     *
-     * @param {string} blockID - The ID of the block to select.
-    */
-    const handleSelectNext = useCallback((e: React.KeyboardEvent) => {
+    // Select next block on ArrowDown
+    const handleSelectNext = (e: React.KeyboardEvent) => {
         if (e.key !== "ArrowDown") return;
-        const currentBlock = getSelectedBlock();
-        if (!currentBlock) return devLog.warn("[Hierarchy] No selected block to navigate from");
 
-        const nextBlock = getNextBlock();
-        if (!nextBlock) return devLog.warn(`[Hierarchy] No next block found for ${currentBlock.id}`);
+        const currentBlockID = getSelectedBlockID();
+        if (!currentBlockID) return devLog.warn("No selected block");
+
+        const nextBlock = getNextBlock(currentBlockID);
         if (!nextBlock) return;
+
         selectBlock(nextBlock.id);
-    }, [getNextBlock]
-    );
+    }
 
-    /**
-     * Handles selecting the previous block in the hierarchy when the up arrow key is pressed.
-     *
-     * @param {string} blockID - The ID of the block to select.
-    */
-    const handleSelectPrevious = useCallback((e: React.KeyboardEvent) => {
+    // Select previous block on ArrowUp
+    const handleSelectPrevious = (e: React.KeyboardEvent) => {
         if (e.key !== "ArrowUp") return;
-        const currentBlock = getSelectedBlock();
-        if (!currentBlock) return devLog.warn("[Hierarchy] No selected block to navigate from");
 
-        const previousBlock = getPreviousBlock();
-        if (!previousBlock) return devLog.warn(`[Hierarchy] No previous block found for ${currentBlock.id}`);
+        const currentBlockID = getSelectedBlockID();
+        if (!currentBlockID) return devLog.warn("No selected block");
+
+        const previousBlock = getPreviousBlock(currentBlockID);
         if (!previousBlock) return;
-        selectBlock(previousBlock.id);
-    }, [getPreviousBlock]
-    );
 
-    /**
-     * Handles keyboard navigation for the hierarchy component.
-     * This function listens for arrow key presses to navigate through the block hierarchy.
-     * @param {React.KeyboardEvent} e - The keyboard event triggered by the user.
-     * It checks for "ArrowDown" to select the next block and "ArrowUp" to select the previous block.
-     * @returns {void}
-    */
-    const handleKeyUp = useCallback((e: React.KeyboardEvent) => {
+        selectBlock(previousBlock.id);
+    };
+
+    // Handle keyboard navigation
+    const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.key === "ArrowDown") {
             handleSelectNext(e);
         } else if (e.key === "ArrowUp") {
             handleSelectPrevious(e);
         }
-    }, [handleSelectNext, handleSelectPrevious]
-    );
+    };
+
+    // Render root block entries
+    const rootInstances = (
+        rootBlocks.map(block => (
+            <Entry key={block.id} blockID={block.id} />
+        ))
+    )
 
     return (
         <div
-            className={CSS.Hierarchy}
+            className={CSS.BlocksHierarchy}
             onKeyUp={handleKeyUp}
+            tabIndex={0}
         >
-            {/* Render each root block */}
-            {rootBlocks.map(block => (
-                <Entry key={block.id} blockID={block.id} />
-            ))}
+
+            {
+                rootInstances.length > 0
+                    ? rootInstances
+                    : <div className={CSS.BlocksEditorHierarchy__Empty}>No blocks available. Add a block to get started.</div>
+            }
         </div>
     );
 };
 
-export default memo(Hierarchy);
+export default memo(BlocksHierarchy);

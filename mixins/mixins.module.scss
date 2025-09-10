@@ -170,7 +170,7 @@
 
 	font-size: var(--font-size-sm);
 	color: var(--color-white);
-	text-transform: uppercase;
+	text-transform: capitalize;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	cursor: pointer;

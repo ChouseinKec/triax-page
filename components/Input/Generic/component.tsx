@@ -16,7 +16,7 @@ import { devLog } from "@/utilities/dev";
 import { validationReducer } from "./reducer";
 
 // Hooks
-import { useSafeCallback } from "@/hooks/utility/useSafeCallback";
+import { useSafeCallback } from "@/hooks/utility/useCallback";
 
 /**
  * GenericInput Component (Controlled, idiomatic React)

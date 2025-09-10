@@ -16,5 +16,8 @@ export type RadioSelectProps = {
 
     /** Optional class name for custom styling. */
     className?: string;
+
+    /** Optional flag to prioritize icons over text in the options. */
+    prioritizeIcons?: boolean;
 };
 

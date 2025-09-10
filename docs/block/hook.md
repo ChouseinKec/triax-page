@@ -26,7 +26,7 @@ The `hooks/block/manager.tsx` file provides the main React hook for block manage
 Adds a new block to the editor, optionally as a child of another block.
 
 - **Parameters:**
-  - `type: BlockType` — The type of block to add.
+  - `type: BlockTypes` — The type of block to add.
   - `parentID?: string` — Optional parent block ID.
 
 ---
@@ -70,33 +70,6 @@ Retrieves the currently selected block.
 
 ---
 
-### getBlockStyles
-Retrieves the style data for a block.
-
-- **Parameters:**
-  - `blockID: string` — The ID of the block.
-- **Returns:** `BlockStyleDefinition | null`
-
----
-
-### getBlockTag
-Retrieves the tag of a block.
-
-- **Parameters:**
-  - `blockID: string` — The ID of the block.
-- **Returns:** `HTMLElementTag | undefined`
-
----
-
-### getBlockContentIDs
-Retrieves the child block IDs for a block.
-
-- **Parameters:**
-  - `blockID: string` — The ID of the block.
-- **Returns:** `string[] | undefined`
-
----
-
 ### hasBlockSelectedContent
 Checks if the currently selected block is a descendant of the given block.
 
@@ -106,7 +79,7 @@ Checks if the currently selected block is a descendant of the given block.
 
 ---
 
-### renderBlockStyles
+### renderStylesEditor
 Resolves and generates the CSS rule for a block based on the current device, orientation, and pseudo-state.
 
 - **Parameters:**
@@ -147,8 +120,8 @@ const {
   getAllBlocks,
   getBlock,
   getSelectedBlock,
-  getBlockStyles,
-  renderBlockStyles,
+  getStylesEditor,
+  renderStylesEditor,
   setBlockAttribute,
   getBlockAttribute,
 } = useBlockManager();

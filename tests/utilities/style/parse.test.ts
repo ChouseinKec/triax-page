@@ -1,10 +1,10 @@
-import { normalizeSyntax, parse } from '@/utilities/style/parse';
-import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/utilities/style/parse-combinator';
-import { parseBrackets } from '@/utilities/style/parse-bracket';
-import { expandTokens } from '@/utilities/style/token';
+import { normalizeSyntax, parseSyntax } from '@/editors/block/utilities/style/parse';
+import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/editors/block/utilities/style/parse/combinator';
+import { parseBrackets } from '@/editors/block/utilities/style/parse/bracket';
+import { expandTokens } from '@/editors/block/utilities/style/token';
 
-import { parseSequence } from '@/utilities/style/parse-combinator';
-import { parseMultiplier } from '@/utilities/style/parse-multiplier';
+import { parseSequence } from '@/editors/block/utilities/style/parse/combinator';
+import { parseMultiplier } from '@/editors/block/utilities/style/parse/multiplier';
 
 describe('expandTokens', () => {
 	it('should expand known data types', () => {
@@ -141,91 +141,91 @@ describe('parseMultiplier', () => {
 
 describe('parse', () => {
 	it('parses || and |', () => {
-		const result = parse('a || b|c');
+		const result = parseSyntax('a || b|c');
 		const expected = ['a', 'b', 'c', 'a b', 'a c', 'b a', 'c a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses || and &&', () => {
-		const result = parse('a || b&&c');
+		const result = parseSyntax('a || b&&c');
 		const expected = ['a', 'b c', 'c b', 'a b c', 'a c b', 'b c a', 'c b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses || and +', () => {
-		const result = parse('a || b+');
+		const result = parseSyntax('a || b+');
 		const expected = ['a', 'b', 'b b', 'a b', 'b a', 'a b b', 'b b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses || and *', () => {
-		const result = parse('a || b*');
+		const result = parseSyntax('a || b*');
 		const expected = ['', 'a', 'b', 'b b', 'a b', 'b a', 'a b b', 'b b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses || and ?', () => {
-		const result = parse('a || b?');
+		const result = parseSyntax('a || b?');
 		const expected = ['', 'a', 'b', 'a b', 'b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses && and |', () => {
-		const result = parse('a&&b|c');
+		const result = parseSyntax('a&&b|c');
 		const expected = ['a b', 'a c', 'b a', 'c a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses && and ||', () => {
-		const result = parse('a&&b || c');
+		const result = parseSyntax('a&&b || c');
 		const expected = ['c', 'a b', 'b a', 'a b c', 'b a c', 'c a b', 'c b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses && and +', () => {
-		const result = parse('a&&b+');
+		const result = parseSyntax('a&&b+');
 		const expected = ['a b', 'b a', 'a b b', 'b b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses && and *', () => {
-		const result = parse('a&&b*');
+		const result = parseSyntax('a&&b*');
 		const expected = ['a', 'a b', 'b a', 'a b b', 'b b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses && and ?', () => {
-		const result = parse('a&&b?');
+		const result = parseSyntax('a&&b?');
 		const expected = ['a', 'a b', 'b a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses []', () => {
-		const result = parse('[a b]');
+		const result = parseSyntax('[a b]');
 		const expected = ['', 'a b'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses [] and |', () => {
-		const result = parse('[a | b]');
+		const result = parseSyntax('[a | b]');
 		const expected = ['', 'a', 'b'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses [] and *', () => {
-		const result = parse('[a | b]*');
+		const result = parseSyntax('[a | b]*');
 		const expected = ['', 'a', 'b', 'a a', 'a b', 'b a', 'b b'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses [] and +', () => {
-		const result = parse('[a | b]+');
+		const result = parseSyntax('[a | b]+');
 		const expected = ['a', 'b', 'a a', 'a b', 'b a', 'b b'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses [] and ?', () => {
-		const result = parse('[a | b]?');
+		const result = parseSyntax('[a | b]?');
 		const expected = ['', 'a', 'b'];
 		expect(result).toEqual(expected);
 	});
@@ -237,13 +237,13 @@ describe('parse', () => {
 	// });
 
 	it('parses complex expressions', () => {
-		const result = parse('a || d+ e? f*');
+		const result = parseSyntax('a || d+ e? f*');
 		const expected = ['a', 'd', 'd e', 'd d', 'a d', 'd  f', 'd e f', 'd d e', 'a d e', 'a d d', 'd   a', 'd  f f', 'd d  f', 'a d  f', 'd  f a', 'd e  a', 'd e f f', 'd d e f', 'a d e f', 'a d d e', 'd e f a', 'd d   a', 'd d  f f', 'a d  f f', 'a d d  f', 'd  f f a', 'd d  f a', 'd d e  a', 'd d e f f', 'a d e f f', 'a d d e f', 'd e f f a', 'd d e f a', 'a d d  f f', 'd d  f f a', 'a d d e f f', 'd d e f f a'];
 		expect(result).toEqual(expected);
 	});
 
 	it('parses with brackets', () => {
-		const result = parse('a || [b|c] d');
+		const result = parseSyntax('a || [b|c] d');
 		const expected = ['a', 'd', 'b d', 'c d', 'd a', 'a  d', 'a b d', 'a c d', 'b d a', 'c d a'];
 		expect(result).toEqual(expected);
 	});

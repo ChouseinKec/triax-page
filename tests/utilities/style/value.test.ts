@@ -1,4 +1,4 @@
-import { getValueType, getValueTokens, getValueToken } from '@/utilities/style/value';
+import { getValueType, getValueTokens, getValueToken } from '@/editors/block/utilities/style/value';
 
 describe('getValueType', () => {
   it('detects keyword', () => {

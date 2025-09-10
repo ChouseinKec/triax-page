@@ -1,23 +1,23 @@
 // Types
-import { CSSTokenDefinition, CSSTokenKeys } from '@/types/block/style/token';
+import { TokenDefinition, TokenKeys } from '@/editors/block/types/core/style/token';
 
 /** Creates a new CSS data type token definition.
- * @param {CSSTokenKeys} type - The canonical name of the CSS data type (e.g. '<number>', '<length>').
+ * @param {TokenKeys} type - The canonical name of the CSS data type (e.g. '<number>', '<length>').
  * @param {string} syntax - The value definition syntax for this data type (may reference other data types).
- * @returns {CSSTokenDefinition} The created token definition.
+ * @returns {TokenDefinition} The created token definition.
  */
-const createToken = (type: CSSTokenKeys, syntax: string): CSSTokenDefinition => {
+export function createToken(type: TokenKeys, syntax: string): TokenDefinition {
 	return {
 		type,
 		syntax,
 	};
-};
+}
 
 /**
  * A lookup table of all supported CSS data type tokens and their definitions.
- * Each entry is a CSSTokenDefinition object describing the token's name and syntax.
+ * Each entry is a TokenDefinition object describing the token's name and syntax.
  */
-export const StyleTokenDefinitions: Record<CSSTokenKeys, CSSTokenDefinition> = {
+export const TokenDefinitions: Record<TokenKeys, TokenDefinition> = {
 	// === Generic Types ===
 	'<number>': createToken('<number>', '<number>'),
 	'<integer>': createToken('<integer>', '<integer>'),
@@ -94,7 +94,7 @@ export const StyleTokenDefinitions: Record<CSSTokenKeys, CSSTokenDefinition> = {
  * Default values for common CSS data types.
  * Used for initializing properties and ensuring valid defaults.
  */
-export const StyleTokenDefaults: Partial<Record<CSSTokenKeys, string>> = {
+export const TokenDefaults: Partial<Record<TokenKeys, string>> = {
 	'<length>': '0px',
 	'<angle>': '0deg',
 	'<percentage>': '0%',

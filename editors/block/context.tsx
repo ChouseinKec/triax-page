@@ -2,38 +2,27 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 
 // Types
-import type { BlockActionProps } from "./types";
-
+import type { BlocksActionDefinition, BlocksContextDefinition } from "@/editors/block/types/core/block";
+import type { BlockID } from "@/editors/block/types/core/block/block";
 
 // Utilities
 import { devLog } from "@/utilities/dev";
-
-/**
- * Record of all actions by their ID.
- */
-type ActionRecord = Record<string, BlockActionProps>;
-
-/**
- * Context type for actions management.
- */
-type BlockContextType = {
-    actions: ActionRecord;
-    registerAction: (action: BlockActionProps) => void;
-    unregisterAction: (actionID: string) => void;
-    getAllActions: () => ActionRecord;
-    resetActions: () => void;
-};
+import { validateBlockAction } from "@/editors/block/helpers/block";
+import { isBlockIDValid } from "@/editors/block/utilities/block/block";
 
 /**
  * Block context for managing actions.
  */
-const BlockContext = createContext<BlockContextType>({
+const BlockContext = createContext<BlocksContextDefinition>({
     actions: {},
     registerAction: () => { },
     unregisterAction: () => { },
+    unregisterBlockActions: () => { },
     getAllActions: () => ({}),
+    getBlockActions: () => [],
     resetActions: () => { }
 });
+
 
 /**
  * BlockProvider component to provide block context.
@@ -41,61 +30,102 @@ const BlockContext = createContext<BlockContextType>({
  * @param children - React children to render within the provider.
  */
 export const BlockProvider = ({ children }: { children: ReactNode }) => {
-    // State to hold all actions
-    const [actions, setActions] = useState<ActionRecord>({});
+    const [actions, setActions] = useState<Record<BlockID, BlocksActionDefinition[]>>({});
 
     /**
-     * Register a new action or update an existing one.
+     * Register a new action for a specific block.
+     * @param blockID - The ID of the block to register the action for.
      * @param action - The action to register.
      */
-    const registerAction = useCallback((action: BlockActionProps) => {
-        if (!action) {
-            devLog.error("[BlockProvider] Invalid action provided.");
-            return;
-        }
-        if (!action.id || typeof action.id !== "string") {
-            devLog.error("[BlockProvider] Action must have a unique string ID.");
-            return;
-        }
-        if (actions[action.id]) {
-            devLog.warn(`[BlockProvider] Action with ID "${action.id}" already exists. Overwriting.`);
-        }
-        setActions(prev => ({
-            ...prev,
-            [action.id]: action,
-        }));
+    const registerAction: BlocksContextDefinition['registerAction'] = useCallback((blockID, action) => {
+        if (!isBlockIDValid(blockID)) return devLog.error("[BlockProvider] Invalid block ID provided.");
+        if (!validateBlockAction(action, "BlockProvider → registerAction")) return;
+
+        setActions(prev => {
+            const blockActions = prev[blockID] || [];
+            const existingIndex = blockActions.findIndex(a => a.actionID === action.actionID);
+
+            if (existingIndex === -1) {
+                blockActions.push(action);
+            } else {
+                devLog.warn(`[BlockProvider] Action with ID "${action.actionID}" already exists for block "${blockID}". Overwriting.`);
+                blockActions[existingIndex] = action;
+            }
+
+            return {
+                ...prev,
+                [blockID]: blockActions,
+            };
+        });
+    }, []
+    );
+
+    /**
+     * Unregister (remove) an action by its ID for a specific block.
+     * @param blockID - The ID of the block.
+     * @param actionID - The ID of the action to remove.
+     */
+    const unregisterAction: BlocksContextDefinition['unregisterAction'] = useCallback((blockID, actionID) => {
+        if (!isBlockIDValid(blockID)) return devLog.error("[BlockProvider] Invalid block ID provided.");
+        if (!isBlockIDValid(actionID)) return devLog.error("[BlockProvider] Invalid action ID provided.");
+
+        setActions(prev => {
+            const blockActions = prev[blockID] || [];
+            const filteredActions = blockActions.filter(a => a.actionID !== actionID);
+            if (filteredActions.length === blockActions.length) {
+                devLog.warn(`[BlockProvider] Action with ID "${actionID}" does not exist for block "${blockID}". Nothing to unregister.`);
+                return prev;
+            }
+            return {
+                ...prev,
+                [blockID]: filteredActions,
+            };
+        });
+    }, []
+    );
+
+    /**
+     * Unregister all actions for a specific block.
+     * @param blockID - The ID of the block to remove all actions for.
+     */
+    const unregisterBlockActions: BlocksContextDefinition['unregisterBlockActions'] = useCallback((blockID) => {
+        if (!isBlockIDValid(blockID)) return devLog.error("[BlockProvider] Invalid block ID provided.");
+
+        setActions(prev => {
+            if (!prev[blockID]) {
+                devLog.warn(`[BlockProvider] No actions found for block "${blockID}". Nothing to remove.`);
+                return prev;
+            }
+            const { [blockID]: _, ...rest } = prev;
+            return rest;
+        });
+    }, []
+    );
+
+    const getAllActions: BlocksContextDefinition['getAllActions'] = useCallback(() => {
+        return actions;
     }, [actions]
     );
 
     /**
-     * Unregister (remove) an action by its ID.
-     * @param actionID - The ID of the action to remove.
+     * Get actions for a specific block.
+     * @param blockID - The ID of the block to get actions for.
+     * @returns Array of actions for the block, or empty array if none.
      */
-    const unregisterAction = useCallback((actionID: string) => {
-        if (!actionID || typeof actionID !== "string") {
-            devLog.error("[BlockProvider] Action ID is required to unregister an action.");
-            return;
+    const getBlockActions: BlocksContextDefinition['getBlockActions'] = useCallback((blockID) => {
+        if (!isBlockIDValid(blockID)) {
+            devLog.error("[BlockProvider] Invalid block ID provided.");
+            return undefined;
         }
-        if (!actions[actionID]) {
-            devLog.warn(`[BlockProvider] Action with ID "${actionID}" does not exist. Nothing to remove.`);
-            return;
-        }
-        setActions(prev => {
-            const { [actionID]: _, ...rest } = prev;
-            return rest;
-        });
-    }, [actions]
-    );
 
-    const getAllActions = useCallback((): ActionRecord => {
-        return actions;
+        return actions[blockID];
     }, [actions]
     );
 
     /**
      * Reset all actions to an empty state.
      */
-    const resetActions = useCallback(() => {
+    const resetActions: BlocksContextDefinition['resetActions'] = useCallback(() => {
         setActions({});
     }, []
     );
@@ -107,7 +137,9 @@ export const BlockProvider = ({ children }: { children: ReactNode }) => {
                 resetActions,
                 registerAction,
                 unregisterAction,
-                getAllActions
+                unregisterBlockActions,
+                getAllActions,
+                getBlockActions
             }}
         >
             {children}
@@ -118,7 +150,7 @@ export const BlockProvider = ({ children }: { children: ReactNode }) => {
 
 /**
  * Custom hook to access the BlockContext.
- * @returns BlockContextType
+ * @returns BlocksContextDefinition
  */
 export const useBlockContext = () => {
     const context = useContext(BlockContext);

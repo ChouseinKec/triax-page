@@ -1,38 +1,77 @@
-import type { HTMLPropertyDefinition, HTMLPropertyKey, HTMLPropertyCategory } from '@/types/block/attribute/property';
-import type { HTMLValueSyntax } from '@/types/block/attribute/value';
+import type { AttributeDefinition, AttributeKeys, AttributeCategories, AttributeSyntaxes } from '@/editors/block/types/core/attribute';
 
 /**
  * Helper function to create an HTMLPropertyDefinition object.
  * @param name - The canonical name of the HTML attribute (e.g. 'id', 'class').
- * @param syntax - The value type for the attribute (string, boolean, number, etc.).
+ * @param syntax - The value type for the attribute (string, radio, number, etc.).
  * @param options - Optional value options for select-type attributes.
  * @param description - Description for UI/help.
  * @returns An HTMLPropertyDefinition object.
  */
-export const createProperty = (name: HTMLPropertyKey, syntax: HTMLValueSyntax, description: string, category: HTMLPropertyCategory): HTMLPropertyDefinition => ({
-	name,
-	syntax,
-	description,
-	category,
-});
+export function createProperty(name: AttributeKeys, syntax: AttributeSyntaxes, description: string, category: AttributeCategories): AttributeDefinition {
+	return {
+		name,
+		syntax,
+		description,
+		category,
+	};
+}
+
+/**
+ * Retrieves a list of AttributeDefinitions filtered by the specified category.
+ *
+ * @param category - The category to filter properties by (e.g., 'global', 'schema', 'accesibility', 'specific').
+ * @returns An array of AttributeDefinitions that belong to the specified category.
+ */
+export function getPropertyGroup(category: AttributeCategories): AttributeDefinition[] {
+	return Object.values(AttributeDefinitions)
+		.filter((p) => p?.category === category)
+		.sort((a, b) => a.name.localeCompare(b.name));
+}
 
 /**
  * A lookup table of all supported HTML global attributes and their metadata.
  * Each entry is an HTMLPropertyDefinition describing the attribute's name, syntax, and description.
  */
-export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefinition> = {
+export const AttributeDefinitions: Record<AttributeKeys, AttributeDefinition> = {
 	// Global
 	id: createProperty('id', { type: 'string' }, 'Unique identifier for the element.', 'global'),
 	class: createProperty('class', { type: 'string' }, 'Space-separated list of classes for styling.', 'global'),
 	title: createProperty('title', { type: 'string' }, 'Advisory information (tooltip) for the element.', 'global'),
 	lang: createProperty('lang', { type: 'string' }, "Language code for the element's content.", 'global'),
 	tabIndex: createProperty('tabIndex', { type: 'number' }, 'Tab order of the element for keyboard navigation.', 'global'),
-	hidden: createProperty('hidden', { type: 'boolean' }, 'Indicates that the element is not relevant.', 'global'),
-	autoFocus: createProperty('autoFocus', { type: 'boolean' }, 'Indicates that the element should automatically receive focus when the page loads.', 'global'),
+	hidden: createProperty(
+		'hidden',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates that the element is not relevant.',
+		'global'
+	),
+	autoFocus: createProperty(
+		'autoFocus',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates that the element should automatically receive focus when the page loads.',
+		'global'
+	),
 	draggable: createProperty(
 		'draggable',
 		{
-			type: 'boolean',
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
 		},
 		'Specifies whether the element is draggable.',
 		'global'
@@ -54,7 +93,11 @@ export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefini
 	spellCheck: createProperty(
 		'spellCheck',
 		{
-			type: 'boolean',
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
 		},
 		'Indicates whether the element should be checked for spelling errors.',
 		'global'
@@ -93,7 +136,18 @@ export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefini
 		'Hints at the type of data that might be entered by the user.',
 		'global'
 	),
-	inert: createProperty('inert', { type: 'boolean' }, 'Prevents user interaction with the element and its subtree.', 'global'),
+	inert: createProperty(
+		'inert',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Prevents user interaction with the element and its subtree.',
+		'global'
+	),
 	enterKeyHint: createProperty(
 		'enterKeyHint',
 		{
@@ -114,8 +168,11 @@ export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefini
 	translate: createProperty(
 		'translate',
 		{
-			type: 'boolean',
-			options: { true: 'Yes', false: 'No' },
+			type: 'radio',
+			options: [
+				{ value: 'yes', name: 'Yes' },
+				{ value: 'no', name: 'No' },
+			],
 		},
 		'Specifies whether the content of the element should be translated.',
 		'global'
@@ -124,26 +181,92 @@ export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefini
 	// Schema
 	itemref: createProperty('itemref', { type: 'string' }, 'References other elements for microdata.', 'schema'),
 	itemtype: createProperty('itemtype', { type: 'string' }, 'Specifies the type of item for microdata.', 'schema'),
-	itemscope: createProperty('itemscope', { type: 'boolean' }, 'Defines the scope of microdata item.', 'schema'),
+	itemscope: createProperty(
+		'itemscope',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Defines the scope of microdata item.',
+		'schema'
+	),
 	itemid: createProperty('itemid', { type: 'string' }, 'Unique identifier for microdata item.', 'schema'),
 	itemprop: createProperty('itemprop', { type: 'string' }, 'Property name for microdata.', 'schema'),
 
 	// Accesibility
 	role: createProperty('role', { type: 'string' }, 'Defines the role of the element for accessibility.', 'accesibility'),
-	'aria-atomic': createProperty('aria-atomic', { type: 'boolean' }, 'Indicates whether assistive technologies should present all changes to the element as a whole.', 'accesibility'),
-	'aria-busy': createProperty('aria-busy', { type: 'boolean' }, 'Indicates whether an element is being modified and assistive technologies should wait.', 'accesibility'),
+	'aria-atomic': createProperty(
+		'aria-atomic',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates whether assistive technologies should present all changes to the element as a whole.',
+		'accesibility'
+	),
+	'aria-busy': createProperty(
+		'aria-busy',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates whether an element is being modified and assistive technologies should wait.',
+		'accesibility'
+	),
 	'aria-controls': createProperty('aria-controls', { type: 'string' }, 'Identifies the element(s) whose contents or presence are controlled by the current element.', 'accesibility'),
 	'aria-current': createProperty('aria-current', { type: 'string' }, 'Indicates the current item within a container or set.', 'accesibility'),
 	'aria-describedby': createProperty('aria-describedby', { type: 'string' }, 'Identifies the element(s) that describe the object.', 'accesibility'),
 	'aria-description': createProperty('aria-description', { type: 'string' }, 'Defines a string value that describes or annotates the current element.', 'accesibility'),
 	'aria-details': createProperty('aria-details', { type: 'string' }, 'Identifies the element that provides additional details.', 'accesibility'),
-	'aria-disabled': createProperty('aria-disabled', { type: 'boolean' }, 'Indicates that the element is perceivable but disabled.', 'accesibility'),
+	'aria-disabled': createProperty(
+		'aria-disabled',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates that the element is perceivable but disabled.',
+		'accesibility'
+	),
 	'aria-dropeffect': createProperty('aria-dropeffect', { type: 'string' }, 'Indicates what operations can be performed by dragging.', 'accesibility'),
 	'aria-errormessage': createProperty('aria-errormessage', { type: 'string' }, 'Identifies the element that provides an error message.', 'accesibility'),
 	'aria-flowto': createProperty('aria-flowto', { type: 'string' }, 'Identifies the next element in an alternate reading order.', 'accesibility'),
-	'aria-grabbed': createProperty('aria-grabbed', { type: 'boolean' }, 'Indicates an element\'s "grabbed" state in drag-and-drop operations.', 'accesibility'),
+	'aria-grabbed': createProperty(
+		'aria-grabbed',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates an element\'s "grabbed" state in drag-and-drop operations.',
+		'accesibility'
+	),
 	'aria-haspopup': createProperty('aria-haspopup', { type: 'string' }, 'Indicates the availability and type of interactive popup element.', 'accesibility'),
-	'aria-hidden': createProperty('aria-hidden', { type: 'boolean' }, 'Indicates whether the element is exposed to an accessibility API.', 'accesibility'),
+	'aria-hidden': createProperty(
+		'aria-hidden',
+		{
+			type: 'radio',
+			options: [
+				{ value: 'true', name: 'True' },
+				{ value: 'false', name: 'False' },
+			],
+		},
+		'Indicates whether the element is exposed to an accessibility API.',
+		'accesibility'
+	),
 	'aria-invalid': createProperty('aria-invalid', { type: 'string' }, 'Indicates the entered value does not conform to the format expected.', 'accesibility'),
 	'aria-keyshortcuts': createProperty('aria-keyshortcuts', { type: 'string' }, 'Indicates keyboard shortcuts that can be used to activate or focus an element.', 'accesibility'),
 	'aria-label': createProperty('aria-label', { type: 'string' }, 'Defines a string value that labels the current element.', 'accesibility'),
@@ -156,4 +279,4 @@ export const HTMLPropertyDefinitions: Record<HTMLPropertyKey, HTMLPropertyDefini
 	// Specific
 	cite: createProperty('cite', { type: 'string' }, 'References a creative work.', 'specific'),
 	datetime: createProperty('datetime', { type: 'string' }, 'Defines the date and time of the element.', 'specific'),
-} as const;
+};

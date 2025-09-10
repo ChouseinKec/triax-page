@@ -98,7 +98,7 @@ Determines the group of a CSS data token based on its format.
 
 - **Parameters:**
   - `input: string` — The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
-- **Returns:** `CSSTokenType | undefined` — The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
+- **Returns:** `TokenTypes | undefined` — The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
 - **Example:**
   - `getTokenType('auto') → 'keyword'`
   - `getTokenType('<length>') → 'dimension'`
@@ -189,7 +189,7 @@ Converts a single token (e.g., <length>, <color>) to its default value.
 ---
 
 ### expandTokens
-Recursively expands all <token> references in a CSS syntax string using StyleTokenDefinitions.
+Recursively expands all <token> references in a CSS syntax string using TokenDefinitions.
 - **Parameters:**
   - `syntax: string` — The CSS property syntax string (e.g. `'auto |<ratio>'`)
   - `seen?: Set<string>` — (internal) Set of already expanded tokens to prevent infinite recursion

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, ReactNode, useCallback, useState, useMemo } from "react";
+import React, { memo, ReactNode, useCallback, useState, useMemo, useEffect } from "react";
 
 // Styles
 import CSS from "./style.module.scss";
@@ -30,7 +30,7 @@ import { devLog } from "@/utilities/dev";
 const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     const {
         items,
-        className = "TabGroup"
+        className
     } = props;
 
     // State management for active tab selection
@@ -40,8 +40,6 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     /**
      * Handles tab selection changes with validation
      * Ensures selected index is within valid range
-     * 
-     * @param {string} value - The selected tab index as string
      */
     const handleTabChange = useCallback((value: string): void => {
         const index = parseInt(value, 10);
@@ -74,8 +72,6 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
 
     /**
      * Returns content for currently selected tab with error boundary
-     * 
-     * @returns {ReactNode} The content of the active tab
      */
     const activeContent = useMemo((): ReactNode => {
         const index = parseInt(selectedIndex, 10);
@@ -103,7 +99,7 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
     }
 
     return (
-        <div className={`${CSS.TabGroup} ${className}`}>
+        <div className={`${CSS.TabGroup} ${className ? className : ""}`}>
             {/* Content area - displays selected tab content */}
             {activeContent}
 

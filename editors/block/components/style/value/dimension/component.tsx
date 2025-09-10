@@ -1,236 +1,116 @@
-"use client";
-
-// External imports
+"use client"
 import React, { memo, useCallback, useMemo } from "react";
 
+// Types
+import type { StylesEditorValueDimensionProps } from "@/editors/block/types/component";
+
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "@/editors/block/components/style/value/dimension/styles.module.scss";
 
 // Components
 import GenericInput from "@/components/input/generic/component";
 import SelectDropdown from "@/components/select/dropdown/component";
 
-// Types
-import { DimensionValueProps } from "./types";
 
 // Utilities
-import { extractNumber, extractUnit } from "@/utilities/style/dimension";
-import { devLog } from "@/utilities/dev";
+import { extractDimensionUnit, extractDimensionDefaults, extractDimensionRange, extractDimensionValues } from "@/editors/block/utilities/style/dimension";
+import { devLog, devRender } from "@/utilities/dev";
 
 /**
- * Dimension Component
- * 
- * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
- * Intelligently splits values into numeric and unit components for separate editing.
- * Supports groupable unit categories and validation for numeric ranges.
+ * StylesEditorValueDimension Component
+ * Renders a controlled input component for CSS dimension values with separate numeric and unit editing.
  *
- * @component
- * @param {DimensionValueProps} props - Component properties
- * @param {string} [props.value=""] - Current CSS dimension value (e.g., "10px")
- * @param {function} [props.onChange] - Callback for value changes
- * @param {Array} [props.options=[]] - Available unit options with categories
- * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
- * @param {number} [props.max=Infinity] - Maximum allowed numeric value
- * @returns {ReactElement} The rendered Dimension component
+ * @param value - Current CSS dimension value (e.g., "10px")
+ * @param options - Available unit options with categories
+ * @param onChange - Callback when the value changes
+ * @returns The rendered dimension input component
  */
-const Dimension: React.FC<DimensionValueProps> = (props: DimensionValueProps) => {
-	const {
-		// Core
-		value,
-		onChange,
-		options,
+const StylesEditorValueDimension: React.FC<StylesEditorValueDimensionProps> = ({ value, options, onChange }) => {
+	if (typeof value !== "string") return devRender.error("[StylesEditorValueDimension] No value provided", { value });
+	if (!onChange || typeof onChange !== "function") return devRender.error("[StylesEditorValueDimension] Invalid onChange callback", { onChange });
+	if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[StylesEditorValueDimension] No options provided", { options });
 
-	} = props;
+	const extractedDefaults = useMemo(() => extractDimensionDefaults(options), [options]);
+	const extractedRange = useMemo(() => extractDimensionRange(options as Array<{ min?: number; max?: number }>), [options]);
+	const extractedValues = extractDimensionValues(value);
 
-
-	// Guard Clause
-	if (!options || options.length === 0) {
-		devLog.error("[Dimension] No options provided");
-		return null;
-	}
-
-	if (value == null) {
-		devLog.error("[Dimension] Invalid value provided, expected a string");
-		return null;
-	}
-
-	/**
-	 * Finds the first dimension category unit as default, fallback to "px"
-	 */
-	const defaults = useMemo(() => {
-		const unit = options.find(option => option.category === "dimension")?.name || "px";
-		const number = "0";
-
-		return { unit, number };
-	},
-		[options]
-	);
-
-	/**
-	 * Computes the valid numeric range based on the first option"s min/max values
-	 * Defaults to -Infinity and Infinity if not specified
-	 * 
-	 * @returns {object} Range object with min and max properties
-	*/
-	const range = useMemo(() => {
-		// Find the first option that is a number or integer
-		const option = options[0];
-
-		// Ensure min and max are valid numbers if present
-		const validMin = (option && "min" in option && typeof option.min === "number") ? option.min : -Infinity;
-		const validMax = (option && "max" in option && typeof option.max === "number") ? option.max : Infinity;
-
-		return {
-			min: validMin,
-			max: validMax
-		};
-	}, [options]
-	);
-
-	/**
-	 * Extracts numeric and unit components from the current value
-	 */
-	const extractedValue = useMemo(() => {
-		const extractedNumber = extractNumber(value);
-		const extractedUnit = extractUnit(value);
-
-		return {
-			number: extractedNumber,
-			unit: extractedUnit
-		};
-	},
-		[value]
-	);
-
-	/**
-	* Validates numeric input and provides user-friendly error messages
-	* Checks for valid numbers, range constraints, and handles edge cases
-	* 
-	* @param {string} inputValue - The input value to validate
-	* @returns {object} Validation result with status and message
-	*/
+	// Validate numeric input with extractedRange constraints
 	const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
 		// Allow empty values
-		if (inputValue === "" || inputValue === null || inputValue === undefined) {
-			return { status: true, message: "" };
-		}
+		if (inputValue === "" || inputValue === null || inputValue === undefined) return { status: true, message: "" };
+
 
 		// Parse the numeric value
 		const numericValue = parseFloat(inputValue);
 
 		// Check if it"s a valid number
-		if (isNaN(numericValue) || !isFinite(numericValue)) {
-			return {
-				status: false,
-				message: "Please enter a valid number"
-			};
-		}
+		if (isNaN(numericValue) || !isFinite(numericValue)) return { status: false, message: "Please enter a valid number" };
 
 		// Check minimum value constraint
-		if (range.min > -Infinity && numericValue < range.min) {
-			return {
-				status: false,
-				message: `Value must be at least ${range.min}`
-			};
-		}
+		if (extractedRange.min > -Infinity && numericValue < extractedRange.min) return { status: false, message: `Value must be at least ${extractedRange.min}` };
 
 		// Check maximum value constraint
-		if (range.max < Infinity && numericValue > range.max) {
-			return {
-				status: false,
-				message: `Value must be at most ${range.max}`
-			};
-		}
+		if (extractedRange.max < Infinity && numericValue > extractedRange.max) return { status: false, message: `Value must be at most ${extractedRange.max}` };
 
 		return { status: true, message: "" };
 	},
-		[range]
+		[extractedRange]
 	);
 
-	/**
-	 * Handles changes to the numeric input component
-	 * Preserves the current unit while updating the numeric value
-	 * Validates input and handles edge cases (empty values, etc.)
-	 * 
-	 * @param {string} inputNumber - The new numeric value from input
-	 */
+	// Handle numeric input changes
 	const handleNumberChange = useCallback((inputNumber: string): void => {
 		// Handle empty input - clear the entire value
-		if (inputNumber === "" || inputNumber === null || inputNumber === undefined) {
-			onChange("");
-			return;
-		}
+		if (inputNumber === "" || inputNumber === null || inputNumber === undefined) return onChange("");
 
 		// Validate numeric input
 		const numericValue = parseFloat(inputNumber);
-		if (isNaN(numericValue)) {
-			devLog.warn(`[Dimension] Invalid numeric input "${inputNumber}"`);
-			return;
-		}
+		if (isNaN(numericValue)) return devLog.warn(`[Dimension] Invalid numeric input "${inputNumber}"`);
 
 		// Use current unit or fallback to default
-		const currentUnit = extractedValue.unit || defaults.unit;
+		const currentUnit = extractedValues.unit || extractedDefaults.unit;
 		const newValue = `${inputNumber}${currentUnit}`;
 
 		onChange(newValue);
 	},
-		[onChange, extractedValue.unit, defaults.unit]
+		[onChange, extractedValues.unit, extractedDefaults.unit]
 	);
 
-	/**
-	 * Handles changes to the unit dropdown selection
-	 * Preserves the current numeric value while updating the unit
-	 * Handles special categories (non-dimension units) appropriately
-	 * 
-	 * @param {string} selectedUnit - The new unit value from dropdown
-	 */
+	// Handle unit dropdown changes
 	const handleUnitChange = useCallback((selectedUnit: string): void => {
 		// Handle empty selection
-		if (!selectedUnit) {
-			onChange("");
-			return;
-		}
+		if (!selectedUnit) return onChange("");
 
 		// Find the selected option to determine its category
 		const selectedOption = options.find(option => option.value === selectedUnit);
 
-		if (!selectedOption) {
-			devLog.warn(`[Dimension] Unknown unit option "${selectedUnit}"`);
-			return;
-		}
+		if (!selectedOption) return devLog.warn(`[Dimension] Unknown unit option "${selectedUnit}"`);
 
 		// Handle non-dimension categories (e.g., "auto", "inherit", etc.)
-		if (selectedOption.category !== "dimension") {
-			// For non-dimensional values, use the unit value directly
-			onChange(selectedUnit);
-			return;
-		}
+		// For non-dimensional values, use the unit value directly
+		if (selectedOption.category !== "dimension") return onChange(selectedUnit);
 
 		// Extract unit from the selected value (in case of compound values)
-		const unitValue = extractUnit(selectedUnit) || selectedUnit;
+		const unitValue = extractDimensionUnit(selectedUnit) || selectedUnit;
 
 		// Handle empty unit
-		if (!unitValue) {
-			onChange("");
-			return;
-		}
+		if (!unitValue) return onChange("");
 
 		// Preserve current number or use default
-		const currentNumber = extractedValue.number || defaults.number;
+		const currentNumber = extractedValues.number || extractedDefaults.number;
 		const newValue = `${currentNumber}${unitValue}`;
 
 		onChange(newValue);
 	},
-		[onChange, options, extractedValue.number, defaults.number]
+		[onChange, options, extractedValues.number, extractedDefaults.number]
 	);
 
 	return (
-		<div className={CSS.Dimension} role="representation">
+		<div className={CSS.StylesEditorValueDimension}>
 			{/* Numeric input for the value component */}
 			<GenericInput
-				value={extractedValue.number || ""}
-				min={range.min}
-				max={range.max}
+				value={extractedValues.number || ""}
+				min={extractedRange.min}
+				max={extractedRange.max}
 				type="number"
 				placeholder="N/A"
 				onValidate={validateNumber}
@@ -243,7 +123,7 @@ const Dimension: React.FC<DimensionValueProps> = (props: DimensionValueProps) =>
 			{/* Unit dropdown for the unit component */}
 			<SelectDropdown
 				options={options}
-				value={extractedValue.unit || "N/A"}
+				value={extractedValues.unit || "N/A"}
 				placeholder="N/A"
 				onChange={handleUnitChange}
 				searchable={true}
@@ -256,4 +136,4 @@ const Dimension: React.FC<DimensionValueProps> = (props: DimensionValueProps) =>
 	);
 };
 
-export default memo(Dimension);
+export default memo(StylesEditorValueDimension);

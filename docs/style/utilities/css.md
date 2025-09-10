@@ -5,19 +5,19 @@ Helpers for formatting CSS property names, generating CSS property blocks, and b
 
 ## Main Functions
 
-### formatCSSProperty
+### formatKey
 Converts a camelCase CSS property name to kebab-case.
 
 - **Parameters:**
   - `property: string` — The camelCase property name (e.g., 'backgroundColor').
 - **Returns:** `string` — The kebab-case property name (e.g., 'background-color').
 - **Example:**
-  - `formatCSSProperty('backgroundColor') → 'background-color'`
-  - `formatCSSProperty('fontSize') → 'font-size'`
+  - `formatKey('backgroundColor') → 'background-color'`
+  - `formatKey('fontSize') → 'font-size'`
 
 ---
 
-### generateCSSProperties
+### generateCSSStyles
 Generates a formatted CSS properties block from an object of styles.
 
 - **Parameters:**
@@ -25,7 +25,7 @@ Generates a formatted CSS properties block from an object of styles.
   - `indentLevel?: number` — Number of spaces for indentation (default: 1).
 - **Returns:** `string` — Formatted CSS properties string.
 - **Example:**
-  - `generateCSSProperties({ color: 'red', fontSize: '16px' })`  
+  - `generateCSSStyles({ color: 'red', fontSize: '16px' })`  
     →  
     ```
       color: red;
@@ -54,7 +54,7 @@ Generates a complete CSS rule block from a selector and a styles object.
 
 ---
 
-### getBlockSelector
+### generateCSSSelector
 Generates a CSS selector for a block with an optional pseudo-state.
 
 - **Parameters:**
@@ -62,5 +62,5 @@ Generates a CSS selector for a block with an optional pseudo-state.
   - `pseudoName?: string` — The pseudo-state name ('all' means no pseudo, default: 'all').
 - **Returns:** `string` — CSS selector string.
 - **Example:**
-  - `getBlockSelector('123') → '#block-123'`
-  - `getBlockSelector('123', 'hover') → '#block-123:hover'`
+  - `generateCSSSelector('123') → '#block-123'`
+  - `generateCSSSelector('123', 'hover') → '#block-123:hover'`

@@ -1,69 +1,47 @@
 "use client";
-
-// External imports
 import React, { useCallback, memo, useMemo } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "@/editors/block/components/style/value/number/styles.module.scss";
 
 // Components
 import GenericInput from "@/components/input/generic/component";
 import SelectDropdown from "@/components/select/dropdown/component";
 
 // Types
-import { NumberValueProps } from "./types";
+import { StylesEditorValueNumberProps } from "@/editors/block/types/component";
 
 // Utilities
-import { devLog } from "@/utilities/dev";
+import { devRender } from "@/utilities/dev";
 
 // Constants
 import { StyleIconDefinitions } from "@/constants/style/icon";
 
 
 /**
- * Number Component
- * 
+ * StylesEditorValueNumber Component
  * A controlled input component for CSS numeric values with optional alternative options.
  * Provides float number input validation with support for special CSS values (auto, inherit, etc.).
  * Automatically formats decimal numbers and validates range constraints.
- * 
- * @param {NumberValueProps} props - Component properties
- * @param {string} [props.value=""] - Current numeric value as string
- * @param {function} [props.onChange] - Callback for value changes
- * @param {Array} [props.options=[]] - Available alternative options (keywords, etc.)
- * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
- * @param {number} [props.max=Infinity] - Maximum allowed numeric value
- * @param {boolean} [props.forceInteger=false] - Whether the value should be treated as an integer
- * @returns {ReactElement} Memoized Number component
+ *
+ * @param props - StylesEditorValueNumberProps containing value, options, and onChange callback
+ * @returns The rendered number input component with optional dropdown
  */
-const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
-    const {
-        value = "",
-        onChange = () => { },
-        options = [],
-        forceInteger = false,
-    } = props;
+const StylesEditorValueNumber: React.FC<StylesEditorValueNumberProps> = ({ value, onChange, options, forceInteger }) => {
+    // Validate input props
+    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[StylesEditorValueNumber] No options provided", { options });
+    if (value == null) return devRender.error("[StylesEditorValueNumber] Invalid value provided, expected a string", { value });
+    if (!onChange || typeof onChange !== "function") return devRender.error("[StylesEditorValueNumber] Invalid onChange callback provided, expected a function", { onChange });
 
-
-    if (!options || options.length === 0) {
-        devLog.error("[Number] No options provided");
-        return null;
-    }
-
-    if (value == null) {
-        devLog.error("[Number] Invalid value provided, expected a string");
-        return null;
-    }
-
-
-    // Extracts min and max from options if available, otherwise defaults to -Infinity and Infinity
-    const range = useMemo(() => {
+    // Extract min and max values from options for validation
+    const valueRange = useMemo(() => {
         const option = options.find(opt => opt.name === "number" || opt.name === "integer");
+
         // Ensure min and max are valid numbers if present
         const validMin = (option && "min" in option && typeof option.min === "number") ? option.min : -Infinity;
         const validMax = (option && "max" in option && typeof option.max === "number") ? option.max : Infinity;
 
-        // Return the range as an object
+        // Return the valueRange as an object
         return {
             min: validMin,
             max: validMax
@@ -71,13 +49,7 @@ const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
     }, [options]
     );
 
-    /**
-    * Validates numeric input and provides user-friendly error messages
-    * Checks for valid numbers, range constraints, and handles edge cases
-    * 
-    * @param {string} inputValue - The input value to validate
-    * @returns {object} Validation result with status and message
-    */
+    // Validate numeric input and return error messages
     const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
         // Allow empty values
         if (inputValue === "" || inputValue === null || inputValue === undefined) {
@@ -96,34 +68,28 @@ const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
         }
 
         // Check minimum value constraint
-        if (range.min > -Infinity && numericValue < range.min) {
+        if (valueRange.min > -Infinity && numericValue < valueRange.min) {
             return {
                 status: false,
-                message: `Value must be at least ${range.min}`
+                message: `Value must be at least ${valueRange.min}`
             };
         }
 
         // Check maximum value constraint
-        if (range.max < Infinity && numericValue > range.max) {
+        if (valueRange.max < Infinity && numericValue > valueRange.max) {
             return {
                 status: false,
-                message: `Value must be at most ${range.max}`
+                message: `Value must be at most ${valueRange.max}`
             };
         }
 
         return { status: true, message: "" };
     },
-        [range]
+        [valueRange]
     );
 
-    /**
-     * Handles changes to the numeric input component
-     * Formats valid numeric input and delegates validation to GenericInput
-     * 
-     * @param {string} inputValue - The new numeric value from input
-     */
+    // Handle numeric input changes and format values
     const handleNumberChange = useCallback((inputValue: string): void => {
-        // Handle empty input
         if (inputValue === "" || inputValue === null || inputValue === undefined) return onChange("");
 
 
@@ -143,36 +109,29 @@ const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
         [onChange]
     );
 
-    /**
-     * Handles changes to the options dropdown selection
-     * Allows selection of alternative CSS values (keywords, etc.)
-     * 
-     * @param {string} selectedOption - The new option value from dropdown
-     */
+    // Handle dropdown option selection changes
     const handleOptionChange = useCallback((selectedOption: string): void => {
-        if (!selectedOption) {
-            onChange("");
-            return;
-        }
+        if (!selectedOption) return onChange("");
 
         onChange(selectedOption);
     },
         [onChange]
     );
 
+    // Determine if dropdown should be shown based on available options
     const showDropdown = useMemo(() => {
-        // Show dropdown only if there are multiple options available   
         return options.length > 1;
-    }, [options.length]);
+    }, [options.length]
+    );
 
     return (
-        <div className={CSS.Number} role="presentation" data-has-dropdown={showDropdown} >
+        <div className={CSS.StylesEditorValueNumber} role="presentation" data-has-dropdown={showDropdown} >
 
-            {/* Numeric input for float values */}
+            {/* Main numeric input field */}
             <GenericInput
                 value={value}
-                min={range.min}
-                max={range.max}
+                min={valueRange.min}
+                max={valueRange.max}
                 placeholder="0.0"
                 type="number"
                 onValidate={validateNumber}
@@ -181,8 +140,7 @@ const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
                 className="NumberInput"
             />
 
-            {/* Options dropdown for alternative values */}
-
+            {/* Optional dropdown for alternative value types */}
             {showDropdown && (
                 <SelectDropdown
                     options={options}
@@ -200,6 +158,6 @@ const Number: React.FC<NumberValueProps> = memo((props: NumberValueProps) => {
 
         </div>
     );
-});
+};
 
-export default Number;
+export default memo(StylesEditorValueNumber);

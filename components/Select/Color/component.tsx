@@ -8,11 +8,8 @@ import CSS from "./styles.module.scss";
 // Types
 import { ColorSelectProps } from "@/components/select/color/types";
 
-// Utilities
-import { clearSpaces } from "@/utilities/string";
-
 // Hooks
-import { useDebouncedCallback } from "@/hooks/hooks";
+import { useDebouncedCallback } from "@/hooks/utility/useCallback";
 
 /**
  * ColorSelect Component
@@ -36,8 +33,7 @@ const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): React
     const debouncedOnChange = useDebouncedCallback(onChange, 100);
 
     const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        const color = clearSpaces(event.target.value);
-        debouncedOnChange(color);
+        debouncedOnChange(event.target.value);
     }, [debouncedOnChange]);
 
 

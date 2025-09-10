@@ -32,7 +32,8 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
         value,
         options,
         onChange,
-        className = "RadioSelect"
+        className = "RadioSelect",
+        prioritizeIcons = true
     } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -41,7 +42,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
     return (
         <div className={`${CSS.RadioSelect} ${className}`} data-is-collapsed={isOverflowing} ref={containerRef}>
             <Options
-                prioritizeIcons={true}
+                prioritizeIcons={prioritizeIcons}
                 value={value}
                 options={options}
                 onChange={onChange}
@@ -56,7 +57,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
                     className="RadioSelectFloat"
                 >
                     <Options
-                        prioritizeIcons={true}
+                        prioritizeIcons={prioritizeIcons}
                         value={value}
                         options={options}
                         onChange={onChange}

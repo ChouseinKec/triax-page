@@ -1,6 +1,6 @@
 @use '../../../../../../mixins//mixins.module.scss' as inputMixins;
 
-.Slots {
+.StylesEditorSlots {
 	width: 100%;
 
 	display: flex;
@@ -18,39 +18,4 @@
 	> * {
 		flex: auto;
 	}
-}
-
-.SlotsInner {
-	display: flex;
-	flex-direction: row;
-	gap: var(--size-sm);
-	width: max-content;
-}
-
-.Values {
-	// flex: 1 1 auto;
-	overflow: hidden;
-	display: flex;
-	min-width: 35px;
-	width: 100%;
-	// justify-content: flex-end;
-	gap: var(--size-md);
-
-	> * {
-		flex: auto;
-	}
-}
-
-.Separator {
-	min-width: 10px;
-
-	color: var(--color-gray);
-	font-size: var(--font-size-md);
-
-	white-space: nowrap;
-	overflow: hidden;
-	flex: auto;
-	opacity: 0.3;
-
-	position: absolute;
 }

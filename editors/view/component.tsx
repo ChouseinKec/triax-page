@@ -23,7 +23,9 @@ const ViewEditor: React.FC<ViewEditorProps> = () => {
 
     // Ref for the canvas element
     const viewRef = useRef<HTMLDivElement>(null);
-    const { template: { width: deviceWidth, height: deviceHeight } } = getDevice();
+    const { template:
+        { width: deviceWidth, height: deviceHeight }
+    } = getDevice();
 
     /**
      * Use native event listener to properly prevent default on wheel events

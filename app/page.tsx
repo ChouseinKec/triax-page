@@ -1,7 +1,7 @@
 'use client';
 // Registry
-import "@/registry/blocks/init";
-import "@/registry/layout/init";
+import "@/editors/block/registry/init";
+import "@/editors/layout/registry/init";
 
 // Styles
 import CSS from "./page.module.scss";
@@ -10,7 +10,7 @@ import CSS from "./page.module.scss";
 import PageEditor from "@/editors/page/component";
 
 // Context
-import { LayoutProvider } from "@/context/layout";
+import { LayoutProvider } from "@/editors/layout/context";
 import { BlockProvider } from "@/editors/block/context";
 
 export default function Home() {

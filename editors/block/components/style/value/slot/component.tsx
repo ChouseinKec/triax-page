@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useMemo } from "react";
+import React, { memo } from "react";
 
 // Components
 import Dimension from "../dimension/component";
@@ -9,67 +8,36 @@ import Keyword from "../keyword/component";
 import Number from "../number/component";
 import Link from "../link/component";
 import Color from "../color/component";
-import Error from "../error/component";
 
 // Types
-import type { SlotProps } from "./types";
+import type { StylesEditorSlotProps } from "@/editors/block/types/component";
 
 // Utilities
-import { getValueType } from "@/utilities/style/value";
-import { devLog } from "@/utilities/dev";
+import { getValueType, getValueDefaultType } from "@/editors/block/utilities/style/value";
+import { devRender } from "@/utilities/dev";
+
 
 /**
- * Slot Component
+ * StylesEditorSlot Component
  * Renders the appropriate input component for a single value slot based on its type.
  * Handles function, keyword, dimension, number, integer, color, and link value types.
  *
- * @param props - SlotProps containing value, options, and onChange callback
- * @returns ReactElement - The rendered input for the slot
+ * @param props - StylesEditorSlotProps containing value, options, and onChange callback
+ * @returns The rendered input for the slot
  */
-const Slot: React.FC<SlotProps> = (props: SlotProps) => {
-    const { value, options, onChange } = props;
+const StylesEditorSlot: React.FC<StylesEditorSlotProps> = ({ value, options, onChange }) => {
+    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[StylesEditorSlot] No options provided", { options });
+    if (value == null || typeof value !== "string") return devRender.error("[StylesEditorSlot] Invalid value provided", { value });
+    if (!onChange || typeof onChange !== "function") return devRender.error("[StylesEditorSlot] Invalid onChange callback", { onChange });
 
-    // Guard Clause
-    if (!options || options.length === 0) {
-        devLog.error("[Slot] No options provided");
-        return null;
-    }
+    // Determine default type when value is empty
+    const defaultType = getValueDefaultType(options);
 
-    if (value == null) {
-        devLog.error("[Slot] Invalid value provided, expected a string");
-        return null;
-    }
-
-    /**
-     * Compute all unique types available in the options.
-     */
-    const allTypes = useMemo(() => {
-        return new Set(options.flat().map(option => option.type))
-    }, [options]
-    );
-
-    /**
-     * Determine the default type to use when value is empty.
-     * Priority: dimension > keyword > color > function  first available type.
-     * If no types are available, fallback to the first option"s type.
-     * Because the value can be empty, we need to determine a default type based on available options.
-     */
-    const defaultType = useMemo(() => {
-        if (allTypes.has("dimension")) return "dimension";
-        if (allTypes.has("keyword")) return "keyword";
-        if (allTypes.has("color")) return "color";
-        if (allTypes.has("function")) return "function";
-        return options[0]?.type;
-    }, [allTypes, options]
-    );
-
-    /**
-     * Determine the value type for this slot.
-     * If value is empty, use the default type.
-     */
+    // Determine the actual value type for this slot
     const valueType = value.length === 0 ? defaultType : getValueType(value);
 
-    const slot = useMemo(() => {
+    // Render the appropriate component based on value type
+    const renderValue = () => {
         switch (valueType) {
             case "function":
                 return (
@@ -100,16 +68,12 @@ const Slot: React.FC<SlotProps> = (props: SlotProps) => {
                     <Link value={value} onChange={onChange} />
                 );
             default:
-                return (
-                    <Error message={`[Slot] Unknown value type: ${String(valueType)}`} />
-                );
+                return devRender.error(`[StylesEditorSlot] Unsupported or undefined value type "${valueType}"`, { value, options, valueType });
         }
-    }, [valueType, value, onChange, options]
-    );
+    };
 
-    return (
-        slot
-    );
+    // Return the rendered slot component
+    return renderValue();
 };
 
-export default Slot;
+export default memo(StylesEditorSlot);

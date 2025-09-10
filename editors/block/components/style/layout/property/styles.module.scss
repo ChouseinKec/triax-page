@@ -1,6 +1,6 @@
 @use '../../../../../../mixins//mixins.module.scss' as inputMixins;
 
-.Property {
+.StylesEditorProperty {
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -18,7 +18,7 @@
 	}
 }
 
-.Label {
+.StylesEditorProperty__Label {
 	> span {
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -29,19 +29,19 @@
 	}
 }
 
-.FloatTitle {
+.StylesEditorProperty__FloatTitle {
 	text-transform: capitalize;
 	font-size: var(--font-size-lg);
 	font-weight: 600;
 }
 
-.FloatDescription {
+.StylesEditorProperty__FloatDescription {
 	font-size: var(--font-size-md);
 	line-height: var(--size-xl);
 	max-width: 200px;
 }
 
-.FloatActions {
+.StylesEditorProperty__FloatActions {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -62,4 +62,8 @@
 			height: 100%;
 		}
 	}
+}
+
+.StylesEditorProperty__Value {
+	width: 100%;
 }

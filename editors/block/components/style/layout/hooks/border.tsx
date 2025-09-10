@@ -1,39 +1,45 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 // Types
-import type { LayoutProps } from "../type";
+import type { StylesEditorLayoutProps } from "@/editors/block/types/component";
 import type { Side, Corner } from "@/components/select/position/types";
 
-// Hooks
-import { useStyleFactory } from "@/hooks/block/style/factory";
+// Components
+import PositionSelect from "@/components/select/position/component";
+
+// Managers
+import { useSelectedBlockID } from "@/editors/block/managers/block";
 
 // Utilities
-import { generatePropertyName } from "@/utilities/style/property";
+import { generateKey } from "@/editors/block/utilities/style/key";
+
+// Factory
+import { StyleValueRenderer } from "@/editors/block/components/style/layout/hooks/factory";
 
 
 /**
+ * useBorderLayout Hook
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
- * 
- * @returns {LayoutProps} The layout configuration for border and shadow settings.
+ *
+ * @returns {StylesEditorLayoutProps} The layout configuration for border and shadow settings.
  */
-export const useBorderLayout = (): LayoutProps => {
-    const { renderValue, renderPositionSelect } = useStyleFactory();
-
+export const useBorderLayout = (): StylesEditorLayoutProps => {
     const [currentSide, setCurrentSide] = useState<Side>("top");
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 
-    const borderWidth = generatePropertyName("border", currentSide, "width");
-    const borderStyle = generatePropertyName("border", currentSide, "style");
-    const borderColor = generatePropertyName("border", currentSide, "color");
-    const borderRadius = generatePropertyName("border", currentCorner, "radius");
+    const borderWidth = generateKey("border", currentSide, "width");
+    const borderStyle = generateKey("border", currentSide, "style");
+    const borderColor = generateKey("border", currentSide, "color");
+    const borderRadius = generateKey("border", currentCorner, "radius");
+    const selectedBlockID = useSelectedBlockID();
+    const layoutIcon = <svg aria-label="Border & Outline Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M200,80v32a8,8,0,0,1-16,0V88H160a8,8,0,0,1,0-16h32A8,8,0,0,1,200,80ZM96,168H72V144a8,8,0,0,0-16,0v32a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16ZM232,56V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z" /></svg>;
 
-    const icon = <svg aria-label="Border & Outline Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M200,80v32a8,8,0,0,1-16,0V88H160a8,8,0,0,1,0-16h32A8,8,0,0,1,200,80ZM96,168H72V144a8,8,0,0,0-16,0v32a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16ZM232,56V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z" /></svg>;
+    if (!selectedBlockID) return { label: layoutIcon, title: "Border & Outline Icon", groups: [] };
 
     return {
-        label: icon,
+        label: layoutIcon,
         title: "Border & Outline",
         groups: [
             {
@@ -43,7 +49,7 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: null,
                         styles: { gridColumn: "1", gridRow: "1/3" },
-                        component: () => renderPositionSelect(setCurrentSide, setCurrentCorner, true, true),
+                        component: () => <PositionSelect onChangeSide={setCurrentSide} onChangeCorner={setCurrentCorner} isCornerSelectable={true} isCenterSelectable={true} />,
                     },
 
                     // Border Width
@@ -51,7 +57,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Width",
                         property: borderWidth,
                         disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(borderWidth),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName={borderWidth} />,
                     },
 
                     // Border Style
@@ -59,7 +65,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Style",
                         property: borderStyle,
                         disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(borderStyle),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName={borderStyle} />,
                     },
 
                     // Border Radius
@@ -67,7 +73,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Radius",
                         property: borderRadius,
                         disabled: currentCorner === null && currentSide !== null,
-                        component: () => renderValue(borderRadius),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName={borderRadius} />,
                     },
 
                     // Border Color
@@ -75,7 +81,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Color",
                         property: borderColor,
                         disabled: currentSide === null && currentCorner !== null,
-                        component: () => renderValue(borderColor),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName={borderColor} />,
                     },
 
 
@@ -83,7 +89,7 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: "Image Source",
                         property: "border-image-source",
-                        component: () => renderValue("border-image-source"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="border-image-source" />,
                     },
 
                     // Border Image Repeat
@@ -91,7 +97,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Image Repeat",
                         property: "border-image-repeat",
                         styles: { gridColumn: "2/-1" },
-                        component: () => renderValue("border-image-repeat"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="border-image-repeat" />,
                     },
 
                     // Border Image Slice
@@ -99,7 +105,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Image Slice",
                         property: "border-image-slice",
                         styles: { gridColumn: "1/-1" },
-                        component: () => renderValue("border-image-slice"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="border-image-slice" />,
                     },
 
                     // Border Image Width
@@ -107,7 +113,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Image Width",
                         property: "border-image-width",
                         styles: { gridColumn: "1/-1" },
-                        component: () => renderValue("border-image-width"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="border-image-width" />,
                     },
 
                     // Border Image Outset
@@ -115,7 +121,7 @@ export const useBorderLayout = (): LayoutProps => {
                         label: "Image Outset",
                         property: "border-image-outset",
                         styles: { gridColumn: "1/-1" },
-                        component: () => renderValue("border-image-outset"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="border-image-outset" />,
                     },
 
 
@@ -132,14 +138,14 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: "Width",
                         property: "outline-width",
-                        component: () => renderValue("outline-width"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="outline-width" />,
                     },
 
                     // Outline Offset
                     {
                         label: "Offset",
                         property: "outline-offset",
-                        component: () => renderValue("outline-offset"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="outline-offset" />,
                     },
 
 
@@ -147,19 +153,19 @@ export const useBorderLayout = (): LayoutProps => {
                     {
                         label: "Style",
                         property: "outline-style",
-                        component: () => renderValue("outline-style"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="outline-style" />,
                     },
 
                     // Outline Color
                     {
                         label: "Color",
                         property: "outline-color",
-                        component: () => renderValue("outline-color"),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="outline-color" />,
                     },
 
                 ],
             },
 
         ],
-    };
+    }
 };

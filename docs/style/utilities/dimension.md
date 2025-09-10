@@ -5,12 +5,12 @@ Helpers for parsing, extracting, validating, and clamping CSS dimension values (
 
 ## Main Functions
 
-### extractNumber
+### extractDimensionNumber
 Extracts the numeric part from a CSS dimension string.
 - **Parameters:** `input: string`
 - **Returns:** `string | undefined`
 
-### extractUnit
+### extractDimensionUnit
 Extracts the unit part from a CSS dimension string.
 - **Parameters:** `input: string`
 - **Returns:** `string | undefined`
@@ -23,7 +23,7 @@ Checks if a string is a valid CSS dimension (number + unit).
 ### getDimensionType
 Determines the CSS dimension group (e.g., 'length', 'percentage') for a given value.
 - **Parameters:** `input: string`
-- **Returns:** `CSSUnitType | undefined`
+- **Returns:** `UnitTypes | undefined`
 
 ### clampDimension
 Clamps a CSS value to a maximum px value (default: 15px).

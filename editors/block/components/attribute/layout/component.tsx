@@ -1,44 +1,48 @@
 "use client";
 
-import React, { ReactElement, useMemo } from "react";
+import React, { memo } from "react";
+
+// Styles
+import CSS from "@/editors/block/components/attribute/layout/styles.module.scss";
 
 // Components
-import Category from "./category/component";
+import Category from "@/editors/block/components/attribute/category/component";
 import TabGroup from "@/components/group/tab/component";
 
-// Types 
-import { LayoutProps } from "./type";
+// Types
+import type { AttributesEditorLayoutsProps, AttributesEditorLayoutProps } from "@/editors/block/types/component";
 import type { TabGroupItemsProps } from "@/components/group/tab/type";
 
 // Hooks
-import { useGlobalLayout } from "./hooks/global";
-
+import { useGlobalLayout } from "@/editors/block/components/attribute/layout/hooks/global";
+import { useSpecificLayout } from "@/editors/block/components/attribute/layout/hooks/specific";
 
 /**
- * Layout component renders various style categories (e.g., display, size, position, font, border) 
- * using an accordion layout for better user experience.
+ * AttributeEditorLayouts Component
+ * Renders the attribute editor layouts organized in tabs for better user experience.
  *
- * @returns {ReactElement} The rendered layout with collapsible accordion items for style editing.
-*/
-const Layout: React.FC = ({ }): ReactElement => {
-    const globalLayout = useGlobalLayout();
-
-    const layouts: LayoutProps[] = [
-        globalLayout,
+ * @returns The rendered layout with tabbed interface for attribute editing
+ */
+const AttributeEditorLayouts: React.FC<AttributesEditorLayoutsProps> = () => {
+  
+    // Fetch all layouts
+    const allLayouts: AttributesEditorLayoutProps[] = [
+        useGlobalLayout(),
+        useSpecificLayout(),
     ];
 
-    const TabItems: TabGroupItemsProps[] = useMemo(() =>
-        layouts.map((category, idx) => ({
-            label: <>{category.label}</>,
-            title: category.title,
-            content: <Category key={idx} groups={category.groups} />,
-        }))
-        , [layouts]);
+    // Map the layouts to tab items
+    const tabItems: TabGroupItemsProps[] = allLayouts.map((category, idx) => ({
+        label: category.label,
+        title: category.title,
+        content: <Category key={idx} groups={category.groups} />,
+    }));
 
     return (
-        <TabGroup items={TabItems} />
-    );
-
+        <div className={CSS.AttributeEditorLayouts}>
+            <TabGroup items={tabItems} />
+        </div>
+    )
 };
 
-export default Layout;
+export default memo(AttributeEditorLayouts);

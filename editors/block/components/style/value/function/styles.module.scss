@@ -1,6 +1,6 @@
 @use '../../../../../../mixins/mixins.module.scss' as inputMixins;
 
-.Function {
+.StylesEditorValueFunction {
 	@include inputMixins.components--flex-horizontal($align: center);
 
 	// Function Change Dropdown
@@ -12,7 +12,7 @@
 	}
 }
 
-.Separator {
+.StylesEditorValueFunction__Separator {
 	color: var(--color-gray);
 	font-size: var(--font-size-2xl);
 }

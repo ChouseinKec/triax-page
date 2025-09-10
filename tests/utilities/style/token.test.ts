@@ -1,4 +1,4 @@
-import { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam } from '@/utilities/style/token';
+import { getTokenValue, getTokenValues, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam } from '@/editors/block/utilities/style/token';
 
 describe('getTokenType', () => {
 	it('detects keyword', () => {

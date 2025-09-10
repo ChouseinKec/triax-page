@@ -1,9 +1,17 @@
 @use '../../../../mixins//mixins.module.scss' as inputMixins;
 
-.Hierarchy {
+.BlocksHierarchy {
 	display: flex;
 	flex-direction: column;
 
 	overflow: auto;
 	height: 100%;
+}
+
+.BlocksEditorHierarchy__Empty {
+	@include inputMixins.components--flex-vertical($align: center);
+	height: 100%;
+	color: var(--color-white);
+	font-size: var(--font-size-md);
+	text-align: center;
 }

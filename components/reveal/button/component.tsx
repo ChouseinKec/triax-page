@@ -51,11 +51,11 @@ const ButtonReveal: React.FC<ButtonRevealProps> = ({
     }, [setIsOpen, onArrowClick]
     );
 
-    const hasChildren = useMemo(() => !!children, [children]);
+    const hasValidChildren = useMemo(() => !!children, [children]);
 
 
     return (
-        <div className={`${CSS.ButtonReveal} ${className}`} data-has-children={hasChildren}>
+        <div className={`${CSS.ButtonReveal} ${className}`} data-has-children={hasValidChildren}>
             {/* Toggle button to expand/collapse the content */}
             <button
                 className={CSS.Button}
@@ -68,7 +68,7 @@ const ButtonReveal: React.FC<ButtonRevealProps> = ({
                 </span>
             </button>
 
-            {hasChildren &&
+            {hasValidChildren &&
                 <button
                     className={CSS.Arrow}
                     onClick={handleArrowClick}

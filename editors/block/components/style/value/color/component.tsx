@@ -1,56 +1,38 @@
 "use client";
-
-// External imports
 import React, { memo, useCallback } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "@/editors/block/components/style/value/color/styles.module.scss";
 
 // Components
 import ColorSelect from "@/components/select/color/component";
 
 // Types
-import { ColorValueProps } from "./types";
+import type { StylesEditorValueColorProps } from "@/editors/block/types/component";
 
 // Utilities
-import { devLog } from "@/utilities/dev";
+import { devRender } from "@/utilities/dev";
 
 /**
- * Color Component
- * 
- * A controlled input component for CSS dimension values (e.g., "10px", "2rem", "100%").
- * Intelligently splits values into numeric and unit components for separate editing.
- * Supports groupable unit categories and validation for numeric ranges.
+ * StylesEditorValueColor Component
+ * Renders a color picker component for CSS color values with validation and user-friendly interface.
  *
- * @component
- * @param {ColorValueProps} props - Component properties
- * @param {string} [props.value=""] - Current CSS dimension value (e.g., "10px")
- * @param {function} [props.onChange] - Callback for value changes
- * @param {Array} [props.options=[]] - Available unit options with categories
- * @param {number} [props.min=-Infinity] - Minimum allowed numeric value
- * @param {number} [props.max=Infinity] - Maximum allowed numeric value
- * @returns {ReactElement} The rendered Color component
+ * @param value - Current CSS color value (e.g., "#ff0000", "rgb(255,0,0)")
+ * @param onChange - Callback when the color value changes
+ * @returns The rendered color picker component
  */
-const Color: React.FC<ColorValueProps> = (props: ColorValueProps) => {
-	const {
-		// Core
-		value,
-		onChange,
+const StylesEditorValueColor: React.FC<StylesEditorValueColorProps> = ({ value, onChange }) => {
+	if (typeof value !== "string") return devRender.error("[StylesEditorValueColor] No value provided", { value });
+	if (!onChange || typeof onChange !== "function") return devRender.error("[StylesEditorValueColor] Invalid onChange callback", { onChange });
 
-	} = props;
-
-	if (value == null) {
-		devLog.error("[Color] Invalid value provided, expected a string");
-		return null;
-	}
-
+	// Handle color value changes
 	const handleChange = useCallback((newValue: string) => {
 		onChange(newValue);
-	}, [onChange]);
-
+	}, [onChange]
+	);
 
 	return (
-		<div className={CSS.Color} role="representation">
+		<div className={CSS.StylesEditorValueColor}>
 			<ColorSelect
 				value={value}
 				onChange={handleChange}
@@ -59,4 +41,4 @@ const Color: React.FC<ColorValueProps> = (props: ColorValueProps) => {
 	);
 };
 
-export default memo(Color);
+export default memo(StylesEditorValueColor);

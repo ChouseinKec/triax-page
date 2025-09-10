@@ -1,38 +1,39 @@
 "use client";
-import React, { ReactElement, memo } from "react";
+import React, { memo } from "react";
 
 // Styles
-import CSS from "./style.module.scss";
+import CSS from "@/editors/block/components/attribute/style.module.scss";
 
 // Types
-import type { BlockAttributesProps } from "./types";
-
-// Hooks
-import { useBlockManager } from "@/hooks/block/manager";
+import type { AttributesEditorProps } from "@/editors/block/types/component";
 
 // Components
-import Layout from "./layout/component";
+import AttributeEditorLayouts from "@/editors/block/components/attribute/layout/component";
+
+// Managers
+import { useSelectedBlockID } from "@/editors/block/managers/block";
 
 /**
- * Attribute Component
- * Renders the main block editor UI and registers block-related tabs to the layout panels.
- * @param props - AttributeProps
+ * AttributeEditor Component
+ * Renders the attribute editor interface for the selected block.
+ * Shows a fallback message when no block is selected.
+ *
  * @returns ReactElement
  */
-const BlockAttributes: React.FC<BlockAttributesProps> = (props: BlockAttributesProps): ReactElement => {
-    const { getSelectedBlock } = useBlockManager();
-    const selectedBlock = getSelectedBlock();
+const AttributeEditor: React.FC<AttributesEditorProps> = () => {
+    const selectedBlockID = useSelectedBlockID();
 
     return (
-        <div className={CSS.BlockAttributes} >
-            {selectedBlock
-                ? <Layout />
-                : <p className={CSS.Fallback}>
+        <div className={CSS.AttributeEditor} >
+            {selectedBlockID
+                ? <AttributeEditorLayouts />
+                : <p className={CSS.AttributesEditor__Empty}>
                     No block selected. Select a block to see attribute-specific settings.
-                </p>}
+                </p>
+            }
         </div>
     );
 };
 
-export default memo(BlockAttributes);
+export default memo(AttributeEditor);
 

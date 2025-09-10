@@ -4,16 +4,14 @@ import React, { ReactElement, useMemo } from "react";
 // Styles
 import CSS from "./style.module.scss";
 
-// Types
-import type { LayoutEditorProps } from "./types";
 
 // Components
-import Panel from "@/editors/layout/components/panel/component";
+import Panel from "./components/panel/component";
 import ActionGroup from "@/components/group/action/component";
 
-// Hooks
-import { useLayoutManager } from "@/hooks/layout/manager";
 
+// Context
+import { useLayoutContext } from "@/editors/layout/context";
 
 
 /**
@@ -22,15 +20,15 @@ import { useLayoutManager } from "@/hooks/layout/manager";
  * @param props - LayoutEditorProps
  * @returns ReactElement
  */
-const LayoutEditor: React.FC<LayoutEditorProps> = (props: LayoutEditorProps): ReactElement => {
+const LayoutEditor: React.FC = (): ReactElement => {
     // Get panel management methods from layout manager hook
-    const { getAllPanels, getOpenPanels, togglePanel } = useLayoutManager();
+    const { panels, togglePanel } = useLayoutContext();
 
     // Memoized list of all panels (for action buttons)
-    const allPanels = useMemo(() => getAllPanels().filter(panel => panel.tabs && Object.keys(panel.tabs).length > 0), [getAllPanels]);
+    const allPanels = useMemo(() => Object.values(panels).filter(panel => panel.tabs && Object.keys(panel.tabs).length > 0), [panels]);
 
     // Memoized list of open panels (for rendering)
-    const openPanels = useMemo(() => getOpenPanels().filter(panel => panel.tabs && Object.keys(panel.tabs).length > 0), [getOpenPanels]);
+    const openPanels = useMemo(() => allPanels.filter(panel => panel.isOpen), [panels]);
 
     /**
      * Renders Panel components for all open panels.
@@ -54,16 +52,18 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props: LayoutEditorProps): Re
      * Renders action buttons for toggling panel visibility.
      */
     const actionElements = useMemo(() => (
-        allPanels.sort((a, b) => a.order - b.order).map(panel => (
-            <button
-                key={panel.id}
-                onClick={() => togglePanel(panel.id)}
-                data-is-active={panel.isOpen}
-            >
-                {panel.icon}
-            </button>
-        ))
-    ), [allPanels, togglePanel]
+        <ActionGroup direction="vertical" className="LayoutEditorBarActionGroup">
+            {allPanels.sort((a, b) => a.order - b.order).map(panel => (
+                <button
+                    key={panel.id}
+                    onClick={() => togglePanel(panel.id)}
+                    data-is-active={panel.isOpen}
+                >
+                    {panel.icon}
+                </button>
+            ))}
+        </ActionGroup>
+    ), [allPanels, ]
     );
 
     return (
@@ -71,19 +71,14 @@ const LayoutEditor: React.FC<LayoutEditorProps> = (props: LayoutEditorProps): Re
 
             {/* Panel action bar */}
             <div className={CSS.Bar}>
-
-                {/* Render only if there are action elements */}
-                {actionElements.length > 0 &&
-                    <ActionGroup direction="vertical" className="LayoutEditorBarActionGroup">
-                        {actionElements}
-                    </ActionGroup>
-                }
+                {/* Render panel action buttons */}
+                {actionElements}
             </div>
 
             {/* Render all open panels */}
             {panelElements}
 
-        </div>
+        </div >
     );
 };
 

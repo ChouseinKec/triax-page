@@ -1,71 +1,51 @@
 "use client";
-
-import React, { Fragment, useCallback, useRef } from "react";
+import React, { Fragment, memo } from "react";
 
 // Styles
-import CSS from "./styles.module.scss";
+import CSS from "@/editors/block/components/style/value/slots/styles.module.scss";
 
 // Components
-import Slot from "../slot/component";
+import StylesEditorSlot from "@/editors/block/components/style/value/slot/component";
 import DropdownSelect from "@/components/select/dropdown/component";
 
 // Types
-import type { SlotsProps } from "./types";
+import type { StylesEditorSlotsProps } from "@/editors/block/types/component";
 
 // Utilities
-import { devLog } from "@/utilities/dev";
+import { devRender } from "@/utilities/dev";
 
 /**
- * Slots Component
+ * StylesEditorSlots Component
  * Renders a row of Slot components for each value slot, plus an extra dropdown for the next possible slot.
  * Handles incremental slot-based value editing for a CSS property.
  *
- * @param props - SlotsProps containing values, options, and onChange callback
- * @returns ReactElement - The rendered slot editor UI
+ * @param props - StylesEditorSlots containing values, options, and onChange callback
+ * @returns The rendered slot editor UI
  */
-const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
-    const {
-        values,
-        options,
-        onChange,
-    } = props;
-
-
-    // Guard Clause
-    if (!options || options.length === 0) {
-        devLog.error("[Slots] No options provided");
-        return null;
-    }
-
-    if (values == null) {
-        devLog.error("[Slots] Invalid value provided, expected a string");
-        return null;
-    }
+const StylesEditorSlots: React.FC<StylesEditorSlotsProps> = ({ values, options, onChange }) => {
+    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[Slots] No options provided", { options });
+    if (!values || !Array.isArray(values)) return devRender.error("[Slots] No values provided", { values });
+    if (!onChange || typeof onChange !== "function") return devRender.error("[Slots] Invalid onChange callback", { onChange });
 
     const valuesLength = values.length;
     const nextOptions = options[valuesLength];
     const slotsLength = options.length;
     const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
 
-
-    /**
-     * Handles a change in a single slot, updating the overall slot values array.
-     */
-    const handleSlotChange = useCallback((newValue: string, slotIndex: number) => {
+    // Handle changes to individual slot values
+    const handleSlotChange = (newValue: string, slotIndex: number) => {
+        // Create a copy of the values array and update the specific slot
         const updatedValues = [...values];
         updatedValues[slotIndex] = newValue;
         onChange(updatedValues);
-    }, [values, onChange]
-    );
+    };
 
-    /**
-     * Renders Slot components for each current value slot.
-     */
-    const renderCurrentSlots = useCallback(() => {
+    // Render all current slot components
+    const renderCurrentSlots = () => {
         // Handle empty values case - render first slot with empty value
         if (!values || valuesLength === 0) {
             return (
-                <Slot
+                <StylesEditorSlot
                     key={0}
                     value={""}
                     options={options[0]}
@@ -78,7 +58,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         return values.map((slotValue, slotIndex) => {
             return (
                 <Fragment key={slotIndex}>
-                    <Slot
+                    <StylesEditorSlot
                         value={slotValue}
                         options={options[slotIndex]}
                         onChange={val => handleSlotChange(val, slotIndex)}
@@ -87,13 +67,10 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
             );
         });
 
-    }, [values, options, handleSlotChange]
-    );
+    };
 
-    /**
-     * Renders an extra dropdown for the next possible slot (if any).
-     */
-    const renderNextSlot = useCallback(() => {
+    // Render dropdown for adding the next slot if available
+    const renderNextSlot = () => {
         // Check if there are valid options for the next slot
         if (!values || valuesLength === 0 || !hasNext) return null;
 
@@ -104,7 +81,7 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
             return (
-                <Slot
+                <StylesEditorSlot
                     value={""}
                     options={nextOptions}
                     onChange={(val: string) => handleSlotChange(val, valuesLength)}
@@ -127,29 +104,14 @@ const Slots: React.FC<SlotsProps> = (props: SlotsProps) => {
             />
         );
 
-    }, [values, options, handleSlotChange]
-    );
-
-    /**
-     * Renders all current slots and the next slot dropdown, optionally inside a dropdown reveal.
-     */
-    const render = useCallback(() => {
-        // Default inline rendering for simple scenarios
-        return (
-            <>
-                {renderCurrentSlots()}
-                {renderNextSlot()}
-            </>
-        );
-    }, [values, renderCurrentSlots, renderNextSlot]
-    );
-
+    };
 
     return (
-        <div className={CSS.Slots}>
-            {render()}
+        <div className={CSS.StylesEditorSlots}>
+            {renderCurrentSlots()}
+            {renderNextSlot()}
         </div>
     );
 };
 
-export default React.memo(Slots);
+export default memo(StylesEditorSlots);

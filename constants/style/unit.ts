@@ -1,15 +1,15 @@
-import { CSSUnitKey, CSSUnitDefinition } from '@/types/block/style/unit';
-import { CSSUnitType } from '@/types/block/style/unit';
-import { CSSDimensionOptionDefinition } from '@/types/block/style/option';
+import { UnitKeys, UnitDefinition } from '@/editors/block/types/core/style/unit';
+import { UnitTypes } from '@/editors/block/types/core/style/unit';
+import { OptionDimensionDefinition } from '@/editors/block/types/core/style/option';
 
 /**
- * Helper function to create a CSSUnitDefinition object.
+ * Helper function to create a UnitDefinition object.
  * @param name - The canonical name of the unit (e.g. 'px', 'em').
  * @param category - The category of the unit (e.g.  'absolute').
  * @param supported - The support status of the unit (e.g. 'widely', 'not widely').
- * @returns A CSSUnitDefinition object with all metadata fields populated.
+ * @returns A UnitDefinition object with all metadata fields populated.
  */
-function createUnit(name: CSSUnitKey, type: CSSUnitType): CSSUnitDefinition {
+export function createUnit(name: UnitKeys, type: UnitTypes): UnitDefinition {
 	return {
 		type,
 		name,
@@ -18,13 +18,13 @@ function createUnit(name: CSSUnitKey, type: CSSUnitType): CSSUnitDefinition {
 }
 
 /**
- * Helper function to create an CSSDimensionOptionDefinition object for a CSS unit.
+ * Helper function to create an OptionDimensionDefinition object for a CSS unit.
  * Used for populating dropdowns, radio selects, etc. with dimension options.
  *
  * @param name - The canonical name of the unit (e.g. 'px', 'em').
- * @returns An CSSDimensionOptionDefinition object with name, value, and category: 'dimension'.
+ * @returns An OptionDimensionDefinition object with name, value, and category: 'dimension'.
  */
-function createUnitOption(name: CSSUnitKey): CSSDimensionOptionDefinition {
+export function createUnitOption(name: UnitKeys): OptionDimensionDefinition {
 	return {
 		name,
 		value: `0${name}`,
@@ -35,9 +35,9 @@ function createUnitOption(name: CSSUnitKey): CSSDimensionOptionDefinition {
 
 /**
  * A lookup table of all supported CSS units and their metadata.
- * Each entry is a CSSUnitDefinition object describing the unit's name, category, and support status.
+ * Each entry is a UnitDefinition object describing the unit's name, category, and support status.
  */
-export const StyleUnitDefinitions: Partial<Record<CSSUnitKey, CSSUnitDefinition>> = {
+export const UnitDefinitions: Partial<Record<UnitKeys, UnitDefinition>> = {
 	fr: createUnit('fr', 'flex'),
 	px: createUnit('px', 'length'),
 	em: createUnit('em', 'length'),
@@ -56,15 +56,15 @@ export const StyleUnitDefinitions: Partial<Record<CSSUnitKey, CSSUnitDefinition>
 } as const;
 
 /**
- * StyleUnitOptions: Maps each CSSUnitType value to an array of CSSDimensionOptionDefinition objects for UI selection.
+ * UnitOptionsByType: Maps each UnitTypes value to an array of OptionDimensionDefinition objects for UI selection.
  *
  * This is used to group units by their dimension group (e.g., 'length', 'angle', 'percentage', 'flex').
- * Each key is a CSSUnitType value, and the value is an array of CSSDimensionOptionDefinition objects for that group.
+ * Each key is a UnitTypes value, and the value is an array of OptionDimensionDefinition objects for that group.
  */
-export const StyleUnitOptions: Record<CSSUnitType, CSSDimensionOptionDefinition[]> = Object.entries(StyleUnitDefinitions).reduce((acc, [unit, def]) => {
+export const UnitOptionsByType: Record<UnitTypes, OptionDimensionDefinition[]> = Object.entries(UnitDefinitions).reduce((acc, [unit, def]) => {
 	if (def?.type) {
 		if (!acc[def.type]) acc[def.type] = [];
-		acc[def.type].push(createUnitOption(unit as CSSUnitKey));
+		acc[def.type].push(createUnitOption(unit as UnitKeys));
 	}
 	return acc;
-}, {} as Record<CSSUnitType, CSSDimensionOptionDefinition[]>);
+}, {} as Record<UnitTypes, OptionDimensionDefinition[]>);

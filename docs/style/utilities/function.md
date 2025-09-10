@@ -11,7 +11,7 @@ Extracts the function name from a CSS function string.
 - **Returns:** `string | undefined`
 
 
-### extractFunctionValue
+### extractFunctionArgs
 Extracts the value inside the parentheses from a CSS function string.
 - **Parameters:** `input: string`
 - **Returns:** `string | undefined`

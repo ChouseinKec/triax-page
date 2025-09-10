@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, RefObject, useCallback } from "react";
-import { useDebouncedCallback } from "../hooks";
+import { useDebouncedCallback } from "../utility/useCallback";
 
 type Size = { width: number; height: number };
 
