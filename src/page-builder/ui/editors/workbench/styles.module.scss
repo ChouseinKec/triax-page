@@ -1,0 +1,12 @@
+$offset: 40px;
+
+.WorkbenchEditor {
+	width: calc(100% - $offset);
+	height: calc(100% - $offset);
+
+	position: fixed;
+	top: $offset;
+	left: $offset;
+
+	z-index: 5;
+}

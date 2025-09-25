@@ -11,7 +11,7 @@ The `constants/style/icon.tsx` file provides a mapping of CSS property and value
 ## What is it used for?
 
 - **UI Representation:**
-  - Provides visual cues for CSS properties and values in editors, property panels, and dropdowns.
+  - Provides visual cues for CSS properties and values in editors, property LayoutPanels, and dropdowns.
 - **Accessibility:**
   - Helps users quickly identify and select CSS options by icon.
 - **Consistency:**

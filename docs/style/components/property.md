@@ -22,7 +22,7 @@ The `Property` component is responsible for rendering an individual style proper
 ## Usage
 
 ```tsx
-import Property from "@/editors/style/components/property/components";
+import Property from "@/modules/editors/style/components/property/components";
 
 <Property
   property="background-color"

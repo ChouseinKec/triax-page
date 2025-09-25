@@ -1,10 +1,9 @@
-import { normalizeSyntax, parseSyntax } from '@/editors/block/utilities/style/parse';
-import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/editors/block/utilities/style/parse/combinator';
-import { parseBrackets } from '@/editors/block/utilities/style/parse/bracket';
-import { expandTokens } from '@/editors/block/utilities/style/token';
-
-import { parseSequence } from '@/editors/block/utilities/style/parse/combinator';
-import { parseMultiplier } from '@/editors/block/utilities/style/parse/multiplier';
+import { normalizeSyntax, parseSyntax } from '@/src/page-builder/core/block/style/utilities/parse';
+import { parseDoubleBar, parseDoubleAmp, parseSingleBar } from '@/src/page-builder/core/block/style/utilities/parse/combinator';
+import { parseBrackets } from '@/src/page-builder/core/block/style/utilities/parse/bracket';
+import { expandTokens } from '@/src/page-builder/core/block/style/utilities/token';
+import { parseSequence } from '@/src/page-builder/core/block/style/utilities/parse/combinator';
+import { parseMultiplier } from '@/src/page-builder/core/block/style/utilities/parse/multiplier';
 
 describe('expandTokens', () => {
 	it('should expand known data types', () => {

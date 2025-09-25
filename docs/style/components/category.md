@@ -16,7 +16,7 @@ The `Category` component is responsible for rendering a list of property groups 
 ## Usage
 
 ```tsx
-import Category from "@/editors/style/components/category/component";
+import Category from "@/modules/editors/style/components/category/component";
 
 <Category groups={groupsArray} />
 ```

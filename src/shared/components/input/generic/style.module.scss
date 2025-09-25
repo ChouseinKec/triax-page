@@ -1,0 +1,14 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.GenericInput {
+	@include inputMixins.components--input($padding: false);
+}
+
+.ErrorMessage {
+	white-space: nowrap;
+	@include inputMixins.components--flex-horizontal;
+}
+
+.ErrorIcon {
+	color: var(--color-error);
+}

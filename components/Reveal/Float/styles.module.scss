@@ -1,9 +1,0 @@
-@use '../../../mixins//mixins.module.scss' as inputMixins;
-
-.FloatReveal {
-	min-width: min-content;
-	max-width: 500px;
-
-	@include inputMixins.components--flex-vertical;
-	@include inputMixins.components--float;
-}

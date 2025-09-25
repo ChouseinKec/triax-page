@@ -1,0 +1,31 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.Empty {
+	width: 100%;
+	padding: var(--size-md);
+
+	font-size: var(--font-size-lg);
+	color: var(--color-gray);
+	text-align: center;
+}
+
+.Categories {
+	width: 100%;
+	@include inputMixins.components--flex-horizontal($gap: var(--size-xl));
+}
+
+.Category {
+	@include inputMixins.components--flex-vertical($align: center);
+}
+
+.CategoryTitle {
+	text-align: center;
+	font-size: var(--font-size-lg);
+	text-transform: capitalize;
+	color: var(--color-white);
+	padding-top: var(--size-lg);
+}
+
+.CategoryItems {
+	@include inputMixins.components--flex-vertical($align: center);
+}

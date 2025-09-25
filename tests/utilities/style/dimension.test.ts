@@ -1,4 +1,5 @@
-import { extractDimensionNumber, extractDimensionUnit, isValueDimension, getDimensionType } from '@/editors/block/utilities/style/dimension';
+import { extractDimensionNumber, extractDimensionUnit, getDimensionType } from '@/src/page-builder/core/block/style/utilities/dimension';
+import { isValueDimension } from '@/src/page-builder/core/block/style/utilities/value';
 
 describe('extractDimensionNumber', () => {
   it('extracts number from dimension', () => {

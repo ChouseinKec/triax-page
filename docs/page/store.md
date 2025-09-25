@@ -16,7 +16,7 @@ The `stores/page/store.ts` file defines the main Zustand store for managing page
 
 - **Responsive Editing:**  
   Allows switching between devices and orientations to preview and edit styles responsively.
-- **Pseudo-State Editing:**  
+- **PseudoDefinition-State Editing:**  
   Enables editing styles for different pseudo-states (like hover or focus).
 - **Context Provider:**  
   Supplies context to block and style editors so they can resolve and render styles correctly for the current device, orientation, and pseudo-state.
@@ -72,7 +72,7 @@ import usePageStore from "@/stores/page/store";
 usePageStore.getState().setCurrentDevice('mobile');
 
 // Get the current orientation
-const orientation = usePageStore.getState().currentOrientation.value;
+const orientation = usePageStore.getState().selectedOrientationID.value;
 
 // Get all devices
 const devices = usePageStore.getState().allDevices;

@@ -7,7 +7,7 @@ The `Block` component is responsible for rendering a single block instance in th
 - `Block` is a React functional component that receives a `blockID` prop.
 - It retrieves the block instance and its definition, and renders the block using the definition's `render` function.
 - If the block type is unknown, it displays an error message.
-- The component also registers block-specific actions (like delete) in the bottom panel when the block is selected.
+- The component also registers block-specific actions (like delete) in the bottom LayoutPanel when the block is selected.
 - Child blocks are rendered recursively, allowing for nested block structures.
 
 ## Props
@@ -19,7 +19,7 @@ The `Block` component is responsible for rendering a single block instance in th
 ## Usage
 
 ```tsx
-import Block from "@/editors/block/components/block/component";
+import Block from "@/modules/editors/block/components/block/component";
 
 <Block blockID="block-123" />
 ```
@@ -36,7 +36,7 @@ import Block from "@/editors/block/components/block/component";
 - Uses the `useBlockManager` hook to access block data and actions.
 - Retrieves the block instance and its definition from the registry.
 - If the block type is unknown, displays a warning.
-- Registers a delete action in the bottom panel when the block is selected.
+- Registers a delete action in the bottom LayoutPanel when the block is selected.
 - Renders all child blocks recursively by mapping over `block.contentIDs`.
 - Uses the definition's `render` function to render the block, passing the block instance and its children.
 - The component is memoized with `React.memo` for performance.

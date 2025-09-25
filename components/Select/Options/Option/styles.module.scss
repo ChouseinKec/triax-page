@@ -1,6 +1,0 @@
-@use '../../../../mixins/mixins.module.scss' as inputMixins;
-
-.Option {
-	@include inputMixins.components--button($height: 20px, $background: none);
-	width: 100%;
-}

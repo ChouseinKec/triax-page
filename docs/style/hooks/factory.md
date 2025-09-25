@@ -14,7 +14,7 @@ The `hooks/style/factory.tsx` file provides a custom React hook for rendering st
 - **Position Selection:**  
   Renders a `PositionSelect` component for selecting sides or corners (e.g., for padding, margin, border-radius).
 - **Abstraction:**  
-  Provides a unified interface for rendering style editors, reducing boilerplate in style panels and property editors.
+  Provides a unified interface for rendering style editors, reducing boilerplate in style LayoutPanels and property editors.
 
 # Style Factory Hook
 
@@ -32,7 +32,7 @@ The `hooks/style/factory.tsx` file provides a custom React hook for rendering st
 - **Position Selection:**  
   Renders a `PositionSelect` component for selecting sides or corners (e.g., for padding, margin, border-radius).
 - **Abstraction:**  
-  Provides a unified interface for rendering style editors, reducing boilerplate in style panels and property editors.
+  Provides a unified interface for rendering style editors, reducing boilerplate in style LayoutPanels and property editors.
 
 ## Main Methods
 
@@ -54,7 +54,7 @@ Renders a `PositionSelect` component for selecting sides or corners.
 ```tsx
 import { useStyleFactory } from "@/hooks/style/factory";
 import { useSelectedBlockID } from "@/hooks/block/manager";
-import Value from "@/editors/block/components/style/value/component";
+import Value from "@/modules/editors/block/components/style/value/component";
 
 const { renderPositionSelect } = useStyleFactory();
 const selectedBlockID = useSelectedBlockID();
@@ -79,10 +79,10 @@ const PositionSelector = renderPositionSelect(
 
 - The hook uses the style manager for getting and setting property values.
 - Property definitions are sourced from `StyleDefinitions`.
-- Use this hook in style panels or property editors to keep UI---
+- Use this hook in style LayoutPanels or property editors to keep UI---
 
 ## Notes
 
 - The hook uses the style manager for getting and setting property values.
 - Property definitions are sourced from `StyleDefinitions`.
-- Use this hook in style panels or property editors to keep UI
+- Use this hook in style LayoutPanels or property editors to keep UI

@@ -1,0 +1,26 @@
+$offset: 40px;
+
+.ViewportEditor {
+	width: calc(100% - $offset);
+	height: calc(100% - $offset);
+
+	position: fixed;
+	top: $offset;
+	left: $offset;
+
+	background-size: 30px 30px;
+
+	overflow: hidden;
+	z-index: 10;
+
+}
+
+.ViewportEditor__Content {
+	padding: var(--size-lg);
+	overflow: auto;
+}
+
+.ViewportEditor__Empty {
+	color: var(--color-white);
+	text-align: center;
+}

@@ -26,7 +26,7 @@ The `List` component provides a searchable, categorized list of all registered b
 ## Usage
 
 ```tsx
-import List from "@/editors/block/components/blocks-list/component";
+import List from "@/modules/editors/block/components/blocks-list/component";
 
 <List />
 ```

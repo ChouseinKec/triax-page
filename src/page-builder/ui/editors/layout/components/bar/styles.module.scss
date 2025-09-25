@@ -1,0 +1,14 @@
+.LayoutBar {
+	padding: var(--size-xs) var(--size-md);
+	position: fixed;
+
+	border-radius: var(--size-md);
+	background: var(--theme-color-primary);
+	box-shadow: var(--theme-shadow-border);
+	z-index: 99999;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: var(--size-sm);
+}

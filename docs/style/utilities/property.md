@@ -5,19 +5,19 @@ Helpers for validating and generating CSS property names, including support for 
 
 ## Main Functions
 
-### isKeyValid
+### isStyleKeyValid
 Checks if a given CSS property is valid according to the defined CSS properties.
 
 - **Parameters:**
   - `property: StyleKeys` — The CSS property to validate.
 - **Returns:** `boolean` — True if the property is valid, false otherwise.
 - **Example:**
-  - `isKeyValid('color') → true`
-  - `isKeyValid('invalid-property') → false`
+  - `isStyleKeyValid('color') → true`
+  - `isStyleKeyValid('invalid-property') → false`
 
 ---
 
-### generateKey
+### generateStyleKey
 Generates a CSS property name based on the provided property, position, and optional suffix. Handles multiple CSS property naming patterns:
 
 - property-position (e.g., `padding-top`, `margin-left`)
@@ -31,7 +31,7 @@ Generates a CSS property name based on the provided property, position, and opti
   - `suffix?: string` — The suffix to append (e.g., 'width', 'style', 'color').
 - **Returns:** `StyleKeys` — The generated CSS property name.
 - **Example:**
-  - `generateKey('padding', 'top') → 'padding-top'`
-  - `generateKey('border', 'top', 'width') → 'border-top-width'`
-  - `generateKey('background', undefined, 'color') → 'background-color'`
-  - `generateKey('color') →
+  - `generateStyleKey('padding', 'top') → 'padding-top'`
+  - `generateStyleKey('border', 'top', 'width') → 'border-top-width'`
+  - `generateStyleKey('background', undefined, 'color') → 'background-color'`
+  - `generateStyleKey('color') →

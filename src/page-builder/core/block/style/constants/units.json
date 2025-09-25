@@ -1,0 +1,67 @@
+{
+	"fr": {
+		"type": "flex",
+		"name": "fr",
+		"value": "0fr"
+	},
+	"px": {
+		"type": "length",
+		"name": "px",
+		"value": "0px"
+	},
+	"em": {
+		"type": "length",
+		"name": "em",
+		"value": "0em"
+	},
+	"rem": {
+		"type": "length",
+		"name": "rem",
+		"value": "0rem"
+	},
+	"vh": {
+		"type": "length",
+		"name": "vh",
+		"value": "0vh"
+	},
+	"vw": {
+		"type": "length",
+		"name": "vw",
+		"value": "0vw"
+	},
+	"vmax": {
+		"type": "length",
+		"name": "vmax",
+		"value": "0vmax"
+	},
+	"vmin": {
+		"type": "length",
+		"name": "vmin",
+		"value": "0vmin"
+	},
+	"deg": {
+		"type": "angle",
+		"name": "deg",
+		"value": "0deg"
+	},
+	"grad": {
+		"type": "angle",
+		"name": "grad",
+		"value": "0grad"
+	},
+	"rad": {
+		"type": "angle",
+		"name": "rad",
+		"value": "0rad"
+	},
+	"turn": {
+		"type": "angle",
+		"name": "turn",
+		"value": "0turn"
+	},
+	"%": {
+		"type": "percentage",
+		"name": "%",
+		"value": "0%"
+	}
+}

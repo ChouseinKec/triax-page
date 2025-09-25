@@ -13,7 +13,7 @@ The `constants/block/style.ts` file provides default CSS style values for blocks
   - Sets the initial style for new blocks, ensuring they have padding, borders, and background color by default.
 - **Consistent Appearance:**
   - Provides a baseline look for all blocks, making the editor visually consistent and user-friendly.
-- **Pseudo-State Support:**
+- **PseudoDefinition-State Support:**
   - Allows for different default styles based on pseudo-states (e.g., `all`, `hover`), enabling richer block interactions.
 
 ## Example Structure

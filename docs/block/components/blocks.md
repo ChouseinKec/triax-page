@@ -6,7 +6,7 @@ The `Blocks` component is responsible for rendering all root blocks in the block
 
 - `Blocks` is a React functional component that retrieves all blocks from the block manager.
 - It filters out root blocks (blocks that do not have a `parentID`) and renders each one as a `Block` component.
-- This component is typically used as the main entry point for rendering the block structure in the editor workspace.
+- This component is typically used as the main entry point for rendering the block structure in the editor Workbench.
 
 ## Props
 
@@ -17,7 +17,7 @@ The `Blocks` component is responsible for rendering all root blocks in the block
 ## Usage
 
 ```tsx
-import Blocks from "@/editors/block/components/blocks/component";
+import Blocks from "@/modules/editors/block/components/blocks/component";
 
 <Blocks />
 ```

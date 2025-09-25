@@ -1,0 +1,69 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.BlockStylesProperty {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	align-items: flex-start;
+	gap: var(--size-md);
+
+	&[data-disabled='true'] {
+		pointer-events: none;
+		opacity: 0.5;
+	}
+
+	&:not([data-label]) {
+		grid-template-columns: auto;
+	}
+}
+
+.BlockStylesProperty__Label {
+	> span {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: calc(var(--font-size-lg) * 0.8);
+		text-transform: capitalize;
+		cursor: help;
+	}
+}
+
+.BlockStylesProperty__FloatTitle {
+	text-transform: capitalize;
+	font-size: var(--font-size-lg);
+	font-weight: 600;
+}
+
+.BlockStylesProperty__FloatDescription {
+	font-size: var(--font-size-md);
+	line-height: var(--size-xl);
+	max-width: 200px;
+}
+
+.BlockStylesProperty__FloatActions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-sm);
+
+	> button {
+		@include inputMixins.components--button;
+
+		height: 25px;
+		width: auto;
+		aspect-ratio: 1;
+
+		padding: var(--size-sm);
+		font-size: var(--font-size-sm);
+
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
+
+.BlockStylesProperty__Value {
+	width: 100%;
+}

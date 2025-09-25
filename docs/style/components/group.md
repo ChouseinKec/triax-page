@@ -21,7 +21,7 @@ The `Group` component is responsible for rendering a grid layout of style proper
 ## Usage
 
 ```tsx
-import Group from "@/editors/style/components/group/component";
+import Group from "@/modules/editors/style/components/group/component";
 
 <Group
   properties={[

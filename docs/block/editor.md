@@ -7,21 +7,21 @@ The block editor is a modular, context-aware system for visually building, manag
 | Section             | Description                                                        |
 |---------------------|--------------------------------------------------------------------|
 | [Overview](#overview)         | High-level summary of the block editor's purpose and features      |
-| [Block List](#block-list)     | Browsing, searching, and adding new blocks                        |
+| [Block List](#block-library)     | Browsing, searching, and adding new blocks                        |
 | [Blocks](#blocks)             | Rendering and managing the block tree structure                  |
 | [Block](#block)               | Rendering individual blocks and handling block actions           |
-| [Panels & Context](#panels--context) | Integration with side panels and context management         |
+| [LayoutPanels & Context](#LayoutPanels--context) | Integration with side LayoutPanels and context management         |
 
 ---
 
 ## Overview
 
-The block editor enables users to visually compose layouts using a system of reusable, nestable blocks. Each block represents a UI component or layout element, and blocks can be added, removed, selected, and rearranged. The editor integrates with style and inspector panels, allowing for rich editing of both structure and appearance.
+The block editor enables users to visually compose layouts using a system of reusable, nestable blocks. Each block represents a UI component or layout element, and blocks can be added, removed, selected, and rearranged. The editor integrates with style and inspector LayoutPanels, allowing for rich editing of both structure and appearance.
 
 - **Block List:** Browse and search all available block types, grouped by category, and add them to the layout.
 - **Blocks:** Render and manage the tree of blocks, supporting nesting and drag-and-drop.
 - **Block:** Render individual block instances, handle selection, deletion, and custom actions.
-- **Panels:** Register block list and style editor panels for quick access and editing.
+- **LayoutPanels:** Register block list and style editor LayoutPanels for quick access and editing.
 
 ---
 
@@ -57,7 +57,7 @@ The Block component renders a single block instance, using its definition's rend
 
 - **Render Function:** Each block type defines its own render logic.
 - **Actions:** Provides UI for block actions (e.g., delete).
-- **Selection:** Integrates with selection and panel context for editing.
+- **Selection:** Integrates with selection and LayoutPanel context for editing.
 - **Error Handling:** Displays a warning if the block type is unknown.
 
 **See also:**  
@@ -65,13 +65,13 @@ The Block component renders a single block instance, using its definition's rend
 
 ---
 
-## Panels & Context
+## LayoutPanels & Context
 
-The block editor registers its panels (block list, style editor) with the layout context, allowing for flexible UI arrangement. Panels can be shown, hidden, or reordered as needed.
+The block editor registers its LayoutPanels (block list, style editor) with the layout context, allowing for flexible UI arrangement. LayoutPanels can be shown, hidden, or reordered as needed.
 
-- **BlocksPanel:** Registers the block list for quick block insertion.
-- **InspectorPanel:** Registers the style editor for editing block styles.
-- **Context Integration:** Uses context providers to manage panel state and actions.
+- **BlocksLayoutPanel:** Registers the block list for quick block insertion.
+- **InspectorLayoutPanel:** Registers the style editor for editing block styles.
+- **Context Integration:** Uses context providers to manage LayoutPanel state and actions.
 
 **See also:**  
 - `editors/block/component.tsx`
@@ -81,7 +81,7 @@ The block editor registers its panels (block list, style editor) with the layout
 ## Example Usage
 
 ```tsx
-import BlockEditor from "@/editors/block/component";
+import BlockEditor from "@/modules/editors/block/component";
 
 export default function Page() {
   return <BlockEditor />;

@@ -13,19 +13,19 @@ Triax is an extensible page builder for React, designed to provide a complete vi
 
 ## 🖼️ Application Layout
 
-Triax uses a **panel-based layout**. Each panel is responsible for a specific part of the editing experience, and components can assign their own controls or even their own sections.
+Triax uses a **LayoutPanel-based layout**. Each LayoutPanel is responsible for a specific part of the editing experience, and components can assign their own controls or even their own sections.
 
-**Main Panels:**
-- **Blocks Panel:** Add new blocks to the page. Provides a searchable, categorized list of all available blocks.
-- **Inspector Panel:** Manage block settings, including attributes and style values. Edit the details of the selected block.
-- **Action Panel:** Each block can register its own controls here (e.g., order, rename, or any block-specific actions). This panel is context-aware and adapts to the selected block.
+**Main LayoutPanels:**
+- **Blocks LayoutPanel:** Add new blocks to the page. Provides a searchable, categorized list of all available blocks.
+- **Inspector LayoutPanel:** Manage block settings, including attributes and style values. Edit the details of the selected block.
+- **Action LayoutPanel:** Each block can register its own controls here (e.g., order, rename, or any block-specific actions). This LayoutPanel is context-aware and adapts to the selected block.
 
-**Panel Layout Features:**
-- Each panel can be **dragged** and **resized** from any corner or side.
-- Panels can be **locked in place** to prevent accidental movement or resizing.
-- *(Planned)* Ability to **save and load custom layouts**, enabling users to create and switch between personalized workspace arrangements.
+**LayoutPanel Layout Features:**
+- Each LayoutPanel can be **dragged** and **resized** from any corner or side.
+- LayoutPanels can be **locked in place** to prevent accidental movement or resizing.
+- *(Planned)* Ability to **save and load custom layouts**, enabling users to create and switch between personalized Workbench arrangements.
 
-This modular and flexible panel system makes the editor highly extensible and customizable for different workflows and plugins.
+This modular and flexible LayoutPanel system makes the editor highly extensible and customizable for different workflows and plugins.
 
 ---
 
@@ -38,7 +38,7 @@ This modular and flexible panel system makes the editor highly extensible and cu
 - **Upcoming Blocks:** Future support for input, button, rich-text, and more.
 - **Block Nesting:** Blocks can be nested to create complex layouts.
 - **Add/Delete Blocks:** Easily add or delete blocks in the editor.
-- **Block-Level Controls:** Each block can add its own actions to the BlockActionPanel.
+- **Block-Level Controls:** Each block can add its own actions to the BlockActionLayoutPanel.
 - **Ordering & Drag-and-Drop:** (Planned) Reordering and drag-and-drop support for blocks.
 - **Extensible Block Registry:** Register custom block types and definitions via plugins.
 
@@ -49,7 +49,7 @@ This modular and flexible panel system makes the editor highly extensible and cu
 - **Lazy Evaluation:** Syntax parsing and expansion are performed on-demand for performance and circular dependency safety.
 - **Comprehensive Lookup Tables:** Centralized definitions for CSS properties, tokens, and units.
 - **Robust Parsing & Validation:** All value editing is validated against the CSS spec, with error feedback.
-- **Device, Orientation, and Pseudo Selection:** Style editor supports device-specific, orientation-specific, and pseudo-class styling and selection for advanced responsive and stateful layouts.
+- **DeviceDefinition, OrientationDefinition, and PseudoDefinition Selection:** Style editor supports device-specific, orientation-specific, and pseudo-class styling and selection for advanced responsive and stateful layouts.
 - **Componentized Value Editors:** Modular editors for color, dimension, keyword, function, and more.
 
 ### ⚙️ Logic Editor
@@ -70,7 +70,7 @@ All documentation is in the [`docs/`](docs/) folder. Key topics are organized by
 - [`hook.md`](docs/block/hook.md): Block manager hook for actions and selectors.
 - [`components/blocks.md`](docs/block/components/blocks.md): Renders all root blocks in the editor.
 - [`components/block.md`](docs/block/components/block.md): Renders a single block instance.
-- [`components/block-list.md`](docs/block/components/block-list.md): Searchable, categorized block list panel.
+- [`components/block-library.md`](docs/block/components/block-library.md): Searchable, categorized block list LayoutPanel.
 
 ### Style Editor
 

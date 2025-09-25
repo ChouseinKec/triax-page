@@ -9,24 +9,24 @@ The `hooks/page/manager.ts` file provides a React hook for managing device-relat
 
 ## What is it used for?
 
-- **Device Selection:**  
+- **DeviceDefinition Selection:**  
   Allows components to get or set the current device context (e.g., desktop, tablet, mobile).
-- **Device List:**  
+- **DeviceDefinition List:**  
   Provides access to the full list of devices supported by the editor.
 - **Context Provider:**  
   Supplies device context to page and style editors for responsive editing and preview.
 
 ## Main Methods
 
-### getDevice
+### getSelectedDevice
 
 Returns the current device object.
 
-- **Returns:** `Device` — The currently selected device.
+- **Returns:** `DeviceDefinition` — The currently selected device.
 
 ---
 
-### setDevice
+### setSelectedDeviceID
 
 Sets the current device.
 
@@ -35,11 +35,11 @@ Sets the current device.
 
 ---
 
-### getDevices
+### getAllDevices
 
 Returns the list of all available device objects.
 
-- **Returns:** `Device[]` — Array of all devices.
+- **Returns:** `DeviceDefinition[]` — Array of all devices.
 
 ---
 
@@ -48,16 +48,16 @@ Returns the list of all available device objects.
 ```tsx
 import { usePageManager } from "@/hooks/page/manager";
 
-const { getDevice, setDevice, getDevices } = usePageManager();
+const { getSelectedDevice, setSelectedDeviceID, getAllDevices } = usePageManager();
 
 // Get the current device
-const device = getDevice();
+const device = getSelectedDevice();
 
 // Set the current device to 'mobile'
-setDevice('mobile');
+setSelectedDeviceID('mobile');
 
 // Get all available devices
-const devices = getDevices();
+const devices = getAllDevices();
 ```
 
 ---

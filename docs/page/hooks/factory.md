@@ -9,10 +9,10 @@ The `hooks/page/factory.tsx` file provides a custom React hook for rendering pag
 
 ## What is it used for?
 
-- **Device Selection:**  
+- **DeviceDefinition Selection:**  
   Renders a dropdown for selecting the current device (desktop, tablet, mobile, etc.), allowing users to preview and edit the page responsively.
 - **UI Abstraction:**  
-  Provides a unified interface for rendering page-level controls, reducing boilerplate in page panels and editors.
+  Provides a unified interface for rendering page-level controls, reducing boilerplate in page LayoutPanels and editors.
 
 ## Main Methods
 
@@ -47,4 +47,4 @@ const { renderDeviceSelect } = usePageFactory();
 
 - The hook uses the Zustand-based page store for state management.
 - The dropdown is implemented with the `DropdownSelect` component and supports searching and grouping.
-- Use this hook in page panels or layout editors to keep UI logic consistent
+- Use this hook in page LayoutPanels or layout editors to keep UI logic consistent

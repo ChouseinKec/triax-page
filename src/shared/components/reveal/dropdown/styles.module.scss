@@ -1,0 +1,10 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.DropdownReveal {
+	position: relative;
+	overflow: hidden;
+}
+
+.Toggle {
+	@include inputMixins.components--button-dropdown;
+}

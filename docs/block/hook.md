@@ -79,7 +79,7 @@ Checks if the currently selected block is a descendant of the given block.
 
 ---
 
-### renderStylesEditor
+### renderBlockStyles
 Resolves and generates the CSS rule for a block based on the current device, orientation, and pseudo-state.
 
 - **Parameters:**
@@ -120,8 +120,8 @@ const {
   getAllBlocks,
   getBlock,
   getSelectedBlock,
-  getStylesEditor,
-  renderStylesEditor,
+  getBlockStyles,
+  renderBlockStyles,
   setBlockAttribute,
   getBlockAttribute,
 } = useBlockManager();

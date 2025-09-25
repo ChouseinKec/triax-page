@@ -58,7 +58,7 @@ Retrieves the block data for a given block ID.
 
 ---
 
-### setStylesEditor
+### setBlockStyles
 Updates the entire style object for a specific block.
 
 - **Parameters:**
@@ -72,9 +72,9 @@ Sets a specific style property for a specific block, device, orientation, and ps
 
 - **Parameters:**
   - `blockID: string` — The ID of the block to update.
-  - `device: string` — Device type (e.g., 'desktop', 'mobile').
-  - `orientation: string` — Orientation (e.g., 'portrait', 'landscape').
-  - `pseudo: string` — Pseudo-class (e.g., 'all', 'hover').
+  - `device: string` — DeviceDefinition type (e.g., 'desktop', 'mobile').
+  - `orientation: string` — OrientationDefinition (e.g., 'portrait', 'landscape').
+  - `pseudo: string` — PseudoDefinition-class (e.g., 'all', 'hover').
   - `property: string` — CSS property name.
   - `value: string` — CSS property value.
 

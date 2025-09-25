@@ -1,28 +1,21 @@
-'use client';
+"use client";
+
 // Registry
-import "@/editors/block/registry/init";
-import "@/editors/layout/registry/init";
+import "@/src/page-builder/state/registries";
 
 // Styles
 import CSS from "./page.module.scss";
 
 // Editors
-import PageEditor from "@/editors/page/component";
+import PageEditor from "@/src/page-builder/ui/editors/page/component";
 
-// Context
-import { LayoutProvider } from "@/editors/layout/context";
-import { BlockProvider } from "@/editors/block/context";
 
 export default function Home() {
 
   return (
-    <LayoutProvider>
-      <BlockProvider>
-        <main className={CSS.main}>
-          <PageEditor />
-        </main>
-      </BlockProvider>
-    </LayoutProvider>
+    <main className={CSS.main}>
+      <PageEditor />
+    </main>
   );
 
 }

@@ -20,7 +20,7 @@ The `hooks/style/manager.ts` file provides the main React hook for managing CSS 
 
 ## Main Methods
 
-### getStyle
+### getBlockStyle
 
 Gets a style property value for the current block, device, orientation, and pseudo-state, with CSS-like cascade and shorthand support.
 
@@ -30,7 +30,7 @@ Gets a style property value for the current block, device, orientation, and pseu
 
 ---
 
-### setStyle
+### setBlockStyle
 
 Sets a style property value for the current block, device, orientation, and pseudo-state. Handles shorthands and validates property and value.
 
@@ -40,7 +40,7 @@ Sets a style property value for the current block, device, orientation, and pseu
 
 ---
 
-### copyStyle
+### copyBlockStyle
 
 Copies a style property value to the clipboard.
 
@@ -49,7 +49,7 @@ Copies a style property value to the clipboard.
 
 ---
 
-### pasteStyle
+### pasteBlockStyle
 
 Pastes a style property value from the clipboard.
 
@@ -58,7 +58,7 @@ Pastes a style property value from the clipboard.
 
 ---
 
-### resetStyle
+### resetBlockStyle
 
 Resets a style property value to an empty string for the current context.
 
@@ -73,25 +73,25 @@ Resets a style property value to an empty string for the current context.
 import { useStyleManager } from "@/hooks/style/manager";
 
 const {
-  getStyle,
-  setStyle,
-  copyStyle,
-  pasteStyle,
-  resetStyle,
+  getBlockStyle,
+  setBlockStyle,
+  copyBlockStyle,
+  pasteBlockStyle,
+  resetBlockStyle,
 } = useStyleManager();
 
 // Get the current value for 'padding-top'
-const paddingTop = getStyle('padding-top');
+const paddingTop = getBlockStyle('padding-top');
 
 // Set a new value for 'background-color'
-setStyle('background-color', '#ff0000');
+setBlockStyle('background-color', '#ff0000');
 
 // Copy and paste a style property
-copyStyle('font-size');
-pasteStyle('font-size');
+copyBlockStyle('font-size');
+pasteBlockStyle('font-size');
 
 // Reset a property
-resetStyle('margin-bottom');
+resetBlockStyle('margin-bottom');
 ```
 
 ---

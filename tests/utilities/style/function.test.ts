@@ -1,4 +1,4 @@
-import { extractFunctionName, extractFunctionArgs } from '@/editors/block/utilities/style/function';
+import { extractFunctionName, extractFunctionArgs } from '@/src/page-builder/core/block/style/utilities/function';
 
 describe('extractFunctionName', () => {
   it('extracts function name from valid CSS function', () => {

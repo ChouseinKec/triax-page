@@ -5,15 +5,15 @@ Helpers for formatting CSS property names, generating CSS property blocks, and b
 
 ## Main Functions
 
-### formatKey
+### formatStyleKey
 Converts a camelCase CSS property name to kebab-case.
 
 - **Parameters:**
   - `property: string` — The camelCase property name (e.g., 'backgroundColor').
 - **Returns:** `string` — The kebab-case property name (e.g., 'background-color').
 - **Example:**
-  - `formatKey('backgroundColor') → 'background-color'`
-  - `formatKey('fontSize') → 'font-size'`
+  - `formatStyleKey('backgroundColor') → 'background-color'`
+  - `formatStyleKey('fontSize') → 'font-size'`
 
 ---
 

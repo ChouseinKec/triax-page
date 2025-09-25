@@ -17,7 +17,7 @@ The `Layout` component is responsible for rendering the overall layout of groupe
 ## Usage
 
 ```tsx
-import Layout from "@/editors/style/components/layout/component";
+import Layout from "@/modules/editors/style/components/layout/component";
 
 <Layout categories={categoriesArray} />
 ```
