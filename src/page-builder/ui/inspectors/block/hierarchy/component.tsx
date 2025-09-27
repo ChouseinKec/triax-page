@@ -6,7 +6,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useBlock, selectBlock, getBlockPreviousSibling, getBlockNextSibling, getSelectedBlockID } from "@/src/page-builder/services/managers/block";
+import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlockID } from "@/src/page-builder/services/managers/block";
 
 // Components
 import Entry from "./entry/component";
@@ -30,10 +30,10 @@ const BlocksHierarchy: React.FC = () => {
         const currentBlockID = getSelectedBlockID();
         if (!currentBlockID) return devLog.warn("No selected block");
 
-        const nextBlock = getBlockNextSibling(currentBlockID);
+        const nextBlock = getNextBlock();
         if (!nextBlock) return;
 
-        selectBlock(nextBlock);
+        selectBlock(nextBlock.id);
     }
 
     // Select previous block on ArrowUp
@@ -43,10 +43,10 @@ const BlocksHierarchy: React.FC = () => {
         const currentBlockID = getSelectedBlockID();
         if (!currentBlockID) return devLog.warn("No selected block");
 
-        const previousBlock = getBlockPreviousSibling(currentBlockID);
+        const previousBlock = getPreviousBlock();
         if (!previousBlock) return;
 
-        selectBlock(previousBlock);
+        selectBlock(previousBlock.id);
     };
 
     // Handle keyboard navigation

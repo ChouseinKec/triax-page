@@ -1,5 +1,5 @@
 // Stores
-import useBlockStore from '@/src/page-builder/state/stores/block';
+import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Helpers
 import { createBlockInstance } from '@/src/page-builder/services/helpers/block/block';

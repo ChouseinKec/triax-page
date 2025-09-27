@@ -85,133 +85,142 @@ export interface BlockStoreProps {
 }
 
 /**
- * Zustand store for block editor state management.
- * Provides pure data operations for blocks, selection, and CRUD operations.
- * All business logic and validation should be handled by managers.
- *
- * @example
- * const { allBlocks, selectBlock, addBlocks } = useBlockStore()
+ * Creates the block store after initialization.
+ * @returns The initialized Zustand store
  */
-export const useBlockStore = create<BlockStoreProps>((set, get) => ({
-	// Currently selected block ID
-	selectedBlockID: null,
+export function createBlockStore() {
+	return create<BlockStoreProps>((set, get) => ({
+		// Currently selected block ID
+		selectedBlockID: null,
 
-	// Collection of all blocks in the store
-	allBlocks: DefaultBlocks,
+		// Collection of all blocks in the store
+		allBlocks: DefaultBlocks,
 
-	// Deletion queue for deferred deletion
-	deletionQueue: [],
+		// Deletion queue for deferred deletion
+		deletionQueue: [],
 
-	// Sets the currently selected block by ID
-	selectBlock: (blockID) => set({ selectedBlockID: blockID }),
+		// Sets the currently selected block by ID
+		selectBlock: (blockID) => set({ selectedBlockID: blockID }),
 
-	// Updates multiple blocks in the store
-	updateBlocks: (blocks) => {
-		set((state) => ({
-			allBlocks: {
-				...state.allBlocks,
-				...blocks,
-			},
-		}));
-	},
+		// Updates multiple blocks in the store
+		updateBlocks: (blocks) => {
+			set((state) => ({
+				allBlocks: {
+					...state.allBlocks,
+					...blocks,
+				},
+			}));
+		},
 
-	// Adds a new block to the store with parent-child relationship handling
-	addBlock: (block) => {
-		set((state) => {
-			const newAllBlocks = {
-				...state.allBlocks,
-				[block.id]: block,
-			};
+		// Adds a new block to the store with parent-child relationship handling
+		addBlock: (block) => {
+			set((state) => {
+				const newAllBlocks = {
+					...state.allBlocks,
+					[block.id]: block,
+				};
 
-			// If block has a parent, update parent's contentIDs
-			if (block.parentID) {
-				const parentBlock = newAllBlocks[block.parentID];
-				if (parentBlock) {
-					newAllBlocks[block.parentID] = {
-						...parentBlock,
-						contentIDs: [...parentBlock.contentIDs, block.id],
-					};
+				// If block has a parent, update parent's contentIDs
+				if (block.parentID) {
+					const parentBlock = newAllBlocks[block.parentID];
+					if (parentBlock) {
+						newAllBlocks[block.parentID] = {
+							...parentBlock,
+							contentIDs: [...parentBlock.contentIDs, block.id],
+						};
+					}
 				}
-			}
 
-			return {
-				allBlocks: newAllBlocks,
-			};
-		});
-	},
+				return {
+					allBlocks: newAllBlocks,
+				};
+			});
+		},
 
-	// Updates a single block in the store
-	updateBlock: (blockID, block) => {
-		set((state) => ({
-			allBlocks: {
-				...state.allBlocks,
-				[blockID]: block,
-			},
-		}));
-	},
+		// Updates a single block in the store
+		updateBlock: (blockID, block) => {
+			set((state) => ({
+				allBlocks: {
+					...state.allBlocks,
+					[blockID]: block,
+				},
+			}));
+		},
 
-	// Queue a block for deletion
-	deleteBlock: (blockID: BlockID) => {
-		set((state) => {
-			const blockToDelete = state.allBlocks[blockID];
-			if (!blockToDelete) return state;
+		// Queue a block for deletion
+		deleteBlock: (blockID: BlockID) => {
+			set((state) => {
+				const blockToDelete = state.allBlocks[blockID];
+				if (!blockToDelete) return state;
 
-			const updatedBlocks = { ...state.allBlocks };
+				const updatedBlocks = { ...state.allBlocks };
 
-			// If block has a parent, remove it from parent's contentIDs
-			if (blockToDelete.parentID) {
-				const parentBlock = updatedBlocks[blockToDelete.parentID];
-				if (parentBlock) {
-					updatedBlocks[blockToDelete.parentID] = {
-						...parentBlock,
-						contentIDs: parentBlock.contentIDs.filter((childID: BlockID) => childID !== blockID),
-					};
+				// If block has a parent, remove it from parent's contentIDs
+				if (blockToDelete.parentID) {
+					const parentBlock = updatedBlocks[blockToDelete.parentID];
+					if (parentBlock) {
+						updatedBlocks[blockToDelete.parentID] = {
+							...parentBlock,
+							contentIDs: parentBlock.contentIDs.filter((childID: BlockID) => childID !== blockID),
+						};
+					}
 				}
-			}
 
-			return {
-				allBlocks: updatedBlocks,
-				deletionQueue: [...state.deletionQueue, blockID],
-			};
-		});
-
-		// Process queue after delay to allow React unmounting
-		setTimeout(() => {
-			get().processDeletionQueue();
-		}, 100);
-	},
-
-	// Process all queued deletions
-	processDeletionQueue: () => {
-		set((state) => {
-			if (state.deletionQueue.length === 0) return state;
-
-			const blocksToDelete = [...state.deletionQueue];
-			const updatedBlocks = { ...state.allBlocks };
-			let selectedBlockID = state.selectedBlockID;
-
-			// Get all descendants for each queued block
-			const allBlocksToDelete = new Set<BlockID>();
-			blocksToDelete.forEach((blockID) => {
-				allBlocksToDelete.add(blockID);
-				// Add all descendants
-				const descendants = getBlockDescendants([blockID], state.allBlocks);
-				descendants.forEach((descendantId: BlockID) => allBlocksToDelete.add(descendantId));
+				return {
+					allBlocks: updatedBlocks,
+					deletionQueue: [...state.deletionQueue, blockID],
+				};
 			});
 
-			// Delete all blocks
-			allBlocksToDelete.forEach((blockID) => {
-				if (selectedBlockID === blockID) selectedBlockID = null;
-				delete updatedBlocks[blockID];
+			// Process queue after delay to allow React unmounting
+			setTimeout(() => {
+				get().processDeletionQueue();
+			}, 100);
+		},
+
+		// Process all queued deletions
+		processDeletionQueue: () => {
+			set((state) => {
+				if (state.deletionQueue.length === 0) return state;
+
+				const blocksToDelete = [...state.deletionQueue];
+				const updatedBlocks = { ...state.allBlocks };
+				let selectedBlockID = state.selectedBlockID;
+
+				// Get all descendants for each queued block
+				const allBlocksToDelete = new Set<BlockID>();
+				blocksToDelete.forEach((blockID) => {
+					allBlocksToDelete.add(blockID);
+					// Add all descendants
+					const descendants = getBlockDescendants([blockID], state.allBlocks);
+					descendants.forEach((descendantId: BlockID) => allBlocksToDelete.add(descendantId));
+				});
+
+				// Delete all blocks
+				allBlocksToDelete.forEach((blockID) => {
+					if (selectedBlockID === blockID) selectedBlockID = null;
+					delete updatedBlocks[blockID];
+				});
+
+				return {
+					allBlocks: updatedBlocks,
+					selectedBlockID,
+					deletionQueue: [],
+				};
 			});
+		},
+	}));
+}
 
-			return {
-				allBlocks: updatedBlocks,
-				selectedBlockID,
-				deletionQueue: [],
-			};
-		});
-	},
-}));
+// Export a reference that will be set after initialization
+export let useBlockStore: ReturnType<typeof createBlockStore>;
 
-export default useBlockStore;
+/**
+ * Initialize the block store.
+ */
+export function initializeBlockStore(): Promise<void> {
+	return new Promise((resolve) => {
+		useBlockStore = createBlockStore();
+		resolve();
+	});
+}

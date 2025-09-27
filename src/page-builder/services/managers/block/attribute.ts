@@ -3,7 +3,7 @@ import { validateAttributeKey, validateAttributeValue } from '@/src/page-builder
 import { validateBlockInstance } from '@/src/page-builder/services/helpers/block/block';
 
 // Stores
-import useBlockStore from '@/src/page-builder/state/stores/block';
+import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';

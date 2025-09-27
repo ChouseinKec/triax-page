@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 // Stores
-import usePageStore from '@/src/page-builder/state/stores/page';
+import { usePageStore } from '@/src/page-builder/state/stores/page';
 
 // Types
 import type { DeviceDefinition, DeviceInstance, DeviceID } from '@/src/page-builder/core/page/types/device';
@@ -60,7 +60,7 @@ export function getSelectedDeviceID(): DeviceID | undefined {
  * setSelectedDeviceID('mobile'); // Sets current device to mobile
  */
 export function setSelectedDeviceID(deviceID: DeviceID): void {
-	if (!deviceID) deviceID = getDeviceDefaultID();
+	if (!deviceID) return;
 	usePageStore.getState().setSelectedDeviceID(deviceID);
 }
 

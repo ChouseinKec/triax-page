@@ -26,26 +26,24 @@ function initializeViewports() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[ViewportInit] Initializing Viewports:');
 
 	viewports.forEach((viewport) => {
 		const result = registerViewport(viewport);
-		results.push({
-			id: viewport.id,
-			status: result.success ? 'PASS' : `FAIL: ${result.error}`,
-			core: 'viewport',
-		});
+		if (result.success) {
+			devLog.info(`         ${viewport.id} registration successful.`);
+		} else {
+			devLog.error(`         ${viewport.id} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
  * Initialize and register all core viewport components
  */
-export function initializeRegistry() {
-	initializeViewports();
+export async function initializeRegistry(): Promise<void> {
+	return new Promise<void>((resolve) => {
+		initializeViewports();
+		resolve();
+	});
 }
-
-// Auto-initialize on module load
-initializeRegistry();

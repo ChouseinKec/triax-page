@@ -1,5 +1,5 @@
 // Stores
-import usePageStore from '@/src/page-builder/state/stores/page';
+import { usePageStore } from '@/src/page-builder/state/stores/page';
 
 // Types
 import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types';
@@ -25,5 +25,6 @@ export function getSelectedWorkbenchID() {
  * @param id - The workbench ID to set
  */
 export function setSelectedWorkbenchID(workbenchID: WorkbenchID) {
+	if(!workbenchID) return;
 	usePageStore.getState().setSelectedWorkbenchID(workbenchID);
 }

@@ -1,23 +1,50 @@
 "use client";
 
-// Registry
-import "@/src/page-builder/state/registries";
+import { useState, useEffect, lazy } from "react";
+
+// Initialization
+import { initCoordinator } from "@/src/page-builder/core/init";
 
 // Styles
 import CSS from "./page.module.scss";
 
-// Editors
-import PageEditor from "@/src/page-builder/ui/editors/page/component";
+// Components
+import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 
+// Utilities
+import { devLog } from "@/src/shared/utilities/dev";
+
+// Lazy load PageEditor to prevent import cascade
+const PageEditor = lazy(() => import("@/src/page-builder/ui/editors/page/component"));
 
 export default function Home() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    initCoordinator.initialize()
+      .then((result) => {
+        if (result.success) {
+          setTimeout(() => {
+            setIsReady(true);
+          }, 3000);
+        } else {
+          devLog.error('Initialization error:', result.error || 'Unknown initialization error');
+        }
+      })
+      .catch((error) => {
+        devLog.error('Initialization error:', error);
+      });
+  }, []);
+
+  if (!isReady) {
+    return <TriaxLoadingSpinner message="Loading...." />;
+  }
 
   return (
     <main className={CSS.main}>
       <PageEditor />
     </main>
   );
-
 }
 
 

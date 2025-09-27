@@ -10,7 +10,7 @@ import { validateStyleKey, validateStyleValue, hasShorthand, getShorthand } from
 import { useSelectedDeviceID, getSelectedDeviceID, getDeviceDefaultID, useSelectedOrientationID, getSelectedOrientationID, getOrientationDefaultID, useSelectedPseudoID, getSelectedPseudoID, getPseudoDefaultID } from '@/src/page-builder/services/managers/page';
 
 // Stores
-import useBlockStore from '@/src/page-builder/state/stores/block';
+import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';

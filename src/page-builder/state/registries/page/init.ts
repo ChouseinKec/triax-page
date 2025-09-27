@@ -27,18 +27,16 @@ function initializeDevices() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[PageInit] Initializing Devices:');
 
 	devices.forEach((device) => {
 		const result = registerDevice(device);
-		results.push({
-			id: device.value,
-			status: result.success ? 'PASS' : `FAIL: ${result.error}`,
-			core: 'device',
-		});
+		if (result.success) {
+			devLog.info(`         ${device.value} registration successful.`);
+		} else {
+			devLog.error(`         ${device.value} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
@@ -58,18 +56,16 @@ function initializeOrientations() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[PageInit] Initializing Orientations:');
 
 	orientations.forEach((orientation) => {
 		const result = registerOrientation(orientation);
-		results.push({
-			id: orientation.value,
-			status: result.success ? 'PASS' : `FAIL: ${result.error}`,
-			core: 'orientation',
-		});
+		if (result.success) {
+			devLog.info(`         ${orientation.value} registration successful.`);
+		} else {
+			devLog.error(`         ${orientation.value} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
@@ -89,18 +85,16 @@ function initializePseudos() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[PageInit] Initializing Pseudos:');
 
 	pseudos.forEach((pseudo) => {
 		const result = registerPseudo(pseudo);
-		results.push({
-			id: pseudo.value,
-			status: result.success ? 'PASS' : `FAIL ${result.error}`,
-			core: 'pseudo',
-		});
+		if (result.success) {
+			devLog.info(`         ${pseudo.value} registration successful.`);
+		} else {
+			devLog.error(`         ${pseudo.value} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
@@ -114,29 +108,27 @@ function initializeActions() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[PageInit] Initializing Actions:');
 
 	actions.forEach((action) => {
 		const result = registerAction(action);
-		results.push({
-			id: action.id,
-			status: result.success ? 'PASS' : `FAIL ${result.error}`,
-			core: 'action',
-		});
+		if (result.success) {
+			devLog.info(`         ${action.id} registration successful.`);
+		} else {
+			devLog.error(`         ${action.id} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
  * Initialize and register all core page components
  */
-export function initializeRegistry() {
-	initializeDevices();
-	initializeOrientations();
-	initializePseudos();
-	initializeActions();
+export async function initializeRegistry(): Promise<void> {
+	return new Promise<void>((resolve) => {
+		initializeDevices();
+		initializeOrientations();
+		initializePseudos();
+		initializeActions();
+		resolve();
+	});
 }
-
-// Auto-initialize on module load
-initializeRegistry();

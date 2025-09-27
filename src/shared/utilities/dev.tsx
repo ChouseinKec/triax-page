@@ -61,6 +61,7 @@ export const devLog = {
 	 * devLog.table(data, ['id', 'status']);
 	 */
 	table: (data: unknown[] | Record<string, unknown>, columns?: string[]): void => {
+		return;
 		if (isDevelopment) {console.table(data, columns)};
 	},
 };

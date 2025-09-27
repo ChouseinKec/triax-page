@@ -9,5 +9,293 @@
 
 	letter-spacing: 1px;
 	font-family: 'Geist';
+}
 
+.loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100vw;
+	background: var(--theme-color-primary-tint);
+	color: var(--color-white);
+	font-family: 'Geist';
+	position: relative;
+	overflow: hidden;
+
+	// Ensure content is above the flying elements
+	& > * {
+		position: relative;
+		z-index: 2;
+	}
+}
+
+.flyingRectangles {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.rectangle {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 1px;
+}
+
+.rect1 {
+	animation: flyRect1 15s linear infinite;
+}
+
+.rect2 {
+	animation: flyRect2 10s linear infinite;
+}
+
+.rect3 {
+	animation: flyRect3 7s linear infinite;
+}
+
+.rect4 {
+	animation: flyRect4 12s linear infinite;
+}
+
+.rect5 {
+	animation: flyRect5 9s linear infinite;
+}
+
+.rect6 {
+	animation: flyRect6 6s linear infinite;
+}
+
+.rect7 {
+	animation: flyRect7 18s linear infinite;
+}
+
+.rect8 {
+	animation: flyRect8 11s linear infinite;
+}
+
+.triaxSpinner {
+	position: relative;
+	width: 200px;
+	height: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.orbitalRing {
+	position: absolute;
+	width: 180px;
+	height: 180px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+}
+
+.pulseRing {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	border: 2px solid rgba(255, 255, 255, 0.1);
+	border-radius: 50%;
+	animation: pulseExpand 3s ease-out infinite;
+	opacity: 0;
+}
+
+.loadingText {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	z-index: 10;
+}
+
+.triaxTitle {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin: 0;
+	background: linear-gradient(135deg, white 0%, rgba(255, 255, 255, 0.8) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+.triaxSubtitle {
+	font-size: 1rem;
+	margin: 0.5rem 0 1rem 0;
+	color: rgba(255, 255, 255, 0.8);
+	font-weight: 300;
+	letter-spacing: 2px;
+}
+
+.loadingMessage {
+	font-size: 1rem;
+	margin: 0;
+	color: rgba(255, 255, 255, 0.7);
+	font-weight: 300;
+}
+
+@keyframes flyRect1 {
+	0% {
+		transform: translateX(-50px) translateY(20vh) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.4;
+	}
+	90% {
+		opacity: 0.4;
+	}
+	100% {
+		transform: translateX(calc(100vw + 50px)) translateY(80vh) rotate(720deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect2 {
+	0% {
+		transform: translateX(30vw) translateY(-50px) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.3;
+	}
+	90% {
+		opacity: 0.3;
+	}
+	100% {
+		transform: translateX(70vw) translateY(calc(100vh + 50px)) rotate(-540deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect3 {
+	0% {
+		transform: translateX(calc(100vw + 50px)) translateY(40vh) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.5;
+	}
+	90% {
+		opacity: 0.5;
+	}
+	100% {
+		transform: translateX(-50px) translateY(60vh) rotate(900deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect4 {
+	0% {
+		transform: translateX(50vw) translateY(calc(100vh + 50px)) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.2;
+	}
+	90% {
+		opacity: 0.2;
+	}
+	100% {
+		transform: translateX(80vw) translateY(-50px) rotate(-720deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect5 {
+	0% {
+		transform: translateX(-50px) translateY(70vh) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.35;
+	}
+	90% {
+		opacity: 0.35;
+	}
+	100% {
+		transform: translateX(calc(100vw + 50px)) translateY(10vh) rotate(600deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect6 {
+	0% {
+		transform: translateX(80vw) translateY(-50px) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.45;
+	}
+	90% {
+		opacity: 0.45;
+	}
+	100% {
+		transform: translateX(20vw) translateY(calc(100vh + 50px)) rotate(-800deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect7 {
+	0% {
+		transform: translateX(calc(100vw + 50px)) translateY(calc(100vh + 50px)) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.25;
+	}
+	90% {
+		opacity: 0.25;
+	}
+	100% {
+		transform: translateX(-50px) translateY(-50px) rotate(1000deg);
+		opacity: 0;
+	}
+}
+
+@keyframes flyRect8 {
+	0% {
+		transform: translateX(10vw) translateY(-50px) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: 0.3;
+	}
+	90% {
+		opacity: 0.3;
+	}
+	100% {
+		transform: translateX(90vw) translateY(calc(100vh + 50px)) rotate(-600deg);
+		opacity: 0;
+	}
+}
+
+@keyframes pulseExpand {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(1.5);
+		opacity: 0;
+	}
+}
+
+@keyframes textGlow {
+	0% {
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	}
+	100% {
+		text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+	}
 }

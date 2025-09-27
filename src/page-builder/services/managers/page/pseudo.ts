@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 // Stores
-import usePageStore from '@/src/page-builder/state/stores/page';
+import { usePageStore } from '@/src/page-builder/state/stores/page';
 
 // Types
 import type { PseudoID, PseudoInstance } from '@/src/page-builder/core/page/types/pseudo';

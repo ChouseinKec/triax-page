@@ -1,5 +1,5 @@
 // Stores
-import useBlockStore from '@/src/page-builder/state/stores/block';
+import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Utilities
 import { isBlockDescendant } from '@/src/page-builder/core/block/block/utilities';

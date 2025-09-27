@@ -20,6 +20,10 @@ import { devLog } from '@/src/shared/utilities/dev';
  * const workbenchBars = getAllBars('workbench-123');
  */
 export function getAllBars(workbenchID?: WorkbenchID): BarInstance[] {
+	if (!useLayoutStore) {
+		devLog.warn('[BarManager → getAllBars] Layout store not initialized yet');
+		return [];
+	}
 	const store = useLayoutStore.getState();
 	const bars = Object.values(store.layoutBars);
 	if (!workbenchID) return bars;
@@ -34,6 +38,10 @@ export function getAllBars(workbenchID?: WorkbenchID): BarInstance[] {
  * const bar = getBarById('bar-123');
  */
 export function getBarById(barID: BarID): BarInstance | undefined {
+	if (!useLayoutStore) {
+		devLog.warn('[BarManager → getBarById] Layout store not initialized yet');
+		return undefined;
+	}
 	const store = useLayoutStore.getState();
 	return store.layoutBars[barID];
 }
@@ -46,6 +54,10 @@ export function getBarById(barID: BarID): BarInstance | undefined {
  * const actions = getBarActions('bar-123');
  */
 export function getBarActions(barID: BarID): ActionInstance[] {
+	if (!useLayoutStore) {
+		devLog.warn('[BarManager → getBarActions] Layout store not initialized yet');
+		return [];
+	}
 	const store = useLayoutStore.getState();
 	const bar = store.layoutBars[barID];
 	return bar ? Object.values(bar.actions) : [];
@@ -59,6 +71,13 @@ export function getBarActions(barID: BarID): ActionInstance[] {
  * registerBarAction('bar-123', actionInstance);
  */
 export function registerBarAction(barID: BarID, action: ActionInstance) {
+	if (!useLayoutStore) {
+		devLog.error('[BarManager → registerBarAction] Layout store not initialized yet');
+		return;
+	}
+
+	const store = useLayoutStore.getState();
+
 	if (!barID || typeof barID !== 'string') {
 		devLog.error('[BarManager → registerBarAction] Bar ID is required to register an action.');
 		return;
@@ -72,25 +91,25 @@ export function registerBarAction(barID: BarID, action: ActionInstance) {
 		return;
 	}
 
-	const store = useLayoutStore.getState();
-	const barActions = store.layoutBars[barID]?.actions || {};
+	if (!store.layoutBars[barID]) {
+		devLog.error(`[BarManager → registerBarAction] Bar with ID "${barID}" does not exist.`);
+		return;
+	}
+
+	const barActions = store.layoutBars[barID].actions;
+
+	if (!barActions) {
+		devLog.error(`[BarManager → registerBarAction] Bar with ID "${barID}" does not have an actions record.`);
+		return;
+	}
+
 	if (barActions[action.id]) {
 		devLog.warn(`[BarManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
 		return;
 	}
 
-	const updatedActions = {
-		...barActions,
-		[action.id]: action,
-	};
-
-	const sortedActions = Object.fromEntries(
-		Object.values(updatedActions)
-			.sort((a: ActionInstance, b: ActionInstance) => a.order - b.order)
-			.map((act: ActionInstance) => [act.id, act])
-	);
-
-	store.updateBar(barID, { actions: sortedActions });
+	// Delegate to store for pure state update
+	store.registerBarAction(barID, action);
 }
 
 /**
@@ -101,6 +120,11 @@ export function registerBarAction(barID: BarID, action: ActionInstance) {
  * unregisterBarAction('bar-123', 'action-456');
  */
 export function unregisterBarAction(barID: BarID, actionID: ActionID) {
+	if (!useLayoutStore) {
+		devLog.error('[BarManager → unregisterBarAction] Layout store not initialized yet');
+		return;
+	}
+
 	if (!barID || typeof barID !== 'string') {
 		devLog.error('[BarManager → unregisterBarAction] Bar ID is required to unregister an action.');
 		return;
@@ -116,14 +140,8 @@ export function unregisterBarAction(barID: BarID, actionID: ActionID) {
 		return;
 	}
 
-	const { [actionID]: _, ...restActions } = barActions;
-	const sortedActions = Object.fromEntries(
-		Object.values(restActions)
-			.sort((a: ActionInstance, b: ActionInstance) => a.order - b.order)
-			.map((act: ActionInstance) => [act.id, act])
-	);
-
-	store.updateBar(barID, { actions: sortedActions });
+	// Delegate to store for pure state update
+	store.unregisterBarAction(barID, actionID);
 }
 
 /**
@@ -134,8 +152,12 @@ export function unregisterBarAction(barID: BarID, actionID: ActionID) {
  * const actions = useBarActions('bar-123');
  */
 export function useBarActions(barID: BarID): ActionInstance[] {
+	if (!useLayoutStore) {
+		devLog.warn('[BarManager → useBarActions] Layout store not initialized yet');
+		return [];
+	}
+
 	const actionsRecord = useLayoutStore((state) => state.layoutBars[barID]?.actions);
 
-    
 	return useMemo(() => Object.values(actionsRecord), [actionsRecord]);
 }

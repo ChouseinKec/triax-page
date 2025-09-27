@@ -22,68 +22,81 @@ export type PageStore = {
 };
 
 /**
- * Zustand store for managing page editor state, including device, orientation, and pseudo state.
- * Provides functions for selecting and manipulating the current device, orientation, and pseudo classes.
+ * Creates the page store after initialization.
+ * @returns The initialized Zustand store
  */
-export const usePageStore = create<PageStore>()((set, get) => ({
-	/**
-	 * The currently selected workbench.
-	 * Defaults to 'main'.
-	 */
-	selectedWorkbenchID: 'main',
+export function createPageStore() {
+	return create<PageStore>()((set, get) => ({
+		/**
+		 * The currently selected workbench.
+		 * Defaults to 'main'.
+		 */
+		selectedWorkbenchID: 'main',
 
-	/**
-	 * The currently selected device.
-	 */
-	selectedDeviceID: 'all',
+		/**
+		 * The currently selected device.
+		 */
+		selectedDeviceID: 'all',
 
-	/**
-	 * The currently selected orientation.
-	 */
-	selectedOrientationID: 'all',
+		/**
+		 * The currently selected orientation.
+		 */
+		selectedOrientationID: 'all',
 
-	/**
-	 * The currently selected pseudo class.
-	 */
-	selectedPseudoID: 'all',
+		/**
+		 * The currently selected pseudo class.
+		 */
+		selectedPseudoID: 'all',
 
-	/**
-	 * Sets the current device based on the provided value.
-	 * Throws an error if the device value is invalid.
-	 *
-	 * @param device - The value of the device to select.
-	 */
-	setSelectedDeviceID: (device) => {
-		set({ selectedDeviceID: device });
-	},
+		/**
+		 * Sets the current device based on the provided value.
+		 * Throws an error if the device value is invalid.
+		 *
+		 * @param device - The value of the device to select.
+		 */
+		setSelectedDeviceID: (device) => {
+			set({ selectedDeviceID: device });
+		},
 
-	/**
-	 * Sets the current orientation based on the provided value.
-	 * Throws an error if the orientation value is invalid.
-	 *
-	 * @param  value - The value of the orientation to select.
-	 */
-	setSelectedOrientationID: (value) => {
-		set({ selectedOrientationID: value });
-	},
+		/**
+		 * Sets the current orientation based on the provided value.
+		 * Throws an error if the orientation value is invalid.
+		 *
+		 * @param  value - The value of the orientation to select.
+		 */
+		setSelectedOrientationID: (value) => {
+			set({ selectedOrientationID: value });
+		},
 
-	/**
-	 * Sets the current pseudo class based on the provided value.
-	 * Throws an error if the pseudo class value is invalid.
-	 *
-	 * @param  value - The value of the pseudo class to select.
-	 */
-	setSelectedPseudoID: (value: string) => {
-		set({ selectedPseudoID: value });
-	},
+		/**
+		 * Sets the current pseudo class based on the provided value.
+		 * Throws an error if the pseudo class value is invalid.
+		 *
+		 * @param  value - The value of the pseudo class to select.
+		 */
+		setSelectedPseudoID: (value: string) => {
+			set({ selectedPseudoID: value });
+		},
 
-	/**
-	 * Sets the current workbench.
-	 * @param id - The WorkbenchID to set as current
-	 */
-	setSelectedWorkbenchID: (workbenchID: WorkbenchID) => {
-		set({ selectedWorkbenchID: workbenchID });
-	},
-}));
+		/**
+		 * Sets the current workbench.
+		 * @param id - The WorkbenchID to set as current
+		 */
+		setSelectedWorkbenchID: (workbenchID: WorkbenchID) => {
+			set({ selectedWorkbenchID: workbenchID });
+		},
+	}));
+}
 
-export default usePageStore;
+// Export a reference that will be set after initialization
+export let usePageStore: ReturnType<typeof createPageStore>;
+
+/**
+ * Initialize the page store.
+ */
+export function initializePageStore(): Promise<void> {
+	return new Promise((resolve) => {
+		usePageStore = createPageStore();
+		resolve();
+	});
+}

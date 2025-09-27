@@ -5,7 +5,7 @@ import { renderBlockStyles, renderBlockAttributes } from '@/src/page-builder/cor
 import { getSelectedDeviceID, getAllOrientations, getAllPseudos, useSelectedOrientation, useSelectedPseudo } from '@/src/page-builder/services/managers/page';
 
 // Stores
-import useBlockStore from '@/src/page-builder/state/stores/block';
+import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';

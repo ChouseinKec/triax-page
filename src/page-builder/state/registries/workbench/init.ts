@@ -26,26 +26,24 @@ function initializeWorkbenchs() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[WorkbenchInit] Initializing Workbenches:');
 
 	workbenches.forEach((workbench) => {
 		const result = registerWorkbench(workbench);
-		results.push({
-			id: workbench.id,
-			status: result.success ? 'PASS' : `FAIL: ${result.error}`,
-			core: 'workbench',
-		});
+		if (result.success) {
+			devLog.info(`         ${workbench.id} registration successful.`);
+		} else {
+			devLog.error(`         ${workbench.id} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
  * Initialize and register all core workbench components
  */
-export function initializeRegistry() {
-	initializeWorkbenchs();
+export async function initializeRegistry(): Promise<void> {
+	return new Promise<void>((resolve) => {
+		initializeWorkbenchs();
+		resolve();
+	});
 }
-
-// Auto-initialize on module load
-initializeRegistry();

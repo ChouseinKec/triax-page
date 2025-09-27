@@ -27,26 +27,24 @@ function initializeBlocks() {
 		return;
 	}
 
-	const results: Array<{ id: string; status: string; core: string }> = [];
+	devLog.info('[BlockInit] Initializing Blocks:');
 
 	blocks.forEach((block) => {
 		const result = registerBlock(block);
-		results.push({
-			id: block.type,
-			status: result.success ? 'PASS' : `FAIL: ${result.error}`,
-			core: 'block',
-		});
+		if (result.success) {
+			devLog.info(`         ${block.type} registration successful.`);
+		} else {
+			devLog.error(`         ${block.type} registration failed. ${result.error}`);
+		}
 	});
-
-	devLog.table(results, ['core', 'id', 'status']);
 }
 
 /**
  * Initialize and register all core block components
  */
-export function initializeRegistry() {
-	initializeBlocks();
+export async function initializeRegistry(): Promise<void> {
+	return new Promise<void>((resolve) => {
+		initializeBlocks();
+		resolve();
+	});
 }
-
-// Auto-initialize on module load
-initializeRegistry();
