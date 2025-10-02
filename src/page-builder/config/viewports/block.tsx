@@ -7,7 +7,7 @@ import BlockView from '@/src/page-builder/ui/views/block/component';
 export const BlockViewport: ViewportDefinition = {
     id: 'block',
     title: 'Block Viewport',
-    workspaceID: 'main',
+    workbenchID: 'main',
     render: () => <BlockView />,
 };
 

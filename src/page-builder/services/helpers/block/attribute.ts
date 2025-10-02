@@ -1,5 +1,5 @@
 // Types
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 import type { ValidationResult } from '@/src/shared/types/result';
 
 // Utilities
@@ -15,12 +15,11 @@ import { isAttributeKeyValid, isAttributeValueValid } from '@/src/page-builder/c
  *
  * @example
  * validateAttributeKey('className', 'AttributeManager') → true
- * validateAttributeKey('', 'AttributeManager') → false (logs error)
  */
-export function validateAttributeKey(attributeKey: AttributeKeys): ValidationResult {
-	if (!isAttributeKeyValid(attributeKey)) return { success: false, error: `Invalid key (${attributeKey})` };
+export function validateAttributeKey(attributeKey: unknown): ValidationResult<AttributeKey> {
+	if (!isAttributeKeyValid(attributeKey)) return { valid: false, message: `Invalid key (${attributeKey})` };
 
-	return { success: true };
+	return { valid: true, value: attributeKey as AttributeKey };
 }
 
 /**
@@ -33,10 +32,9 @@ export function validateAttributeKey(attributeKey: AttributeKeys): ValidationRes
  *
  * @example
  * validateAttributeValue('my-class', 'AttributeManager') → true
- * validateAttributeValue('', 'AttributeManager') → false (logs error)
  */
-export function validateAttributeValue(value: string): ValidationResult {
-	if (!isAttributeValueValid(value)) return { success: false, error: `Invalid value (${value})` };
+export function validateAttributeValue(attributeValue: string): ValidationResult<string> {
+	if (!isAttributeValueValid(attributeValue)) return { valid: false, message: `Invalid value (${attributeValue})` };
 
-	return { success: true };
+	return { valid: true, value: attributeValue };
 }

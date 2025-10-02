@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useEffect, memo } from "react";
+import React, { useMemo, memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -12,7 +12,7 @@ import ActionGroup from "@/src/shared/components/group/action/component";
 // Managers
 import { useSelectedWorkbenchID } from "@/src/page-builder/services/managers/page";
 import { useAllPanels, useOpenPanels, togglePanel } from "@/src/page-builder/services/managers/layout/panel";
-import { getAllBars } from "@/src/page-builder/services/managers/layout/bar";
+import { getBarsByWorkbench } from "@/src/page-builder/services/managers/layout/bar";
 
 /**
  * LayoutEditor Component
@@ -24,21 +24,24 @@ const LayoutEditor: React.FC = () => {
     const selectedWorkbench = useSelectedWorkbenchID();
     const allPanels = useAllPanels(selectedWorkbench);
     const openPanels = useOpenPanels(selectedWorkbench);
-    const allBars = getAllBars(selectedWorkbench);
+    const allBars = getBarsByWorkbench(selectedWorkbench);
 
     /**
      * Renders LayoutBar components for all open LayoutBars.
      */
     const barInstances = useMemo(() => (
-        allBars.map(bar => (
-            <LayoutBar
-                key={bar.id}
-                barID={bar.id}
-                position={bar.position}
-                size={bar.size}
-                title={bar.title}
-            />
-        ))
+        allBars && allBars.length > 0
+            ? allBars.map(bar => (
+                <LayoutBar
+                    key={bar.id}
+                    barID={bar.id}
+                    position={bar.position}
+                    size={bar.size}
+                    title={bar.title}
+                    isTransparent={bar.isTransparent}
+                />
+            ))
+            : null
     ), [allBars]
     );
 
@@ -46,17 +49,19 @@ const LayoutEditor: React.FC = () => {
      * Renders LayoutPanel components for all open LayoutPanels.
      */
     const panelInstances = useMemo(() => (
-        openPanels.map(panel => (
-            <LayoutPanel
-                key={panel.id}
-                initialPosition={panel.initialPosition}
-                initialSize={panel.initialSize}
-                initialLocked={panel.initialLocked}
-                title={panel.title}
-                onClose={() => togglePanel(panel.id)}
-                tabs={panel.tabs}
-            />
-        ))
+        openPanels && openPanels.length > 0
+            ? openPanels.map(panel => (
+                <LayoutPanel
+                    key={panel.id}
+                    initialPosition={panel.initialPosition}
+                    initialSize={panel.initialSize}
+                    initialLocked={panel.initialLocked}
+                    title={panel.title}
+                    onClose={() => togglePanel(panel.id)}
+                    tabs={panel.tabs}
+                />
+            ))
+            : null
     ), [openPanels, togglePanel]
     );
 
@@ -64,20 +69,22 @@ const LayoutEditor: React.FC = () => {
      * Renders action buttons for toggling LayoutPanel visibility.
      */
     const panelActionInstances = useMemo(() => (
-        allPanels.length === 0 ? null : (
-            <ActionGroup direction="vertical" className="LayoutEditorActionBar">
-                {allPanels
-                    .map(panel => (
-                        <button
-                            key={panel.id}
-                            onClick={() => togglePanel(panel.id)}
-                            data-is-active={panel.isOpen}
-                        >
-                            {panel.icon}
-                        </button>
-                    ))}
-            </ActionGroup>
-        )
+        allPanels && allPanels.length > 0
+            ? (
+                <ActionGroup direction="vertical" className="LayoutEditorActionBar">
+                    {allPanels
+                        .map(panel => (
+                            <button
+                                key={panel.id}
+                                onClick={() => togglePanel(panel.id)}
+                                data-is-active={panel.isOpen}
+                            >
+                                {panel.icon}
+                            </button>
+                        ))}
+                </ActionGroup>
+            )
+            : null
     ), [allPanels, togglePanel]
     );
 

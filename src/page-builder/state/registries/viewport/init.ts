@@ -28,12 +28,14 @@ function initializeViewports() {
 
 	devLog.info('[ViewportInit] Initializing Viewports:');
 
+	console.log(viewports);
+
 	viewports.forEach((viewport) => {
 		const result = registerViewport(viewport);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${viewport.id} registration successful.`);
 		} else {
-			devLog.error(`         ${viewport.id} registration failed. ${result.error}`);
+			devLog.error(`         ${viewport.id} registration failed. ${result.message}`);
 		}
 	});
 }

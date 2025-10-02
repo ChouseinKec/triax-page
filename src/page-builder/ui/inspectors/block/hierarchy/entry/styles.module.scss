@@ -1,15 +1,20 @@
 @use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
-.BlocksHierarchyEntry {
+.Entry {
 	display: flex;
 	flex-direction: column;
 
-	> :global(.EntryButtonReveal) {
-		gap: var(--size-md);
+	:global(.Float) {
+		background: var(--theme-color-primary-tint) !important;
 	}
 }
 
-.BlocksHierarchyEntry__Content {
+.Entry__Action {
+	width: 100%;
+	@include inputMixins.components--button($background: none, $justify: flex-start, $gap: var(--size-xl));
+}
+
+.Entry__Content {
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-md);
@@ -28,4 +33,34 @@
 
 		background-color: var(--theme-color-primary-tint);
 	}
+}
+
+.Entry__Reveal {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-md);
+	position: relative;
+}
+
+.Entry__RevealButton {
+	justify-content: space-between !important;
+
+	@include inputMixins.components--button($background: none);
+
+	span {
+		width: auto;
+		display: flex;
+		align-items: center;
+		gap: var(--size-sm);
+		overflow: hidden;
+	}
+}
+
+.Entry__RevealArrow {
+	position: absolute;
+	top: 0;
+	right: 0;
+	@include inputMixins.components--button($background: none);
+	@include inputMixins.icon-arrow();
 }

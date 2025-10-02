@@ -11,7 +11,7 @@ import { getSelectedBlockID, useSelectedBlockType, addBlock, getRegisteredBlocks
 import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Types
-import type { BlockDefinition, BlockTypes } from "@/src/page-builder/core/block/block/types";
+import type { BlockDefinition, BlockType } from "@/src/page-builder/core/block/block/types";
 import type { BlockLiblaryProps } from "@/src/page-builder/ui/inspectors/block/types/liblary";
 
 /**
@@ -26,7 +26,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
     const [search, setSearch] = useState("");
 
     // Handle adding a new block, optionally nesting inside the selected block
-    const handleAddBlock = useCallback((blockType: BlockTypes) => {
+    const handleAddBlock = useCallback((blockType: BlockType) => {
         const selectedBlockID = getSelectedBlockID();
         if (!selectedBlockID) return addBlock(blockType);
 

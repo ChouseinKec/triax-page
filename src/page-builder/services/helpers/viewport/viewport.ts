@@ -2,28 +2,81 @@
 import type { ViewportDefinition } from '@/src/page-builder/core/editor/viewport/types';
 import type { ValidationResult } from '@/src/shared/types/result';
 
+// Utilities
+import { isViewportDefinitionValid, isViewportIDValid, isViewportTitleValid, isViewportRenderValid } from '@/src/page-builder/core/editor/viewport/utilities/viewport';
+
+// Helpers
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
+
 /**
- * Type guard to check if a value is a valid ViewportDefinition shape
+ * Validates a viewport ID for viewport operations.
+ * Checks if the ID is a valid string identifier.
+ *
+ * @param viewportID - The viewport ID to validate
+ * @returns ValidationResult containing validity and the validated string if valid
+ *
+ * @example
+ * validateViewportID('viewport-123') → { valid: true, value: 'viewport-123' }
  */
-function isViewportDefinitionShape(value: unknown): value is Record<keyof ViewportDefinition, unknown> {
-	return typeof value === 'object' && value !== null && 'id' in value && 'title' in value && 'workspaceID' in value && 'render' in value;
+export function validateViewportID(viewportID: unknown): ValidationResult<string> {
+	if (!isViewportIDValid(viewportID)) return { valid: false, message: `Viewport ID must be a valid string, got: ${viewportID}` };
+	return { valid: true, value: viewportID as string };
 }
 
 /**
- * Validates a viewport definition
+ * Validates a viewport title for viewport operations.
+ * Checks if the title is a valid string.
+ *
+ * @param viewportTitle - The viewport title to validate
+ * @returns ValidationResult containing validity and the validated string if valid
+ *
+ * @example
+ * validateViewportTitle('My Viewport') → { valid: true, value: 'My Viewport' }
  */
-export function validateViewport(viewport: unknown): ValidationResult {
-	if (!viewport) return { success: false, error: 'Viewport definition is required' };
+export function validateViewportTitle(viewportTitle: unknown): ValidationResult<string> {
+	if (!isViewportTitleValid(viewportTitle)) return { valid: false, message: `Viewport title must be a valid string, got: ${viewportTitle}` };
+	return { valid: true, value: viewportTitle as string };
+}
 
-	if (!isViewportDefinitionShape(viewport)) return { success: false, error: `Viewport must be an object with required properties, got: ${typeof viewport}` };
+/**
+ * Validates a viewport render for viewport operations.
+ * Checks if the render is a valid function.
+ *
+ * @param viewportRender - The viewport render to validate
+ * @returns ValidationResult containing validity and the validated Function if valid
+ *
+ * @example
+ * validateViewportRender(() => <div>Viewport</div>) → { valid: true, value: () => <div>Viewport</div> }
+ */
+export function validateViewportRender(viewportRender: unknown): ValidationResult<Function> {
+	if (!isViewportRenderValid(viewportRender)) return { valid: false, message: `Viewport render must be a valid function, got: ${typeof viewportRender}` };
+	return { valid: true, value: viewportRender as Function };
+}
 
-	if (typeof viewport.id !== 'string' || viewport.id.length === 0) return { success: false, error: `Viewport requires a valid string id, got: ${viewport.id}` };
+/**
+ * Validates a complete viewport definition for viewport operations.
+ * Checks if the definition has all required valid properties including ID, title, workbench ID, and render.
+ *
+ * @param viewportDefinition - The viewport definition to validate
+ * @returns ValidationResult containing validity and the validated ViewportDefinition if valid
+ *
+ * @example
+ * validateViewport({ id: 'vp-1', title: 'My Viewport', workbenchID: 'wb-1', render: () => <div>Content</div> }) → { valid: true, value: {...} }
+ */
+export function validateViewport(viewportDefinition: unknown): ValidationResult<ViewportDefinition> {
+	if (!isViewportDefinitionValid(viewportDefinition)) return { valid: false, message: `Viewport definition must be an object with required properties, got: ${typeof viewportDefinition}` };
 
-	if (typeof viewport.title !== 'string' || viewport.title.length === 0) return { success: false, error: `Viewport "${viewport.id}" requires a valid title, got: ${viewport.title}` };
+	const idValidation = validateViewportID(viewportDefinition.id);
+	if (!idValidation.valid) return idValidation;
 
-	if (typeof viewport.workspaceID !== 'string' || viewport.workspaceID.length === 0) return { success: false, error: `Viewport "${viewport.id}" requires a valid workspaceID, got: ${viewport.workspaceID}` };
+	const titleValidation = validateViewportTitle(viewportDefinition.title);
+	if (!titleValidation.valid) return titleValidation;
 
-	if (typeof viewport.render !== 'function') return { success: false, error: `Viewport "${viewport.id}" requires a render function, got: ${typeof viewport.render}` };
+	const workbenchIDValidation = validateWorkbenchID(viewportDefinition.workbenchID);
+	if (!workbenchIDValidation.valid) return workbenchIDValidation;
 
-	return { success: true };
+	const renderValidation = validateViewportRender(viewportDefinition.render);
+	if (!renderValidation.valid) return renderValidation;
+
+	return { valid: true, value: viewportDefinition as ViewportDefinition };
 }

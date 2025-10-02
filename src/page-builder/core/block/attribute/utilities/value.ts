@@ -11,8 +11,8 @@
  * isAttributeValueValid(123, 'BlockStore') → false (logs error)
  * isAttributeValueValid('', 'BlockStore') → true (empty strings are allowed)
  */
-export function isAttributeValueValid(value: string): boolean {
-	if (typeof value !== 'string') return false;
+export function isAttributeValueValid(attributeValue: unknown): boolean {
+	if (typeof attributeValue !== 'string') return false;
 	return true;
 }
 
@@ -29,17 +29,17 @@ export function isAttributeValueValid(value: string): boolean {
  * normalizeKeyValue('my-class') // → 'my-class'
  * normalizeKeyValue('') // → ''
  */
-export function normalizeAttributeValue(value: string): string | boolean {
+export function normalizeAttributeValue(attributeValue: string): string | boolean {
 	// Handle edge cases gracefully
-	if (typeof value !== 'string') return value;
+	if (typeof attributeValue !== 'string') return attributeValue;
 
 	// Convert string boolean values to actual booleans
-	if (value === 'true') {
+	if (attributeValue === 'true') {
 		return true;
-	} else if (value === 'false') {
+	} else if (attributeValue === 'false') {
 		return false;
 	} else {
 		// Return string values as-is
-		return value;
+		return attributeValue;
 	}
 }

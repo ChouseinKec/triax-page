@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -11,8 +11,6 @@ import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlock
 // Components
 import Entry from "./entry/component";
 
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
 
 /**
  * BlocksHierarchy Component
@@ -23,14 +21,15 @@ import { devLog } from "@/src/shared/utilities/dev";
 const BlocksHierarchy: React.FC = () => {
     const rootBlock = useBlock('body');
 
+
     // Select next block on ArrowDown
     const handleSelectNext = (e: React.KeyboardEvent) => {
         if (e.key !== "ArrowDown") return;
 
         const currentBlockID = getSelectedBlockID();
-        if (!currentBlockID) return devLog.warn("No selected block");
+        if (!currentBlockID) return;
 
-        const nextBlock = getNextBlock();
+        const nextBlock = getNextBlock(currentBlockID);
         if (!nextBlock) return;
 
         selectBlock(nextBlock.id);
@@ -41,9 +40,9 @@ const BlocksHierarchy: React.FC = () => {
         if (e.key !== "ArrowUp") return;
 
         const currentBlockID = getSelectedBlockID();
-        if (!currentBlockID) return devLog.warn("No selected block");
+        if (!currentBlockID) return;
 
-        const previousBlock = getPreviousBlock();
+        const previousBlock = getPreviousBlock(currentBlockID);
         if (!previousBlock) return;
 
         selectBlock(previousBlock.id);
@@ -58,10 +57,13 @@ const BlocksHierarchy: React.FC = () => {
         }
     };
 
+
+
     return (
         <div
             className={CSS.BlocksHierarchy}
             onKeyUp={handleKeyUp}
+
             tabIndex={0}
         >
 

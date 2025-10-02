@@ -22,65 +22,67 @@
 	}
 }
 
-.LayoutPanel__ResizeHandle {
-	position: absolute;
+.LayoutPanel__ResizeHandles {
+	div {
+		position: absolute;
 
-	width: 16px;
-	height: 16px;
-	background: transparent;
-	z-index: 2;
+		width: 16px;
+		height: 16px;
+		background: transparent;
+		z-index: 2;
 
-	&[data-position='top-left'] {
-		left: 0;
-		top: 0;
-		cursor: nwse-resize;
-		border-top-left-radius: var(--size-md);
-	}
-	&[data-position='top-right'] {
-		right: 0;
-		top: 0;
-		cursor: nesw-resize;
-		border-top-right-radius: var(--size-md);
-	}
-	&[data-position='bottom-left'] {
-		left: 0;
-		bottom: 0;
-		cursor: nesw-resize;
-		border-bottom-left-radius: var(--size-md);
-	}
-	&[data-position='bottom-right'] {
-		right: 0;
-		bottom: 0;
-		cursor: nwse-resize;
-		border-bottom-right-radius: var(--size-md);
-	}
-	&[data-position='top'] {
-		left: 50%;
-		top: 0;
-		transform: translateX(-50%);
-		cursor: ns-resize;
-		width: 50%;
-	}
-	&[data-position='right'] {
-		right: 0;
-		top: 50%;
-		transform: translateY(-50%);
-		cursor: ew-resize;
-		height: 50%;
-	}
-	&[data-position='bottom'] {
-		left: 50%;
-		bottom: 0;
-		transform: translateX(-50%);
-		cursor: ns-resize;
-		width: 50%;
-	}
-	&[data-position='left'] {
-		left: 0;
-		top: 50%;
-		transform: translateY(-50%);
-		cursor: ew-resize;
-		height: 50%;
+		&[data-position='top-left'] {
+			left: 0;
+			top: 0;
+			cursor: nwse-resize;
+			border-top-left-radius: var(--size-md);
+		}
+		&[data-position='top-right'] {
+			right: 0;
+			top: 0;
+			cursor: nesw-resize;
+			border-top-right-radius: var(--size-md);
+		}
+		&[data-position='bottom-left'] {
+			left: 0;
+			bottom: 0;
+			cursor: nesw-resize;
+			border-bottom-left-radius: var(--size-md);
+		}
+		&[data-position='bottom-right'] {
+			right: 0;
+			bottom: 0;
+			cursor: nwse-resize;
+			border-bottom-right-radius: var(--size-md);
+		}
+		&[data-position='top'] {
+			left: 50%;
+			top: 0;
+			transform: translateX(-50%);
+			cursor: ns-resize;
+			width: 50%;
+		}
+		&[data-position='right'] {
+			right: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			cursor: ew-resize;
+			height: 50%;
+		}
+		&[data-position='bottom'] {
+			left: 50%;
+			bottom: 0;
+			transform: translateX(-50%);
+			cursor: ns-resize;
+			width: 50%;
+		}
+		&[data-position='left'] {
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			cursor: ew-resize;
+			height: 50%;
+		}
 	}
 }
 

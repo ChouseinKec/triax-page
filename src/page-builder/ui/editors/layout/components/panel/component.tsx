@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, memo, useEffect, useCallback, useMemo, useState, useLayoutEffect, } from "react";
+import React, { useRef, memo, useCallback, useMemo, useState, useLayoutEffect, } from "react";
 
 // Components
 import ActionGroup from "@/src/shared/components/group/action/component";
@@ -57,11 +57,12 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
     // Determine the initial tab ID 
     const [currentTabID, setCurrentTabID] = useState<string>(Object.keys(tabs)[0]);
 
-    // Drag hook
-    const { startDrag, stopDrag, handleMouseMove: handleDragMouseMove, dragging } = useDrag(position, setPosition);
-
     // Resize hook
-    const { startResize, stopResize, handleMouseMove: handleResizeMouseMove, resizing, } = useResize(initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition);
+    const { handles, resizing } = useResize(layoutPanelRef, initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition, locked);
+
+    // Drag hook
+    const { dragging } = useDrag(layoutPanelRef, setPosition, (e) => !(e.target as Element)?.closest('[data-position]'), locked);
+
 
     /**
      * Memoized inline styles for the LayoutPanel.
@@ -86,35 +87,6 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
     );
 
     /**
-     * Handles mouse down events for both dragging and resizing using event delegation.
-     * If a resize handle is clicked, starts resizing; otherwise, starts dragging.
-     */
-    const handleMouseDown = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
-            if (locked) return;
-            const target = e.target as HTMLElement;
-            const side = target.dataset.position as PanelSide | undefined;
-
-            if (side) {
-                e.stopPropagation();
-                startResize(e, side);
-            } else {
-                startDrag(e);
-            }
-        },
-        [startDrag, startResize, locked]
-    );
-
-    /**
-     * Handles mouse up events to stop dragging or resizing.
-     */
-    const handleMouseUp = useCallback(() => {
-        stopDrag();
-        stopResize();
-    }, [stopDrag, stopResize]
-    );
-
-    /**
      * Toggles the locked state of the LayoutPanel.
      */
     const handleLock = useCallback(() => {
@@ -128,39 +100,6 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
     const handleClose = useCallback(() => {
         onClose();
     }, [onClose]
-    );
-
-    /**
-     * Handles global mouse move events for dragging and resizing.
-     * Delegates to the appropriate handler.
-     */
-    const handleMouseMove = useCallback(
-        (e: MouseEvent) => {
-            if (locked) return;
-            if (dragging.current) {
-                handleDragMouseMove(e);
-                return;
-            }
-            if (resizing.current) {
-                handleResizeMouseMove(e);
-                return;
-            }
-        },
-        [handleDragMouseMove, handleResizeMouseMove, dragging, resizing, locked]
-    );
-
-    /**
-     * Attach global mouse listeners for dragging/resizing.
-     * Cleans up listeners on unmount or dependency change.
-     */
-    useEffect(() => {
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseup", handleMouseUp);
-        return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseup", handleMouseUp);
-        };
-    }, [handleMouseMove, handleMouseUp]
     );
 
     /**
@@ -230,7 +169,6 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
             className={CSS.LayoutPanel}
             ref={layoutPanelRef}
             style={styles}
-            onMouseDown={handleMouseDown}
         >
             {/* Top bar with title and actions */}
             <div className={CSS.LayoutPanel__Header}>
@@ -240,19 +178,10 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
                 </ActionGroup>
             </div>
 
-            {/* Render all resize handles with data-position for event delegation */}
-            {!locked && (
-                <>
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="top-right" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="top-left" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="bottom-left" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="bottom-right" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="top" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="right" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="bottom" title="Resize" />
-                    <div className={CSS.LayoutPanel__ResizeHandle} data-position="left" title="Resize" />
-                </>
-            )}
+            {/* Render resize handles */}
+            <div className={CSS.LayoutPanel__ResizeHandles}>
+                {handles}
+            </div>
 
             {/* Render tab elements if there are multiple tabs */}
             {tabActions.length > 1 && (

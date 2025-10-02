@@ -10,7 +10,7 @@ import { StyleDefinitions } from '@/src/page-builder/core/block/style/constants'
 import BlockStylesValue from '@/src/page-builder/ui/inspectors/block/style/value/component';
 
 // Types
-import { StyleKeys } from '@/src/page-builder/core/block/style/types';
+import { StyleKey } from '@/src/page-builder/core/block/style/types';
 
 // Utilties
 import { devRender } from '@/src/shared/utilities/dev';
@@ -19,7 +19,7 @@ import { devRender } from '@/src/shared/utilities/dev';
  * Memoized component to render the appropriate value editor for a CSS property
  * Handles data fetching and component selection reactively
  */
-const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: string; propertyName: StyleKeys }): React.ReactElement | null => {
+const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: string; propertyName: StyleKey }): React.ReactElement | null => {
     const value = useBlockStyle(blockID, propertyName);
     const property = StyleDefinitions[propertyName];
 

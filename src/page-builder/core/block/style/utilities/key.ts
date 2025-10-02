@@ -1,7 +1,6 @@
 // Types
-import type { StyleKeys } from '@/src/page-builder/core/block/style/types';
+import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 import type { Side, Corner } from '@/src/shared/components/select/position/types';
-
 
 /**
  * Validates if a given CSS property is valid according to the defined CSS properties.
@@ -16,9 +15,9 @@ import type { Side, Corner } from '@/src/shared/components/select/position/types
  * isStyleKeyValid('invalid-property', 'StyleManager') → false (logs error)
  * isStyleKeyValid('', 'StyleManager') → false (logs error)
  */
-export function isStyleKeyValid(key: unknown): key is StyleKeys {
+export function isStyleKeyValid(styleKey: unknown): styleKey is StyleKey {
 	// Check if key is a non-empty string
-	if (!key || typeof key !== 'string' || key.trim().length === 0) return false;
+	if (!styleKey || typeof styleKey !== 'string' || styleKey.trim().length === 0) return false;
 
 	return true;
 }
@@ -43,28 +42,28 @@ export function isStyleKeyValid(key: unknown): key is StyleKeys {
  * generateStyleKey('background', undefined, 'color'); → 'background-color'
  * generateStyleKey('color'); → 'color'
  */
-export function generateStyleKey(key: unknown, position?: Side | Corner, suffix?: string): StyleKeys | undefined {
+export function generateStyleKey(styleKey: unknown, position?: Side | Corner, suffix?: string): StyleKey | undefined {
 	// Validate base property
-	if (!isStyleKeyValid(key)) return undefined;
+	if (!isStyleKeyValid(styleKey)) return undefined;
 
 	// Pattern 4: Just the base property (e.g., 'color', 'display')
 	if (!position && !suffix) {
-		return key as StyleKeys;
+		return styleKey as StyleKey;
 	}
 
 	// Pattern 3: property-suffix (e.g., 'background-color', 'font-size')
 	if (!position && suffix) {
-		return `${key}-${suffix}` as StyleKeys;
+		return `${styleKey}-${suffix}` as StyleKey;
 	}
 
 	// Pattern 1: property-position (e.g., 'padding-top', 'margin-left')
 	if (position && !suffix) {
-		return `${key}-${position}` as StyleKeys;
+		return `${styleKey}-${position}` as StyleKey;
 	}
 
 	// Pattern 2: property-position-suffix (e.g., 'border-top-width', 'border-left-style')
 	if (position && suffix) {
-		return `${key}-${position}-${suffix}` as StyleKeys;
+		return `${styleKey}-${position}-${suffix}` as StyleKey;
 	}
 
 	// Fallback (should never reach here)
@@ -76,10 +75,10 @@ export function generateStyleKey(key: unknown, position?: Side | Corner, suffix?
  * @param key - The camelCase property name (e.g., 'backgroundColor')
  * @returns The kebab-case property name (e.g., 'background-color')
  */
-export function formatStyleKey(key: string): string | undefined {
+export function formatStyleKey(styleKey: string): string | undefined {
 	// Validate key
-	if (!isStyleKeyValid(key)) return undefined;
+	if (!isStyleKeyValid(styleKey)) return undefined;
 
 	// Convert camelCase to kebab-case
-	return key.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+	return styleKey.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 }

@@ -1,4 +1,4 @@
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 
 /**
  * All supported HTML element tags.
@@ -16,7 +16,7 @@ export type ElementDescription = string;
  */
 export interface ElementDefinition {
 	/** Array of supported attributes for this element */
-	attributes: AttributeKeys[];
+	attributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */
 	allowedContent: ElementTags[] | null;
 	/** Human-readable description of the element */

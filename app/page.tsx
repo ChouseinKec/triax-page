@@ -23,12 +23,12 @@ export default function Home() {
   useEffect(() => {
     initCoordinator.initialize()
       .then((result) => {
-        if (result.success) {
+        if (result.valid) {
           setTimeout(() => {
             setIsReady(true);
           }, 3000);
         } else {
-          devLog.error('Initialization error:', result.error || 'Unknown initialization error');
+          devLog.error('Initialization error:', result.message || 'Unknown initialization error');
         }
       })
       .catch((error) => {
@@ -40,8 +40,14 @@ export default function Home() {
     return <TriaxLoadingSpinner message="Loading...." />;
   }
 
+
+  const handleRightClick = (e: React.MouseEvent) => {
+    // e.preventDefault();
+  }
+
   return (
-    <main className={CSS.main}>
+    <main className={CSS.main} onContextMenu={handleRightClick}
+    >
       <PageEditor />
     </main>
   );

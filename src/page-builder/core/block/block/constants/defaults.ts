@@ -1,7 +1,7 @@
-import type { StyleKeys } from '@/src/page-builder/core/block/style/types';
+import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 import type { PseudoName } from '@/src/page-builder/core/page/types/pseudo';
 
-export const BlockStyleDefaults: Partial<Record<PseudoName, Partial<Record<StyleKeys, string>>>> = {
+export const BlockStyleDefaults: Partial<Record<PseudoName, Partial<Record<StyleKey, string>>>> = {
 	all: {
 		'padding-top': '10px',
 		'padding-bottom': '10px',

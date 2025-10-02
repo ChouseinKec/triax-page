@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 // Types
 import type { BlockStylesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
 import type { Side } from "@/src/shared/components/select/position/types";
-import type { StyleKeys } from "@/src/page-builder/core/block/style/types";
+import type { StyleKey } from "@/src/page-builder/core/block/style/types";
 
 // Components
 import PositionSelect from "@/src/shared/components/select/position/component";
@@ -139,8 +139,8 @@ export const useSizeLayout = (): BlockStylesLayoutProps => {
                     {
                         label: currentSide || "...",
                         disabled: selectedBlockID ? (!["absolute", "fixed", "sticky"].includes(positionValue) || !currentSide) : true,
-                        property: currentSide ? currentSide.toLowerCase() as StyleKeys : "top",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName={currentSide?.toLowerCase() as StyleKeys || "top"} />, [selectedBlockID, currentSide]),
+                        property: currentSide ? currentSide.toLowerCase() as StyleKey : "top",
+                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName={currentSide?.toLowerCase() as StyleKey || "top"} />, [selectedBlockID, currentSide]),
                     },
 
                     // Z-Index

@@ -8,6 +8,7 @@ import CSS from "./styles.module.scss";
 // Components
 import Options from "@/src/shared/components/select/options/component";
 import FloatReveal from "@/src/shared/components/reveal/float/component";
+import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
 
 // Types
 import { RadioSelectProps } from "@/src/shared/components/select/radio/types";
@@ -51,9 +52,9 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
             />
 
             {isOverflowing &&
-                <FloatReveal
+                <TooltipReveal
                     targetRef={containerRef}
-                    position="top"
+                    anchor="top"
                     hoverDelay={600}
                     className="RadioSelectFloat"
                 >
@@ -64,7 +65,7 @@ const RadioSelect: React.FC<RadioSelectProps> = (props: RadioSelectProps): React
                         onChange={onChange}
                         className="RadioSelect"
                     />
-                </FloatReveal>
+                </TooltipReveal>
             }
         </div>
     );

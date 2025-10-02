@@ -1,5 +1,5 @@
 // Types
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 
 // Constants
 import { AttributeDefinitions } from '@/src/page-builder/core/block/attribute/constants';
@@ -16,12 +16,12 @@ import { AttributeDefinitions } from '@/src/page-builder/core/block/attribute/co
  * isAttributeKeyValid('invalidAttr') → false
  * isAttributeKeyValid('') → false
  */
-export function isAttributeKeyValid(key: AttributeKeys): key is AttributeKeys {
+export function isAttributeKeyValid(attributeKey: unknown): attributeKey is AttributeKey {
 	// Check if property is a non-empty string
-	if (!key || typeof key !== 'string' || key.trim().length === 0) return false;
+	if (!attributeKey || typeof attributeKey !== 'string' || attributeKey.trim().length === 0) return false;
 
 	// Check if property is a valid HTML attribute
-	if (!(key in AttributeDefinitions)) return false;
+	if (!(attributeKey in AttributeDefinitions)) return false;
 
 	return true;
 }
@@ -39,7 +39,7 @@ export function isAttributeKeyValid(key: AttributeKeys): key is AttributeKeys {
  * normalizeAttributeKey('id') // → 'id'
  * normalizeAttributeKey('disabled') // → 'disabled'
  */
-export function normalizeAttributeKey(attributeKey: AttributeKeys): string {
+export function normalizeAttributeKey(attributeKey: AttributeKey): string {
 	if (!isAttributeKeyValid(attributeKey)) return attributeKey;
 
 	switch (attributeKey) {
@@ -50,4 +50,3 @@ export function normalizeAttributeKey(attributeKey: AttributeKeys): string {
 			return attributeKey;
 	}
 }
-

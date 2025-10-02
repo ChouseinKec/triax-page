@@ -35,7 +35,7 @@ Sets the currently selected block by ID.
 Adds a new block to the editor, optionally as a child of another block.
 
 - **Parameters:**
-  - `type: BlockTypes` — The type of block to add.
+  - `type: BlockType` — The type of block to add.
   - `parentID?: string` — Optional parent block ID.
 - **Returns:** The newly created block instance.
 

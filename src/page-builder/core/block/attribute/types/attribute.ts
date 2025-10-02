@@ -66,7 +66,7 @@ export type AttributeSyntaxes = AttributeListSyntax | AttributeNumberSyntax | At
  * All supported HTML attribute keys.
  * Includes global, ARIA, and element-specific attributes.
  */
-export type AttributeKeys = 'accessKey' | 'autoFocus' | 'class' | 'contentEditable' | 'dir' | 'draggable' | 'enterKeyHint' | 'hidden' | 'id' | 'inert' | 'inputMode' | 'itemid' | 'itemprop' | 'itemref' | 'itemscope' | 'itemtype' | 'lang' | 'popover' | 'spellCheck' | 'tabIndex' | 'title' | 'translate' | 'role' | 'aria-atomic' | 'aria-busy' | 'aria-controls' | 'aria-current' | 'aria-describedby' | 'aria-description' | 'aria-details' | 'aria-disabled' | 'aria-dropeffect' | 'aria-errormessage' | 'aria-flowto' | 'aria-grabbed' | 'aria-haspopup' | 'aria-hidden' | 'aria-invalid' | 'aria-keyshortcuts' | 'aria-label' | 'aria-labelledby' | 'aria-live' | 'aria-owns' | 'aria-relevant' | 'aria-roledescription' | 'cite' | 'datetime' | 'text';
+export type AttributeKey = 'accessKey' | 'autoFocus' | 'class' | 'contentEditable' | 'dir' | 'draggable' | 'enterKeyHint' | 'hidden' | 'id' | 'inert' | 'inputMode' | 'itemid' | 'itemprop' | 'itemref' | 'itemscope' | 'itemtype' | 'lang' | 'popover' | 'spellCheck' | 'tabIndex' | 'title' | 'translate' | 'role' | 'aria-atomic' | 'aria-busy' | 'aria-controls' | 'aria-current' | 'aria-describedby' | 'aria-description' | 'aria-details' | 'aria-disabled' | 'aria-dropeffect' | 'aria-errormessage' | 'aria-flowto' | 'aria-grabbed' | 'aria-haspopup' | 'aria-hidden' | 'aria-invalid' | 'aria-keyshortcuts' | 'aria-label' | 'aria-labelledby' | 'aria-live' | 'aria-owns' | 'aria-relevant' | 'aria-roledescription' | 'cite' | 'datetime' | 'text';
 
 /**
  * Categories for organizing HTML attributes.
@@ -78,13 +78,15 @@ export type AttributeCategories = 'global' | 'accesibility' | 'schema' | 'specif
  */
 export type AttributeDescription = string;
 
+export type AttributeValue = string;
+
 /**
  * Complete definition of an HTML attribute.
  * Includes name, syntax, description, and category information.
  */
 export interface AttributeDefinition {
 	/** The attribute name/key */
-	name: AttributeKeys;
+	name: AttributeKey;
 	/** Syntax definition for the attribute's values */
 	syntax: AttributeSyntaxes;
 	/** Human-readable description of the attribute */

@@ -1,61 +1,32 @@
 // Types
-import type { BlockAttributes, BlockStyles, BlockID, BlockTypes, BlockRender, BlockChildren, BlockPermitedContent, BlockPermitedParent, BlockCategory, BlockIcon } from '@/src/page-builder/core/block/block/types';
+import type { BlockInstance, BlockDefinition, BlockAttributes, BlockStyles, BlockID, BlockType, BlockRender, BlockPermitedContent, BlockPermitedParent, BlockCategory, BlockIcon } from '@/src/page-builder/core/block/block/types';
 import type { ElementTags } from '@/src/page-builder/core/block/element/types';
 
-/**
- * Validates the block type.
- *
- * @param type - The block type to validate
- * @returns True if valid BlockTypes, false otherwise
- *
- * @example
- * isBlockTypeValid('text') // → true
- * isBlockTypeValid('invalid') // → false
- */
-export function isBlockTypeValid(type: unknown): type is BlockTypes {
-	return typeof type === 'string' && type.length > 0;
+export function isBlockInstanceValid(blockInstance: unknown): blockInstance is Record<keyof BlockInstance, unknown> {
+	return (
+		typeof blockInstance === 'object' && //
+		blockInstance !== null &&
+		'id' in blockInstance &&
+		'type' in blockInstance &&
+		'parentID' in blockInstance &&
+		'contentIDs' in blockInstance &&
+		'attributes' in blockInstance &&
+		'styles' in blockInstance
+	);
 }
 
-/**
- * Validates the block tag.
- *
- * @param tag - The block tag to validate
- * @returns True if valid ElementTags, false otherwise
- *
- * @example
- * isBlockTagValid('div') // → true
- * isBlockTagValid('invalid') // → false
- */
-export function isBlockTagValid(tag: unknown): tag is ElementTags {
-	return typeof tag === 'string' && tag.length > 0;
-}
-
-/**
- * Validates the block tags array.
- *
- * @param tags - The block tags array to validate
- * @returns True if valid ElementTags array, false otherwise
- *
- * @example
- * isBlockTagsValid(['div', 'span']) // → true
- * isBlockTagsValid([]) // → false
- */
-export function isBlockTagsValid(tags: unknown): tags is ElementTags[] {
-	return Array.isArray(tags) && tags.length > 0 && tags.every((tag) => typeof tag === 'string' && tag.length > 0);
-}
-
-/**
- * Validates the block render function.
- *
- * @param render - The block render function to validate
- * @returns True if valid BlockRender function, false otherwise
- *
- * @example
- * isBlockRenderValid((instance, children) => <div>{children}</div>) // → true
- * isBlockRenderValid('not-a-function') // → false
- */
-export function isBlockRenderValid(render: unknown): render is BlockRender {
-	return typeof render === 'function';
+export function isBlockDefinitionValid(blockDefinition: unknown): blockDefinition is Record<keyof BlockDefinition, unknown> {
+	return (
+		typeof blockDefinition === 'object' && //
+		blockDefinition !== null &&
+		'type' in blockDefinition &&
+		'tags' in blockDefinition &&
+		'permittedContent' in blockDefinition &&
+		'permittedParent' in blockDefinition &&
+		'icon' in blockDefinition &&
+		'category' in blockDefinition &&
+		'render' in blockDefinition
+	);
 }
 
 /**
@@ -72,6 +43,62 @@ export function isBlockIDValid(blockID: unknown): blockID is BlockID {
 }
 
 /**
+ * Validates the block tag.
+ *
+ * @param tag - The block tag to validate
+ * @returns True if valid ElementTags, false otherwise
+ *
+ * @example
+ * isBlockTagValid('div') // → true
+ * isBlockTagValid('invalid') // → false
+ */
+export function isBlockTagValid(blockTag: unknown): blockTag is ElementTags {
+	return typeof blockTag === 'string' && blockTag.length > 0;
+}
+
+/**
+ * Validates the block type.
+ *
+ * @param type - The block type to validate
+ * @returns True if valid BlockType, false otherwise
+ *
+ * @example
+ * isBlockTypeValid('text') // → true
+ * isBlockTypeValid('invalid') // → false
+ */
+export function isBlockTypeValid(blockType: unknown): blockType is BlockType {
+	return typeof blockType === 'string' && blockType.length > 0;
+}
+
+/**
+ * Validates the block tags array.
+ *
+ * @param tags - The block tags array to validate
+ * @returns True if valid ElementTags array, false otherwise
+ *
+ * @example
+ * isBlockTagsValid(['div', 'span']) // → true
+ * isBlockTagsValid([]) // → false
+ */
+export function isBlockTagsValid(blockTags: unknown): blockTags is ElementTags[] {
+	return Array.isArray(blockTags) && blockTags.length > 0 && blockTags.every((blockTag) => typeof blockTag === 'string' && blockTag.length > 0);
+}
+
+/**
+ * Validates the block render function.
+ *
+ * @param render - The block render function to validate
+ * @returns True if valid BlockRender function, false otherwise
+ *
+ * @example
+ * isBlockRenderValid((instance, children) => <div>{children}</div>) // → true
+ * isBlockRenderValid('not-a-function') // → false
+ */
+export function isBlockRenderValid(blockRender: unknown): blockRender is BlockRender {
+	return typeof blockRender === 'function';
+}
+
+/**
  * Validates the block attributes object.
  *
  * @param attributes - The attributes object to validate
@@ -80,8 +107,8 @@ export function isBlockIDValid(blockID: unknown): blockID is BlockID {
  * @example
  * isBlockAttributesValid(someObject) // → true or false
  */
-export function isBlockAttributesValid(attributes: unknown): attributes is BlockAttributes {
-	if (!attributes || typeof attributes !== 'object') return false;
+export function isBlockAttributesValid(blockAttributes: unknown): blockAttributes is BlockAttributes {
+	if (!blockAttributes || typeof blockAttributes !== 'object') return false;
 	return true;
 }
 
@@ -94,23 +121,9 @@ export function isBlockAttributesValid(attributes: unknown): attributes is Block
  * @example
  * isBlockStylesValid(someObject) // → true or false
  */
-export function isBlockStylesValid(styles: unknown): styles is BlockStyles {
-	if (!styles || typeof styles !== 'object') return false;
+export function isBlockStylesValid(blockStyles: unknown): blockStyles is BlockStyles {
+	if (!blockStyles || typeof blockStyles !== 'object') return false;
 	return true;
-}
-
-/**
- * Validates the block children.
- *
- * @param children - The children to validate
- * @returns True if valid BlockChildren, false otherwise
- *
- * @example
- * isBlockChildrenValid(<div>content</div>) // → true
- * isBlockChildrenValid(null) // → true
- */
-export function isBlockChildrenValid(children: unknown): children is BlockChildren {
-	return true; // ReactNode can be anything, including null/undefined
 }
 
 /**
@@ -124,10 +137,10 @@ export function isBlockChildrenValid(children: unknown): children is BlockChildr
  * isBlockPermittedContentValid(null) // → true
  * isBlockPermittedContentValid('invalid') // → false
  */
-export function isBlockPermittedContentValid(permittedContent: unknown): permittedContent is BlockPermitedContent {
-	if (permittedContent === null) return true;
-	if (!Array.isArray(permittedContent)) return false;
-	return permittedContent.every(type => isBlockTypeValid(type));
+export function isBlockPermittedContentValid(blockPermittedContent: unknown): blockPermittedContent is BlockPermitedContent {
+	if (blockPermittedContent === null) return true;
+	if (!Array.isArray(blockPermittedContent)) return false;
+	return blockPermittedContent.every((type) => isBlockTypeValid(type));
 }
 
 /**
@@ -141,10 +154,10 @@ export function isBlockPermittedContentValid(permittedContent: unknown): permitt
  * isBlockPermittedParentValid(null) // → true
  * isBlockPermittedParentValid('invalid') // → false
  */
-export function isBlockPermittedParentValid(permittedParent: unknown): permittedParent is BlockPermitedParent {
-	if (permittedParent === null) return true;
-	if (!Array.isArray(permittedParent)) return false;
-	return permittedParent.every(type => isBlockTypeValid(type));
+export function isBlockPermittedParentValid(blockPermittedParent: unknown): blockPermittedParent is BlockPermitedParent {
+	if (blockPermittedParent === null) return true;
+	if (!Array.isArray(blockPermittedParent)) return false;
+	return blockPermittedParent.every((type) => isBlockTypeValid(type));
 }
 
 /**
@@ -157,8 +170,8 @@ export function isBlockPermittedParentValid(permittedParent: unknown): permitted
  * isBlockCategoryValid('layout') // → true
  * isBlockCategoryValid('') // → false
  */
-export function isBlockCategoryValid(category: unknown): category is BlockCategory {
-	return typeof category === 'string' && category.trim().length > 0;
+export function isBlockCategoryValid(blockCategory: unknown): blockCategory is BlockCategory {
+	return typeof blockCategory === 'string' && blockCategory.trim().length > 0;
 }
 
 /**
@@ -172,8 +185,6 @@ export function isBlockCategoryValid(category: unknown): category is BlockCatego
  * isBlockIconValid(<IconComponent />) // → true
  * isBlockIconValid(123) // → false
  */
-export function isBlockIconValid(icon: unknown): icon is BlockIcon {
-	return typeof icon === 'string' || (icon !== null && typeof icon === 'object' && '$$typeof' in icon);
+export function isBlockIconValid(blockIcon: unknown): blockIcon is BlockIcon {
+	return typeof blockIcon === 'string' || (blockIcon !== null && typeof blockIcon === 'object' && '$$typeof' in blockIcon);
 }
-
-

@@ -5,159 +5,116 @@ import { useLayoutStore } from '@/src/page-builder/state/stores/layout';
 import { useMemo } from 'react';
 
 // Types
-import type { BarID, BarInstance, ActionInstance, ActionID } from '@/src/page-builder/core/editor/layout/types/bar';
+import type { BarID, BarInstance, BarActionInstance, BarActionID } from '@/src/page-builder/core/editor/layout/types/bar';
 import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
+import { validateOrLog } from '@/src/shared/utilities/validation';
+
+// Helpers
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
+import { validateBarActionInstance, validateBarID, validateBarActionID } from '@/src/page-builder/services/helpers/layout';
 
 /**
- * Gets all bars, optionally filtered by workbench.
- * @param workbenchID - Optional workbench identifier to filter bars
- * @returns Array of bar instances
+ * Gets all bar instances filtered by workbench ID for layout management operations.
+ * Returns an array of bars associated with the specified workbench.
+ *
+ * @param workbenchID - The workbench identifier to filter bars
+ * @returns Array of bar instances or undefined if validation fails
+ *
  * @example
- * const allBars = getAllBars();
- * const workbenchBars = getAllBars('workbench-123');
+ * const bars = getBarsByWorkbench('workbench-123') // Returns bars for specific workbench
  */
-export function getAllBars(workbenchID?: WorkbenchID): BarInstance[] {
-	if (!useLayoutStore) {
-		devLog.warn('[BarManager → getAllBars] Layout store not initialized yet');
-		return [];
-	}
+export function getBarsByWorkbench(workbenchID: WorkbenchID): BarInstance[] | undefined {
+	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → getBarsByWorkbench]`);
+	if (!safeParams) return undefined;
+
 	const store = useLayoutStore.getState();
 	const bars = Object.values(store.layoutBars);
-	if (!workbenchID) return bars;
-	return bars.filter((b: BarInstance) => b.workbenchID === workbenchID);
+
+	return bars.filter((b: BarInstance) => b.workbenchID === safeParams.workbenchID);
 }
 
 /**
- * Gets a bar instance by its ID.
+ * Gets a bar instance by its unique identifier for layout management operations.
+ * Retrieves the complete bar object from the layout store.
+ *
  * @param barID - The bar identifier
- * @returns The bar instance or undefined if not found
+ * @returns The bar instance or undefined if not found or validation fails
+ *
  * @example
- * const bar = getBarById('bar-123');
+ * const bar = getBarById('bar-123') // Returns bar instance or undefined
  */
 export function getBarById(barID: BarID): BarInstance | undefined {
-	if (!useLayoutStore) {
-		devLog.warn('[BarManager → getBarById] Layout store not initialized yet');
-		return undefined;
-	}
-	const store = useLayoutStore.getState();
-	return store.layoutBars[barID];
+	const safeParams = validateOrLog({ barID: validateBarID(barID) }, `[LayoutManager → getBarById]`);
+	if (!safeParams) return undefined;
+
+	return useLayoutStore.getState().getBar(safeParams.barID);
 }
 
 /**
- * Gets all actions for a specific bar.
- * @param barID - The bar identifier
- * @returns Array of action instances
- * @example
- * const actions = getBarActions('bar-123');
- */
-export function getBarActions(barID: BarID): ActionInstance[] {
-	if (!useLayoutStore) {
-		devLog.warn('[BarManager → getBarActions] Layout store not initialized yet');
-		return [];
-	}
-	const store = useLayoutStore.getState();
-	const bar = store.layoutBars[barID];
-	return bar ? Object.values(bar.actions) : [];
-}
-
-/**
- * Registers a new action for a bar.
+ * Registers a new action instance to a bar for layout management operations.
+ * Adds the action to the bar's actions collection if it doesn't already exist.
+ *
  * @param barID - The bar identifier to register the action for
  * @param action - The action instance to register
+ * @returns void
+ *
  * @example
- * registerBarAction('bar-123', actionInstance);
+ * registerBarAction('bar-123', { id: 'action-456', ... }) // Registers action to bar
  */
-export function registerBarAction(barID: BarID, action: ActionInstance) {
-	if (!useLayoutStore) {
-		devLog.error('[BarManager → registerBarAction] Layout store not initialized yet');
-		return;
-	}
+export function registerBarAction(barID: BarID, action: BarActionInstance): void {
+	const safeParams = validateOrLog({ barID: validateBarID(barID), action: validateBarActionInstance(action) }, `[LayoutManager → registerBarAction]`);
+	if (!safeParams) return;
 
 	const store = useLayoutStore.getState();
+	const bar = store.getBar(safeParams.barID);
+	if (!bar) return devLog.error(`[LayoutManager → registerBarAction] Bar with ID "${safeParams.barID}" not found.`, undefined);
+	if (bar.actions[action.id]) return devLog.warn(`[LayoutManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`, undefined);
 
-	if (!barID || typeof barID !== 'string') {
-		devLog.error('[BarManager → registerBarAction] Bar ID is required to register an action.');
-		return;
-	}
-	if (!action || typeof action !== 'object') {
-		devLog.error('[BarManager → registerBarAction] Action object is required to register an action.');
-		return;
-	}
-	if (!action.id || typeof action.id !== 'string') {
-		devLog.error('[BarManager → registerBarAction] Action must have a unique string ID.');
-		return;
-	}
-
-	if (!store.layoutBars[barID]) {
-		devLog.error(`[BarManager → registerBarAction] Bar with ID "${barID}" does not exist.`);
-		return;
-	}
-
-	const barActions = store.layoutBars[barID].actions;
-
-	if (!barActions) {
-		devLog.error(`[BarManager → registerBarAction] Bar with ID "${barID}" does not have an actions record.`);
-		return;
-	}
-
-	if (barActions[action.id]) {
-		devLog.warn(`[BarManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
-		return;
-	}
-
-	// Delegate to store for pure state update
 	store.registerBarAction(barID, action);
 }
 
 /**
- * Unregisters an action from a bar.
+ * Unregisters an action from a bar for layout management operations.
+ * Removes the specified action from the bar's actions collection.
+ *
  * @param barID - The bar identifier
  * @param actionID - The action identifier to unregister
+ * @returns void
+ *
  * @example
- * unregisterBarAction('bar-123', 'action-456');
+ * unregisterBarAction('bar-123', 'action-456') // Removes action from bar
  */
-export function unregisterBarAction(barID: BarID, actionID: ActionID) {
-	if (!useLayoutStore) {
-		devLog.error('[BarManager → unregisterBarAction] Layout store not initialized yet');
-		return;
-	}
-
-	if (!barID || typeof barID !== 'string') {
-		devLog.error('[BarManager → unregisterBarAction] Bar ID is required to unregister an action.');
-		return;
-	}
-	if (!actionID || typeof actionID !== 'string') {
-		devLog.error('[BarManager → unregisterBarAction] Action ID is required to unregister an action.');
-		return;
-	}
+export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
+	const safeParams = validateOrLog({ barID: validateBarID(barID), actionID: validateBarActionID(actionID) }, `[LayoutManager → unregisterBarAction]`);
+	if (!safeParams) return;
 
 	const store = useLayoutStore.getState();
-	const barActions = store.layoutBars[barID]?.actions;
-	if (!barActions || !barActions[actionID]) {
-		return;
-	}
+	const bar = store.getBar(barID);
+	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${barID}" not found.`, undefined);
+	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${actionID}" not found in bar "${barID}". Skipping.`, undefined);
 
-	// Delegate to store for pure state update
 	store.unregisterBarAction(barID, actionID);
 }
 
 /**
- * Reactive hook to get all actions for a specific bar.
+ * Reactive hook to get all action instances for a specific bar in layout management operations.
+ * Returns a memoized array of actions that updates when the bar's actions change.
+ *
  * @param barID - The bar identifier
- * @returns Reactive array of action instances
+ * @returns Reactive array of action instances or undefined if bar not found
+ *
  * @example
- * const actions = useBarActions('bar-123');
+ * const actions = useBarActions('bar-123') // Returns reactive array of actions
  */
-export function useBarActions(barID: BarID): ActionInstance[] {
-	if (!useLayoutStore) {
-		devLog.warn('[BarManager → useBarActions] Layout store not initialized yet');
-		return [];
-	}
+export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
+	const safeParams = validateOrLog({ barID: validateBarID(barID) }, `[LayoutManager → useBarActions]`);
+	if (!safeParams) return undefined;
 
-	const actionsRecord = useLayoutStore((state) => state.layoutBars[barID]?.actions);
-
+	const actionsRecord = useLayoutStore((state) => state.getBar(safeParams.barID)?.actions);
+	if (!actionsRecord) return undefined;
+	
 	return useMemo(() => Object.values(actionsRecord), [actionsRecord]);
 }

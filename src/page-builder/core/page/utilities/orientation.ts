@@ -1,23 +1,35 @@
 // Types
-import type { OrientationID, OrientationName, OrientationValue } from '@/src/page-builder/core/page/types/orientation';
+import type { OrientationDefinition, OrientationID, OrientationName, OrientationValue } from '@/src/page-builder/core/page/types/orientation';
 
 /**
  * Validates that an orientation name is valid
  */
-export function isOrientationNameValid(name: unknown): name is OrientationName {
-	return typeof name === 'string' && ['all', 'portrait', 'landscape'].includes(name);
+export function isOrientationNameValid(orientationName: unknown): orientationName is OrientationName {
+	return typeof orientationName === 'string' && orientationName.length > 0;
 }
 
 /**
  * Validates that an orientation value is valid
  */
-export function isOrientationValueValid(value: unknown): value is OrientationValue {
-	return typeof value === 'string' && ['all', 'portrait', 'landscape'].includes(value);
+export function isOrientationValueValid(orientationValue: unknown): orientationValue is OrientationValue {
+	return typeof orientationValue === 'string' && orientationValue.length > 0;
 }
 
 /**
  * Validates that an orientation ID is valid
-*/
-export function isOrientationIDValid(value: unknown): value is OrientationID {
-	return typeof value === 'string' && value.length > 0;
+ */
+export function isOrientationIDValid(orientationID: unknown): orientationID is OrientationID {
+	return typeof orientationID === 'string' && orientationID.length > 0;
+}
+
+/**
+ * Type guard to check if a value is a valid OrientationDefinition shape
+ */
+export function isOrientationDefinitionValid(orientationDefinition: unknown): orientationDefinition is Record<keyof OrientationDefinition, unknown> {
+	return (
+		typeof orientationDefinition === 'object' && //
+		orientationDefinition !== null &&
+		'name' in orientationDefinition &&
+		'value' in orientationDefinition
+	);
 }

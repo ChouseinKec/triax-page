@@ -23,10 +23,10 @@ function initializeTabs() {
 
 	tabs.forEach((tab) => {
 		const result = registerTab(tab);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${tab.id} registration successful.`);
 		} else {
-			devLog.error(`         ${tab.id} registration failed. ${result.error}`);
+			devLog.error(`         ${tab.id} registration failed. ${result.message}`);
 		}
 	});
 }
@@ -42,10 +42,10 @@ function initializePanels() {
 
 	panels.forEach((panel) => {
 		const result = registerPanel(panel);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${panel.id} registration successful.`);
 		} else {
-			devLog.error(`         ${panel.id} registration failed. ${result.error}`);
+			devLog.error(`         ${panel.id} registration failed. ${result.message}`);
 		}
 	});
 }
@@ -61,10 +61,10 @@ function initializeBars() {
 
 	bars.forEach((bar) => {
 		const result = registerBar(bar);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${bar.id} registration successful.`);
 		} else {
-			devLog.error(`         ${bar.id} registration failed. ${result.error}`);
+			devLog.error(`         ${bar.id} registration failed. ${result.message}`);
 		}
 	});
 }

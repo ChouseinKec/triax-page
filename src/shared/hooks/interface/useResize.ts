@@ -1,4 +1,5 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect, RefObject } from 'react';
+import React from 'react';
 
 export type Side = 'top' | 'right' | 'bottom' | 'left' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -83,21 +84,20 @@ function calculateTop(side: Side, top: number, dy: number, height: number, minHe
 
 /**
  * Custom hook for handling resize logic.
- * Encapsulates state and handlers for resizing an element from a given side/corner.
+ * Encapsulates state, handlers, and resize handles for resizing an element.
  *
- * @param minWidth - Minimum allowed width of the LayoutPanel
- * @param minHeight - Minimum allowed height of the LayoutPanel
- * @param size - Current size of the LayoutPanel ({ width, height })
- * @param position - Current position of the LayoutPanel ({ top, left })
- * @param setSize - Setter function to update the LayoutPanel size
- * @param setPosition - Setter function to update the LayoutPanel position
- * @returns Object containing handlers and state for resizing:
- *   - startResize: function to start resizing
- *   - stopResize: function to stop resizing
- *   - handleMouseMove: function to handle mouse move events during resizing
- *   - resizing: ref indicating if resizing is active
+ * @param ref - RefObject to the resizable container element
+ * @param minWidth - Minimum allowed width
+ * @param minHeight - Minimum allowed height
+ * @param size - Current size ({ width, height })
+ * @param position - Current position ({ top, left })
+ * @param setSize - Setter for size
+ * @param setPosition - Setter for position
+ * @param locked - Whether resizing is disabled
+ * @param handleClassName - CSS class for resize handles
+ * @returns Object containing resize handles JSX and resizing state
  */
-export function useResize(minWidth: number, minHeight: number, size: { width: number; height: number }, position: { top: number; left: number }, setSize: (size: { width: number; height: number }) => void, setPosition: (position: { top: number; left: number }) => void) {
+export function useResize(ref: RefObject<HTMLElement | null>, minWidth: number, minHeight: number, size: { width: number; height: number }, position: { top: number; left: number }, setSize: (size: { width: number; height: number }) => void, setPosition: (position: { top: number; left: number }) => void, locked: boolean = false) {
 	const resizing = useRef(false);
 	const resizeStart = useRef({
 		width: 0,
@@ -112,11 +112,12 @@ export function useResize(minWidth: number, minHeight: number, size: { width: nu
 	/**
 	 * Starts the resize operation.
 	 *
-	 * @param e - Mouse event that started the resize
 	 * @param side - The side/corner being resized
+	 * @param e - Mouse event
 	 */
 	const startResize = useCallback(
-		(e: React.MouseEvent, side: Side) => {
+		(side: Side, e: MouseEvent) => {
+			if (locked) return;
 			resizing.current = true;
 			resizeStart.current = {
 				width: size.width,
@@ -129,7 +130,7 @@ export function useResize(minWidth: number, minHeight: number, size: { width: nu
 			};
 			document.body.style.cursor = 'nwse-resize';
 		},
-		[size, position]
+		[size, position, locked]
 	);
 
 	/**
@@ -165,5 +166,49 @@ export function useResize(minWidth: number, minHeight: number, size: { width: nu
 		[minWidth, minHeight, setSize, setPosition]
 	);
 
-	return { startResize, stopResize, handleMouseMove, resizing };
+	/**
+	 * Handles mouse up to stop resizing.
+	 */
+	const handleMouseUp = useCallback(() => {
+		stopResize();
+	}, [stopResize]);
+
+	/**
+	 * Handles mousedown on resize handles.
+	 */
+	const handleMouseDown = useCallback(
+		(e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+			const side = target.dataset.position as Side;
+			if (side) {
+				e.stopPropagation();
+				startResize(side, e);
+			}
+		},
+		[startResize]
+	);
+
+	// Attach mousedown listener to ref
+	useEffect(() => {
+		const element = ref.current;
+		if (!element) return;
+
+		element.addEventListener('mousedown', handleMouseDown);
+		return () => element.removeEventListener('mousedown', handleMouseDown);
+	}, [ref, handleMouseDown]);
+
+	// Attach global mousemove and mouseup listeners
+	useEffect(() => {
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+		return () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
+	}, [handleMouseMove, handleMouseUp]);
+
+	// Create resize handles using React.createElement
+	const handles = locked ? null : React.createElement(React.Fragment, null, React.createElement('div', { 'data-position': 'top-right', title: 'Resize' }), React.createElement('div', { 'data-position': 'top-left', title: 'Resize' }), React.createElement('div', { 'data-position': 'bottom-left', title: 'Resize' }), React.createElement('div', { 'data-position': 'bottom-right', title: 'Resize' }), React.createElement('div', { 'data-position': 'top', title: 'Resize' }), React.createElement('div', { 'data-position': 'right', title: 'Resize' }), React.createElement('div', { 'data-position': 'bottom', title: 'Resize' }), React.createElement('div', { 'data-position': 'left', title: 'Resize' }));
+
+	return { handles, resizing };
 }

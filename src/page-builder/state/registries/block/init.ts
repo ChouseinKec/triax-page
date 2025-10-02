@@ -31,10 +31,10 @@ function initializeBlocks() {
 
 	blocks.forEach((block) => {
 		const result = registerBlock(block);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${block.type} registration successful.`);
 		} else {
-			devLog.error(`         ${block.type} registration failed. ${result.error}`);
+			devLog.error(`         ${block.type} registration failed. ${result.message}`);
 		}
 	});
 }

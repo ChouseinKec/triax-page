@@ -16,17 +16,17 @@ class ViewportRegistryClass {
 	 * @param viewport - The viewport definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerViewport(viewport: ViewportDefinition): ValidationResult {
+	registerViewport(viewport: ViewportDefinition): ValidationResult<ViewportDefinition> {
 		const validation = validateViewport(viewport);
-		if (!validation.success) return { success: false, error: validation.error };
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.viewports[viewport.id]) {
-			return { success: false, error: `Viewport with id "${viewport.id}" already registered` };
+			return { valid: false, message: `Viewport with id "${viewport.id}" already registered` };
 		}
 
 		this.viewports = { ...this.viewports, [viewport.id]: viewport };
-		return { success: true };
+		return { valid: true, value: viewport };
 	}
 
 	/**
@@ -61,7 +61,7 @@ class ViewportRegistryClass {
 	 * @returns The viewport definition if found, undefined otherwise
 	 */
 	getRegisteredViewportByWorkbenchID(workbenchID: string): ViewportDefinition | undefined {
-		return Object.values(this.viewports).find((viewport) => viewport.workspaceID === workbenchID);
+		return Object.values(this.viewports).find((viewport) => viewport.workbenchID === workbenchID);
 	}
 }
 

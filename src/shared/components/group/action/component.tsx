@@ -24,7 +24,8 @@ const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
     const {
         children,
         direction = "horizontal",
-        className = "ActionGroup"
+        className = "ActionGroup",
+        isTransparent = true,
     } = props;
 
     // Guard Clause
@@ -34,7 +35,7 @@ const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
     }
 
     return (
-        <div className={`${CSS.ActionGroup} ${className}`} data-direction={direction}>
+        <div className={`${CSS.ActionGroup} ${className}`} data-direction={direction} data-transparent={String(isTransparent)}>
             {children}
         </div>
     );

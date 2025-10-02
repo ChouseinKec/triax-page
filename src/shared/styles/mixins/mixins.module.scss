@@ -152,16 +152,20 @@
 	$radius: var(--size-sm),
 	$background: var(--theme-color-primary-tint),
 	$fill: var(--color-white),
-	$padding: var(--size-sm)
+	$padding: var(--size-sm),
+	$justify: center,
+	$align: center,
+	$direction: row,
+	$gap: var(--size-xs)
 ) {
 	height: $height;
 
 	padding: $padding;
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: var(--size-xs);
+	flex-direction: $direction;
+	align-items: $align;
+	justify-content: $justify;
+	gap: $gap;
 	outline: none;
 	border-radius: $radius;
 	border: none;
@@ -236,7 +240,7 @@
 		background: var(--color-white);
 
 		box-shadow: none !important;
-		
+
 		transition: clip-path 0.5s;
 	}
 

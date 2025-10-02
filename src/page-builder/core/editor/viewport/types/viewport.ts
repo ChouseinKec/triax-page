@@ -39,8 +39,8 @@ export interface ViewportDefinition {
 	id: ViewportID;
 	/** Title of the Viewport */
 	title: ViewportTitle;
-	/** ID of the Workspace the Viewport belongs to */
-	workspaceID: WorkbenchID;
+	/** ID of the Workbench the Viewport belongs to */
+	workbenchID: WorkbenchID;
 	/** Main React component for the Viewport (optional) */
 	render: ViewportRender;
 }

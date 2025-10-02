@@ -1,5 +1,5 @@
 // Types
-import type { TabID,  TabTitle, TabIcon, TabComponent, TabOrder } from '@/src/page-builder/core/editor/layout/types/tab';
+import type { TabDefinition, TabID, TabTitle, TabIcon, TabComponent, TabOrder } from '@/src/page-builder/core/editor/layout/types/tab';
 
 /**
  * Validates if a tab ID is valid
@@ -34,7 +34,7 @@ export function isTabComponentValid(tabComponent: unknown): tabComponent is TabC
  * @returns true if valid, false otherwise
  */
 export function isTabIconValid(tabIcon: unknown): tabIcon is TabIcon {
-	return tabIcon !== null && tabIcon !== undefined;
+	return tabIcon != null;
 }
 
 /**
@@ -44,4 +44,17 @@ export function isTabIconValid(tabIcon: unknown): tabIcon is TabIcon {
  */
 export function isTabOrderValid(tabOrder: unknown): tabOrder is TabOrder {
 	return typeof tabOrder === 'number' && !isNaN(tabOrder);
+}
+
+export function isTabDefinitionValid(tabDefinition: unknown): tabDefinition is TabDefinition {
+	return (
+		typeof tabDefinition === 'object' &&
+		tabDefinition !== null && //
+		'id' in tabDefinition &&
+		'title' in tabDefinition &&
+		'component' in tabDefinition &&
+		'icon' in tabDefinition &&
+		'order' in tabDefinition &&
+		'panelID' in tabDefinition
+	);
 }

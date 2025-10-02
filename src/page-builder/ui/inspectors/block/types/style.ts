@@ -1,7 +1,7 @@
 import { ReactElement, CSSProperties } from 'react';
 
 // Types
-import type { StyleKeys, StyleDefinition, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
+import type { StyleKey, StyleDefinition, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 
 /**
@@ -41,7 +41,7 @@ export type BlockStylesGroupProps = {
 	/** Whether the group should be hidden */
 	hidden?: boolean;
 	/** Style properties in this group */
-	properties: BlockStylesPropertyProps[];
+	properties: PropertyProps[];
 	/** Whether the group can be expanded/collapsed */
 	isExpandable?: boolean;
 	/** Title for the divider between groups */
@@ -54,7 +54,7 @@ export type BlockStylesGroupProps = {
  * Props for an individual style property component.
  * Defines how a single CSS property should be displayed and edited.
  */
-export interface BlockStylesPropertyProps {
+export interface PropertyProps {
 	/** Label for the property */
 	label: string | null;
 	/** Whether the property should be hidden */
@@ -62,7 +62,7 @@ export interface BlockStylesPropertyProps {
 	/** Whether the property is disabled */
 	disabled?: boolean;
 	/** The CSS property key this property represents */
-	property?: StyleKeys;
+	property?: StyleKey;
 	/** Custom styles for the property */
 	styles?: CSSProperties;
 	/** Component function to render the property editor */

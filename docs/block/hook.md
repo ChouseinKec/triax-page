@@ -26,7 +26,7 @@ The `hooks/block/manager.tsx` file provides the main React hook for block manage
 Adds a new block to the editor, optionally as a child of another block.
 
 - **Parameters:**
-  - `type: BlockTypes` — The type of block to add.
+  - `type: BlockType` — The type of block to add.
   - `parentID?: string` — Optional parent block ID.
 
 ---

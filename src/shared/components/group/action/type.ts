@@ -9,4 +9,7 @@ export type ActionGroupProps = {
 
 	/** Optional class name for additional styling */
 	className?: string;
+
+	/** Optional flag to render the action buttons with a transparent background */
+	isTransparent?: boolean;
 };

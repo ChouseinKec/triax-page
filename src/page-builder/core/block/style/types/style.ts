@@ -2,7 +2,7 @@
  * All valid CSS property names supported by the style system.
  * These correspond to official CSS property names (e.g. 'width', 'color', 'display').
  */
-export type StyleKeys =
+export type StyleKey =
 	| 'display'
 	| 'flex-direction'
 	| 'flex-wrap'
@@ -183,7 +183,7 @@ export interface StyleDefinition {
 	 * The name of the CSS property (e.g. 'color', 'font-size').
 	 * This is used for matching against user input and for validation.
 	 */
-	name: StyleKeys;
+	name: StyleKey;
 
 	/**
 	 * A brief description of the CSS property.

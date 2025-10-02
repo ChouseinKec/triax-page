@@ -1,13 +1,15 @@
 // Types
 import type { BlockStyles, BlockAttributes, BlockID } from '@/src/page-builder/core/block/block/types';
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 import type { DeviceValue } from '@/src/page-builder/core/page/types/device';
-import type { OrientationDefinition } from '@/src/page-builder/core/page/types/orientation';
-import type { PseudoDefinition } from '@/src/page-builder/core/page/types/pseudo';
+import type { OrientationValue } from '@/src/page-builder/core/page/types/orientation';
+import type { PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
 
 // Utilities
 import { cascadeStyles, generateCSSSelector, generateCSSRule } from '@/src/page-builder/core/block/style/utilities';
 import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-builder/core/block/attribute/utilities';
+import { isBlockAttributesValid, isBlockStylesValid, isBlockIDValid } from '@/src/page-builder/core/block/block/utilities/validation';
+import { isPseudoValueValid, isOrientationValueValid, isDeviceValueValid } from '@/src/page-builder/core/page/utilities';
 
 /**
  * Renders block styles into a CSS string.
@@ -18,11 +20,15 @@ import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-build
  * @param pseudo Current pseudo-class
  * @returns CSS string or undefined if no styles
  */
-export function renderBlockStyles(styles: BlockStyles | null, blockID: BlockID, device: DeviceValue, orientation: OrientationDefinition, pseudo: PseudoDefinition): string | undefined {
-	if (!styles) return undefined;
-	const resolvedStyles = cascadeStyles(styles, device, orientation.value, pseudo.value);
-	if (Object.keys(resolvedStyles).length === 0) return undefined;
-	const selector = generateCSSSelector(blockID, pseudo.value);
+export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device: DeviceValue, orientation: OrientationValue, pseudo: PseudoValue): string | undefined {
+	if (!isBlockStylesValid(styles)) return undefined;
+	if (!isBlockIDValid(blockID)) return undefined;
+	if (!isDeviceValueValid(device)) return undefined;
+	if (!isOrientationValueValid(orientation)) return undefined;
+	if (!isPseudoValueValid(pseudo)) return undefined;
+
+	const resolvedStyles = cascadeStyles(styles, device, orientation, pseudo);
+	const selector = generateCSSSelector(blockID, pseudo);
 	return generateCSSRule(selector, resolvedStyles);
 }
 
@@ -31,12 +37,13 @@ export function renderBlockStyles(styles: BlockStyles | null, blockID: BlockID, 
  * @param attributes The block's attribute definition
  * @returns Normalized attributes object or null if empty
  */
-export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> | null {
-	if (Object.keys(attributes).length === 0) return null;
+export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> | undefined {
+	if (!isBlockAttributesValid(attributes)) return undefined;
+
 	const normalizedAttributes: Record<string, string | boolean> = {};
 	for (const [property, value] of Object.entries(attributes)) {
 		if (!value) continue;
-		const normalizedProperty = normalizeAttributeKey(property as AttributeKeys);
+		const normalizedProperty = normalizeAttributeKey(property as AttributeKey);
 		const normalizedValue = normalizeAttributeValue(value);
 		normalizedAttributes[normalizedProperty] = normalizedValue;
 	}

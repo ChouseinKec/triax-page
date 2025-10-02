@@ -30,10 +30,10 @@ function initializeWorkbenchs() {
 
 	workbenches.forEach((workbench) => {
 		const result = registerWorkbench(workbench);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${workbench.id} registration successful.`);
 		} else {
-			devLog.error(`         ${workbench.id} registration failed. ${result.error}`);
+			devLog.error(`         ${workbench.id} registration failed. ${result.message}`);
 		}
 	});
 }

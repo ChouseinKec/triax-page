@@ -7,12 +7,23 @@ import type { BlockID, BlockInstance, BlockRecord } from '@/src/page-builder/cor
 import { DefaultBlocks } from './block-defaults';
 
 // Utilities
-import { getBlockDescendants } from '@/src/page-builder/core/block/block/utilities';
+import { findBlockDescendants } from '@/src/page-builder/core/block/block/utilities';
 
 export interface BlockStoreProps {
 	selectedBlockID: BlockID | null;
 	allBlocks: BlockRecord;
 	deletionQueue: BlockID[];
+
+	/**
+	 * Retrieves a single block instance from the store.
+	 *
+	 * @param blockID - The ID of the block to retrieve.
+	 * @returns The block instance if found, otherwise undefined.
+	 *
+	 * @example
+	 * const block = getBlock('block-123');
+	 */
+	getBlock: (blockID: BlockID) => BlockInstance | undefined;
 
 	/**
 	 * Sets the currently selected block by ID.
@@ -91,13 +102,16 @@ export interface BlockStoreProps {
 export function createBlockStore() {
 	return create<BlockStoreProps>((set, get) => ({
 		// Currently selected block ID
-		selectedBlockID: null,
+		selectedBlockID: 'body',
 
 		// Collection of all blocks in the store
 		allBlocks: DefaultBlocks,
 
 		// Deletion queue for deferred deletion
 		deletionQueue: [],
+
+		// Retrieves a single block instance from the store
+		getBlock: (blockID) => get().allBlocks[blockID],
 
 		// Sets the currently selected block by ID
 		selectBlock: (blockID) => set({ selectedBlockID: blockID }),
@@ -192,7 +206,7 @@ export function createBlockStore() {
 				blocksToDelete.forEach((blockID) => {
 					allBlocksToDelete.add(blockID);
 					// Add all descendants
-					const descendants = getBlockDescendants([blockID], state.allBlocks);
+					const descendants = findBlockDescendants([blockID], state.allBlocks);
 					descendants.forEach((descendantId: BlockID) => allBlocksToDelete.add(descendantId));
 				});
 

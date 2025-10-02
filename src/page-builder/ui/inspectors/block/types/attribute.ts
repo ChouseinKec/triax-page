@@ -1,7 +1,7 @@
 import { ReactElement, CSSProperties } from 'react';
 
 // Types
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 import type { BlockID } from '@/src/page-builder/core/block/block/types';
 
 /**
@@ -78,7 +78,7 @@ export interface BlockAttributesPropertyProps {
 	/** Whether the property is disabled */
 	disabled?: boolean;
 	/** The HTML attribute key this property represents */
-	property?: AttributeKeys;
+	property?: AttributeKey;
 	/** Custom styles for the property */
 	styles?: CSSProperties;
 	/** Component function to render the property editor */
@@ -95,5 +95,5 @@ export interface BlockAttributesValueProps {
 	/** ID of the block being edited */
 	blockID: BlockID;
 	/** Name of the attribute being edited */
-	attribute: AttributeKeys;
+	attribute: AttributeKey;
 }

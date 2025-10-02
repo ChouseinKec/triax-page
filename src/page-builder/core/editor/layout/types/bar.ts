@@ -3,15 +3,24 @@ import { ReactNode } from 'react';
 // Types
 import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types';
 
+export type BarSizeFixed = {
+	/** Current width of the LayoutBar (in any CSS unit) */
+	width: string;
+
+	/** Optional height of the LayoutBar (in any CSS unit) */
+	height?: string;
+};
+
+export type BarSizeAuto = {
+	/** Minimum width of the LayoutBar (in any CSS unit) */
+	minWidth: string;
+	/** Maximum width of the LayoutBar (in any CSS unit) */
+	maxWidth: string;
+};
 /**
  * Represents the size of the LayoutBar.
  */
-export type BarSize = {
-	/** Current width of the LayoutBar (in any CSS unit) */
-	width: string;
-	/** Current height of the LayoutBar (in any CSS unit) */
-	height: string;
-};
+export type BarSize = BarSizeFixed | BarSizeAuto;
 
 /**
  * Represents the position of the LayoutBar on the screen.
@@ -32,7 +41,6 @@ export type BarID = string;
  * Title of the LayoutBar
  */
 export type BarTitle = string;
-
 
 /**
  * Interface for LayoutBar definition used in the layout system.
@@ -63,55 +71,58 @@ export interface BarDefinition {
 	size: BarSize;
 
 	/**
+	 * Background color of the LayoutBar
+	 * @default 'transparent'
+	 */
+	isTransparent?: boolean;
+
+	/**
 	 * Optional Workbench identifier for the LayoutBar
 	 * Used to differentiate LayoutBars in different Workbenchs
 	 */
 	workbenchID: WorkbenchID;
-
-
 }
 
 /**
  * Unique identifier for a bar action
  */
-export type ActionID = string;
+export type BarActionID = string;
 
 /**
  * Display title of a bar action
  */
-export type ActionTitle = string;
+export type BarActionTitle = string;
 
 /**
  * Order value for sorting bar actions within a bar
  */
-export type ActionOrder = number;
+export type BarActionOrder = number;
 
 /**
  * Render function for a bar action content
  */
-export type ActionRender = () => ReactNode;
+export type BarActionRender = () => ReactNode;
 
 /**
  * Represents an action within a LayoutBar.
  * This defines the structure of an action that can be registered in a LayoutBar.
  * This is used to render the content of the LayoutBar.
  */
-export interface ActionInstance {
+export interface BarActionInstance {
 	/** Unique identifier for the action */
-	id: ActionID;
-
+	id: BarActionID;
 	/** Title of the action */
-	title: ActionTitle;
+	title: BarActionTitle;
 	/** Priority of the action, used for sorting */
-	order: ActionOrder;
+	order: BarActionOrder;
 	/** Content of the action */
-	render: ActionRender;
+	render: BarActionRender;
 }
 
 /**
  * Record of all bar actions by their ID.
  */
-export type ActionRecord = Record<ActionID, ActionInstance>;
+export type BarActionRecord = Record<BarActionID, BarActionInstance>;
 
 /**
  * Record of all LayoutBars by their ID.
@@ -125,5 +136,5 @@ export type BarRecord = Record<BarID, BarInstance>;
  */
 export interface BarInstance extends BarDefinition {
 	/** The actions (bar items) to render inside the bar */
-	actions: ActionRecord;
+	actions: BarActionRecord;
 }

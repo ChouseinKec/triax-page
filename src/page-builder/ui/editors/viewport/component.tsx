@@ -118,7 +118,6 @@ const ViewportEditor: React.FC = () => {
     }, [selectedWorkbench]
     )
 
-
     return (
         <div className={CSS.ViewportEditor}
             ref={viewRef}

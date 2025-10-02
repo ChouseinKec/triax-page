@@ -9,9 +9,11 @@
 		@include inputMixins.components--flex-vertical($gap: var(--size-lg), $align: center, $justify: flex-start);
 	}
 
-	button {
-		@include inputMixins.components--button($background: none, $padding: 0);
-		aspect-ratio: 1;
-		padding: 0;
+	&[data-transparent='true'] button {
+		@include inputMixins.components--button($background: none);
+	}
+
+	&[data-transparent='false'] button {
+		@include inputMixins.components--button($background: var(--theme-color-primary));
 	}
 }

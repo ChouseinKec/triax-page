@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
 // Types
-import type { StyleKeys } from '@/src/page-builder/core/block/style/types';
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { StyleKey } from '@/src/page-builder/core/block/style/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 import type { ElementTags } from '@/src/page-builder/core/block/element/types';
 
 /**
@@ -23,7 +23,7 @@ export type BlockCategory = string;
 /**
  * The kind of block (text, container, media).
  */
-export type BlockTypes = 'text' | 'container' | 'media';
+export type BlockType = 'text' | 'container' | 'media';
 
 /**
  * Block styles structure:
@@ -33,7 +33,7 @@ export type BlockStyles = {
 	[deviceName: string]: {
 		[orientationName: string]: {
 			[pseudoName: string]: {
-				[key in StyleKeys]?: string;
+				[key in StyleKey]?: string;
 			};
 		};
 	};
@@ -43,7 +43,7 @@ export type BlockStyles = {
  * Block attributes structure:
  * key -> value
  */
-export type BlockAttributes = Partial<Record<AttributeKeys, string>>;
+export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 
 /**
  * Children blocks (React nodes)
@@ -58,12 +58,12 @@ export type BlockRender = (instance: BlockInstance, children?: BlockChildren) =>
 /**
  * Permitted content types that can be contained within this block
  */
-export type BlockPermitedContent = BlockTypes[] | null;
+export type BlockPermitedContent = BlockType[] | null;
 
 /**
  * Permitted parent types that can contain this block
  */
-export type BlockPermitedParent = BlockTypes[] | null;
+export type BlockPermitedParent = BlockType[] | null;
 
 /**
  * Record of all block instances by their ID.
@@ -76,7 +76,7 @@ export type BlockRecord = Record<BlockID, BlockInstance>;
  */
 export interface BlockDefinition {
 	/** The kind of block (text, container, media) */
-	type: BlockTypes;
+	type: BlockType;
 	/** The primary HTML tag for this block */
 	tag: ElementTags;
 	/** All supported HTML tags for this block type */
@@ -105,7 +105,7 @@ export interface BlockInstance {
 	/** Unique identifier for this block instance */
 	id: BlockID;
 	/** The kind of block (text, container, media) */
-	type: BlockTypes;
+	type: BlockType;
 	/** ID of the parent block, null if root */
 	parentID: BlockID | null;
 	/** IDs of child blocks in order */

@@ -1,33 +1,73 @@
 // Types
-import type { PseudoDefinition } from '@/src/page-builder/core/page/types/pseudo';
+import type { PseudoDefinition, PseudoID, PseudoName, PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
 import type { ValidationResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isPseudoNameValid, isPseudoValueValid } from '@/src/page-builder/core/page/utilities/pseudo';
+import { isPseudoDefinitionValid, isPseudoIDValid, isPseudoNameValid, isPseudoValueValid } from '@/src/page-builder/core/page/utilities/pseudo';
 
 /**
- * Type guard to check if a value is a valid PseudoDefinition shape
+ * Validates a pseudo ID for pseudo operations.
+ * Checks if the ID is a valid string identifier.
+ *
+ * @param pseudoID - The pseudo ID to validate
+ * @returns ValidationResult containing validity and the validated PseudoID if valid
+ *
+ * @example
+ * validatePseudoID('pseudo-123') → { valid: true, value: 'pseudo-123' }
  */
-function isDefinitionShape(value: unknown): value is Record<keyof PseudoDefinition, unknown> {
-	return (
-		typeof value === 'object' && //
-		value !== null &&
-		'name' in value &&
-		'value' in value
-	);
+export function validatePseudoID(pseudoID: unknown): ValidationResult<PseudoID> {
+	if (!isPseudoIDValid(pseudoID)) return { valid: false, message: `Pseudo ID must be a valid string, got: ${pseudoID}` };
+	return { valid: true, value: pseudoID as PseudoID };
 }
 
 /**
- * Validates a PseudoDefinition object.
+ * Validates a pseudo name for pseudo operations.
+ * Checks if the name is a valid string.
+ *
+ * @param pseudoName - The pseudo name to validate
+ * @returns ValidationResult containing validity and the validated PseudoName if valid
+ *
+ * @example
+ * validatePseudoName('hover') → { valid: true, value: 'hover' }
  */
-export function validatePseudoDefinition(pseudo: unknown): ValidationResult {
-	if (!pseudo) return { success: false, error: 'Pseudo definition is required' };
+export function validatePseudoName(pseudoName: unknown): ValidationResult<PseudoName> {
+	if (!isPseudoNameValid(pseudoName)) return { valid: false, message: `Pseudo name must be a valid string, got: ${pseudoName}` };
+	return { valid: true, value: pseudoName as PseudoName };
+}
 
-	if (!isDefinitionShape(pseudo)) return { success: false, error: `Pseudo definition must be an object with required properties, got: ${typeof pseudo}` };
+/**
+ * Validates a pseudo value for pseudo operations.
+ * Checks if the value is a valid string.
+ *
+ * @param pseudoValue - The pseudo value to validate
+ * @returns ValidationResult containing validity and the validated PseudoValue if valid
+ *
+ * @example
+ * validatePseudoValue(':hover') → { valid: true, value: ':hover' }
+ */
+export function validatePseudoValue(pseudoValue: unknown): ValidationResult<PseudoValue> {
+	if (!isPseudoValueValid(pseudoValue)) return { valid: false, message: `Pseudo value must be a valid string, got: ${pseudoValue}` };
+	return { valid: true, value: pseudoValue as PseudoValue };
+}
 
-	if (!isPseudoNameValid(pseudo.name)) return { success: false, error: `Pseudo definition requires a valid name, got: ${pseudo.name}` };
+/**
+ * Validates a complete pseudo definition for pseudo operations.
+ * Checks if the definition has all required valid properties including name and value.
+ *
+ * @param pseudoDefinition - The pseudo definition to validate
+ * @returns ValidationResult containing validity and the validated PseudoDefinition if valid
+ *
+ * @example
+ * validatePseudoDefinition({ name: 'hover', value: ':hover' }) → { valid: true, value: { name: 'hover', value: ':hover' } }
+ */
+export function validatePseudoDefinition(pseudoDefinition: unknown): ValidationResult<PseudoDefinition> {
+	if (!isPseudoDefinitionValid(pseudoDefinition)) return { valid: false, message: `Pseudo definition must be an object with required properties, got: ${typeof pseudoDefinition}` };
 
-	if (!isPseudoValueValid(pseudo.value)) return { success: false, error: `Pseudo definition requires a valid value, got: ${pseudo.value}` };
+	const nameValidation = validatePseudoName(pseudoDefinition.name);
+	if (!nameValidation.valid) return nameValidation;
 
-	return { success: true };
+	const valueValidation = validatePseudoValue(pseudoDefinition.value);
+	if (!valueValidation.valid) return valueValidation;
+
+	return { valid: true, value: pseudoDefinition as PseudoDefinition };
 }

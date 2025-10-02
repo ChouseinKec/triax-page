@@ -4,7 +4,7 @@ import React from "react";
 
 // Types
 import type { BlockAttributesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
-import type { AttributeKeys } from "@/src/page-builder/core/block/attribute/types";
+import type { AttributeKey } from "@/src/page-builder/core/block/attribute/types";
 
 // Constants
 import { getPropertyGroup } from "@/src/page-builder/core/block/attribute/constants";
@@ -30,7 +30,7 @@ export const useSpecificLayout = (): BlockAttributesLayoutProps => {
 
     const specificProps = getPropertyGroup("specific")
         .map((p) => {
-            const key = p.name as AttributeKeys;
+            const key = p.name as AttributeKey;
             return {
                 label: p.name,
                 property: p.name,

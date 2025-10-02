@@ -1,3 +1,3 @@
-export interface BlocksHierarchyEntryProps {
+export interface EntryProps {
 	blockID: string;
 }

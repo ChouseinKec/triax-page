@@ -3,10 +3,14 @@ import { getRegisteredBlocks as getBlocksFromRegistry, getRegisteredBlock as get
 
 // Utilities
 import { isBlockChildAllowed as isBlockChildAllowedUtil } from '@/src/page-builder/core/block/block/utilities';
+import { validateOrLog } from '@/src/shared/utilities/validation';
 
 // Types
-import type { BlockDefinition, BlockTypes } from '@/src/page-builder/core/block/block/types';
+import type { BlockDefinition, BlockType } from '@/src/page-builder/core/block/block/types';
 import type { ReactNode } from 'react';
+
+// Helpers
+import { validateBlockType } from '@/src/page-builder/services/helpers/block/block';
 
 /**
  * Gets all registered block definitions from the registry.
@@ -25,8 +29,11 @@ export function getRegisteredBlocks(): Record<string, BlockDefinition> {
  * @example
  * const blockDef = getRegisteredBlock('text'); // BlockDefinition | undefined
  */
-export function getRegisteredBlock(blockType: BlockTypes): BlockDefinition | undefined {
-	return getBlockFromRegistry(blockType);
+export function getRegisteredBlock(blockType: BlockType): BlockDefinition | undefined {
+	const safeParams = validateOrLog({ blockType: validateBlockType(blockType) }, `[BlockManager → getRegisteredBlock]`);
+	if (!safeParams) return undefined;
+
+	return getBlockFromRegistry(safeParams.blockType);
 }
 
 /**
@@ -37,8 +44,11 @@ export function getRegisteredBlock(blockType: BlockTypes): BlockDefinition | und
  * @example
  * const allowed = isBlockChildAllowed('container', 'text'); // true
  */
-export function isBlockChildAllowed(parentType: BlockTypes, childType: BlockTypes): boolean {
-	return isBlockChildAllowedUtil(parentType, childType, getBlocksFromRegistry());
+export function isBlockChildAllowed(parentType: BlockType, childType: BlockType): boolean {
+	const safeParams = validateOrLog({ parentType: validateBlockType(parentType), childType: validateBlockType(childType) }, `[BlockManager → isBlockChildAllowed]`);
+	if (!safeParams) return false;
+
+	return isBlockChildAllowedUtil(safeParams.parentType, safeParams.childType, getBlocksFromRegistry());
 }
 
 /**
@@ -48,8 +58,11 @@ export function isBlockChildAllowed(parentType: BlockTypes, childType: BlockType
  * @example
  * const icon = getBlockIcon('text'); // <TextIcon />
  */
-export function getBlockIcon(blockType: BlockTypes | undefined): ReactNode | undefined {
-	return blockType ? getRegisteredBlock(blockType)?.icon || undefined : undefined;
+export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
+	const safeParams = validateOrLog({ blockType: validateBlockType(blockType) }, `[BlockManager → getBlockIcon]`);
+	if (!safeParams) return undefined;
+
+	return getRegisteredBlock(safeParams.blockType)?.icon;
 }
 
 /**
@@ -59,6 +72,9 @@ export function getBlockIcon(blockType: BlockTypes | undefined): ReactNode | und
  * @example
  * const render = getBlockRender('text'); // (block, children) => <TextBlock ... />
  */
-export function getBlockRender(blockType: BlockTypes | undefined) {
-	return blockType ? getRegisteredBlock(blockType)?.render : undefined;
+export function getBlockRender(blockType: BlockType | undefined) {
+	const safeParams = validateOrLog({ blockType: validateBlockType(blockType) }, `[BlockManager → getBlockRender]`);
+	if (!safeParams) return undefined;
+
+	return getRegisteredBlock(safeParams.blockType)?.render;
 }

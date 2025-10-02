@@ -179,7 +179,7 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
 
             {/* Error message tooltip - only shown when there's an error */}
             <FloatReveal
-                position="bottom"
+                anchor="bottom"
                 targetRef={inputRef}
                 isOpen={validationState.isError}
             >

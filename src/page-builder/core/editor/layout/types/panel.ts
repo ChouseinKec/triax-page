@@ -65,30 +65,6 @@ export interface PanelDefinition {
 	id: PanelID;
 
 	/**
-	 *  Initial position of the LayoutPanel
-	 *  @default { top: '0px', left: '0px' }
-	 */
-	initialPosition: PanelPosition;
-
-	/**
-	 *  Initial size and constraints of the LayoutPanel
-	 *  @default { width: '250px', height: '250px', minWidth: 250, minHeight: 250 }
-	 */
-	initialSize: PanelSize;
-
-	/**
-	 * Optional initial locked state of the LayoutPanel
-	 * @default true
-	 */
-	initialLocked: boolean;
-
-	/**
-	 * Optional initial open state of the LayoutPanel
-	 * @default true
-	 */
-	initialOpen: boolean;
-
-	/**
 	 * Title of the LayoutPanel, displayed in the header
 	 * @default "LayoutPanel"
 	 */
@@ -110,6 +86,30 @@ export interface PanelDefinition {
 	 * Used to differentiate LayoutPanels in different Workbenchs
 	 */
 	workbenchID: WorkbenchID;
+
+	/**
+	 *  Initial position of the LayoutPanel
+	 *  @default { top: '0px', left: '0px' }
+	 */
+	initialPosition: PanelPosition;
+
+	/**
+	 *  Initial size and constraints of the LayoutPanel
+	 *  @default { width: '250px', height: '250px', minWidth: 250, minHeight: 250 }
+	 */
+	initialSize: PanelSize;
+
+	/**
+	 * Optional initial locked state of the LayoutPanel
+	 * @default true
+	 */
+	initialLocked: boolean;
+
+	/**
+	 * Optional initial open state of the LayoutPanel
+	 * @default false
+	 */
+	initialOpen: boolean;
 }
 
 /**

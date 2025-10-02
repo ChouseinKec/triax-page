@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from 'react';
+import type { RefObject } from 'react';
 
-const useHover = (delay = 200) => {
+const useHover = (ref: RefObject<HTMLElement | null>, delay = 200): boolean => {
 	const [isHovered, setisHovered] = useState(false);
 	const showTimeoutRef = useRef<number | null>(null);
 	const hideTimeoutRef = useRef<number | null>(null);
-	const isHoveringRef = useRef(false);
 
 	const show = useCallback(() => {
 		if (hideTimeoutRef.current) {
@@ -28,35 +28,25 @@ const useHover = (delay = 200) => {
 		}
 
 		hideTimeoutRef.current = window.setTimeout(() => {
-			if (!isHoveringRef.current) {
-				setisHovered(false);
-			}
+			setisHovered(false);
 		}, delay);
 	}, [delay]);
 
-	const handleTargetEnter = useCallback(() => {
-		isHoveringRef.current = false;
-		show();
-	}, [show]);
+	useEffect(() => {
+		const element = ref.current;
+		if (!element) return;
 
-	const handleTargetLeave = useCallback(() => {
-		hide();
-	}, [hide]);
+		const handleEnter = () => show();
+		const handleLeave = () => hide();
 
-	const handleFloatEnter = useCallback(() => {
-		isHoveringRef.current = true;
-		if (!isHovered) {
-			if (showTimeoutRef.current) {
-				clearTimeout(showTimeoutRef.current);
-			}
-			setisHovered(true);
-		}
-	}, [isHovered]);
+		element.addEventListener('mouseenter', handleEnter);
+		element.addEventListener('mouseleave', handleLeave);
 
-	const handleFloatLeave = useCallback(() => {
-		isHoveringRef.current = false;
-		hide();
-	}, [hide]);
+		return () => {
+			element.removeEventListener('mouseenter', handleEnter);
+			element.removeEventListener('mouseleave', handleLeave);
+		};
+	}, [ref, show, hide]);
 
 	// Cleanup timeouts on unmount
 	useEffect(() => {
@@ -66,13 +56,7 @@ const useHover = (delay = 200) => {
 		};
 	}, []);
 
-	return {
-		isHovered,
-		handleTargetEnter,
-		handleTargetLeave,
-		handleFloatEnter,
-		handleFloatLeave,
-	};
+	return isHovered;
 };
 
 export default useHover;

@@ -31,7 +31,7 @@ export function createBlockStyles(): BlockStyles {
 	};
 }
 
-export function createBlock(definition: BlockDefinition, parentID?: string): BlockInstance {
+export function createBlock(definition: BlockDefinition, parentID: string): BlockInstance {
 	const block: BlockInstance = {
 		id: uuidv4(),
 		parentID: parentID ?? null,

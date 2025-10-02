@@ -1,60 +1,61 @@
 // Helpers
 import { validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/attribute';
-import { validateBlockInstance } from '@/src/page-builder/services/helpers/block/block';
-
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';
-import type { AttributeKeys } from '@/src/page-builder/core/block/attribute/types';
+import type { AttributeKey, AttributeValue } from '@/src/page-builder/core/block/attribute/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
+import { validateOrLog } from '@/src/shared/utilities/validation';
 
 /**
- * Sets attribute value for block.
- * @param blockID Block identifier to update
- * @param attribute Attribute key to set
- * @param value New value for the attribute
+ * Sets the attribute value for a specific block in block attribute operations.
+ * Updates the block's attributes with the provided key-value pair after validation.
+ *
+ * @param blockID - The block identifier to update
+ * @param attributeKey - The attribute key to set
+ * @param attributeValue - The new value for the attribute
+ * @returns void
+ *
+ * @example
+ * setBlockAttribute('block-1', 'className', 'my-class')
  */
-export function setBlockAttribute(blockID: BlockID, attribute: AttributeKeys, value: string) {
-	const block = useBlockStore.getState().allBlocks[blockID];
-	if (!block) return devLog.error(`[attributeManager → setBlockAttribute] Block not found`);
+export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), attributeKey: validateAttributeKey(attributeKey), attributeValue: validateAttributeValue(attributeValue) }, `[BlockManager → setBlockAttribute]`);
+	if (!safeParams) return;
 
-	const blockValidation = validateBlockInstance(block);
-	if (!blockValidation.success) return devLog.error(`[attributeManager → setBlockAttribute] ${blockValidation.error}`);
-
-	const attributeValidation = validateAttributeKey(attribute);
-	if (!attributeValidation.success) return devLog.error(`[attributeManager → setBlockAttribute] ${attributeValidation.error}`);
-
-	const valueValidation = validateAttributeValue(value);
-	if (!valueValidation.success) return devLog.error(`[attributeManager → setBlockAttribute] ${valueValidation.error}`);
+	const block = useBlockStore.getState().getBlock(safeParams.blockID);
+	if (!block) return devLog.error(`[BlockManager → setBlockAttribute] Block not found`, undefined);
 
 	const updatedBlock = {
 		...block,
 		attributes: {
 			...block.attributes,
-			[attribute]: value,
+			[safeParams.attributeKey]: safeParams.attributeValue,
 		},
 	};
 
-	useBlockStore.getState().updateBlock(blockID, updatedBlock);
+	useBlockStore.getState().updateBlock(safeParams.blockID, updatedBlock);
 }
 
 /**
- * Subscribes to attribute value with automatic updates.
- * @param blockID Block identifier to subscribe to
- * @param attribute Attribute key to watch for changes
- * @returns Current attribute value, updates on changes
+ * Subscribes to attribute value changes for a specific block in block attribute operations.
+ * Returns the current attribute value and updates reactively when it changes.
+ *
+ * @param blockID - The block identifier to subscribe to
+ * @param attributeKey - The attribute key to watch for changes
+ * @returns The current attribute value or undefined if not found
+ *
+ * @example
+ * useBlockAttribute('block-1', 'className') → 'my-class'
  */
-export function useBlockAttribute(blockID: BlockID, attribute: AttributeKeys): string | undefined {
-	const attributeValidation = validateAttributeKey(attribute);
+export function useBlockAttribute(blockID: BlockID, attributeKey: AttributeKey): string | undefined {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), attributeKey: validateAttributeKey(attributeKey) }, `[BlockManager → useBlockAttribute]`);
+	if (!safeParams) return;
 
-	if (!attributeValidation.success) {
-		devLog.error(`[attributeManager → useBlockAttribute] ${attributeValidation.error}`);
-		return undefined;
-	}
-
-	return useBlockStore((state) => state.allBlocks[blockID]?.attributes?.[attribute]);
+	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.attributes?.[safeParams.attributeKey]);
 }

@@ -1,18 +1,17 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect, RefObject } from 'react';
 
 /**
  * Custom hook for handling drag logic.
  * Encapsulates state and handlers for dragging an element.
+ * Attaches mousedown listener to the ref and handles global mousemove/mouseup.
  *
- * @param position - Current position of the element ({ top, left })
+ * @param ref - RefObject to the draggable element
  * @param setPosition - Setter function to update the element position
- * @returns Object containing handlers and state for dragging:
- *   - startDrag: function to start dragging
- *   - stopDrag: function to stop dragging
- *   - handleMouseMove: function to handle mouse move events during dragging
- *   - dragging: ref indicating if dragging is active
+ * @param shouldStartDrag - Optional function to determine if drag should start on mousedown (default: always true)
+ * @param locked - Whether dragging is disabled
+ * @returns Object containing dragging state
  */
-export function useDrag(position: { top: number; left: number }, setPosition: (position: { top: number; left: number }) => void) {
+export function useDrag(ref: RefObject<HTMLElement | null>, setPosition: (position: { top: number; left: number }) => void, shouldStartDrag: (e: MouseEvent) => boolean = () => true, locked: boolean = false) {
 	// Tracks whether dragging is active
 	const dragging = useRef(false);
 
@@ -31,17 +30,19 @@ export function useDrag(position: { top: number; left: number }, setPosition: (p
 	 * @param e - Mouse event that started the drag
 	 */
 	const startDrag = useCallback(
-		(e: React.MouseEvent) => {
+		(e: MouseEvent) => {
 			dragging.current = true;
+			const rect = ref.current?.getBoundingClientRect();
+			if (!rect) return;
 			dragStart.current = {
 				x: e.clientX,
 				y: e.clientY,
-				left: position.left,
-				top: position.top,
+				left: rect.left,
+				top: rect.top,
 			};
 			document.body.style.cursor = 'move';
 		},
-		[position]
+		[ref]
 	);
 
 	/**
@@ -70,6 +71,45 @@ export function useDrag(position: { top: number; left: number }, setPosition: (p
 		[setPosition]
 	);
 
-	// Return handlers and state ref
-	return { startDrag, stopDrag, handleMouseMove, dragging };
+	/**
+	 * Handles mouse up to stop dragging.
+	 */
+	const handleMouseUp = useCallback(() => {
+		stopDrag();
+	}, [stopDrag]);
+
+	/**
+	 * Handles mousedown on the element to potentially start drag.
+	 */
+	const handleMouseDown = useCallback(
+		(e: MouseEvent) => {
+			if (locked || !shouldStartDrag(e)) {
+				return;
+			}
+			startDrag(e);
+		},
+		[locked, shouldStartDrag, startDrag]
+	);
+
+	// Attach mousedown listener to ref
+	useEffect(() => {
+		const element = ref.current;
+		if (!element) return;
+
+		element.addEventListener('mousedown', handleMouseDown);
+		return () => element.removeEventListener('mousedown', handleMouseDown);
+	}, [ref, handleMouseDown]);
+
+	// Attach global mousemove and mouseup listeners
+	useEffect(() => {
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+		return () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
+	}, [handleMouseMove, handleMouseUp]);
+
+	// Return only the dragging state
+	return { dragging };
 }

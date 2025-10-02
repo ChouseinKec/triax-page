@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 // Stores
 import { usePageStore } from '@/src/page-builder/state/stores/page';
 
@@ -9,11 +7,20 @@ import type { DeviceDefinition, DeviceInstance, DeviceID } from '@/src/page-buil
 // Registry
 import { getRegisteredDevices, getRegisteredDevice } from '@/src/page-builder/state/registries/page';
 
+// Utilities
+import { validateOrLog } from '@/src/shared/utilities/validation';
+
+// Helpers
+import { validateDeviceID } from '@/src/page-builder/services/helpers/page/device';
+
 /**
- * Reactive hook to get the current device.
- * @returns The current device object
+ * Reactive hook to get the currently selected device instance for page management operations.
+ * Returns the complete device object based on the current selection in the page store.
+ *
+ * @returns The current device instance or undefined if not found
+ *
  * @example
- * const device = useSelectedDevice(); // { id: 'all', name: 'all', value: 'all' }
+ * const device = useSelectedDevice() // Returns { id: 'mobile', name: 'Mobile', ... }
  */
 export function useSelectedDevice(): DeviceInstance | undefined {
 	const selectedDeviceID = usePageStore((state) => state.selectedDeviceID);
@@ -21,76 +28,70 @@ export function useSelectedDevice(): DeviceInstance | undefined {
 }
 
 /**
- * Gets the current device synchronously.
- * @returns The current device object
+ * Reactive hook to get the currently selected device ID for page management operations.
+ * Returns the device identifier from the page store state.
+ *
+ * @returns The current device ID or undefined if not set
+ *
  * @example
- * const device = getSelectedDevice(); // { id: 'all', name: 'all', value: 'all' }
- */
-export function getSelectedDevice(): DeviceInstance | undefined {
-	const selectedDeviceID = usePageStore.getState().selectedDeviceID;
-	return getRegisteredDevice(selectedDeviceID);
-}
-
-/**
- * Reactive hook to get the current device ID.
- * @returns The current device ID
- * @example
- * const deviceID = useSelectedDeviceID(); // 'all'
+ * const deviceID = useSelectedDeviceID() // Returns 'mobile' or undefined
  */
 export function useSelectedDeviceID(): DeviceID | undefined {
 	return usePageStore((state) => state.selectedDeviceID);
 }
 
 /**
- * Gets the current device ID.
- * @returns The current device ID
+ * Gets the currently selected device ID from the page store for page management operations.
+ * Returns the device identifier from the current store state.
+ *
+ * @returns The current device ID or undefined if not set
+ *
  * @example
- * const deviceID = getSelectedDeviceID(); // 'all'
+ * const deviceID = getSelectedDeviceID() // Returns 'mobile' or undefined
  */
 export function getSelectedDeviceID(): DeviceID | undefined {
-	const selectedDeviceID = usePageStore.getState().selectedDeviceID;
-	const device = getRegisteredDevice(selectedDeviceID);
-	return device?.id;
+	return usePageStore.getState().getSelectedDeviceID();
 }
 
 /**
- * Sets the current device by ID.
- * @param deviceID - The device ID to set
+ * Sets the currently selected device by ID for page management operations.
+ * Updates the page store with the new device selection.
+ *
+ * @param deviceID - The device ID to set as current
+ * @returns void
+ *
  * @example
- * setSelectedDeviceID('mobile'); // Sets current device to mobile
+ * setSelectedDeviceID('mobile') // Sets current device to mobile
  */
 export function setSelectedDeviceID(deviceID: DeviceID): void {
-	if (!deviceID) return;
-	usePageStore.getState().setSelectedDeviceID(deviceID);
+	const safeParams = validateOrLog({ deviceID: validateDeviceID(deviceID) }, `[PageManager → setSelectedDeviceID]`);
+	if (!safeParams) return;
+
+	usePageStore.getState().setSelectedDeviceID(safeParams.deviceID);
 }
 
 /**
- * Gets all available devices.
+ * Gets all available device definitions for page management operations.
+ * Returns an array of all registered device definitions from the registry.
+ *
  * @returns Array of all device definitions
+ *
  * @example
- * const devices = getAllDevices(); // [{ name: 'all', value: 'all' }, { name: 'mobile', value: 'mobile' }, ...]
+ * const devices = getAllDevices() // Returns [{ id: 'all', name: 'All' }, { id: 'mobile', name: 'Mobile' }, ...]
  */
 export function getAllDevices(): DeviceDefinition[] {
 	return Object.values(getRegisteredDevices());
 }
 
 /**
- * Gets a specific device by ID.
- * @param deviceID - The device ID to retrieve
- * @returns The device object or undefined if not found
+ * Gets the default device ID for page management operations.
+ * Returns the hardcoded default device identifier used as fallback.
+ *
+ * @returns The default device ID string
+ *
  * @example
- * const device = getDevice('mobile'); // { id: 'mobile', name: 'mobile', value: 'mobile' }
+ * const defaultID = getDeviceDefaultID() // Returns 'all'
  */
-export function getDevice(deviceID: DeviceID): DeviceInstance | undefined {
-	return getRegisteredDevice(deviceID);
-}
-
-/**
- * Gets the default device ID.
- * @returns The default device ID
- * @example
- * const defaultDeviceID = getDeviceDefaultID(); // 'all'
- */
-export function getDeviceDefaultID() {
-	return 'all ';
+export function getDeviceDefaultID(): string {
+	return 'all';
 }

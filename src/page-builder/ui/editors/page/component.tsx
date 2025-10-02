@@ -10,7 +10,7 @@ import ViewportEditor from "@/src/page-builder/ui/editors/viewport/component";
 import LayoutEditor from "@/src/page-builder/ui/editors/layout/component";
 
 //Managers
-import { useAllActions } from "@/src/page-builder/services/managers/page";
+import { usePageActions } from "@/src/page-builder/services/managers/page";
 
 /**
  * PageEditor Component
@@ -19,7 +19,7 @@ import { useAllActions } from "@/src/page-builder/services/managers/page";
  * @returns ReactElement
  */
 const PageEditor: React.FC = () => {
-    const allActions = useAllActions();
+    const allActions = usePageActions();
 
     const actionInstances = useMemo(() => (
         allActions

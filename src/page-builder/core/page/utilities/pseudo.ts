@@ -1,20 +1,32 @@
 // Types
-import type { PseudoID,PseudoName,PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
+import type { PseudoDefinition, PseudoID, PseudoName, PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
 
 /**
  * Validates that a pseudo name is valid
  */
-export function isPseudoNameValid(name: unknown): name is PseudoName {
-	return typeof name === 'string' && ['all', 'hover', 'active'].includes(name);
+export function isPseudoNameValid(pseudoName: unknown): pseudoName is PseudoName {
+	return typeof pseudoName === 'string' && pseudoName.length > 0;
 }
 
 /**
  * Validates that a pseudo value is valid
  */
-export function isPseudoValueValid(value: unknown): value is PseudoValue {
-	return typeof value === 'string' && ['all', 'hover', 'active'].includes(value);
+export function isPseudoValueValid(pseudoValue: unknown): pseudoValue is PseudoValue {
+	return typeof pseudoValue === 'string' && pseudoValue.length > 0;
 }
 
-export function isPseudoIDValid(value: unknown): value is PseudoID {
-    return typeof value === 'string' && value.length > 0;
+export function isPseudoIDValid(pseudoID: unknown): pseudoID is PseudoID {
+	return typeof pseudoID === 'string' && pseudoID.length > 0;
+}
+
+/**
+ * Type guard to check if a value is a valid PseudoDefinition shape
+ */
+export function isPseudoDefinitionValid(pseudoDefinition: unknown): pseudoDefinition is Record<keyof PseudoDefinition, unknown> {
+	return (
+		typeof pseudoDefinition === 'object' && //
+		pseudoDefinition !== null &&
+		'name' in pseudoDefinition &&
+		'value' in pseudoDefinition
+	);
 }

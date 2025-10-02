@@ -1,5 +1,4 @@
-export type Position = "top" | "bottom" | "left" | "right";
-export type Role = 'tooltip' | 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'group' | 'region';
+export type Anchor = "top" | "bottom" | "left" | "right";
 export interface FloatRevealProps {
     /** Reference to the target element that triggers the float */
     targetRef: React.RefObject<HTMLElement | null>;
@@ -8,13 +7,13 @@ export interface FloatRevealProps {
     children: React.ReactNode;
 
     /** Preferred position relative to the target element */
-    position?: Position;
+    anchor?: Anchor;
 
-    /** External control override (undefined = hover controlled, boolean = parent controlled) */
-    isOpen?: boolean;
+    /** Controls whether the float is visible (required for controlled behavior) */
+    isOpen: boolean;
 
-    /** Delay for hover show/hide transitions in milliseconds */
-    hoverDelay?: number;
+    /** Whether to automatically close on outside clicks or Escape key */
+    autoClose?: boolean;
 
     /** Whether to close the float when Escape key is pressed */
     closeOnEscape?: boolean;
@@ -22,6 +21,6 @@ export interface FloatRevealProps {
     /** Optional class name for custom styling */
     className?: string;
 
-    /** Callback function when visibility state changes */
+    /** Callback function when visibility state changes (for auto-close) */
     onVisibilityChange?: (isVisible: boolean) => void;
 }

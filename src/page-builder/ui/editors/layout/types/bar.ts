@@ -22,4 +22,10 @@ export type LayoutBarProps = {
 	 * ID of the bar to get actions for
 	 */
 	barID: BarID;
+
+	/**
+	 * Background color of the LayoutBar
+	 * @default 'transparent'
+	*/
+	isTransparent?: boolean;
 };

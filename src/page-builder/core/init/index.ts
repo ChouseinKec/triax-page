@@ -26,10 +26,10 @@ class InitializationCoordinator {
 	/**
 	 * Execute all initialization steps in order.
 	 */
-	async initialize(): Promise<ValidationResult> {
+	async initialize(): Promise<ValidationResult<null>> {
 		if (this.initialized) {
 			devLog.info('[InitCoordinator] Already initialized, skipping');
-			return { success: true };
+			return { valid: true, value: null };
 		}
 
 		devLog.info('[InitCoordinator] Starting initialization pipeline...');
@@ -50,8 +50,8 @@ class InitializationCoordinator {
 				if (step.required) {
 					devLog.error('[InitCoordinator] Required step failed, aborting initialization');
 					return {
-						success: false,
-						error: `Required initialization step "${step.name}" failed: ${errorMessage}`,
+						valid: false,
+						message: `Required initialization step "${step.name}" failed: ${errorMessage}`,
 					};
 				}
 			}
@@ -60,7 +60,7 @@ class InitializationCoordinator {
 		this.initialized = true;
 		devLog.info(`[InitCoordinator] 🎉 Initialization complete!`);
 
-		return { success: true };
+		return { valid: true, value: null };
 	}
 }
 

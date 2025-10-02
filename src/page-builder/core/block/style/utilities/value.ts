@@ -4,7 +4,7 @@ import { splitAdvanced } from '@/src/shared/utilities/string';
 import { isColor } from '@/src/shared/utilities/color';
 
 // Types
-import type { TokenTypes, StyleKeys, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
+import type { TokenTypes, StyleKey, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
 
 // Constants
 import { StyleDefinitions, StyleValueSeparatorDefaults, UnitDefinitions } from '@/src/page-builder/core/block/style/constants';
@@ -240,12 +240,12 @@ export function getValueTokens(values: unknown[]): string[] {
  * isValueValid('color', '#fff', 'StyleManager') → true
  * isValueValid('display', 'invalid', 'StyleManager') → false (logs error)
  */
-export function isStyleValueValid(styleKey: StyleKeys, value: unknown): boolean {
+export function isStyleValueValid(styleKey: StyleKey, styleValue: unknown): boolean {
 	// Validate input parameters
-	if (typeof value !== 'string') return false;
+	if (typeof styleValue !== 'string') return false;
 
 	// Empty strings are valid CSS values (used to clear/reset properties)
-	if (value === '') return true;
+	if (styleValue === '') return true;
 
 	// Fetch the property definition from the StyleDefinitions
 	const propertyDef = StyleDefinitions[styleKey];
@@ -256,7 +256,7 @@ export function isStyleValueValid(styleKey: StyleKeys, value: unknown): boolean 
 	if (!syntaxNormalized) return false;
 
 	// Split the value into its components
-	const values = splitAdvanced(value, StyleValueSeparatorDefaults);
+	const values = splitAdvanced(styleValue, StyleValueSeparatorDefaults);
 
 	// Convert the values to their token representations
 	const valueTokens = getValueTokens(values).join(' ');

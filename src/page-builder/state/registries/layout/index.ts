@@ -3,7 +3,7 @@ import type { PanelDefinition, BarDefinition, TabDefinition } from '@/src/page-b
 import type { ValidationResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validatePanel, validateTab, validateBar } from '@/src/page-builder/services/helpers/layout';
+import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/layout';
 
 /**
  * Class-based layout registry for managing panels and bars
@@ -18,17 +18,17 @@ class LayoutRegistry {
 	 * @param panel - The LayoutPanel definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerPanel(panel: PanelDefinition): ValidationResult {
-		const validation = validatePanel(panel);
-		if (!validation.success) return { success: false, error: validation.error };
+	registerPanel(panel: PanelDefinition): ValidationResult<PanelDefinition> {
+		const validation = validatePanelDefinition(panel);
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.panels[panel.id]) {
-			return { success: false, error: `Panel with id "${panel.id}" already registered` };
+			return { valid: false, message: `Panel with id "${panel.id}" already registered` };
 		}
 
 		this.panels = { ...this.panels, [panel.id]: panel };
-		return { success: true };
+		return { valid: true, value: panel };
 	}
 
 	/**
@@ -36,17 +36,17 @@ class LayoutRegistry {
 	 * @param tab - The Tab definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerTab(tab: TabDefinition): ValidationResult {
-		const validation = validateTab(tab);
-		if (!validation.success) return { success: false, error: validation.error };
+	registerTab(tab: TabDefinition): ValidationResult<TabDefinition> {
+		const validation = validateTabDefinition(tab);
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.tabs[tab.id]) {
-			return { success: false, error: `Tab with id "${tab.id}" already registered` };
+			return { valid: false, message: `Tab with id "${tab.id}" already registered` };
 		}
 
 		this.tabs = { ...this.tabs, [tab.id]: tab };
-		return { success: true };
+		return { valid: true, value: tab };
 	}
 
 	/**
@@ -54,19 +54,19 @@ class LayoutRegistry {
 	 * @param bar - The LayoutBar definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerBar(bar: BarDefinition): ValidationResult {
+	registerBar(bar: BarDefinition): ValidationResult<BarDefinition> {
 		// Validate bar
-		const validation = validateBar(bar);
-		if (!validation.success) return { success: false, error: validation.error };
+		const validation = validateBarDefinition(bar);
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.bars[bar.id]) {
-			return { success: false, error: `Bar with id "${bar.id}" already registered` };
+			return { valid: false, message: `Bar with id "${bar.id}" already registered` };
 		}
 
 		// Register bar
 		this.bars = { ...this.bars, [bar.id]: bar };
-		return { success: true };
+		return { valid: true, value: bar };
 	}
 
 	/**

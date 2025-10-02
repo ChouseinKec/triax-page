@@ -1,5 +1,5 @@
 // Types
-import { PanelPosition, PanelSize, PanelID, PanelTitle, PanelIcon, PanelOrder } from '@/src/page-builder/core/editor/layout/types';
+import { PanelPosition, PanelSize, PanelID, PanelTitle, PanelIcon, PanelOrder, PanelDefinition } from '@/src/page-builder/core/editor/layout/types';
 
 /**
  * Validates if a panel ID is valid
@@ -24,8 +24,13 @@ export function isPanelTitleValid(panelTitle: unknown): panelTitle is PanelTitle
  * @param position - The panel position to validate
  * @returns true if valid, false otherwise
  */
-export function isPanelPositionValid(position: unknown): position is PanelPosition {
-	return typeof position === 'object' && position !== null && typeof (position as Record<string, unknown>).top === 'string' && typeof (position as Record<string, unknown>).left === 'string';
+export function isPanelPositionValid(panelPosition: unknown): panelPosition is PanelPosition {
+	return (
+		typeof panelPosition === 'object' &&
+		panelPosition !== null && //
+		typeof (panelPosition as Record<string, unknown>).top === 'string' &&
+		typeof (panelPosition as Record<string, unknown>).left === 'string'
+	);
 }
 
 /**
@@ -33,8 +38,15 @@ export function isPanelPositionValid(position: unknown): position is PanelPositi
  * @param size - The panel size to validate
  * @returns true if valid, false otherwise
  */
-export function isPanelSizeValid(size: unknown): size is PanelSize {
-	return typeof size === 'object' && size !== null && typeof (size as PanelSize).width === 'string' && typeof (size as PanelSize).height === 'string' && typeof (size as PanelSize).minWidth === 'number' && typeof (size as PanelSize).minHeight === 'number';
+export function isPanelSizeValid(panelSize: unknown): panelSize is PanelSize {
+	return (
+		typeof panelSize === 'object' &&
+		panelSize !== null && //
+		typeof (panelSize as PanelSize).width === 'string' &&
+		typeof (panelSize as PanelSize).height === 'string' &&
+		typeof (panelSize as PanelSize).minWidth === 'number' &&
+		typeof (panelSize as PanelSize).minHeight === 'number'
+	);
 }
 
 /**
@@ -42,8 +54,8 @@ export function isPanelSizeValid(size: unknown): size is PanelSize {
  * @param value - The number to validate
  * @returns true if valid, false otherwise
  */
-export function isPanelOrderValid(value: unknown): value is PanelOrder {
-	return typeof value === 'number' && !isNaN(value);
+export function isPanelOrderValid(panelOrder: unknown): panelOrder is PanelOrder {
+	return typeof panelOrder === 'number' && !isNaN(panelOrder);
 }
 
 /**
@@ -51,6 +63,35 @@ export function isPanelOrderValid(value: unknown): value is PanelOrder {
  * @param icon - The React icon to validate
  * @returns true if valid, false otherwise
  */
-export function isPanelIconValid(icon: unknown): icon is PanelIcon {
-	return icon !== null && icon !== undefined;
+export function isPanelIconValid(panelIcon: unknown): panelIcon is PanelIcon {
+	return panelIcon != null;
+}
+
+/**
+ * Validates if a boolean is valid
+ * @param value - The boolean to validate
+ * @returns true if valid, false otherwise
+ */
+export function isPanelLockedValid(panelLocked: unknown): panelLocked is boolean {
+	return typeof panelLocked === 'boolean';
+}
+
+export function isPanelOpenValid(panelOpen: unknown): panelOpen is boolean {
+	return typeof panelOpen === 'boolean';
+}
+
+export function isPanelDefinitionValid(panelDefinition: unknown): panelDefinition is PanelDefinition {
+	return (
+		typeof panelDefinition === 'object' && //
+		panelDefinition !== null &&
+		'id' in panelDefinition &&
+		'title' in panelDefinition &&
+		'order' in panelDefinition &&
+		'icon' in panelDefinition &&
+		'workbenchID' in panelDefinition &&
+		'initialPosition' in panelDefinition &&
+		'initialSize' in panelDefinition &&
+		'initialLocked' in panelDefinition &&
+		'initialOpen' in panelDefinition
+	);
 }

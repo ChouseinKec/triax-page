@@ -16,18 +16,18 @@ class WorkbenchRegistryClass {
 	 * @param workbench - The workbench definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerWorkbench(workbench: WorkbenchDefinition): ValidationResult {
+	registerWorkbench(workbench: WorkbenchDefinition): ValidationResult<WorkbenchDefinition> {
 		const validation = validateWorkbench(workbench);
-		if (!validation.success) return { success: false, error: validation.error };
+		if (!validation.valid) return { valid: false, message: validation.message };
 
 		// Check for duplicates
 		if (this.workbenches[workbench.id]) {
-			return { success: false, error: `Workbench with id "${workbench.id}" already registered` };
+			return { valid: false, message: `Workbench with id "${workbench.id}" already registered` };
 		}
 
 		this.workbenches = { ...this.workbenches, [workbench.id]: workbench };
 
-		return { success: true };
+		return { valid: true, value: workbench };
 	}
 
 	/**

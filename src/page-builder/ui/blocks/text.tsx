@@ -4,55 +4,54 @@ import React, { useCallback, useRef } from "react";
 import type { BlockInstance } from '@/src/page-builder/core/block/block/types';
 
 // Managers
-import { useHasBlockSelectedContent, useIsBlockSelected, selectBlock, useRenderedBlockAttributes, useRenderedBlockStyles } from '@/src/page-builder/services/managers/block';
+import { useIsBlockSelected, selectBlock, useRenderedBlockAttributes, useRenderedBlockStyles } from '@/src/page-builder/services/managers/block';
 import { setBlockAttribute, useBlockAttribute } from "@/src/page-builder/services/managers/block/attribute";
 
 const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
-    const isSelected = useIsBlockSelected(instance.id);
-    const hasChildSelected = useHasBlockSelectedContent(instance.id);
-    const BlockAttributes = useRenderedBlockAttributes(instance.id);
-    const BlockStyles = useRenderedBlockStyles(instance.id);
+    const blockID = instance.id;
+    const isSelected = useIsBlockSelected(blockID);
+    const blockAttributes = useRenderedBlockAttributes(blockID);
+    const blockStyles = useRenderedBlockStyles(blockID);
 
     // Get the current text value from attributes
-    const text = useBlockAttribute(instance.id, "text") || "Enter something...";
+    const text = useBlockAttribute(blockID, "text") || "Enter something...";
 
     // Ref to access the <p> element
-    const pRef = useRef<HTMLParagraphElement>(null);
+    const textRef = useRef<HTMLParagraphElement>(null);
 
     // Handle block selection
     const handleSelectBlock = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
-            selectBlock(instance.id);
+            selectBlock(blockID);
         },
-        [selectBlock, instance.id]
+        [selectBlock, blockID]
     );
 
     // Commit text to block attribute only on blur (focus lost)
     const handleBlur = useCallback(() => {
-        const currentText = pRef.current?.innerText ?? "";
-        setBlockAttribute(instance.id, "text", currentText);
-    }, [setBlockAttribute, instance.id]
+        const currentText = textRef.current?.innerText ?? "";
+        setBlockAttribute(blockID, "text", currentText);
+    }, [setBlockAttribute, blockID]
     );
 
     return (
         <>
             <p
-                ref={pRef}
-                id={`block-${instance.id}`}
+                ref={textRef}
+                id={`block-${blockID}`}
                 onClick={handleSelectBlock}
                 onBlur={handleBlur}
                 data-block-type="container"
                 data-is-selected={isSelected}
-                data-has-selected-descendant={hasChildSelected}
                 contentEditable
                 suppressContentEditableWarning
-                {...BlockAttributes}
+                {...blockAttributes}
             >
                 {text}
 
             </p>
-            <style>{BlockStyles}</style>
+            <style>{blockStyles}</style>
         </>
     );
 }

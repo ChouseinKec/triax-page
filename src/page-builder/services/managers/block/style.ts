@@ -1,10 +1,17 @@
 // Utilities
 import { cascadeStyle } from '@/src/page-builder/core/block/style/utilities';
 import { resolveShorthand } from '@/src/page-builder/core/block/style/utilities';
+import { useMemo } from 'react';
+
 import { devLog } from '@/src/shared/utilities/dev';
+import { validateOrLog } from '@/src/shared/utilities/validation';
 
 // Helpers
 import { validateStyleKey, validateStyleValue, hasShorthand, getShorthand } from '@/src/page-builder/services/helpers/block/style';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block';
+import { validatePseudoID } from '@/src/page-builder/services/helpers/page/pseudo';
+import { validateOrientationID } from '@/src/page-builder/services/helpers/page/orientation';
+import { validateDeviceID } from '@/src/page-builder/services/helpers/page/device';
 
 // Managers
 import { useSelectedDeviceID, getSelectedDeviceID, getDeviceDefaultID, useSelectedOrientationID, getSelectedOrientationID, getOrientationDefaultID, useSelectedPseudoID, getSelectedPseudoID, getPseudoDefaultID } from '@/src/page-builder/services/managers/page';
@@ -14,45 +21,35 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';
-import type { StyleKeys } from '@/src/page-builder/core/block/style/types';
+import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 
 /**
- * Gets a style styleKey value with CSS cascade fallback logic.
- * Validates block and styleKey before lookup.
+ * Gets a style key value with CSS cascade fallback logic for block style operations.
+ * Resolves the style value considering device, orientation, and pseudo contexts.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to lookup
- * @returns The resolved value or empty string if not found
+ * @param styleKey - The CSS style key to lookup
+ * @returns The resolved value or undefined if not found
+ *
+ * @example
+ * getBlockStyle('block-123', 'color') → 'red'
  */
-export function getBlockStyle(blockID: BlockID, styleKey: StyleKeys): string {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) {
-		devLog.error(`[StyleManager → getBlockStyle] ${keyValidation.error}`);
-		return '';
-	}
+export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
+	const safeParams = validateOrLog(
+		{
+			blockID: validateBlockID(blockID),
+			styleKey: validateStyleKey(styleKey),
+			deviceID: validateDeviceID(getSelectedDeviceID()),
+			orientationID: validateOrientationID(getSelectedOrientationID()),
+			pseudoID: validatePseudoID(getSelectedPseudoID()),
+		},
+		`[BlockManager → getBlockStyle]`
+	);
 
-	const blockStyles = useBlockStore.getState().allBlocks[blockID]?.styles;
-	if (blockStyles === undefined) {
-		devLog.error(`[StyleManager → getBlockStyle] Block styles not found`);
-		return '';
-	}
+	if (!safeParams) return undefined;
 
-	const selectedDeviceID = getSelectedDeviceID();
-	if (!selectedDeviceID) {
-		devLog.error(`[StyleManager → getBlockStyle] Invalid device value: ${selectedDeviceID}`);
-		return '';
-	}
-
-	const selectedOrientationID = getSelectedOrientationID();
-	if (!selectedOrientationID) {
-		devLog.error(`[StyleManager → getBlockStyle] No selected orientation ID`);
-		return '';
-	}
-	const selectedPseudoID = getSelectedPseudoID();
-	if (!selectedPseudoID) {
-		devLog.error(`[StyleManager → getBlockStyle] No selected pseudo ID`);
-		return '';
-	}
+	const block = useBlockStore.getState().getBlock(safeParams.blockID);
+	if (!block) return devLog.error(`[BlockManager → getBlockStyle] Block not found`, undefined);
 
 	const defaultPseudo = getPseudoDefaultID();
 	const defaultOrientation = getOrientationDefaultID();
@@ -61,44 +58,43 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKeys): string {
 	if (hasShorthand(styleKey)) {
 		const properties = getShorthand(styleKey);
 		const values = properties.map((property) => {
-			return cascadeStyle(blockStyles, property, selectedDeviceID, selectedOrientationID, selectedPseudoID, defaultDevice, defaultOrientation, defaultPseudo);
+			return cascadeStyle(block.styles, property, safeParams.deviceID, safeParams.orientationID, safeParams.pseudoID, defaultDevice, defaultOrientation, defaultPseudo);
 		});
 
 		return resolveShorthand(values);
 	}
 
-	return cascadeStyle(blockStyles, styleKey, selectedDeviceID, selectedOrientationID, selectedPseudoID, defaultDevice, defaultOrientation, defaultPseudo);
+	return cascadeStyle(block.styles, styleKey, safeParams.deviceID, safeParams.orientationID, safeParams.pseudoID, defaultDevice, defaultOrientation, defaultPseudo);
 }
 
 /**
- * Sets a style styleKey value for the current device/orientation/pseudo context.
- * Handles CSS shorthand expansion and validates input.
+ * Sets a style key value for the current device/orientation/pseudo context in block style operations.
+ * Handles CSS shorthand expansion and updates the block's styles.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to set
+ * @param styleKey - The CSS style key to set
  * @param value - The value to set
+ * @returns void
+ *
+ * @example
+ * setBlockStyle('block-123', 'color', 'red')
  */
-export function setBlockStyle(blockID: BlockID, styleKey: StyleKeys, value: string): void {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) return devLog.error(`[StyleManager → setBlockStyle] ${keyValidation.error}`);
+export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: string): void {
+	const safeParams = validateOrLog(
+		{
+			blockID: validateBlockID(blockID),
+			styleKey: validateStyleKey(styleKey),
+			value: validateStyleValue(styleKey, value),
+			deviceID: validateDeviceID(getSelectedDeviceID()),
+			orientationID: validateOrientationID(getSelectedOrientationID()),
+			pseudoID: validatePseudoID(getSelectedPseudoID()),
+		},
+		`[BlockManager → setBlockStyle]`
+	);
+	if (!safeParams) return;
 
-	const valueValidation = validateStyleValue(styleKey, value);
-	if (!valueValidation.success) return devLog.error(`[StyleManager → setBlockStyle] ${valueValidation.error}`);
-
-	const blockStyles = useBlockStore.getState().allBlocks[blockID]?.styles;
-	if (blockStyles === undefined) return devLog.error(`[StyleManager → setBlockStyle] Block styles not found`);
-
-	const selectedDeviceID = getSelectedDeviceID();
-	if (!selectedDeviceID) return devLog.error(`[StyleManager → setBlockStyle] Invalid device value: ${selectedDeviceID}`);
-
-	const selectedOrientationID = getSelectedOrientationID();
-	if (!selectedOrientationID) return devLog.error(`[StyleManager → setBlockStyle] No selected orientation ID`);
-
-	const selectedPseudoID = getSelectedPseudoID();
-	if (!selectedPseudoID) return devLog.error(`[StyleManager → setBlockStyle] No selected pseudo ID`);
-
-	const block = useBlockStore.getState().allBlocks[blockID];
-	if (!block) return;
+	const block = useBlockStore.getState().getBlock(safeParams.blockID);
+	if (!block) return devLog.error(`[BlockManager → setBlockStyle] Block not found`, undefined);
 
 	// If the styleKey is a CSS shorthand (e.g. 'margin', 'padding'), set all its longhand properties
 	if (hasShorthand(styleKey)) {
@@ -108,12 +104,12 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKeys, value: stri
 				...block,
 				styles: {
 					...block.styles,
-					[selectedDeviceID]: {
-						...block.styles?.[selectedDeviceID],
-						[selectedOrientationID]: {
-							...block.styles?.[selectedDeviceID]?.[selectedOrientationID],
-							[selectedPseudoID]: {
-								...block.styles?.[selectedDeviceID]?.[selectedOrientationID]?.[selectedPseudoID],
+					[safeParams.deviceID]: {
+						...block.styles?.[safeParams.deviceID],
+						[safeParams.orientationID]: {
+							...block.styles?.[safeParams.deviceID]?.[safeParams.orientationID],
+							[safeParams.pseudoID]: {
+								...block.styles?.[safeParams.deviceID]?.[safeParams.orientationID]?.[safeParams.pseudoID],
 								[longhand]: value,
 							},
 						},
@@ -129,12 +125,12 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKeys, value: stri
 			...block,
 			styles: {
 				...block.styles,
-				[selectedDeviceID]: {
-					...block.styles?.[selectedDeviceID],
-					[selectedOrientationID]: {
-						...block.styles?.[selectedDeviceID]?.[selectedOrientationID],
-						[selectedPseudoID]: {
-							...block.styles?.[selectedDeviceID]?.[selectedOrientationID]?.[selectedPseudoID],
+				[safeParams.deviceID]: {
+					...block.styles?.[safeParams.deviceID],
+					[safeParams.orientationID]: {
+						...block.styles?.[safeParams.deviceID]?.[safeParams.orientationID],
+						[safeParams.pseudoID]: {
+							...block.styles?.[safeParams.deviceID]?.[safeParams.orientationID]?.[safeParams.pseudoID],
 							[styleKey]: value,
 						},
 					},
@@ -147,117 +143,126 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKeys, value: stri
 }
 
 /**
- * Copies a style styleKey value to clipboard.
- * Logs success/failure and validates styleKey.
+ * Copies a style key value to clipboard for block style operations.
+ * Retrieves the current style value and writes it to the system clipboard.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to copy
+ * @param styleKey - The CSS style key to copy
+ * @returns void
+ *
+ * @example
+ * copyBlockStyle('block-123', 'color') // Copies 'red' to clipboard
  */
-export function copyBlockStyle(blockID: BlockID, styleKey: StyleKeys): void {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) return devLog.error(`[StyleManager → resetBlockStyle] ${keyValidation.error}`);
+export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), styleKey: validateStyleKey(styleKey) }, `[BlockManager → copyBlockStyle]`);
+	if (!safeParams) return;
 
-	const value = getBlockStyle(blockID, styleKey);
-	const valueValidation = validateStyleValue(styleKey, value);
-	if (!valueValidation.success) return devLog.error(`[StyleManager → copyBlockStyle] ${valueValidation.error}`);
+	const style = getBlockStyle(safeParams.blockID, safeParams.styleKey);
+	if (!style) return devLog.error(`[BlockManager → copyBlockStyle] No style found for ${safeParams.styleKey}`, undefined);
 
 	// Copy the value to clipboard
 	navigator.clipboard
-		.writeText(value)
+		.writeText(style)
 		.then(() => {
-			devLog.info(`Copied style ${styleKey}: ${value}`);
+			devLog.info(`Copied style ${safeParams.styleKey}: ${style}`);
 		})
 		.catch((err) => {
-			devLog.error(`Failed to copy style ${styleKey}:`, err);
+			devLog.error(`Failed to copy style ${safeParams.styleKey}:`, err);
 		});
 }
 
 /**
- * Pastes a style styleKey value from clipboard.
- * Validates clipboard content and styleKey before setting.
+ * Pastes a style key value from clipboard for block style operations.
+ * Reads text from the system clipboard and sets it as the style value if valid.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to paste
+ * @param styleKey - The CSS style key to paste
+ * @returns void
+ *
+ * @example
+ * pasteBlockStyle('block-123', 'color') // Pastes clipboard content as color value
  */
-export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKeys): void {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) return devLog.error(`[StyleManager → resetBlockStyle] ${keyValidation.error}`);
+export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), styleKey: validateStyleKey(styleKey) }, `[BlockManager → pasteBlockStyle]`);
+	if (!safeParams) return;
 
 	navigator.clipboard
 		.readText()
 		.then((text) => {
-			const valueValidation = validateStyleValue(styleKey, text);
-			if (!valueValidation.success) return devLog.error(`[StyleManager → pasteBlockStyle] ${valueValidation.error}`);
+			const safeValue = validateStyleValue(safeParams.styleKey, text);
+			if (!safeValue.valid) return devLog.error(`[BlockManager → pasteBlockStyle] ${safeValue.message}`);
 
-			setBlockStyle(blockID, styleKey, text);
-			devLog.info(`Pasted style ${styleKey}: ${text}`);
+			setBlockStyle(safeParams.blockID, safeParams.styleKey, safeValue.value);
+			devLog.info(`Pasted style ${safeParams.styleKey}: ${safeValue.value}`);
 		})
 		.catch((err) => {
-			devLog.error(`Failed to paste style ${styleKey}:`, err);
+			devLog.error(`Failed to paste style ${safeParams.styleKey}:`, err);
 		});
 }
 
 /**
- * Resets a style value to empty string.
- * Validates styleKey before resetting.
+ * Resets a style key value to empty string for block style operations.
+ * Clears the current style value by setting it to an empty string.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to reset
+ * @param styleKey - The CSS style key to reset
+ * @returns void
+ *
+ * @example
+ * resetBlockStyle('block-123', 'color') // Resets color to empty string
  */
-export function resetBlockStyle(blockID: BlockID, styleKey: StyleKeys): void {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) return devLog.error(`[StyleManager → resetBlockStyle] ${keyValidation.error}`);
+export function resetBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), styleKey: validateStyleKey(styleKey) }, `[BlockManager → resetBlockStyle]`);
+	if (!safeParams) return;
 
-	setBlockStyle(blockID, styleKey, '');
+	setBlockStyle(safeParams.blockID, safeParams.styleKey, '');
 }
 
 /**
- * Reactive hook to get a block's style value with cascade logic.
- * Validates styleKey before lookup.
+ * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.
+ * Returns the resolved style value considering device, orientation, and pseudo contexts.
+ *
  * @param blockID - The block identifier
- * @param styleKey - The CSS styleKey to retrieve
- * @returns The resolved style value or empty string if not found
+ * @param styleKey - The CSS style key to retrieve
+ * @returns The resolved style value or undefined if not found
+ *
+ * @example
+ * const color = useBlockStyle('block-123', 'color') // Returns 'red' or undefined
  */
-export function useBlockStyle(blockID: BlockID, styleKey: StyleKeys): string {
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.success) {
-		devLog.error(`[StyleManager → useBlockStyle] ${keyValidation.error}`);
-		return '';
-	}
-
-	const selectedDeviceID = useSelectedDeviceID();
-	if (!selectedDeviceID) {
-		devLog.error(`[StyleManager → useBlockStyle] Invalid device value: ${selectedDeviceID}`);
-		return '';
-	}
-
-	const selectedOrientationID = useSelectedOrientationID();
-	if (!selectedOrientationID) {
-		devLog.error(`[StyleManager → useBlockStyle] No selected orientation ID`);
-		return '';
-	}
-	const selectedPseudoID = useSelectedPseudoID();
-	if (!selectedPseudoID) {
-		devLog.error(`[StyleManager → useBlockStyle] No selected pseudo ID`);
-		return '';
-	}
+export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
+	const safeParams = validateOrLog(
+		{
+			blockID: validateBlockID(blockID),
+			styleKey: validateStyleKey(styleKey),
+			deviceID: validateDeviceID(useSelectedDeviceID()),
+			orientationID: validateOrientationID(useSelectedOrientationID()),
+			pseudoID: validatePseudoID(useSelectedPseudoID()),
+		},
+		`[BlockManager → useBlockStyle]`
+	);
+	if (!safeParams) return '';
 
 	const defaultPseudo = getPseudoDefaultID();
 	const defaultOrientation = getOrientationDefaultID();
 	const defaultDevice = getDeviceDefaultID();
 
-	return useBlockStore((state) => {
-		const styles = state.allBlocks[blockID]?.styles;
-		if (!styles) return '';
+	return useBlockStore(
+		useMemo(
+			() => (state) => {
+				const styles = state.allBlocks[blockID]?.styles;
+				if (!styles) return undefined;
 
-		if (hasShorthand(styleKey)) {
-			const properties = getShorthand(styleKey);
-			const values = properties.map((property) => {
-				return cascadeStyle(styles, property, selectedDeviceID, selectedOrientationID, selectedPseudoID, defaultDevice, defaultOrientation, defaultPseudo);
-			});
-			return resolveShorthand(values);
-		}
+				if (hasShorthand(styleKey)) {
+					const properties = getShorthand(styleKey);
+					const values = properties.map((property) => {
+						return cascadeStyle(styles, property, safeParams.deviceID, safeParams.orientationID, safeParams.pseudoID, defaultDevice, defaultOrientation, defaultPseudo);
+					});
+					return resolveShorthand(values);
+				}
 
-		return cascadeStyle(styles, styleKey, selectedDeviceID, selectedOrientationID, selectedPseudoID, defaultDevice, defaultOrientation, defaultPseudo);
-	});
+				return cascadeStyle(styles, styleKey, safeParams.deviceID, safeParams.orientationID, safeParams.pseudoID, defaultDevice, defaultOrientation, defaultPseudo);
+			},
+			[blockID, styleKey, safeParams.deviceID, safeParams.orientationID, safeParams.pseudoID, defaultDevice, defaultOrientation, defaultPseudo]
+		)
+	);
 }

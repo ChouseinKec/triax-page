@@ -31,10 +31,10 @@ function initializeDevices() {
 
 	devices.forEach((device) => {
 		const result = registerDevice(device);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${device.value} registration successful.`);
 		} else {
-			devLog.error(`         ${device.value} registration failed. ${result.error}`);
+			devLog.error(`         ${device.value} registration failed. ${result.message}`);
 		}
 	});
 }
@@ -60,10 +60,10 @@ function initializeOrientations() {
 
 	orientations.forEach((orientation) => {
 		const result = registerOrientation(orientation);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${orientation.value} registration successful.`);
 		} else {
-			devLog.error(`         ${orientation.value} registration failed. ${result.error}`);
+			devLog.error(`         ${orientation.value} registration failed. ${result.message}`);
 		}
 	});
 }
@@ -89,10 +89,10 @@ function initializePseudos() {
 
 	pseudos.forEach((pseudo) => {
 		const result = registerPseudo(pseudo);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${pseudo.value} registration successful.`);
 		} else {
-			devLog.error(`         ${pseudo.value} registration failed. ${result.error}`);
+			devLog.error(`         ${pseudo.value} registration failed. ${result.message}`);
 		}
 	});
 }
@@ -112,10 +112,10 @@ function initializeActions() {
 
 	actions.forEach((action) => {
 		const result = registerAction(action);
-		if (result.success) {
+		if (result.valid) {
 			devLog.info(`         ${action.id} registration successful.`);
 		} else {
-			devLog.error(`         ${action.id} registration failed. ${result.error}`);
+			devLog.error(`         ${action.id} registration failed. ${result.message}`);
 		}
 	});
 }

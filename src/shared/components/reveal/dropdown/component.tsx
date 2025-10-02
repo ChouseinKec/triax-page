@@ -114,7 +114,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = (props: DropdownRevealProp
             {isDisabled !== true && (
                 <FloatReveal
                     targetRef={dropdownRef}
-                    position="bottom"
+                    anchor="bottom"
                     isOpen={isOpen}
                 >
                     {children}

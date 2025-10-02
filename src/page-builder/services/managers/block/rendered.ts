@@ -1,8 +1,5 @@
-// Utilities
-import { renderBlockStyles, renderBlockAttributes } from '@/src/page-builder/core/block/block/utilities';
-
 // Managers
-import { getSelectedDeviceID, getAllOrientations, getAllPseudos, useSelectedOrientation, useSelectedPseudo } from '@/src/page-builder/services/managers/page';
+import { useSelectedDeviceID, useSelectedOrientationID, useSelectedPseudoID } from '@/src/page-builder/services/managers/page';
 
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
@@ -10,42 +7,61 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';
 
+// Utilities
+import { renderBlockStyles, renderBlockAttributes } from '@/src/page-builder/core/block/block/utilities';
+import { validateOrLog } from '@/src/shared/utilities/validation';
+import { devLog } from '@/src/shared/utilities/dev';
+
+// Helpers
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateDeviceID } from '@/src/page-builder/services/helpers/page/device';
+import { validateOrientationID } from '@/src/page-builder/services/helpers/page/orientation';
+import { validatePseudoID } from '@/src/page-builder/services/helpers/page/pseudo';
+
 /**
- * Reactive hook to get rendered CSS styles for a block.
- * Combines block styles with current device, orientation, and pseudo states.
+ * Reactive hook to get rendered CSS styles for a block in block rendering operations.
+ * Combines block styles with current device, orientation, and pseudo states to generate CSS.
+ *
  * @param blockID - The block identifier
  * @returns Rendered CSS string or undefined if block doesn't exist or has no styles
+ *
  * @example
- * const styles = useRenderedBlockStyles('block-123'); // 'color: red; font-size: 16px;'
+ * useRenderedBlockStyles('block-123') → 'color: red; font-size: 16px;'
  */
 export function useRenderedBlockStyles(blockID: BlockID): string | undefined {
-	const styles = useBlockStore((state) => state.allBlocks[blockID]?.styles);
-	const currentDevice = getSelectedDeviceID();
-	const selectedOrientation = useSelectedOrientation();
-	const selectedPseudo = useSelectedPseudo();
+	const safeParams = validateOrLog(
+		{
+			blockID: validateBlockID(blockID),
+			selectedDeviceID: validateDeviceID(useSelectedDeviceID()),
+			selectedOrientationID: validateOrientationID(useSelectedOrientationID()),
+			selectedPseudoID: validatePseudoID(useSelectedPseudoID()),
+		},
+		`[BlockManager → useRenderedBlockStyles]`
+	);
+	if (!safeParams) return;
 
-	if (!styles || !currentDevice || !selectedOrientation || !selectedPseudo) return undefined;
+	const styles = useBlockStore((state) => state.allBlocks[safeParams.blockID]?.styles);
+	if (!styles) return devLog.warn(`[BlockManager → useRenderedBlockStyles] No styles found for block ID: ${safeParams.blockID}`, undefined);
 
-	const orientations = getAllOrientations();
-	const pseudos = getAllPseudos();
-	const orientation = orientations.find((o) => o.name === selectedOrientation.name);
-	const pseudo = pseudos.find((p) => p.name === selectedPseudo.name);
-
-	if (!orientation || !pseudo) return undefined;
-
-	return renderBlockStyles(styles, blockID, currentDevice, orientation, pseudo);
+	return renderBlockStyles(styles, blockID, safeParams.selectedDeviceID, safeParams.selectedOrientationID, safeParams.selectedPseudoID);
 }
 
 /**
- * Reactive hook to get rendered HTML attributes for a block.
- * Combines block attributes with any additional processing needed for HTML rendering.
+ * Reactive hook to get rendered HTML attributes for a block in block rendering operations.
+ * Processes block attributes for HTML rendering with any necessary transformations.
+ *
  * @param blockID - The block identifier
- * @returns Rendered attributes object or null if block doesn't exist or has no attributes
+ * @returns Rendered attributes object or undefined if block doesn't exist or has no attributes
+ *
  * @example
- * const attributes = useRenderedBlockAttributes('block-123'); // { class: 'my-class', id: 'block-123' }
+ * useRenderedBlockAttributes('block-123') → { class: 'my-class', id: 'block-123' }
  */
-export function useRenderedBlockAttributes(blockID: BlockID): Record<string, string | boolean> | null {
-	const attributes = useBlockStore((state) => state.allBlocks[blockID]?.attributes);
-	if (attributes === undefined) return null;
+export function useRenderedBlockAttributes(blockID: BlockID): Record<string, string | boolean> | undefined {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useRenderedBlockAttributes]`);
+	if (!safeParams) return;
+
+	const attributes = useBlockStore((state) => state.allBlocks[safeParams.blockID]?.attributes);
+	if (!attributes) return devLog.warn(`[BlockManager → useRenderedBlockAttributes] No attributes found for block ID: ${safeParams.blockID}`, undefined);
+
 	return renderBlockAttributes(attributes);
 }

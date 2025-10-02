@@ -6,7 +6,7 @@ import CSS from "./styles.module.scss";
 
 // Types
 import type { BlockStylesValueFunctionProps } from "@/src/page-builder/ui/inspectors/block/types";
-import type { StyleKeys } from "@/src/page-builder/core/block/style/types";
+import type { StyleKey } from "@/src/page-builder/core/block/style/types";
 
 // Components
 import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
@@ -36,7 +36,7 @@ const BlockStylesValueFunction: React.FC<BlockStylesValueFunctionProps> = ({ val
 
     const functionOptions = filterFunctionOptions(options);
     const currentOption = matchFunctionOption(functionOptions, value);
-    const createdProperty = createProperty(currentOption.name as StyleKeys, currentOption.syntax);
+    const createdProperty = createProperty(currentOption.name as StyleKey, currentOption.syntax);
     const extractedValue = extractFunctionValue(value);
 
     // Handle changes to CSS function value arguments

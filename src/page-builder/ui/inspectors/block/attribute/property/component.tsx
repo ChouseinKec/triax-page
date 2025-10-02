@@ -6,7 +6,7 @@ import { memo, useRef } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import FloatReveal from "@/src/shared/components/reveal/float/component";
+import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
 
 // Types
 import type { BlockAttributesPropertyProps } from "@/src/page-builder/ui/inspectors/block/types";
@@ -53,7 +53,7 @@ const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ compo
                         {label}
                     </span>
 
-                    <FloatReveal targetRef={labelRef} position="top">
+                    <TooltipReveal targetRef={labelRef} anchor="top">
                         <div className={CSS.BlockAttributesProperty__FloatTitle} aria-label="Property Name">
                             {propertyName}
                         </div>
@@ -61,7 +61,7 @@ const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ compo
                         <div className={CSS.BlockAttributesProperty__FloatDescription} aria-label="Property Description">
                             {propertyDescription}
                         </div>
-                    </FloatReveal>
+                    </TooltipReveal>
                 </div>
             )}
 

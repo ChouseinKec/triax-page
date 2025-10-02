@@ -3,7 +3,7 @@ import { create } from 'zustand';
 // Types
 import type { PanelID, PanelInstance, TabInstance, PanelRecord } from '@/src/page-builder/core/editor/layout/types';
 import type { BarDefinition, BarID } from '@/src/page-builder/core/editor/layout/types';
-import type { BarRecord, ActionInstance, ActionID } from '@/src/page-builder/core/editor/layout/types/bar';
+import type { BarRecord, BarActionInstance, BarActionID } from '@/src/page-builder/core/editor/layout/types/bar';
 
 // Registry
 import { getRegisteredPanels, getRegisteredTabs, getRegisteredBars } from '@/src/page-builder/state/registries/layout';
@@ -13,8 +13,10 @@ interface LayoutStoreState {
 	layoutBars: BarRecord;
 
 	updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => void;
-	registerBarAction: (barID: BarID, action: ActionInstance) => void;
-	unregisterBarAction: (barID: BarID, actionID: ActionID) => void;
+	getPanel: (panelID: PanelID) => PanelInstance | undefined;
+	getBar: (barID: BarID) => BarRecord[BarID] | undefined;
+	registerBarAction: (barID: BarID, action: BarActionInstance) => void;
+	unregisterBarAction: (barID: BarID, actionID: BarActionID) => void;
 }
 type LayoutStore = LayoutStoreState;
 
@@ -64,9 +66,11 @@ export function createLayoutStore() {
 		})();
 
 		// Build initial bars
-		const initialBars: BarRecord = Object.fromEntries(Object.values(getRegisteredBars()).map((barDef: BarDefinition) => {
-			return [barDef.id, { ...barDef, actions: {}, isOpen: true }]
-		}));
+		const initialBars: BarRecord = Object.fromEntries(
+			Object.values(getRegisteredBars()).map((barDef: BarDefinition) => {
+				return [barDef.id, { ...barDef, actions: {}, isOpen: true }];
+			})
+		);
 
 		return {
 			// Initial state
@@ -91,7 +95,15 @@ export function createLayoutStore() {
 				});
 			},
 
-			registerBarAction: (barID: BarID, action: ActionInstance) => {
+			getPanel: (panelID: PanelID) => {
+				return get().layoutPanels[panelID];
+			},
+
+			getBar: (barID: BarID) => {
+				return get().layoutBars[barID];
+			},
+
+			registerBarAction: (barID: BarID, action: BarActionInstance) => {
 				set((state) => {
 					const bar = state.layoutBars[barID];
 					if (!bar) return state;
@@ -103,8 +115,8 @@ export function createLayoutStore() {
 
 					const sortedActions = Object.fromEntries(
 						Object.values(updatedActions)
-							.sort((a: ActionInstance, b: ActionInstance) => a.order - b.order)
-							.map((act: ActionInstance) => [act.id, act])
+							.sort((a: BarActionInstance, b: BarActionInstance) => a.order - b.order)
+							.map((act: BarActionInstance) => [act.id, act])
 					);
 
 					return {
@@ -119,7 +131,7 @@ export function createLayoutStore() {
 				});
 			},
 
-			unregisterBarAction: (barID: BarID, actionID: ActionID) => {
+			unregisterBarAction: (barID: BarID, actionID: BarActionID) => {
 				set((state) => {
 					const bar = state.layoutBars[barID];
 					if (!bar || !bar.actions[actionID]) return state;
@@ -128,8 +140,8 @@ export function createLayoutStore() {
 
 					const sortedActions = Object.fromEntries(
 						Object.values(restActions)
-							.sort((a: ActionInstance, b: ActionInstance) => a.order - b.order)
-							.map((act: ActionInstance) => [act.id, act])
+							.sort((a: BarActionInstance, b: BarActionInstance) => a.order - b.order)
+							.map((act: BarActionInstance) => [act.id, act])
 					);
 
 					return {

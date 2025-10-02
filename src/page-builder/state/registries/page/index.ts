@@ -1,7 +1,7 @@
 import type { DeviceDefinition, DeviceInstance, DeviceID, DeviceRecord } from '@/src/page-builder/core/page/types/device';
 import type { OrientationDefinition, OrientationInstance, OrientationID, OrientationRecord } from '@/src/page-builder/core/page/types/orientation';
 import type { PseudoDefinition, PseudoInstance, PseudoID, PseudoRecord } from '@/src/page-builder/core/page/types/pseudo';
-import type { ActionInstance, ActionID, ActionRecord } from '@/src/page-builder/core/page/types/action';
+import type { BarActionInstance, BarActionID, BarActionRecord } from '@/src/page-builder/core/page/types/action';
 import type { ValidationResult } from '@/src/shared/types/result';
 
 // Helpers
@@ -20,17 +20,17 @@ class DeviceRegistry {
 	 * @param device - The device definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerDevice(device: DeviceDefinition): ValidationResult {
+	registerDevice(device: DeviceDefinition): ValidationResult<DeviceDefinition> {
 		const validation = validateDeviceDefinition(device);
-		if (!validation.success) return { success: false, error: validation.error };
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.devices[device.value]) {
-			return { success: false, error: `Device with value "${device.value}" already registered` };
+			return { valid: false, message: `Device with value "${device.value}" already registered` };
 		}
 
 		this.devices = { ...this.devices, [device.value]: { ...device, id: device.value } };
-		return { success: true };
+		return { valid: true, value: device };
 	}
 
 	/**
@@ -62,18 +62,18 @@ class OrientationRegistry {
 	 * @param orientation - The orientation definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerOrientation(orientation: OrientationDefinition): ValidationResult {
+	registerOrientation(orientation: OrientationDefinition): ValidationResult<OrientationDefinition> {
 		const validation = validateOrientationDefinition(orientation);
-		if (!validation.success) return { success: false, error: validation.error };
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.orientations[orientation.value]) {
-			return { success: false, error: `Orientation with value "${orientation.value}" already registered` };
+			return { valid: false, message: `Orientation with value "${orientation.value}" already registered` };
 		}
 
 		// Store orientation keyed by its value, ensuring id matches value for consistency
 		this.orientations = { ...this.orientations, [orientation.value]: { ...orientation, id: orientation.value } };
-		return { success: true };
+		return { valid: true, value: orientation };
 	}
 
 	/**
@@ -92,7 +92,6 @@ class OrientationRegistry {
 	getRegisteredOrientation(value: OrientationID): OrientationInstance | undefined {
 		return this.orientations[value];
 	}
-	
 }
 
 /**
@@ -106,18 +105,18 @@ class PseudoRegistry {
 	 * @param pseudo - The pseudo definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerPseudo(pseudo: PseudoDefinition): ValidationResult {
+	registerPseudo(pseudo: PseudoDefinition): ValidationResult<PseudoDefinition> {
 		const validation = validatePseudoDefinition(pseudo);
-		if (!validation.success) return { success: false, error: validation.error };
+		if (!validation.valid) return validation;
 
 		// Check for duplicates
 		if (this.pseudos[pseudo.value]) {
-			return { success: false, error: `Pseudo with value "${pseudo.value}" already registered` };
+			return { valid: false, message: `Pseudo with value "${pseudo.value}" already registered` };
 		}
 
 		// Store pseudo keyed by its value, ensuring id matches value for consistency
 		this.pseudos = { ...this.pseudos, [pseudo.value]: { ...pseudo, id: pseudo.value } };
-		return { success: true };
+		return { valid: true, value: pseudo };
 	}
 
 	/**
@@ -142,28 +141,28 @@ class PseudoRegistry {
  * Class-based action registry for managing action definitions
  */
 class ActionRegistry {
-	private actions: ActionRecord = {};
+	private actions: BarActionRecord = {};
 
 	/**
 	 * Registers an action definition in the action registry.
 	 * @param action - The action definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerAction(action: ActionInstance): ValidationResult {
+	registerAction(action: BarActionInstance): ValidationResult<BarActionInstance> {
 		// Check for duplicates
 		if (this.actions[action.id]) {
-			return { success: false, error: `Action with id "${action.id}" already registered` };
+			return { valid: false, message: `Action with id "${action.id}" already registered` };
 		}
 
 		this.actions = { ...this.actions, [action.id]: action };
-		return { success: true };
+		return { valid: true, value: action };
 	}
 
 	/**
 	 * Retrieves all registered action definitions.
 	 * @returns Readonly record of all registered actions keyed by their id
 	 */
-	getRegisteredActions(): Readonly<ActionRecord> {
+	getRegisteredActions(): Readonly<BarActionRecord> {
 		return { ...this.actions };
 	}
 
@@ -172,10 +171,9 @@ class ActionRegistry {
 	 * @param id - The action id to retrieve
 	 * @returns The action definition if found, undefined otherwise
 	 */
-	getRegisteredAction(id: ActionID): ActionInstance | undefined {
+	getRegisteredAction(id: BarActionID): BarActionInstance | undefined {
 		return this.actions[id];
 	}
-
 }
 
 // Create singleton instance
@@ -203,6 +201,6 @@ export const getRegisteredPseudo = (value: PseudoID) => pseudoRegistry.getRegist
 const actionRegistry = new ActionRegistry();
 
 // Export the registry instance methods
-export const registerAction = (action: ActionInstance) => actionRegistry.registerAction(action);
+export const registerAction = (action: BarActionInstance) => actionRegistry.registerAction(action);
 export const getRegisteredActions = () => actionRegistry.getRegisteredActions();
-export const getRegisteredAction = (id: ActionID) => actionRegistry.getRegisteredAction(id);
+export const getRegisteredAction = (id: BarActionID) => actionRegistry.getRegisteredAction(id);

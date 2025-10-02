@@ -1,6 +1,6 @@
 // Types
 import type { BlockStyles } from '@/src/page-builder/core/block/block/types';
-import type { StyleKeys } from '@/src/page-builder/core/block/style/types';
+import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 import type { DeviceName } from '@/src/page-builder/core/page/types/device';
 import type { OrientationName } from '@/src/page-builder/core/page/types/orientation';
 import type { PseudoName } from '@/src/page-builder/core/page/types/pseudo';
@@ -17,7 +17,7 @@ import type { PseudoName } from '@/src/page-builder/core/page/types/pseudo';
  * @param defaultPseudo - Default pseudo fallback (usually 'all')
  * @returns The resolved value or empty string if not found
  */
-export function cascadeStyle(styles: BlockStyles, styleKey: StyleKeys, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): string {
+export function cascadeStyle(styles: BlockStyles, styleKey: StyleKey, device: DeviceName, orientation: OrientationName, pseudo: PseudoName, defaultDevice: DeviceName = 'all', defaultOrientation: OrientationName = 'all', defaultPseudo: PseudoName = 'all'): string {
 	return (
 		// 1. Exact match
 		styles[device]?.[orientation]?.[pseudo]?.[styleKey] ??
@@ -50,7 +50,7 @@ export function cascadeStyles(styles: BlockStyles, device: DeviceName, orientati
 	// Build CSS with fallback values
 	const resolvedStyles: Record<string, string> = {};
 	allKeys.forEach((key) => {
-		const value = cascadeStyle(styles, key as StyleKeys, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
+		const value = cascadeStyle(styles, key as StyleKey, device, orientation, pseudo, defaultDevice, defaultOrientation, defaultPseudo);
 		if (value) resolvedStyles[key] = value;
 	});
 

@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 // Stores
 import { usePageStore } from '@/src/page-builder/state/stores/page';
 
@@ -9,11 +7,20 @@ import type { PseudoID, PseudoInstance } from '@/src/page-builder/core/page/type
 // Registry
 import { getRegisteredPseudos, getRegisteredPseudo } from '@/src/page-builder/state/registries/page';
 
+// Utilities
+import { validateOrLog } from '@/src/shared/utilities/validation';
+
+// Helpers
+import { validatePseudoID } from '@/src/page-builder/services/helpers/page/pseudo';
+
 /**
- * Reactive hook to get the current pseudo.
- * @returns The current pseudo object
+ * Reactive hook to get the currently selected pseudo instance for page management operations.
+ * Returns the complete pseudo object based on the current selection in the page store.
+ *
+ * @returns The current pseudo instance or undefined if not found
+ *
  * @example
- * const pseudo = useSelectedPseudo(); // { id: 'all', name: 'all', value: 'all' }
+ * const pseudo = useSelectedPseudo() // Returns { id: 'hover', name: 'Hover', ... }
  */
 export function useSelectedPseudo(): PseudoInstance | undefined {
 	const selectedPseudoID = usePageStore((state) => state.selectedPseudoID);
@@ -21,74 +28,72 @@ export function useSelectedPseudo(): PseudoInstance | undefined {
 }
 
 /**
- * Gets the current pseudo synchronously.
- * @returns The current pseudo object
+ * Reactive hook to get the currently selected pseudo ID for page management operations.
+ * Returns the pseudo identifier from the page store state.
+ *
+ * @returns The current pseudo ID or undefined if not set
+ *
  * @example
- * const pseudo = getSelectedPseudo(); // { id: 'all', name: 'all', value: 'all' }
- */
-export function getSelectedPseudo(): PseudoInstance | undefined {
-	const selectedPseudoID = usePageStore.getState().selectedPseudoID;
-	return getRegisteredPseudo(selectedPseudoID);
-}
-
-/**
- * Reactive hook to get the current pseudo ID.
- * @returns The current pseudo ID
- * @example
- * const pseudoID = useSelectedPseudoID(); // 'all'
+ * const pseudoID = useSelectedPseudoID() // Returns 'hover' or undefined
  */
 export function useSelectedPseudoID(): PseudoID | undefined {
 	return usePageStore((state) => state.selectedPseudoID);
 }
 
 /**
- * Gets the current pseudo ID.
- * @returns The current pseudo ID
+ * Gets the currently selected pseudo ID from the page store for page management operations.
+ * Returns the pseudo identifier from the current store state.
+ *
+ * @returns The current pseudo ID or undefined if not set
+ *
  * @example
- * const pseudoID = getSelectedPseudoID(); // 'all'
+ * const pseudoID = getSelectedPseudoID() // Returns 'hover' or undefined
  */
 export function getSelectedPseudoID(): PseudoID | undefined {
-	const selectedPseudoID = usePageStore.getState().selectedPseudoID;
+	const selectedPseudoID = usePageStore.getState().getSelectedPseudoID();
 	const pseudo = getRegisteredPseudo(selectedPseudoID);
 	return pseudo?.id;
 }
 
 /**
- * Sets the current pseudo by ID.
- * @param pseudoID - The pseudo ID to set
+ * Sets the currently selected pseudo by ID for page management operations.
+ * Updates the page store with the new pseudo selection.
+ *
+ * @param pseudoID - The pseudo ID to set as current
+ * @returns void
+ *
  * @example
- * setSelectedPseudoID('hover'); // Sets current pseudo to hover
+ * setSelectedPseudoID('hover') // Sets current pseudo to hover
  */
 export function setSelectedPseudoID(pseudoID: PseudoID): void {
-	usePageStore.getState().setSelectedPseudoID(pseudoID);
+	const safeParams = validateOrLog({ pseudoID: validatePseudoID(pseudoID) }, `[PageManager → setSelectedPseudoID]`);
+	if (!safeParams) return;
+
+	usePageStore.getState().setSelectedPseudoID(safeParams.pseudoID);
 }
 
 /**
- * Gets all available pseudos.
- * @returns Array of all pseudo objects
+ * Gets all available pseudo instances for page management operations.
+ * Returns an array of all registered pseudo definitions from the registry.
+ *
+ * @returns Array of all pseudo instances
+ *
  * @example
- * const pseudos = getAllPseudos(); // [{ name: 'all', value: 'all' }, { name: 'hover', value: 'hover' }, ...]
+ * const pseudos = getAllPseudos() // Returns [{ id: 'all', name: 'All' }, { id: 'hover', name: 'Hover' }, ...]
  */
 export function getAllPseudos(): PseudoInstance[] {
-	return useMemo(() => Object.values(getRegisteredPseudos()), []);
+	return Object.values(getRegisteredPseudos());
 }
 
 /**
- * Gets a specific pseudo by ID.
- * @param pseudoID - The pseudo ID to retrieve
- * @returns The pseudo object or undefined if not found
+ * Gets the default pseudo ID for page management operations.
+ * Returns the hardcoded default pseudo identifier used as fallback.
+ *
+ * @returns The default pseudo ID string
+ *
  * @example
- * const pseudo = getPseudo('hover'); // { id: 'hover', name: 'hover', value: 'hover' }
+ * const defaultID = getPseudoDefaultID() // Returns 'all'
  */
-export function getPseudo(pseudoID: PseudoID): PseudoInstance | undefined {
-	return useMemo(() => getRegisteredPseudo(pseudoID), [pseudoID]);
-}
-
-/** * Gets the default pseudo ID.
- * @returns The default pseudo ID
- * @example
- * const defaultPseudoID = getPseudoDefaultID(); // 'all'
- */
-export function getPseudoDefaultID() {
+export function getPseudoDefaultID(): string {
 	return 'all';
 }

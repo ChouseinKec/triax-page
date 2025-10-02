@@ -1,75 +1,246 @@
 // Types
-import type { BlockTypes, BlockID, BlockInstance, BlockDefinition } from '@/src/page-builder/core/block/block/types';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockPermitedContent, BlockPermitedParent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
+import type { ElementTags } from '@/src/page-builder/core/block/element/types';
 import type { ValidationResult, CreationResult } from '@/src/shared/types/result';
 
 // Utilities
-import { createBlock, isBlockTypeValid, isBlockTagsValid, isBlockRenderValid, isBlockAttributesValid, isBlockStylesValid, isBlockPermittedContentValid, isBlockPermittedParentValid, isBlockCategoryValid, isBlockIconValid } from '@/src/page-builder/core/block/block/utilities';
+import { isBlockIDValid, isBlockInstanceValid, isBlockDefinitionValid, createBlock, isBlockTypeValid, isBlockTagsValid, isBlockRenderValid, isBlockAttributesValid, isBlockStylesValid, isBlockPermittedContentValid, isBlockPermittedParentValid, isBlockCategoryValid, isBlockIconValid } from '@/src/page-builder/core/block/block/utilities';
 
 // Registry
 import { getRegisteredBlock } from '@/src/page-builder/state/registries/block';
 
 /**
- * Type guard to check if a value is a valid BlockInstance shape
+ * Validates a block ID for block operations.
+ * Checks if the ID is a valid string identifier.
+ *
+ * @param blockID - The block ID to validate
+ * @returns ValidationResult containing validity and the validated BlockID if valid
+ *
+ * @example
+ * validateBlockID('block-123') → { valid: true, value: 'block-123' }
  */
-function isInstanceShape(value: unknown): value is Record<keyof BlockInstance, unknown> {
-	return (
-		typeof value === 'object' && //
-		value !== null &&
-		'id' in value &&
-		'type' in value &&
-		'parentID' in value &&
-		'contentIDs' in value &&
-		'attributes' in value &&
-		'styles' in value 
-	);
+export function validateBlockID(blockID: unknown): ValidationResult<BlockID> {
+	if (!isBlockIDValid(blockID)) return { valid: false, message: `Block ID must be a valid string, got: ${blockID}` };
+	return { valid: true, value: blockID as BlockID };
 }
 
-function isDefinitionShape(value: unknown): value is Record<keyof BlockDefinition, unknown> {
-	return typeof value === 'object' && value !== null && 'type' in value && 'tags' in value && 'permittedContent' in value && 'permittedParent' in value && 'icon' in value && 'category' in value && 'render' in value;
+/**
+ * Validates a block type for block operations.
+ * Checks if the type is a registered and valid block type.
+ *
+ * @param blockType - The block type to validate
+ * @returns ValidationResult containing validity and the validated BlockType if valid
+ *
+ * @example
+ * validateBlockType('text') → { valid: true, value: 'text' }
+ */
+export function validateBlockType(blockType: unknown): ValidationResult<BlockType> {
+	if (!isBlockTypeValid(blockType)) return { valid: false, message: `Invalid block type (${blockType})` };
+
+	return { valid: true, value: blockType as BlockType };
 }
 
-export function validateBlockInstance(block: unknown): ValidationResult {
-	if (!block) return { success: false, error: 'Block instance is required' };
-
-	if (!isInstanceShape(block)) return { success: false, error: `Block must be an object with required properties, got: ${typeof block}` };
-
-	if (!isBlockTypeValid(block.type)) return { success: false, error: `Block requires a valid string type, got: ${block.type}` };
-
-	if (!isBlockAttributesValid(block.attributes)) return { success: false, error: `Block "${block.type}" requires valid attributes object, got: ${block.attributes}` };
-
-	if (!isBlockStylesValid(block.styles)) return { success: false, error: `Block "${block.type}" requires valid styles object, got: ${block.styles}` };
-
-	return { success: true };
+/**
+ * Validates block tags for block operations.
+ * Checks if the tags are valid HTML element tags.
+ *
+ * @param blockTags - The block tags to validate
+ * @returns ValidationResult containing validity and the validated ElementTags array if valid
+ *
+ * @example
+ * validateBlockTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
+ */
+export function validateBlockTags(blockTags: unknown): ValidationResult<ElementTags[]> {
+	if (!isBlockTagsValid(blockTags)) return { valid: false, message: `Invalid block tags (${JSON.stringify(blockTags)})` };
+	return { valid: true, value: blockTags as ElementTags[] };
 }
 
-export function validateBlockDefinition(block: unknown): ValidationResult {
-	if (!block) return { success: false, error: 'Block definition is required' };
-
-	if (!isDefinitionShape(block)) return { success: false, error: `Block definition must be an object with required properties, got: ${typeof block}` };
-
-	if (!isBlockTypeValid(block.type)) return { success: false, error: `Block definition requires a valid string type, got: ${block.type}` };
-
-	if (!isBlockTagsValid(block.tags)) return { success: false, error: `Block definition "${block.type}" requires a non-empty tags array, got: ${JSON.stringify(block.tags)}` };
-
-	if (!isBlockRenderValid(block.render)) return { success: false, error: `Block definition "${block.type}" requires a render function, got: ${typeof block.render}` };
-
-	if (!isBlockPermittedContentValid(block.permittedContent)) return { success: false, error: `Block definition "${block.type}" requires valid permittedContent, got: ${block.permittedContent}` };
-
-	if (!isBlockPermittedParentValid(block.permittedParent)) return { success: false, error: `Block definition "${block.type}" requires valid permittedParent, got: ${block.permittedParent}` };
-
-	if (!isBlockCategoryValid(block.category)) return { success: false, error: `Block definition "${block.type}" requires a valid category, got: ${block.category}` };
-
-	if (!isBlockIconValid(block.icon)) return { success: false, error: `Block definition "${block.type}" requires a valid icon, got: ${block.icon}` };
-
-	return { success: true };
+/**
+ * Validates block render configuration for block operations.
+ * Checks if the render config is valid for block rendering.
+ *
+ * @param blockRender - The block render configuration to validate
+ * @returns ValidationResult containing validity and the validated BlockRender if valid
+ *
+ * @example
+ * validateBlockRender({ component: MyComponent }) → { valid: true, value: { component: MyComponent } }
+ */
+export function validateBlockRender(blockRender: unknown): ValidationResult<BlockRender> {
+	if (!isBlockRenderValid(blockRender)) return { valid: false, message: `Invalid block render (${typeof blockRender})` };
+	return { valid: true, value: blockRender as BlockRender };
 }
 
-export function createBlockInstance(type: BlockTypes, parentID?: BlockID): CreationResult<BlockInstance> {
-	const definition = getRegisteredBlock(type);
+/**
+ * Validates block permitted content for block operations.
+ * Checks if the permitted content configuration is valid.
+ *
+ * @param blockPermittedContent - The block permitted content to validate
+ * @returns ValidationResult containing validity and the validated BlockPermitedContent if valid
+ *
+ * @example
+ * validateBlockPermittedContent(['text', 'image']) → { valid: true, value: ['text', 'image'] }
+ */
+export function validateBlockPermittedContent(blockPermittedContent: unknown): ValidationResult<BlockPermitedContent> {
+	if (!isBlockPermittedContentValid(blockPermittedContent)) return { valid: false, message: `Invalid block permitted content (${JSON.stringify(blockPermittedContent)})` };
+	return { valid: true, value: blockPermittedContent as BlockPermitedContent };
+}
 
-	if (!isBlockTypeValid(type)) return { success: false, error: `Invalid block type: ${type}` };
-	if (!definition) return { success: false, error: `Block type "${type}" is not registered` };
+/**
+ * Validates block permitted parent for block operations.
+ * Checks if the permitted parent configuration is valid.
+ *
+ * @param blockPermittedParent - The block permitted parent to validate
+ * @returns ValidationResult containing validity and the validated BlockPermitedParent if valid
+ *
+ * @example
+ * validateBlockPermittedParent(['container']) → { valid: true, value: ['container'] }
+ */
+export function validateBlockPermittedParent(blockPermittedParent: unknown): ValidationResult<BlockPermitedParent> {
+	if (!isBlockPermittedParentValid(blockPermittedParent)) return { valid: false, message: `Invalid block permitted parent (${JSON.stringify(blockPermittedParent)})` };
+	return { valid: true, value: blockPermittedParent as BlockPermitedParent };
+}
 
-	const block = createBlock(definition, parentID);
+/**
+ * Validates block category for block operations.
+ * Checks if the category is a valid block category.
+ *
+ * @param blockCategory - The block category to validate
+ * @returns ValidationResult containing validity and the validated BlockCategory if valid
+ *
+ * @example
+ * validateBlockCategory('layout') → { valid: true, value: 'layout' }
+ */
+export function validateBlockCategory(blockCategory: unknown): ValidationResult<BlockCategory> {
+	if (!isBlockCategoryValid(blockCategory)) return { valid: false, message: `Invalid block category (${blockCategory})` };
+	return { valid: true, value: blockCategory as BlockCategory };
+}
+
+/**
+ * Validates block icon for block operations.
+ * Checks if the icon configuration is valid.
+ *
+ * @param blockIcon - The block icon to validate
+ * @returns ValidationResult containing validity and the validated BlockIcon if valid
+ *
+ * @example
+ * validateBlockIcon({ name: 'star', size: 16 }) → { valid: true, value: { name: 'star', size: 16 } }
+ */
+export function validateBlockIcon(blockIcon: unknown): ValidationResult<BlockIcon> {
+	if (!isBlockIconValid(blockIcon)) return { valid: false, message: `Invalid block icon (${JSON.stringify(blockIcon)})` };
+	return { valid: true, value: blockIcon as BlockIcon };
+}
+
+/**
+ * Validates block attributes for block operations.
+ * Checks if the attributes object is valid.
+ *
+ * @param blockAttributes - The block attributes to validate
+ * @returns ValidationResult containing validity and the validated BlockAttributes if valid
+ *
+ * @example
+ * validateBlockAttributes({ className: 'my-class' }) → { valid: true, value: { className: 'my-class' } }
+ */
+export function validateBlockAttributes(blockAttributes: unknown): ValidationResult<BlockAttributes> {
+	if (!isBlockAttributesValid(blockAttributes)) return { valid: false, message: `Invalid block attributes (${JSON.stringify(blockAttributes)})` };
+
+	return { valid: true, value: blockAttributes as BlockAttributes };
+}
+
+/**
+ * Validates block styles for block operations.
+ * Checks if the styles object is valid.
+ *
+ * @param blockStyles - The block styles to validate
+ * @returns ValidationResult containing validity and the validated BlockStyles if valid
+ *
+ * @example
+ * validateBlockStyles({ color: 'red' }) → { valid: true, value: { color: 'red' } }
+ */
+export function validateBlockStyles(blockStyles: unknown): ValidationResult<BlockStyles> {
+	if (!isBlockStylesValid(blockStyles)) return { valid: false, message: `Invalid block styles (${JSON.stringify(blockStyles)})` };
+	return { valid: true, value: blockStyles as BlockStyles };
+}
+
+/**
+ * Validates a complete block instance for block operations.
+ * Checks if the instance has valid type, attributes, and styles.
+ *
+ * @param blockInstance - The block instance to validate
+ * @returns ValidationResult containing validity and the validated BlockInstance if valid
+ *
+ * @example
+ * validateBlockInstance({ type: 'text', attributes: {}, styles: {} }) → { valid: true, value: { type: 'text', attributes: {}, styles: {} } }
+ */
+export function validateBlockInstance(blockInstance: unknown): ValidationResult<BlockInstance> {
+	if (!isBlockInstanceValid(blockInstance)) return { valid: false, message: `Block must be an object with required properties, got: ${typeof blockInstance}` };
+
+	const typeValidation = validateBlockType(blockInstance.type);
+	if (!typeValidation.valid) return { valid: false, message: typeValidation.message };
+
+	const attributesValidation = validateBlockAttributes(blockInstance.attributes);
+	if (!attributesValidation.valid) return { valid: false, message: attributesValidation.message };
+
+	const stylesValidation = validateBlockStyles(blockInstance.styles);
+	if (!stylesValidation.valid) return { valid: false, message: stylesValidation.message };
+
+	return { valid: true, value: blockInstance as BlockInstance };
+}
+
+/**
+ * Validates a complete block definition for block operations.
+ * Checks if the definition has all required valid properties including type, tags, render, etc.
+ *
+ * @param blockDefinition - The block definition to validate
+ * @returns ValidationResult containing validity and the validated BlockDefinition if valid
+ *
+ * @example
+ * validateBlockDefinition({ type: 'text', tags: ['span'], render: {}, permittedContent: [], permittedParent: [], category: 'content', icon: {} }) → { valid: true, value: {...} }
+ */
+export function validateBlockDefinition(blockDefinition: unknown): ValidationResult<BlockDefinition> {
+	if (!isBlockDefinitionValid(blockDefinition)) return { valid: false, message: `Block definition must be an object with required properties, got: ${typeof blockDefinition}` };
+
+	const typeValidation = validateBlockType(blockDefinition.type);
+	if (!typeValidation.valid) return { valid: false, message: typeValidation.message };
+
+	const tagsValidation = validateBlockTags(blockDefinition.tags);
+	if (!tagsValidation.valid) return { valid: false, message: tagsValidation.message };
+
+	const renderValidation = validateBlockRender(blockDefinition.render);
+	if (!renderValidation.valid) return { valid: false, message: renderValidation.message };
+
+	const permittedContentValidation = validateBlockPermittedContent(blockDefinition.permittedContent);
+	if (!permittedContentValidation.valid) return { valid: false, message: permittedContentValidation.message };
+
+	const permittedParentValidation = validateBlockPermittedParent(blockDefinition.permittedParent);
+	if (!permittedParentValidation.valid) return { valid: false, message: permittedParentValidation.message };
+
+	const categoryValidation = validateBlockCategory(blockDefinition.category);
+	if (!categoryValidation.valid) return { valid: false, message: categoryValidation.message };
+
+	const iconValidation = validateBlockIcon(blockDefinition.icon);
+	if (!iconValidation.valid) return { valid: false, message: iconValidation.message };
+
+	return { valid: true, value: blockDefinition as BlockDefinition };
+}
+
+/**
+ * Creates a new block instance for block operations.
+ * Instantiates a block of the specified type with the given parent ID.
+ *
+ * @param blockType - The type of block to create
+ * @param blockParentID - The ID of the parent block
+ * @returns CreationResult containing success status and the created BlockInstance if successful
+ *
+ * @example
+ * createBlockInstance('text', 'parent-123') → { success: true, data: { type: 'text', attributes: {}, styles: {}, ... } }
+ */
+export function createBlockInstance(blockType: BlockType, blockParentID: BlockID): CreationResult<BlockInstance> {
+	const definition = getRegisteredBlock(blockType);
+
+	if (!definition) return { success: false, error: `Block type "${blockType}" is not registered` };
+	if (!isBlockTypeValid(blockType)) return { success: false, error: `Invalid block type: ${blockType}` };
+
+	const block = createBlock(definition, blockParentID);
+
 	return { success: true, data: block };
 }

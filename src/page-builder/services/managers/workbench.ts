@@ -13,5 +13,5 @@ import type { WorkbenchDefinition } from '@/src/page-builder/core/editor/workben
  * @returns Record of all registered workbenches keyed by their IDs
  */
 export function useWorkbenchs(): Record<string, WorkbenchDefinition> {
-    return useMemo(() => getRegisteredWorkbenchs(), []);
+	return useMemo(() => getRegisteredWorkbenchs(), []);
 }

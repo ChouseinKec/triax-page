@@ -9,47 +9,67 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
  */
 export const devLog = {
 	/**
-	 * Logs error messages to console.error (development only)
-	 * @param {...unknown} args - One or more values to log (same signature as console.error)
+	 * Logs error messages and returns a specified value (development only).
+	 * The last argument is returned, and all preceding arguments are logged.
+	 * @param {...unknown} args - One or more values to log, with the last being the return value.
+	 * @returns The last argument passed to the function.
 	 * @example
-	 * devLog.error('API Failed:', error);
-	 * devLog.error('Validation errors:', error1, error2);
+	 * return devLog.error('API Failed:', error, null); // Logs 'API Failed:' and error, returns null
 	 */
-	error: (...args: unknown[]): void => {
-		if (isDevelopment) console.error(...args);
+	error: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+		if (isDevelopment) {
+			const messages = args.slice(0, -1);
+			console.error(...messages);
+		}
+		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs warning messages to console.warn (development only)
-	 * @param {...unknown} args - One or more values to log (same signature as console.warn)
+	 * Logs warning messages and returns a specified value (development only).
+	 * The last argument is returned, and all preceding arguments are logged.
+	 * @param {...unknown} args - One or more values to log, with the last being the return value.
+	 * @returns The last argument passed to the function.
 	 * @example
-	 * devLog.warn('Deprecated function called');
-	 * devLog.warn('Low disk space:', { available: '10MB' });
+	 * return devLog.warn('Deprecated function called', undefined); // Logs message, returns undefined
 	 */
-	warn: (...args: unknown[]): void => {
-		if (isDevelopment) console.warn(...args);
+	warn: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+		if (isDevelopment) {
+			const messages = args.slice(0, -1);
+			console.warn(...messages);
+		}
+		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs messages to console.log (development only)
-	 * @param {...unknown} args - One or more values to log (same signature as console.log)
+	 * Logs messages and returns a specified value (development only).
+	 * The last argument is returned, and all preceding arguments are logged.
+	 * @param {...unknown} args - One or more values to log, with the last being the return value.
+	 * @returns The last argument passed to the function.
 	 * @example
-	 * devLog.log('Component mounted');
-	 * devLog.log('State update:', prevState, '→', newState);
+	 * return devLog.log('Component mounted', true); // Logs message, returns true
 	 */
-	log: (...args: unknown[]): void => {
-		if (isDevelopment) console.log(...args);
+	log: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+		if (isDevelopment) {
+			const messages = args.slice(0, -1);
+			console.log(...messages);
+		}
+		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs info messages to console.info (development only)
-	 * @param {...unknown} args - One or more values to log (same signature as console.info)
+	 * Logs info messages and returns a specified value (development only).
+	 * The last argument is returned, and all preceding arguments are logged.
+	 * @param {...unknown} args - One or more values to log, with the last being the return value.
+	 * @returns The last argument passed to the function.
 	 * @example
-	 * devLog.info('User logged in:', user);
-	 * devLog.info('Data fetched successfully');
+	 * return devLog.info('Data fetched', data, data); // Logs 'Data fetched' and data, returns data
 	 */
-	info: (...args: unknown[]): void => {
-		if (isDevelopment) console.info(...args);
+	info: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+		if (isDevelopment) {
+			const messages = args.slice(0, -1);
+			console.info(...messages);
+		}
+		return args[args.length - 1] as T;
 	},
 
 	/**
@@ -62,7 +82,7 @@ export const devLog = {
 	 */
 	table: (data: unknown[] | Record<string, unknown>, columns?: string[]): void => {
 		return;
-		if (isDevelopment) {console.table(data, columns)};
+		if (isDevelopment) { console.table(data, columns) };
 	},
 };
 

@@ -10,7 +10,7 @@ Gets a style property value with CSS cascade fallback logic.
 
 - **Parameters:**
   - `styles: BlockStyleDefinition` — The block's complete style data.
-  - `property: StyleKeys` — The style property to lookup.
+  - `property: StyleKey` — The style property to lookup.
   - `device: DeviceName` — Current device context.
   - `orientation: OrientationName` — Current orientation context.
   - `pseudo: PseudoName` — Current pseudo context.

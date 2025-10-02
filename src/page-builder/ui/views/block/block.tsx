@@ -8,10 +8,8 @@ import type { BlockID } from "@/src/page-builder/core/block/block/types";
 // Manager
 import { useBlock, getBlockRender } from "@/src/page-builder/services/managers/block";
 
-
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";
-
 
 /**
  * BlocksCanvasBlock Component

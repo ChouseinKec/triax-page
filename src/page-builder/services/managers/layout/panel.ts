@@ -1,127 +1,98 @@
+import { useMemo } from 'react';
+
 // Stores
 import { useLayoutStore } from '@/src/page-builder/state/stores/layout';
 
-// React
-import { useMemo } from 'react';
+// Helpers
+import { validatePanelID } from '@/src/page-builder/services/helpers/layout';
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
 
 // Types
-import type { PanelID, PanelInstance, TabInstance } from '@/src/page-builder/core/editor/layout/types';
+import type { PanelID, PanelInstance } from '@/src/page-builder/core/editor/layout/types';
 import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
+import { validateOrLog } from '@/src/shared/utilities/validation';
 
 /**
- * Toggles the open state of a panel.
+ * Toggles the open/closed state of a panel for layout management operations.
+ * Switches the panel's isOpen property between true and false.
+ *
  * @param panelID - The panel identifier to toggle
+ * @returns void
+ *
  * @example
- * togglePanel('panel-123'); // Toggles the panel open/closed
+ * togglePanel('panel-123') // Toggles panel open/closed state
  */
-export function togglePanel(panelID: PanelID) {
-    if (!panelID || typeof panelID !== "string") {
-        devLog.error("[PanelManager → togglePanel] Panel ID is required to toggle a panel.");
-        return;
-    }
+export function togglePanel(panelID: PanelID): void {
+	const safeParams = validateOrLog({ panelID: validatePanelID(panelID) }, `[LayoutManager → togglePanel]`);
+	if (!safeParams) return;
 
-    const store = useLayoutStore.getState();
-    const panel = store.layoutPanels[panelID];
-    if (!panel) {
-        devLog.error(`[PanelManager → togglePanel] Panel with ID "${panelID}" not found. Skipping toggle.`);
-        return;
-    }
+	const store = useLayoutStore.getState();
+	const panel = store.getPanel(safeParams.panelID);
+	if (!panel) return devLog.error(`[LayoutManager → togglePanel] Panel with ID "${safeParams.panelID}" not found.`, undefined);
 
-    store.updatePanel(panelID, { isOpen: !panel.isOpen });
+	store.updatePanel(safeParams.panelID, { isOpen: !panel.isOpen });
 }
 
 /**
- * Gets a panel instance by its ID.
+ * Gets a panel instance by its unique identifier for layout management operations.
+ * Retrieves the complete panel object from the layout store.
+ *
  * @param panelID - The panel identifier
- * @returns The panel instance or undefined if not found
+ * @returns The panel instance or undefined if not found or validation fails
+ *
  * @example
- * const panel = getPanelById('panel-123');
+ * const panel = getPanelById('panel-123') // Returns panel instance or undefined
  */
 export function getPanelById(panelID: PanelID): PanelInstance | undefined {
-    const store = useLayoutStore.getState();
-    return store.layoutPanels[panelID];
+	const safeParams = validateOrLog({ panelID: validatePanelID(panelID) }, `[LayoutManager → getPanelById]`);
+	if (!safeParams) return;
+
+	return useLayoutStore.getState().getPanel(safeParams.panelID);
 }
 
 /**
- * Gets all tabs for a specific panel.
- * @param panelID - The panel identifier
- * @returns Array of tab instances
+ * Reactive hook to get all panel instances filtered by workbench for layout management operations.
+ * Returns a memoized array of panels associated with the specified workbench.
+ *
+ * @param workbenchID - The workbench identifier to filter panels
+ * @returns Reactive array of panel instances or undefined if validation fails
+ *
  * @example
- * const tabs = getPanelTabs('panel-123');
+ * const panels = useAllPanels('workbench-123') // Returns all panels for workbench
  */
-export function getPanelTabs(panelID: PanelID): TabInstance[] {
-    const store = useLayoutStore.getState();
-    const panel = store.layoutPanels[panelID];
-    if (!panel) return [];
-    return Object.values(panel.tabs);
+export function useAllPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
+	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → useAllPanels]`);
+	if (!safeParams) return;
+
+	const panels = useLayoutStore((state) => state.layoutPanels);
+
+	return useMemo(() => {
+		const all = Object.values(panels);
+		return all.filter((p: PanelInstance) => p.workbenchID === safeParams.workbenchID);
+	}, [panels, safeParams.workbenchID]);
 }
 
 /**
- * Gets all panels, optionally filtered by workbench.
- * @param workbenchID - Optional workbench identifier to filter panels
- * @returns Array of panel instances
+ * Reactive hook to get all open panel instances filtered by workbench for layout management operations.
+ * Returns a memoized array of panels that are currently open and associated with the specified workbench.
+ *
+ * @param workbenchID - The workbench identifier to filter panels
+ * @returns Reactive array of open panel instances or undefined if validation fails
+ *
  * @example
- * const allPanels = getAllPanels();
- * const workbenchPanels = getAllPanels('workbench-123');
+ * const openPanels = useOpenPanels('workbench-123') // Returns open panels for workbench
  */
-export function getAllPanels(workbenchID?: WorkbenchID): PanelInstance[] {
-    const store = useLayoutStore.getState();
-    const panels = Object.values(store.layoutPanels);
-    if (!workbenchID) return panels;
-    return panels.filter((p: PanelInstance) => p.workbenchID === workbenchID);
+export function useOpenPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
+	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → useOpenPanels]`);
+	if (!safeParams) return;
+
+	const panels = useLayoutStore((state) => state.layoutPanels);
+
+	return useMemo(() => {
+		const all = Object.values(panels).filter((p: PanelInstance) => p.isOpen);
+		return all.filter((p: PanelInstance) => p.workbenchID === safeParams.workbenchID);
+	}, [panels, safeParams.workbenchID]);
 }
-
-/**
- * Gets all open panels, optionally filtered by workbench.
- * @param workbenchID - Optional workbench identifier to filter panels
- * @returns Array of open panel instances
- * @example
- * const openPanels = getOpenPanels();
- * const openWorkbenchPanels = getOpenPanels('workbench-123');
- */
-export function getOpenPanels(workbenchID?: WorkbenchID): PanelInstance[] {
-    const store = useLayoutStore.getState();
-    const panels = Object.values(store.layoutPanels).filter((p: PanelInstance) => p.isOpen);
-    if (!workbenchID) return panels;
-    return panels.filter((p: PanelInstance) => p.workbenchID === workbenchID);
-}
-
-/**
- * Reactive hook to get all panels, optionally filtered by workbench.
- * @param workbenchID - Optional workbench identifier to filter panels
- * @returns Reactive array of panel instances
- * @example
- * const allPanels = useAllPanels();
- * const workbenchPanels = useAllPanels('workbench-123');
- */
-export function useAllPanels(workbenchID?: WorkbenchID): PanelInstance[] {
-    const panels = useLayoutStore(state => state.layoutPanels);
-
-    return useMemo(() => {
-        const all = Object.values(panels);
-        if (!workbenchID) return all;
-        return all.filter((p: PanelInstance) => p.workbenchID === workbenchID);
-    }, [panels, workbenchID]);
-}
-
-/**
- * Reactive hook to get all open panels, optionally filtered by workbench.
- * @param workbenchID - Optional workbench identifier to filter panels
- * @returns Reactive array of open panel instances
- * @example
- * const openPanels = useOpenPanels();
- * const openWorkbenchPanels = useOpenPanels('workbench-123');
- */
-export function useOpenPanels(workbenchID?: WorkbenchID): PanelInstance[] {
-    const panels = useLayoutStore(state => state.layoutPanels);
-
-    return useMemo(() => {
-        const all = Object.values(panels).filter((p: PanelInstance) => p.isOpen);
-        if (!workbenchID) return all;
-        return all.filter((p: PanelInstance) => p.workbenchID === workbenchID);
-    }, [panels, workbenchID]);
-}
-
