@@ -1,6 +1,6 @@
 // Helpers
 import { validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/attribute';
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 

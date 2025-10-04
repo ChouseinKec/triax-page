@@ -1,5 +1,5 @@
 // Types
-import type { BlockInstance, BlockType, BlockID, BlockDefinition } from '@/src/page-builder/core/block/block/types';
+import type { BlockRecord, BlockInstance, BlockType, BlockID, BlockDefinition } from '@/src/page-builder/core/block/block/types';
 
 /**
  * Finds the next sibling of a given block.
@@ -7,7 +7,7 @@ import type { BlockInstance, BlockType, BlockID, BlockDefinition } from '@/src/p
  * @param allBlocks - All blocks collection
  * @returns The next sibling block instance or null
  */
-export function findBlockNextSibling(blockID: BlockID, allBlocks: Record<BlockID, BlockInstance>): BlockInstance | null {
+export function findBlockNextSibling(blockID: BlockID, allBlocks:BlockRecord): BlockInstance | null {
 	if (!blockID || typeof blockID !== 'string') return null;
 	if (!allBlocks || typeof allBlocks !== 'object') return null;
 
@@ -30,7 +30,7 @@ export function findBlockNextSibling(blockID: BlockID, allBlocks: Record<BlockID
  * @param allBlocks - All blocks collection
  * @returns The previous sibling block instance or null
  */
-export function findBlockPreviousSibling(blockID: BlockID, allBlocks: Record<BlockID, BlockInstance>): BlockInstance | null {
+export function findBlockPreviousSibling(blockID: BlockID, allBlocks:BlockRecord): BlockInstance | null {
 	if (!blockID || typeof blockID !== 'string') return null;
 	if (!allBlocks || typeof allBlocks !== 'object') return null;
 
@@ -53,7 +53,7 @@ export function findBlockPreviousSibling(blockID: BlockID, allBlocks: Record<Blo
  * @param allBlocks - All blocks collection
  * @returns The last descendant block instance or null if input is invalid
  */
-export function findBlockLastDescendant(block: BlockInstance, allBlocks: Record<BlockID, BlockInstance>): BlockInstance | null {
+export function findBlockLastDescendant(block: BlockInstance, allBlocks:BlockRecord): BlockInstance | null {
 	if (!block || typeof block !== 'object') return null;
 	if (!allBlocks || typeof allBlocks !== 'object') return null;
 
@@ -78,7 +78,7 @@ export function findBlockLastDescendant(block: BlockInstance, allBlocks: Record<
  * @example
  * getBlockDescendants(['parent-1'], allBlocks) // → ['parent-1', 'child-1', 'grandchild-1']
  */
-export function findBlockDescendants(blockIDs: BlockID[], allBlocks: Record<BlockID, BlockInstance>): BlockID[] {
+export function findBlockDescendants(blockIDs: BlockID[], allBlocks:BlockRecord): BlockID[] {
 	if (!blockIDs || !Array.isArray(blockIDs) || blockIDs.length === 0) return [];
 	if (!allBlocks || typeof allBlocks !== 'object') return [];
 
@@ -113,7 +113,7 @@ export function findBlockDescendants(blockIDs: BlockID[], allBlocks: Record<Bloc
  * @example
  * isBlockDescendant(parentBlock, 'child-2', allBlocks) // → true
  */
-export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID, allBlocks: Record<BlockID, BlockInstance>): boolean {
+export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID, allBlocks:BlockRecord): boolean {
 	if (!parentBlock || typeof parentBlock !== 'object') return false;
 	if (!targetID || typeof targetID !== 'string') return false;
 	if (!allBlocks || typeof allBlocks !== 'object') return false;
@@ -143,4 +143,88 @@ export function isBlockChildAllowed(parentType: BlockType, childType: BlockType,
 
 	if (parentBlock.permittedContent == null) return true;
 	return parentBlock.permittedContent.includes(childType);
+}
+
+/**
+ * Moves a block to be positioned after a target block within the same parent.
+ * Updates the parent's contentIDs array to reflect the new order.
+ *
+ * @param blockID - The block ID to move
+ * @param targetBlockID - The target block ID to position after
+ * @param allBlocks - All blocks collection
+ * @returns Updated blocks record with the block moved to new position
+ *
+ * @example
+ * moveBlockAfter('block-456', 'block-123', allBlocks) → block-456 positioned after block-123
+ */
+export function moveBlockAfter(blockID: BlockID, targetBlockID: BlockID, allBlocks: BlockRecord): BlockRecord {
+	const block = allBlocks[blockID];
+	const targetBlock = allBlocks[targetBlockID];
+
+	if (!block || !targetBlock) return allBlocks;
+	if (block.parentID !== targetBlock.parentID) return allBlocks; // Must be siblings
+
+	const parentBlock = allBlocks[block.parentID];
+	if (!parentBlock) return allBlocks;
+
+	// Remove the block from its current position
+	const contentIDs = parentBlock.contentIDs.filter((id) => id !== blockID);
+
+	// Find the target block's position and insert after it
+	const targetIndex = contentIDs.indexOf(targetBlockID);
+	if (targetIndex === -1) return allBlocks;
+
+	contentIDs.splice(targetIndex + 1, 0, blockID);
+
+	const updatedParent = {
+		...parentBlock,
+		contentIDs,
+	};
+
+	return {
+		...allBlocks,
+		[block.parentID]: updatedParent,
+	};
+}
+
+/**
+ * Moves a block to be positioned before a target block within the same parent.
+ * Updates the parent's contentIDs array to reflect the new order.
+ *
+ * @param blockID - The block ID to move
+ * @param targetBlockID - The target block ID to position before
+ * @param allBlocks - All blocks collection
+ * @returns Updated blocks record with the block moved to new position
+ *
+ * @example
+ * moveBlockBefore('block-456', 'block-123', allBlocks) → block-456 positioned before block-123
+ */
+export function moveBlockBefore(blockID: BlockID, targetBlockID: BlockID, allBlocks: BlockRecord): BlockRecord {
+	const block = allBlocks[blockID];
+	const targetBlock = allBlocks[targetBlockID];
+
+	if (!block || !targetBlock) return allBlocks;
+	if (block.parentID !== targetBlock.parentID) return allBlocks; // Must be siblings
+
+	const parentBlock = allBlocks[block.parentID];
+	if (!parentBlock) return allBlocks;
+
+	// Remove the block from its current position
+	const contentIDs = parentBlock.contentIDs.filter((id) => id !== blockID);
+
+	// Find the target block's position and insert before it
+	const targetIndex = contentIDs.indexOf(targetBlockID);
+	if (targetIndex === -1) return allBlocks;
+
+	contentIDs.splice(targetIndex, 0, blockID);
+
+	const updatedParent = {
+		...parentBlock,
+		contentIDs,
+	};
+
+	return {
+		...allBlocks,
+		[block.parentID]: updatedParent,
+	};
 }

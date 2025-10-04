@@ -9,7 +9,7 @@ import { validateOrLog } from '@/src/shared/utilities/validation';
 import type { BlockType, BlockID } from '@/src/page-builder/core/block/block/types';
 
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 
 /**
  * Reactive hook to check if a specific block is currently selected.
@@ -79,4 +79,28 @@ export function useHasBlockSelectedContent(blockID: BlockID): boolean {
  */
 export function getSelectedBlockID(): BlockID | null {
 	return useBlockStore.getState().selectedBlockID;
+}
+
+/**
+ * Selects a block as the currently active block for editing in block CRUD operations.
+ * Sets the selected block ID in the store.
+ *
+ * @param blockID - The block identifier to select, or null to clear selection
+ * @returns void
+ *
+ * @example
+ * selectBlock('block-123')
+ * selectBlock(null)
+ */
+export function selectBlock(blockID: BlockID | null): void {
+	const store = useBlockStore.getState();
+	if (blockID === null) return store.selectBlock(null);
+
+	const selectedBlockID = store.selectedBlockID;
+	if (blockID === selectedBlockID) return;
+
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → selectBlock]`);
+	if (!safeParams) return;
+
+	store.selectBlock(safeParams.blockID);
 }

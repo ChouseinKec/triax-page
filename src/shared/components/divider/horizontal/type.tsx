@@ -12,4 +12,6 @@ export type HorizontalDividerProps = {
 
     /** Optional className for the divider. */
     className?: string;
+
+    variation?: "dashed" | "solid";
 };

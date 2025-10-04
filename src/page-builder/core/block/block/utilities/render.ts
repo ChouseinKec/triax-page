@@ -8,8 +8,6 @@ import type { PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
 // Utilities
 import { cascadeStyles, generateCSSSelector, generateCSSRule } from '@/src/page-builder/core/block/style/utilities';
 import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-builder/core/block/attribute/utilities';
-import { isBlockAttributesValid, isBlockStylesValid, isBlockIDValid } from '@/src/page-builder/core/block/block/utilities/validation';
-import { isPseudoValueValid, isOrientationValueValid, isDeviceValueValid } from '@/src/page-builder/core/page/utilities';
 
 /**
  * Renders block styles into a CSS string.
@@ -20,13 +18,7 @@ import { isPseudoValueValid, isOrientationValueValid, isDeviceValueValid } from 
  * @param pseudo Current pseudo-class
  * @returns CSS string or undefined if no styles
  */
-export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device: DeviceValue, orientation: OrientationValue, pseudo: PseudoValue): string | undefined {
-	if (!isBlockStylesValid(styles)) return undefined;
-	if (!isBlockIDValid(blockID)) return undefined;
-	if (!isDeviceValueValid(device)) return undefined;
-	if (!isOrientationValueValid(orientation)) return undefined;
-	if (!isPseudoValueValid(pseudo)) return undefined;
-
+export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device: DeviceValue, orientation: OrientationValue, pseudo: PseudoValue): string {
 	const resolvedStyles = cascadeStyles(styles, device, orientation, pseudo);
 	const selector = generateCSSSelector(blockID, pseudo);
 	return generateCSSRule(selector, resolvedStyles);
@@ -35,11 +27,9 @@ export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device:
 /**
  * Renders block attributes into a normalized object.
  * @param attributes The block's attribute definition
- * @returns Normalized attributes object or null if empty
+ * @returns Normalized attributes object
  */
-export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> | undefined {
-	if (!isBlockAttributesValid(attributes)) return undefined;
-
+export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> {
 	const normalizedAttributes: Record<string, string | boolean> = {};
 	for (const [property, value] of Object.entries(attributes)) {
 		if (!value) continue;

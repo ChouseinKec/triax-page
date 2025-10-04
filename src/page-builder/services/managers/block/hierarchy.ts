@@ -5,12 +5,11 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 import type { BlockID, BlockInstance } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
-import { findBlockDescendants } from '@/src/page-builder/core/block/block/utilities';
-import { findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant } from '@/src/page-builder/core/block/block/utilities/hierarchy';
+import { moveBlockAfter as moveBlockAfterUtil, moveBlockBefore as moveBlockBeforeUtil, findBlockDescendants, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant } from '@/src/page-builder/core/block/block/utilities';
 import { validateOrLog } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 
 /**
  * Retrieves the next block in the hierarchy for block hierarchy operations.
@@ -85,4 +84,44 @@ export function getBlockDescendants(blockID: BlockID): BlockID[] | undefined {
 	const store = useBlockStore.getState();
 
 	return findBlockDescendants([safeParams.blockID], store.allBlocks);
+}
+
+/**
+ * Moves a block to be positioned after a target block in block CRUD operations.
+ * Updates the parent's contentIDs array to reflect the new order.
+ *
+ * @param currentBlockID - The block ID to move
+ * @param targetBlockID - The target block ID to position after
+ * @returns void
+ *
+ * @example
+ * moveBlockAfter('block-456', 'block-123')
+ */
+export function moveBlockAfter(currentBlockID: BlockID, targetBlockID: BlockID): void {
+	const safeParams = validateOrLog({ currentBlockID: validateBlockID(currentBlockID), targetBlockID: validateBlockID(targetBlockID) }, `[BlockManager → moveBlockAfter]`);
+	if (!safeParams) return;
+
+	const store = useBlockStore.getState();
+	const updatedBlocks = moveBlockAfterUtil(safeParams.currentBlockID, safeParams.targetBlockID, store.allBlocks);
+	store.updateBlocks(updatedBlocks);
+}
+
+/**
+ * Moves a block to be positioned before a target block in block CRUD operations.
+ * Updates the parent's contentIDs array to reflect the new order.
+ *
+ * @param currentBlockID - The block ID to move
+ * @param targetBlockID - The target block ID to position before
+ * @returns void
+ *
+ * @example
+ * moveBlockBefore('block-456', 'block-123')
+ */
+export function moveBlockBefore(currentBlockID: BlockID, targetBlockID: BlockID): void {
+	const safeParams = validateOrLog({ currentBlockID: validateBlockID(currentBlockID), targetBlockID: validateBlockID(targetBlockID) }, `[BlockManager → moveBlockBefore]`);
+	if (!safeParams) return;
+
+	const store = useBlockStore.getState();
+	const updatedBlocks = moveBlockBeforeUtil(safeParams.currentBlockID, safeParams.targetBlockID, store.allBlocks);
+	store.updateBlocks(updatedBlocks);
 }

@@ -28,8 +28,6 @@ function initializeViewports() {
 
 	devLog.info('[ViewportInit] Initializing Viewports:');
 
-	console.log(viewports);
-
 	viewports.forEach((viewport) => {
 		const result = registerViewport(viewport);
 		if (result.valid) {

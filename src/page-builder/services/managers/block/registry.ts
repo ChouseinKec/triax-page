@@ -10,7 +10,7 @@ import type { BlockDefinition, BlockType } from '@/src/page-builder/core/block/b
 import type { ReactNode } from 'react';
 
 // Helpers
-import { validateBlockType } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockType } from '@/src/page-builder/services/helpers/block/validation';
 
 /**
  * Gets all registered block definitions from the registry.

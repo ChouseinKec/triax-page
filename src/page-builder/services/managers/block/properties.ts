@@ -1,11 +1,11 @@
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
-import type { BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
+import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
 import { validateOrLog } from '@/src/shared/utilities/validation';
@@ -93,4 +93,21 @@ export function useBlockStyles(blockID: BlockID): BlockStyles | undefined {
 	if (!safeParams) return;
 
 	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.styles);
+}
+
+/**
+ * Reactive hook to get a complete block instance in block CRUD operations.
+ * Returns the block data and updates reactively when it changes.
+ *
+ * @param blockID - The block identifier to retrieve
+ * @returns The complete block instance or undefined if not found
+ *
+ * @example
+ * useBlock('block-123') → { id: 'block-123', type: 'text', ... }
+ */
+export function useBlock(blockID: BlockID): BlockInstance | undefined {
+	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlock]`);
+	if (!safeParams) return;
+
+	return useBlockStore((state) => state.allBlocks[safeParams.blockID]);
 }

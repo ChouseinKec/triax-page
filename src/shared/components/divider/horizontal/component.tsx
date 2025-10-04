@@ -19,14 +19,9 @@ import { HorizontalDividerProps } from "./type";
  * @param {string} [props.title] - Optional title text displayed on the divider
  * @returns {ReactNode} The rendered HorizontalDivider component
  */
-const HorizontalDivider: React.FC<HorizontalDividerProps> = (props: HorizontalDividerProps) => {
-    const {
-        title,
-        className = "HorizontalDivider"
-    } = props;
-
+const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ title, className, variation }) => {
     return (
-        <span className={`${CSS.HorizontalDivider} ${className}`} data-title={title || null}>
+        <span className={`${CSS.HorizontalDivider} ${className}`} data-title={title || null} data-variation={variation}>
             {title ? title : ""}
         </span>
     );

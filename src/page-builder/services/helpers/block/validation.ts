@@ -1,13 +1,10 @@
 // Types
 import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockPermitedContent, BlockPermitedParent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 import type { ElementTags } from '@/src/page-builder/core/block/element/types';
-import type { ValidationResult, CreationResult } from '@/src/shared/types/result';
+import type { ValidationResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isBlockIDValid, isBlockInstanceValid, isBlockDefinitionValid, createBlock, isBlockTypeValid, isBlockTagsValid, isBlockRenderValid, isBlockAttributesValid, isBlockStylesValid, isBlockPermittedContentValid, isBlockPermittedParentValid, isBlockCategoryValid, isBlockIconValid } from '@/src/page-builder/core/block/block/utilities';
-
-// Registry
-import { getRegisteredBlock } from '@/src/page-builder/state/registries/block';
+import { isBlockIDValid, isBlockInstanceValid, isBlockDefinitionValid, isBlockTypeValid, isBlockTagsValid, isBlockRenderValid, isBlockAttributesValid, isBlockStylesValid, isBlockPermittedContentValid, isBlockPermittedParentValid, isBlockCategoryValid, isBlockIconValid } from '@/src/page-builder/core/block/block/utilities';
 
 /**
  * Validates a block ID for block operations.
@@ -221,26 +218,4 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidationRes
 	if (!iconValidation.valid) return { valid: false, message: iconValidation.message };
 
 	return { valid: true, value: blockDefinition as BlockDefinition };
-}
-
-/**
- * Creates a new block instance for block operations.
- * Instantiates a block of the specified type with the given parent ID.
- *
- * @param blockType - The type of block to create
- * @param blockParentID - The ID of the parent block
- * @returns CreationResult containing success status and the created BlockInstance if successful
- *
- * @example
- * createBlockInstance('text', 'parent-123') → { success: true, data: { type: 'text', attributes: {}, styles: {}, ... } }
- */
-export function createBlockInstance(blockType: BlockType, blockParentID: BlockID): CreationResult<BlockInstance> {
-	const definition = getRegisteredBlock(blockType);
-
-	if (!definition) return { success: false, error: `Block type "${blockType}" is not registered` };
-	if (!isBlockTypeValid(blockType)) return { success: false, error: `Invalid block type: ${blockType}` };
-
-	const block = createBlock(definition, blockParentID);
-
-	return { success: true, data: block };
 }

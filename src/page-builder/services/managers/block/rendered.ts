@@ -13,7 +13,7 @@ import { validateOrLog } from '@/src/shared/utilities/validation';
 import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/block';
+import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 import { validateDeviceID } from '@/src/page-builder/services/helpers/page/device';
 import { validateOrientationID } from '@/src/page-builder/services/helpers/page/orientation';
 import { validatePseudoID } from '@/src/page-builder/services/helpers/page/pseudo';

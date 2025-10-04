@@ -67,7 +67,7 @@ export type BlockPermitedParent = BlockType[] | null;
 
 /**
  * Record of all block instances by their ID.
-*/
+ */
 export type BlockRecord = Record<BlockID, BlockInstance>;
 
 /**
@@ -107,7 +107,7 @@ export interface BlockInstance {
 	/** The kind of block (text, container, media) */
 	type: BlockType;
 	/** ID of the parent block, null if root */
-	parentID: BlockID | null;
+	parentID: BlockID;
 	/** IDs of child blocks in order */
 	contentIDs: BlockID[];
 	/** Instance-specific attributes that override defaults */
