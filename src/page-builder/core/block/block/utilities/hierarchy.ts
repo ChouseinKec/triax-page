@@ -7,10 +7,7 @@ import type { BlockRecord, BlockInstance, BlockType, BlockID, BlockDefinition } 
  * @param allBlocks - All blocks collection
  * @returns The next sibling block instance or null
  */
-export function findBlockNextSibling(blockID: BlockID, allBlocks:BlockRecord): BlockInstance | null {
-	if (!blockID || typeof blockID !== 'string') return null;
-	if (!allBlocks || typeof allBlocks !== 'object') return null;
-
+export function findBlockNextSibling(blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
 	const block = allBlocks[blockID];
 	if (!block?.parentID) return null;
 
@@ -30,10 +27,7 @@ export function findBlockNextSibling(blockID: BlockID, allBlocks:BlockRecord): B
  * @param allBlocks - All blocks collection
  * @returns The previous sibling block instance or null
  */
-export function findBlockPreviousSibling(blockID: BlockID, allBlocks:BlockRecord): BlockInstance | null {
-	if (!blockID || typeof blockID !== 'string') return null;
-	if (!allBlocks || typeof allBlocks !== 'object') return null;
-
+export function findBlockPreviousSibling(blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
 	const block = allBlocks[blockID];
 	if (!block?.parentID) return null;
 
@@ -53,10 +47,7 @@ export function findBlockPreviousSibling(blockID: BlockID, allBlocks:BlockRecord
  * @param allBlocks - All blocks collection
  * @returns The last descendant block instance or null if input is invalid
  */
-export function findBlockLastDescendant(block: BlockInstance, allBlocks:BlockRecord): BlockInstance | null {
-	if (!block || typeof block !== 'object') return null;
-	if (!allBlocks || typeof allBlocks !== 'object') return null;
-
+export function findBlockLastDescendant(block: BlockInstance, allBlocks: BlockRecord): BlockInstance | null {
 	let current = block;
 	while (current.contentIDs?.length > 0) {
 		const lastChildID = current.contentIDs[current.contentIDs.length - 1];
@@ -76,12 +67,9 @@ export function findBlockLastDescendant(block: BlockInstance, allBlocks:BlockRec
  * @returns Array of all descendant block IDs including the starting IDs
  *
  * @example
- * getBlockDescendants(['parent-1'], allBlocks) // → ['parent-1', 'child-1', 'grandchild-1']
+ * findBlockDescendants(['parent-1'], allBlocks) // → ['parent-1', 'child-1', 'grandchild-1']
  */
-export function findBlockDescendants(blockIDs: BlockID[], allBlocks:BlockRecord): BlockID[] {
-	if (!blockIDs || !Array.isArray(blockIDs) || blockIDs.length === 0) return [];
-	if (!allBlocks || typeof allBlocks !== 'object') return [];
-
+export function findBlockDescendants(blockIDs: BlockID[], allBlocks: BlockRecord): BlockID[] {
 	const result: string[] = [];
 	const visited = new Set<string>();
 
@@ -113,11 +101,7 @@ export function findBlockDescendants(blockIDs: BlockID[], allBlocks:BlockRecord)
  * @example
  * isBlockDescendant(parentBlock, 'child-2', allBlocks) // → true
  */
-export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID, allBlocks:BlockRecord): boolean {
-	if (!parentBlock || typeof parentBlock !== 'object') return false;
-	if (!targetID || typeof targetID !== 'string') return false;
-	if (!allBlocks || typeof allBlocks !== 'object') return false;
-
+export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID, allBlocks: BlockRecord): boolean {
 	if (parentBlock.contentIDs.includes(targetID)) return true;
 	return parentBlock.contentIDs.some((childID) => {
 		const childBlock = allBlocks[childID];
@@ -126,105 +110,58 @@ export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID,
 }
 
 /**
- * Checks if a child block type is permitted within a parent block type.
- * @param parentType Parent block type
- * @param childType Child block type to check
- * @param registeredBlocks All registered block definitions
- * @returns True if child is permitted, false otherwise
- */
-export function isBlockChildAllowed(parentType: BlockType, childType: BlockType, registeredBlocks: Record<string, BlockDefinition>): boolean {
-	if (!parentType || typeof parentType !== 'string') return false;
-	if (!childType || typeof childType !== 'string') return false;
-	if (!registeredBlocks || typeof registeredBlocks !== 'object') return false;
-
-	const parentBlock = registeredBlocks[parentType];
-	const childBlock = registeredBlocks[childType];
-	if (!parentBlock || !childBlock) return false;
-
-	if (parentBlock.permittedContent == null) return true;
-	return parentBlock.permittedContent.includes(childType);
-}
-
-/**
- * Moves a block to be positioned after a target block within the same parent.
- * Updates the parent's contentIDs array to reflect the new order.
+ * Core function to move a block to a specific parent and position.
+ * Handles removing from old parent and updating the block's parentID.
  *
  * @param blockID - The block ID to move
- * @param targetBlockID - The target block ID to position after
+ * @param targetParentID - The target parent block ID
+ * @param targetIndex - The index position within the target parent's contentIDs
  * @param allBlocks - All blocks collection
  * @returns Updated blocks record with the block moved to new position
- *
- * @example
- * moveBlockAfter('block-456', 'block-123', allBlocks) → block-456 positioned after block-123
  */
-export function moveBlockAfter(blockID: BlockID, targetBlockID: BlockID, allBlocks: BlockRecord): BlockRecord {
-	const block = allBlocks[blockID];
-	const targetBlock = allBlocks[targetBlockID];
+export function moveBlock(sourceBlockID: BlockID, targetParentID: BlockID, targetIndex: number, allBlocks: BlockRecord): BlockRecord {
+	const block = allBlocks[sourceBlockID];
+	const targetParent = allBlocks[targetParentID];
 
-	if (!block || !targetBlock) return allBlocks;
-	if (block.parentID !== targetBlock.parentID) return allBlocks; // Must be siblings
+	if (!block || !targetParent) return allBlocks;
 
-	const parentBlock = allBlocks[block.parentID];
-	if (!parentBlock) return allBlocks;
+	let updatedBlocks = { ...allBlocks };
 
-	// Remove the block from its current position
-	const contentIDs = parentBlock.contentIDs.filter((id) => id !== blockID);
+	// Remove from current parent if it exists
+	if (block.parentID) {
+		const currentParent = allBlocks[block.parentID];
+		if (currentParent) {
+			const filteredContentIDs = currentParent.contentIDs.filter((id) => id !== sourceBlockID);
+			updatedBlocks = {
+				...updatedBlocks,
+				[block.parentID]: {
+					...currentParent,
+					contentIDs: filteredContentIDs,
+				},
+			};
+		}
+	}
 
-	// Find the target block's position and insert after it
-	const targetIndex = contentIDs.indexOf(targetBlockID);
-	if (targetIndex === -1) return allBlocks;
+	// Update block's parentID
+	const updatedBlock = {
+		...block,
+		parentID: targetParentID,
+	};
 
-	contentIDs.splice(targetIndex + 1, 0, blockID);
+	// Insert at target position in new parent
+	// Use the updated target parent if it was modified above, otherwise use the original
+	const targetParentToUse = updatedBlocks[targetParentID];
+	const newContentIDs = [...targetParentToUse.contentIDs];
+	newContentIDs.splice(targetIndex, 0, sourceBlockID);
 
-	const updatedParent = {
-		...parentBlock,
-		contentIDs,
+	const updatedTargetParent = {
+		...targetParentToUse,
+		contentIDs: newContentIDs,
 	};
 
 	return {
-		...allBlocks,
-		[block.parentID]: updatedParent,
-	};
-}
-
-/**
- * Moves a block to be positioned before a target block within the same parent.
- * Updates the parent's contentIDs array to reflect the new order.
- *
- * @param blockID - The block ID to move
- * @param targetBlockID - The target block ID to position before
- * @param allBlocks - All blocks collection
- * @returns Updated blocks record with the block moved to new position
- *
- * @example
- * moveBlockBefore('block-456', 'block-123', allBlocks) → block-456 positioned before block-123
- */
-export function moveBlockBefore(blockID: BlockID, targetBlockID: BlockID, allBlocks: BlockRecord): BlockRecord {
-	const block = allBlocks[blockID];
-	const targetBlock = allBlocks[targetBlockID];
-
-	if (!block || !targetBlock) return allBlocks;
-	if (block.parentID !== targetBlock.parentID) return allBlocks; // Must be siblings
-
-	const parentBlock = allBlocks[block.parentID];
-	if (!parentBlock) return allBlocks;
-
-	// Remove the block from its current position
-	const contentIDs = parentBlock.contentIDs.filter((id) => id !== blockID);
-
-	// Find the target block's position and insert before it
-	const targetIndex = contentIDs.indexOf(targetBlockID);
-	if (targetIndex === -1) return allBlocks;
-
-	contentIDs.splice(targetIndex, 0, blockID);
-
-	const updatedParent = {
-		...parentBlock,
-		contentIDs,
-	};
-
-	return {
-		...allBlocks,
-		[block.parentID]: updatedParent,
+		...updatedBlocks,
+		[sourceBlockID]: updatedBlock,
+		[targetParentID]: updatedTargetParent,
 	};
 }

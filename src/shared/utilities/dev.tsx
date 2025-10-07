@@ -9,67 +9,51 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
  */
 export const devLog = {
 	/**
-	 * Logs error messages and returns a specified value (development only).
-	 * The last argument is returned, and all preceding arguments are logged.
-	 * @param {...unknown} args - One or more values to log, with the last being the return value.
-	 * @returns The last argument passed to the function.
+	 * Logs error messages (development only).
+	 * @param {...unknown} args - Values to log as an error.
 	 * @example
-	 * return devLog.error('API Failed:', error, null); // Logs 'API Failed:' and error, returns null
+	 * devLog.error('API Failed:', error);
 	 */
-	error: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+	error: (...args: unknown[]): void => {
 		if (isDevelopment) {
-			const messages = args.slice(0, -1);
-			console.error(...messages);
+			console.error(...args);
 		}
-		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs warning messages and returns a specified value (development only).
-	 * The last argument is returned, and all preceding arguments are logged.
-	 * @param {...unknown} args - One or more values to log, with the last being the return value.
-	 * @returns The last argument passed to the function.
+	 * Logs warning messages (development only).
+	 * @param {...unknown} args - Values to log as a warning.
 	 * @example
-	 * return devLog.warn('Deprecated function called', undefined); // Logs message, returns undefined
+	 * devLog.warn('Deprecated function called');
 	 */
-	warn: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+	warn: (...args: unknown[]): void => {
 		if (isDevelopment) {
-			const messages = args.slice(0, -1);
-			console.warn(...messages);
+			console.warn(...args);
 		}
-		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs messages and returns a specified value (development only).
-	 * The last argument is returned, and all preceding arguments are logged.
-	 * @param {...unknown} args - One or more values to log, with the last being the return value.
-	 * @returns The last argument passed to the function.
+	 * Logs messages (development only).
+	 * @param {...unknown} args - Values to log.
 	 * @example
-	 * return devLog.log('Component mounted', true); // Logs message, returns true
+	 * devLog.log('Component mounted');
 	 */
-	log: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+	log: (...args: unknown[]): void => {
 		if (isDevelopment) {
-			const messages = args.slice(0, -1);
-			console.log(...messages);
+			console.log(...args);
 		}
-		return args[args.length - 1] as T;
 	},
 
 	/**
-	 * Logs info messages and returns a specified value (development only).
-	 * The last argument is returned, and all preceding arguments are logged.
-	 * @param {...unknown} args - One or more values to log, with the last being the return value.
-	 * @returns The last argument passed to the function.
+	 * Logs info messages (development only).
+	 * @param {...unknown} args - Values to log as info.
 	 * @example
-	 * return devLog.info('Data fetched', data, data); // Logs 'Data fetched' and data, returns data
+	 * devLog.info('Data fetched', data);
 	 */
-	info: <T,>(...args: [...messages: unknown[], returnValue: T]): T => {
+	info: (...args: unknown[]): void => {
 		if (isDevelopment) {
-			const messages = args.slice(0, -1);
-			console.info(...messages);
+			console.info(...args);
 		}
-		return args[args.length - 1] as T;
 	},
 
 	/**
@@ -81,8 +65,9 @@ export const devLog = {
 	 * devLog.table(data, ['id', 'status']);
 	 */
 	table: (data: unknown[] | Record<string, unknown>, columns?: string[]): void => {
-		return;
-		if (isDevelopment) { console.table(data, columns) };
+		if (isDevelopment) {
+			console.table(data, columns);
+		}
 	},
 };
 

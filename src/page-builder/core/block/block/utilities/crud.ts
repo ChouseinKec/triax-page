@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { BlockDefinition, BlockInstance, BlockStyles, BlockID, BlockAttributes, BlockRecord } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
-import { findBlockDescendants } from './hierarchy';
+import { findBlockDescendants } from '@/src/page-builder/core/block/block/utilities';
 
 /**
  * Creates default style structure for a new block.

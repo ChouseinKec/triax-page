@@ -7,7 +7,6 @@ import CSS from "./styles.module.scss";
 
 // Managers
 import {
-    //
     useBlockType,
     useBlockContentIDs,
     selectBlock,
@@ -21,6 +20,10 @@ import {
     pasteBlockStyles,
     copyBlockAttributes,
     pasteBlockAttributes,
+    moveBlockAfter,
+    moveBlockBefore,
+    canBlockHaveChildren,
+    moveBlockInto,
 } from "@/src/page-builder/services/managers/block";
 
 // Types
@@ -29,6 +32,9 @@ import type { EntryProps } from "@/src/page-builder/ui/inspectors/block/types/hi
 // Components
 import FloatReveal from "@/src/shared/components/reveal/float/component";
 import HorizontalDivider from "@/src/shared/components/divider/horizontal/component";
+
+// Hooks
+import { useDragDrop } from "@/src/shared/hooks/interface/useDragDrop";
 
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";
@@ -42,14 +48,31 @@ import { devRender } from "@/src/shared/utilities/dev";
  */
 const Entry: React.FC<EntryProps> = ({ blockID }) => {
     if (!blockID) return devRender.error("[Entry] No blockID provided");
-    const containerRef = useRef<HTMLButtonElement | null>(null);
+    const revealButtonRef = useRef<HTMLButtonElement | null>(null);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
-
     const blockType = useBlockType(blockID);
-    const blockContentIDs = useBlockContentIDs(blockID);
+    const blockContentIDs = useBlockContentIDs(blockID) || [];
     const isBlockSelected = useIsBlockSelected(blockID);
     const blockIcon = blockType ? getBlockIcon(blockType) : null;
+    const canHaveChildren = canBlockHaveChildren(blockID);
+    const hasChildren = blockContentIDs && blockContentIDs.length > 0 ? true : false;
+
+    // Drag and drop hook
+    const {
+        isDragOver,
+        draggedItemID,
+        handleDragStart,
+        handleDragOver,
+        handleDragLeave,
+        handleDrop,
+        handleDragEnd,
+    } = useDragDrop(
+        moveBlockBefore,
+        moveBlockAfter,
+        moveBlockInto,
+        selectBlock
+    );
 
     // Handle block selection
     const handleLeftClick = () => {
@@ -78,58 +101,56 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
         setIsOpen(prev => !prev);
     }
 
-    // Render child entries recursively
-    const renderChildren = useMemo(() => {
-        if (!blockContentIDs || blockContentIDs.length <= 0) return null;
-        return (
-            <div className={CSS.Entry__Content}>
-                {blockContentIDs.map((childID) => (
-                    <Entry key={childID} blockID={childID} />
-                ))}
-            </div>
-        );
-    }, [blockContentIDs]
+    const beforeDropzone = (
+        <div
+            className={CSS.Entry__DropZone}
+            onDragOver={(e) => handleDragOver(e, 'before')}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, blockID, 'before')}
+            data-drag-over={isDragOver === 'before'}
+            data-drag-position="before"
+        />
     );
 
-    return (
-        <div className={CSS.Entry}        >
-            <div className={CSS.Entry__Reveal}>
+    const afterDropzone = (
+        <div
+            className={CSS.Entry__DropZone}
+            onDragOver={(e) => handleDragOver(e, 'after')}
+            onDragLeave={handleDragLeave}
+            onDrop={(e) => handleDrop(e, blockID, 'after')}
+            data-drag-over={isDragOver === 'after'}
+            data-drag-position="after"
+        />
+    );
 
-                {/* Toggle button to expand/collapse the content */}
-                <button
-                    className={CSS.Entry__RevealButton}
-                    data-is-selected={isBlockSelected}
-                    onClick={handleLeftClick}
-                    ref={containerRef}
-                    onContextMenu={handleRightClick}
-                >
-                    <span>
-                        {blockIcon}
-                        <span>{blockID}</span>
-                    </span>
+    // Render child entries recursively
+    const childrenContent = useMemo(() => {
+        if (!canHaveChildren) return null;
 
-                    {renderChildren && (
-                        <span
-                            tabIndex={0}
-                            className={CSS.Entry__RevealArrow}
-                            onClick={handleArrowClick}
-                            data-is-open={isOpen}
-                        />
-                    )}
+        const children =
+            hasChildren
+                ? blockContentIDs.map((childID) => (
+                    <Entry key={childID} blockID={childID} />
+                ))
+                : null;
 
-                </button>
 
-                {/* Render expandable content if open */}
-                {isOpen && renderChildren}
+        return (
+            <div className={CSS.Entry__Content} >
+                {children}
             </div>
+        );
+    }, [blockContentIDs, canHaveChildren]
+    );
 
+    const contextMenu = useMemo(() => {
+        return (
             <FloatReveal
-                className='Float'
-                anchor={"bottom"}
-                targetRef={containerRef}
+                targetRef={revealButtonRef}
                 isOpen={isContextMenuOpen}
+                anchor="bottom"
                 autoClose={true}
-                onVisibilityChange={(visible) => setIsContextMenuOpen(visible)}
+                onVisibilityChange={setIsContextMenuOpen}
             >
                 <button className={CSS.Entry__Action} onClick={() => handleActionClick(() => copyBlock(blockID))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z" /></svg>
@@ -170,7 +191,83 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                     Paste Attributes
                 </button>
             </FloatReveal>
+        )
+    }, [isContextMenuOpen, blockID]
+    );
 
+    const revealButton = useMemo(() => {
+        const attributes = {
+            ref: revealButtonRef,
+            className: CSS.Entry__RevealButton,
+
+            'data-is-selected': isBlockSelected,
+
+            onClick: handleLeftClick,
+            onContextMenu: handleRightClick,
+
+            draggable: true,
+            onDragStart: (e: React.DragEvent) => {
+                handleDragStart(e, blockID);
+                e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+            },
+            onDragEnd: handleDragEnd,
+
+            // Conditionally add drag handlers for blocks that can have children but don't have any yet
+            ...(canHaveChildren && !hasChildren && {
+                onDragOver: (e: React.DragEvent) => handleDragOver(e, 'over'),
+                onDragLeave: handleDragLeave,
+                onDrop: (e: React.DragEvent) => handleDrop(e, blockID, 'over')
+            })
+        }
+
+        return (
+            <button {...attributes}>
+                <span>
+                    {blockIcon}
+                    <span>{blockID}</span>
+                </span>
+
+                {hasChildren && (
+                    <span
+                        tabIndex={0}
+                        className={CSS.Entry__RevealArrow}
+                        onClick={handleArrowClick}
+                        data-is-open={isOpen}
+                    />
+                )}
+
+
+            </button>
+        )
+    },
+        [isBlockSelected, blockID, isOpen, childrenContent, blockIcon, handleDragEnd, handleDragStart, draggedItemID]
+    );
+
+    return (
+        <div
+            className={CSS.Entry}
+            data-is-dragged={draggedItemID === blockID}
+            data-drag-over={isDragOver}
+            data-children-allowed={canHaveChildren}
+            data-has-children={hasChildren}
+        >
+            {/* Drop zone above */}
+            {beforeDropzone}
+
+            <div className={CSS.Entry__Reveal}>
+
+                {/* Toggle button to expand/collapse the content */}
+                {revealButton}
+
+                {/* Render expandable content if open */}
+                {isOpen && childrenContent}
+
+                {contextMenu}
+
+            </div>
+
+            {/* Drop zone below */}
+            {afterDropzone}
         </div>
     );
 };

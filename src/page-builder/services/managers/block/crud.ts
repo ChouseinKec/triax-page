@@ -9,7 +9,7 @@ import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } 
 
 // Utilities
 import { createBlock, deleteBlockFromParent, processBlockDeletions, addBlockToParent, cloneBlock } from '@/src/page-builder/core/block/block/utilities/crud';
-import { moveBlockAfter as moveBlockAfterUtil, moveBlockBefore as moveBlockBeforeUtil } from '@/src/page-builder/core/block/block/utilities/hierarchy';
+import { moveBlock } from '@/src/page-builder/core/block/block/utilities/hierarchy';
 
 import { devLog } from '@/src/shared/utilities/dev';
 import { validateOrLog } from '@/src/shared/utilities/validation';
@@ -41,7 +41,7 @@ export function addBlock(blockType: BlockType, parentID: BlockID): void {
 
 	// Get block definition and validate registration
 	const definition = getRegisteredBlock(safeParams.blockType);
-	if (!definition) return devLog.error(`[BlockManager → addBlock] Block type "${safeParams.blockType}" is not registered`, undefined);
+	if (!definition) return devLog.error(`[BlockManager → addBlock] Block type "${safeParams.blockType}" is not registered`), undefined;
 
 	// Create the block instance
 	const newBlock = createBlock(definition, safeParams.parentID, {}, {});
@@ -70,7 +70,7 @@ export function deleteBlock(blockID: BlockID): void {
 	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → deleteBlock]`);
 	if (!safeParams) return;
 
-	if (safeParams.blockID === 'body') return devLog.error(`[BlockManager → deleteBlock] Cannot delete root body block`, undefined);
+	if (safeParams.blockID === 'body') return devLog.error(`[BlockManager → deleteBlock] Cannot delete root body block`), undefined;
 
 	const store = useBlockStore.getState();
 
@@ -107,7 +107,7 @@ export function copyBlock(blockID: BlockID): void {
 
 	const store = useBlockStore.getState();
 	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlock] Block ${safeParams.blockID} not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → copyBlock] Block ${safeParams.blockID} not found`), undefined;
 
 	blockClipboard = JSON.parse(JSON.stringify(block));
 }
@@ -123,14 +123,14 @@ export function copyBlock(blockID: BlockID): void {
  * pasteBlock('block-123')
  */
 export function pasteBlock(blockID: BlockID): void {
-	if (!blockClipboard) return devLog.error(`[BlockManager → pasteBlock] No block in clipboard`, undefined);
+	if (!blockClipboard) return devLog.error(`[BlockManager → pasteBlock] No block in clipboard`), undefined;
 
 	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlock]`);
 	if (!safeParams) return;
 
 	const store = useBlockStore.getState();
 	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`, undefined);
+	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`), undefined;
 
 	// Duplicate the entire block tree from clipboard
 	const { clonedBlocks } = cloneBlock(blockClipboard, store.allBlocks, targetBlock.id);
@@ -155,13 +155,25 @@ export function duplicateBlock(blockID: BlockID): void {
 
 	const store = useBlockStore.getState();
 	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`, undefined);
+	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`), undefined;
 
 	// Duplicate the entire block tree from clipboard
 	const { clonedBlocks, rootBlock } = cloneBlock(targetBlock, store.allBlocks);
 
 	// Position the new root block after the target block
-	const positionedBlocks = moveBlockAfterUtil(rootBlock.id, safeParams.blockID, { ...store.allBlocks, ...clonedBlocks });
+	const mergedBlocks = { ...store.allBlocks, ...clonedBlocks };
+	const targetBlockInMerged = mergedBlocks[safeParams.blockID];
+	if (!targetBlockInMerged) return devLog.error(`[BlockManager → duplicateBlock] Target block not found in merged blocks`), undefined;
+
+	const targetParentID = targetBlockInMerged.parentID;
+	const targetParent = mergedBlocks[targetParentID];
+	if (!targetParent) return devLog.error(`[BlockManager → duplicateBlock] Target parent not found`), undefined;
+
+	// Find the target block's position and insert after it
+	const targetIndex = targetParent.contentIDs.indexOf(safeParams.blockID);
+	if (targetIndex === -1) return devLog.error(`[BlockManager → duplicateBlock] Target block not found in parent`), undefined;
+
+	const positionedBlocks = moveBlock(rootBlock.id, targetParentID, targetIndex + 1, mergedBlocks);
 	store.updateBlocks(positionedBlocks);
 }
 
@@ -181,7 +193,7 @@ export function copyBlockStyles(blockID: BlockID): void {
 
 	const store = useBlockStore.getState();
 	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlockStyles] Block ${safeParams.blockID} not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → copyBlockStyles] Block ${safeParams.blockID} not found`), undefined;
 
 	stylesClipboard = JSON.parse(JSON.stringify(block.styles));
 }
@@ -200,11 +212,11 @@ export function pasteBlockStyles(blockID: BlockID): void {
 	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlockStyles]`);
 	if (!safeParams) return;
 
-	if (!stylesClipboard) return devLog.error(`[BlockManager → pasteBlockStyles] No styles in clipboard`, undefined);
+	if (!stylesClipboard) return devLog.error(`[BlockManager → pasteBlockStyles] No styles in clipboard`), undefined;
 
 	const store = useBlockStore.getState();
 	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockStyles] Target block ${safeParams.blockID} not found`, undefined);
+	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockStyles] Target block ${safeParams.blockID} not found`), undefined;
 
 	targetBlock.styles = JSON.parse(JSON.stringify(stylesClipboard));
 	store.updateBlock(safeParams.blockID, targetBlock);
@@ -226,7 +238,7 @@ export function copyBlockAttributes(blockID: BlockID): void {
 
 	const store = useBlockStore.getState();
 	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlockAttributes] Block ${safeParams.blockID} not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → copyBlockAttributes] Block ${safeParams.blockID} not found`), undefined;
 
 	attributesClipboard = JSON.parse(JSON.stringify(block.attributes));
 }
@@ -245,11 +257,11 @@ export function pasteBlockAttributes(blockID: BlockID): void {
 	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlockAttributes]`);
 	if (!safeParams) return;
 
-	if (!attributesClipboard) return devLog.error(`[BlockManager → pasteBlockAttributes] No attributes in clipboard`, undefined);
+	if (!attributesClipboard) return devLog.error(`[BlockManager → pasteBlockAttributes] No attributes in clipboard`), undefined;
 
 	const store = useBlockStore.getState();
 	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockAttributes] Target block ${safeParams.blockID} not found`, undefined);
+	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockAttributes] Target block ${safeParams.blockID} not found`), undefined;
 
 	targetBlock.attributes = JSON.parse(JSON.stringify(attributesClipboard));
 	store.updateBlock(safeParams.blockID, targetBlock);

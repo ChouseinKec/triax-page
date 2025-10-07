@@ -31,7 +31,7 @@ export function togglePanel(panelID: PanelID): void {
 
 	const store = useLayoutStore.getState();
 	const panel = store.getPanel(safeParams.panelID);
-	if (!panel) return devLog.error(`[LayoutManager → togglePanel] Panel with ID "${safeParams.panelID}" not found.`, undefined);
+	if (!panel) return devLog.error(`[LayoutManager → togglePanel] Panel with ID "${safeParams.panelID}" not found.`);
 
 	store.updatePanel(safeParams.panelID, { isOpen: !panel.isOpen });
 }

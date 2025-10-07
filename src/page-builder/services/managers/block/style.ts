@@ -49,7 +49,7 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 	if (!safeParams) return undefined;
 
 	const block = useBlockStore.getState().getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → getBlockStyle] Block not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → getBlockStyle] Block not found`), undefined;
 
 	const defaultPseudo = getPseudoDefaultID();
 	const defaultOrientation = getOrientationDefaultID();
@@ -94,7 +94,7 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 	if (!safeParams) return;
 
 	const block = useBlockStore.getState().getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → setBlockStyle] Block not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → setBlockStyle] Block not found`);
 
 	// If the styleKey is a CSS shorthand (e.g. 'margin', 'padding'), set all its longhand properties
 	if (hasShorthand(styleKey)) {
@@ -158,7 +158,7 @@ export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 	if (!safeParams) return;
 
 	const style = getBlockStyle(safeParams.blockID, safeParams.styleKey);
-	if (!style) return devLog.error(`[BlockManager → copyBlockStyle] No style found for ${safeParams.styleKey}`, undefined);
+	if (!style) return devLog.error(`[BlockManager → copyBlockStyle] No style found for ${safeParams.styleKey}`);
 
 	// Copy the value to clipboard
 	navigator.clipboard

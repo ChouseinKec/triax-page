@@ -33,7 +33,6 @@ export function validateBlockID(blockID: unknown): ValidationResult<BlockID> {
  */
 export function validateBlockType(blockType: unknown): ValidationResult<BlockType> {
 	if (!isBlockTypeValid(blockType)) return { valid: false, message: `Invalid block type (${blockType})` };
-
 	return { valid: true, value: blockType as BlockType };
 }
 

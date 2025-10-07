@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { getSelectedBlockID, useSelectedBlockType, addBlock, getRegisteredBlocks, getRegisteredBlock, isBlockChildAllowed } from "@/src/page-builder/services/managers/block";
+import { getSelectedBlockID, useSelectedBlockType, addBlock, getRegisteredBlocks, getRegisteredBlock, canBlockTypeAcceptChildType } from "@/src/page-builder/services/managers/block";
 
 // Components
 import GenericInput from "@/src/shared/components/input/generic/component";
@@ -28,7 +28,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
     // Handle adding a new block, optionally nesting inside the selected block
     const handleAddBlock = useCallback((blockType: BlockType) => {
         const selectedBlockID = getSelectedBlockID();
-        if (!selectedBlockID) return addBlock(blockType);
+        if (!selectedBlockID) return;
 
         addBlock(blockType, selectedBlockID);
     }, [addBlock]
@@ -43,7 +43,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
 
         return Object.fromEntries(
             Object.entries(registeredBlocks).filter(([_, block]) => {
-                return isBlockChildAllowed(selectedBlockType, block.type);
+                return canBlockTypeAcceptChildType(selectedBlockType, block.type);
             })
         );
     }, [selectedBlockType, registeredBlocks]

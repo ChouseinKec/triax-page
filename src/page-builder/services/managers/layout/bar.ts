@@ -70,8 +70,8 @@ export function registerBarAction(barID: BarID, action: BarActionInstance): void
 
 	const store = useLayoutStore.getState();
 	const bar = store.getBar(safeParams.barID);
-	if (!bar) return devLog.error(`[LayoutManager → registerBarAction] Bar with ID "${safeParams.barID}" not found.`, undefined);
-	if (bar.actions[action.id]) return devLog.warn(`[LayoutManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`, undefined);
+	if (!bar) return devLog.error(`[LayoutManager → registerBarAction] Bar with ID "${safeParams.barID}" not found.`);
+	if (bar.actions[action.id]) return devLog.warn(`[LayoutManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
 
 	store.registerBarAction(barID, action);
 }
@@ -93,8 +93,8 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
 
 	const store = useLayoutStore.getState();
 	const bar = store.getBar(barID);
-	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${barID}" not found.`, undefined);
-	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${actionID}" not found in bar "${barID}". Skipping.`, undefined);
+	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${barID}" not found.`);
+	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${actionID}" not found in bar "${barID}". Skipping.`);
 
 	store.unregisterBarAction(barID, actionID);
 }
@@ -114,7 +114,7 @@ export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
 	if (!safeParams) return undefined;
 
 	const actionsRecord = useLayoutStore((state) => state.getBar(safeParams.barID)?.actions);
-	if (!actionsRecord) return undefined;
-	
+	if (!actionsRecord) return devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeParams.barID}" not found.`), undefined;
+
 	return useMemo(() => Object.values(actionsRecord), [actionsRecord]);
 }

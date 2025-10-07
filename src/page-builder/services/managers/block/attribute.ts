@@ -29,7 +29,7 @@ export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, 
 	if (!safeParams) return;
 
 	const block = useBlockStore.getState().getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → setBlockAttribute] Block not found`, undefined);
+	if (!block) return devLog.error(`[BlockManager → setBlockAttribute] Block not found`);
 
 	const updatedBlock = {
 		...block,

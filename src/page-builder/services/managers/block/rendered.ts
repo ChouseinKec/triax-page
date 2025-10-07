@@ -41,7 +41,7 @@ export function useRenderedBlockStyles(blockID: BlockID): string | undefined {
 	if (!safeParams) return;
 
 	const styles = useBlockStore((state) => state.allBlocks[safeParams.blockID]?.styles);
-	if (!styles) return devLog.warn(`[BlockManager → useRenderedBlockStyles] No styles found for block ID: ${safeParams.blockID}`, undefined);
+	if (!styles) return devLog.warn(`[BlockManager → useRenderedBlockStyles] No styles found for block ID: ${safeParams.blockID}`), undefined;
 
 	return renderBlockStyles(styles, blockID, safeParams.selectedDeviceID, safeParams.selectedOrientationID, safeParams.selectedPseudoID);
 }
@@ -61,7 +61,7 @@ export function useRenderedBlockAttributes(blockID: BlockID): Record<string, str
 	if (!safeParams) return;
 
 	const attributes = useBlockStore((state) => state.allBlocks[safeParams.blockID]?.attributes);
-	if (!attributes) return devLog.warn(`[BlockManager → useRenderedBlockAttributes] No attributes found for block ID: ${safeParams.blockID}`, undefined);
+	if (!attributes) return devLog.warn(`[BlockManager → useRenderedBlockAttributes] No attributes found for block ID: ${safeParams.blockID}`), undefined;
 
 	return renderBlockAttributes(attributes);
 }
