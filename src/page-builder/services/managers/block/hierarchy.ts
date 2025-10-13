@@ -5,16 +5,13 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 import type { BlockID, BlockInstance } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
-import { moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant } from '@/src/page-builder/core/block/block/utilities';
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block';
-import { validateBlockExistence } from '@/src/page-builder/services/helpers/block/existence';
-
-// Managers
-import { canBlockAcceptChild } from '@/src/page-builder/services/managers/block';
+import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
+import { validateBlockID } from '@/src/page-builder/services/helpers/validate';
+import { isBlockChildPermitted, moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant } from '@/src/page-builder/services/helpers/block';
 
 /**
  * Retrieves the next block in the hierarchy for block hierarchy operations.
@@ -27,23 +24,26 @@ import { canBlockAcceptChild } from '@/src/page-builder/services/managers/block'
  * getNextBlock('block-123') → { id: 'child-1', ... }
  */
 export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → getNextBlock]`);
-	if (!safeParams) return;
-
-	const store = useBlockStore.getState();
-
-	const selectedBlock = store.getBlock(safeParams.blockID);
-	if (!selectedBlock) return null;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → getNextBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
 	// If it has children, return the first child
-	if (selectedBlock.contentIDs?.length > 0) return store.getBlock(selectedBlock.contentIDs[0]);
+	const nextSibling = findBlockNextSibling(safeData.block.id, blockStore.allBlocks);
+	if (safeData.block.contentIDs?.length > 0) return blockStore.getBlock(safeData.block.contentIDs[0]);
 
 	// If no children, get the next sibling
-	const nextSibling = findBlockNextSibling(safeParams.blockID, store.allBlocks);
 	if (nextSibling) return nextSibling;
 
 	// If no next sibling, check the parent's next sibling
-	return selectedBlock.parentID ? findBlockNextSibling(selectedBlock.parentID, store.allBlocks) : null;
+	return findBlockNextSibling(safeData.block.parentID, blockStore.allBlocks);
 }
 
 /**
@@ -57,19 +57,24 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
  * getPreviousBlock('block-123') → { id: 'sibling-122', ... }
  */
 export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → getPreviousBlock]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → getPreviousBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
 
-	const store = useBlockStore.getState();
-	const selectedBlock = store.getBlock(safeParams.blockID);
-	if (!selectedBlock) return null;
+		.execute();
+	if (!safeData) return;
 
-	// If previous sibling has children, return its last descendant
-	const previousSibling = findBlockPreviousSibling(safeParams.blockID, store.allBlocks);
-	if (previousSibling) return findBlockLastDescendant(previousSibling, store.allBlocks) || previousSibling;
+	// If previous sibling has children, return its last descendant, otherwise the sibling itself
+	const prevSibling = findBlockPreviousSibling(safeData.blockInstance.id, blockStore.allBlocks);
+	if (prevSibling) return findBlockLastDescendant(prevSibling, blockStore.allBlocks) || prevSibling;
 
 	// If no previous sibling, return the parent
-	return selectedBlock.parentID ? store.getBlock(selectedBlock.parentID) : null;
+	return blockStore.getBlock(safeData.blockInstance.parentID);
 }
 
 /**
@@ -84,25 +89,39 @@ export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undef
  * moveBlockAfter('block-456', 'block-123')
  */
 export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): void {
-	const safeParams = validateOrLog({ sourceBlockID: validateBlockID(sourceBlockID), targetBlockID: validateBlockID(targetBlockID) }, `[BlockManager → moveBlockAfter]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → moveBlockAfter]')
+		.validate({
+			sourceBlockID: validateBlockID(sourceBlockID),
+			targetBlockID: validateBlockID(targetBlockID),
+		})
+		.fetch((data) => ({
+			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			targetParentBlock: fetchBlock(data.targetBlock.parentID, blockStore.allBlocks),
+		}))
+		.derive((data) => ({}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
+	// If child is not compatible
+	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockAfter] Block type not allowed as sibling`);
 
-	const targetBlock = store.getBlock(safeParams.targetBlockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found`);
+	// If the target block is not found in the parent's contentIDs
+	const targetBlockIndex = safeData.targetParentBlock.contentIDs.indexOf(safeData.targetBlock.id);
+	if (targetBlockIndex === -1) return devLog.error(`[BlockManager → moveBlockAfter] Target block not found in parent`);
 
-	const targetParentBlock = store.getBlock(targetBlock.parentID);
-	if (!targetParentBlock) return devLog.error(`[BlockManager → moveBlockBefore] Target parent block not found`);
-
-	if (!canBlockAcceptChild(targetParentBlock.id, safeParams.sourceBlockID)) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
-
-	// Find the target block's position and insert after it
-	const targetIndex = targetParentBlock.contentIDs.indexOf(safeParams.targetBlockID);
-	if (targetIndex === -1) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found in parent's contentIDs`);
-
-	const updatedBlocks = moveBlock(safeParams.sourceBlockID, targetParentBlock.id, targetIndex + 1, store.allBlocks);
-	store.updateBlocks(updatedBlocks);
+	blockStore.updateBlocks(
+		moveBlock(
+			safeData.sourceBlockID, //
+			safeData.targetParentBlock.id,
+			targetBlockIndex + 1,
+			blockStore.allBlocks
+		)
+	);
 }
 
 /**
@@ -117,25 +136,38 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
  * moveBlockBefore('block-456', 'block-123')
  */
 export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID): void {
-	const safeParams = validateOrLog({ sourceBlockID: validateBlockID(sourceBlockID), targetBlockID: validateBlockID(targetBlockID) }, `[BlockManager → moveBlockBefore]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → moveBlockBefore]')
+		.validate({
+			sourceBlockID: validateBlockID(sourceBlockID),
+			targetBlockID: validateBlockID(targetBlockID),
+		})
+		.fetch((data) => ({
+			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			targetParentBlock: fetchBlock(data.targetBlock.parentID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
+	// If child is not compatible
+	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
 
-	const targetBlock = store.getBlock(safeParams.targetBlockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found`);
+	// If the target block is not found in the parent's contentIDs
+	const targetBlockIndex = safeData.targetParentBlock.contentIDs.indexOf(safeData.targetBlock.id);
+	if (targetBlockIndex === -1) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found in parent`);
 
-	const targetParentBlock = store.getBlock(targetBlock.parentID);
-	if (!targetParentBlock) return devLog.error(`[BlockManager → moveBlockBefore] Target parent block not found`);
-
-	if (!canBlockAcceptChild(targetParentBlock.id, safeParams.sourceBlockID)) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
-
-	// Find the target block's position and insert before it
-	const targetIndex = targetParentBlock.contentIDs.indexOf(safeParams.targetBlockID);
-	if (targetIndex === -1) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found in parent's contentIDs`);
-
-	const updatedBlocks = moveBlock(safeParams.sourceBlockID, targetParentBlock.id, targetIndex, store.allBlocks);
-	store.updateBlocks(updatedBlocks);
+	blockStore.updateBlocks(
+		moveBlock(
+			safeData.sourceBlockID, //
+			safeData.targetParentBlock.id,
+			targetBlockIndex,
+			blockStore.allBlocks
+		)
+	);
 }
 
 /**
@@ -150,17 +182,26 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
  * moveBlockInto('block-456', 'block-123')
  */
 export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): void {
-	const safeParams = validateOrLog({ sourceBlockID: validateBlockID(sourceBlockID), targetBlockID: validateBlockID(targetBlockID) }, `[BlockManager → moveBlockInto]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → moveBlockInto]')
+		.validate({ sourceBlockID: validateBlockID(sourceBlockID), targetBlockID: validateBlockID(targetBlockID) })
+		.fetch((data) => ({
+			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
+	// If child is not compatible
+	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetBlock.type, safeData.sourceBlock.type);
+	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
 
-	const targetBlock = store.getBlock(safeParams.targetBlockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → moveBlockInto] Target block not found`);
-
-	if (!canBlockAcceptChild(safeParams.targetBlockID, safeParams.sourceBlockID)) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
-
-	// Insert as the last child of the target block
-	const updatedBlocks = moveBlock(safeParams.sourceBlockID, safeParams.targetBlockID, targetBlock.contentIDs.length, store.allBlocks);
-	store.updateBlocks(updatedBlocks);
+	blockStore.updateBlocks(
+		moveBlock(
+			safeData.sourceBlockID, //
+			safeData.targetBlockID,
+			safeData.targetBlock.contentIDs.length,
+			blockStore.allBlocks
+		)
+	);
 }

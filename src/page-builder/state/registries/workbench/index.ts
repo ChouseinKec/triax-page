@@ -1,9 +1,9 @@
 // Types
 import type { WorkbenchDefinition, WorkbenchID } from '@/src/page-builder/core/editor/workbench/types/workbench';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateWorkbench } from '@/src/page-builder/services/helpers/workbench/workbench';
+import { validateWorkbench } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Class-based workbench registry for managing workbench definitions
@@ -16,7 +16,7 @@ class WorkbenchRegistryClass {
 	 * @param workbench - The workbench definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerWorkbench(workbench: WorkbenchDefinition): ValidationResult<WorkbenchDefinition> {
+	registerWorkbench(workbench: WorkbenchDefinition): ValidateResult<WorkbenchDefinition> {
 		const validation = validateWorkbench(workbench);
 		if (!validation.valid) return { valid: false, message: validation.message };
 

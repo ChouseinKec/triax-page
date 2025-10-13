@@ -8,10 +8,10 @@ import type { DeviceDefinition, DeviceInstance, DeviceID } from '@/src/page-buil
 import { getRegisteredDevices, getRegisteredDevice } from '@/src/page-builder/state/registries/page';
 
 // Utilities
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateDeviceID } from '@/src/page-builder/services/helpers/page/device';
+import { validateDeviceID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Reactive hook to get the currently selected device instance for page management operations.
@@ -64,10 +64,14 @@ export function getSelectedDeviceID(): DeviceID | undefined {
  * setSelectedDeviceID('mobile') // Sets current device to mobile
  */
 export function setSelectedDeviceID(deviceID: DeviceID): void {
-	const safeParams = validateOrLog({ deviceID: validateDeviceID(deviceID) }, `[PageManager → setSelectedDeviceID]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[PageManager → setSelectedDeviceID]')
+		.validate({
+			deviceID: validateDeviceID(deviceID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	usePageStore.getState().setSelectedDeviceID(safeParams.deviceID);
+	usePageStore.getState().setSelectedDeviceID(safeData.deviceID);
 }
 
 /**
@@ -83,15 +87,3 @@ export function getAllDevices(): DeviceDefinition[] {
 	return Object.values(getRegisteredDevices());
 }
 
-/**
- * Gets the default device ID for page management operations.
- * Returns the hardcoded default device identifier used as fallback.
- *
- * @returns The default device ID string
- *
- * @example
- * const defaultID = getDeviceDefaultID() // Returns 'all'
- */
-export function getDeviceDefaultID(): string {
-	return 'all';
-}

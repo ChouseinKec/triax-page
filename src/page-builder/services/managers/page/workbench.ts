@@ -5,10 +5,10 @@ import { usePageStore } from '@/src/page-builder/state/stores/page';
 import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types';
 
 // Utilities
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Reactive hook to get the currently selected workbench ID for page management operations.
@@ -34,8 +34,12 @@ export function useSelectedWorkbenchID(): WorkbenchID {
  * setSelectedWorkbenchID('workbench-123') // Sets current workbench to workbench-123
  */
 export function setSelectedWorkbenchID(workbenchID: WorkbenchID): void {
-	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[PageManager → setSelectedWorkbenchID]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[PageManager → setSelectedWorkbenchID]')
+		.validate({
+			workbenchID: validateWorkbenchID(workbenchID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	usePageStore.getState().setSelectedWorkbenchID(safeParams.workbenchID);
+	usePageStore.getState().setSelectedWorkbenchID(safeData.workbenchID);
 }

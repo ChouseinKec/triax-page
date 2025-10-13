@@ -2,20 +2,16 @@
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Helpers
-import { validateBlockType, validateBlockID } from '@/src/page-builder/services/helpers/block';
+import { fetchBlock, fetchRegisteredBlock } from '@/src/page-builder/services/helpers/fetch';
+import { validateBlockType, validateBlockID } from '@/src/page-builder/services/helpers/validate';
+import { createBlock, deleteBlockFromParent, cloneBlock, overwriteBlock, addBlockToTree, deleteBlockFromTree } from '@/src/page-builder/services/helpers/block';
 
 // Types
 import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
-import { createBlock, deleteBlockFromParent, processBlockDeletions, addBlockToParent, cloneBlock } from '@/src/page-builder/core/block/block/utilities/crud';
-import { moveBlock } from '@/src/page-builder/core/block/block/utilities/hierarchy';
-
 import { devLog } from '@/src/shared/utilities/dev';
-import { validateOrLog } from '@/src/shared/utilities/validation';
-
-// Registry
-import { getRegisteredBlock } from '@/src/page-builder/state/registries/block';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Clipboard storage for copy/paste operations
 let blockClipboard: BlockInstance | null = null;
@@ -34,26 +30,25 @@ let attributesClipboard: BlockAttributes | null = null;
  * addBlock('text', 'parent-123')
  */
 export function addBlock(blockType: BlockType, parentID: BlockID): void {
-	const safeParams = validateOrLog({ blockType: validateBlockType(blockType), parentID: validateBlockID(parentID) }, `[BlockManager → addBlock]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → addBlock]')
+		.validate({
+			blockType: validateBlockType(blockType),
+			parentID: validateBlockID(parentID),
+		})
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockType),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-
-	// Get block definition and validate registration
-	const definition = getRegisteredBlock(safeParams.blockType);
-	if (!definition) return devLog.error(`[BlockManager → addBlock] Block type "${safeParams.blockType}" is not registered`), undefined;
-
-	// Create the block instance
-	const newBlock = createBlock(definition, safeParams.parentID, {}, {});
-
-	// Add block to store
-	store.updateBlocks({ [newBlock.id]: newBlock });
-
-	// Update parent relationship
-	const updatedBlocks = addBlockToParent(newBlock, store.allBlocks);
-	if (updatedBlocks !== store.allBlocks) {
-		store.updateBlocks(updatedBlocks);
-	}
+	// Add block to tree (adds to collection and updates parent relationship)
+	blockStore.updateBlocks(
+		addBlockToTree(
+			createBlock(safeData.blockDefinition, safeData.parentID), //
+			blockStore.allBlocks
+		)
+	);
 }
 
 /**
@@ -67,33 +62,40 @@ export function addBlock(blockType: BlockType, parentID: BlockID): void {
  * deleteBlock('block-123')
  */
 export function deleteBlock(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → deleteBlock]`);
-	if (!safeParams) return;
-
-	if (safeParams.blockID === 'body') return devLog.error(`[BlockManager → deleteBlock] Cannot delete root body block`), undefined;
-
-	const store = useBlockStore.getState();
+	if (blockID === 'body') return devLog.error(`[BlockManager → deleteBlock] Cannot delete root body block`), undefined;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → deleteBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
 	// Remove block from parent relationship
-	const updatedBlocks = deleteBlockFromParent(safeParams.blockID, store.allBlocks);
-	store.updateBlocks(updatedBlocks);
+	blockStore.updateBlocks(
+		deleteBlockFromParent(
+			safeData.blockID, //
+			blockStore.allBlocks
+		)
+	);
 
 	// Queue deletion with timeout for React unmounting
 	setTimeout(() => {
 		const currentStore = useBlockStore.getState();
-		const { allBlocks: finalBlocks, selectedBlockID: finalSelectedID } = processBlockDeletions([safeParams.blockID], currentStore.allBlocks, currentStore.selectedBlockID);
+
+		// Delete block tree and update selected block if needed
+		const blocksAfterDeletion = deleteBlockFromTree(safeData.blockID, currentStore.allBlocks);
+		const finalSelectedID = currentStore.selectedBlockID === safeData.blockID ? null : currentStore.selectedBlockID;
 
 		// Update store with final state
-		useBlockStore.setState({
-			allBlocks: finalBlocks,
-			selectedBlockID: finalSelectedID,
-		});
+		currentStore.setBlocks(blocksAfterDeletion);
+		currentStore.selectBlock(finalSelectedID);
 	}, 100);
 }
 
 /**
  * Copies a block and all its descendants to the clipboard in block CRUD operations.
- * Stores the block data for later pasting.
+ * Stores the complete block tree for later pasting.
  *
  * @param blockID - The block identifier to copy
  * @returns void
@@ -102,21 +104,26 @@ export function deleteBlock(blockID: BlockID): void {
  * copyBlock('block-123')
  */
 export function copyBlock(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → copyBlock]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → copyBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlock] Block ${safeParams.blockID} not found`), undefined;
-
-	blockClipboard = JSON.parse(JSON.stringify(block));
+	// Store the entire block tree in clipboard
+	blockClipboard = JSON.parse(JSON.stringify(safeData.block));
 }
 
 /**
- * Pastes a copied block as a sibling after the specified block in block CRUD operations.
- * Creates a new block instance from clipboard data.
+ * Pastes a copied block by replacing the target block's content with clipboard content.
+ * Maintains the target's position in the hierarchy while updating its type, styles, attributes, and content structure.
  *
- * @param blockID - The block identifier to paste after
+ * @param blockID - The block identifier to replace with clipboard content
  * @returns void
  *
  * @example
@@ -124,19 +131,20 @@ export function copyBlock(blockID: BlockID): void {
  */
 export function pasteBlock(blockID: BlockID): void {
 	if (!blockClipboard) return devLog.error(`[BlockManager → pasteBlock] No block in clipboard`), undefined;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → pasteBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlock]`);
-	if (!safeParams) return;
-
-	const store = useBlockStore.getState();
-	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`), undefined;
-
-	// Duplicate the entire block tree from clipboard
-	const { clonedBlocks } = cloneBlock(blockClipboard, store.allBlocks, targetBlock.id);
-
-	// Add all positioned blocks to store in one update
-	store.updateBlocks(clonedBlocks);
+	// Overwrite the target block with the clipboard content, cloning the entire tree
+	const blocksWithPaste = overwriteBlock(blockClipboard, safeData.blockID, blockStore.allBlocks);
+	blockStore.updateBlocks(blocksWithPaste);
 }
 
 /**
@@ -150,31 +158,17 @@ export function pasteBlock(blockID: BlockID): void {
  * duplicateBlock('block-123')
  */
 export function duplicateBlock(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → duplicateBlock]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → duplicateBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlock] Target block ${safeParams.blockID} not found`), undefined;
-
-	// Duplicate the entire block tree from clipboard
-	const { clonedBlocks, rootBlock } = cloneBlock(targetBlock, store.allBlocks);
-
-	// Position the new root block after the target block
-	const mergedBlocks = { ...store.allBlocks, ...clonedBlocks };
-	const targetBlockInMerged = mergedBlocks[safeParams.blockID];
-	if (!targetBlockInMerged) return devLog.error(`[BlockManager → duplicateBlock] Target block not found in merged blocks`), undefined;
-
-	const targetParentID = targetBlockInMerged.parentID;
-	const targetParent = mergedBlocks[targetParentID];
-	if (!targetParent) return devLog.error(`[BlockManager → duplicateBlock] Target parent not found`), undefined;
-
-	// Find the target block's position and insert after it
-	const targetIndex = targetParent.contentIDs.indexOf(safeParams.blockID);
-	if (targetIndex === -1) return devLog.error(`[BlockManager → duplicateBlock] Target block not found in parent`), undefined;
-
-	const positionedBlocks = moveBlock(rootBlock.id, targetParentID, targetIndex + 1, mergedBlocks);
-	store.updateBlocks(positionedBlocks);
+	// Clone the block and position it after the original
+	const updatedBlocks = cloneBlock(safeData.blockID, blockStore.allBlocks);
+	blockStore.updateBlocks(updatedBlocks);
 }
 
 /**
@@ -188,14 +182,18 @@ export function duplicateBlock(blockID: BlockID): void {
  * copyBlockStyles('block-123')
  */
 export function copyBlockStyles(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → copyBlockStyles]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → copyBlockStyles]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlockStyles] Block ${safeParams.blockID} not found`), undefined;
-
-	stylesClipboard = JSON.parse(JSON.stringify(block.styles));
+	stylesClipboard = JSON.parse(JSON.stringify(safeData.block.styles));
 }
 
 /**
@@ -209,17 +207,24 @@ export function copyBlockStyles(blockID: BlockID): void {
  * pasteBlockStyles('block-123')
  */
 export function pasteBlockStyles(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlockStyles]`);
-	if (!safeParams) return;
-
 	if (!stylesClipboard) return devLog.error(`[BlockManager → pasteBlockStyles] No styles in clipboard`), undefined;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → pasteBlockStyles]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockStyles] Target block ${safeParams.blockID} not found`), undefined;
-
-	targetBlock.styles = JSON.parse(JSON.stringify(stylesClipboard));
-	store.updateBlock(safeParams.blockID, targetBlock);
+	blockStore.updateBlocks({
+		[safeData.blockID]: {
+			...safeData.targetBlock,
+			styles: JSON.parse(JSON.stringify(stylesClipboard)),
+		},
+	});
 }
 
 /**
@@ -233,14 +238,18 @@ export function pasteBlockStyles(blockID: BlockID): void {
  * copyBlockAttributes('block-123')
  */
 export function copyBlockAttributes(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → copyBlockAttributes]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → copyBlockAttributes]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const block = store.getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → copyBlockAttributes] Block ${safeParams.blockID} not found`), undefined;
-
-	attributesClipboard = JSON.parse(JSON.stringify(block.attributes));
+	attributesClipboard = JSON.parse(JSON.stringify(safeData.block.attributes));
 }
 
 /**
@@ -254,15 +263,20 @@ export function copyBlockAttributes(blockID: BlockID): void {
  * pasteBlockAttributes('block-123')
  */
 export function pasteBlockAttributes(blockID: BlockID): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → pasteBlockAttributes]`);
-	if (!safeParams) return;
-
 	if (!attributesClipboard) return devLog.error(`[BlockManager → pasteBlockAttributes] No attributes in clipboard`), undefined;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → pasteBlockAttributes]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.fetch((data) => ({
+			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const store = useBlockStore.getState();
-	const targetBlock = store.getBlock(safeParams.blockID);
-	if (!targetBlock) return devLog.error(`[BlockManager → pasteBlockAttributes] Target block ${safeParams.blockID} not found`), undefined;
-
-	targetBlock.attributes = JSON.parse(JSON.stringify(attributesClipboard));
-	store.updateBlock(safeParams.blockID, targetBlock);
+	safeData.targetBlock.attributes = JSON.parse(JSON.stringify(attributesClipboard));
+	blockStore.updateBlocks({
+		[safeData.blockID]: safeData.targetBlock,
+	});
 }

@@ -8,10 +8,10 @@ import type { OrientationID, OrientationInstance } from '@/src/page-builder/core
 import { getRegisteredOrientations, getRegisteredOrientation } from '@/src/page-builder/state/registries/page';
 
 // Utilities
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateOrientationID } from '@/src/page-builder/services/helpers/page/orientation';
+import { validateOrientationID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Reactive hook to get the currently selected orientation instance for page management operations.
@@ -66,10 +66,14 @@ export function getSelectedOrientationID(): OrientationID | undefined {
  * setSelectedOrientationID('portrait') // Sets current orientation to portrait
  */
 export function setSelectedOrientationID(orientationID: OrientationID): void {
-	const safeParams = validateOrLog({ orientationID: validateOrientationID(orientationID) }, `[PageManager → setSelectedOrientationID]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[PageManager → setSelectedOrientationID]')
+		.validate({
+			orientationID: validateOrientationID(orientationID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	usePageStore.getState().setSelectedOrientationID(safeParams.orientationID);
+	usePageStore.getState().setSelectedOrientationID(safeData.orientationID);
 }
 
 /**
@@ -83,17 +87,4 @@ export function setSelectedOrientationID(orientationID: OrientationID): void {
  */
 export function getAllOrientations(): OrientationInstance[] {
 	return Object.values(getRegisteredOrientations());
-}
-
-/**
- * Gets the default orientation ID for page management operations.
- * Returns the hardcoded default orientation identifier used as fallback.
- *
- * @returns The default orientation ID string
- *
- * @example
- * const defaultID = getOrientationDefaultID() // Returns 'all'
- */
-export function getOrientationDefaultID(): string {
-	return 'all';
 }

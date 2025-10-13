@@ -5,7 +5,7 @@ The `constants/block/style.ts` file provides default CSS style values for blocks
 ## What is style.ts?
 
 - `style.ts` is a TypeScript module that exports:
-  - **`BlockStyleDefaults`**: An object mapping pseudo-state names (such as `'all'`, `'hover'`, etc.) to partial style property/value maps. Each property key is a valid CSS property, and each value is a string representing the default value for that property.
+  - **`BLOCK_STYLE_DEFAULTS`**: An object mapping pseudo-state names (such as `'all'`, `'hover'`, etc.) to partial style property/value maps. Each property key is a valid CSS property, and each value is a string representing the default value for that property.
 
 ## What is it used for?
 
@@ -19,7 +19,7 @@ The `constants/block/style.ts` file provides default CSS style values for blocks
 ## Example Structure
 
 ```ts
-export const BlockStyleDefaults = {
+export const BLOCK_STYLE_DEFAULTS = {
   all: {
     'padding-top': '10px',
     'padding-bottom': '10px',

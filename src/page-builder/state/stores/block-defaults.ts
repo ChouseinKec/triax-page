@@ -10,19 +10,25 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'min-height': '100vh',
-						background: 'linear-gradient(135deg, #e0e7ff 0%, #f0fdfa 100%)',
+						'background-color': '#f8fafc',
 						display: 'flex',
 						'flex-direction': 'column',
 						'align-items': 'center',
 						'justify-content': 'flex-start',
-						padding: '10px',
-						margin: '0',
+						'padding-top': '10px',
+						'padding-right': '10px',
+						'padding-bottom': '10px',
+						'padding-left': '10px',
+						'margin-top': '0',
+						'margin-right': '0',
+						'margin-bottom': '0',
+						'margin-left': '0',
 					},
 				},
 			},
 		},
 		attributes: {},
-		parentID: null,
+		parentID: 'root',
 		contentIDs: ['hero', 'footer', 'features', 'timeline'],
 		type: 'container',
 	},
@@ -36,9 +42,15 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'max-width': '900px',
-						margin: '40px 0 24px 0',
-						padding: '32px 24px',
-						background: 'linear-gradient(120deg, #6366f1 0%, #06b6d4 100%)',
+						'margin-top': '40px',
+						'margin-right': '0',
+						'margin-bottom': '24px',
+						'margin-left': '0',
+						'padding-top': '32px',
+						'padding-right': '24px',
+						'padding-bottom': '32px',
+						'padding-left': '24px',
+						'background-color': '#6366f1',
 						'border-radius': '18px',
 						'box-shadow': '0 8px 32px rgba(0,0,0,0.08)',
 						display: 'flex',
@@ -75,7 +87,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'hero',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 	'hero-desc': {
 		id: 'hero-desc',
@@ -97,7 +108,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'hero',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 
 	// Features section
@@ -109,9 +119,15 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'max-width': '900px',
-						margin: '0 0 32px 0',
-						padding: '24px',
-						background: '#fff',
+						'margin-top': '0',
+						'margin-right': '0',
+						'margin-bottom': '32px',
+						'margin-left': '0',
+						'padding-top': '24px',
+						'padding-right': '24px',
+						'padding-bottom': '24px',
+						'padding-left': '24px',
+						'background-color': '#fff',
 						'border-radius': '14px',
 						'box-shadow': '0 4px 16px rgba(0,0,0,0.04)',
 						display: 'flex',
@@ -126,7 +142,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'body',
 		contentIDs: ['features-title', 'features-list'],
 		type: 'container',
-		
 	},
 	'features-title': {
 		id: 'features-title',
@@ -149,7 +164,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'features',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 	'features-list': {
 		id: 'features-list',
@@ -171,7 +185,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'features',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 
 	// Footer
@@ -183,9 +196,15 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'max-width': '900px',
-						margin: '0 0 24px 0',
-						padding: '16px',
-						background: '#f1f5f9',
+						'margin-top': '0',
+						'margin-right': '0',
+						'margin-bottom': '24px',
+						'margin-left': '0',
+						'padding-top': '16px',
+						'padding-right': '16px',
+						'padding-bottom': '16px',
+						'padding-left': '16px',
+						'background-color': '#f1f5f9',
 						'border-radius': '10px',
 						'text-align': 'center',
 						color: '#64748b',
@@ -200,7 +219,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'body',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 
 	// Timeline
@@ -212,9 +230,15 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'max-width': '900px',
-						margin: '0 0 24px 0',
-						padding: '18px',
-						background: '#f3f6fd', // soft blue background
+						'margin-top': '0',
+						'margin-right': '0',
+						'margin-bottom': '24px',
+						'margin-left': '0',
+						'padding-top': '18px',
+						'padding-right': '18px',
+						'padding-bottom': '18px',
+						'padding-left': '18px',
+						'background-color': '#f3f6fd', // soft blue background
 						'border-radius': '10px',
 						'box-shadow': '0 2px 8px rgba(0,0,0,0.03)',
 						'text-align': 'left',
@@ -228,7 +252,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'body',
 		contentIDs: ['timeline-title', 'timeline-date-2025-08-13'],
 		type: 'container',
-	
 	},
 	'timeline-title': {
 		id: 'timeline-title',
@@ -251,7 +274,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'timeline',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 	'timeline-date-2025-08-13': {
 		id: 'timeline-date-2025-08-13',
@@ -260,11 +282,14 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				all: {
 					all: {
 						'margin-bottom': '8px',
-						padding: '8px 0 0 0',
+						'padding-top': '8px',
+						'padding-right': '0',
+						'padding-bottom': '0',
+						'padding-left': '0',
 						'border-left-width': '3px',
 						'border-left-style': 'solid',
 						'border-left-color': '#2563eb', // blue accent
-						background: '#f8fafc', // very light background
+						'background-color': '#f8fafc', // very light background
 					},
 				},
 			},
@@ -273,7 +298,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'timeline',
 		contentIDs: ['timeline-date-2025-08-13-title', 'timeline-entry-1'],
 		type: 'container',
-		
 	},
 	'timeline-date-2025-08-13-title': {
 		id: 'timeline-date-2025-08-13-title',
@@ -296,7 +320,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'timeline-date-2025-08-13',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 	'timeline-entry-1': {
 		id: 'timeline-entry-1',
@@ -319,6 +342,5 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		parentID: 'timeline-date-2025-08-13',
 		contentIDs: [],
 		type: 'text',
-		
 	},
 };

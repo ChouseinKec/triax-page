@@ -35,18 +35,6 @@ export interface BlockStoreProps {
 	selectBlock: (blockID: BlockID | null) => void;
 
 	/**
-	 * Updates a single block in the store.
-	 * Pure data mutation without validation
-	 *
-	 * @param blockID - The block ID to update
-	 * @param block - Complete updated block instance
-	 *
-	 * @example
-	 * updateBlock('block-123', updatedBlockInstance)
-	 */
-	updateBlock: (blockID: BlockID, block: BlockInstance) => void;
-
-	/**
 	 * Updates multiple blocks in the store.
 	 * Can be used for adding new blocks or updating existing ones.
 	 * Pure data mutation without validation
@@ -57,6 +45,16 @@ export interface BlockStoreProps {
 	 * updateBlocks({ 'block-123': blockInstance, 'block-456': anotherBlock })
 	 */
 	updateBlocks: (blocks: Record<BlockID, BlockInstance>) => void;
+
+	/**
+	 * Replaces the entire blocks collection in the store.
+	 * Pure data mutation without validation
+	 * @param blocks - New complete record of blocks to set in the store
+	 *
+	 * @example
+	 * setBlocks({ 'block-123': blockInstance, 'block-456': anotherBlock })
+	 */
+	setBlocks: (blocks: Record<BlockID, BlockInstance>) => void;
 }
 
 /**
@@ -87,15 +85,8 @@ export function createBlockStore() {
 			}));
 		},
 
-		// Updates a single block in the store
-		updateBlock: (blockID, block) => {
-			set((state) => ({
-				allBlocks: {
-					...state.allBlocks,
-					[blockID]: block,
-				},
-			}));
-		},
+		// Replaces the entire blocks collection in the store
+		setBlocks: (blocks) => set({ allBlocks: blocks }),
 	}));
 }
 

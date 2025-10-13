@@ -2,13 +2,13 @@ import type { AttributeDefinition, AttributeKey, AttributeCategories } from '@/s
 import JSON from './attributes.json';
 
 /**
- * Retrieves a list of AttributeDefinitions filtered by the specified category.
+ * Retrieves a list of ATTRIBUTE_DEFINITIONS filtered by the specified category.
  *
  * @param category - The category to filter properties by (e.g., 'global', 'schema', 'accesibility', 'specific').
- * @returns An array of AttributeDefinitions that belong to the specified category.
+ * @returns An array of ATTRIBUTE_DEFINITIONS that belong to the specified category.
  */
 export function getPropertyGroup(category: AttributeCategories): AttributeDefinition[] {
-	return Object.values(AttributeDefinitions)
+	return Object.values(ATTRIBUTE_DEFINITIONS)
 		.filter((p) => p?.category === category)
 		.sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -17,7 +17,7 @@ export function getPropertyGroup(category: AttributeCategories): AttributeDefini
  * A lookup table of all supported HTML global attributes and their metadata.
  * Each entry is an HTMLPropertyDefinition describing the attribute's name, syntax, and description.
  */
-export const AttributeDefinitions: Record<AttributeKey, AttributeDefinition> = Object.entries(JSON).reduce((acc, [key, data]) => {
+export const ATTRIBUTE_DEFINITIONS: Record<AttributeKey, AttributeDefinition> = Object.entries(JSON).reduce((acc, [key, data]) => {
 	const attrData = data as AttributeDefinition;
 	acc[key as AttributeKey] = {
 		name: attrData.name,

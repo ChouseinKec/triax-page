@@ -1,24 +1,24 @@
 // Types
 import type { BarActionInstance, BarActionID, BarActionOrder, BarActionRender, BarActionTitle, BarDefinition, BarID, BarTitle, BarPosition, BarSize } from '@/src/page-builder/core/editor/layout/types';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
 import { isBarActionInstanceValid, isBarActionIDValid, isBarActionOrderValid, isBarActionRenderValid, isBarActionTitleValid, isBarDefinitionValid, isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid } from '@/src/page-builder/core/editor/layout/utilities/bar';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench/workbench';
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Validates a bar ID for bar operations.
  * Checks if the ID is a valid string identifier.
  *
  * @param barID - The bar ID to validate
- * @returns ValidationResult containing validity and the validated BarID if valid
+ * @returns ValidateResult containing validity and the validated BarID if valid
  *
  * @example
  * validateBarID('bar-123') → { valid: true, value: 'bar-123' }
  */
-export function validateBarID(barID: unknown): ValidationResult<BarID> {
+export function validateBarID(barID: unknown): ValidateResult<BarID> {
 	if (!isBarIDValid(barID)) return { valid: false, message: `Bar ID must be a valid string, got: ${barID}` };
 	return { valid: true, value: barID as BarID };
 }
@@ -28,12 +28,12 @@ export function validateBarID(barID: unknown): ValidationResult<BarID> {
  * Checks if the title is a valid string.
  *
  * @param barTitle - The bar title to validate
- * @returns ValidationResult containing validity and the validated BarTitle if valid
+ * @returns ValidateResult containing validity and the validated BarTitle if valid
  *
  * @example
  * validateBarTitle('My Bar') → { valid: true, value: 'My Bar' }
  */
-export function validateBarTitle(barTitle: unknown): ValidationResult<BarTitle> {
+export function validateBarTitle(barTitle: unknown): ValidateResult<BarTitle> {
 	if (!isBarTitleValid(barTitle)) return { valid: false, message: `Bar title must be a valid string, got: ${barTitle}` };
 	return { valid: true, value: barTitle as BarTitle };
 }
@@ -43,12 +43,12 @@ export function validateBarTitle(barTitle: unknown): ValidationResult<BarTitle> 
  * Checks if the position is a valid position object.
  *
  * @param barPosition - The bar position to validate
- * @returns ValidationResult containing validity and the validated BarPosition if valid
+ * @returns ValidateResult containing validity and the validated BarPosition if valid
  *
  * @example
  * validateBarPosition({ x: 10, y: 20 }) → { valid: true, value: { x: 10, y: 20 } }
  */
-export function validateBarPosition(barPosition: unknown): ValidationResult<BarPosition> {
+export function validateBarPosition(barPosition: unknown): ValidateResult<BarPosition> {
 	if (!isBarPositionValid(barPosition)) return { valid: false, message: `Bar position must be a valid object, got: ${JSON.stringify(barPosition)}` };
 	return { valid: true, value: barPosition as BarPosition };
 }
@@ -58,12 +58,12 @@ export function validateBarPosition(barPosition: unknown): ValidationResult<BarP
  * Checks if the size is a valid size object.
  *
  * @param barSize - The bar size to validate
- * @returns ValidationResult containing validity and the validated BarSize if valid
+ * @returns ValidateResult containing validity and the validated BarSize if valid
  *
  * @example
  * validateBarSize({ width: 100, height: 50 }) → { valid: true, value: { width: 100, height: 50 } }
  */
-export function validateBarSize(barSize: unknown): ValidationResult<BarSize> {
+export function validateBarSize(barSize: unknown): ValidateResult<BarSize> {
 	if (!isBarSizeValid(barSize)) return { valid: false, message: `Bar size must be a valid object, got: ${JSON.stringify(barSize)}` };
 	return { valid: true, value: barSize as BarSize };
 }
@@ -73,12 +73,12 @@ export function validateBarSize(barSize: unknown): ValidationResult<BarSize> {
  * Checks if the definition has all required valid properties including ID, title, position, size, and workbench ID.
  *
  * @param barDefinition - The bar definition to validate
- * @returns ValidationResult containing validity and the validated BarDefinition if valid
+ * @returns ValidateResult containing validity and the validated BarDefinition if valid
  *
  * @example
  * validateBarDefinition({ id: 'bar-1', title: 'My Bar', position: { x: 0, y: 0 }, size: { width: 200, height: 50 }, workbenchID: 'wb-1' }) → { valid: true, value: {...} }
  */
-export function validateBarDefinition(barDefinition: unknown): ValidationResult<BarDefinition> {
+export function validateBarDefinition(barDefinition: unknown): ValidateResult<BarDefinition> {
 	if (!isBarDefinitionValid(barDefinition)) return { valid: false, message: `Bar definition is not a valid object, got: ${JSON.stringify(barDefinition)}` };
 
 	const idValidation = validateBarID(barDefinition.id);
@@ -104,12 +104,12 @@ export function validateBarDefinition(barDefinition: unknown): ValidationResult<
  * Checks if the ID is a valid string identifier.
  *
  * @param actionID - The bar action ID to validate
- * @returns ValidationResult containing validity and the validated BarActionID if valid
+ * @returns ValidateResult containing validity and the validated BarActionID if valid
  *
  * @example
  * validateBarActionID('action-123') → { valid: true, value: 'action-123' }
  */
-export function validateBarActionID(actionID: unknown): ValidationResult<BarActionID> {
+export function validateBarActionID(actionID: unknown): ValidateResult<BarActionID> {
 	if (!isBarActionIDValid(actionID)) return { valid: false, message: `Bar action ID must be a valid string, got: ${actionID}` };
 	return { valid: true, value: actionID as BarActionID };
 }
@@ -119,12 +119,12 @@ export function validateBarActionID(actionID: unknown): ValidationResult<BarActi
  * Checks if the title is a valid string.
  *
  * @param actionTitle - The bar action title to validate
- * @returns ValidationResult containing validity and the validated BarActionTitle if valid
+ * @returns ValidateResult containing validity and the validated BarActionTitle if valid
  *
  * @example
  * validateBarActionTitle('Save') → { valid: true, value: 'Save' }
  */
-export function validateBarActionTitle(actionTitle: unknown): ValidationResult<BarActionTitle> {
+export function validateBarActionTitle(actionTitle: unknown): ValidateResult<BarActionTitle> {
 	if (!isBarActionTitleValid(actionTitle)) return { valid: false, message: `Bar action title must be a valid string, got: ${actionTitle}` };
 	return { valid: true, value: actionTitle as BarActionTitle };
 }
@@ -134,12 +134,12 @@ export function validateBarActionTitle(actionTitle: unknown): ValidationResult<B
  * Checks if the order is a valid number.
  *
  * @param actionOrder - The bar action order to validate
- * @returns ValidationResult containing validity and the validated BarActionOrder if valid
+ * @returns ValidateResult containing validity and the validated BarActionOrder if valid
  *
  * @example
  * validateBarActionOrder(1) → { valid: true, value: 1 }
  */
-export function validateBarActionOrder(actionOrder: unknown): ValidationResult<BarActionOrder> {
+export function validateBarActionOrder(actionOrder: unknown): ValidateResult<BarActionOrder> {
 	if (!isBarActionOrderValid(actionOrder)) return { valid: false, message: `Bar action order must be a valid number, got: ${actionOrder}` };
 	return { valid: true, value: actionOrder as BarActionOrder };
 }
@@ -149,12 +149,12 @@ export function validateBarActionOrder(actionOrder: unknown): ValidationResult<B
  * Checks if the render is a valid function or Vue component.
  *
  * @param actionRender - The bar action render to validate
- * @returns ValidationResult containing validity and the validated BarActionRender if valid
+ * @returns ValidateResult containing validity and the validated BarActionRender if valid
  *
  * @example
  * validateBarActionRender(() => <button>Click</button>) → { valid: true, value: () => <button>Click</button> }
  */
-export function validateBarActionRender(actionRender: unknown): ValidationResult<BarActionRender> {
+export function validateBarActionRender(actionRender: unknown): ValidateResult<BarActionRender> {
 	if (!isBarActionRenderValid(actionRender)) return { valid: false, message: `Bar action render must be a valid function or Vue component, got: ${actionRender}` };
 	return { valid: true, value: actionRender as BarActionRender };
 }
@@ -164,12 +164,12 @@ export function validateBarActionRender(actionRender: unknown): ValidationResult
  * Checks if the instance is a valid bar action object.
  *
  * @param action - The bar action instance to validate
- * @returns ValidationResult containing validity and the validated BarActionInstance if valid
+ * @returns ValidateResult containing validity and the validated BarActionInstance if valid
  *
  * @example
  * validateBarActionInstance({ id: 'action-1', title: 'Save', order: 1, render: () => <button>Save</button> }) → { valid: true, value: {...} }
  */
-export function validateBarActionInstance(action: unknown): ValidationResult<BarActionInstance> {
+export function validateBarActionInstance(action: unknown): ValidateResult<BarActionInstance> {
 	if (!isBarActionInstanceValid(action)) return { valid: false, message: `Bar action instance is not a valid object, got: ${JSON.stringify(action)}` };
 	return { valid: true, value: action as BarActionInstance };
 }

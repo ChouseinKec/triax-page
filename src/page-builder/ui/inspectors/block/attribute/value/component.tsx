@@ -6,7 +6,7 @@ import { memo, useCallback } from "react";
 import type { BlockAttributesValueProps } from "@/src/page-builder/ui/inspectors/block/types";
 
 // Constants
-import { AttributeDefinitions } from "@/src/page-builder/core/block/attribute/constants";
+import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/constants";
 
 // Managers
 import { useBlockAttribute, setBlockAttribute } from "@/src/page-builder/services/managers/block/attribute";
@@ -38,7 +38,7 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
     }, [blockID, attribute]
     );
 
-    const definition = AttributeDefinitions[attribute];
+    const definition = ATTRIBUTE_DEFINITIONS[attribute];
 
     if (!definition) return devRender.error(`[BlockAttributesValue] No definition found for ${attribute}`, { definition });
 

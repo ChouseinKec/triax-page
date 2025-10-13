@@ -5,9 +5,8 @@ import type { DeviceValue } from '@/src/page-builder/core/page/types/device';
 import type { OrientationValue } from '@/src/page-builder/core/page/types/orientation';
 import type { PseudoValue } from '@/src/page-builder/core/page/types/pseudo';
 
-// Utilities
-import { cascadeStyles, generateCSSSelector, generateCSSRule } from '@/src/page-builder/core/block/style/utilities';
-import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-builder/core/block/attribute/utilities';
+// Helpers
+import { generateCSSSelector, generateCSSRule, cascadeCSSStyles, normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-builder/services/helpers/block';
 
 /**
  * Renders block styles into a CSS string.
@@ -19,9 +18,10 @@ import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/page-build
  * @returns CSS string or undefined if no styles
  */
 export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device: DeviceValue, orientation: OrientationValue, pseudo: PseudoValue): string {
-	const resolvedStyles = cascadeStyles(styles, device, orientation, pseudo);
-	const selector = generateCSSSelector(blockID, pseudo);
-	return generateCSSRule(selector, resolvedStyles);
+	const cssStyles = cascadeCSSStyles(styles, device, orientation, pseudo);
+	const cssSelector = generateCSSSelector(blockID, pseudo);
+
+	return generateCSSRule(cssSelector, cssStyles);
 }
 
 /**

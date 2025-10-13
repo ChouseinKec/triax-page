@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
+import React, { ReactElement } from 'react';
 
 // Types
 import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
-import type { ElementTags } from '@/src/page-builder/core/block/element/types';
+import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 
 /**
  * Unique identifier for a block instance
@@ -13,7 +13,7 @@ export type BlockID = string;
 /**
  * Icon for representing the block in the UI
  */
-export type BlockIcon = string | ReactNode;
+export type BlockIcon = ReactElement;
 
 /**
  * Category for organizing blocks in the UI
@@ -48,12 +48,12 @@ export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 /**
  * Children blocks (React nodes)
  */
-export type BlockChildren = ReactNode;
+export type BlockChildren = ReactElement;
 
 /**
  * Function to render a block instance with optional children
  */
-export type BlockRender = (instance: BlockInstance, children?: BlockChildren) => ReactNode;
+export type BlockRender = (instance: BlockInstance, children?: BlockChildren) => ReactElement;
 
 /**
  * Permitted content types that can be contained within this block
@@ -78,9 +78,9 @@ export interface BlockDefinition {
 	/** The kind of block (text, container, media) */
 	type: BlockType;
 	/** The primary HTML tag for this block */
-	tag: ElementTags;
+	tag: ElementTag;
 	/** All supported HTML tags for this block type */
-	tags: ElementTags[];
+	tags: ElementTag[];
 	/** Block kinds that can be contained within this block */
 	permittedContent: BlockPermitedContent;
 	/** Block kinds that can contain this block */
@@ -107,7 +107,7 @@ export interface BlockInstance {
 	/** The kind of block (text, container, media) */
 	type: BlockType;
 	/** ID of the parent block, null if root */
-	parentID: BlockID;
+	parentID: BlockID ;
 	/** IDs of child blocks in order */
 	contentIDs: BlockID[];
 	/** Instance-specific attributes that override defaults */

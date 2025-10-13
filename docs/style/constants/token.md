@@ -25,7 +25,7 @@ The `constants/style/token.ts` file defines the canonical set of CSS value defin
 ## Example Structure
 
 ```ts
-export const TokenDefinitions = {
+export const TOKEN_DEFINITIONS = {
   '<length>': {
     type: '<length>',
     syntax: '<length>',

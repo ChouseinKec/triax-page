@@ -2,7 +2,7 @@
 import type { StyleDefinition, StyleKey } from '@/src/page-builder/core/block/style/types';
 
 // Constants
-import { StyleValueSeparatorDefaults } from './value';
+import { VALUE_SEPARATOR_DEFAULTS } from './value';
 
 // Utilities
 import { getColumnSets } from '@/src/shared/utilities/array';
@@ -42,7 +42,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
 
 		get syntaxSet() {
 			if (_set === undefined) {
-				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, StyleValueSeparatorDefaults));
+				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, VALUE_SEPARATOR_DEFAULTS));
 				const columnArrays = getColumnSets(tokens);
 				_set = columnArrays.map((col) => new Set(col));
 			}
@@ -52,7 +52,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
 		get syntaxNormalized() {
 			if (_normalized === undefined) {
 				_normalized = this.syntaxParsed.map((variation) =>
-					splitAdvanced(variation, StyleValueSeparatorDefaults)
+					splitAdvanced(variation, VALUE_SEPARATOR_DEFAULTS)
 						.map((token) => getTokenCanonical(token))
 						.join(' ')
 				);
@@ -73,7 +73,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
  * A lookup table of all supported CSS properties and their metadata.
  * Each entry is a StyleDefinition object describing the property's name, syntax, description, and category.
  */
-export const StyleDefinitions: Record<StyleKey, StyleDefinition> = Object.entries(JSON.properties).reduce((acc, [key, data]) => {
+export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entries(JSON.properties).reduce((acc, [key, data]) => {
 	acc[key as StyleKey] = createProperty(key as StyleKey, data.syntax, data.description);
 	return acc;
 }, {} as Record<StyleKey, StyleDefinition>);
@@ -82,4 +82,4 @@ export const StyleDefinitions: Record<StyleKey, StyleDefinition> = Object.entrie
  * A lookup table of CSS shorthand properties and their expanded definitions.
  * Each entry maps a shorthand property to an array of its longhand properties.
  */
-export const StyleShorthandDefinitions: Partial<Record<StyleKey, StyleKey[]>> = JSON.shorthands as Partial<Record<StyleKey, StyleKey[]>>;
+export const STYLE_SHORTHAND_DEFINITIONS: Partial<Record<StyleKey, StyleKey[]>> = JSON.shorthands as Partial<Record<StyleKey, StyleKey[]>>;

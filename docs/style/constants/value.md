@@ -5,8 +5,8 @@ The `constants/style/value.ts` file provides default values and separators for c
 ## What is value.ts?
 
 - `value.ts` is a TypeScript module that exports:
-  - **`ValueFunctionDefaults`**: An object mapping CSS function names (e.g., `minmax`, `blur`, `url`) to their default value strings. Useful for initializing value editors or providing example values.
-  - **`StyleValueSeparatorDefaults`**: An array of default separators (space, comma, slash) used for splitting or joining value lists in CSS.
+  - **`VALUE_FUNCTION_DEFAULTS`**: An object mapping CSS function names (e.g., `minmax`, `blur`, `url`) to their default value strings. Useful for initializing value editors or providing example values.
+  - **`VALUE_SEPARATOR_DEFAULTS`**: An array of default separators (space, comma, slash) used for splitting or joining value lists in CSS.
 
 ## What is it used for?
 
@@ -22,7 +22,7 @@ The `constants/style/value.ts` file provides default values and separators for c
 ## Example Structure
 
 ```ts
-export const ValueFunctionDefaults = {
+export const VALUE_FUNCTION_DEFAULTS = {
   minmax: 'minmax(0px,0px)',
   'fit-content': 'fit-content(0px)',
   repeat: 'repeat(1,1fr)',
@@ -30,5 +30,5 @@ export const ValueFunctionDefaults = {
   url: 'url("https://example.com")',
 };
 
-export const StyleValueSeparatorDefaults = [' ', ',', '/'];
+export const VALUE_SEPARATOR_DEFAULTS = [' ', ',', '/'];
 ```

@@ -10,7 +10,7 @@ The `hooks/style/manager.ts` file provides the main React hook for managing CSS 
 ## What is it used for?
 
 - **Style Access:**  
-  Get and set style property values for the currently selected block, with full cascade and shorthand support.
+  Get and set style property values for the currently selected block, with full cascade support.
 - **Clipboard Actions:**  
   Copy and paste style values using the system clipboard.
 - **Resetting:**  
@@ -22,7 +22,7 @@ The `hooks/style/manager.ts` file provides the main React hook for managing CSS 
 
 ### getBlockStyle
 
-Gets a style property value for the current block, device, orientation, and pseudo-state, with CSS-like cascade and shorthand support.
+Gets a style property value for the current block, device, orientation, and pseudo-state, with CSS-like cascade support.
 
 - **Parameters:**
   - `property: StyleKey` — The style property to get.

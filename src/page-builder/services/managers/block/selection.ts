@@ -2,14 +2,14 @@
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Utilities
-import { isBlockDescendant } from '@/src/page-builder/core/block/block/utilities';
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { isBlockDescendant } from '@/src/page-builder/services/helpers/block/hierarchy';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Types
 import type { BlockType, BlockID } from '@/src/page-builder/core/block/block/types';
 
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
+import { validateBlockID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Reactive hook to check if a specific block is currently selected.
@@ -19,10 +19,14 @@ import { validateBlockID } from '@/src/page-builder/services/helpers/block/valid
  * const isSelected = useIsBlockSelected('block-123'); // true/false
  */
 export function useIsBlockSelected(blockID: BlockID): boolean {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useIsBlockSelected]`);
-	if (!safeParams) return false;
+	const safeData = new ValidationPipeline('[BlockManager → useIsBlockSelected]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return false;
 
-	return useBlockStore((state) => state.selectedBlockID === safeParams.blockID);
+	return useBlockStore((state) => state.selectedBlockID === safeData.blockID);
 }
 
 /**
@@ -46,7 +50,7 @@ export function useSelectedBlockType(): BlockType | undefined {
  * const selectedID = useSelectedBlockID(); // 'block-123' | undefined
  */
 export function useSelectedBlockID(): BlockID | null {
-	return useBlockStore((state) => state.selectedBlockID || null);
+	return useBlockStore((state) => state.selectedBlockID);
 }
 
 /**
@@ -57,14 +61,20 @@ export function useSelectedBlockID(): BlockID | null {
  * const hasSelectedContent = useHasBlockSelectedContent('block-123'); // true/false
  */
 export function useHasBlockSelectedContent(blockID: BlockID): boolean {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useHasBlockSelectedContent]`);
-	if (!safeParams) return false;
+	const safeData = new ValidationPipeline('[BlockManager → useHasBlockSelectedContent]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return false;
 
 	return useBlockStore((state) => {
+		// If no block is selected or the blockID is the selected one
 		const selectedBlockID = state.selectedBlockID;
-		if (!selectedBlockID || selectedBlockID === safeParams.blockID) return false;
+		if (!selectedBlockID || selectedBlockID === safeData.blockID) return false;
 
-		const currentBlock = state.getBlock(safeParams.blockID);
+		// If the block doesn't exist
+		const currentBlock = state.getBlock(safeData.blockID);
 		if (!currentBlock) return false;
 
 		return isBlockDescendant(currentBlock, selectedBlockID, state.allBlocks);
@@ -93,14 +103,21 @@ export function getSelectedBlockID(): BlockID | null {
  * selectBlock(null)
  */
 export function selectBlock(blockID: BlockID | null): void {
-	const store = useBlockStore.getState();
-	if (blockID === null) return store.selectBlock(null);
+	const blockStore = useBlockStore.getState();
+	const selectedBlockID = blockStore.selectedBlockID;
 
-	const selectedBlockID = store.selectedBlockID;
+	// If null, clear selection
+	if (blockID === null) return blockStore.selectBlock(null);
+
+	// If already selected, do nothing
 	if (blockID === selectedBlockID) return;
 
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → selectBlock]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → selectBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	store.selectBlock(safeParams.blockID);
+	blockStore.selectBlock(safeData.blockID);
 }

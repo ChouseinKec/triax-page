@@ -5,7 +5,7 @@ The `constants/style/icon.tsx` file provides a mapping of CSS property and value
 ## What is icon.tsx?
 
 - `icon.tsx` is a TypeScript/React module that exports:
-  - **`StyleIconDefinitions`**: An object mapping string keys (such as `'flex-direction-row'`, `'align-items-center'`, `'display-flex'`, etc.) to React SVG elements.
+  - **`STYLE_ICON_DEFINITIONS`**: An object mapping string keys (such as `'flex-direction-row'`, `'align-items-center'`, `'display-flex'`, etc.) to React SVG elements.
   - **`CSSIcons`**: A type representing all valid icon keys.
 
 ## What is it used for?
@@ -20,7 +20,7 @@ The `constants/style/icon.tsx` file provides a mapping of CSS property and value
 ## Example Structure
 
 ```tsx
-export const StyleIconDefinitions = {
+export const STYLE_ICON_DEFINITIONS = {
   'flex-direction-row': (
     <svg ...>...</svg>
   ),
@@ -33,16 +33,16 @@ export const StyleIconDefinitions = {
   // ...many more icons
 };
 
-export type CSSIcons = keyof typeof StyleIconDefinitions;
+export type CSSIcons = keyof typeof STYLE_ICON_DEFINITIONS;
 ```
 
 ## Example Usage
 
 ```tsx
-import { StyleIconDefinitions } from '@/constants/style/icon';
+import { STYLE_ICON_DEFINITIONS } from '@/constants/style/icon';
 
 function PropertyIcon({ iconKey }: { iconKey: string }) {
-  return StyleIconDefinitions[iconKey] ?? null;
+  return STYLE_ICON_DEFINITIONS[iconKey] ?? null;
 }
 
 // Usage in a component

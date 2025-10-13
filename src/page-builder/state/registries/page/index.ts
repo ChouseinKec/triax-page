@@ -2,12 +2,10 @@ import type { DeviceDefinition, DeviceInstance, DeviceID, DeviceRecord } from '@
 import type { OrientationDefinition, OrientationInstance, OrientationID, OrientationRecord } from '@/src/page-builder/core/page/types/orientation';
 import type { PseudoDefinition, PseudoInstance, PseudoID, PseudoRecord } from '@/src/page-builder/core/page/types/pseudo';
 import type { BarActionInstance, BarActionID, BarActionRecord } from '@/src/page-builder/core/page/types/action';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateDeviceDefinition } from '@/src/page-builder/services/helpers/page/device';
-import { validateOrientationDefinition } from '@/src/page-builder/services/helpers/page/orientation';
-import { validatePseudoDefinition } from '@/src/page-builder/services/helpers/page/pseudo';
+import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Class-based device registry for managing device definitions
@@ -20,7 +18,7 @@ class DeviceRegistry {
 	 * @param device - The device definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerDevice(device: DeviceDefinition): ValidationResult<DeviceDefinition> {
+	registerDevice(device: DeviceDefinition): ValidateResult<DeviceDefinition> {
 		const validation = validateDeviceDefinition(device);
 		if (!validation.valid) return validation;
 
@@ -62,7 +60,7 @@ class OrientationRegistry {
 	 * @param orientation - The orientation definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerOrientation(orientation: OrientationDefinition): ValidationResult<OrientationDefinition> {
+	registerOrientation(orientation: OrientationDefinition): ValidateResult<OrientationDefinition> {
 		const validation = validateOrientationDefinition(orientation);
 		if (!validation.valid) return validation;
 
@@ -105,7 +103,7 @@ class PseudoRegistry {
 	 * @param pseudo - The pseudo definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerPseudo(pseudo: PseudoDefinition): ValidationResult<PseudoDefinition> {
+	registerPseudo(pseudo: PseudoDefinition): ValidateResult<PseudoDefinition> {
 		const validation = validatePseudoDefinition(pseudo);
 		if (!validation.valid) return validation;
 
@@ -148,7 +146,7 @@ class ActionRegistry {
 	 * @param action - The action definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerAction(action: BarActionInstance): ValidationResult<BarActionInstance> {
+	registerAction(action: BarActionInstance): ValidateResult<BarActionInstance> {
 		// Check for duplicates
 		if (this.actions[action.id]) {
 			return { valid: false, message: `Action with id "${action.id}" already registered` };

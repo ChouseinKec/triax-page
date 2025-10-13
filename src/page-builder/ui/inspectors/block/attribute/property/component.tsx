@@ -12,7 +12,7 @@ import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
 import type { BlockAttributesPropertyProps } from "@/src/page-builder/ui/inspectors/block/types";
 
 // Constants
-import { AttributeDefinitions } from "@/src/page-builder/core/block/attribute/constants";
+import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/constants";
 
 // Utilities
 import { devRender, devLog } from "@/src/shared/utilities/dev";
@@ -35,7 +35,7 @@ const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ compo
     if (hidden) return null;
 
     const labelRef = useRef<HTMLLabelElement>(null);
-    const propertyDef = property ? AttributeDefinitions[property] : undefined;
+    const propertyDef = property ? ATTRIBUTE_DEFINITIONS[property] : undefined;
     const propertyName = propertyDef?.name ?? "N/A";
     const propertyDescription = propertyDef?.description ?? "N/A";
 

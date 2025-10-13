@@ -1,40 +1,47 @@
 // Types
 import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
-import type { ValidationResult } from '@/src/shared/types/result';
-
-// Utilities
-import { isAttributeKeyValid, isAttributeValueValid } from '@/src/page-builder/core/block/attribute/utilities';
 
 /**
- * Validates an HTML attribute key for block attribute operations.
- * Checks if the key is a valid HTML attribute key with context-aware error logging.
+ * Normalizes HTML attribute values for React compatibility.
+ * Converts string representations of booleans to actual boolean values.
  *
- * @param attribute - The HTML attribute key to validate
- * @param context - The calling context for error logging (e.g., 'AttributeManager')
- * @returns True if the key is valid, false otherwise
+ * @param value - Raw HTML attribute value (always a string)
+ * @returns Normalized value with proper type conversion
  *
  * @example
- * validateAttributeKey('className', 'AttributeManager') → true
+ * normalizeKeyValue('true') // → true
+ * normalizeKeyValue('false') // → false
+ * normalizeKeyValue('my-class') // → 'my-class'
+ * normalizeKeyValue('') // → ''
  */
-export function validateAttributeKey(attributeKey: unknown): ValidationResult<AttributeKey> {
-	if (!isAttributeKeyValid(attributeKey)) return { valid: false, message: `Invalid key (${attributeKey})` };
-
-	return { valid: true, value: attributeKey as AttributeKey };
+export function normalizeAttributeValue(attributeValue: string): string | boolean {
+	// Convert string boolean values to actual booleans
+	if (attributeValue === 'true') {
+		return true;
+	} else if (attributeValue === 'false') {
+		return false;
+	} else {
+		// Return string values as-is
+		return attributeValue;
+	}
 }
 
 /**
- * Validates an attribute value for block attribute operations.
- * Checks if the value is a valid non-empty string with context-aware error logging.
+ * Normalizes HTML attribute property names for React compatibility.
+ * Converts HTML-specific property names to their React equivalents.
  *
- * @param value - The attribute value to validate
- * @param context - The calling context for error logging (e.g., 'AttributeManager')
- * @returns True if the value is valid, false otherwise
+ * @param property - Raw HTML attribute property name
+ * @returns Normalized property name for React compatibility
  *
  * @example
- * validateAttributeValue('my-class', 'AttributeManager') → true
+ * normalizeAttributeKey('class') → 'className'
  */
-export function validateAttributeValue(attributeValue: string): ValidationResult<string> {
-	if (!isAttributeValueValid(attributeValue)) return { valid: false, message: `Invalid value (${attributeValue})` };
-
-	return { valid: true, value: attributeValue };
+export function normalizeAttributeKey(attributeKey: AttributeKey): string {
+	switch (attributeKey) {
+		case 'class':
+			return 'className';
+		default:
+			// Return attribute names as-is for most cases
+			return attributeKey;
+	}
 }

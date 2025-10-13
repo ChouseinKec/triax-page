@@ -6,7 +6,7 @@ import { memo } from "react";
 import type { BlockStylesValue } from "@/src/page-builder/ui/inspectors/block/types";
 
 // Constants
-import { StyleValueSeparatorDefaults } from "@/src/page-builder/core/block/style/constants";
+import { VALUE_SEPARATOR_DEFAULTS } from "@/src/page-builder/core/block/style/constants";
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
@@ -39,7 +39,7 @@ const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, propert
     const syntaxSeparators = property.syntaxSeparators;
 
     // Split the value string into slots (e.g., ["10px", "auto"])
-    const values = splitAdvanced(value, [...StyleValueSeparatorDefaults]);
+    const values = splitAdvanced(value, [...VALUE_SEPARATOR_DEFAULTS]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
     const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, property.name);

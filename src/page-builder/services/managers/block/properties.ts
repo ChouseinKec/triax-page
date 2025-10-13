@@ -1,5 +1,5 @@
 // Helpers
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
+import { validateBlockID } from '@/src/page-builder/services/helpers/validate';
 
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
@@ -8,7 +8,7 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 
 // Utilities
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 /**
  * Reactive hook to get a block's type for block properties operations.
@@ -21,10 +21,14 @@ import { validateOrLog } from '@/src/shared/utilities/validation';
  * useBlockType('block-123') → 'text'
  */
 export function useBlockType(blockID: BlockID): BlockType | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlockType]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlockType]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.type);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.type);
 }
 
 /**
@@ -38,10 +42,14 @@ export function useBlockType(blockID: BlockID): BlockType | undefined {
  * useBlockID('block-123') → 'block-123'
  */
 export function useBlockID(blockID: BlockID): BlockID | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlockID]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlockID]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.id);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.id);
 }
 
 /**
@@ -55,10 +63,14 @@ export function useBlockID(blockID: BlockID): BlockID | undefined {
  * useBlockContentIDs('block-123') → ['block-456', 'block-789']
  */
 export function useBlockContentIDs(blockID: BlockID): BlockID[] | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlockContentIDs]`);
-	if (!safeParams) return [];
+	const safeData = new ValidationPipeline('[BlockManager → useBlockContentIDs]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return [];
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.contentIDs);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.contentIDs);
 }
 
 /**
@@ -72,10 +84,14 @@ export function useBlockContentIDs(blockID: BlockID): BlockID[] | undefined {
  * useBlockAttributes('block-123') → { className: 'my-class' }
  */
 export function useBlockAttributes(blockID: BlockID): BlockAttributes | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlockAttributes]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlockAttributes]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.attributes);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.attributes);
 }
 
 /**
@@ -89,10 +105,14 @@ export function useBlockAttributes(blockID: BlockID): BlockAttributes | undefine
  * useBlockStyles('block-123') → { all: { all: { all: { color: 'red' } } } }
  */
 export function useBlockStyles(blockID: BlockID): BlockStyles | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlockStyles]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlockStyles]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.styles);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.styles);
 }
 
 /**
@@ -106,8 +126,12 @@ export function useBlockStyles(blockID: BlockID): BlockStyles | undefined {
  * useBlock('block-123') → { id: 'block-123', type: 'text', ... }
  */
 export function useBlock(blockID: BlockID): BlockInstance | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID) }, `[BlockManager → useBlock]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]);
 }

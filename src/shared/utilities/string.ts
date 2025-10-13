@@ -12,7 +12,7 @@ type symbolType = '()' | '[]' | '{}' | '<>';
  * splitAdvanced('a <b> c|d', ['|', ' ']); → ['a', '<b>', 'c', 'd']
  * splitAdvanced('foo "bar baz"|qux', ['|', ' ']); → ['foo', '"bar baz"', 'qux']
  */
-function splitAdvanced(input: string, separators: string | string[]): string[] {
+export function splitAdvanced(input: string, separators: string | string[]): string[] {
 	// Normalize separators to an array
 	const seps = Array.isArray(separators) ? separators : [separators];
 	// Result array to hold split parts
@@ -80,7 +80,7 @@ function splitAdvanced(input: string, separators: string | string[]): string[] {
  * @example
  * joinAdvanced(['10px', 'auto'], [' ', '/']) → '10px auto'
  */
-function joinAdvanced(inputs: string[], separators: string[]): string {
+export function joinAdvanced(inputs: string[], separators: string[]): string {
 	if (!separators.length) return inputs.join(' ');
 	let result = '';
 
@@ -89,22 +89,6 @@ function joinAdvanced(inputs: string[], separators: string[]): string {
 		if (separators[i]) result += separators[i];
 	}
 	return result.trim();
-}
-
-/**
- * Removes all whitespace characters (spaces, tabs, newlines) from a string.
- *
- * @param input - String to process.
- * @returns String with all whitespace removed.
- *
- * @example
- * clearSpaces('  hello  world  '); → "helloworld"
- * clearSpaces('a b c d e');        → "abcde"
- * clearSpaces('hello\tworld');     → "helloworld"
- * clearSpaces('');                 → ""
- */
-function clearSpaces(input: string): string {
-	return input.replace(/\s+/g, '');
 }
 
 /**
@@ -120,7 +104,7 @@ function clearSpaces(input: string): string {
  * extractBetween('outer (inner (nested) content) more', 'parenthesis'); → Returns 'inner (nested) content'
  * extractBetween('data [array1] text [array2]', 'bracket'); → Returns 'array1'
  */
-function extractBetween(input: string, symbol: symbolType): string | undefined {
+export function extractBetween(input: string, symbol: symbolType): string | undefined {
 	// Map symbols to their opening and closing characters
 	const symbolMap: Record<string, { open: string; close: string }> = {
 		'()': { open: '(', close: ')' },
@@ -166,6 +150,9 @@ function extractBetween(input: string, symbol: symbolType): string | undefined {
 	return undefined; // No matching symbol pair found
 }
 
-
-
-export { extractBetween, splitAdvanced, clearSpaces, joinAdvanced };
+export function toKebabCase(input: string): string {
+	return input
+		.replace(/([a-z])([A-Z])/g, '$1-$2') // Insert hyphen between lowercase and uppercase letters
+		.replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+		.toLowerCase(); // Convert the entire string to lowercase
+}

@@ -1,9 +1,9 @@
 // Types
 import type { PanelDefinition, BarDefinition, TabDefinition } from '@/src/page-builder/core/editor/layout/types';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/layout';
+import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Class-based layout registry for managing panels and bars
@@ -18,7 +18,7 @@ class LayoutRegistry {
 	 * @param panel - The LayoutPanel definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerPanel(panel: PanelDefinition): ValidationResult<PanelDefinition> {
+	registerPanel(panel: PanelDefinition): ValidateResult<PanelDefinition> {
 		const validation = validatePanelDefinition(panel);
 		if (!validation.valid) return validation;
 
@@ -36,7 +36,7 @@ class LayoutRegistry {
 	 * @param tab - The Tab definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerTab(tab: TabDefinition): ValidationResult<TabDefinition> {
+	registerTab(tab: TabDefinition): ValidateResult<TabDefinition> {
 		const validation = validateTabDefinition(tab);
 		if (!validation.valid) return validation;
 
@@ -54,7 +54,7 @@ class LayoutRegistry {
 	 * @param bar - The LayoutBar definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerBar(bar: BarDefinition): ValidationResult<BarDefinition> {
+	registerBar(bar: BarDefinition): ValidateResult<BarDefinition> {
 		// Validate bar
 		const validation = validateBarDefinition(bar);
 		if (!validation.valid) return validation;

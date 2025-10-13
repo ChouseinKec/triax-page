@@ -12,7 +12,7 @@ import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
 import type { PropertyProps } from "@/src/page-builder/ui/inspectors/block/types";
 
 // Constants
-import { StyleDefinitions } from "@/src/page-builder/core/block/style/constants";
+import { STYLE_DEFINITIONS } from "@/src/page-builder/core/block/style/constants";
 
 // Hooks
 import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from "@/src/page-builder/services/managers/block/style";
@@ -42,7 +42,7 @@ const Property: React.FC<PropertyProps> = ({ component, label, hidden, disabled,
     
     const selectedBlockID = useSelectedBlockID();
     const labelRef = useRef<HTMLLabelElement>(null);
-    const propertyDef = property ? StyleDefinitions[property] : undefined;
+    const propertyDef = property ? STYLE_DEFINITIONS[property] : undefined;
     const propertyName = propertyDef?.name ?? "N/A";
     const propertyDescription = propertyDef?.description ?? "N/A";
 

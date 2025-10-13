@@ -3,6 +3,6 @@ export * from './crud';
 export * from './registry';
 export * from './hierarchy';
 export * from './properties';
-export * from './rendered';
+export * from './render';
 export * from './selection';
 export * from './style';

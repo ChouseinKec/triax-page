@@ -10,11 +10,10 @@ import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
-import { validateBarActionInstance, validateBarID, validateBarActionID } from '@/src/page-builder/services/helpers/layout';
+import { validateWorkbenchID, validateBarActionInstance, validateBarID, validateBarActionID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Gets all bar instances filtered by workbench ID for layout management operations.
@@ -27,13 +26,15 @@ import { validateBarActionInstance, validateBarID, validateBarActionID } from '@
  * const bars = getBarsByWorkbench('workbench-123') // Returns bars for specific workbench
  */
 export function getBarsByWorkbench(workbenchID: WorkbenchID): BarInstance[] | undefined {
-	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → getBarsByWorkbench]`);
-	if (!safeParams) return undefined;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → getBarsByWorkbench]')
+		.validate({
+			workbenchID: validateWorkbenchID(workbenchID),
+		})
+		.execute();
+	if (!safeData) return undefined;
 
-	const store = useLayoutStore.getState();
-	const bars = Object.values(store.layoutBars);
-
-	return bars.filter((b: BarInstance) => b.workbenchID === safeParams.workbenchID);
+	return Object.values(layoutStore.layoutBars).filter((b: BarInstance) => b.workbenchID === safeData.workbenchID);
 }
 
 /**
@@ -47,10 +48,15 @@ export function getBarsByWorkbench(workbenchID: WorkbenchID): BarInstance[] | un
  * const bar = getBarById('bar-123') // Returns bar instance or undefined
  */
 export function getBarById(barID: BarID): BarInstance | undefined {
-	const safeParams = validateOrLog({ barID: validateBarID(barID) }, `[LayoutManager → getBarById]`);
-	if (!safeParams) return undefined;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → getBarById]')
+		.validate({
+			barID: validateBarID(barID),
+		})
+		.execute();
+	if (!safeData) return undefined;
 
-	return useLayoutStore.getState().getBar(safeParams.barID);
+	return layoutStore.getBar(safeData.barID);
 }
 
 /**
@@ -65,15 +71,20 @@ export function getBarById(barID: BarID): BarInstance | undefined {
  * registerBarAction('bar-123', { id: 'action-456', ... }) // Registers action to bar
  */
 export function registerBarAction(barID: BarID, action: BarActionInstance): void {
-	const safeParams = validateOrLog({ barID: validateBarID(barID), action: validateBarActionInstance(action) }, `[LayoutManager → registerBarAction]`);
-	if (!safeParams) return;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → registerBarAction]')
+		.validate({
+			barID: validateBarID(barID),
+			action: validateBarActionInstance(action),
+		})
+		.execute();
+	if (!safeData) return;
 
-	const store = useLayoutStore.getState();
-	const bar = store.getBar(safeParams.barID);
-	if (!bar) return devLog.error(`[LayoutManager → registerBarAction] Bar with ID "${safeParams.barID}" not found.`);
+	const bar = layoutStore.getBar(safeData.barID);
+	if (!bar) return devLog.error(`[LayoutManager → registerBarAction] Bar with ID "${safeData.barID}" not found.`);
 	if (bar.actions[action.id]) return devLog.warn(`[LayoutManager → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
 
-	store.registerBarAction(barID, action);
+	layoutStore.registerBarAction(barID, action);
 }
 
 /**
@@ -88,15 +99,20 @@ export function registerBarAction(barID: BarID, action: BarActionInstance): void
  * unregisterBarAction('bar-123', 'action-456') // Removes action from bar
  */
 export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
-	const safeParams = validateOrLog({ barID: validateBarID(barID), actionID: validateBarActionID(actionID) }, `[LayoutManager → unregisterBarAction]`);
-	if (!safeParams) return;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → unregisterBarAction]')
+		.validate({
+			barID: validateBarID(barID),
+			actionID: validateBarActionID(actionID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	const store = useLayoutStore.getState();
-	const bar = store.getBar(barID);
-	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${barID}" not found.`);
-	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${actionID}" not found in bar "${barID}". Skipping.`);
+	const bar = layoutStore.getBar(safeData.barID);
+	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${safeData.barID}" not found.`);
+	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${safeData.actionID}" not found in bar "${safeData.barID}". Skipping.`);
 
-	store.unregisterBarAction(barID, actionID);
+	layoutStore.unregisterBarAction(safeData.barID, safeData.actionID);
 }
 
 /**
@@ -110,11 +126,15 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
  * const actions = useBarActions('bar-123') // Returns reactive array of actions
  */
 export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
-	const safeParams = validateOrLog({ barID: validateBarID(barID) }, `[LayoutManager → useBarActions]`);
-	if (!safeParams) return undefined;
+	const safeData = new ValidationPipeline('[LayoutManager → useBarActions]')
+		.validate({
+			barID: validateBarID(barID),
+		})
+		.execute();
+	if (!safeData) return undefined;
 
-	const actionsRecord = useLayoutStore((state) => state.getBar(safeParams.barID)?.actions);
-	if (!actionsRecord) return devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeParams.barID}" not found.`), undefined;
+	const actionsRecord = useLayoutStore((state) => state.getBar(safeData.barID)?.actions);
+	if (!actionsRecord) return devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeData.barID}" not found.`), undefined;
 
 	return useMemo(() => Object.values(actionsRecord), [actionsRecord]);
 }

@@ -1,7 +1,7 @@
 // Types
 import type { StyleValueSeparator } from '@/src/page-builder/core/block/style/types';
 
-export const ValueFunctionDefaults: Record<string, string> = {
+export const VALUE_FUNCTION_DEFAULTS: Record<string, string> = {
 	minmax: 'minmax(0px,0px)',
 	'fit-content': 'fit-content(0px)',
 	repeat: 'repeat(1,1fr)',
@@ -25,4 +25,4 @@ export const ValueFunctionDefaults: Record<string, string> = {
 	url: 'url("https://example.com")',
 };
 
-export const StyleValueSeparatorDefaults: StyleValueSeparator[] = [' ', ',', '/'];
+export const VALUE_SEPARATOR_DEFAULTS: StyleValueSeparator[] = [' ', ',', '/'];

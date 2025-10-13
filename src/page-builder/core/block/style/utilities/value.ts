@@ -1,13 +1,9 @@
 // Utilities
 import { getTokenCanonical, extractDimensionNumber, extractDimensionUnit, getDimensionType } from '@/src/page-builder/core/block/style/utilities';
-import { splitAdvanced } from '@/src/shared/utilities/string';
 import { isColor } from '@/src/shared/utilities/color';
 
 // Types
-import type { TokenTypes, StyleKey, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
-
-// Constants
-import { StyleDefinitions, StyleValueSeparatorDefaults, UnitDefinitions } from '@/src/page-builder/core/block/style/constants';
+import type { TokenTypes, StyleOptionDefinition } from '@/src/page-builder/core/block/style/types';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
@@ -116,7 +112,7 @@ export function isValueDimension(input: unknown): boolean {
 	if (value === undefined || !unit) return false;
 
 	// Ensure unit is a valid UnitKeys value
-	if (!(unit in UnitDefinitions)) return false;
+	// if (!(unit in UNIT_DEFINITIONS)) return false; //! If you still see this line, remove it.
 	return true;
 }
 
@@ -153,6 +149,52 @@ export function getValueType(input: unknown): TokenTypes | undefined {
 }
 
 /**
+ * Converts a CSS value string to its canonical token representation.
+ * Converts keywords to their canonical form, numbers to '<number>', and dimensions to '<dimensionType>'.
+ * If the value type is not recognized, returns undefined.
+ * @param input - The CSS value string to convert.
+ * @returns {string | undefined} The token representation of the value or undefined if not recognized.
+ * @example
+ * getValueToken('10px') → '<length>'
+ * getValueToken('auto') → 'auto'
+ * getValueToken('fit-content(10px)') → 'fit-content()'
+ * getValueToken('10') → '<number>'
+ */
+export function getValueToken(input: unknown): string | undefined {
+	if (typeof input !== 'string') return undefined;
+
+	const type = getValueType(input);
+
+	switch (type) {
+		case 'keyword':
+			return input;
+		case 'integer':
+			return '<integer>';
+		case 'number':
+			return '<number>';
+		case 'dimension':
+			return `<${getDimensionType(input)}>`;
+		case 'color':
+			return '<color>';
+		default:
+			return getTokenCanonical(input);
+	}
+}
+
+/**
+ * Converts an array of CSS value strings to an array of tokens.
+ * Uses getValueToken to convert each value to its token representation.
+ * Filters out any unrecognized values (returns null for those).
+ * @param inputs - An array of CSS value strings to convert.
+ * @returns {string[]} An array of value tokens corresponding to the input values.
+ * @example
+ * getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']
+ */
+export function getValueTokens(input: unknown[]): string[] {
+	return input.map(getValueToken).filter((token): token is string => token !== undefined);
+}
+
+/**
  * Determines the default value type to use when a value is empty.
  * Prioritizes certain types (dimension > keyword > color > function) based on available options.
  * Falls back to the first option's type if no prioritized types are available.
@@ -176,93 +218,4 @@ export function getValueDefaultType(options: StyleOptionDefinition[]): TokenType
 
 	// Fallback to first option's type
 	return options[0]?.type as TokenTypes;
-}
-
-/**
- * Converts a CSS value string to its canonical token representation.
- * Converts keywords to their canonical form, numbers to '<number>', and dimensions to '<dimensionType>'.
- * If the value type is not recognized, returns undefined.
- * @param input - The CSS value string to convert.
- * @returns {string | undefined} The token representation of the value or undefined if not recognized.
- * @example
- * getValueToken('10px') → '<length>'
- * getValueToken('auto') → 'auto'
- * getValueToken('fit-content(10px)') → 'fit-content()'
- * getValueToken('10') → '<number>'
- */
-export function getValueToken(value: unknown): string | undefined {
-	if (typeof value !== 'string') return undefined;
-
-	const type = getValueType(value);
-
-	switch (type) {
-		case 'keyword':
-			return value;
-		case 'integer':
-			return '<integer>';
-		case 'number':
-			return '<number>';
-		case 'dimension':
-			return `<${getDimensionType(value)}>`;
-		case 'color':
-			return '<color>';
-		default:
-			return getTokenCanonical(value);
-	}
-}
-
-/**
- * Converts an array of CSS value strings to an array of tokens.
- * Uses getValueToken to convert each value to its token representation.
- * Filters out any unrecognized values (returns null for those).
- * @param inputs - An array of CSS value strings to convert.
- * @returns {string[]} An array of value tokens corresponding to the input values.
- * @example
- * getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']
- */
-export function getValueTokens(values: unknown[]): string[] {
-	return values.map(getValueToken).filter((token): token is string => token !== undefined);
-}
-
-/**
- * Validates if a given value is valid for a specific CSS property.
- * Uses the property's syntaxNormalized to check if the value matches any of the defined syntaxes.
- * Performs comprehensive validation with error logging for debugging.
- *
- * @param styleKey - The CSS property name (e.g., 'margin', 'padding')
- * @param value - The CSS value string to validate (e.g., '10px auto')
- * @param context - The context/component name for error logging
- * @returns True if the value is valid for the property, false otherwise
- *
- * @example
- * isValueValid('margin', '10px auto', 'StyleManager') → true
- * isValueValid('padding', '10px', 'StyleManager') → true
- * isValueValid('color', '#fff', 'StyleManager') → true
- * isValueValid('display', 'invalid', 'StyleManager') → false (logs error)
- */
-export function isStyleValueValid(styleKey: StyleKey, styleValue: unknown): boolean {
-	// Validate input parameters
-	if (typeof styleValue !== 'string') return false;
-
-	// Empty strings are valid CSS values (used to clear/reset properties)
-	if (styleValue === '') return true;
-
-	// Fetch the property definition from the StyleDefinitions
-	const propertyDef = StyleDefinitions[styleKey];
-	if (!propertyDef) return false;
-
-	// Fetch the normalized syntax variations for the property
-	const syntaxNormalized = propertyDef.syntaxNormalized;
-	if (!syntaxNormalized) return false;
-
-	// Split the value into its components
-	const values = splitAdvanced(styleValue, StyleValueSeparatorDefaults);
-
-	// Convert the values to their token representations
-	const valueTokens = getValueTokens(values).join(' ');
-	if (valueTokens.length === 0) return false;
-
-	return syntaxNormalized.some((syntax) => {
-		return syntax === valueTokens;
-	});
 }

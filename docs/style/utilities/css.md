@@ -17,7 +17,7 @@ Converts a camelCase CSS property name to kebab-case.
 
 ---
 
-### generateCSSStyles
+### cascadeCSSStyles
 Generates a formatted CSS properties block from an object of styles.
 
 - **Parameters:**
@@ -25,7 +25,7 @@ Generates a formatted CSS properties block from an object of styles.
   - `indentLevel?: number` — Number of spaces for indentation (default: 1).
 - **Returns:** `string` — Formatted CSS properties string.
 - **Example:**
-  - `generateCSSStyles({ color: 'red', fontSize: '16px' })`  
+  - `cascadeCSSStyles({ color: 'red', fontSize: '16px' })`  
     →  
     ```
       color: red;

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useBlockStyle, setBlockStyle } from '@/src/page-builder/services/managers/block/style';
 
 // Constants
-import { StyleDefinitions } from '@/src/page-builder/core/block/style/constants';
+import { STYLE_DEFINITIONS } from '@/src/page-builder/core/block/style/constants';
 
 // Components
 import BlockStylesValue from '@/src/page-builder/ui/inspectors/block/style/value/component';
@@ -21,7 +21,7 @@ import { devRender } from '@/src/shared/utilities/dev';
  */
 const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: string; propertyName: StyleKey }): React.ReactElement | null => {
     const value = useBlockStyle(blockID, propertyName);
-    const property = StyleDefinitions[propertyName];
+    const property = STYLE_DEFINITIONS[propertyName];
 
     if (!property) return devRender.error("[StyleValueRenderer] No property definition found", { propertyName });
 

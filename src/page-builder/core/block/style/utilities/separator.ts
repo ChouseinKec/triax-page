@@ -1,5 +1,5 @@
 // Constants
-import { StyleValueSeparatorDefaults } from '@/src/page-builder/core/block/style/constants';
+import { VALUE_SEPARATOR_DEFAULTS } from '@/src/page-builder/core/block/style/constants';
 
 // Types
 import type { StyleValueSeparator } from '@/src/page-builder/core/block/style/types';
@@ -36,7 +36,7 @@ export function extractSeparator(variation: string): string[] {
 		.trim();
 
 	// Build a regex to match all possible separators
-	const separatorPattern = StyleValueSeparatorDefaults.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
+	const separatorPattern = VALUE_SEPARATOR_DEFAULTS.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
 	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
 
 	// Extract separators
@@ -61,12 +61,4 @@ export function extractSeparators(variations: string[]): string[][] {
 	const arr = Array.isArray(variations) ? variations : [...variations];
 	return arr.map(extractSeparator);
 }
-
-export default {
-	extractAll: extractSeparators,
-	extract: extractSeparator,
-} as const;
-
-
-
 

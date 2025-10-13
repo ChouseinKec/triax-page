@@ -1,9 +1,9 @@
 // Types
 import type { ViewportDefinition, ViewportID } from '@/src/page-builder/core/editor/viewport/types/viewport';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateViewport } from '@/src/page-builder/services/helpers/viewport/viewport';
+import { validateViewport } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Class-based viewport registry for managing viewport definitions
@@ -16,7 +16,7 @@ class ViewportRegistryClass {
 	 * @param viewport - The viewport definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerViewport(viewport: ViewportDefinition): ValidationResult<ViewportDefinition> {
+	registerViewport(viewport: ViewportDefinition): ValidateResult<ViewportDefinition> {
 		const validation = validateViewport(viewport);
 		if (!validation.valid) return validation;
 

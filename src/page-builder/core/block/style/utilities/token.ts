@@ -2,7 +2,7 @@
 import type { TokenTypes, TokenKeys } from '@/src/page-builder/core/block/style/types';
 
 // Constants
-import { TokenDefaults, TokenDefinitions } from '@/src/page-builder/core/block/style/constants';
+import { TOKEN_DEFAULTS, TOKEN_DEFINITIONS } from '@/src/page-builder/core/block/style/constants';
 
 // Utilities
 import { extractBetween } from '@/src/shared/utilities/string';
@@ -245,7 +245,7 @@ export function getTokenValue(token: string): string | undefined {
 	const tokenCanonical = getTokenCanonical(token) as TokenKeys | undefined;
 	if (!tokenCanonical) return undefined;
 
-	const tokenValue = TokenDefaults[tokenCanonical];
+	const tokenValue = TOKEN_DEFAULTS[tokenCanonical];
 	return tokenValue ? tokenValue : undefined;
 }
 
@@ -261,7 +261,7 @@ export function getTokenValues(tokens: string[]): string[] {
 }
 
 /**
- * Recursively expands all <token> references in a CSS syntax string using TokenDefinitions.
+ * Recursively expands all <token> references in a CSS syntax string using TOKEN_DEFINITIONS.
  * If a token is not found, it is left as-is.
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
  * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
@@ -289,8 +289,8 @@ export function expandTokens(syntax: string, seen = new Set<string>()): string {
 		// Extract range/constraint (e.g., [0,100]) if present
 		const range = getTokenRange(token);
 
-		// Look up the token definition in TokenDefinitions
-		const def = TokenDefinitions[tokenCanonical as TokenKeys];
+		// Look up the token definition in TOKEN_DEFINITIONS
+		const def = TOKEN_DEFINITIONS[tokenCanonical as TokenKeys];
 
 		if (def?.syntax) {
 			// Mark this token as seen to prevent recursion
@@ -310,28 +310,3 @@ export function expandTokens(syntax: string, seen = new Set<string>()): string {
 	// Return the fully expanded syntax string
 	return result;
 }
-
-export default {
-	is: {
-		keyword: isTokenKeyword,
-		dimension: isTokenDimension,
-		integer: isTokenInteger,
-		number: isTokenNumber,
-		function: isTokenFunction,
-		color: isTokenColor,
-		link: isTokenLink,
-	},
-
-	get: {
-		type: getTokenType,
-		canonical: getTokenCanonical,
-		base: getTokenBase,
-		range: getTokenRange,
-		param: getTokenParam,
-		value: getTokenValue,
-		values: getTokenValues,
-	},
-	expand: {
-		tokens: expandTokens,
-	},
-} as const;

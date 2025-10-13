@@ -1,5 +1,5 @@
 // Types
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 import type { InitStep } from './types';
 
 // Utilities
@@ -26,7 +26,7 @@ class InitializationCoordinator {
 	/**
 	 * Execute all initialization steps in order.
 	 */
-	async initialize(): Promise<ValidationResult<null>> {
+	async initialize(): Promise<ValidateResult<null>> {
 		if (this.initialized) {
 			devLog.info('[InitCoordinator] Already initialized, skipping');
 			return { valid: true, value: null };

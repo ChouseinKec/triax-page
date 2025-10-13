@@ -15,7 +15,7 @@ import { BlockStylesValueNumberProps } from "@/src/page-builder/ui/inspectors/bl
 import { devRender } from "@/src/shared/utilities/dev";
 
 // Constants
-import { StyleIconDefinitions } from "@/src/page-builder/core/block/style/constants/icon";
+import { STYLE_ICON_DEFINITIONS } from "@/src/page-builder/core/block/style/constants/icon";
 
 
 /**
@@ -148,7 +148,7 @@ const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, 
                     onChange={handleOptionChange}
                     searchable={true}
                     groupable={true}
-                    placeholder={StyleIconDefinitions.number || "NUM"}
+                    placeholder={STYLE_ICON_DEFINITIONS.number || "NUM"}
                     forcePlaceholder={true}
                     isDisabled={options.length <= 1}
                     title="Change Value Type"

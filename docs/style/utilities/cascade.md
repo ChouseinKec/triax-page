@@ -23,7 +23,7 @@ Gets a style property value with CSS cascade fallback logic.
 
 ---
 
-### cascadeStyles
+### cascadeCSSStyles
 Gets all properties with their resolved values for the current context. Useful for rendering context-specific styles.
 
 - **Parameters:**
@@ -36,4 +36,4 @@ Gets all properties with their resolved values for the current context. Useful f
   - `defaultPseudo?: PseudoName` — Default pseudo fallback (default: 'all').
 - **Returns:** `Record<string, string>` — Object of resolved property values.
 - **Example:**
-  - `cascadeStyles(styles, 'desktop', 'portrait',
+  - `cascadeCSSStyles(styles, 'desktop', 'portrait',

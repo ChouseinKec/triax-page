@@ -4,8 +4,7 @@ import { useMemo } from 'react';
 import { useLayoutStore } from '@/src/page-builder/state/stores/layout';
 
 // Helpers
-import { validatePanelID } from '@/src/page-builder/services/helpers/layout';
-import { validateWorkbenchID } from '@/src/page-builder/services/helpers/workbench';
+import { validatePanelID, validateWorkbenchID } from '@/src/page-builder/services/helpers/validate';
 
 // Types
 import type { PanelID, PanelInstance } from '@/src/page-builder/core/editor/layout/types';
@@ -13,7 +12,7 @@ import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 /**
  * Toggles the open/closed state of a panel for layout management operations.
@@ -26,14 +25,18 @@ import { validateOrLog } from '@/src/shared/utilities/validation';
  * togglePanel('panel-123') // Toggles panel open/closed state
  */
 export function togglePanel(panelID: PanelID): void {
-	const safeParams = validateOrLog({ panelID: validatePanelID(panelID) }, `[LayoutManager → togglePanel]`);
-	if (!safeParams) return;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → togglePanel]')
+		.validate({
+			panelID: validatePanelID(panelID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	const store = useLayoutStore.getState();
-	const panel = store.getPanel(safeParams.panelID);
-	if (!panel) return devLog.error(`[LayoutManager → togglePanel] Panel with ID "${safeParams.panelID}" not found.`);
+	const panel = layoutStore.getPanel(safeData.panelID);
+	if (!panel) return devLog.error(`[LayoutManager → togglePanel] Panel with ID "${safeData.panelID}" not found.`);
 
-	store.updatePanel(safeParams.panelID, { isOpen: !panel.isOpen });
+	layoutStore.updatePanel(safeData.panelID, { isOpen: !panel.isOpen });
 }
 
 /**
@@ -47,10 +50,18 @@ export function togglePanel(panelID: PanelID): void {
  * const panel = getPanelById('panel-123') // Returns panel instance or undefined
  */
 export function getPanelById(panelID: PanelID): PanelInstance | undefined {
-	const safeParams = validateOrLog({ panelID: validatePanelID(panelID) }, `[LayoutManager → getPanelById]`);
-	if (!safeParams) return;
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → getPanelById]')
+		.validate({
+			panelID: validatePanelID(panelID),
+		})
+		.derive((data) => ({
+			panel: layoutStore.getPanel(data.panelID),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	return useLayoutStore.getState().getPanel(safeParams.panelID);
+	return safeData.panel;
 }
 
 /**
@@ -64,15 +75,18 @@ export function getPanelById(panelID: PanelID): PanelInstance | undefined {
  * const panels = useAllPanels('workbench-123') // Returns all panels for workbench
  */
 export function useAllPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → useAllPanels]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[LayoutManager → useAllPanels]')
+		.validate({
+			workbenchID: validateWorkbenchID(workbenchID),
+		})
+		.execute();
+	if (!safeData) return;
 
 	const panels = useLayoutStore((state) => state.layoutPanels);
 
 	return useMemo(() => {
-		const all = Object.values(panels);
-		return all.filter((p: PanelInstance) => p.workbenchID === safeParams.workbenchID);
-	}, [panels, safeParams.workbenchID]);
+		return Object.values(panels).filter((p: PanelInstance) => p.workbenchID === safeData.workbenchID);
+	}, [panels, safeData.workbenchID]);
 }
 
 /**
@@ -86,13 +100,17 @@ export function useAllPanels(workbenchID: WorkbenchID): PanelInstance[] | undefi
  * const openPanels = useOpenPanels('workbench-123') // Returns open panels for workbench
  */
 export function useOpenPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-	const safeParams = validateOrLog({ workbenchID: validateWorkbenchID(workbenchID) }, `[LayoutManager → useOpenPanels]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[LayoutManager → useOpenPanels]')
+		.validate({
+			workbenchID: validateWorkbenchID(workbenchID),
+		})
+		.execute();
+	if (!safeData) return;
 
 	const panels = useLayoutStore((state) => state.layoutPanels);
 
 	return useMemo(() => {
 		const all = Object.values(panels).filter((p: PanelInstance) => p.isOpen);
-		return all.filter((p: PanelInstance) => p.workbenchID === safeParams.workbenchID);
-	}, [panels, safeParams.workbenchID]);
+		return all.filter((p: PanelInstance) => p.workbenchID === safeData.workbenchID);
+	}, [panels, safeData.workbenchID]);
 }

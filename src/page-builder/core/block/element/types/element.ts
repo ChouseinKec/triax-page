@@ -3,7 +3,7 @@ import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types
 /**
  * All supported HTML element tags.
  */
-export type ElementTags = 'div' | 'section' | 'article' | 'aside' | 'nav' | 'p' | 'span' | 'b' | 'strong' | 'i' | 'em' | 'u' | 'small' | 'mark' | 'sub' | 'sup' | 'code' | 'abbr' | 's' | 'del' | 'ins' | 'q' | 'cite' | 'dfn';
+export type ElementTag = 'div' | 'section' | 'article' | 'aside' | 'nav' | 'p' | 'span' | 'b' | 'strong' | 'i' | 'em' | 'u' | 'small' | 'mark' | 'sub' | 'sup' | 'code' | 'abbr' | 's' | 'del' | 'ins' | 'q' | 'cite' | 'dfn';
 
 /**
  * Description of an HTML element.
@@ -18,7 +18,7 @@ export interface ElementDefinition {
 	/** Array of supported attributes for this element */
 	attributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */
-	allowedContent: ElementTags[] | null;
+	allowedContent: ElementTag[] | null;
 	/** Human-readable description of the element */
 	description: ElementDescription;
 }

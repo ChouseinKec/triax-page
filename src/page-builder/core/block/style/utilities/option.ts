@@ -1,5 +1,5 @@
 // Constants
-import { ValueFunctionDefaults, UnitOptionsByType, StyleIconDefinitions, CSSIcons } from '@/src/page-builder/core/block/style/constants';
+import { VALUE_FUNCTION_DEFAULTS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/page-builder/core/block/style/constants';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/page-builder/core/block/style/utilities';
@@ -29,7 +29,7 @@ export function createFunctionOption(token: string): OptionFunctionDefinition | 
 	if (!canonicalName || !baseName || !syntax) return undefined;
 
 	// Get the default function value from the constants
-	const defaultValue = ValueFunctionDefaults[baseName];
+	const defaultValue = VALUE_FUNCTION_DEFAULTS[baseName];
 
 	// If no default value is defined for this function, return undefined
 	if (!defaultValue) return undefined;
@@ -60,11 +60,11 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
 	const baseName = getTokenBase(token) as UnitTypes;
 
 	// If the base name is not a valid dimension group, return undefined
-	if (!UnitOptionsByType[baseName]) return undefined;
+	if (!UNIT_OPTIONS[baseName]) return undefined;
 
 	// Get the range parameters for the token, and retrieve the unit options for the base name
 	const range = getTokenParam(token);
-	const unitOptions = UnitOptionsByType[baseName] || [];
+	const unitOptions = UNIT_OPTIONS[baseName] || [];
 
 	// If no range is specified, return the unit options as is
 	if (!range) return unitOptions as OptionDimensionDefinition[];
@@ -90,7 +90,7 @@ export function createKeywordOption(token: string, styleKey: string): OptionKeyw
 	// Check if the token is empty or undefined
 	if (!token) return undefined;
 
-	const icon = StyleIconDefinitions?.[`${styleKey}-${token}` as CSSIcons];
+	const icon = STYLE_ICON_DEFINITIONS?.[`${styleKey}-${token}` as CSSIcons];
 
 	// Create and return the OptionKeywordDefinition object for the keyword
 	return {
@@ -120,7 +120,7 @@ export function createNumberOption(token: string): OptionGenericDefinition | und
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
-		icon: StyleIconDefinitions?.number,
+		icon: STYLE_ICON_DEFINITIONS?.number,
 		type: 'number',
 	};
 }
@@ -142,7 +142,7 @@ export function createIntegerOption(token: string): OptionGenericDefinition | un
 		category: 'other',
 		min: range?.min,
 		max: range?.max,
-		icon: StyleIconDefinitions?.number,
+		icon: STYLE_ICON_DEFINITIONS?.number,
 		type: 'integer',
 	};
 }
@@ -272,21 +272,3 @@ export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<str
 		});
 	});
 }
-
-export default {
-	create: {
-		colorOption: createColorOption,
-		keywordOption: createKeywordOption,
-		numberOption: createNumberOption,
-		integerOption: createIntegerOption,
-		dimensionOption: createDimensionOptions,
-		functionOption: createFunctionOption,
-		linkOption: createLinkOption,
-		genericOption: createOption,
-		optionTable: createOptionTable,
-	},
-
-	validate: {
-		slotOption: isSlotOptionValid,
-	},
-} as const;

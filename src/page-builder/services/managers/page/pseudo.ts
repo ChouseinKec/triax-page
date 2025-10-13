@@ -8,10 +8,10 @@ import type { PseudoID, PseudoInstance } from '@/src/page-builder/core/page/type
 import { getRegisteredPseudos, getRegisteredPseudo } from '@/src/page-builder/state/registries/page';
 
 // Utilities
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validatePseudoID } from '@/src/page-builder/services/helpers/page/pseudo';
+import { validatePseudoID } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Reactive hook to get the currently selected pseudo instance for page management operations.
@@ -66,10 +66,14 @@ export function getSelectedPseudoID(): PseudoID | undefined {
  * setSelectedPseudoID('hover') // Sets current pseudo to hover
  */
 export function setSelectedPseudoID(pseudoID: PseudoID): void {
-	const safeParams = validateOrLog({ pseudoID: validatePseudoID(pseudoID) }, `[PageManager → setSelectedPseudoID]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[PageManager → setSelectedPseudoID]')
+		.validate({
+			pseudoID: validatePseudoID(pseudoID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	usePageStore.getState().setSelectedPseudoID(safeParams.pseudoID);
+	usePageStore.getState().setSelectedPseudoID(safeData.pseudoID);
 }
 
 /**
@@ -85,15 +89,3 @@ export function getAllPseudos(): PseudoInstance[] {
 	return Object.values(getRegisteredPseudos());
 }
 
-/**
- * Gets the default pseudo ID for page management operations.
- * Returns the hardcoded default pseudo identifier used as fallback.
- *
- * @returns The default pseudo ID string
- *
- * @example
- * const defaultID = getPseudoDefaultID() // Returns 'all'
- */
-export function getPseudoDefaultID(): string {
-	return 'all';
-}

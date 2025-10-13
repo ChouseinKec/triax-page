@@ -6,6 +6,10 @@ import type { DeviceID } from '@/src/page-builder/core/page/types/device';
 import type { OrientationID } from '@/src/page-builder/core/page/types/orientation';
 import type { PseudoID } from '@/src/page-builder/core/page/types/pseudo';
 
+// Constants
+import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/page-builder/core/page/constants';
+import { DEFAULT_WORKBENCH_ID } from '@/src/page-builder/core/editor/workbench/constants/defaults';
+
 export type PageStore = {
 	selectedDeviceID: DeviceID;
 	setSelectedDeviceID: (value: DeviceID) => void;
@@ -34,22 +38,22 @@ export function createPageStore() {
 		 * The currently selected workbench.
 		 * Defaults to 'main'.
 		 */
-		selectedWorkbenchID: 'main',
+		selectedWorkbenchID: DEFAULT_WORKBENCH_ID,
 
 		/**
 		 * The currently selected device.
 		 */
-		selectedDeviceID: 'all',
+		selectedDeviceID: DEFAULT_DEVICE_ID,
 
 		/**
 		 * The currently selected orientation.
 		 */
-		selectedOrientationID: 'all',
+		selectedOrientationID: DEFAULT_ORIENTATION_ID,
 
 		/**
 		 * The currently selected pseudo class.
 		 */
-		selectedPseudoID: 'all',
+		selectedPseudoID: DEFAULT_PSEUDO_ID,
 
 		/**
 		 * Sets the current device based on the provided value.

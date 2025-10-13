@@ -1,6 +1,3 @@
-// Helpers
-import { validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/attribute';
-import { validateBlockID } from '@/src/page-builder/services/helpers/block/validation';
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
@@ -9,8 +6,11 @@ import type { BlockID } from '@/src/page-builder/core/block/block/types';
 import type { AttributeKey, AttributeValue } from '@/src/page-builder/core/block/attribute/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { validateOrLog } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
+
+// Helpers
+import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
+import { validateBlockID, validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Sets the attribute value for a specific block in block attribute operations.
@@ -25,21 +25,28 @@ import { validateOrLog } from '@/src/shared/utilities/validation';
  * setBlockAttribute('block-1', 'className', 'my-class')
  */
 export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), attributeKey: validateAttributeKey(attributeKey), attributeValue: validateAttributeValue(attributeValue) }, `[BlockManager → setBlockAttribute]`);
-	if (!safeParams) return;
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → setBlockAttribute]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			attributeKey: validateAttributeKey(attributeKey),
+			attributeValue: validateAttributeValue(attributeValue),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID,blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
 
-	const block = useBlockStore.getState().getBlock(safeParams.blockID);
-	if (!block) return devLog.error(`[BlockManager → setBlockAttribute] Block not found`);
-
-	const updatedBlock = {
-		...block,
-		attributes: {
-			...block.attributes,
-			[safeParams.attributeKey]: safeParams.attributeValue,
+	blockStore.updateBlocks({
+		[safeData.blockID]: {
+			...safeData.block,
+			attributes: {
+				...safeData.block.attributes,
+				[safeData.attributeKey]: safeData.attributeValue,
+			},
 		},
-	};
-
-	useBlockStore.getState().updateBlock(safeParams.blockID, updatedBlock);
+	});
 }
 
 /**
@@ -51,11 +58,16 @@ export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, 
  * @returns The current attribute value or undefined if not found
  *
  * @example
- * useBlockAttribute('block-1', 'className') → 'my-class'
+ * useBlockAttribute('block-1', 'className')
  */
 export function useBlockAttribute(blockID: BlockID, attributeKey: AttributeKey): string | undefined {
-	const safeParams = validateOrLog({ blockID: validateBlockID(blockID), attributeKey: validateAttributeKey(attributeKey) }, `[BlockManager → useBlockAttribute]`);
-	if (!safeParams) return;
+	const safeData = new ValidationPipeline('[BlockManager → useBlockAttribute]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			attributeKey: validateAttributeKey(attributeKey),
+		})
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeParams.blockID]?.attributes?.[safeParams.attributeKey]);
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.attributes?.[safeData.attributeKey]);
 }

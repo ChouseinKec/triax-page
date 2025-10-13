@@ -66,13 +66,3 @@ export function matchFunctionOption(options: any[], value: string): any | undefi
 	const match = options.find((opt) => getValueToken(value) === getValueToken(opt.value));
 	return match || options[0];
 }
-
-export default {
-	extract: {
-		name: extractFunctionName,
-		args: extractFunctionArgs,
-		value: extractFunctionValue,
-	},
-	filter: filterFunctionOptions,
-	match: matchFunctionOption,
-} as const;

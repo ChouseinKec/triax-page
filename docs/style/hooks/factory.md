@@ -78,11 +78,11 @@ const PositionSelector = renderPositionSelect(
 ## Notes
 
 - The hook uses the style manager for getting and setting property values.
-- Property definitions are sourced from `StyleDefinitions`.
+- Property definitions are sourced from `STYLE_DEFINITIONS`.
 - Use this hook in style LayoutPanels or property editors to keep UI---
 
 ## Notes
 
 - The hook uses the style manager for getting and setting property values.
-- Property definitions are sourced from `StyleDefinitions`.
+- Property definitions are sourced from `STYLE_DEFINITIONS`.
 - Use this hook in style LayoutPanels or property editors to keep UI

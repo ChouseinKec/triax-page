@@ -1,8 +1,8 @@
 import type { BlockDefinition, BlockType } from '@/src/page-builder/core/block/block/types';
-import type { ValidationResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateBlockDefinition } from '@/src/page-builder/services/helpers/block/validation';
+import { validateBlockDefinition } from '@/src/page-builder/services/helpers/validate';
 
 /**
  * Class-based block registry for managing block definitions
@@ -15,7 +15,7 @@ class BlockRegistry {
 	 * @param block - The block definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerBlock(block: BlockDefinition): ValidationResult<BlockDefinition> {
+	registerBlock(block: BlockDefinition): ValidateResult<BlockDefinition> {
 		const validation = validateBlockDefinition(block);
 		if (!validation.valid) return validation;
 

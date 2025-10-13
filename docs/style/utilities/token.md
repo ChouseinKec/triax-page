@@ -189,7 +189,7 @@ Converts a single token (e.g., <length>, <color>) to its default value.
 ---
 
 ### expandTokens
-Recursively expands all <token> references in a CSS syntax string using TokenDefinitions.
+Recursively expands all <token> references in a CSS syntax string using TOKEN_DEFINITIONS.
 - **Parameters:**
   - `syntax: string` — The CSS property syntax string (e.g. `'auto |<ratio>'`)
   - `seen?: Set<string>` — (internal) Set of already expanded tokens to prevent infinite recursion

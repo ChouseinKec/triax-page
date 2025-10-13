@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { getSelectedBlockID, useSelectedBlockType, addBlock, getRegisteredBlocks, getRegisteredBlock, canBlockTypeAcceptChildType } from "@/src/page-builder/services/managers/block";
+import { getSelectedBlockID, useSelectedBlockType, addBlock, getRegisteredBlocks, getRegisteredBlock, canBlockAcceptChild } from "@/src/page-builder/services/managers/block";
 
 // Components
 import GenericInput from "@/src/shared/components/input/generic/component";
@@ -43,7 +43,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
 
         return Object.fromEntries(
             Object.entries(registeredBlocks).filter(([_, block]) => {
-                return canBlockTypeAcceptChildType(selectedBlockType, block.type);
+                return canBlockAcceptChild(selectedBlockType, block.type);
             })
         );
     }, [selectedBlockType, registeredBlocks]

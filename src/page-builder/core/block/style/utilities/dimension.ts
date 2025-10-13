@@ -1,5 +1,5 @@
 // Constants
-import { UnitDefinitions } from '@/src/page-builder/core/block/style/constants';
+import { UNIT_DEFINITIONS } from '@/src/page-builder/core/block/style/constants';
 
 // Types
 import type { UnitTypes } from '@/src/page-builder/core/block/style/types';
@@ -95,19 +95,6 @@ export function extractDimensionDefaults(options: Array<{ category?: string; nam
  */
 export function getDimensionType(input: string): UnitTypes | undefined {
 	const unit = extractDimensionUnit(input) as UnitKeys;
-	const unitDef = unit ? UnitDefinitions[unit] : undefined;
+	const unitDef = unit ? UNIT_DEFINITIONS[unit] : undefined;
 	return unitDef?.type;
 }
-
-export default {
-	extract: {
-		number: extractDimensionNumber,
-		unit: extractDimensionUnit,
-		range: extractDimensionRange,
-		values: extractDimensionValues,
-		defaults: extractDimensionDefaults,
-	},
-	get: {
-		type: getDimensionType,
-	},
-} as const;
