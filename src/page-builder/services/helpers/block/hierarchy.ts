@@ -4,19 +4,6 @@ import * as blockRegistry from '@/src/page-builder/state/registries/block';
 // Types
 import type { BlockType, BlockInstance, BlockID, BlockRecord } from '@/src/page-builder/core/block/block/types';
 
-export function isBlockChildPermitted(parentBlockType: BlockType, childBlockType: BlockType): boolean {
-	const registeredBlocks = blockRegistry.getRegisteredBlocks();
-
-	const parentBlockDefinition = registeredBlocks[parentBlockType];
-	if (!parentBlockDefinition) return false;
-
-	const childBlockDefinition = registeredBlocks[childBlockType];
-	if (!childBlockDefinition) return false;
-
-	if (parentBlockDefinition.permittedContent == null) return true;
-	return parentBlockDefinition.permittedContent.includes(childBlockDefinition.type);
-}
-
 /**
  * Checks if a target block is a descendant of a parent block.
  * Recursively traverses the block tree to find relationship.
@@ -182,4 +169,65 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 
 	traverse(blockID);
 	return result;
+}
+
+export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: BlockType): boolean {
+	const registeredBlocks = blockRegistry.getRegisteredBlocks();
+
+	const parentBlockDefinition = registeredBlocks[parentBlockType];
+	if (!parentBlockDefinition) return false;
+
+	const childBlockDefinition = registeredBlocks[childBlockType];
+	if (!childBlockDefinition) return false;
+
+	if (parentBlockDefinition.permittedContent == null) return true;
+	return parentBlockDefinition.permittedContent.includes(childBlockDefinition.type);
+}
+
+/**
+ * Checks if a block can be moved before a target block.
+ * Returns the target index if the move is needed, null if already positioned correctly or invalid.
+ *
+ * @param sourceBlock - The block to potentially move
+ * @param targetBlock - The target block for positioning reference
+ * @param parentBlock - The parent block containing both source and target
+ * @returns Target index if move is needed, null if already positioned correctly or invalid
+ */
+export function canBlockMoveBefore(sourceBlock: BlockInstance, targetBlock: BlockInstance, parentBlock: BlockInstance): number | null {
+	const sourceIndex = parentBlock.contentIDs.indexOf(sourceBlock.id);
+	const targetIndex = parentBlock.contentIDs.indexOf(targetBlock.id);
+
+	// If either block is not found, return null
+	if (sourceIndex === -1 || targetIndex === -1) return null;
+
+	// If source is already before target, no move needed
+	if (sourceIndex < targetIndex) return null;
+
+	// Return the target index (where source should be positioned)
+	return targetIndex;
+}
+
+/**
+ * Checks if a block can be moved after a target block.
+ * Returns the target index if the move is needed, null if already positioned correctly or invalid.
+ *
+ * @param sourceBlock - The block to potentially move
+ * @param targetBlock - The target block for positioning reference
+ * @param parentBlock - The parent block containing both source and target
+ * @returns Target index if move is needed, null if already positioned correctly or invalid
+ */
+export function canBlockMoveAfter(sourceBlock: BlockInstance, targetBlock: BlockInstance, parentBlock: BlockInstance): number | null {
+	const sourceIndex = parentBlock.contentIDs.indexOf(sourceBlock.id);
+	const targetIndex = parentBlock.contentIDs.indexOf(targetBlock.id);
+
+	// If either block is not found, return null
+	if (sourceIndex === -1 || targetIndex === -1) return null;
+
+	const desiredIndex = targetIndex + 1;
+
+	// If source is already at the desired position, no move needed
+	if (sourceIndex === desiredIndex) return null;
+
+	// Return the target index (where source should be positioned)
+	return desiredIndex;
 }

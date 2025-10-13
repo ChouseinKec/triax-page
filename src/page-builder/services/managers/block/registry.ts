@@ -10,7 +10,7 @@ import type { BlockDefinition, BlockType, BlockID } from '@/src/page-builder/cor
 import type { ReactNode } from 'react';
 
 // Helpers
-import { isBlockChildPermitted } from '@/src/page-builder/services/helpers/block';
+import { canBlockMoveInto } from '@/src/page-builder/services/helpers/block';
 import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
 import { validateBlockType, validateBlockID } from '@/src/page-builder/services/helpers/validate';
 
@@ -62,7 +62,7 @@ export function canBlockAcceptChild(parentType: BlockType, childType: BlockType)
 		.execute();
 	if (!safeData) return false;
 
-	return isBlockChildPermitted(parentType, childType);
+	return canBlockMoveInto(parentType, childType);
 }
 
 

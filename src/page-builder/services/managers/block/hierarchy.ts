@@ -11,7 +11,7 @@ import { devLog } from '@/src/shared/utilities/dev';
 // Helpers
 import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
 import { validateBlockID } from '@/src/page-builder/services/helpers/validate';
-import { isBlockChildPermitted, moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant } from '@/src/page-builder/services/helpers/block';
+import { canBlockMoveInto, moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, canBlockMoveBefore, canBlockMoveAfter } from '@/src/page-builder/services/helpers/block';
 
 /**
  * Retrieves the next block in the hierarchy for block hierarchy operations.
@@ -107,18 +107,18 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.type, safeData.sourceBlock.type);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockAfter] Block type not allowed as sibling`);
 
-	// If the target block is not found in the parent's contentIDs
-	const targetBlockIndex = safeData.targetParentBlock.contentIDs.indexOf(safeData.targetBlock.id);
-	if (targetBlockIndex === -1) return devLog.error(`[BlockManager → moveBlockAfter] Target block not found in parent`);
+	// Check if move is needed
+	const targetIndex = canBlockMoveAfter(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
+	if (!targetIndex) return devLog.warn(`[BlockManager → moveBlockAfter] Block is already positioned after target or invalid operation`);
 
 	blockStore.updateBlocks(
 		moveBlock(
 			safeData.sourceBlockID, //
 			safeData.targetParentBlock.id,
-			targetBlockIndex + 1,
+			targetIndex,
 			blockStore.allBlocks
 		)
 	);
@@ -153,18 +153,18 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.type, safeData.sourceBlock.type);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
 
-	// If the target block is not found in the parent's contentIDs
-	const targetBlockIndex = safeData.targetParentBlock.contentIDs.indexOf(safeData.targetBlock.id);
-	if (targetBlockIndex === -1) return devLog.error(`[BlockManager → moveBlockBefore] Target block not found in parent`);
+	// Check if move is needed
+	const targetIndex = canBlockMoveBefore(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
+	if (!targetIndex) return devLog.warn(`[BlockManager → moveBlockBefore] Block is already positioned before target or invalid operation`);
 
 	blockStore.updateBlocks(
 		moveBlock(
 			safeData.sourceBlockID, //
 			safeData.targetParentBlock.id,
-			targetBlockIndex,
+			targetIndex,
 			blockStore.allBlocks
 		)
 	);
@@ -193,7 +193,7 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = isBlockChildPermitted(safeData.targetBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetBlock.type, safeData.sourceBlock.type);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
 
 	blockStore.updateBlocks(
