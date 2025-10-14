@@ -1,11 +1,11 @@
 "use client";
-import React, { memo } from "react";
+import React from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import type { BlockAttributesProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { BlockAttributesProps } from "./types";
 
 // Components
 import BlockAttributesLayouts from "@/src/page-builder/ui/inspectors/block/attribute/layout/component";
@@ -27,7 +27,7 @@ const BlockAttributes: React.FC<BlockAttributesProps> = () => {
         <div className={CSS.BlockAttributes} >
             {selectedBlockID
                 ? <BlockAttributesLayouts />
-                : <p className={CSS.BlockAttributes__Empty}>
+                : <p className={CSS.Empty}>
                     No block selected. Select a block to see attribute-specific settings.
                 </p>
             }
@@ -35,5 +35,6 @@ const BlockAttributes: React.FC<BlockAttributesProps> = () => {
     );
 };
 
+BlockAttributes.displayName = "BlockAttributes";
 export default BlockAttributes;
 

@@ -48,7 +48,7 @@ export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 /**
  * Children blocks (React nodes)
  */
-export type BlockChildren = ReactElement;
+export type BlockChildren = ReactElement | ReactElement[] ;
 
 /**
  * Function to render a block instance with optional children

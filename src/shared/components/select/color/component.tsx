@@ -1,48 +1,47 @@
 "use client";
 
-import React, { memo, ReactElement, useCallback } from "react";
+import React, { memo, ReactElement } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import { ColorSelectProps } from "@/src/shared/components/select/color/types";
+import type { ColorSelectProps } from "./types";
 
 // Hooks
 import { useDebouncedCallback } from "@/src/shared/hooks/utility/useCallback";
 
 /**
  * ColorSelect Component
- * 
- * A controlled color picker component that allows users to pick a color.
- * The color is represented in RGBA format and can be customized via a `DropdownReveal` component.
  *
- * @component
- * @param {ColorSelectProps} props - Component props
- * @param {string} props.value - The current color value (in RGBA format)
- * @param {(value: string) => void} props.onChange - Handler function for when the color changes
- * @param {string} [props.placeholder="Pick"] - Placeholder text for the DropdownReveal toggle
- * @returns {ReactElement} - The rendered color picker component
+ * A controlled color picker component that provides a native HTML color input with debounced change handling.
+ * Displays a visual color preview and allows users to select colors with smooth interaction feedback.
+ *
+ * @param  props - Component properties
+ * @param  props.value - The current color value in RGBA format
+ * @param  props.onChange - Callback function triggered when the color changes
+ * @returns Rendered color picker with visual preview and input control
+ *
+ * @note Uses 100ms debouncing to prevent excessive callback invocations during color selection
  */
-const ColorSelect: React.FC<ColorSelectProps> = (props: ColorSelectProps): ReactElement => {
-    const {
-        value,
-        onChange,
-    } = props;
-
+const ColorSelect: React.FC<ColorSelectProps> = ({
+    value,
+    onChange,
+}): ReactElement => {
     const debouncedOnChange = useDebouncedCallback(onChange, 100);
-
-    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    
+    // Handle input change events with debounced callback
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         debouncedOnChange(event.target.value);
-    }, [debouncedOnChange]);
-
+    };
 
     return (
-        <div className={CSS.ColorSelect} style={{ backgroundColor: value }}>
-            <input className={CSS.Input} type="color" value={value} onChange={handleChange} />
+        <div className={`${CSS.ColorSelect} ColorSelect`} style={{ backgroundColor: value }}>
+            <input className={`${CSS.Input} Input`} type="color" value={value} onChange={handleChange} />
         </div>
     );
 
 };
 
+ColorSelect.displayName = "ColorSelect";
 export default memo(ColorSelect);

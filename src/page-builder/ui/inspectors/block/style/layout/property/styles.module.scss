@@ -18,7 +18,7 @@
 	}
 }
 
-.Property__Label {
+.Label {
 	> span {
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -33,19 +33,23 @@
 	}
 }
 
-.Tooltip__Title {
+.Value {
+	width: 100%;
+}
+
+.Title {
 	text-transform: capitalize;
 	font-size: var(--font-size-lg);
 	font-weight: 600;
 }
 
-.Tooltip__Description {
+.Description {
 	font-size: var(--font-size-md);
 	line-height: var(--size-xl);
 	max-width: 200px;
 }
 
-.Tooltip__Actions {
+.Actions {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -66,8 +70,4 @@
 			height: 100%;
 		}
 	}
-}
-
-.Property__Value {
-	width: 100%;
 }

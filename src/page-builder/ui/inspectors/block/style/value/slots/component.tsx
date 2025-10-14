@@ -9,24 +9,24 @@ import BlockStylesSlot from "@/src/page-builder/ui/inspectors/block/style/value/
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 
 // Types
-import type { BlockStylesSlotsProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import type { BlockStylesSlotsProps } from "./types";
 
 /**
  * BlockStylesSlots Component
- * Renders a row of Slot components for each value slot, plus an extra dropdown for the next possible slot.
- * Handles incremental slot-based value editing for a CSS property.
  *
- * @param props - BlockStylesSlots containing values, options, and onChange callback
- * @returns The rendered slot editor UI
+ * A multi-slot value editor that manages arrays of CSS property values with incremental slot addition.
+ * Renders individual slot editors for each value and provides intelligent UI for adding subsequent slots.
+ * Uses radio buttons for single keyword options and dropdowns for complex multi-option slots.
+ *
+ * @param  props - Component properties
+ * @param  props.values - Array of current CSS values for each slot
+ * @param  props.options - Two-dimensional array of options for each slot position
+ * @param  props.onChange - Callback triggered when any slot value changes
+ * @returns Rendered collection of slot editors with optional next-slot adder
+ *
+ * @note Automatically chooses between radio and dropdown UI based on next slot's option complexity
  */
 const BlockStylesSlots: React.FC<BlockStylesSlotsProps> = ({ values, options, onChange }) => {
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[Slots] No options provided", { options });
-    if (!values || !Array.isArray(values)) return devRender.error("[Slots] No values provided", { values });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[Slots] Invalid onChange callback", { onChange });
-
     const valuesLength = values.length;
     const nextOptions = options[valuesLength];
     const slotsLength = options.length;
@@ -99,8 +99,8 @@ const BlockStylesSlots: React.FC<BlockStylesSlotsProps> = ({ values, options, on
                 searchable={false}
                 groupable={true}
                 title="Select Next Slot"
+                className='BlockStylesNextSlot'
                 onChange={(val: string) => handleSlotChange(val, valuesLength)}
-                className="NextSlotDropdown"
             />
         );
 
@@ -114,4 +114,5 @@ const BlockStylesSlots: React.FC<BlockStylesSlotsProps> = ({ values, options, on
     );
 };
 
+BlockStylesSlots.displayName = "BlockStylesSlots";
 export default memo(BlockStylesSlots);

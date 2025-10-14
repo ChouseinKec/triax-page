@@ -8,22 +8,24 @@ import CSS from "./styles.module.scss";
 import ColorSelect from "@/src/shared/components/select/color/component";
 
 // Types
-import type { BlockStylesValueColorProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { ColorValueProps } from "./types";
 
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
 
 /**
- * BlockStylesValueColor Component
- * Renders a color picker component for CSS color values with validation and user-friendly interface.
+ * ColorValue Component
  *
- * @param value - Current CSS color value (e.g., "#ff0000", "rgb(255,0,0)")
- * @param onChange - Callback when the color value changes
- * @returns The rendered color picker component
+ * A specialized color picker component for CSS style value editing in the page builder.
+ * Provides a user-friendly interface for selecting and modifying color values with real-time preview.
+ * Wraps the ColorSelect component with debounced change handling for smooth editing experience.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current CSS color value (hex, rgb, rgba, hsl, etc.)
+ * @param  props.onChange - Callback triggered when color value changes
+ * @returns Rendered color picker with visual preview and input control
+ *
+ * @note Uses 100ms debouncing to prevent excessive callback invocations during color selection
  */
-const BlockStylesValueColor: React.FC<BlockStylesValueColorProps> = ({ value, onChange }) => {
-	if (typeof value !== "string") return devRender.error("[BlockStylesValueColor] No value provided", { value });
-	if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValueColor] Invalid onChange callback", { onChange });
+const ColorValue: React.FC<ColorValueProps> = ({ value, onChange }) => {
 
 	// Handle color value changes
 	const handleChange = useCallback((newValue: string) => {
@@ -32,7 +34,7 @@ const BlockStylesValueColor: React.FC<BlockStylesValueColorProps> = ({ value, on
 	);
 
 	return (
-		<div className={CSS.BlockStylesValueColor}>
+		<div className={`${CSS.ColorValue} ColorValue`}>
 			<ColorSelect
 				value={value}
 				onChange={handleChange}
@@ -41,4 +43,5 @@ const BlockStylesValueColor: React.FC<BlockStylesValueColorProps> = ({ value, on
 	);
 };
 
-export default memo(BlockStylesValueColor);
+ColorValue.displayName = "ColorValue";
+export default memo(ColorValue);

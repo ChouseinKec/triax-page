@@ -1,9 +1,8 @@
 "use client";
-
 import { memo, useCallback } from "react";
 
 // Types
-import type { BlockAttributesValueProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { BlockAttributesValueProps } from "./types";
 
 // Constants
 import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/constants";
@@ -14,8 +13,11 @@ import { useBlockAttribute, setBlockAttribute } from "@/src/page-builder/service
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";
 
+// Styles
+import CSS from "./styles.module.scss";
+
 // Components
-import InputGeneric from "@/src/shared/components/input/generic/component";
+import GenericInput from "@/src/shared/components/input/generic/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 import RadioSelect from "@/src/shared/components/select/radio/component";
 
@@ -28,9 +30,6 @@ import RadioSelect from "@/src/shared/components/select/radio/component";
  * @returns ReactElement - The rendered value editor UI for the property.
  */
 const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, attribute }) => {
-    if (!blockID) return devRender.error("[BlockAttributesValue] No block ID provided", { blockID });
-    if (!attribute) return devRender.error("[BlockAttributesValue] No attribute provided", { attribute });
-
     const value = useBlockAttribute(blockID, attribute) || "";
 
     const handleChange = useCallback((newValue: string) => {
@@ -39,7 +38,6 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
     );
 
     const definition = ATTRIBUTE_DEFINITIONS[attribute];
-
     if (!definition) return devRender.error(`[BlockAttributesValue] No definition found for ${attribute}`, { definition });
 
     const renderValue = () => {
@@ -48,26 +46,23 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
 
         switch (type) {
             case "string":
-                return <InputGeneric value={value} onChange={handleChange} type="text" />;
+                return <GenericInput value={value} onChange={handleChange} type="text" />;
             case "number":
-                return <InputGeneric value={value} onChange={handleChange} type="number" />;
+                return <GenericInput value={value} onChange={handleChange} type="number" />;
             case "list":
                 const listOptions = definition.syntax.options;
-                if (!listOptions) return devRender.error(`[BlockAttributesValue] No options defined for list type of ${attribute}`, { definition });
                 return <DropdownSelect value={value} onChange={handleChange} options={listOptions} />;
             case "radio":
                 const radioOptions = definition.syntax.options;
-                if (!radioOptions) return devRender.error(`[BlockAttributesValue] No options defined for radio type of ${attribute}`, { definition });
                 return <RadioSelect prioritizeIcons={false} value={value} onChange={handleChange} options={radioOptions} />;
             default:
-                return devRender.error(`[BlockAttributesValue] Unsupported type "${type}" for ${attribute}`, { definition });
+                return <span className={CSS.Unsupported}>Unsupported value type</span>;
         }
     };
 
-
     return renderValue();
-
 };
 
+BlockAttributesValue.displayName = "BlockAttributesValue";
 export default memo(BlockAttributesValue);
 

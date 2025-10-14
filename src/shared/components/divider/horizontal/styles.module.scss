@@ -27,6 +27,7 @@ $variation-solid: 1px solid var(--theme-color-primary-tint);
 		}
 	}
 
+	// If no title and solid variation is provided, create a solid line
 	&:not([data-title])[data-variation='solid'] {
 		&::before {
 			border: $variation-solid;

@@ -22,7 +22,7 @@ import type { Side, Corner } from '@/src/shared/components/select/position/types
  * generateStyleKey('background', undefined, 'color'); → 'background-color'
  * generateStyleKey('color'); → 'color'
  */
-export function generateStyleKey(styleKey: StyleKey, position?: Side | Corner, suffix?: string): StyleKey | undefined {
+export function generateStyleKey(styleKey: string, position?: Side | Corner, suffix?: string): StyleKey | undefined {
 	// Pattern 4: Just the base property (e.g., 'color', 'display')
 	if (!position && !suffix) {
 		return styleKey as StyleKey;

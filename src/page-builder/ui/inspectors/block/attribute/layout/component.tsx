@@ -10,7 +10,7 @@ import Category from "@/src/page-builder/ui/inspectors/block/attribute/category/
 import TabGroup from "@/src/shared/components/group/tab/component";
 
 // Types
-import type { BlockAttributesLayoutsProps, BlockAttributesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./hooks/types";
 
 // Hooks
 import { useGlobalLayout } from "@/src/page-builder/ui/inspectors/block/attribute/layout/hooks/global";
@@ -18,14 +18,19 @@ import { useSpecificLayout } from "@/src/page-builder/ui/inspectors/block/attrib
 
 /**
  * BlockAttributesLayouts Component
- * Renders the attribute editor layouts organized in tabs for better user experience.
  *
- * @returns The rendered layout with tabbed interface for attribute editing
+ * A tabbed interface that organizes HTML attribute editing into logical categories for the page builder.
+ * Aggregates global and block-specific attribute layouts into navigable tabs using custom hooks.
+ * Each tab contains categorized attribute controls rendered through the Category component.
+ *
+ * @returns Rendered tabbed attribute editor with categorized property controls
+ *
+ * @note Uses custom hooks to generate layout configurations for global and specific attributes
  */
-const BlockAttributesLayouts: React.FC<BlockAttributesLayoutsProps> = () => {
-  
+const BlockAttributesLayouts: React.FC = () => {
+
     // Fetch all layouts
-    const allLayouts: BlockAttributesLayoutProps[] = [
+    const allLayouts: LayoutProps[] = [
         useGlobalLayout(),
         useSpecificLayout(),
     ];
@@ -44,4 +49,5 @@ const BlockAttributesLayouts: React.FC<BlockAttributesLayoutsProps> = () => {
     )
 };
 
+BlockAttributesLayouts.displayName = "BlockAttributesLayouts";
 export default memo(BlockAttributesLayouts);

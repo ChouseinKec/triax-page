@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -8,20 +7,21 @@ import CSS from "./styles.module.scss";
 // Components
 import BlockStylesLayouts from "@/src/page-builder/ui/inspectors/block/style/layout/component";
 
-// Types
-import type { BlockStylesProps } from "@/src/page-builder/ui/inspectors/block/types";
-
 // Managers
 import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
 
 /**
  * BlockStyles Component
- * Displays style controls for the currently selected block.
- * Shows a fallback message when no block is selected.
  *
- * @returns The rendered style controls or fallback message
+ * The main style inspector panel that displays CSS property controls for the currently selected block in the page builder.
+ * Conditionally renders comprehensive style editing interface or informative fallback when no block is selected.
+ * Serves as the primary interface for visual block customization and property management.
+ *
+ * @returns Rendered style inspector panel with block-specific controls or selection prompt
+ *
+ * @note Relies on block selection state to determine which style controls to display
  */
-const BlockStyles: React.FC<BlockStylesProps> = () => {
+const BlockStyles: React.FC = () => {
     // Get the currently selected block ID
     const selectedBlockID = useSelectedBlockID();
 

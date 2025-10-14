@@ -1,33 +1,35 @@
 "use client";
-
 import { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockStylesGroup from "../group/component";
+import Group from "../group/component";
 
 // Types
-import { BlockStylesCategoryProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import { CategoryProps } from "./types";
 
 /**
- * BlockStylesCategory Component
- * Renders a list of style groups in a category layout for better user experience.
+ * Category Component
  *
- * @param groups - The groups to render in the category
- * @returns The rendered category with style groups
+ * A container component that organizes and renders multiple style groups within a category.
+ * Provides structured layout for related CSS properties, supporting expandable sections and custom styling.
+ * Acts as an intermediate layer between tabbed layouts and individual property groups.
+ *
+ * @param  props - Component properties
+ * @param  props.groups - Array of style group configurations to render
+ * @returns Rendered category containing organized style property groups
+ *
+ * @note Each group can be individually configured for expandability and visibility
  */
-const BlockStylesCategory: React.FC<BlockStylesCategoryProps> = ({ groups }) => {
-    if (!groups || !Array.isArray(groups) || groups.length === 0) return devRender.error("[BlockStylesCategory] No groups to render");
+const Category: React.FC<CategoryProps> = ({ groups }) => {
     return (
-        <div className={CSS.BlockStylesCategory}>
+        <div className={CSS.Category}>
+
             {/* Render each group in the category */}
             {groups.map((group, index) => (
-                <BlockStylesGroup
+                <Group
                     key={index}
                     properties={group.properties}
                     hidden={group.hidden}
@@ -40,4 +42,5 @@ const BlockStylesCategory: React.FC<BlockStylesCategoryProps> = ({ groups }) => 
     );
 };
 
-export default memo(BlockStylesCategory);
+Category.displayName = "Category";
+export default memo(Category);

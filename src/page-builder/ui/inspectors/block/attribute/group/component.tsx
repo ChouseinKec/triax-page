@@ -1,53 +1,55 @@
 "use client";
-
 import { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockAttributesProperty from "@/src/page-builder/ui/inspectors/block/attribute/property/component";
+import Property from "@/src/page-builder/ui/inspectors/block/attribute/property/component";
 import DividerReveal from "@/src/shared/components/reveal/divider/component";
 import HorizontalDivider from "@/src/shared/components/divider/horizontal/component";
 
 // Types
-import type { BlockAttributesGroupProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import type { GroupProps } from "./types";
 
 /**
- * BlockAttributesGroup Component
- * Renders the attribute editor group organized in a grid for better user experience.
+ * Group Component
  *
- * @param properties - The properties to render in the group
- * @param hidden - Flag to determine if the group should be visible
- * @param isExpandable - Whether the group is expandable
- * @param dividerTitle - Title for the divider
- * @param styles - Additional styles for the group
- * @returns The rendered group with grid interface for attribute editing
+ * A container for organizing related HTML attribute properties with support for expandable sections.
+ * Renders properties in a structured layout with optional dividers and collapsible functionality.
+ * Provides visual organization for complex attribute sets in the block inspector.
+ *
+ * @param  props - Component properties
+ * @param  props.properties - Array of property configurations to render
+ * @param  props.hidden - Whether to completely hide this group
+ * @param  props.isExpandable - Enables collapsible section with divider toggle
+ * @param  props.dividerTitle - Title for the divider when expandable
+ * @param  props.styles - Custom styles for the group container
+ * @returns Rendered attribute group with optional expandable wrapper
+ *
  */
-const BlockAttributesGroup: React.FC<BlockAttributesGroupProps> = ({ properties, hidden, isExpandable, dividerTitle, styles }) => {
-    if (!properties || !Array.isArray(properties) || properties.length === 0) return devRender.error("[BlockAttributesGroup] No properties to render");
+const Group: React.FC<GroupProps> = ({ properties, hidden, isExpandable, dividerTitle, styles }) => {
     if (hidden === true) return null;
 
-    // Map properties to BlockAttributesProperty components
+    // Map properties to Property components
     const propertyInstances = properties.map((property, index) => (
-        <BlockAttributesProperty
+        <Property
             key={property.label || index}
             {...property}
         />
     ));
 
     return (
-        <div className={CSS.BlockAttributesGroup} style={styles}>
+        <div className={CSS.Group} style={styles}>
             {isExpandable ?
-                <DividerReveal className="BlockAttributesGroup__Reveal" title={dividerTitle} contentStyles={styles}>
-                    {propertyInstances}
+                <DividerReveal title={dividerTitle}>
+                    <div className={CSS.Content} style={styles}>
+                        {propertyInstances}
+                    </div>
                 </DividerReveal>
                 :
                 <>
-                    {dividerTitle !== undefined && <HorizontalDivider className="BlockAttributesGroup__Divider" title={dividerTitle} />}
+                    {dividerTitle !== undefined && <HorizontalDivider title={dividerTitle} />}
                     {propertyInstances}
                 </>
             }
@@ -55,4 +57,5 @@ const BlockAttributesGroup: React.FC<BlockAttributesGroupProps> = ({ properties,
     );
 };
 
-export default memo(BlockAttributesGroup);
+Group.displayName = "Group";
+export default memo(Group);

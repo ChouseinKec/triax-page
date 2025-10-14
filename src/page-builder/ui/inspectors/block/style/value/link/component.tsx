@@ -8,24 +8,24 @@ import CSS from "./styles.module.scss";
 import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Types
-import { BlockStylesValueLinkProps } from "@/src/page-builder/ui/inspectors/block/types";
+import { LinkValueProps } from "./types";
 
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
 
 /**
- * BlockStylesValueLink Component
- * Renders a text input for editing a URL value.
- * Ensures the value is always formatted as "https://example.com" (with quotes).
+ * LinkValue Component
  *
- * @param props - BlockStylesValueLinkProps containing value and onChange callback
- * @returns The rendered link input component
+ * A specialized URL input component for CSS link values with automatic formatting and comprehensive validation.
+ * Automatically wraps URLs in quotes and prepends "https://" protocol for proper CSS syntax.
+ * Provides real-time validation preventing protocols, local files, and invalid domains.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current URL value (will be formatted as quoted https URL)
+ * @param  props.onChange - Callback triggered when URL changes
+ * @returns Rendered URL input with validation and automatic formatting
+ *
+ * @note Automatically formats input as "https://domain.com" and validates against local/invalid URLs
  */
-const BlockStylesValueLink: React.FC<BlockStylesValueLinkProps> = ({ value, onChange }) => {
-    // Validate input props
-    if (typeof value !== 'string') return devRender.error("[BlockStylesValueLink] No value provided", { value });
-    if (!onChange || typeof onChange !== 'function') return devRender.error("[BlockStylesValueLink] Invalid onChange callback", { onChange });
-
+const LinkValue: React.FC<LinkValueProps> = ({ value, onChange }) => {
     // Prepare value for display by removing quotes and protocol
     const safeValue = value.replaceAll('"', '').replace(/^https:\/\//, '');
 
@@ -79,7 +79,8 @@ const BlockStylesValueLink: React.FC<BlockStylesValueLinkProps> = ({ value, onCh
 
     // Render the link input component
     return (
-        <div className={CSS.BlockStylesValueLink}>
+        <div className={CSS.LinkValue}>
+
             {/* URL input field with validation */}
             <GenericInput
                 value={safeValue}
@@ -92,4 +93,5 @@ const BlockStylesValueLink: React.FC<BlockStylesValueLinkProps> = ({ value, onCh
     );
 };
 
-export default memo(BlockStylesValueLink);
+LinkValue.displayName = "LinkValue";
+export default memo(LinkValue);

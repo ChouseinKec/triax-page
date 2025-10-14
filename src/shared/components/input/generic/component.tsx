@@ -1,57 +1,57 @@
 "use client";
 
-import React, { useCallback, memo, useRef, useMemo, useReducer, useEffect, useState } from "react";
+import React, { memo, useRef, useReducer, useEffect, useState } from "react";
 
 // Styles
-import CSS from "./style.module.scss";
+import CSS from "./styles.module.scss";
 
 // Components
 import FloatReveal from "@/src/shared/components/reveal/float/component";
 
 // Types
-import type { GenericInputProps } from "./type";
+import type { GenericInputProps } from "./types";
 
 // Utilities
-import { devLog } from "@/src/shared/utilities/dev";
 import { validationReducer } from "./reducer";
 
-// Hooks
-import { useSafeCallback } from "@/src/shared/hooks/utility/useCallback";
 
 /**
- * GenericInput Component (Controlled, idiomatic React)
+ * GenericInput Component
+ *
+ * A sophisticated, controlled input component with built-in validation, error handling,
+ * and user experience enhancements. Supports both text and number inputs with automatic
+ * constraint handling and real-time validation feedback.
+ *
+ * @param props - Component properties
+ * @param props.value - Current input value (required)
+ * @param props.onChange - Callback fired when value changes (required)
+ * @param props.type - Input type: 'text' (default) or 'number'
+ * @param props.placeholder - Placeholder text when input is empty
+ * @param props.min - Minimum value (numbers) or minimum length (text)
+ * @param props.max - Maximum value (numbers) or maximum length (text)
+ * @param props.title - Tooltip title for additional context
+ * @param props.className - Additional CSS classes for styling
+ * @param props.onValidate - Custom validation function returning {status, message}
+ * @param props.onFocus - Callback when input receives focus
+ * @param props.onBlur - Callback when input loses focus
+ * @returns The rendered GenericInput component with validation UI
  */
-const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => {
-    const {
-        // Core
-        value,
-        type = "text",
-        placeholder = `Enter ${type}`,
-        style = {},
-        // Validation
-        min = -Infinity,
-        max = Infinity,
-
-        // Accessibility
-        title = "Enter Value",
-        className = "GenericInput",
-
-        // Event
-        onChange,
-        onFocus = () => { },
-        onBlur = () => { },
-        onValidate,
-    } = props;
-
-    // Internal state for editing
+const GenericInput: React.FC<GenericInputProps> = ({
+    value,
+    type = "text",
+    placeholder = `Enter ${type}`,
+    min = -Infinity,
+    max = Infinity,
+    title = "Enter Value",
+    className = "",
+    onChange,
+    onFocus = () => { },
+    onBlur = () => { },
+    onValidate,
+}) => {
     const [internalValue, setInternalValue] = useState(value ?? "");
     const inputRef = useRef<HTMLInputElement>(null);
     const [validationState, validationDispatch] = useReducer(validationReducer, { isError: false, message: "" });
-
-    // Safe validator
-    const safeOnValidate = useSafeCallback(onValidate, () =>
-        validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } })
-    );
 
     // Sync internal value with prop when value changes (e.g. block switch)
     useEffect(() => {
@@ -59,17 +59,15 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
     }, [value]
     );
 
-
     // Data attributes for styling
-    const dataAttributes = useMemo(() => ({
+    const dataAttributes = {
         "title": title,
         "data-is-error": validationState.isError,
         "data-type": type,
-    }), [type, validationState, title]
-    );
+    };
 
     // Input attributes
-    const inputAttributes = useMemo(() => {
+    const inputAttributes = (() => {
         const isNumberType = type === "number";
         const isTextType = type === "text";
         const hasValidMin = min > -Infinity;
@@ -82,20 +80,25 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             maxLength: isTextType && hasValidMax ? max : undefined,
             placeholder
         };
-    }, [type, min, max, placeholder]
-    );
+    })();
 
     // Reset input to prop value and clear error
-    const handleReset = useCallback((): void => {
+    const handleReset = (): void => {
         setInternalValue(value ?? "");
         validationDispatch({ type: "CLEAR" });
-    }, [value]
-    );
+    }
 
     // Commit value to parent (on blur/enter)
-    const handleCommit = useCallback((): void => {
+    const handleCommit = (): void => {
         const inputValue = internalValue.trim();
-        const validationResult = safeOnValidate(inputValue);
+        let validationResult;
+
+        try {
+            validationResult = onValidate?.(inputValue);
+        } catch (error) {
+            validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } });
+            return;
+        }
 
         // If input is empty, clear the value
         if (inputValue === "") return onChange("");
@@ -105,18 +108,16 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
         if (validationResult && !validationResult.status) {
             validationDispatch({ type: "VALIDATION_FAILURE", payload: { message: validationResult.message } });
             onChange("");
-            devLog.warn(`[GenericInput] Validation failed: ${validationResult.message}`);
             return;
         }
 
         if (validationResult?.status) validationDispatch({ type: "VALIDATION_SUCCESS" });
         if (inputValue !== value) onChange(inputValue);
 
-    }, [internalValue, value, onChange, onValidate, safeOnValidate]
-    );
+    };
 
     // Keyboard events
-    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         switch (event.key) {
             case "Enter":
                 event.preventDefault();
@@ -129,52 +130,49 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
             default:
                 break;
         }
-    }, [handleCommit, handleReset]
-    );
+    }
 
     // Real-time validation on change
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const newValue = e.target.value;
         setInternalValue(newValue);
 
-        const validationResult = safeOnValidate(newValue);
-        if (validationResult === undefined) return;
+        if (!onValidate) return;
+
+        let validationResult;
+        try {
+            validationResult = onValidate(newValue);
+        } catch (error) {
+            validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } });
+            return;
+        }
 
         if (validationResult.status) {
             validationDispatch({ type: "VALIDATION_SUCCESS" });
         } else {
             validationDispatch({ type: "VALIDATION_FAILURE", payload: { message: validationResult.message } });
         }
-    }, [safeOnValidate]
-    );
+    }
 
     // Blur handler: commit and reset
-    const handleBlur = useCallback((): void => {
+    const handleBlur = (): void => {
         onBlur();
         handleCommit();
-    }, [onBlur, handleCommit]
-    );
-
-    // Guard Clause
-    if (value == null) {
-        devLog.warn("[GenericInput] Invalid value provided, expected a string");
-        return null;
-    }
+    };
 
     return (
         <>
             <input
+                className={`${CSS.GenericInput} GenericInput ${className}`}
                 ref={inputRef}
                 type={type}
                 value={internalValue}
-                className={`${CSS.GenericInput} ${className}`}
                 {...inputAttributes}
                 {...dataAttributes}
                 onBlur={handleBlur}
                 onFocus={onFocus}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
-                style={style}
             />
 
             {/* Error message tooltip - only shown when there's an error */}
@@ -183,8 +181,8 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
                 targetRef={inputRef}
                 isOpen={validationState.isError}
             >
-                <span className={CSS.ErrorMessage} role="alert">
-                    <span className={CSS.ErrorIcon} aria-hidden="true">✖</span>
+                <span className={`${CSS.ErrorMessage} ErrorMessage`}>
+                    <span className={`${CSS.ErrorIcon} ErrorIcon`}>✖</span>
                     {validationState.message}
                 </span>
             </FloatReveal>
@@ -192,4 +190,5 @@ const GenericInput: React.FC<GenericInputProps> = (props: GenericInputProps) => 
     );
 };
 
+GenericInput.displayName = "GenericInput";
 export default memo(GenericInput);

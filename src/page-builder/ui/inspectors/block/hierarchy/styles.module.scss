@@ -9,7 +9,7 @@
 	height: 100%;
 }
 
-.BlocksEditorHierarchy__Empty {
+.Empty {
 	@include inputMixins.components--flex-vertical($align: center);
 	height: 100%;
 	color: var(--color-white);

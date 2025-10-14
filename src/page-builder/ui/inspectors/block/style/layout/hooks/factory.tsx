@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Managers
 import { useBlockStyle, setBlockStyle } from '@/src/page-builder/services/managers/block/style';
@@ -27,7 +27,7 @@ const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: str
 
     return (
         <BlockStylesValue
-            value={value}
+            value={value || ''}
             onChange={(newValue) => setBlockStyle(blockID, propertyName, newValue)}
             property={property}
         />

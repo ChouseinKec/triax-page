@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Types
-import type { BlockStylesValueFunctionProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { FunctionValueProps } from "./types";
 import type { StyleKey } from "@/src/page-builder/core/block/style/types";
 
 // Components
@@ -21,19 +21,19 @@ import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from
 import { devRender } from "@/src/shared/utilities/dev";
 
 /**
- * BlockStylesValueFunction Component
- * Renders a controlled input component for CSS function values with separate controls for function selection and arguments.
+ * FunctionValue Component
  *
- * @param value - Current CSS function value (e.g., "repeat(2, 1fr)")
- * @param options - Available function options with categories and syntax
- * @param onChange - Callback for value changes
- * @returns The rendered function input component
+ * An advanced CSS function value editor for the page builder that provides separate controls for function selection and argument editing.
+ * Parses CSS function syntax (e.g., "repeat(2, 1fr)") and allows users to change function types while preserving arguments.
+ * Features dropdown selection for function types and integrated value editing for arguments.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current CSS function value with syntax like "function(args)"
+ * @param  props.options - Array of available CSS function options with categories and syntax
+ * @param  props.onChange - Callback triggered when function value changes
+ * @returns Rendered function editor with type selector and argument input
  */
-const BlockStylesValueFunction: React.FC<BlockStylesValueFunctionProps> = ({ value, options, onChange }) => {
-    if (typeof value !== "string") return devRender.error("[BlockStylesValueFunction] No value provided", { value });
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesValueFunction] No options provided", { options });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValueFunction] Invalid onChange callback", { onChange });
-
+const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
     const functionOptions = filterFunctionOptions(options);
     const currentOption = matchFunctionOption(functionOptions, value);
     const createdProperty = createProperty(currentOption.name as StyleKey, currentOption.syntax);
@@ -67,14 +67,19 @@ const BlockStylesValueFunction: React.FC<BlockStylesValueFunctionProps> = ({ val
         onChange(newOptionValue);
     }
 
-    if (!extractedValue.name || !extractedValue.value) return devRender.error("[BlockStylesValueFunction] Malformed function value - missing name or arguments.", { value, extractedValue });
-    if (!currentOption) return devRender.error("[BlockStylesValueFunction] No valid function option available.", { options, functionOptions });
-    if (!createdProperty) return devRender.error("[BlockStylesValueFunction] No valid property available for the current function option.", { currentOption });
+    if (!extractedValue.name || !extractedValue.value) return devRender.error("[FunctionValue] Malformed function value - missing name or arguments.", { value, extractedValue });
+    if (!currentOption) return devRender.error("[FunctionValue] No valid function option available.", { options, functionOptions });
+    if (!createdProperty) return devRender.error("[FunctionValue] No valid property available for the current function option.", { currentOption });
 
     return (
-        <DropdownReveal closeOnChange={false} placeholder={`${extractedValue.name}()`} title="Edit Function">
+        <DropdownReveal
+            closeOnChange={false}
+            placeholder={`${extractedValue.name}()`}
+            title="Edit Function"
+        >
 
-            <div className={CSS.BlockStylesValueFunction} role="presentation">
+            <div className={`${CSS.FunctionValue} FunctionValue`} >
+
                 {/* Function selection dropdown */}
                 <DropdownSelect
                     options={options}
@@ -84,11 +89,10 @@ const BlockStylesValueFunction: React.FC<BlockStylesValueFunctionProps> = ({ val
                     placeholder="↺"
                     forcePlaceholder={true}
                     groupable={true}
-                    className="FunctionSelect"
                 />
 
                 {/* Visual separator */}
-                <span className={CSS.BlockStylesValueFunction__Separator} aria-hidden="true">⇄</span>
+                <span className={CSS.Separator} aria-hidden="true">⇄</span>
 
                 {/* Function arguments editor */}
                 <BlockStylesValue
@@ -102,4 +106,5 @@ const BlockStylesValueFunction: React.FC<BlockStylesValueFunctionProps> = ({ val
     );
 };
 
-export default memo(BlockStylesValueFunction);
+FunctionValue.displayName = "FunctionValue";
+export default memo(FunctionValue);

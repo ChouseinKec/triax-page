@@ -9,29 +9,30 @@ import CSS from "./styles.module.scss";
 import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
 
 // Types
-import type { BlockAttributesPropertyProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { PropertyProps } from "./types";
 
 // Constants
 import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/constants";
 
-// Utilities
-import { devRender, devLog } from "@/src/shared/utilities/dev";
-
 /**
- * BlockAttributesProperty Component
- * Renders the attribute editor property with label and input for better user experience.
+ * Property Component
  *
- * @param component - The component function to render the input
- * @param label - The label for the property
- * @param hidden - Whether the property is hidden
- * @param disabled - Whether the property is disabled
- * @param property - The HTML attribute key
- * @param styles - Additional styles
- * @returns The rendered property with input interface for attribute editing
+ * An individual HTML attribute editor with tooltip information and conditional rendering.
+ * Displays attribute labels with informational tooltips and provides controlled input components.
+ * Supports visibility and disabled states for flexible attribute management.
+ *
+ * @param  props - Component properties
+ * @param  props.component - Function that renders the attribute input component
+ * @param  props.label - Display label for the attribute (can be null to hide)
+ * @param  props.hidden - Whether to completely hide this attribute
+ * @param  props.disabled - Whether the attribute controls are disabled
+ * @param  props.property - HTML attribute key for tooltip information
+ * @param  props.styles - Custom CSS styles for the attribute container
+ * @returns Rendered attribute editor with label, tooltip, and input control
+ *
+ * @note Tooltip displays attribute name and description from definitions
  */
-const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ component, label, hidden, disabled, property, styles }) => {
-    if (!component || typeof component !== "function") return devRender.error("[BlockAttributesProperty] No component to render");
-    if (!property || typeof property !== "string") devLog.warn("[BlockAttributesProperty] No property key provided");
+const Property: React.FC<PropertyProps> = ({ component, label, hidden, disabled, property, styles }) => {
     if (hidden) return null;
 
     const labelRef = useRef<HTMLLabelElement>(null);
@@ -41,24 +42,24 @@ const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ compo
 
     return (
         <div
-            className={CSS.BlockAttributesProperty}
+            className={CSS.Property}
             style={styles}
             data-label={label?.toLocaleLowerCase()}
             data-disabled={disabled}
         >
             {/* Render the label and float reveal if provided */}
             {label && (
-                <div className={CSS.BlockAttributesProperty__Label}>
+                <div className={CSS.Label}>
                     <span ref={labelRef} aria-label="Property Label">
                         {label}
                     </span>
 
                     <TooltipReveal targetRef={labelRef} anchor="top">
-                        <div className={CSS.BlockAttributesProperty__FloatTitle} aria-label="Property Name">
+                        <div className={CSS.FloatTitle} aria-label="Property Name">
                             {propertyName}
                         </div>
 
-                        <div className={CSS.BlockAttributesProperty__FloatDescription} aria-label="Property Description">
+                        <div className={CSS.FloatDescription} aria-label="Property Description">
                             {propertyDescription}
                         </div>
                     </TooltipReveal>
@@ -66,11 +67,12 @@ const BlockAttributesProperty: React.FC<BlockAttributesPropertyProps> = ({ compo
             )}
 
             {/* Render the property input component */}
-            <div className={CSS.BlockAttributesProperty__Value}>
+            <div className={CSS.Value}>
                 {component()}
             </div>
         </div>
     );
 };
 
-export default memo(BlockAttributesProperty);
+Property.displayName = "Property";
+export default memo(Property);

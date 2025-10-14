@@ -1,7 +1,7 @@
 "use client";
 
 // Types
-import type { BlockStylesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./types";
 
 // Factory
 import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style/layout/hooks/factory";
@@ -14,9 +14,9 @@ import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
  * Custom hook for the Font & Text section configuration in the style editor.
  * This defines the structure and properties for typography and text styling.
  *
- * @returns {BlockStylesLayoutProps} The layout configuration for font and text settings.
+ * @returns {LayoutProps} The layout configuration for font and text settings.
  */
-export const useFontLayout = (): BlockStylesLayoutProps => {
+export const useFontLayout = (): LayoutProps => {
     const selectedBlockID = useSelectedBlockID();
     const layoutIcon = <svg aria-label="Font & Text Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill="black" d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>;
 

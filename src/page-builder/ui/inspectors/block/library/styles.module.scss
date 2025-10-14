@@ -12,7 +12,7 @@
 	overflow: hidden auto;
 }
 
-.BlockLibrary__Category {
+.Category {
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-sm);
@@ -20,7 +20,7 @@
 	padding-top: var(--size-lg);
 }
 
-.BlockLibrary__CategoryTitle {
+.CategoryTitle {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -35,7 +35,7 @@
 	border-bottom: 1px solid var(--theme-color-primary-tint);
 }
 
-.BlockLibrary__Blocks {
+.Blocks {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 
@@ -43,14 +43,14 @@
 	padding-top: var(--size-sm);
 }
 
-.BlockLibrary__BlockContainer {
+.BlockContainer {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: var(--size-sm);
 }
 
-.BlockLibrary__BlockButton {
+.BlockButton {
 	@include inputMixins.components--button;
 
 	height: auto;
@@ -66,13 +66,13 @@
 	}
 }
 
-.BlockLibrary__BlockTitle {
+.BlockTitle {
 	text-transform: capitalize;
 	font-size: var(--font-size-sm);
 	color: var(--color-white);
 }
 
-.BlockLibrary__Empty {
+.Fallback {
 	display: flex;
 	flex-direction: column;
 	align-items: center;

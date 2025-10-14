@@ -9,7 +9,7 @@ import Category from "./category/component";
 import TabGroup from "@/src/shared/components/group/tab/component";
 
 // Types 
-import type { BlockStylesLayoutProps, BlockStylesLayoutsProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./hooks/types";
 
 // Hooks
 import { useDisplayLayout } from "./hooks/display";
@@ -19,17 +19,21 @@ import { useBorderLayout } from "./hooks/border";
 import { useEffectLayout } from "./hooks/effect";
 import { useBackgroundLayout } from "./hooks/background";
 
-
 /**
  * BlockStylesLayouts Component
- * Renders the style editor layouts organized in tabs for better user experience.
  *
- * @returns The rendered layout with tabbed interface for style editing
+ * A tabbed interface that organizes CSS property editing into logical categories for improved user experience.
+ * Aggregates multiple style layout hooks (display, size, font, background, border, effects) into navigable tabs.
+ * Each tab contains grouped property controls rendered through the Category component.
+ *
+ * @returns Rendered tabbed style editor with categorized property controls
+ *
+ * @note Uses custom hooks to generate layout configurations for each style category
  */
-const BlockStylesLayouts: React.FC<BlockStylesLayoutsProps> = () => {
+const BlockStylesLayouts: React.FC = () => {
 
     // Fetch all layouts
-    const allLayouts: BlockStylesLayoutProps[] = [
+    const allLayouts: LayoutProps[] = [
         useDisplayLayout(),
         useSizeLayout(),
         useFontLayout(),

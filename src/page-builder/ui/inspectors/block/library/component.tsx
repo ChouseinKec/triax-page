@@ -12,13 +12,12 @@ import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Types
 import type { BlockDefinition, BlockType } from "@/src/page-builder/core/block/block/types";
-import type { BlockLiblaryProps } from "@/src/page-builder/ui/inspectors/block/types/liblary";
+import type { BlockLiblaryProps } from "./types";
 
 /**
  * BlockLibrary Component
  * Displays registered blocks as buttons to add them to the editor.
  *
- * @returns The rendered list with search and categorized block buttons
  */
 const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
     const registeredBlocks = getRegisteredBlocks();
@@ -72,11 +71,11 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
     const createBlockButton = useCallback((block: BlockDefinition) => {
         const blockType = block.type;
         return (
-            <div className={CSS.BlockLibrary__BlockContainer} key={blockType}>
-                <button className={CSS.BlockLibrary__BlockButton} onClick={() => handleAddBlock(blockType)}>
+            <div className={CSS.BlockContainer} key={blockType}>
+                <button className={CSS.BlockButton} onClick={() => handleAddBlock(blockType)}>
                     {block.icon}
                 </button>
-                <p className={CSS.BlockLibrary__BlockTitle}>{blockType}</p>
+                <p className={CSS.BlockTitle}>{blockType}</p>
             </div>
         );
     }, [handleAddBlock]
@@ -84,16 +83,16 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
 
     // Render block buttons, grouped by category if there are multiple categories
     const blockElements = useMemo(() => {
-        // If no blocks match the search, show an empty state
+        // If no blocks match the search, show an Fallback state
         if (searchedBlocks.length === 0) {
-            return <div className={CSS.BlockLibrary__Empty}>No blocks found.</div>;
+            return <div className={CSS.Fallback}>No blocks found.</div>;
         }
 
         // If only one category or no grouping, render as a flat list
         const categories = Object.keys(groupedBlocks);
         if (categories.length <= 1) {
             return (
-                <div className={CSS.BlockLibrary__Blocks}>
+                <div className={CSS.Blocks}>
                     {searchedBlocks.map(createBlockButton)}
                 </div>
             );
@@ -101,8 +100,8 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
 
         // Otherwise, render grouped by category
         return categories.map((category) => (
-            <div key={category} className={CSS.BlockLibrary__Category}>
-                <p className={CSS.BlockLibrary__CategoryTitle}>
+            <div key={category} className={CSS.Category}>
+                <p className={CSS.CategoryTitle}>
                     {category}
                     <span>
                         ({groupedBlocks[category]?.length ?? 0})
@@ -116,14 +115,14 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
     }, [searchedBlocks, groupedBlocks, createBlockButton]
     );
 
-    // If no blocks are registered, show an empty state
+    // If no blocks are registered, show an Fallback state
     if (Object.keys(registeredBlocks).length === 0) {
-        return <div className={CSS.BlockLibrary__Empty}>No blocks available.</div>;
+        return <div className={CSS.Fallback}>No blocks available.</div>;
     }
 
-    // If selected block permitted content is empty, show an empty state
+    // If selected block permitted content is Fallback, show an Fallback state
     if (Object.keys(filteredBlocks).length === 0) {
-        return <div className={CSS.BlockLibrary__Empty}>The selected block <b>{'<'}{selectedBlockType}{'>'}</b> does not allow any child blocks.</div>;
+        return <div className={CSS.Fallback}>The selected block <b>{'<'}{selectedBlockType}{'>'}</b> does not allow any child blocks.</div>;
     }
 
     return (
@@ -133,7 +132,6 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
                 onChange={setSearch}
                 placeholder="Search blocks"
                 type="text"
-                style={{ width: "100%" }}
             />
 
             {blockElements}

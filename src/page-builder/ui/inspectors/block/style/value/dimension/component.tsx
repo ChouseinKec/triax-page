@@ -2,7 +2,7 @@
 import React, { memo, useCallback, useMemo } from "react";
 
 // Types
-import type { BlockStylesValueDimensionProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { DimensionValueProps } from "./types";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -11,13 +11,12 @@ import CSS from "./styles.module.scss";
 import GenericInput from "@/src/shared/components/input/generic/component";
 import SelectDropdown from "@/src/shared/components/select/dropdown/component";
 
-
 // Utilities
 import { extractDimensionUnit, extractDimensionDefaults, extractDimensionRange, extractDimensionValues } from "@/src/page-builder/core/block/style/utilities";
-import { devLog, devRender } from "@/src/shared/utilities/dev";
+import { devLog } from "@/src/shared/utilities/dev";
 
 /**
- * BlockStylesValueDimension Component
+ * DimensionValue Component
  * Renders a controlled input component for CSS dimension values with separate numeric and unit editing.
  *
  * @param value - Current CSS dimension value (e.g., "10px")
@@ -25,11 +24,7 @@ import { devLog, devRender } from "@/src/shared/utilities/dev";
  * @param onChange - Callback when the value changes
  * @returns The rendered dimension input component
  */
-const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ value, options, onChange }) => {
-	if (typeof value !== "string") return devRender.error("[BlockStylesValueDimension] No value provided", { value });
-	if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValueDimension] Invalid onChange callback", { onChange });
-	if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesValueDimension] No options provided", { options });
-
+const DimensionValue: React.FC<DimensionValueProps> = ({ value, options, onChange }) => {
 	const extractedDefaults = useMemo(() => extractDimensionDefaults(options), [options]);
 	const extractedRange = useMemo(() => extractDimensionRange(options as Array<{ min?: number; max?: number }>), [options]);
 	const extractedValues = extractDimensionValues(value);
@@ -38,7 +33,6 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 	const validateNumber = useCallback((inputValue: string): { status: boolean; message: string } => {
 		// Allow empty values
 		if (inputValue === "" || inputValue === null || inputValue === undefined) return { status: true, message: "" };
-
 
 		// Parse the numeric value
 		const numericValue = parseFloat(inputValue);
@@ -82,7 +76,6 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 
 		// Find the selected option to determine its category
 		const selectedOption = options.find(option => option.value === selectedUnit);
-
 		if (!selectedOption) return devLog.warn(`[Dimension] Unknown unit option "${selectedUnit}"`);
 
 		// Handle non-dimension categories (e.g., "auto", "inherit", etc.)
@@ -105,7 +98,7 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 	);
 
 	return (
-		<div className={CSS.BlockStylesValueDimension}>
+		<div className={`${CSS.DimensionValue} DimensionValue`}>
 			{/* Numeric input for the value component */}
 			<GenericInput
 				value={extractedValues.number || ""}
@@ -116,7 +109,6 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 				onValidate={validateNumber}
 				onChange={handleNumberChange}
 				title="Enter Dimension Value"
-				className="DimensionInput"
 			/>
 
 
@@ -128,7 +120,6 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 				onChange={handleUnitChange}
 				searchable={true}
 				groupable={true}
-				className="DimensionDropdown"
 				title="Change Value Type"
 			/>
 
@@ -136,4 +127,5 @@ const BlockStylesValueDimension: React.FC<BlockStylesValueDimensionProps> = ({ v
 	);
 };
 
-export default memo(BlockStylesValueDimension);
+DimensionValue.displayName = "DimensionValue";
+export default memo(DimensionValue);

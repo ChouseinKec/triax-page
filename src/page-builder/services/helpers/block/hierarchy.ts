@@ -198,7 +198,7 @@ export function canBlockMoveBefore(sourceBlock: BlockInstance, targetBlock: Bloc
 	const targetIndex = parentBlock.contentIDs.indexOf(targetBlock.id);
 
 	// If either block is not found, return null
-	if (sourceIndex === -1 || targetIndex === -1) return null;
+	if (sourceIndex === -1 || targetIndex === -1) return targetIndex;
 
 	// If source is already before target, no move needed
 	if (sourceIndex < targetIndex) return null;
@@ -221,7 +221,7 @@ export function canBlockMoveAfter(sourceBlock: BlockInstance, targetBlock: Block
 	const targetIndex = parentBlock.contentIDs.indexOf(targetBlock.id);
 
 	// If either block is not found, return null
-	if (sourceIndex === -1 || targetIndex === -1) return null;
+	if (sourceIndex === -1 || targetIndex === -1) return targetIndex;
 
 	const desiredIndex = targetIndex + 1;
 

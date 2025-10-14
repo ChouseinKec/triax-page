@@ -9,25 +9,25 @@ import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 import RadioSelect from "@/src/shared/components/select/radio/component";
 
 // Types
-import { BlockStylesValueKeywordProps } from "@/src/page-builder/ui/inspectors/block/types";
+import { KeywordValueProps } from "./types";
 
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
 
 /**
- * BlockStylesValueKeyword Component
- * Renders a keyword value selector using either a radio group (with icons)
- * or a dropdown select (without icons), based on the provided options.
+ * KeywordValue Component
  *
- * @param value - The current selected value
- * @param options - Array of available options for selection
- * @param onChange - Callback function to handle value changes
- * @returns The rendered selector component
+ * An adaptive keyword selector for CSS values that intelligently chooses between radio buttons and dropdown based on option characteristics.
+ * Displays as a compact radio group when all options have icons, otherwise uses a searchable dropdown.
+ * Provides a user-friendly interface for selecting predefined CSS keyword values.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Currently selected keyword value
+ * @param  props.options - Array of keyword options with optional icons
+ * @param  props.onChange - Callback triggered when selection changes
+ * @returns Rendered keyword selector (radio or dropdown based on icon availability)
+ *
+ * @note Automatically switches to radio layout when all options have icons for better UX
  */
-const BlockStylesValueKeyword: React.FC<BlockStylesValueKeywordProps> = ({ value, options, onChange }) => {
-    if (typeof value !== "string") return devRender.error("[BlockStylesValueKeyword] No value provided", { value });
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesValueKeyword] No options provided", { options });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValueKeyword] Invalid onChange callback", { onChange });
+const KeywordValue: React.FC<KeywordValueProps> = ({ value, options, onChange }) => {
 
     // Determine if all options have an icon for radio rendering
     const hasIcon = useMemo(() =>
@@ -37,19 +37,17 @@ const BlockStylesValueKeyword: React.FC<BlockStylesValueKeywordProps> = ({ value
 
     return (
         <div
-            className={CSS.BlockStylesValueKeyword}
+            className={`${CSS.KeywordValue} KeywordValue`}
             data-type={hasIcon ? "radio" : "dropdown"}
             role="presentation"
         >
-            {hasIcon ? (
-                <RadioSelect
+            {hasIcon
+                ? <RadioSelect
                     value={value}
                     options={options}
                     onChange={onChange}
-                    className="KeywordRadioSelect"
                 />
-            ) : (
-                <DropdownSelect
+                : <DropdownSelect
                     value={value}
                     options={options}
                     placeholder="N/A"
@@ -57,11 +55,11 @@ const BlockStylesValueKeyword: React.FC<BlockStylesValueKeywordProps> = ({ value
                     groupable={true}
                     onChange={onChange}
                     title="Change Value Type"
-                    className="KeywordDropdownSelect"
                 />
-            )}
+            }
         </div>
     )
 };
 
-export default memo(BlockStylesValueKeyword);
+KeywordValue.displayName = "KeywordValue";
+export default memo(KeywordValue);

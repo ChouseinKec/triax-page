@@ -26,6 +26,7 @@ function initializeTabs() {
 		if (result.valid) {
 			devLog.info(`         ${tab.id} registration successful.`);
 		} else {
+			console.log(result.message)
 			devLog.error(`         ${tab.id} registration failed. ${result.message}`);
 		}
 	});

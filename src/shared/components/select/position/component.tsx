@@ -1,9 +1,13 @@
 "use client";
+import React, { ReactElement, useState, memo } from "react";
 
-import React, { ReactElement, useCallback, useState } from "react";
-import { PositionSelectProps, Positions, Side, Corner } from "@/src/shared/components/select/position/types";
+// Types
+import type { PositionSelectProps, Positions, Side, Corner } from "./types";
+
+// Styles
 import CSS from "./styles.module.scss";
 
+// Available position options
 const POSITIONS: Positions[] = [
     "top-left",
     "top",
@@ -18,6 +22,7 @@ const POSITIONS: Positions[] = [
     "bottom-right",
 ]
 
+// Available side positions for selection
 const SIDES: Side[] = [
     "top",
     "right",
@@ -25,6 +30,7 @@ const SIDES: Side[] = [
     "left",
 ]
 
+// Available corner positions for selection
 const CORNERS: Corner[] = [
     "top-left",
     "top-right",
@@ -32,60 +38,55 @@ const CORNERS: Corner[] = [
     "bottom-right",
 ]
 
-
-
+// Utility to check if a position value is a side
 const isPositionSide = (value: Positions): value is Side => {
     return SIDES.includes(value as Side);
 };
 
+// Utility to check if a position value is a corner
 const isPositionCorner = (value: Positions): value is Corner => {
     return CORNERS.includes(value as Corner);
 };
 
+// Utility to check if a position value is the center "all" position
 const isPositionAll = (value: Positions): value is "all" => {
     return value === "all";
 };
 
+// Utility to check if a position value matches the current selected position
 const isPositionSelected = (value: Positions, currentPosition: Positions) => {
     return value === currentPosition;
 };
 
-
 /**
  * Position Component
- * 
- * A reusable component that allows the user to select a position from a list.
- * It handles the selection of sides and corners separately, with callbacks for both.
- * 
- * @param {PositionSelectProps} props - The component props.
- * @param {function} props.onChangeSide - Callback for when a side position is selected.
- * @param {function} props.onChangeCorner - Callback for when a corner position is selected.
- * @param {string} [props.defaultValue="top"] - The default selected position.
- * @param {boolean} [props.isCornerSelectable=true] - Flag to control whether corners should be visible.
- * @returns {ReactElement} - The rendered position select component.
-*/
-const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): ReactElement => {
-    const {
-        onChangeSide,
-        onChangeCorner,
-        defaultValue = "top",
-        isCornerSelectable = false,
-        isCenterSelectable = false,
-    } = props;
-
+ *
+ * An interactive position selector component that displays a 3x3 grid of position options (sides, corners, center).
+ * Allows users to select positioning values with separate callbacks for side and corner selections.
+ * Supports configurable selectability for corners and center positions.
+ *
+ * @param  props - Component properties
+ * @param  props.onChangeSide - Callback triggered when a side position (top/right/bottom/left) is selected
+ * @param  props.onChangeCorner - Callback triggered when a corner position is selected
+ * @param  props.defaultValue="top" - Initial selected position value
+ * @param  props.isCornerSelectable=false - Enables selection of corner positions
+ * @param  props.isCenterSelectable=false - Enables selection of center "all" position
+ * @returns Rendered position selector grid with current selection display
+ *
+ * @note Callbacks receive null when switching between side/corner selections to clear the other type
+ */
+const Position: React.FC<PositionSelectProps> = ({
+    onChangeSide,
+    onChangeCorner,
+    defaultValue = "top",
+    isCornerSelectable = false,
+    isCenterSelectable = false,
+}): ReactElement => {
     const [currentPosition, setCurrentPosition] = useState(defaultValue);
 
+    // Handle position changes
+    const handleChange = (value: Positions): void => {
 
-    /**
-     * Handle the change in position.
-     * If a side is selected, it updates the side and resets the corner.
-     * If a corner is selected, it updates the corner and resets the side.
-     * 
-     * @param {Positions} value - The position value that was selected.
-     */
-    const handleChange = useCallback((value: Positions): void => {
-
-        // Ensure callbacks are defined
         if (isPositionSide(value)) {
             onChangeSide(value); // Update the side if it"s a side position
             onChangeCorner(null); // Reset the corner
@@ -100,14 +101,11 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
             onChangeCorner(null); // Reset the corner
         }
 
-
         setCurrentPosition(value); // Update the current selected position
-    }, [onChangeSide, onChangeCorner, isCenterSelectable]
-    );
+    };
 
-
-
-    const renderDots = useCallback((currentPosition: Positions) => {
+    // Render position dots based on current selection
+    const renderDots = (currentPosition: Positions) => {
         return POSITIONS.map((value) => (
             <i
                 key={value}
@@ -117,15 +115,19 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
                 data-value={value}
             />
         ))
-    }, [handleChange]);
+    };
 
     return (
-        <div className={CSS.PositionSelect}>
-            <div className={CSS.Positions} data-corners={isCornerSelectable} data-center={isCenterSelectable}>
+        <div className={`${CSS.PositionSelect} PositionSelect`}>
+            <div
+                className={`${CSS.Positions} Positions`}
+                data-corners={isCornerSelectable}
+                data-center={isCenterSelectable}
+            >
                 {renderDots(currentPosition)}
             </div>
 
-            <div className={CSS.PositionSelect_Current}>
+            <div className={`${CSS.Current} Current`}>
                 {currentPosition}
             </div>
 
@@ -133,4 +135,5 @@ const Position: React.FC<PositionSelectProps> = (props: PositionSelectProps): Re
     );
 };
 
-export default Position;
+Position.displayName = "Position";
+export default memo(Position);

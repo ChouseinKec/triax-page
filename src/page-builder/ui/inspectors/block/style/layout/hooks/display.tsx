@@ -2,7 +2,7 @@
 import { useMemo, useCallback } from "react";
 
 // Types
-import type { BlockStylesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./types";
 
 // Managers
 import { useBlockStyle } from "@/src/page-builder/services/managers/block/style";
@@ -16,9 +16,9 @@ import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style
  * Custom hook for the Display & Layout section configuration in the style editor.
  * Dynamically shows/hides properties based on the selected block's display type.
  *
- * @returns {BlockStylesLayoutProps} The layout configuration for display and layout settings.
+ * @returns {LayoutProps} The layout configuration for display and layout settings.
  */
-export const useDisplayLayout = (): BlockStylesLayoutProps => {
+export const useDisplayLayout = (): LayoutProps => {
     const selectedBlockID = useSelectedBlockID();
     const layoutIcon = <svg aria-label="Display & Layout Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256">            <path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" /> </svg>
     const displayValue = selectedBlockID ? useBlockStyle(selectedBlockID, "display") : "";

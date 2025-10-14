@@ -53,7 +53,7 @@ const LayoutBar: React.FC<LayoutBarProps> = ({ title = "LayoutBar", position = {
     return (
         <div className={CSS.LayoutBar} style={styles} title={title} data-transparent={String(isTransparent)}>
             {actionInstances &&
-                <ActionGroup direction="horizontal" isTransparent={!isTransparent}>
+                <ActionGroup direction="horizontal">
                     {actionInstances}
                 </ActionGroup>
             }

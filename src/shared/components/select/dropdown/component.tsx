@@ -1,12 +1,11 @@
 "use client";
+import React, { memo, useCallback } from "react";
 
-import React, { memo, useCallback, useMemo } from "react";
+// Styles
+import CSS from "./styles.module.scss";
 
 // Types
-import { DropdownSelectProps } from "@/src/shared/components/select/dropdown/types";
-
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
+import type { DropdownSelectProps } from "./types";
 
 // Components
 import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
@@ -14,101 +13,66 @@ import Options from "@/src/shared/components/select/options/component";
 
 /**
  * DropdownSelect Component
- * 
- * A reusable dropdown select component that allows users to select an option from a list.
- * It includes features such as search and grouping options for the dropdown content.
- * 
- * @param {DropdownSelectProps} props - The component props.
- * @param {Array<{ name: string, value: string }>} props.options - The list of options to display in the dropdown.
- * @param {string} props.value - The currently selected value.
- * @param {(value: string) => void} props.onChange - Callback function triggered when an option is selected.
- * @param {string} props.placeholder - Placeholder text to display when no value is selected.
- * @param {boolean} [props.groupable=false] - Whether the options should be groupable.
- * @param {boolean} [props.searchable=false] - Whether the options should be searchable.
- * @returns {ReactElement} - The rendered dropdown select component.
  *
+ * A controlled dropdown select component that provides a user-friendly interface for selecting options from a list.
+ * Features validation, search, grouping, and accessibility support with customizable display options.
+ * Internally uses DropdownReveal for the dropdown behavior and Options for the selectable list.
+ *
+ * @param  props - Component properties
+ * @param  props.value - The currently selected option value
+ * @param  props.options - Array of selectable options with value/label structure
+ * @param  props.onChange - Callback function triggered when selection changes
+ * @param  props.placeholder="N/A" - Text displayed when no value is selected
+ * @param  props.forcePlaceholder=false - Forces placeholder display even with selected value
+ * @param  props.searchable=false - Enables search/filtering functionality in options
+ * @param  props.groupable=false - Groups options by category if supported
+ * @param  props.isDisabled=false - Disables the dropdown interaction
+ * @param  props.title="Toggle Dropdown" - Tooltip text for the dropdown button
+ * @param  props.className="DropdownSelect" - Additional CSS classes for styling
+ * @returns Rendered dropdown select with toggle button and floating options panel
+ *
+ * @note Validates selections against available options
  */
-const DropdownSelect: React.FC<DropdownSelectProps> = (props: DropdownSelectProps) => {
-    const {
-        // Core
-        value,
-        options,
-        onChange,
+const DropdownSelect: React.FC<DropdownSelectProps> = ({
+    value,
+    options,
+    onChange,
+    placeholder = "N/A",
+    forcePlaceholder = false,
+    groupable = false,
+    searchable = false,
+    isDisabled = false,
+    title = "Toggle Dropdown",
+    className = "DropdownSelect"
+}) => {
 
-        placeholder = "N/A",
-        forcePlaceholder = false,
-        groupable = false,
-        searchable = false,
-        isDisabled = false,
-
-        // Accessibility
-        title = "Toggle Dropdown",
-        className = "DropdownSelect"
-    } = props;
-
-    /**
-     * Handles option selection with validation and error handling
-     * Ensures the selected value exists in the options array
-     * 
-     * @param {string} selectedValue - The value of the selected option
-     */
+    // Handle option selection changes
     const handleOptionChange = useCallback((selectedValue: string): void => {
-        // If no value is selected, clear the selection
-        if (selectedValue === "") return onChange("");
-
-        // Validate that the selected value exists in options
-        const isValidOption = options.some(option => option.value === selectedValue);
-
-        if (!isValidOption) {
-            devLog.warn(`[DropdownSelect] Invalid option selected: ${selectedValue}`);
-            return;
-        }
-
         onChange(selectedValue);
-    }, [options, onChange]
+    }, [onChange]
     );
-
-    /**
-     * Options container props for performance
-     * Reduces re-renders when parent component updates
-     */
-    const optionsProps = useMemo(() => ({
-        searchable,
-        groupable,
-        value,
-        options,
-        onChange: handleOptionChange
-    }), [searchable, groupable, value, options, handleOptionChange]
-    );
-
-    /**
-     * Dropdown properties for the reveal component
-    */
-    const dropdownProps = useMemo(() => ({
-        value,
-        placeholder: forcePlaceholder ? placeholder : value || "N/A",
-        title,
-        isDisabled,
-        className
-    }), [value, placeholder, title, isDisabled, forcePlaceholder, className]
-    );
-
-    // Guard Clause
-    if (!options || options.length === 0) {
-        devLog.warn("[DropdownSelect] No options provided");
-        return null;
-    }
-
-    if (value == null) {
-        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
-        return null;
-    }
 
     return (
-        <DropdownReveal  {...dropdownProps} >
-            <Options {...optionsProps} />
+        <DropdownReveal
+            className={className}
+            placeholder={forcePlaceholder ? placeholder : value || "N/A"}
+            title={title}
+            isDisabled={isDisabled}
+        >
+            {
+                options && options.length > 0
+                    ? <Options
+                        searchable={searchable}
+                        groupable={groupable}
+                        options={options}
+                        value={value}
+                        onChange={handleOptionChange}
+                    />
+                    : <span className={CSS.Empty}>No options available</span>
+            }
         </DropdownReveal>
     );
 };
 
+DropdownSelect.displayName = "DropdownSelect";
 export default memo(DropdownSelect);

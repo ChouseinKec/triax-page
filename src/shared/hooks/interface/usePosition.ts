@@ -3,9 +3,8 @@ import { useLayoutEffect, RefObject, useState } from 'react';
 
 type Anchor = 'top' | 'bottom' | 'left' | 'right';
 
-const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObject<HTMLElement | null>, anchor: Anchor, isVisible: boolean) => {
+const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObject<HTMLElement | null>, anchor: Anchor, isVisible: boolean, offset: number = 5) => {
 	const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
-	const offset = 5;
 
 	useLayoutEffect(() => {
 		if (!isVisible || !targetRef.current || !floatRef.current) return;
@@ -19,20 +18,38 @@ const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObje
 
 		switch (anchor) {
 			case 'top':
-				top = targetRect.top - floatRect.height - offset;
+				top = targetRect.top - floatRect.height;
 				left = targetRect.left;
 				break;
 			case 'bottom':
-				top = targetRect.bottom + offset;
+				top = targetRect.bottom;
 				left = targetRect.left;
 				break;
 			case 'left':
-				top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
+				// top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
+				top = targetRect.top;
 				left = targetRect.left - floatRect.width;
 				break;
 			case 'right':
-				top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
+				// top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
+				top = targetRect.top;
 				left = targetRect.right;
+				break;
+		}
+
+		// Apply offset based on anchor direction
+		switch (anchor) {
+			case 'top':
+				top -= offset;
+				break;
+			case 'bottom':
+				top += offset;
+				break;
+			case 'left':
+				left -= offset;
+				break;
+			case 'right':
+				left += offset;
 				break;
 		}
 

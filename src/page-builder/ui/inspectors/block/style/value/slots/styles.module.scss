@@ -6,16 +6,18 @@
 	display: flex;
 	align-items: center;
 	gap: var(--size-md);
-	// justify-content: flex-end;
 
 	overflow: hidden;
 	position: relative;
 
-	:global(.NextSlotDropdownToggle) {
-		@include inputMixins.components--button-dropdown($isRound: true);
+	> :global(.BlockStylesNextSlot) {
+		flex: unset;
+		:global(.Toggle) {
+			@include inputMixins.components--button-dropdown($isRound: true);
+		}
 	}
 
 	> * {
-		flex: auto;
+		flex: 1;
 	}
 }

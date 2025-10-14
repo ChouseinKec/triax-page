@@ -10,26 +10,30 @@ import Link from "../link/component";
 import Color from "../color/component";
 
 // Types
-import type { BlockStylesSlotProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { BlockStylesSlotProps } from "./types";
 
 // Utilities
 import { getValueType, getValueDefaultType } from "@/src/page-builder/core/block/style/utilities";
-import { devRender } from "@/src/shared/utilities/dev";
 
+// CSS
+import CSS from "./styles.module.scss";
 
 /**
  * BlockStylesSlot Component
- * Renders the appropriate input component for a single value slot based on its type.
- * Handles function, keyword, dimension, number, integer, color, and link value types.
  *
- * @param props - BlockStylesSlotProps containing value, options, and onChange callback
- * @returns The rendered input for the slot
+ * A dynamic value editor router that automatically selects and renders the appropriate input component based on CSS value type.
+ * Intelligently handles function, keyword, dimension, number, integer, color, and link value types with type detection.
+ * Provides a unified interface for editing different CSS property values in the page builder.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current CSS value to edit
+ * @param  props.options - Array of available value type options with constraints
+ * @param  props.onChange - Callback triggered when value changes
+ * @returns Rendered value editor component appropriate for the detected CSS value type
+ *
+ * @note Automatically detects value type and falls back to default type for empty values
  */
 const BlockStylesSlot: React.FC<BlockStylesSlotProps> = ({ value, options, onChange }) => {
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesSlot] No options provided", { options });
-    if (value == null || typeof value !== "string") return devRender.error("[BlockStylesSlot] Invalid value provided", { value });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesSlot] Invalid onChange callback", { onChange });
-
     // Determine default type when value is empty
     const defaultType = getValueDefaultType(options);
 
@@ -68,7 +72,7 @@ const BlockStylesSlot: React.FC<BlockStylesSlotProps> = ({ value, options, onCha
                     <Link value={value} onChange={onChange} />
                 );
             default:
-                return devRender.error(`[BlockStylesSlot] Unsupported or undefined value type "${valueType}"`, { value, options, valueType });
+                return <span className={CSS.Unsupported}>Unsupported value type</span>;
         }
     };
 

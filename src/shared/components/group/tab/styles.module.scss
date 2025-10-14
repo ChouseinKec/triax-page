@@ -1,0 +1,34 @@
+.TabGroup {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden auto;
+
+	scrollbar-width: none;
+
+	> :global(.RadioSelect) {
+		width: 100%;
+		position: absolute;
+		bottom: 0%;
+		right: 0%;
+	}
+}
+
+.TabContent {
+	width: 100%;
+	position: relative;
+}
+
+.Empty {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+
+	font-size: var(--font-size-md);
+	color: var(--color-white);
+}

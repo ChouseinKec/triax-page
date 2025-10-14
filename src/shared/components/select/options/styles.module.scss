@@ -18,7 +18,14 @@
 	@include inputMixins.components--flex-vertical($align: center);
 }
 
-.CategoryTitle {
+.Search {
+	width: 100%;
+	> :global(.InputGeneric) {
+		width: 100%;
+	}
+}
+
+.Title {
 	text-align: center;
 	font-size: var(--font-size-lg);
 	text-transform: capitalize;
@@ -26,6 +33,6 @@
 	padding-top: var(--size-lg);
 }
 
-.CategoryItems {
+.Items {
 	@include inputMixins.components--flex-vertical($align: center);
 }

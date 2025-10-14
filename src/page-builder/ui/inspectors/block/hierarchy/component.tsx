@@ -11,16 +11,19 @@ import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlock
 // Components
 import Entry from "./entry/component";
 
-
 /**
  * BlocksHierarchy Component
- * Renders the block editor hierarchy with keyboard navigation for better user experience.
  *
- * @returns The rendered hierarchy with keyboard navigation for block editing
+ * The main block hierarchy viewer for the page builder inspector panel.
+ * Displays the complete block tree structure starting from the root body block, with keyboard navigation support.
+ * Enables users to navigate and select blocks using arrow keys for improved accessibility and workflow efficiency.
+ *
+ * @returns Rendered block hierarchy with keyboard navigation and selection controls
+ *
+ * @note Supports Arrow Up/Down keys for block navigation when component is focused
  */
 const BlocksHierarchy: React.FC = () => {
     const rootBlock = useBlock('body');
-
 
     // Select next block on ArrowDown
     const handleSelectNext = (e: React.KeyboardEvent) => {
@@ -57,23 +60,21 @@ const BlocksHierarchy: React.FC = () => {
         }
     };
 
-
-
     return (
         <div
             className={CSS.BlocksHierarchy}
             onKeyUp={handleKeyUp}
-
             tabIndex={0}
         >
 
             {
                 rootBlock
                     ? <Entry key={rootBlock.id} blockID={rootBlock.id} />
-                    : <div className={CSS.BlocksEditorHierarchy__Empty}>No blocks available. Add a block to get started.</div>
+                    : <div className={CSS.Empty}>No blocks available. Add a block to get started.</div>
             }
         </div>
     );
 };
 
+BlocksHierarchy.displayName = "BlocksHierarchy";
 export default BlocksHierarchy;

@@ -11,25 +11,25 @@ import DividerReveal from "@/src/shared/components/reveal/divider/component";
 import HorizontalDivider from "@/src/shared/components/divider/horizontal/component";
 
 // Types
-import type { BlockStylesGroupProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import type { GroupProps } from "./types";
 
 /**
- * BlockStylesGroup Component
- * Renders a grid layout of properties within a style editor for better user experience.
+ * Group Component
  *
- * @param properties - The properties to render in the group
- * @param hidden - Flag to determine if the group should be visible
- * @param isExpandable - Whether the group should be expandable
- * @param dividerTitle - Title for the divider if applicable
- * @param styles - Custom styles for the group
- * @returns The rendered group with properties
+ * A flexible container for organizing CSS property editors with support for expandable sections.
+ * Renders properties in a grid layout with optional dividers and dynamic styling through CSS variables.
+ * Provides collapsible sections for complex property sets to improve interface organization.
+ *
+ * @param  props - Component properties
+ * @param  props.properties - Array of property configurations to render
+ * @param  props.hidden - Whether to completely hide this group
+ * @param  props.isExpandable - Enables collapsible section with divider toggle
+ * @param  props.dividerTitle - Title for the divider when expandable
+ * @param  props.styles - Custom styles applied as CSS variables to content
+ * @returns Rendered property group with optional expandable wrapper
  */
-const BlockStylesGroup: React.FC<BlockStylesGroupProps> = ({ properties, hidden, isExpandable, dividerTitle, styles }) => {
-    if (!properties || !Array.isArray(properties) || properties.length === 0) return devRender.error("[BlockStylesGroup] No properties to render");
-    if (hidden === true) return <></>;
+const Group: React.FC<GroupProps> = ({ properties, hidden, isExpandable, dividerTitle, styles }) => {
+    if (hidden === true) return null;
 
     // Map properties to BlockStylesProperty components
     const propertyInstances = properties.map((property, index) => (
@@ -40,14 +40,16 @@ const BlockStylesGroup: React.FC<BlockStylesGroupProps> = ({ properties, hidden,
     ));
 
     return (
-        <div className={CSS.BlockStylesGroup} style={styles}>
+        <div className={CSS.Group} style={styles}>
             {isExpandable ?
-                <DividerReveal className="BlockStylesGroup__Reveal" title={dividerTitle} contentStyles={styles}>
-                    {propertyInstances}
+                <DividerReveal title={dividerTitle} >
+                    <div className={CSS.Content} style={styles}>
+                        {propertyInstances}
+                    </div>
                 </DividerReveal>
                 :
                 <>
-                    {dividerTitle !== undefined && <HorizontalDivider className="BlockStylesGroup__Divider" title={dividerTitle} />}
+                    {dividerTitle !== undefined && <HorizontalDivider title={dividerTitle} />}
                     {propertyInstances}
                 </>
             }
@@ -55,4 +57,4 @@ const BlockStylesGroup: React.FC<BlockStylesGroupProps> = ({ properties, hidden,
     );
 };
 
-export default memo(BlockStylesGroup);
+export default memo(Group);

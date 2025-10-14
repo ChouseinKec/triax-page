@@ -1,34 +1,35 @@
 "use client";
-
 import { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockAttributesGroup from "@/src/page-builder/ui/inspectors/block/attribute/group/component";
+import Group from "@/src/page-builder/ui/inspectors/block/attribute/group/component";
 
 // Types
-import { BlockAttributesCategoryProps } from "@/src/page-builder/ui/inspectors/block/types";
+import { CategoryProps } from "./types";
 
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
 
 /**
- * BlockAttributesCategory Component
- * Renders the attribute editor category organized in groups for better user experience.
+ * Category Component
  *
- * @param groups - The groups to render in the category
- * @returns The rendered layout with grouped interface for attribute editing
+ * A container component that organizes attribute editing into logical categories within the page builder.
+ * Renders multiple attribute groups with support for expandable sections and custom styling.
+ * Acts as an intermediate layer in the attribute editor hierarchy for improved organization.
+ *
+ * @param  props - Component properties
+ * @param  props.groups - Array of attribute group configurations to render
+ * @returns Rendered category containing organized attribute property groups
+ *
+ * @note Each group can be individually configured for expandability and visibility
  */
-const BlockAttributesCategory: React.FC<BlockAttributesCategoryProps> = ({ groups }) => {
-    if (!groups || !Array.isArray(groups) || groups.length === 0) return devRender.error("[BlockAttributesCategory] No groups to render");
-
+const Category: React.FC<CategoryProps> = ({ groups }) => {
     return (
-        <div className={CSS.BlockAttributesCategory}>
+        <div className={CSS.Category}>
             {/* Render each group in the category */}
             {groups.map((group, index) => (
-                <BlockAttributesGroup
+                <Group
                     key={index}
                     properties={group.properties}
                     hidden={group.hidden}
@@ -41,4 +42,5 @@ const BlockAttributesCategory: React.FC<BlockAttributesCategoryProps> = ({ group
     );
 };
 
-export default memo(BlockAttributesCategory);
+Category.displayName = "Category";
+export default memo(Category);

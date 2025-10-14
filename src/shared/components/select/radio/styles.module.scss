@@ -7,7 +7,7 @@
 	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
 	overflow: hidden;
 
-	:global(.RadioSelectFloat) {
+	> :global(.FloatReveal) {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 	}

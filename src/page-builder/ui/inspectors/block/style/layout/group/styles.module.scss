@@ -1,15 +1,23 @@
-.BlockStylesGroup {
+.Group {
 	display: grid;
 	align-items: flex-start;
 	gap: var(--size-lg);
 	position: relative;
 
-	:global(.BlockStylesGroup__Reveal) {
+	:global(.DividerReveal) {
 		grid-column: 1/-1;
 	}
 
-	:global(.BlockStylesGroup__Divider) {
+	:global(.HorizontalDivider) {
 		grid-column: 1/-1;
 		margin-top: var(--size-2xl);
 	}
+}
+
+.Content {
+	padding-bottom: var(--size-md);
+	padding-top: var(--size-lg);
+
+	display: grid;
+	gap: var(--size-lg);
 }

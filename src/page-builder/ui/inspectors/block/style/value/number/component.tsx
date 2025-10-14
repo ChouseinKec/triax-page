@@ -9,29 +9,29 @@ import GenericInput from "@/src/shared/components/input/generic/component";
 import SelectDropdown from "@/src/shared/components/select/dropdown/component";
 
 // Types
-import { BlockStylesValueNumberProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import { NumberValueProps } from "./types";
 
 // Constants
 import { STYLE_ICON_DEFINITIONS } from "@/src/page-builder/core/block/style/constants/icon";
 
 
 /**
- * BlockStylesValueNumber Component
- * A controlled input component for CSS numeric values with optional alternative options.
- * Provides float number input validation with support for special CSS values (auto, inherit, etc.).
- * Automatically formats decimal numbers and validates range constraints.
+ * NumberValue Component
  *
- * @param props - BlockStylesValueNumberProps containing value, options, and onChange callback
- * @returns The rendered number input component with optional dropdown
+ * A comprehensive numeric input component for CSS values with validation, range constraints, and alternative type selection.
+ * Supports both decimal and integer modes with automatic formatting and min/max validation.
+ * Provides dropdown access to alternative CSS values (auto, inherit, etc.) when multiple options are available.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current numeric value as string
+ * @param  props.onChange - Callback triggered when value changes
+ * @param  props.options - Array of available value type options with validation ranges
+ * @param  props.forceInteger=false - Forces integer-only input instead of decimal
+ * @returns Rendered numeric input with optional alternative value selector
+ *
+ * @note Automatically formats decimals to one place and validates against configured min/max ranges
  */
-const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, onChange, options, forceInteger }) => {
-    // Validate input props
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesValueNumber] No options provided", { options });
-    if (value == null) return devRender.error("[BlockStylesValueNumber] Invalid value provided, expected a string", { value });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValueNumber] Invalid onChange callback provided, expected a function", { onChange });
+const NumberValue: React.FC<NumberValueProps> = ({ value, onChange, options, forceInteger }) => {
 
     // Extract min and max values from options for validation
     const valueRange = useMemo(() => {
@@ -125,7 +125,7 @@ const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, 
     );
 
     return (
-        <div className={CSS.BlockStylesValueNumber} role="presentation" data-has-dropdown={showDropdown} >
+        <div className={CSS.NumberValue} role="presentation" data-has-dropdown={showDropdown} >
 
             {/* Main numeric input field */}
             <GenericInput
@@ -137,7 +137,6 @@ const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, 
                 onValidate={validateNumber}
                 onChange={handleNumberChange}
                 title="Enter Numeric Value"
-                className="NumberInput"
             />
 
             {/* Optional dropdown for alternative value types */}
@@ -152,7 +151,6 @@ const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, 
                     forcePlaceholder={true}
                     isDisabled={options.length <= 1}
                     title="Change Value Type"
-                    className="NumberDropdown"
                 />
             )}
 
@@ -160,4 +158,5 @@ const BlockStylesValueNumber: React.FC<BlockStylesValueNumberProps> = ({ value, 
     );
 };
 
-export default memo(BlockStylesValueNumber);
+NumberValue.displayName = "NumberValue";
+export default memo(NumberValue);

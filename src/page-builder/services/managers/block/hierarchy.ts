@@ -112,7 +112,7 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 
 	// Check if move is needed
 	const targetIndex = canBlockMoveAfter(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
-	if (!targetIndex) return devLog.warn(`[BlockManager → moveBlockAfter] Block is already positioned after target or invalid operation`);
+	if (targetIndex === null) return devLog.warn(`[BlockManager → moveBlockAfter] Block is already positioned after target or invalid operation`);
 
 	blockStore.updateBlocks(
 		moveBlock(
@@ -158,7 +158,7 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 
 	// Check if move is needed
 	const targetIndex = canBlockMoveBefore(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
-	if (!targetIndex) return devLog.warn(`[BlockManager → moveBlockBefore] Block is already positioned before target or invalid operation`);
+	if (targetIndex === null) return devLog.warn(`[BlockManager → moveBlockBefore] Block is already positioned before target or invalid operation`);
 
 	blockStore.updateBlocks(
 		moveBlock(

@@ -9,28 +9,27 @@ import GenericInput from '@/src/shared/components/input/generic/component';
 import SelectDropdown from '@/src/shared/components/select/dropdown/component';
 
 // Types
-import { BlockStylesValueIntegerProps } from "@/src/page-builder/ui/inspectors/block/types";
-
-// Utilities
-import { devRender } from '@/src/shared/utilities/dev';
+import { IntegerValueProps } from "./types";
 
 /**
- * BlockStylesValueInteger Component
- * Renders an integer value input with optional unit selection dropdown.
+ * IntegerValue Component
  *
- * @param value - The current value (string or number)
- * @param onChange - Callback function to handle value changes
- * @param options - Array of available unit options
- * @param minValue - Minimum allowed value for the input
- * @param maxValue - Maximum allowed value for the input
- * @param isStrict - Whether to enforce strict numeric values
- * @returns The rendered integer input component
+ * A specialized numeric input component for CSS integer values in the page builder with optional unit selection.
+ * Provides controlled integer input with min/max validation and the ability to switch between different value types.
+ * Features strict mode for enforcing numeric values and conditional dropdown display.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current integer value as string
+ * @param  props.onChange - Callback triggered when value changes
+ * @param  props.options - Array of available value type options
+ * @param  props.minValue - Minimum allowed numeric value
+ * @param  props.maxValue - Maximum allowed numeric value
+ * @param  props.isStrict=false - Enforces strict integer validation and defaults
+ * @returns Rendered numeric input with optional unit selector dropdown
+ *
+ * @note Dropdown only appears when multiple options are available
  */
-const BlockStylesValueInteger: React.FC<BlockStylesValueIntegerProps> = ({ value, onChange, options, minValue, maxValue, isStrict }) => {
-    if (typeof value !== 'string' && typeof value !== 'number') return devRender.error("[BlockStylesValueInteger] No value provided", { value });
-    if (!onChange || typeof onChange !== 'function') return devRender.error("[BlockStylesValueInteger] Invalid onChange callback", { onChange });
-    if (!options || !Array.isArray(options) || options.length === 0) return devRender.error("[BlockStylesValueInteger] No options provided", { options });
-
+const IntegerValue: React.FC<IntegerValueProps> = ({ value, onChange, options, minValue, maxValue, isStrict }) => {
     // Default number is '0', used when no numeric value is provided in strict mode
     const DEFAULT_NUMBER = '0';
 
@@ -56,7 +55,7 @@ const BlockStylesValueInteger: React.FC<BlockStylesValueIntegerProps> = ({ value
     );
 
     return (
-        <div className={CSS.BlockStylesValueInteger}>
+        <div className={`${CSS.IntegerValue} IntegerValue`}>
 
             {/* Main numeric input field */}
             <GenericInput
@@ -82,4 +81,5 @@ const BlockStylesValueInteger: React.FC<BlockStylesValueIntegerProps> = ({ value
     );
 };
 
-export default memo(BlockStylesValueInteger);
+IntegerValue.displayName = "IntegerValue";
+export default memo(IntegerValue);

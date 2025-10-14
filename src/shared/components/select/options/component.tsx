@@ -12,71 +12,54 @@ import GenericInput from "../../input/generic/component";
 // Types
 import type { OptionsSelectProps } from "./types";
 
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
-
 /**
  * OptionsSelect Component
- * 
- * A comprehensive options selection component with advanced filtering and grouping capabilities.
- * Supports real-time search, category-based grouping.
- * Optimized for performance with memoization and debounced search functionality.
- * 
- * @param {OptionsSelectProps} props - Component properties
- * @param {string} props.value - Currently selected option value
- * @param {OptionDefinition[]} props.options - Array of selectable options with name/value/category
- * @param {function} props.onChange - Callback fired when selection changes (value or empty string)
- * @param {boolean} [props.searchable=false] - Enable search/filter functionality for large option sets
- * @param {boolean} [props.groupable=false] - Group options by category for better organization
- * @param {boolean} [props.prioritizeIcons=false] - Display icons prominently over text labels
- * @param {string} [props.ariaRole="radio"] - ARIA role for individual options (radio/option/menuitem)
- * @returns {ReactElement} Memoized OptionsSelect component
+ *
+ * A flexible options selection component that displays a list of selectable items with advanced filtering and organization features.
+ * Supports real-time search, category-based grouping, and icon prioritization for enhanced user experience.
+ * Optimized for performance with memoized filtering and grouping operations.
+ *
+ * @param  props - Component properties
+ * @param  props.value - The currently selected option value
+ * @param  props.options - Array of option objects with name, value, category, and icon properties
+ * @param  props.onChange - Callback function triggered when an option is selected
+ * @param  props.searchable=false - Enables real-time search filtering of options
+ * @param  props.groupable=false - Organizes options into category groups when available
+ * @param  props.prioritizeIcons=false - Prioritizes icon display over text in option rendering
+ * @param  props.className="" - Additional CSS classes for custom styling
+ * @returns Rendered options list with optional search input and category groupings
+ *
+ * @note Search input only appears when searchable is true and there are 10+ options
  */
-const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) => {
-    const {
-        value,
-        options,
-        onChange,
-        searchable = false,
-        groupable = false,
-        prioritizeIcons = false,
-        className = "",
-    } = props;
-
+const OptionsSelect: React.FC<OptionsSelectProps> = ({
+    value,
+    options,
+    onChange,
+    searchable = false,
+    groupable = false,
+    prioritizeIcons = false,
+    className = "",
+}) => {
     const [search, setSearch] = useState<string>("");
 
-    /**
-     * Handles the selection of an option.
-     * Memoized to prevent unnecessary re-creations.
-     * 
-     * @param {string} option - The value of the selected option.
-    */
-    const handleChange = useCallback((option: string): void => {
+    // Handle option selection changes
+    const handleChange = (option: string): void => {
+        // Clear selection if the same option is clicked
         if (value === option) {
-            onChange("");  // Clear selection if the same option is clicked
+            onChange("");
             return;
         }
-        onChange(option); // Otherwise, select the new option
-    }, [onChange, value]
-    );
 
-    /**
-     * Updates the search term in the state.
-     * Memoized to prevent unnecessary re-creations.
-     * 
-     * @param {string} input - The new search input value.
-    */
-    const handleSearch = useCallback((input: string): void => {
+        // Otherwise, select the new option
+        onChange(option);
+    };
+
+    // Handle search input changes
+    const handleSearch = (input: string): void => {
         setSearch(input);
-    }, []
-    );
+    }
 
-    /**
-     * Filters the options based on the search term (if search is enabled).
-     * Memoized to optimize performance when search term or options change.
-     * 
-     * @returns {Array<Option>} - The filtered list of options.
-    */
+    // Filter options based on search input
     const filteredOptions = useMemo(() => {
         if (!searchable) return options;
 
@@ -88,12 +71,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
         [search, searchable, options]
     );
 
-    /**
-     * Groups the filtered options by category if grouping is enabled.
-     * Memoized to optimize performance when filtered options change.
-     * 
-     * @returns {Record<string, Option[]> | null} - The groupable options or null.
-    */
+    // Group options by category if enabled
     const groupedOptions = useMemo(() => {
         return groupable
             ? Object.groupBy(filteredOptions, ({ category }) => category || "uncategorized")
@@ -101,33 +79,24 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     }, [filteredOptions, groupable]
     );
 
-    /**
-    * Renders the search input element if search is enabled and there are more than 10 options.
-    * Memoized to avoid unnecessary re-renders.
-    * 
-    * @returns {ReactElement | null} - The rendered search input element.
-    */
-    const searchElement = useMemo((): ReactElement | null => {
+    // Render the search input element if searchable and enough options
+    const renderSearch = useCallback((): ReactElement | null => {
         if (!searchable || options.length < 10) return null;
         return (
-
-            <GenericInput
-                value={search}
-                onChange={handleSearch}
-                placeholder="Search"
-                type="text"
-                style={{ width: "100%" }}
-            />
+            <div className={`${CSS.Search} Search`}>
+                <GenericInput
+                    value={search}
+                    onChange={handleSearch}
+                    placeholder="Search"
+                    type="text"
+                />
+            </div>
         );
     }, [handleSearch, searchable, options.length, search]
     );
 
-    /**
-    * Renders the list of options or groupable options based on the filtered data.
-    * 
-    * @returns {ReactElement | ReactElement[]} - The rendered options list.
-    */
-    const optionElements = useMemo(() => {
+    // Render the list of options, grouped or ungrouped
+    const renderOptions = useCallback(() => {
         // If the search result is null
         if (filteredOptions.length === 0) {
             return <div className={CSS.Empty}>No options found.</div>;
@@ -139,15 +108,15 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
             const categoryCount = Object.keys(groupedOptions).length;
 
             return (
-                <div className={CSS.Categories}>
+                <div className={`${CSS.Categories} Categories`}>
                     {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
-                        <div key={category} className={CSS.Category}>
+                        <div key={category} className={`${CSS.Category} Category`}>
 
                             {categoryCount > 1 &&
-                                <span className={CSS.CategoryTitle}>{category}</span>
+                                <span className={`${CSS.Title} Title`}>{category}</span>
                             }
 
-                            <div className={CSS.CategoryItems}>
+                            <div className={`${CSS.Items} Items`}>
                                 {categoryOptions?.map((option, index) => {
                                     return (
                                         <Option
@@ -159,7 +128,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                                             icon={option.icon}
                                             prioritizeIcons={prioritizeIcons}
                                             category={category}
-                                            className={`${className}Option`}
                                         />
                                     )
                                 }) ?? []}
@@ -182,7 +150,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
                     prioritizeIcons={prioritizeIcons}
                     isSelected={value === option.name || value === option.value}
                     onChange={handleChange}
-                    className={`${className}Option`}
                 />
             )
         }));
@@ -190,21 +157,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = (props: OptionsSelectProps) 
     }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons, className]
     );
 
-    // Guard clauses for required props
-    if (!options || options.length === 0) {
-        devLog.warn("[DropdownSelect] No options provided");
-        return;
-    }
-
-    if (value == null) {
-        devLog.warn("[DropdownSelect] Invalid value provided, expected a string");
-        return;
-    }
-
     return (
         <>
-            {searchElement}
-            {optionElements}
+            {renderSearch()}
+            {renderOptions()}
         </>
     )
 };

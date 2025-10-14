@@ -1,30 +1,35 @@
 "use client";
-
 import React, { memo } from "react";
 
 // Styles
-import CSS from "./style.module.scss";
+import CSS from "./styles.module.scss";
 
 // Types
-import { HorizontalDividerProps } from "./type";
+import type { HorizontalDividerProps } from "./types";
 
 /**
  * HorizontalDivider Component
- * 
- * A semantic horizontal divider/separator element with optional title.
- * Uses CSS custom properties for title display and provides proper accessibility.
- * Rendered as a semantic separator with appropriate ARIA attributes.
- * 
- * @param {HorizontalDividerProps} props - Component properties
- * @param {string} [props.title] - Optional title text displayed on the divider
- * @returns {ReactNode} The rendered HorizontalDivider component
+ *
+ * A flexible horizontal divider/separator component that provides visual separation
+ * between content sections. Supports optional titles and different visual styles.
+ *
+ * @param props - Component properties
+ * @param props.title - Optional title text displayed centered on the divider line
+ * @param props.className - Additional CSS classes for custom styling
+ * @param props.variation - Visual style variant: 'solid' (default) or 'dashed'
+ * @returns The rendered HorizontalDivider component
  */
 const HorizontalDivider: React.FC<HorizontalDividerProps> = ({ title, className, variation }) => {
     return (
-        <span className={`${CSS.HorizontalDivider} ${className}`} data-title={title || null} data-variation={variation}>
-            {title ? title : ""}
+        <span
+            className={`${CSS.HorizontalDivider} HorizontalDivider ${className}`}
+            data-title={title || null}
+            data-variation={variation}
+        >
+            {title}
         </span>
     );
 };
 
+HorizontalDivider.displayName = "HorizontalDivider";
 export default memo(HorizontalDivider);

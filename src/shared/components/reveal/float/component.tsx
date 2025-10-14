@@ -1,67 +1,59 @@
 "use client";
-
-import React, { useRef, useEffect, memo, useCallback, useMemo } from "react";
+import React, { useRef, useEffect, memo, useCallback } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import { FloatRevealProps } from "@/src/shared/components/reveal/float/types";
+import type { FloatRevealProps } from "./types";
 
 // Hooks
 import usePosition from "@/src/shared/hooks/interface/usePosition";
 
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
 
 /**
  * FloatReveal Component
- * 
- * A controlled floating content revealer that supports automatic positioning relative to a target element.
- * Supports optional auto-close on outside clicks and keyboard events.
  *
- * @param {FloatRevealProps} props - Component properties
- * @param {React.RefObject<HTMLElement>} props.targetRef - Reference to the trigger element
- * @param {Position} [props.position="top"] - Preferred position relative to target
- * @param {React.ReactNode} props.children - Content to display in the float
- * @param {boolean} props.isOpen - Controls whether the float is visible
- * @param {boolean} [props.autoClose] - Whether to automatically close on outside clicks
- * @param {boolean} [props.closeOnEscape=true] - Whether to close on Escape key
- * @param {function} [props.onVisibilityChange] - Callback when auto-close occurs
- * @param {string} [props.className] - Optional class name for styling
- * @returns {ReactElement|null} The rendered FloatReveal component or null if hidden
+ * A controlled floating content revealer that displays content in a positioned overlay relative to a target element.
+ * Provides automatic positioning, auto-close functionality, and accessibility features for floating UI elements
+ * like tooltips, dropdowns, and popovers.
+ *
+ * @param  props - Component properties
+ * @param  props.targetRef - Reference to the target element for positioning the float
+ * @param  props.children - Content to render inside the floating container
+ * @param  props.isOpen - Controls visibility of the float (required for controlled rendering)
+ * @param  props.anchor="top" - Preferred anchor position relative to target ("top" | "bottom" | "left" | "right")
+ * @param  props.offset=5 - Pixel offset from the target element's edge
+ * @param  props.autoClose=false - Enables automatic closing on outside interactions
+ * @param  props.closeOnEscape=true - Allows closing via Escape key when autoClose is enabled
+ * @param  props.className="" - Additional CSS class for custom styling
+ * @param  props.onVisibilityChange - Callback triggered on auto-close events
+ * @returns Rendered floating container or null when hidden
+ *
+ * @note Requires the target element to be mounted for proper positioning calculations
  */
-const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) => {
-    const {
-        children,
-        targetRef,
-        anchor = "top",
-        isOpen,
-        autoClose = false,
-        closeOnEscape = true,
-        onVisibilityChange,
-        className = "",
+const FloatReveal: React.FC<FloatRevealProps> = ({
+    children,
+    targetRef,
+    anchor = "top",
+    offset = 5,
+    isOpen,
+    autoClose = false,
+    closeOnEscape = true,
+    onVisibilityChange,
+    className = "",
+}) => {
+    // Early return if not visible - prevents unnecessary DOM rendering
+    if (!isOpen) return null;
 
-    } = props;
-
-    // Refs for DOM elements
     const floatRef = useRef<HTMLDivElement | null>(null);
-
-    // Position management hook
-    const position = usePosition(targetRef, floatRef, anchor, isOpen);
-
-    // Convert position to CSS styles
-    const positionStyles = useMemo(() => ({
+    const position = usePosition(targetRef, floatRef, anchor, isOpen, offset);
+    const styles = {
         top: `${position.top}px`,
         left: `${position.left}px`,
-    }), [position]);
+    };
 
-    /**
-     * Handles keyboard events for accessibility
-     * Supports Escape key to close the float when auto-close is enabled
-     * 
-     * @param {KeyboardEvent} event - The keyboard event
-     */
+    // Handle keyboard events for auto-close
     const handleKeyDown = useCallback((event: KeyboardEvent): void => {
         if (!closeOnEscape || !isOpen || !autoClose) return;
 
@@ -75,10 +67,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
     }, [closeOnEscape, isOpen, autoClose, onVisibilityChange]
     );
 
-    /**
-     * Effect to manage keyboard event listeners
-     * Adds/removes global keyboard listeners based on visibility state
-     */
+    // Effect to handle auto-close on Escape key
     useEffect(() => {
         if (!isOpen || !autoClose) return;
 
@@ -88,10 +77,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
         [isOpen, autoClose, handleKeyDown]
     );
 
-    /**
-     * Effect to handle auto-close on outside clicks
-     * Closes the float when clicking outside if autoClose is enabled
-     */
+    // Effect to handle auto-close on outside clicks
     useEffect(() => {
         if (!isOpen || !autoClose) return;
 
@@ -111,28 +97,12 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
     }, [isOpen, autoClose, onVisibilityChange, targetRef]
     );
 
-    // Guard Clause
-    if (!children) {
-        devLog.warn("[FloatReveal] No children provided");
-        return null;
-    }
-
-    if (!targetRef) {
-        devLog.warn("[FloatReveal] Target reference is not provided");
-        return null;
-    }
-
-    // Early return if not visible - prevents unnecessary DOM rendering
-    if (!isOpen) {
-        return null;
-    }
-
     return (
         <div
             ref={floatRef}
-            className={`${CSS.FloatReveal} ${className}`}
-            style={positionStyles}
-            data-position={anchor}
+            className={`${CSS.FloatReveal} FloatReveal ${className}`}
+            style={styles}
+            data-anchor={anchor}
             onClick={e => e.stopPropagation()}
             onMouseDown={e => e.stopPropagation()}
             onPointerDown={e => e.stopPropagation()}
@@ -140,9 +110,7 @@ const FloatReveal: React.FC<FloatRevealProps> = memo((props: FloatRevealProps) =
             {children}
         </div>
     );
-});
+};
 
-// Display name for debugging
 FloatReveal.displayName = "FloatReveal";
-
-export default FloatReveal;
+export default memo(FloatReveal);

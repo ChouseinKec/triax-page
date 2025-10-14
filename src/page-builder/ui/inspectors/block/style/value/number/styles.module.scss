@@ -1,27 +1,26 @@
-.BlockStylesValueNumber {
+.NumberValue {
 	position: relative;
-	// max-width: 50px;
 
 	&[data-has-dropdown='true'] {
-		max-width: 100px;
+		// max-width: 100px;
 
-		:global(.NumberInput) {
+		:global(.GenericInput) {
 			padding-right: 40%;
 		}
 	}
 
-	:global(.NumberInput) {
+	:global(.GenericInput) {
 		width: 100%;
 	}
 
-	:global(.NumberDropdown) {
+	:global(.DropdownReveal) {
 		width: 40%;
 		height: 80%;
 		position: absolute;
 		top: 10%;
 		right: 2%;
 
-		:global(.NumberDropdownToggle) {
+		:global(.Toggle) {
 			height: 100%;
 
 			svg {

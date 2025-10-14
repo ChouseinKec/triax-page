@@ -1,44 +1,35 @@
 "use client";
-
 import React, { memo } from "react";
 
 // Styles
-import CSS from "./style.module.scss";
+import CSS from "./styles.module.scss";
 
 // Types
-import type { ActionGroupProps } from "./type";
-
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
+import type { ActionGroupProps } from "./types";
 
 /**
  * ActionGroup Component
- * 
- * A simple wrapper for grouping action buttons or controls, such as those used in toolbars or block editors.
- * Provides consistent structure and styling for collections of actions throughout the UI.
- * Useful for maintaining layout and code consistency when rendering groups of interactive elements.
- * @param {ActionGroupProps} props - Component properties
- * @param {React.ReactNode[]} props.children - Child components to render within the action group
-*/
-const ActionGroup: React.FC<ActionGroupProps> = (props: ActionGroupProps) => {
-    const {
-        children,
-        direction = "horizontal",
-        className = "ActionGroup",
-        isTransparent = true,
-    } = props;
-
-    // Guard Clause
-    if (!children || (Array.isArray(children) && children.length === 0)) {
-        devLog.warn("[ActionGroup] No children provided");
-        return null;
-    }
-
+ *
+ * A flexible container component for grouping related action buttons, controls, or interactive
+ * elements together. Provides consistent layout and spacing for UI toolbars, button clusters,
+ * and control panels throughout the application.
+ *
+ * @param props - Component properties
+ * @param props.children - Action buttons, controls, or elements to group together
+ * @param props.direction - Layout direction: 'horizontal' (default) or 'vertical'
+ * @param props.className - Additional CSS classes for custom styling
+ * @returns The rendered ActionGroup component
+ */
+const ActionGroup: React.FC<ActionGroupProps> = ({ children, direction, className = "" }) => {
     return (
-        <div className={`${CSS.ActionGroup} ${className}`} data-direction={direction} data-transparent={String(isTransparent)}>
+        <div
+            className={`${CSS.ActionGroup} ActionGroup ${className}`}
+            data-direction={direction}
+        >
             {children}
         </div>
     );
 };
 
+ActionGroup.displayName = "ActionGroup";
 export default memo(ActionGroup);

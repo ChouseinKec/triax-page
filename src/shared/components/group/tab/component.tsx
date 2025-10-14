@@ -3,17 +3,14 @@
 import React, { memo, ReactNode, useCallback, useState, useMemo } from "react";
 
 // Styles
-import CSS from "./style.module.scss";
+import CSS from "./styles.module.scss";
 
 // Components
 import RadioSelect from "@/src/shared/components/select/radio/component";
 
 // Types
-import type { TabGroupProps } from "./type";
+import type { TabGroupProps } from "./types";
 import type { OptionDefinition } from "@/src/shared/components/types/option";
-
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
 
 /**
  * TabGroup Component
@@ -23,57 +20,35 @@ import { devLog } from "@/src/shared/utilities/dev";
  * 
  * @param  props - Component properties
  * @param  props.items - Array of tab configurations
- * @param  props.ariaLabel - ARIA label for the tab group
- * @param  props.ariaDescription - Optional description for the tab group
  * @returns Memoized TabGroup component
  */
-const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
-    const {
-        items,
-        className
-    } = props;
-
-    // State management for active tab selection
-    // Default to first tab (index 0) for consistent behavior
+const TabGroup: React.FC<TabGroupProps> = ({ items, className = '' }) => {
     const [selectedIndex, setSelectedIndex] = useState<string>("0");
 
-    /**
-     * Handles tab selection changes with validation
-     * Ensures selected index is within valid range
-     */
+    // Handle tab selection changes
     const handleTabChange = useCallback((value: string): void => {
         const index = parseInt(value, 10);
 
         // Validate index is within bounds
-        if (isNaN(index) || index < 0 || index >= items.length) {
-            devLog.warn(`[TabGroup] Invalid tab index ${value}, resetting to 0`);
-            setSelectedIndex("0");
-            return;
-        }
+        if (isNaN(index) || index < 0 || index >= items.length) return setSelectedIndex("0");
 
         setSelectedIndex(value);
     }, [items.length]
     );
 
-    /**
-     * Transforms tab items into RadioSelect-compatible options
-     * 
-     * @returns {OptionDefinition[]} Array of options for RadioSelect
-     */
+    // Prepare tab options for RadioSelect component
     const tabOptions = useMemo((): OptionDefinition[] => {
         return items.map((item, index) => ({
-            name: item.title || `Tab ${index + 1}`,
-            icon: typeof item.label === "object" ? item.label : undefined,
+            name: item.title,
+            icon: item.label,
             value: index.toString(),
         }));
     },
         [items]
     );
 
-    /**
-     * Returns content for currently selected tab with error boundary
-     */
-    const activeContent = useMemo((): ReactNode => {
+    // Render content for the currently selected tab
+    const renderActiveContent = (): ReactNode => {
         const index = parseInt(selectedIndex, 10);
 
         // Validate index and return content or fallback
@@ -81,37 +56,29 @@ const TabGroup: React.FC<TabGroupProps> = (props: TabGroupProps) => {
             return items[index].content;
         }
 
-
         // Fallback content for missing or invalid content
         return (
-            <div className={CSS.TabContentError} role="alert">
+            <div className={CSS.Empty}>
                 <p>Content not available for this tab</p>
             </div>
         );
-    },
-        [items, selectedIndex]
-    );
-
-    // Guard Clause
-    if (!items || items.length === 0) {
-        devLog.warn("[TabGroup] No items provided");
-        return null;
-    }
+    };
 
     return (
-        <div className={`${CSS.TabGroup} ${className ? className : ""}`}>
+        <div className={`${CSS.TabGroup} TabGroup ${className}`}>
+
             {/* Content area - displays selected tab content */}
-            {activeContent}
+            {renderActiveContent()}
 
             {/* Navigation controls - tab selection interface */}
             <RadioSelect
                 options={tabOptions}
                 value={selectedIndex}
                 onChange={handleTabChange}
-                className="TabGroupRadioSelect"
             />
         </div>
     );
 };
 
+TabGroup.displayName = "TabGroup";
 export default memo(TabGroup);

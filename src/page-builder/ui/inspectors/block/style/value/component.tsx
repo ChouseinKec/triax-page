@@ -3,7 +3,7 @@
 import { memo } from "react";
 
 // Types
-import type { BlockStylesValue } from "@/src/page-builder/ui/inspectors/block/types";
+import type { BlockStylesValue } from "./types";
 
 // Constants
 import { VALUE_SEPARATOR_DEFAULTS } from "@/src/page-builder/core/block/style/constants";
@@ -12,7 +12,6 @@ import { VALUE_SEPARATOR_DEFAULTS } from "@/src/page-builder/core/block/style/co
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
 import { createOptionTable, getValueTokens, getTokenValues } from "@/src/page-builder/core/block/style/utilities";
 import { mergeArrays } from "@/src/shared/utilities/array";
-import { devRender } from "@/src/shared/utilities/dev";
 
 // Components
 import BlockStylesSlots from "@/src/page-builder/ui/inspectors/block/style/value/slots/component";
@@ -20,18 +19,20 @@ import BlockStylesSlots from "@/src/page-builder/ui/inspectors/block/style/value
 
 /**
  * BlockStylesValue Component
- * Main entry for rendering a CSS property value editor.
- * Handles parsing, slotting, and incremental UI for property values.
  *
- * @param blockID - The ID of the block
- * @param propertyName - The CSS property key
- * @returns ReactElement - The rendered value editor UI for the property.
+ * The primary CSS property value editor that orchestrates complex syntax parsing and multi-slot editing.
+ * Handles CSS property syntax normalization, value tokenization, and separator management for advanced properties.
+ * Automatically determines appropriate editing UI based on property syntax definitions and current values.
+ *
+ * @param  props - Component properties
+ * @param  props.value - Current CSS property value string
+ * @param  props.property - Complete CSS property definition with syntax and constraints
+ * @param  props.onChange - Callback triggered when property value changes
+ * @returns Rendered multi-slot value editor with syntax-aware editing capabilities
+ *
+ * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
  */
 const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, property }) => {
-    if (typeof value !== "string") return devRender.error("[BlockStylesValue] No value provided", { value });
-    if (!property || typeof property !== "object") return devRender.error("[BlockStylesValue] No property provided", { property });
-    if (!onChange || typeof onChange !== "function") return devRender.error("[BlockStylesValue] Invalid onChange callback", { onChange });
-
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
     const syntaxSet = property.syntaxSet;
     const syntaxParsed = property.syntaxParsed;
@@ -83,5 +84,6 @@ const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, propert
     return <BlockStylesSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
+BlockStylesValue.displayName = "BlockStylesValue";
 export default memo(BlockStylesValue);
 

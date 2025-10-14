@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // Types
-import type { BlockStylesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./types";
 import type { Side, Corner } from "@/src/shared/components/select/position/types";
 
 // Components
@@ -23,9 +23,9 @@ import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style
  * Custom hook to render the layout for the border and shadow styles.
  * This hook generates the structure and behavior of the "Border & Shadow" section in the style editor.
  *
- * @returns {BlockStylesLayoutProps} The layout configuration for border and shadow settings.
+ * @returns {LayoutProps} The layout configuration for border and shadow settings.
  */
-export const useBorderLayout = (): BlockStylesLayoutProps => {
+export const useBorderLayout = (): LayoutProps => {
     const [currentSide, setCurrentSide] = useState<Side>("top");
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 

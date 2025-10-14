@@ -1,12 +1,11 @@
 "use client";
-
 import React, { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import { TooltipRevealProps } from "./types";
+import type { TooltipRevealProps } from "./types";
 
 // Components
 import FloatReveal from "@/src/shared/components/reveal/float/component";
@@ -17,25 +16,27 @@ import useHover from "@/src/shared/hooks/interface/useHover";
 /**
  * TooltipReveal Component
  *
- * A tooltip component that shows content on hover with automatic positioning.
- * Wraps FloatReveal with hover logic for simple tooltip use cases.
+ * A hover-triggered tooltip component that displays contextual information with automatic positioning.
+ * Provides a simple, accessible way to show tooltips on hover with customizable delay and positioning.
+ * Internally uses FloatReveal for positioning and rendering logic.
  *
- * @param {TooltipRevealProps} props - Component properties
- * @param {React.RefObject<HTMLElement>} props.targetRef - Reference to the trigger element
- * @param {Position} [props.position="top"] - Preferred position relative to target
- * @param {React.ReactNode} props.children - Content to display in the tooltip
- * @param {number} [props.hoverDelay=200] - Delay for hover show/hide in milliseconds
- * @param {string} [props.className] - Optional class name for styling
- * @returns {ReactElement|null} The rendered TooltipReveal component or null if hidden
+ * @param  props - Component properties
+ * @param  props.targetRef - Reference to the target element for hover detection and positioning
+ * @param  props.children - Content to render inside the tooltip
+ * @param  props.anchor="top" - Preferred anchor position relative to target ("top" | "bottom" | "left" | "right")
+ * @param  props.hoverDelay=200 - Milliseconds to delay showing/hiding tooltip on hover enter/leave
+ * @param  props.className="" - Additional CSS class for custom tooltip styling
+ * @returns Rendered tooltip container or null when not hovered
+ *
+ * @note Requires the target element to be mounted for proper hover detection and positioning
  */
-const TooltipReveal: React.FC<TooltipRevealProps> = memo((props: TooltipRevealProps) => {
-    const {
-        children,
-        targetRef,
-        anchor = "top",
-        hoverDelay = 200,
-        className = "",
-    } = props;
+const TooltipReveal: React.FC<TooltipRevealProps> = ({
+    children,
+    targetRef,
+    anchor = "top",
+    hoverDelay = 200,
+    className = "",
+}) => {
 
     // Hover state management
     const isHovered = useHover(targetRef, hoverDelay);
@@ -50,9 +51,7 @@ const TooltipReveal: React.FC<TooltipRevealProps> = memo((props: TooltipRevealPr
             {children}
         </FloatReveal>
     );
-});
+};
 
-// Display name for debugging
 TooltipReveal.displayName = "TooltipReveal";
-
-export default TooltipReveal;
+export default memo(TooltipReveal);

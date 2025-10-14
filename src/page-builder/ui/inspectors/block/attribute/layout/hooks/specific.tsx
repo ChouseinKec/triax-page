@@ -3,7 +3,7 @@
 import React from "react";
 
 // Types
-import type { BlockAttributesLayoutProps } from "@/src/page-builder/ui/inspectors/block/types";
+import type { LayoutProps } from "./types";
 import type { AttributeKey } from "@/src/page-builder/core/block/attribute/types";
 
 // Constants
@@ -22,7 +22,7 @@ import BlockAttributesValue from "../../value/component";
  *
  * @returns The layout props with icon, title, and specific attribute components
  */
-export const useSpecificLayout = (): BlockAttributesLayoutProps => {
+export const useSpecificLayout = (): LayoutProps => {
     const selectedBlockID = useSelectedBlockID();
     const layoutIcon = <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"        >            <path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" />  </svg>
 

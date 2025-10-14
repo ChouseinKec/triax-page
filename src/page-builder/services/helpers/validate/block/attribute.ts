@@ -39,6 +39,8 @@ export function validateAttributeKey(attributeKey: unknown): ValidateResult<Attr
  * validateAttributeValue('my-class') → { valid: true, value: 'my-class' }
  */
 export function validateAttributeValue(attributeValue: unknown): ValidateResult<AttributeValue> {
+	if (attributeValue === '') return { valid: true, value: '' };
+
 	const validation = validateString(attributeValue);
 	if (!validation.valid) return validation;
 

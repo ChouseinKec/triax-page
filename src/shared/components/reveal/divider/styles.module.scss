@@ -2,7 +2,7 @@
 	width: 100%;
 }
 
-.Button {
+.Toggle {
 	width: 100%;
 	height: auto;
 
@@ -13,10 +13,3 @@
 	cursor: pointer;
 }
 
-.Content {
-	padding-bottom: var(--size-md);
-	padding-top: var(--size-lg);
-
-	display: grid;
-	gap: var(--size-lg);
-}

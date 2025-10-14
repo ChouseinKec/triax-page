@@ -6,19 +6,27 @@ import { memo, ReactElement, useCallback } from "react";
 import CSS from "./styles.module.scss";
 
 // Types
-import { OptionProps } from "./types";
+import type { OptionProps } from "./types";
 
 /**
  * Option Component
  *
- * Renders a single selectable option for use in dropdowns, radio groups, etc.
- * Handles selection/deselection logic and displays an icon or label.
+ * A presentational component that renders a single selectable option with icon and text display.
+ * Handles click interactions for selection/deselection and provides accessibility features.
+ * Optimized for performance with memoization and designed for use in lists, dropdowns, and radio groups.
  *
- * Best practice: Keep this component presentational and stateless, relying on props for state and actions.
- * Use memoization to avoid unnecessary re-renders.
+ * @param  props - Component properties
+ * @param  props.name - Display text for the option
+ * @param  props.value - Underlying value associated with the option
+ * @param  props.icon - Optional icon element to display alongside the text
+ * @param  props.category="other" - Category grouping for organizational purposes
+ * @param  props.isSelected - Whether this option is currently selected
+ * @param  props.onChange - Callback function triggered when option is clicked
+ * @param  props.prioritizeIcons=false - Hides text when true, showing only the icon
+ * @param  props.className="" - Additional CSS classes for custom styling
+ * @returns Rendered option button with icon, text, and selection state
  *
- * @param {OptionProps} props - The props for the option item.
- * @returns {ReactElement} - The rendered option element.
+ * @note Clicking a selected option deselects it; clicking unselected option selects it
  */
 const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
     const {
@@ -29,33 +37,23 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
         onChange,
         category = "other",
         prioritizeIcons = false,
-        className = "Option"
+        className = ""
     } = props;
 
-    /**
-     * Handles the selection or deselection of this option.
-     *
-     * Best practice: Use useCallback to memoize event handlers for performance.
-     *
-     * If the option is already selected, clicking will deselect it (calls onChange with "").
-     * Otherwise, clicking will select it (calls onChange with the option"s value).
-     *
-     * @param {string} value - The value of the option to select/deselect.
-     */
+    // Handle option selection changes
     const handleChange = useCallback((value: string): void => {
-        if (isSelected) {
-            onChange(""); // Deselect the option if it"s already selected
-            return;
-        }
-        onChange(value); // Select the option if it"s not already selected
+
+        // Deselect the option if it"s already selected
+        if (isSelected) return onChange('');
+
+        // Select the option if it"s not already selected
+        onChange(value);
     }, [isSelected, onChange]
     );
 
-    const iconElement = icon ? icon : "";
-    const textElement = prioritizeIcons ? null : <span>{name}</span>;
     return (
         <button
-            className={`${CSS.Option} ${className}`}
+            className={`${CSS.Option} Option ${className}`}
             onClick={() => handleChange(value)}
             data-is-selected={isSelected}
             title={name}
@@ -63,11 +61,15 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
             data-category={category}
         >
 
-            {iconElement}
-            {textElement}
+            {icon}
+
+            {prioritizeIcons
+                ? null
+                : <span>{name}</span>
+            }
         </button>
     )
 };
 
-
-export default memo(Option); // Best practice: memoize presentational components for performance
+Option.displayName = "Option";
+export default memo(Option); 

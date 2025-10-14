@@ -14,6 +14,11 @@
 		[fill]:not([fill='none']) {
 			fill: var(--theme-color-secondary);
 		}
+
+		::after,
+		&::after {
+			background: var(--theme-color-secondary);
+		}
 	}
 
 	&[data-is-active='true'] {
@@ -29,6 +34,11 @@
 		[fill]:not([fill='none']) {
 			fill: var(--color-white);
 		}
+
+		::after,
+		&::after {
+			background: var(--color-white);
+		}
 	}
 
 	&:focus {
@@ -37,6 +47,10 @@
 
 	&:active {
 		box-shadow: 0px 0px 0px 1px var(--theme-color-secondary) inset;
+	}
+
+	&[data-is-error='true'] {
+		box-shadow: 0px 0px 0px 1px var(--color-error--light) inset;
 	}
 
 	&[data-is-disabled='true'] {
@@ -71,7 +85,7 @@
 	font-size: var(--font-size-md);
 	background: var(--theme-color-primary);
 	position: fixed;
-	padding: var(--size-md);
+	padding: var(--size-sm);
 	z-index: 9999;
 }
 
@@ -116,10 +130,6 @@
 	appearance: textfield;
 
 	@include states();
-
-	&[data-is-error='true'] {
-		border-bottom: 3px solid var(--color-error);
-	}
 }
 
 // This mixin is used for vertical flex stack
@@ -156,7 +166,8 @@
 	$justify: center,
 	$align: center,
 	$direction: row,
-	$gap: var(--size-xs)
+	$gap: var(--size-xs),
+	$border: none
 ) {
 	height: $height;
 
@@ -168,7 +179,7 @@
 	gap: $gap;
 	outline: none;
 	border-radius: $radius;
-	border: none;
+	border: $border;
 
 	background: $background;
 
@@ -228,6 +239,10 @@
 }
 
 @mixin icon-arrow {
+	&:not([data-is-selected]):hover::after {
+		background: var(--theme-color-secondary);
+	}
+
 	&::after {
 		content: '';
 		width: 7px;
@@ -236,7 +251,6 @@
 
 		transform: translateY(-5%);
 
-		clip-path: polygon(50% 100%, 0 0, 100% 0);
 		background: var(--color-white);
 
 		box-shadow: none !important;
@@ -244,16 +258,66 @@
 		transition: clip-path 0.5s;
 	}
 
-	&[data-is-open='true'] {
+	// Default closed state - arrow points down (towards content below)
+	&::after {
+		clip-path: polygon(50% 100%, 0 0, 100% 0);
+	}
+
+	// Anchor-specific closed states (arrow points towards content)
+	&[data-anchor='top'] {
 		&::after {
 			clip-path: polygon(50% 0, 0 100%, 100% 100%);
-			background: var(--color-white);
 		}
 	}
 
-	&:hover {
+	&[data-anchor='bottom'] {
 		&::after {
-			background: var(--theme-color-secondary);
+			clip-path: polygon(50% 100%, 0 0, 100% 0);
+		}
+	}
+
+	&[data-anchor='left'] {
+		&::after {
+			clip-path: polygon(0 50%, 100% 0, 100% 100%);
+		}
+	}
+
+	&[data-anchor='right'] {
+		&::after {
+			clip-path: polygon(100% 50%, 0 0, 0 100%);
+		}
+	}
+
+	// Open states - arrow points away from content
+	&[data-is-open='true'] {
+		&[data-anchor='top'] {
+			&::after {
+				clip-path: polygon(50% 100%, 0 0, 100% 0);
+			}
+		}
+
+		&[data-anchor='bottom'] {
+			&::after {
+				clip-path: polygon(50% 0, 0 100%, 100% 100%);
+			}
+		}
+
+		&[data-anchor='left'] {
+			&::after {
+				clip-path: polygon(100% 50%, 0 0, 0 100%);
+			}
+		}
+
+		&[data-anchor='right'] {
+			&::after {
+				clip-path: polygon(0 50%, 100% 0, 100% 100%);
+			}
+		}
+
+		&:not([data-anchor]) {
+			&::after {
+				clip-path: polygon(50% 0, 0 100%, 100% 100%);
+			}
 		}
 	}
 }
