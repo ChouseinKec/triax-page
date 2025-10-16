@@ -126,15 +126,27 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
  * const actions = useBarActions('bar-123') // Returns reactive array of actions
  */
 export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
-	const safeData = new ValidationPipeline('[LayoutManager → useBarActions]')
-		.validate({
-			barID: validateBarID(barID),
-		})
-		.execute();
-	if (!safeData) return undefined;
+	const safeData = useMemo(
+		() =>
+			new ValidationPipeline('[LayoutManager → useBarActions]')
+				.validate({
+					barID: validateBarID(barID),
+				})
+				.execute(),
+		[barID]
+	);
 
-	const actionsRecord = useLayoutStore((state) => state.getBar(safeData.barID)?.actions);
-	if (!actionsRecord) return devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeData.barID}" not found.`), undefined;
+	const actionsRecord = useLayoutStore((state) => {
+		if (!safeData) return undefined;
+		return state.getBar(safeData.barID)?.actions;
+	});
 
-	return useMemo(() => Object.values(actionsRecord), [actionsRecord]);
+	return useMemo(() => {
+		if (!safeData || !actionsRecord) {
+			if (!safeData) return undefined;
+			devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeData.barID}" not found.`);
+			return undefined;
+		}
+		return Object.values(actionsRecord);
+	}, [actionsRecord, safeData]);
 }

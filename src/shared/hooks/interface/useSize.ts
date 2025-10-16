@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, RefObject, useCallback } from "react";
-import { useDebouncedCallback } from "../utility/useCallback";
+import { useState, useEffect, RefObject, useCallback } from 'react';
+import { useDebouncedCallback } from '../utility/useCallback';
 
 type Size = { width: number; height: number };
 
@@ -40,7 +40,7 @@ const useSize = (targetRef: RefObject<HTMLElement | null>) => {
 
 		// Cleanup function to disconnect the observer when the component unmounts
 		return () => observer.disconnect();
-	}, [targetRef]);
+	}, [targetRef, debouncedResize, handleResize]);
 
 	return { size, isOverflowing } as const;
 };

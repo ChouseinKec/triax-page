@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 // Types
 import type { StyleKey } from '@/src/page-builder/core/block/style/types';
@@ -48,7 +48,7 @@ export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 /**
  * Children blocks (React nodes)
  */
-export type BlockChildren = ReactElement | ReactElement[] ;
+export type BlockChildren = ReactElement | ReactElement[];
 
 /**
  * Function to render a block instance with optional children
@@ -107,7 +107,7 @@ export interface BlockInstance {
 	/** The kind of block (text, container, media) */
 	type: BlockType;
 	/** ID of the parent block, null if root */
-	parentID: BlockID ;
+	parentID: BlockID;
 	/** IDs of child blocks in order */
 	contentIDs: BlockID[];
 	/** Instance-specific attributes that override defaults */

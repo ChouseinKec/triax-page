@@ -8,15 +8,15 @@ import { devLog } from '@/src/shared/utilities/dev';
  * Batch validates multiple ValidateResult objects.
  * Returns the first error encountered, or an object with all validated values if all pass.
  */
-export function validate<T extends Record<string, ValidateResult<any>>>(validations: T): { valid: true; values: { [K in keyof T]: T[K] extends ValidateResult<infer U> ? U : never } } | { valid: false; message: string } {
-	const values: any = {};
+export function validate<T extends Record<string, ValidateResult<unknown>>>(validations: T): { valid: true; values: { [K in keyof T]: T[K] extends ValidateResult<infer U> ? U : never } } | { valid: false; message: string } {
+	const values = {} as { [K in keyof T]: T[K] extends ValidateResult<infer U> ? U : never };
 
 	for (const key in validations) {
 		const result = validations[key];
 		if (!result.valid) {
 			return { valid: false, message: result.message };
 		}
-		values[key] = result.value;
+		(values as Record<string, unknown>)[key] = result.value;
 	}
 
 	return { valid: true, values };
@@ -26,15 +26,15 @@ export function validate<T extends Record<string, ValidateResult<any>>>(validati
  * Batch fetches multiple FetchResult objects.
  * Returns the first error encountered, or an object with all fetched data if all succeed.
  */
-export function fetch<T extends Record<string, FetchResult<any>>>(fetches: T): { success: true; data: { [K in keyof T]: T[K] extends FetchResult<infer U> ? U : never } } | { success: false; error: string } {
-	const data: any = {};
+export function fetch<T extends Record<string, FetchResult<unknown>>>(fetches: T): { success: true; data: { [K in keyof T]: T[K] extends FetchResult<infer U> ? U : never } } | { success: false; error: string } {
+	const data = {} as { [K in keyof T]: T[K] extends FetchResult<infer U> ? U : never };
 
 	for (const key in fetches) {
 		const result = fetches[key];
 		if (!result.success) {
 			return { success: false, error: result.error };
 		}
-		data[key] = result.data;
+		(data as Record<string, unknown>)[key] = result.data;
 	}
 
 	return { success: true, data };
@@ -45,7 +45,7 @@ export function fetch<T extends Record<string, FetchResult<any>>>(fetches: T): {
  * On failure, logs the error message and returns null.
  * On success, returns an object with the validated values.
  */
-export function validateOrLog<T extends Record<string, ValidateResult<any>>>(validations: T, logPrefix = '[Validation]'): { [K in keyof T]: T[K] extends ValidateResult<infer U> ? U : never } | null {
+export function validateOrLog<T extends Record<string, ValidateResult<unknown>>>(validations: T, logPrefix = '[Validation]'): { [K in keyof T]: T[K] extends ValidateResult<infer U> ? U : never } | null {
 	const result = validate(validations);
 	if (!result.valid) return devLog.error(`${logPrefix} ${result.message}`), null;
 
@@ -57,9 +57,9 @@ export function validateOrLog<T extends Record<string, ValidateResult<any>>>(val
  * Allows building complex validation flows where each step can use results from previous steps.
  * Maintains type safety by accumulating types as data is added to the pipeline.
  */
-export class ValidationPipeline<TData extends Record<string, any> = {}> {
+export class ValidationPipeline<TData extends Record<string, unknown> = Record<string, never>> {
 	private context: string;
-	private validatedData: Record<string, any> = {};
+	private validatedData: Record<string, unknown> = {};
 	private hasFailed: boolean = false;
 
 	constructor(context: string) {
@@ -71,10 +71,10 @@ export class ValidationPipeline<TData extends Record<string, any> = {}> {
 	 * @param validations - Either a validation object or a function that receives previous data
 	 * @returns The pipeline with extended type information
 	 */
-	validate<TValidations extends Record<string, ValidateResult<any>>>(
+	validate<TValidations extends Record<string, ValidateResult<unknown>>>(
 		validations: TValidations | ((data: TData) => TValidations)
 	): ValidationPipeline<TData & { [K in keyof TValidations]: TValidations[K] extends ValidateResult<infer U> ? U : never }> {
-		if (this.hasFailed) return this as any; // Skip if already failed
+		if (this.hasFailed) return this as ValidationPipeline<TData & { [K in keyof TValidations]: TValidations[K] extends ValidateResult<infer U> ? U : never }>; // Skip if already failed
 
 		// Allow validations to be a function that receives previous validated data
 		const validationObj = typeof validations === 'function' ? validations(this.validatedData as TData) : validations;
@@ -83,12 +83,12 @@ export class ValidationPipeline<TData extends Record<string, any> = {}> {
 		if (!result.valid) {
 			devLog.error(`${this.context} ${result.message}`);
 			this.hasFailed = true;
-			return this as any;
+			return this as ValidationPipeline<TData & { [K in keyof TValidations]: TValidations[K] extends ValidateResult<infer U> ? U : never }>;
 		}
 
 		// Merge validated values into pipeline data
 		Object.assign(this.validatedData, result.values);
-		return this as any;
+		return this as ValidationPipeline<TData & { [K in keyof TValidations]: TValidations[K] extends ValidateResult<infer U> ? U : never }>;
 	}
 
 	/**
@@ -96,10 +96,10 @@ export class ValidationPipeline<TData extends Record<string, any> = {}> {
 	 * @param fetches - Either a fetch object or a function that receives previous data
 	 * @returns The pipeline with extended type information
 	 */
-	fetch<TFetches extends Record<string, FetchResult<any>>>(
+	fetch<TFetches extends Record<string, FetchResult<unknown>>>(
 		fetches: TFetches | ((data: TData) => TFetches)
 	): ValidationPipeline<TData & { [K in keyof TFetches]: TFetches[K] extends FetchResult<infer U> ? U : never }> {
-		if (this.hasFailed) return this as any; // Skip if already failed
+		if (this.hasFailed) return this as ValidationPipeline<TData & { [K in keyof TFetches]: TFetches[K] extends FetchResult<infer U> ? U : never }>; // Skip if already failed
 
 		// Allow fetches to be a function that receives previous validated data
 		const fetchObj = typeof fetches === 'function' ? fetches(this.validatedData as TData) : fetches;
@@ -108,12 +108,12 @@ export class ValidationPipeline<TData extends Record<string, any> = {}> {
 		if (!result.success) {
 			devLog.error(`${this.context} ${result.error}`);
 			this.hasFailed = true;
-			return this as any;
+			return this as ValidationPipeline<TData & { [K in keyof TFetches]: TFetches[K] extends FetchResult<infer U> ? U : never }>;
 		}
 
 		// Merge fetched data into pipeline data
 		Object.assign(this.validatedData, result.data);
-		return this as any;
+		return this as ValidationPipeline<TData & { [K in keyof TFetches]: TFetches[K] extends FetchResult<infer U> ? U : never }>;
 	}
 
 	/**
@@ -121,17 +121,17 @@ export class ValidationPipeline<TData extends Record<string, any> = {}> {
 	 * @param derivations - Either a derivation object or a function that receives previous data
 	 * @returns The pipeline with extended type information
 	 */
-	derive<TDerivations extends Record<string, any>>(
+	derive<TDerivations extends Record<string, unknown>>(
 		derivations: TDerivations | ((data: TData) => TDerivations)
 	): ValidationPipeline<TData & TDerivations> {
-		if (this.hasFailed) return this as any; // Skip if already failed
+		if (this.hasFailed) return this as ValidationPipeline<TData & TDerivations>; // Skip if already failed
 
 		// Allow derivations to be a function that receives previous validated data
 		const derivationObj = typeof derivations === 'function' ? derivations(this.validatedData as TData) : derivations;
 
 		// Merge derived values into pipeline data
 		Object.assign(this.validatedData, derivationObj);
-		return this as any;
+		return this as ValidationPipeline<TData & TDerivations>;
 	}
 
 	/**

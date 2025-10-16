@@ -28,7 +28,7 @@ const ContainerRender: React.FC<{ instance: BlockInstance; children?: BlockChild
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         selectBlock(blockID);
-    }, [selectBlock, blockID]
+    }, [blockID]
     );
 
     return (

@@ -37,13 +37,15 @@ import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
  * @returns Rendered property editor with label, tooltip, and action controls
  */
 const Property: React.FC<PropertyProps> = ({ component, label, hidden, disabled, property, styles }) => {
-    if (hidden) return null;
-
+    // Always call hooks in the same order
     const selectedBlockID = useSelectedBlockID();
     const labelRef = useRef<HTMLLabelElement>(null);
+
     const propertyDef = property ? STYLE_DEFINITIONS[property] : undefined;
     const propertyName = propertyDef?.name ?? "N/A";
     const propertyDescription = propertyDef?.description ?? "N/A";
+
+    if (hidden) return null;
 
     return (
         <div

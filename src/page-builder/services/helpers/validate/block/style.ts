@@ -59,7 +59,7 @@ export function validateStyleValue(styleKey: unknown, styleValue: unknown): Vali
 	const propertyDef = STYLE_DEFINITIONS[keyValidation.value];
 
 	// Fetch the normalized syntax variations for the property
-	const syntaxNormalized = propertyDef.syntaxNormalized;
+	const {syntaxNormalized} = propertyDef;
 	if (!syntaxNormalized) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
 
 	// Split the value into its components

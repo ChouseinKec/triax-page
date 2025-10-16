@@ -106,7 +106,7 @@ const NumberValue: React.FC<NumberValueProps> = ({ value, onChange, options, for
 
         onChange(safeValue);
     },
-        [onChange]
+        [onChange, forceInteger]
     );
 
     // Handle dropdown option selection changes

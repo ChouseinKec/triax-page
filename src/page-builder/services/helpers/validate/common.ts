@@ -10,7 +10,7 @@ export function validateString(input: unknown): ValidateResult<string> {
 	return { valid: true, value: input };
 }
 
-export function validateArray(input: unknown): ValidateResult<any[]> {
+export function validateArray(input: unknown): ValidateResult<unknown[]> {
 	if (!Array.isArray(input)) {
 		return { valid: false, message: `Invalid array: expected an array, got ${typeof input}` };
 	}
@@ -27,22 +27,22 @@ export function validateArray(input: unknown): ValidateResult<any[]> {
 	return { valid: true, value: input };
 }
 
-export function validateFunction(input: unknown): ValidateResult<Function> {
+export function validateFunction<T extends (...args: unknown[]) => unknown>(input: unknown): ValidateResult<T> {
 	if (typeof input !== 'function') {
 		return { valid: false, message: `Invalid function: expected a function, got ${typeof input}` };
 	}
 
-	return { valid: true, value: input };
+	return { valid: true, value: input as T };
 }
 
-export function validateObject(input: unknown): ValidateResult<Record<string, any>>;
-export function validateObject(input: unknown, keys: string[]): ValidateResult<Record<string, any>>;
-export function validateObject(input: unknown, keys?: string[]): ValidateResult<Record<string, any>> {
+export function validateObject(input: unknown): ValidateResult<Record<string, unknown>>;
+export function validateObject(input: unknown, keys: string[]): ValidateResult<Record<string, unknown>>;
+export function validateObject(input: unknown, keys?: string[]): ValidateResult<Record<string, unknown>> {
 	if (!input || typeof input !== 'object' || Array.isArray(input)) {
 		return { valid: false, message: `Invalid object: expected an object, got ${typeof input}` };
 	}
 
-	const obj = input as Record<string, any>;
+	const obj = input as Record<string, unknown>;
 
 	if (keys) {
 		const missingKeys = keys.filter((key) => !(key in obj));

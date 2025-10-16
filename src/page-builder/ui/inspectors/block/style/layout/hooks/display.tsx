@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 
 // Types
 import type { LayoutProps } from "./types";
@@ -21,8 +21,10 @@ import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style
 export const useDisplayLayout = (): LayoutProps => {
     const selectedBlockID = useSelectedBlockID();
     const layoutIcon = <svg aria-label="Display & Layout Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256">            <path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" /> </svg>
-    const displayValue = selectedBlockID ? useBlockStyle(selectedBlockID, "display") : "";
-    const flexWrapValue = selectedBlockID ? useBlockStyle(selectedBlockID, "flex-wrap") : "";
+    
+    // Always call hooks in the same order
+    const displayValue = useBlockStyle(selectedBlockID || "", "display");
+    const flexWrapValue = useBlockStyle(selectedBlockID || "", "flex-wrap");
 
     // Memoize display type flags for better performance
     const displayIsFlex = useMemo(() => displayValue === "flex", [displayValue]);
@@ -48,7 +50,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: "Display",
                         property: "display",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="display" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="display" />
                     },
 
                 ],
@@ -65,14 +67,14 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: "Direction",
                         property: "flex-direction",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="flex-direction" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="flex-direction" />
                     },
 
                     // Flex Wrap (wrap, no-wrap, etc.)
                     {
                         label: "Wrap",
                         property: "flex-wrap",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="flex-wrap" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="flex-wrap" />
                     },
 
                     // Align Items (flex-start, center, etc.)
@@ -80,7 +82,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Align Items",
                         property: "align-items",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-items" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-items" />
                     },
 
                     // Align Content (flex-start, center, etc.)
@@ -89,7 +91,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Align Content",
                         property: "align-content",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-content" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-content" />
                     },
 
 
@@ -98,21 +100,21 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Justify Content",
                         property: "justify-content",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-content" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-content" />,
                     },
 
                     // Row Gap for flex container
                     {
                         label: "Row Gap",
                         property: "row-gap",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="row-gap" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="row-gap" />,
                     },
 
                     // Column Gap for flex container
                     {
                         label: "Column Gap",
                         property: "column-gap",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-gap" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-gap" />,
                     },
                 ],
             },
@@ -128,7 +130,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Justify Content",
                         property: "justify-content",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-content" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-content" />,
                     },
 
                     // Justify Items 
@@ -136,7 +138,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Justify Items",
                         property: "justify-items",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-items" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="justify-items" />,
                     },
 
                     // Align Content 
@@ -144,7 +146,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Align Content",
                         property: "align-content",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-content" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-content" />,
                     },
 
                     // Align Items 
@@ -152,7 +154,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Align Items",
                         property: "align-items",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-items" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="align-items" />,
                     },
 
                     // Auto Flow 
@@ -160,35 +162,35 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Auto Flow",
                         property: "grid-auto-flow",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-flow" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-flow" />,
                     },
 
                     // Auto Rows 
                     {
                         label: "Auto Rows",
                         property: "grid-auto-rows",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-rows" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-rows" />,
                     },
 
                     // Auto Columns 
                     {
                         label: "Auto Columns",
                         property: "grid-auto-columns",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-columns" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-auto-columns" />,
                     },
 
                     // Template Rows 
                     {
                         label: "Template Rows",
                         property: "grid-template-rows",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-template-rows" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-template-rows" />,
                     },
 
                     // Template Columns 
                     {
                         label: "Template Columns",
                         property: "grid-template-columns",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-template-columns" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="grid-template-columns" />,
                     },
 
 
@@ -198,7 +200,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Row Gap",
                         property: "row-gap",
                         styles: { gridColumn: "1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="row-gap" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="row-gap" />,
                     },
 
                     // Column Gap for grid container
@@ -206,7 +208,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Column Gap",
                         property: "column-gap",
                         styles: { gridColumn: "2" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-gap" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="column-gap" />,
                     },
 
 
@@ -222,28 +224,28 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: "Direction",
                         property: "direction",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="direction" />, [selectedBlockID])
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="direction" />
                     },
 
                     // Box-Sizing
                     {
                         label: "Box Sizing",
                         property: "box-sizing",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="box-sizing" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="box-sizing" />,
                     },
 
                     // Visibility
                     {
                         label: "Visibility",
                         property: "visibility",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="visibility" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="visibility" />,
                     },
 
                     // Float
                     {
                         label: "Float",
                         property: "float",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="float" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="float" />,
                     },
 
 
@@ -251,7 +253,7 @@ export const useDisplayLayout = (): LayoutProps => {
                     {
                         label: "Clear",
                         property: "clear",
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="clear" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="clear" />,
                     },
 
 
@@ -261,7 +263,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Object Position",
                         property: "object-position",
                         styles: { gridColumn: "2/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="object-position" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="object-position" />,
                     },
 
 
@@ -270,7 +272,7 @@ export const useDisplayLayout = (): LayoutProps => {
                         label: "Object Fit",
                         property: "object-fit",
                         styles: { gridColumn: "1/-1" },
-                        component: useCallback(() => <StyleValueRenderer blockID={selectedBlockID} propertyName="object-fit" />, [selectedBlockID]),
+                        component: () => <StyleValueRenderer blockID={selectedBlockID} propertyName="object-fit" />,
                     },
 
 

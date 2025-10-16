@@ -1,5 +1,5 @@
 // Types
-import type { ViewportDefinition } from '@/src/page-builder/core/editor/viewport/types';
+import type { ViewportDefinition, ViewportRender, ViewportID, ViewportTitle } from '@/src/page-builder/core/editor/viewport/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
@@ -18,9 +18,9 @@ import { validateWorkbenchID } from '@/src/page-builder/services/helpers/validat
  * @example
  * validateViewportID('viewport-123') → { valid: true, value: 'viewport-123' }
  */
-export function validateViewportID(viewportID: unknown): ValidateResult<string> {
+export function validateViewportID(viewportID: unknown): ValidateResult<ViewportID> {
 	if (!isViewportIDValid(viewportID)) return { valid: false, message: `Viewport ID must be a valid string, got: ${viewportID}` };
-	return { valid: true, value: viewportID as string };
+	return { valid: true, value: viewportID as ViewportID };
 }
 
 /**
@@ -33,9 +33,9 @@ export function validateViewportID(viewportID: unknown): ValidateResult<string> 
  * @example
  * validateViewportTitle('My Viewport') → { valid: true, value: 'My Viewport' }
  */
-export function validateViewportTitle(viewportTitle: unknown): ValidateResult<string> {
+export function validateViewportTitle(viewportTitle: unknown): ValidateResult<ViewportTitle> {
 	if (!isViewportTitleValid(viewportTitle)) return { valid: false, message: `Viewport title must be a valid string, got: ${viewportTitle}` };
-	return { valid: true, value: viewportTitle as string };
+	return { valid: true, value: viewportTitle as ViewportTitle };
 }
 
 /**
@@ -48,9 +48,9 @@ export function validateViewportTitle(viewportTitle: unknown): ValidateResult<st
  * @example
  * validateViewportRender(() => <div>Viewport</div>) → { valid: true, value: () => <div>Viewport</div> }
  */
-export function validateViewportRender(viewportRender: unknown): ValidateResult<Function> {
+export function validateViewportRender(viewportRender: unknown): ValidateResult<ViewportRender> {
 	if (!isViewportRenderValid(viewportRender)) return { valid: false, message: `Viewport render must be a valid function, got: ${typeof viewportRender}` };
-	return { valid: true, value: viewportRender as Function };
+	return { valid: true, value: viewportRender as ViewportRender };
 }
 
 /**

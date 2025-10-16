@@ -32,8 +32,4 @@ export interface OptionsSelectProps {
 
     /** Whether to prioritize icons over text in the dropdown options (default: false) */
     prioritizeIcons?: boolean;
-
-
-    /** Optional class name for custom styling */
-    className?: string;
 }

@@ -103,7 +103,7 @@ export function getColumnSets<T>(rows: T[][]): T[][] {
  * groupBy([{type: 'a'}, {type: 'b'}, {type: 'a'}], 'type')
  * → { a: [{type: 'a'}, {type: 'a'}], b: [{type: 'b'}] }
  */
-export function groupBy<T extends Record<string, any>>(arr: T[], prop: keyof T): Record<string, T[]> {
+export function groupBy<T extends Record<string, unknown>>(arr: T[], prop: keyof T): Record<string, T[]> {
 	return arr.reduce((acc, item) => {
 		const key = String(item[prop]);
 		if (!acc[key]) acc[key] = [];

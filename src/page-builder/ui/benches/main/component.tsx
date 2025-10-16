@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, memo } from "react";
+import { useEffect, memo, useCallback } from "react";
 
 // Managers
 import { useSelectedDeviceID } from "@/src/page-builder/services/managers/page";
@@ -11,7 +11,6 @@ import DeviceSelect from "@/src/page-builder/ui/actions/device";
 // Styles
 import CSS from "./styles.module.scss";
 
-
 /**
  * Renders the main workbench layout.
  * 
@@ -20,8 +19,7 @@ import CSS from "./styles.module.scss";
  */
 const MainRender: React.FC = () => {
     const selectedDeviceID = useSelectedDeviceID() || '';
-    const renderDeviceSelect = () => <DeviceSelect />;
-
+    const renderDeviceSelect = useCallback(() => <DeviceSelect />, []);
 
     useEffect(() => {
         const barID = "workbenchmain-actions";
@@ -38,7 +36,7 @@ const MainRender: React.FC = () => {
             unregisterBarAction(barID, actionID)
         };
 
-    }, [renderDeviceSelect, registerBarAction, unregisterBarAction, selectedDeviceID]
+    }, [renderDeviceSelect, selectedDeviceID]
     );
 
     return (

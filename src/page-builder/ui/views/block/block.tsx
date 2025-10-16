@@ -19,18 +19,17 @@ import { devRender } from "@/src/shared/utilities/dev";
  * @returns The rendered block with recursive children for block editing
  */
 const Block: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
-    if (!blockID || typeof blockID !== "string" || blockID.trim().length === 0) return devRender.error("[BlocksCanvasBlock] No block ID provided", { blockID });
-
+    // Always call hooks in the same order
     const currentBlock = useBlock(blockID);
-    const currentBlockContentIDs = currentBlock?.contentIDs || [];
     const currentBlockRender = getBlockRender(currentBlock?.type);
 
     // Render child blocks recursively
     const children = useMemo(() => {
-        if (!currentBlockContentIDs) return [];
-        return currentBlockContentIDs.map(childID => <Block key={childID} blockID={childID} />);
-    }, [currentBlockContentIDs]
-    );
+        const contentIDs = currentBlock?.contentIDs || [];
+        if (!contentIDs.length) return [];
+        return contentIDs.map(childID => <Block key={childID} blockID={childID} />);
+    }, [currentBlock?.contentIDs]);
+
 
     // Early return if block doesn't exist
     if (!currentBlock) return devRender.error(`[BlocksCanvasBlock] Block not found: ${blockID}`);

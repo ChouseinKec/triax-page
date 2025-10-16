@@ -10,15 +10,15 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					all: {
 						width: '100%',
 						'min-height': '100vh',
-						'background-color': '#f8fafc',
+						'background-color': '#ffffff',
 						display: 'flex',
 						'flex-direction': 'column',
 						'align-items': 'center',
 						'justify-content': 'flex-start',
-						'padding-top': '10px',
-						'padding-right': '10px',
-						'padding-bottom': '10px',
-						'padding-left': '10px',
+						'padding-top': '40px',
+						'padding-right': '24px',
+						'padding-bottom': '40px',
+						'padding-left': '24px',
 						'margin-top': '0px',
 						'margin-right': '0px',
 						'margin-bottom': '0px',
@@ -29,7 +29,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		attributes: {},
 		parentID: 'root',
-		contentIDs: ['hero', 'footer', 'features', 'timeline'],
+		contentIDs: ['hero', 'features-grid', 'timeline'],
 		type: 'container',
 	},
 
@@ -41,22 +41,23 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				all: {
 					all: {
 						width: '100%',
-						'max-width': '900px',
-						'margin-top': '40px',
-						'margin-right': '0',
-						'margin-bottom': '24px',
-						'margin-left': '0',
-						'padding-top': '32px',
-						'padding-right': '24px',
-						'padding-bottom': '32px',
-						'padding-left': '24px',
-						'background-color': '#6366f1',
-						'border-radius': '18px',
-						'box-shadow': '0 8px 32px rgba(0,0,0,0.08)',
+						'max-width': '1000px',
+						'margin-top': '0px',
+						'margin-right': '0px',
+						'margin-bottom': '0px',
+						'margin-left': '0px',
+						'padding-top': '80px',
+						'padding-right': '60px',
+						'padding-bottom': '80px',
+						'padding-left': '60px',
+						'background-color': '#ffffff',
+						'border-radius': '20px',
+						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
 						display: 'flex',
 						'flex-direction': 'column',
 						'align-items': 'center',
-						color: '#fff',
+						color: '#111827',
+						position: 'relative',
 					},
 				},
 			},
@@ -72,17 +73,19 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			all: {
 				all: {
 					all: {
-						'font-size': '2.5rem',
-						'font-weight': 'bold',
-						'margin-bottom': '12px',
+						'font-size': '3.5rem',
+						'font-weight': '800',
+						'margin-bottom': '20px',
 						'text-align': 'center',
-						'letter-spacing': '0.02em',
+						'letter-spacing': '-0.02em',
+						'line-height': '1.1',
+						color: '#111827',
 					},
 				},
 			},
 		},
 		attributes: {
-			text: '👋 Welcome to Triax Page Builder!',
+			text: 'Design websites visually',
 		},
 		parentID: 'hero',
 		contentIDs: [],
@@ -94,16 +97,18 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			all: {
 				all: {
 					all: {
-						'font-size': '1.25rem',
-						'margin-bottom': '0',
+						'font-size': '1.375rem',
+						'margin-bottom': '0px',
 						'text-align': 'center',
-						color: '#e0f2fe',
+						color: '#6b7280',
+						'line-height': '1.6',
+						'max-width': '800px',
 					},
 				},
 			},
 		},
 		attributes: {
-			text: 'Start building visually. Nest, and style blocks. Select a block to see its settings. 🚀',
+			text: 'Create responsive, professional websites with a visual page builder. Drag, drop, and customize blocks to build exactly what you need.',
 		},
 		parentID: 'hero',
 		contentIDs: [],
@@ -111,112 +116,195 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	},
 
 	// Features section
-	features: {
-		id: 'features',
+	'features-grid': {
+		id: 'features-grid',
 		styles: {
 			all: {
 				all: {
 					all: {
+						display: 'grid',
+						'grid-template-columns': 'repeat(auto-fit, minmax(150px, 1fr))',
+						gap: '40px',
 						width: '100%',
-						'max-width': '900px',
-						'margin-top': '0',
-						'margin-right': '0',
-						'margin-bottom': '32px',
-						'margin-left': '0',
-						'padding-top': '24px',
-						'padding-right': '24px',
-						'padding-bottom': '24px',
-						'padding-left': '24px',
-						'background-color': '#fff',
-						'border-radius': '14px',
-						'box-shadow': '0 4px 16px rgba(0,0,0,0.04)',
-						display: 'flex',
-						'flex-direction': 'column',
-						'align-items': 'center',
-						color: '#334155',
+						'max-width': '1000px',
+						'padding-top': '20px',
+						'padding-bottom': '20px',
+						'margin-top': '20px',
+						'margin-bottom': '20px',
 					},
 				},
 			},
 		},
 		attributes: {},
 		parentID: 'body',
-		contentIDs: ['features-title', 'features-list'],
+		contentIDs: ['feature-1', 'feature-2', 'feature-3', 'feature-4'],
 		type: 'container',
 	},
-	'features-title': {
-		id: 'features-title',
+	'feature-1': {
+		id: 'feature-1',
 		styles: {
 			all: {
 				all: {
 					all: {
-						'font-size': '1.5rem',
-						'font-weight': 'bold',
-						'margin-bottom': '10px',
 						'text-align': 'center',
-						color: '#0ea5e9',
+						padding: '20px',
+						background: '#ffffff',
+						'border-radius': '12px',
+						'backdrop-filter': 'blur(10px)',
+						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
 					},
 				},
 			},
 		},
-		attributes: {
-			text: '✨ Features',
-		},
-		parentID: 'features',
-		contentIDs: [],
-		type: 'text',
+		attributes: {},
+		parentID: 'features-grid',
+		contentIDs: ['feature-1-label'],
+		type: 'container',
 	},
-	'features-list': {
-		id: 'features-list',
+	'feature-1-label': {
+		id: 'feature-1-label',
 		styles: {
 			all: {
 				all: {
 					all: {
-						'font-size': '1.1rem',
-						'line-height': '1.7',
-						'text-align': 'center',
-						color: '#334155',
-					},
-				},
-			},
-		},
-		attributes: {
-			text: '• Nest blocks\n• Change devices\n• Edit styles visually\n• Try selecting a block to see its settings!',
-		},
-		parentID: 'features',
-		contentIDs: [],
-		type: 'text',
-	},
-
-	// Footer
-	footer: {
-		id: 'footer',
-		styles: {
-			all: {
-				all: {
-					all: {
-						width: '100%',
-						'max-width': '900px',
-						'margin-top': '0',
-						'margin-right': '0',
-						'margin-bottom': '24px',
-						'margin-left': '0',
-						'padding-top': '16px',
-						'padding-right': '16px',
-						'padding-bottom': '16px',
-						'padding-left': '16px',
-						'background-color': '#f1f5f9',
-						'border-radius': '10px',
-						'text-align': 'center',
-						color: '#64748b',
 						'font-size': '1rem',
+						'font-weight': '500',
+						'text-align': 'center',
+						color: '#111827',
 					},
 				},
 			},
 		},
 		attributes: {
-			text: 'Made with ❤️ using Triax. Edit this page or add your own blocks!',
+			text: 'Visual drag-and-drop interface',
 		},
-		parentID: 'body',
+		parentID: 'feature-1',
+		contentIDs: [],
+		type: 'text',
+	},
+	'feature-2': {
+		id: 'feature-2',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'text-align': 'center',
+						padding: '20px',
+						background: '#ffffff',
+						'border-radius': '12px',
+						'backdrop-filter': 'blur(10px)',
+						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'features-grid',
+		contentIDs: ['feature-2-label'],
+		type: 'container',
+	},
+	'feature-2-label': {
+		id: 'feature-2-label',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'font-weight': '500',
+						'text-align': 'center',
+						color: '#111827',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: 'Responsive design across devices',
+		},
+		parentID: 'feature-2',
+		contentIDs: [],
+		type: 'text',
+	},
+	'feature-3': {
+		id: 'feature-3',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'text-align': 'center',
+						padding: '20px',
+						background: '#ffffff',
+						'border-radius': '12px',
+						'backdrop-filter': 'blur(10px)',
+						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'features-grid',
+		contentIDs: ['feature-3-label'],
+		type: 'container',
+	},
+	'feature-3-label': {
+		id: 'feature-3-label',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'font-weight': '500',
+						'text-align': 'center',
+						color: '#111827',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: 'Real-time style customization',
+		},
+		parentID: 'feature-3',
+		contentIDs: [],
+		type: 'text',
+	},
+	'feature-4': {
+		id: 'feature-4',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'text-align': 'center',
+						padding: '20px',
+						background: '#ffffff',
+						'border-radius': '12px',
+						'backdrop-filter': 'blur(10px)',
+						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'features-grid',
+		contentIDs: ['feature-4-label'],
+		type: 'container',
+	},
+	'feature-4-label': {
+		id: 'feature-4-label',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'font-weight': '500',
+						'text-align': 'center',
+						color: '#111827',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: 'Nested component architecture',
+		},
+		parentID: 'feature-4',
 		contentIDs: [],
 		type: 'text',
 	},
@@ -229,28 +317,30 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				all: {
 					all: {
 						width: '100%',
-						'max-width': '900px',
-						'margin-top': '0',
-						'margin-right': '0',
-						'margin-bottom': '24px',
-						'margin-left': '0',
-						'padding-top': '18px',
-						'padding-right': '18px',
-						'padding-bottom': '18px',
-						'padding-left': '18px',
-						'background-color': '#f3f6fd', // soft blue background
-						'border-radius': '10px',
-						'box-shadow': '0 2px 8px rgba(0,0,0,0.03)',
-						'text-align': 'left',
-						color: '#334155',
-						'font-size': '1rem',
+						'max-width': '1000px',
+						'margin-top': '0px',
+						'margin-right': '0px',
+						'margin-bottom': '40px',
+						'margin-left': '0px',
+						'padding-top': '60px',
+						'padding-right': '40px',
+						'padding-bottom': '60px',
+						'padding-left': '40px',
+						background: '#ffffff',
+						'border-radius': '20px',
+						'box-shadow': '0 12px 40px rgba(0,0,0,0.15)',
+						display: 'flex',
+						'flex-direction': 'column',
+						'align-items': 'center',
+						color: '#111827',
+						'text-align': 'center',
 					},
 				},
 			},
 		},
 		attributes: {},
 		parentID: 'body',
-		contentIDs: ['timeline-title', 'timeline-date-2025-08-13'],
+		contentIDs: ['timeline-container'],
 		type: 'container',
 	},
 	'timeline-title': {
@@ -259,87 +349,265 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			all: {
 				all: {
 					all: {
-						'font-size': '1.5rem', // match Features title size
-						'font-weight': 'bold',
-						'margin-bottom': '10px',
-						'text-align': 'center', // center like Features
-						color: '#0ea5e9', // match Features accent color
+						'font-size': '2.5rem',
+						'font-weight': '800',
+						'margin-bottom': '16px',
+						'line-height': '1.2',
+						color: '#111827',
+						'letter-spacing': '-0.02em',
 					},
 				},
 			},
 		},
 		attributes: {
-			text: '🕒 Timeline', // match Features icon and rename
+			text: 'Updates',
 		},
 		parentID: 'timeline',
 		contentIDs: [],
 		type: 'text',
 	},
-	'timeline-date-2025-08-13': {
-		id: 'timeline-date-2025-08-13',
+	'timeline-container': {
+		id: 'timeline-container',
 		styles: {
 			all: {
 				all: {
 					all: {
-						'margin-bottom': '8px',
-						'padding-top': '8px',
-						'padding-right': '0',
-						'padding-bottom': '0',
-						'padding-left': '0',
-						'border-left-width': '3px',
-						'border-left-style': 'solid',
-						'border-left-color': '#2563eb', // blue accent
-						'background-color': '#f8fafc', // very light background
+						display: 'flex',
+						'flex-direction': 'column',
+						'align-items': 'flex-start',
+						position: 'relative',
+						width: '100%',
+						'max-width': '800px',
+						margin: '0 auto',
 					},
 				},
 			},
 		},
 		attributes: {},
 		parentID: 'timeline',
-		contentIDs: ['timeline-date-2025-08-13-title', 'timeline-entry-1'],
+		contentIDs: ['timeline-line', 'timeline-item-1', 'timeline-item-2', 'timeline-item-3'],
 		type: 'container',
 	},
-	'timeline-date-2025-08-13-title': {
-		id: 'timeline-date-2025-08-13-title',
+	'timeline-line': {
+		id: 'timeline-line',
 		styles: {
 			all: {
 				all: {
 					all: {
-						'font-size': '1.1rem',
-						'font-weight': 'bold',
-						color: '#2563eb', // blue accent
-						'margin-bottom': '4px',
-						'padding-left': '12px',
+						position: 'absolute',
+						left: '15px',
+						top: '30px',
+						bottom: '30px',
+						width: '2px',
+						'background-color': '#667eea',
+						'z-index': '1',
 					},
 				},
 			},
 		},
-		attributes: {
-			text: ' 2025-08-13',
-		},
-		parentID: 'timeline-date-2025-08-13',
+		attributes: {},
+		parentID: 'timeline-container',
 		contentIDs: [],
-		type: 'text',
+		type: 'container',
 	},
-	'timeline-entry-1': {
-		id: 'timeline-entry-1',
+	'timeline-item-1': {
+		id: 'timeline-item-1',
+		styles: {
+			all: {
+				all: {
+					all: {
+						display: 'flex',
+						'align-items': 'flex-start',
+						'margin-bottom': '40px',
+						position: 'relative',
+						'padding-left': '50px',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-container',
+		contentIDs: ['timeline-dot-1',  'timeline-content-1'],
+		type: 'container',
+	},
+	'timeline-dot-1': {
+		id: 'timeline-dot-1',
+		styles: {
+			all: {
+				all: {
+					all: {
+						position: 'absolute',
+						left: '7px',
+						top: '8px',
+						width: '16px',
+						height: '16px',
+						'background-color': '#667eea',
+						'border-radius': '50%',
+						'border-width': '3px',
+						'border-style': 'solid',
+						'border-color': '#ffffff',
+						'z-index': '2',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-item-1',
+		contentIDs: [],
+		type: 'container',
+	},
+
+	'timeline-content-1': {
+		id: 'timeline-content-1',
 		styles: {
 			all: {
 				all: {
 					all: {
 						'font-size': '1rem',
-						'line-height': '1.7',
-						color: '#334155',
-						'margin-bottom': '4px',
-						'padding-left': '12px',
+						'line-height': '1.5',
+						color: '#111827',
 					},
 				},
 			},
 		},
 		attributes: {
-			text: '• Added ArrowUp/ArrowDown block selection in Block Hierarchy.',
+			text: '[Block Hierarchy] Added keyboard navigation for block selection using arrow keys.',
 		},
-		parentID: 'timeline-date-2025-08-13',
+		parentID: 'timeline-item-1',
+		contentIDs: [],
+		type: 'text',
+	},
+	'timeline-item-2': {
+		id: 'timeline-item-2',
+		styles: {
+			all: {
+				all: {
+					all: {
+						display: 'flex',
+						'align-items': 'flex-start',
+						'margin-bottom': '40px',
+						position: 'relative',
+						'padding-left': '50px',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-container',
+		contentIDs: ['timeline-dot-2',  'timeline-content-2'],
+		type: 'container',
+	},
+	'timeline-dot-2': {
+		id: 'timeline-dot-2',
+		styles: {
+			all: {
+				all: {
+					all: {
+						position: 'absolute',
+						left: '7px',
+						top: '8px',
+						width: '16px',
+						height: '16px',
+						'background-color': '#667eea',
+						'border-radius': '50%',
+						'border-width': '3px',
+						'border-style': 'solid',
+						'border-color': '#ffffff',
+						'z-index': '2',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-item-2',
+		contentIDs: [],
+		type: 'container',
+	},
+
+	'timeline-content-2': {
+		id: 'timeline-content-2',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'line-height': '1.5',
+						color: '#111827',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: '[Block Hierarchy] Added right-click context menu for copy, paste, duplicate, and delete block operations.',
+		},
+		parentID: 'timeline-item-2',
+		contentIDs: [],
+		type: 'text',
+	},
+	'timeline-item-3': {
+		id: 'timeline-item-3',
+		styles: {
+			all: {
+				all: {
+					all: {
+						display: 'flex',
+						'align-items': 'flex-start',
+						'margin-bottom': '20px',
+						position: 'relative',
+						'padding-left': '50px',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-container',
+		contentIDs: ['timeline-dot-3',  'timeline-content-3'],
+		type: 'container',
+	},
+	'timeline-dot-3': {
+		id: 'timeline-dot-3',
+		styles: {
+			all: {
+				all: {
+					all: {
+						position: 'absolute',
+						left: '7px',
+						top: '8px',
+						width: '16px',
+						height: '16px',
+						'background-color': '#667eea',
+						'border-radius': '50%',
+						'border-width': '3px',
+						'border-style': 'solid',
+						'border-color': '#ffffff',
+						'z-index': '2',
+					},
+				},
+			},
+		},
+		attributes: {},
+		parentID: 'timeline-item-3',
+		contentIDs: [],
+		type: 'container',
+	},
+
+	'timeline-content-3': {
+		id: 'timeline-content-3',
+		styles: {
+			all: {
+				all: {
+					all: {
+						'font-size': '1rem',
+						'line-height': '1.5',
+						color: '#111827',
+					},
+				},
+			},
+		},
+		attributes: {
+			text: '[Block Hierarchy] Added drag-and-drop functionality for block repositioning.',
+		},
+		parentID: 'timeline-item-3',
 		contentIDs: [],
 		type: 'text',
 	},

@@ -42,12 +42,11 @@ export default function Home() {
 
 
   const handleRightClick = (e: React.MouseEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
   }
 
   return (
-    <main className={CSS.main} onContextMenu={handleRightClick}
-    >
+    <main className={CSS.main} onContextMenu={handleRightClick}>
       <PageEditor />
     </main>
   );

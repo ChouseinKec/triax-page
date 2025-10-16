@@ -25,14 +25,14 @@ const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
             e.stopPropagation();
             selectBlock(blockID);
         },
-        [selectBlock, blockID]
+        [blockID]
     );
 
     // Commit text to block attribute only on blur (focus lost)
     const handleBlur = useCallback(() => {
         const currentText = textRef.current?.innerText ?? "";
         setBlockAttribute(blockID, "text", currentText);
-    }, [setBlockAttribute, blockID]
+    }, [blockID]
     );
 
     return (

@@ -23,10 +23,12 @@ export function createFunctionOption(token: string): OptionFunctionDefinition | 
 	// Extract the canonical name, base name, and syntax from the token
 	const canonicalName = getTokenCanonical(token);
 	const baseName = getTokenBase(token);
-	const syntax = getTokenParam(token)?.syntax;
+	const param = getTokenParam(token);
 
 	// If any of these are undefined or empty, return undefined
-	if (!canonicalName || !baseName || !syntax) return undefined;
+	if (!canonicalName || !baseName || !param || param.type !== 'function') return undefined;
+
+	const { syntax } = param;
 
 	// Get the default function value from the constants
 	const defaultValue = VALUE_FUNCTION_DEFAULTS[baseName];
@@ -63,17 +65,17 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
 	if (!UNIT_OPTIONS[baseName]) return undefined;
 
 	// Get the range parameters for the token, and retrieve the unit options for the base name
-	const range = getTokenParam(token);
+	const param = getTokenParam(token);
 	const unitOptions = UNIT_OPTIONS[baseName] || [];
 
 	// If no range is specified, return the unit options as is
-	if (!range) return unitOptions as OptionDimensionDefinition[];
+	if (!param || param.type !== 'range') return unitOptions as OptionDimensionDefinition[];
 
 	// Map the unit options to include the min and max range values, creating and returning OptionDimensionDefinition objects
 	return unitOptions.map((unit) => ({
 		...unit,
-		min: range.min,
-		max: range.max,
+		min: param.min,
+		max: param.max,
 	})) as OptionDimensionDefinition[];
 }
 
@@ -112,14 +114,14 @@ export function createKeywordOption(token: string, styleKey: string): OptionKeyw
  */
 export function createNumberOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
-	const range = getTokenParam(token);
+	const param = getTokenParam(token);
 
 	return {
 		name: 'number',
 		value: '0.0',
 		category: 'other',
-		min: range?.min,
-		max: range?.max,
+		min: param?.type === 'range' ? param.min : undefined,
+		max: param?.type === 'range' ? param.max : undefined,
 		icon: STYLE_ICON_DEFINITIONS?.number,
 		type: 'number',
 	};
@@ -135,13 +137,13 @@ export function createNumberOption(token: string): OptionGenericDefinition | und
  */
 export function createIntegerOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
-	const range = getTokenParam(token);
+	const param = getTokenParam(token);
 	return {
 		name: 'integer',
 		value: '0',
 		category: 'other',
-		min: range?.min,
-		max: range?.max,
+		min: param?.type === 'range' ? param.min : undefined,
+		max: param?.type === 'range' ? param.max : undefined,
 		icon: STYLE_ICON_DEFINITIONS?.number,
 		type: 'integer',
 	};

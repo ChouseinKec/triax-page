@@ -59,4 +59,3 @@ export interface WorkbenchDefinition {
 	render: WorkbenchRender;
 }
 
-export interface WorkbenchInstance {}

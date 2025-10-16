@@ -32,7 +32,6 @@ const WorkbenchSelect: React.FC = () => {
         <RadioSelect
             value={selectedWorkbench}
             options={workbenchOptions}
-            className="WorkbenchEditor__Select"
             onChange={setSelectedWorkbenchID}
             prioritizeIcons
         />

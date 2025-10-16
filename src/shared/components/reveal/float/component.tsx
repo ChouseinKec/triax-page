@@ -43,9 +43,6 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
     onVisibilityChange,
     className = "",
 }) => {
-    // Early return if not visible - prevents unnecessary DOM rendering
-    if (!isOpen) return null;
-
     const floatRef = useRef<HTMLDivElement | null>(null);
     const position = usePosition(targetRef, floatRef, anchor, isOpen, offset);
     const styles = {
@@ -96,6 +93,9 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isOpen, autoClose, onVisibilityChange, targetRef]
     );
+
+    // Early return if not visible - prevents unnecessary DOM rendering
+    if (!isOpen) return null;
 
     return (
         <div

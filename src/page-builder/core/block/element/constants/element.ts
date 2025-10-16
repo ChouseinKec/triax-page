@@ -3,9 +3,8 @@ import JSON from './elements.json';
 
 export const ELEMENT_DEFINITIONS: Record<ElementTag, ElementDefinition> = Object.entries(JSON).reduce((acc, [key, data]) => {
 	const elementData = data as ElementDefinition;
-	const attributes = elementData.attributes;
-	const allowedContent = elementData.allowedContent;
+	const { attributes, allowedContent, description } = elementData;
 
-	acc[key as ElementTag] = { attributes, allowedContent, description: elementData.description };
+	acc[key as ElementTag] = { attributes, allowedContent, description };
 	return acc;
 }, {} as Record<ElementTag, ElementDefinition>);

@@ -3,7 +3,7 @@ import type { TabDefinition, TabID, TabTitle, TabComponent, TabIcon, TabOrder } 
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isTabDefinitionValid, isTabIDValid, isTabTitleValid, isTabComponentValid, isTabIconValid, isTabOrderValid, isPanelIDValid } from '@/src/page-builder/core/editor/layout/utilities';
+import { isTabDefinitionValid, isTabIDValid, isTabTitleValid, isTabComponentValid, isTabIconValid, isTabOrderValid } from '@/src/page-builder/core/editor/layout/utilities';
 
 // Helpers
 import { validatePanelID } from '@/src/page-builder/services/helpers/validate';

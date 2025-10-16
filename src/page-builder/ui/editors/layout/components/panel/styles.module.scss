@@ -8,7 +8,7 @@
 	box-shadow: var(--theme-shadow-border);
 	z-index: 99999;
 
-	:global(.LayoutPanelTabActions) {
+	> :global(.ActionGroup) {
 		background: var(--theme-color-primary);
 		padding: var(--size-xs);
 		position: absolute;
@@ -22,7 +22,7 @@
 	}
 }
 
-.LayoutPanel__ResizeHandles {
+.ResizeHandles {
 	div {
 		position: absolute;
 
@@ -86,7 +86,7 @@
 	}
 }
 
-.LayoutPanel__Header {
+.Header {
 	width: 100%;
 
 	display: flex;
@@ -103,9 +103,15 @@
 	border-top-left-radius: var(--size-md);
 	border-top-right-radius: var(--size-md);
 	box-shadow: var(--theme-shadow-border);
+
+	> :global(.ActionGroup) {
+		button {
+			background: transparent;
+		}
+	}
 }
 
-.LayoutPanel__Title {
+.Title {
 	font-size: var(--font-size-lg);
 	font-weight: 600;
 	color: var(--color-white);

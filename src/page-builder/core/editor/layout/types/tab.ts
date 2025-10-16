@@ -21,7 +21,7 @@ export type TabIcon = ReactNode;
 /**
  * React component to render as panel tab content
  */
-export type TabComponent = React.ComponentType<any>;
+export type TabComponent = React.ComponentType;
 
 /**
  * Order value for sorting panel tabs within a panel

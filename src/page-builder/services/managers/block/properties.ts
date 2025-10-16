@@ -26,9 +26,8 @@ export function useBlockType(blockID: BlockID): BlockType | undefined {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.type);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.type : undefined);
 }
 
 /**
@@ -47,9 +46,8 @@ export function useBlockID(blockID: BlockID): BlockID | undefined {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.id);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.id : undefined);
 }
 
 /**
@@ -68,9 +66,8 @@ export function useBlockContentIDs(blockID: BlockID): BlockID[] | undefined {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return [];
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.contentIDs);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.contentIDs : []);
 }
 
 /**
@@ -89,9 +86,8 @@ export function useBlockAttributes(blockID: BlockID): BlockAttributes | undefine
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.attributes);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.attributes : undefined);
 }
 
 /**
@@ -110,9 +106,8 @@ export function useBlockStyles(blockID: BlockID): BlockStyles | undefined {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.styles);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.styles : undefined);
 }
 
 /**
@@ -131,7 +126,6 @@ export function useBlock(blockID: BlockID): BlockInstance | undefined {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]);
+	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID] : undefined);
 }

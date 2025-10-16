@@ -245,7 +245,7 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 	const stylesValidation = validateBlockStyles(validation.value.styles);
 	if (!stylesValidation.valid) return { valid: false, message: stylesValidation.message };
 
-	return { valid: true, value: validation.value as BlockInstance };
+	return { valid: true, value: validation.value as unknown as BlockInstance };
 }
 
 /**
@@ -293,5 +293,5 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidateResul
 	const iconValidation = validateBlockIcon(validation.value.icon);
 	if (!iconValidation.valid) return { valid: false, message: iconValidation.message };
 
-	return { valid: true, value: validation.value as BlockDefinition };
+	return { valid: true, value: validation.value as unknown as BlockDefinition };
 }

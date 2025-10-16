@@ -15,5 +15,5 @@ import type { BarActionInstance } from '@/src/page-builder/core/page/types/actio
  */
 export function usePageActions(): BarActionInstance[] {
 	const actions = Object.values(getRegisteredActions()).sort((a, b) => a.order - b.order);
-	return useMemo(() => actions, [actions.length]);
+	return useMemo(() => actions, [actions]);
 }

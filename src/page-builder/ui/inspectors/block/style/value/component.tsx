@@ -34,10 +34,7 @@ import BlockStylesSlots from "@/src/page-builder/ui/inspectors/block/style/value
  */
 const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, property }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
-    const syntaxSet = property.syntaxSet;
-    const syntaxParsed = property.syntaxParsed;
-    const syntaxNormalized = property.syntaxNormalized;
-    const syntaxSeparators = property.syntaxSeparators;
+    const { syntaxSet, syntaxParsed, syntaxNormalized, syntaxSeparators } = property;
 
     // Split the value string into slots (e.g., ["10px", "auto"])
     const values = splitAdvanced(value, [...VALUE_SEPARATOR_DEFAULTS]);

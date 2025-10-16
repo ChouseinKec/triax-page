@@ -1,4 +1,6 @@
 import { getValueToken } from './value';
+import type { OptionDefinition } from '@/src/shared/components/types/option';
+import type { OptionFunctionDefinition } from '@/src/page-builder/core/block/style/types/option';
 
 /**
  * Extracts the function name from a CSS function string.
@@ -47,8 +49,8 @@ export function extractFunctionValue(input: string): { name: string | undefined;
  * @example
  * filterFunctionOptions([{category: "function", name: "repeat"}, {category: "other", name: "auto"}]) → [{category: "function", name: "repeat"}]
  */
-export function filterFunctionOptions(options: any[]): any[] {
-	return options.filter((opt) => opt.category === 'function');
+export function filterFunctionOptions(options: OptionDefinition[]): OptionFunctionDefinition[] {
+	return options.filter((opt): opt is OptionFunctionDefinition => opt.category === 'function');
 }
 
 /**
@@ -60,7 +62,7 @@ export function filterFunctionOptions(options: any[]): any[] {
  * @example
  * matchFunctionOption([{name: "repeat", value: "repeat(2, 1fr)"}], "repeat(3, 2fr)") → {name: "repeat", value: "repeat(2, 1fr)"}
  */
-export function matchFunctionOption(options: any[], value: string): any | undefined {
+export function matchFunctionOption(options: OptionFunctionDefinition[], value: string): OptionFunctionDefinition | undefined {
 	if (options.length === 0) return undefined;
 
 	const match = options.find((opt) => getValueToken(value) === getValueToken(opt.value));

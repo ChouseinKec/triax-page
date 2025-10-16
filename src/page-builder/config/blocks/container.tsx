@@ -27,7 +27,7 @@ const ContainerBlock: BlockDefinition = {
 		</svg>
 	),
 	category: 'core',
-	render: (instance, children) => <ContainerRender instance={instance} children={children} />,
+	render: (instance, children) => <ContainerRender instance={instance}>{children}</ContainerRender>,
 };
 
 export default ContainerBlock;

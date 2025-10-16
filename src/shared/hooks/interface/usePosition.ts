@@ -13,27 +13,31 @@ const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObje
 		const targetRect = targetRef.current.getBoundingClientRect();
 		const floatRect = floatRef.current.getBoundingClientRect();
 
+		// Destructure properties for cleaner access
+		const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = targetRect;
+		const { width: floatWidth, height: floatHeight } = floatRect;
+
 		let top = 0;
 		let left = 0;
 
 		switch (anchor) {
 			case 'top':
-				top = targetRect.top - floatRect.height;
-				left = targetRect.left;
+				top = targetTop - floatHeight;
+				left = targetLeft;
 				break;
 			case 'bottom':
-				top = targetRect.bottom;
-				left = targetRect.left;
+				top = targetBottom;
+				left = targetLeft;
 				break;
 			case 'left':
 				// top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
-				top = targetRect.top;
-				left = targetRect.left - floatRect.width;
+				top = targetTop;
+				left = targetLeft - floatWidth;
 				break;
 			case 'right':
 				// top = targetRect.top + targetRect.height / 2 - floatRect.height / 2;
-				top = targetRect.top;
-				left = targetRect.right;
+				top = targetTop;
+				left = targetRight;
 				break;
 		}
 
@@ -54,11 +58,11 @@ const usePosition = (targetRef: RefObject<HTMLElement | null>, floatRef: RefObje
 		}
 
 		// Ensure the float stays within viewport boundaries
-		top = Math.max(0, Math.min(top, window.innerHeight - floatRect.height));
-		left = Math.max(0, Math.min(left, window.innerWidth - floatRect.width));
+		top = Math.max(0, Math.min(top, window.innerHeight - floatHeight));
+		left = Math.max(0, Math.min(left, window.innerWidth - floatWidth));
 
 		setPosition({ top, left });
-	}, [isVisible, anchor, targetRef, floatRef]);
+	}, [isVisible, anchor, targetRef, floatRef, offset]);
 
 	return position;
 };

@@ -104,11 +104,11 @@ const ViewportEditor: React.FC = () => {
     }, []
     );
 
-    const handleReset = useCallback(() => {
-        setZoom(1);
-        setPan({ x: 0, y: 0 });
-    }, []
-    );
+    // const handleReset = useCallback(() => {
+    //     setZoom(1);
+    //     setPan({ x: 0, y: 0 });
+    // }, []
+    // );
 
     const viewportInstance = useMemo(() => {
         const currentViewport = getRegisteredViewportByWorkbenchID(selectedWorkbench);

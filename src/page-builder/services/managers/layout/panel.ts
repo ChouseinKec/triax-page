@@ -75,18 +75,22 @@ export function getPanelById(panelID: PanelID): PanelInstance | undefined {
  * const panels = useAllPanels('workbench-123') // Returns all panels for workbench
  */
 export function useAllPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-	const safeData = new ValidationPipeline('[LayoutManager → useAllPanels]')
-		.validate({
-			workbenchID: validateWorkbenchID(workbenchID),
-		})
-		.execute();
-	if (!safeData) return;
+	const safeData = useMemo(
+		() =>
+			new ValidationPipeline('[LayoutManager → useAllPanels]')
+				.validate({
+					workbenchID: validateWorkbenchID(workbenchID),
+				})
+				.execute(),
+		[workbenchID]
+	);
 
 	const panels = useLayoutStore((state) => state.layoutPanels);
 
 	return useMemo(() => {
+		if (!safeData) return undefined;
 		return Object.values(panels).filter((p: PanelInstance) => p.workbenchID === safeData.workbenchID);
-	}, [panels, safeData.workbenchID]);
+	}, [panels, safeData]);
 }
 
 /**
@@ -100,17 +104,21 @@ export function useAllPanels(workbenchID: WorkbenchID): PanelInstance[] | undefi
  * const openPanels = useOpenPanels('workbench-123') // Returns open panels for workbench
  */
 export function useOpenPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-	const safeData = new ValidationPipeline('[LayoutManager → useOpenPanels]')
-		.validate({
-			workbenchID: validateWorkbenchID(workbenchID),
-		})
-		.execute();
-	if (!safeData) return;
+	const safeData = useMemo(
+		() =>
+			new ValidationPipeline('[LayoutManager → useOpenPanels]')
+				.validate({
+					workbenchID: validateWorkbenchID(workbenchID),
+				})
+				.execute(),
+		[workbenchID]
+	);
 
 	const panels = useLayoutStore((state) => state.layoutPanels);
 
 	return useMemo(() => {
+		if (!safeData) return undefined;
 		const all = Object.values(panels).filter((p: PanelInstance) => p.isOpen);
 		return all.filter((p: PanelInstance) => p.workbenchID === safeData.workbenchID);
-	}, [panels, safeData.workbenchID]);
+	}, [panels, safeData]);
 }

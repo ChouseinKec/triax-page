@@ -1,5 +1,5 @@
 // Type
-import type { TokenTypes, TokenKeys } from '@/src/page-builder/core/block/style/types';
+import type { TokenTypes, TokenKeys, TokenParam } from '@/src/page-builder/core/block/style/types';
 
 // Constants
 import { TOKEN_DEFAULTS, TOKEN_DEFINITIONS } from '@/src/page-builder/core/block/style/constants';
@@ -202,13 +202,13 @@ export function getTokenRange(input: string): string | undefined {
  * getTokenParam('<number [0,15]>') → { min: 0, max: 15 }
  *
  */
-export function getTokenParam(input: string): Record<string, any> | undefined {
+export function getTokenParam(input: string): TokenParam | undefined {
 	const group = getTokenType(input);
 
 	switch (group) {
 		case 'function': {
 			const param = extractBetween(input, '()');
-			return param ? { syntax: param } : undefined;
+			return param ? { type: 'function', syntax: param } : undefined;
 		}
 		case 'dimension':
 		case 'number':
@@ -218,7 +218,7 @@ export function getTokenParam(input: string): Record<string, any> | undefined {
 			if (range) {
 				const rangeValues = range.replace(/[\[\]]/g, '').split(',');
 				if (rangeValues.length === 2) {
-					return { min: parseFloat(rangeValues[0]), max: parseFloat(rangeValues[1]) };
+					return { type: 'range', min: parseFloat(rangeValues[0]), max: parseFloat(rangeValues[1]) };
 				}
 			}
 			return undefined;

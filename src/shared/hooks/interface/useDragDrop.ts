@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 
-export type DragDropState = 'before' |  'after' | 'over' | null;
+export type DragDropState = 'before' | 'after' | 'over' | null;
 
 /**
  * Custom hook for handling drag and drop operations for reordering items.
@@ -66,7 +66,7 @@ export function useDragDrop(
 				onSelect(draggedId);
 			}
 		},
-		[onMoveBefore, onMoveAfter, onSelect]
+		[onMoveBefore, onMoveAfter, onSelect, onMoveInto]
 	);
 
 	/**

@@ -4,9 +4,6 @@ import React from "react";
 // Styles
 import CSS from "./styles.module.scss";
 
-// Types
-import type { BlockAttributesProps } from "./types";
-
 // Components
 import BlockAttributesLayouts from "@/src/page-builder/ui/inspectors/block/attribute/layout/component";
 
@@ -20,7 +17,7 @@ import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
  *
  * @returns ReactElement
  */
-const BlockAttributes: React.FC<BlockAttributesProps> = () => {
+const BlockAttributes: React.FC = () => {
     const selectedBlockID = useSelectedBlockID();
 
     return (

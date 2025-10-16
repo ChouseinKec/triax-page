@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useRef, memo, useCallback, useMemo, useState, useLayoutEffect, } from "react";
 
 // Components
@@ -10,10 +9,6 @@ import CSS from "./styles.module.scss";
 
 // Types
 import type { LayoutPanelProps } from "@/src/page-builder/ui/editors/layout/types/panel";
-import type { PanelSide } from "@/src/page-builder/core/editor/layout/types/panel";
-
-// Utilities
-import { devLog } from "@/src/shared/utilities/dev";
 
 // Hooks
 import { useDrag } from "@/src/shared/hooks/interface/useDrag";
@@ -37,12 +32,6 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
     onClose = () => { },
     tabs = {} }) => {
 
-    // Guard clause: if no tabs, render nothing
-    if (!tabs || Object.keys(tabs).length === 0) {
-        devLog.warn("[LayoutPanel] No tabs registered, rendering nothing");
-        return null;
-    }
-
     // Ref for the LayoutPanel DOM element
     const layoutPanelRef = useRef<HTMLDivElement>(null);
 
@@ -58,10 +47,10 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
     const [currentTabID, setCurrentTabID] = useState<string>(Object.keys(tabs)[0]);
 
     // Resize hook
-    const { handles, resizing } = useResize(layoutPanelRef, initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition, locked);
+    const { handles } = useResize(layoutPanelRef, initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition, locked);
 
     // Drag hook
-    const { dragging } = useDrag(layoutPanelRef, setPosition, (e) => !(e.target as Element)?.closest('[data-position]'), locked);
+    useDrag(layoutPanelRef, setPosition, (e) => !(e.target as Element)?.closest('[data-position]'), locked);
 
 
     /**
@@ -171,21 +160,21 @@ const LayoutPanel: React.FC<LayoutPanelProps> = ({
             style={styles}
         >
             {/* Top bar with title and actions */}
-            <div className={CSS.LayoutPanel__Header}>
-                <span className={CSS.LayoutPanel__Title}>{title}</span>
+            <div className={CSS.Header}>
+                <span className={CSS.Title}>{title}</span>
                 <ActionGroup>
                     {headerActions}
                 </ActionGroup>
             </div>
 
             {/* Render resize handles */}
-            <div className={CSS.LayoutPanel__ResizeHandles}>
+            <div className={CSS.ResizeHandles}>
                 {handles}
             </div>
 
             {/* Render tab elements if there are multiple tabs */}
             {tabActions.length > 1 && (
-                <ActionGroup className="LayoutPanelTabActions" direction="vertical">
+                <ActionGroup direction="vertical">
                     {tabActions}
                 </ActionGroup>
             )}

@@ -11,6 +11,11 @@ export type TokenKeys = '<number>' | '<integer>' | '<percentage>' | '<length>' |
 export type TokenTypes = 'keyword' | 'function' | 'dimension' | 'number' | 'integer' | 'color' | 'link';
 
 /**
+ * Represents the parameters for a CSS data type token.
+ */
+export type TokenParam = { type: 'function'; syntax: string } | { type: 'range'; min: number; max: number };
+
+/**
  * Represents a single CSS data type definition, including its name and syntax.
  */
 export interface TokenDefinition {

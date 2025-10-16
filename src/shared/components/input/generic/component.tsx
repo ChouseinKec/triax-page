@@ -91,29 +91,16 @@ const GenericInput: React.FC<GenericInputProps> = ({
     // Commit value to parent (on blur/enter)
     const handleCommit = (): void => {
         const inputValue = internalValue.trim();
-        let validationResult;
 
-        try {
-            validationResult = onValidate?.(inputValue);
-        } catch (error) {
-            validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } });
-            return;
-        }
-
-        // If input is empty, clear the value
-        if (inputValue === "") return onChange("");
-
-        if (validationResult === undefined && onValidate) return;
+        const validationResult = onValidate?.(inputValue);
 
         if (validationResult && !validationResult.status) {
             validationDispatch({ type: "VALIDATION_FAILURE", payload: { message: validationResult.message } });
-            onChange("");
             return;
         }
 
         if (validationResult?.status) validationDispatch({ type: "VALIDATION_SUCCESS" });
         if (inputValue !== value) onChange(inputValue);
-
     };
 
     // Keyboard events
@@ -139,13 +126,7 @@ const GenericInput: React.FC<GenericInputProps> = ({
 
         if (!onValidate) return;
 
-        let validationResult;
-        try {
-            validationResult = onValidate(newValue);
-        } catch (error) {
-            validationDispatch({ type: "VALIDATION_EXCEPTION", payload: { message: "Validation error occurred" } });
-            return;
-        }
+        const validationResult = onValidate(newValue);
 
         if (validationResult.status) {
             validationDispatch({ type: "VALIDATION_SUCCESS" });

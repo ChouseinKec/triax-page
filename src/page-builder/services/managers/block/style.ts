@@ -67,24 +67,27 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
  * const color = useBlockStyle('block-123', 'color') // Returns 'red' or undefined
  */
 export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
-	const blockStore = useBlockStore.getState();
-	const safeData = new ValidationPipeline('[BlockManager → getBlockStyle]')
+	const deviceID = useSelectedDeviceID();
+	const orientationID = useSelectedOrientationID();
+	const pseudoID = useSelectedPseudoID();
+
+	const safeData = useMemo(() => new ValidationPipeline('[BlockManager → getBlockStyle]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			styleKey: validateStyleKey(styleKey),
-			deviceID: validateDeviceID(useSelectedDeviceID()),
-			orientationID: validateOrientationID(useSelectedOrientationID()),
-			pseudoID: validatePseudoID(useSelectedPseudoID()),
+			deviceID: validateDeviceID(deviceID),
+			orientationID: validateOrientationID(orientationID),
+			pseudoID: validatePseudoID(pseudoID),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlock(data.blockID, useBlockStore.getState().allBlocks),
 		}))
-		.execute();
-	if (!safeData) return undefined;
+		.execute(), [blockID, styleKey, deviceID, orientationID, pseudoID]);
 
 	return useBlockStore(
 		useMemo(
 			() => (state) => {
+				if (!safeData) return undefined;
 				const styles = state.allBlocks[blockID]?.styles;
 				if (!styles) return undefined;
 
@@ -96,7 +99,7 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 					safeData.pseudoID
 				);
 			},
-			[blockID, styleKey, safeData.deviceID, safeData.orientationID, safeData.pseudoID]
+			[blockID, styleKey, safeData]
 		)
 	);
 }

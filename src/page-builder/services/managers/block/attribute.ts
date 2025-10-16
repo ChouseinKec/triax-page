@@ -1,6 +1,9 @@
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
+// React
+import { useMemo } from 'react';
+
 // Types
 import type { BlockID } from '@/src/page-builder/core/block/block/types';
 import type { AttributeKey, AttributeValue } from '@/src/page-builder/core/block/attribute/types';
@@ -61,13 +64,15 @@ export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, 
  * useBlockAttribute('block-1', 'className')
  */
 export function useBlockAttribute(blockID: BlockID, attributeKey: AttributeKey): string | undefined {
-	const safeData = new ValidationPipeline('[BlockManager → useBlockAttribute]')
+	const safeData = useMemo(() => new ValidationPipeline('[BlockManager → useBlockAttribute]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			attributeKey: validateAttributeKey(attributeKey),
 		})
-		.execute();
-	if (!safeData) return;
+		.execute(), [blockID, attributeKey]);
 
-	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.attributes?.[safeData.attributeKey]);
+	return useBlockStore((state) => {
+		if (!safeData) return undefined;
+		return state.allBlocks[safeData.blockID]?.attributes?.[safeData.attributeKey];
+	});
 }

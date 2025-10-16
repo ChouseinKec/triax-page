@@ -38,12 +38,11 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
     searchable = false,
     groupable = false,
     prioritizeIcons = false,
-    className = "",
 }) => {
     const [search, setSearch] = useState<string>("");
 
     // Handle option selection changes
-    const handleChange = (option: string): void => {
+    const handleChange = useCallback((option: string): void => {
         // Clear selection if the same option is clicked
         if (value === option) {
             onChange("");
@@ -52,12 +51,12 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
 
         // Otherwise, select the new option
         onChange(option);
-    };
+    }, [onChange, value]);
 
     // Handle search input changes
-    const handleSearch = (input: string): void => {
+    const handleSearch = useCallback((input: string): void => {
         setSearch(input);
-    }
+    }, []);
 
     // Filter options based on search input
     const filteredOptions = useMemo(() => {
@@ -154,7 +153,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
             )
         }));
 
-    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons, className]
+    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons]
     );
 
     return (

@@ -62,7 +62,7 @@ const LayoutEditor: React.FC = () => {
                 />
             ))
             : null
-    ), [openPanels, togglePanel]
+    ), [openPanels]
     );
 
     /**
@@ -85,7 +85,7 @@ const LayoutEditor: React.FC = () => {
                 </ActionGroup>
             )
             : null
-    ), [allPanels, togglePanel]
+    ), [allPanels]
     );
 
     return (

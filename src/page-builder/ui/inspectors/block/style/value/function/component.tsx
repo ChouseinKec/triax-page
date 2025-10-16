@@ -36,7 +36,7 @@ import { devRender } from "@/src/shared/utilities/dev";
 const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
     const functionOptions = filterFunctionOptions(options);
     const currentOption = matchFunctionOption(functionOptions, value);
-    const createdProperty = createProperty(currentOption.name as StyleKey, currentOption.syntax);
+    const createdProperty = currentOption ? createProperty(currentOption.name as StyleKey, currentOption.syntax) : undefined;
     const extractedValue = extractFunctionValue(value);
 
     // Handle changes to CSS function value arguments

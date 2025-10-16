@@ -102,7 +102,6 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 		.fetch((data) => ({
 			targetParentBlock: fetchBlock(data.targetBlock.parentID, blockStore.allBlocks),
 		}))
-		.derive((data) => ({}))
 		.execute();
 	if (!safeData) return;
 
@@ -118,7 +117,7 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 		moveBlock(
 			safeData.sourceBlockID, //
 			safeData.targetParentBlock.id,
-			targetIndex,
+			targetIndex + 1,
 			blockStore.allBlocks
 		)
 	);

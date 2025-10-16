@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -54,7 +54,8 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
     const blockType = useBlockType(blockID);
-    const blockContentIDs = useBlockContentIDs(blockID) || [];
+    const blockContentIDsRaw = useBlockContentIDs(blockID);
+    const blockContentIDs = useMemo(() => blockContentIDsRaw || [], [blockContentIDsRaw]);
     const isBlockSelected = useIsBlockSelected(blockID);
     const blockIcon = blockType ? getBlockIcon(blockType) : null;
     const canHaveChildren = canBlockHaveChildren(blockID);
@@ -77,20 +78,20 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
     );
 
     // Handle block selection
-    const handleLeftClick = () => {
+    const handleLeftClick = useCallback(() => {
         if (isBlockSelected) {
             selectBlock(null);
         } else {
             selectBlock(blockID);
         }
-    }
+    }, [isBlockSelected, blockID])
 
     // Handle context menu
-    const handleRightClick = (e: React.MouseEvent) => {
+    const handleRightClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setIsContextMenuOpen(true);
-    }
+    }, []);
 
     // Handle action click
     const handleActionClick = (action: () => void) => {
@@ -142,7 +143,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                 {children}
             </div>
         );
-    }, [blockContentIDs, canHaveChildren]
+    }, [blockContentIDs, canHaveChildren, hasChildren]
     );
 
     const contextMenu = useMemo(() => {
@@ -166,7 +167,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                 className={CSS.Context}
             >
 
-                <DropdownReveal title="Copy" placeholder={copyIcon} className={CSS.Dropdown} anchor="right" offset={10}>
+                <DropdownReveal title="Copy" placeholder={copyIcon} className={CSS.Dropdown} anchor="right" offset={15}>
                     <button className={CSS.Action} onClick={() => handleActionClick(() => copyBlock(blockID))}>
                         Copy Block
                     </button>
@@ -180,7 +181,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                     </button>
                 </DropdownReveal>
 
-                <DropdownReveal title="Paste" placeholder={pasteIcon} className={CSS.Dropdown} anchor="right" offset={10}>
+                <DropdownReveal title="Paste" placeholder={pasteIcon} className={CSS.Dropdown} anchor="right" offset={15}>
                     <button className={CSS.Action} onClick={() => handleActionClick(() => pasteBlock(blockID))}>
                         Paste Block
                     </button>
@@ -247,7 +248,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                         onClick={handleArrowClick}
                         data-is-open={isOpen}
                         data-is-selected={isBlockSelected}
-                        
+
                     />
                 )}
 
@@ -255,7 +256,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             </button>
         )
     },
-        [isBlockSelected, blockID, isOpen, childrenContent, blockIcon, handleDragEnd, handleDragStart, draggedItemID]
+        [isBlockSelected, blockID, isOpen, blockIcon, handleDragEnd, handleDragStart, canHaveChildren, handleDragLeave, handleDragOver, handleDrop, handleLeftClick, handleRightClick, hasChildren]
     );
 
     return (

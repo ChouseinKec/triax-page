@@ -33,12 +33,12 @@ import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/c
  * @note Tooltip displays attribute name and description from definitions
  */
 const Property: React.FC<PropertyProps> = ({ component, label, hidden, disabled, property, styles }) => {
-    if (hidden) return null;
-
     const labelRef = useRef<HTMLLabelElement>(null);
     const propertyDef = property ? ATTRIBUTE_DEFINITIONS[property] : undefined;
     const propertyName = propertyDef?.name ?? "N/A";
     const propertyDescription = propertyDef?.description ?? "N/A";
+
+    if (hidden) return null;
 
     return (
         <div

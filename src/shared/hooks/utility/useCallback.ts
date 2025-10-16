@@ -10,7 +10,7 @@ import { devLog } from '@/src/shared/utilities/dev';
  * @param onError - A function to call when an exception is caught.
  * @returns A new function that will not throw, returning undefined on error.
  */
-export const useSafeCallback = <T extends any[], R>(callback: ((...args: T) => R) | undefined, onError: (error: unknown) => void): ((...args: T) => R | undefined) => {
+export const useSafeCallback = <T extends unknown[], R>(callback: ((...args: T) => R) | undefined, onError: (error: unknown) => void): ((...args: T) => R | undefined) => {
 	return useCallback(
 		(...args: T): R | undefined => {
 			if (typeof callback !== 'function') {

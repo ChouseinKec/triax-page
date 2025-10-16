@@ -12,14 +12,13 @@ import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Types
 import type { BlockDefinition, BlockType } from "@/src/page-builder/core/block/block/types";
-import type { BlockLiblaryProps } from "./types";
 
 /**
  * BlockLibrary Component
  * Displays registered blocks as buttons to add them to the editor.
  *
  */
-const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
+const BlockLibrary: React.FC = () => {
     const registeredBlocks = getRegisteredBlocks();
     const selectedBlockType = useSelectedBlockType();
     const [search, setSearch] = useState("");
@@ -30,7 +29,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
         if (!selectedBlockID) return;
 
         addBlock(blockType, selectedBlockID);
-    }, [addBlock]
+    }, []
     );
 
     // Filter blocks based on the selected block's permitted content
@@ -41,7 +40,7 @@ const BlockLibrary: React.FC<BlockLiblaryProps> = () => {
         if (!blockDef) return registeredBlocks;
 
         return Object.fromEntries(
-            Object.entries(registeredBlocks).filter(([_, block]) => {
+            Object.entries(registeredBlocks).filter(([, block]) => {
                 return canBlockAcceptChild(selectedBlockType, block.type);
             })
         );

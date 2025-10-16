@@ -41,7 +41,7 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
     if (!definition) return devRender.error(`[BlockAttributesValue] No definition found for ${attribute}`, { definition });
 
     const renderValue = () => {
-        const type = definition.syntax.type;
+        const { type } = definition.syntax;
         if (!type) return devRender.error(`[BlockAttributesValue] No type defined for ${attribute}`, { definition });
 
         switch (type) {
@@ -50,11 +50,9 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
             case "number":
                 return <GenericInput value={value} onChange={handleChange} type="number" />;
             case "list":
-                const listOptions = definition.syntax.options;
-                return <DropdownSelect value={value} onChange={handleChange} options={listOptions} />;
+                return <DropdownSelect value={value} onChange={handleChange} options={definition.syntax.options} />;
             case "radio":
-                const radioOptions = definition.syntax.options;
-                return <RadioSelect prioritizeIcons={false} value={value} onChange={handleChange} options={radioOptions} />;
+                return <RadioSelect prioritizeIcons={false} value={value} onChange={handleChange} options={definition.syntax.options} />;
             default:
                 return <span className={CSS.Unsupported}>Unsupported value type</span>;
         }
