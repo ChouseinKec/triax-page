@@ -44,4 +44,5 @@ node_modules
 PRIVATE.md
 /docs
 /docs_custom
+/tests
 
