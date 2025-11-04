@@ -16,7 +16,6 @@ const ContainerBlock: BlockDefinition = {
 	tags: ['div', 'section', 'article', 'aside', 'nav'],
 
 	permittedContent: null, // Can contain any block type
-	permittedParent: null, // Can be placed in any parent
 
 	styles: {},
 	attributes: {},

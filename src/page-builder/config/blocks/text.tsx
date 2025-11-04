@@ -32,7 +32,6 @@ const TextBlock: BlockDefinition = {
 	],
 
 	permittedContent: [],
-	permittedParent: null,
 
 	styles: {},
 	attributes: {},

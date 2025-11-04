@@ -1,5 +1,5 @@
 // Types
-import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockPermitedContent, BlockPermitedParent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockPermitedContent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
@@ -124,32 +124,6 @@ export function validateBlockPermittedContent(blockPermittedContent: unknown): V
 }
 
 /**
- * Checks if all parent types in the array are valid block types that can contain this block.
- *
- * @param blockPermittedParent - The array of permitted parent types to validate
- * @returns ValidateResult containing validity and the validated BlockPermitedParent array if all types are valid
- *
- * @example
- * validateBlockPermittedParent(['container']) → { valid: true, value: ['container'] }
- */
-export function validateBlockPermittedParent(blockPermittedParent: unknown): ValidateResult<BlockPermitedParent> {
-	if (blockPermittedParent === null) {
-		return { valid: true, value: [] };
-	}
-
-	if (!Array.isArray(blockPermittedParent)) {
-		return { valid: false, message: `Invalid block permitted parent: expected an array or null, got ${typeof blockPermittedParent}` };
-	}
-
-	for (const type of blockPermittedParent) {
-		const typeValidation = validateBlockType(type);
-		if (!typeValidation.valid) return typeValidation;
-	}
-
-	return { valid: true, value: blockPermittedParent as BlockPermitedParent };
-}
-
-/**
  * Checks if the category is a valid non-empty string representing a block category.
  *
  * @param blockCategory - The block category to validate
@@ -249,7 +223,7 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 }
 
 /**
- * Checks if the definition has all required properties (type, tags, render, permittedContent, permittedParent, icon, category)
+ * Checks if the definition has all required properties (type, tags, render, permittedContent, icon, category)
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
@@ -261,15 +235,14 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
  *   tags: ['span'],
  *   render: () => <span>Text</span>,
  *   permittedContent: [],
- *   permittedParent: ['container'],
  *   icon: <TextIcon />,
  *   category: 'content'
  * }) → { valid: true, value: {...} }
  *
- * validateBlockDefinition({}) → { valid: false, message: 'Invalid block definition: missing required keys: type, tags, render, permittedContent, permittedParent, icon, category' }
+ * validateBlockDefinition({}) → { valid: false, message: 'Invalid block definition: missing required keys: type, tags, render, permittedContent, icon, category' }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
-	const validation = validateObject(blockDefinition, ['type', 'tags', 'permittedContent', 'permittedParent', 'icon', 'category', 'render']);
+	const validation = validateObject(blockDefinition, ['type', 'tags', 'permittedContent', 'icon', 'category', 'render']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const typeValidation = validateBlockType(validation.value.type);
@@ -283,9 +256,6 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidateResul
 
 	const permittedContentValidation = validateBlockPermittedContent(validation.value.permittedContent);
 	if (!permittedContentValidation.valid) return { valid: false, message: permittedContentValidation.message };
-
-	const permittedParentValidation = validateBlockPermittedParent(validation.value.permittedParent);
-	if (!permittedParentValidation.valid) return { valid: false, message: permittedParentValidation.message };
 
 	const categoryValidation = validateBlockCategory(validation.value.category);
 	if (!categoryValidation.valid) return { valid: false, message: categoryValidation.message };

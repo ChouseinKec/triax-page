@@ -23,7 +23,7 @@ export type BlockCategory = string;
 /**
  * The kind of block (text, container, media).
  */
-export type BlockType = 'text' | 'container' | 'media';
+export type BlockType = string;
 
 /**
  * Block styles structure:
@@ -61,11 +61,6 @@ export type BlockRender = (instance: BlockInstance, children?: BlockChildren) =>
 export type BlockPermitedContent = BlockType[] | null;
 
 /**
- * Permitted parent types that can contain this block
- */
-export type BlockPermitedParent = BlockType[] | null;
-
-/**
  * Record of all block instances by their ID.
  */
 export type BlockRecord = Record<BlockID, BlockInstance>;
@@ -83,8 +78,7 @@ export interface BlockDefinition {
 	tags: ElementTag[];
 	/** Block kinds that can be contained within this block */
 	permittedContent: BlockPermitedContent;
-	/** Block kinds that can contain this block */
-	permittedParent: BlockPermitedParent;
+
 	/** Icon representation for the block */
 	icon: BlockIcon;
 	/** Default styles for the block */

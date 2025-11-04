@@ -87,6 +87,7 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 
 	const registeredBlocks = blockRegistry.getRegisteredBlocks();
 	const blockDefinition = registeredBlocks[safeData.blockInstance.type];
+
 	if (!blockDefinition) return devLog.error(`[BlockManager → canBlockHaveChildren] Block definition not found`), false;
 
 	if (blockDefinition.permittedContent == null) return true;
