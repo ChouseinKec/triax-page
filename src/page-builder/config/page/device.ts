@@ -1,14 +1,6 @@
 import type { DeviceDefinition } from '@/src/page-builder/core/page/types/device';
 
 export const DeviceDefinitions: DeviceDefinition[] = [
-	// All devices - catch-all
-	{
-		name: 'all',
-		value: 'all',
-		media: { min: 0, max: Infinity },
-		template: { width: 1200, height: 800 },
-		category: 'custom',
-	},
 
 	// Mobile ranges
 	{

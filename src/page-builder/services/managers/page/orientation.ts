@@ -13,6 +13,9 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
 // Helpers
 import { validateOrientationID } from '@/src/page-builder/services/helpers/validate';
 
+// Constants
+import { DEFAULT_ORIENTATION_ID } from '@/src/page-builder/core/page/constants';
+
 /**
  * Reactive hook to get the currently selected orientation instance for page management operations.
  * Returns the complete orientation object based on the current selection in the page store.
@@ -66,6 +69,8 @@ export function getSelectedOrientationID(): OrientationID | undefined {
  * setSelectedOrientationID('portrait') // Sets current orientation to portrait
  */
 export function setSelectedOrientationID(orientationID: OrientationID): void {
+	if (!orientationID) orientationID = DEFAULT_ORIENTATION_ID;
+	
 	const safeData = new ValidationPipeline('[PageManager → setSelectedOrientationID]')
 		.validate({
 			orientationID: validateOrientationID(orientationID),

@@ -13,6 +13,9 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
 // Helpers
 import { validateDeviceID } from '@/src/page-builder/services/helpers/validate';
 
+// Constants
+import { DEFAULT_DEVICE_ID } from '@/src/page-builder/core/page/constants';
+
 /**
  * Reactive hook to get the currently selected device instance for page management operations.
  * Returns the complete device object based on the current selection in the page store.
@@ -64,6 +67,8 @@ export function getSelectedDeviceID(): DeviceID | undefined {
  * setSelectedDeviceID('mobile') // Sets current device to mobile
  */
 export function setSelectedDeviceID(deviceID: DeviceID): void {
+	if (!deviceID) deviceID = DEFAULT_DEVICE_ID;
+
 	const safeData = new ValidationPipeline('[PageManager → setSelectedDeviceID]')
 		.validate({
 			deviceID: validateDeviceID(deviceID),
@@ -86,4 +91,3 @@ export function setSelectedDeviceID(deviceID: DeviceID): void {
 export function getAllDevices(): DeviceDefinition[] {
 	return Object.values(getRegisteredDevices());
 }
-

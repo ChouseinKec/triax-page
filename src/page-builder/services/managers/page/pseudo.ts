@@ -13,6 +13,9 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
 // Helpers
 import { validatePseudoID } from '@/src/page-builder/services/helpers/validate';
 
+// Constants
+import { DEFAULT_PSEUDO_ID } from '@/src/page-builder/core/page/constants';
+
 /**
  * Reactive hook to get the currently selected pseudo instance for page management operations.
  * Returns the complete pseudo object based on the current selection in the page store.
@@ -66,6 +69,7 @@ export function getSelectedPseudoID(): PseudoID | undefined {
  * setSelectedPseudoID('hover') // Sets current pseudo to hover
  */
 export function setSelectedPseudoID(pseudoID: PseudoID): void {
+	if (!pseudoID) pseudoID = DEFAULT_PSEUDO_ID;
 	const safeData = new ValidationPipeline('[PageManager → setSelectedPseudoID]')
 		.validate({
 			pseudoID: validatePseudoID(pseudoID),
@@ -88,4 +92,3 @@ export function setSelectedPseudoID(pseudoID: PseudoID): void {
 export function getAllPseudos(): PseudoInstance[] {
 	return Object.values(getRegisteredPseudos());
 }
-
