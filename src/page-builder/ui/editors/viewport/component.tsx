@@ -5,7 +5,7 @@ import React, { useState, useCallback, MouseEvent, useRef, useEffect, memo, useM
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedDevice, useSelectedWorkbenchID } from "@/src/page-builder/services/managers/page";
+import { useSelectedDevice, useSelectedOrientation, useSelectedWorkbenchID } from "@/src/page-builder/services/managers/page";
 
 // Registries
 import { getRegisteredViewportByWorkbenchID } from "@/src/page-builder/state/registries/viewport";
@@ -20,7 +20,16 @@ const ViewportEditor: React.FC = () => {
     // Ref for the canvas element
     const viewRef = useRef<HTMLDivElement>(null);
     const selectedDevice = useSelectedDevice();
-    const { width: deviceWidth, height: deviceHeight } = selectedDevice?.template || { width: 1920, height: 1080 };
+    const selectedOrientation = useSelectedOrientation();
+
+    // Get base dimensions from device template
+    const baseWidth = selectedDevice?.template?.width || 1920;
+    const baseHeight = selectedDevice?.template?.height || 1080;
+
+    // Swap dimensions if orientation is landscape
+    const isLandscape = selectedOrientation?.value === 'landscape';
+    const deviceWidth = isLandscape ? Math.max(baseWidth, baseHeight) : Math.min(baseWidth, baseHeight);
+    const deviceHeight = isLandscape ? Math.min(baseWidth, baseHeight) : Math.max(baseWidth, baseHeight);
 
     /**
      * Use native event listener to properly prevent default on wheel events
@@ -144,7 +153,7 @@ const ViewportEditor: React.FC = () => {
                     ? viewportInstance
                     :
                     <div className={CSS.ViewportEditor__Empty}>
-                        No content available
+                        No viewport available
                     </div>
                 }
 

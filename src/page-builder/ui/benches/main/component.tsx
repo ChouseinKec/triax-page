@@ -2,11 +2,11 @@
 import { useEffect, memo, useCallback } from "react";
 
 // Managers
-import { useSelectedDeviceID } from "@/src/page-builder/services/managers/page";
 import { registerBarAction, unregisterBarAction } from "@/src/page-builder/services/managers/layout/bar";
 
 // Components
 import DeviceSelect from "@/src/page-builder/ui/actions/device";
+import OrientationSelect from "@/src/page-builder/ui/actions/orientation";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -18,25 +18,35 @@ import CSS from "./styles.module.scss";
  * @returns JSX element representing the main workbench
  */
 const MainRender: React.FC = () => {
-    const selectedDeviceID = useSelectedDeviceID() || '';
     const renderDeviceSelect = useCallback(() => <DeviceSelect />, []);
+    const renderOrientationSelect = useCallback(() => <OrientationSelect />, []);
 
     useEffect(() => {
         const barID = "workbenchmain-actions";
-        const actionID = "workbenchmain-select-device";
+        const deviceActionID = "workbenchmain-select-device";
+        const orientationActionID = "workbenchmain-select-orientation";
+
         registerBarAction(barID, {
-            id: actionID,
+            id: deviceActionID,
             title: 'DeviceDefinition Select',
             order: 5,
             render: renderDeviceSelect,
         });
 
+        registerBarAction(barID, {
+            id: orientationActionID,
+            title: 'Orientation Select',
+            order: 10,
+            render: renderOrientationSelect,
+        });
+
         // Cleanup: unregister bar action on unmount
         return () => {
-            unregisterBarAction(barID, actionID)
+            unregisterBarAction(barID, deviceActionID);
+            unregisterBarAction(barID, orientationActionID);
         };
 
-    }, [renderDeviceSelect, selectedDeviceID]
+    }, [renderDeviceSelect, renderOrientationSelect]
     );
 
     return (
