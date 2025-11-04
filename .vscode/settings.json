@@ -1,6 +1,0 @@
-{
-	"explorer.compactFolders": false,
-	"explorer.openEditors.visible": 1, // Show open editors
-	"explorer.autoReveal": true, // Auto reveal files
-	"explorer.sortOrder": "type" // Sort by type
-}
