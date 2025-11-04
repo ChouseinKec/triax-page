@@ -1,138 +1,255 @@
 # Triax Page Builder
 
-![version](https://img.shields.io/badge/version-0.4.1-blue) [![Live Demo](https://img.shields.io/badge/demo-online-brightgreen?logo=google-chrome&logoColor=white)](https://demo.chouseinkechagia.com/)
+![version](https://img.shields.io/badge/version-0.5-blue) 
+![license](https://img.shields.io/badge/license-MIT-green)
+[![Live Demo](https://img.shields.io/badge/demo-online-brightgreen?logo=google-chrome&logoColor=white)](https://demo.chouseinkechagia.com/)
 
-
-> 🚀 **Extensible page builder for React**
+> **Extensible visual page builder for React with advanced styling capabilities**
 
 ![Triax Page Builder Screenshot](screenshot.png)
 
-Triax is an extensible page builder for React, designed to provide a complete visual editing experience—including a block editor, style editor, and logic editor. The current focus is on the advanced style editor and foundational block editor, with a roadmap toward a full-featured, production-ready builder.
+Triax is a modular, registry-based page builder for React that provides a complete visual editing experience. Built with TypeScript and Zustand, it features a sophisticated block system, advanced style editor with token-based styling, and a flexible workbench architecture designed for extensibility and performance.
+
+**⚠️ Current Status:** Under heavy development (v0.5) - Core architecture and APIs may change. Not recommended for production use yet.
 
 ---
 
-## 🖼️ Application Layout
+## Key Features
 
-Triax uses a **LayoutPanel-based layout**. Each LayoutPanel is responsible for a specific part of the editing experience, and components can assign their own controls or even their own sections.
+### Registry-Based Architecture
+- **Centralized Management:** All components (blocks, layouts, viewports, workbenches) registered in type-safe registries
+- **Plugin-Ready:** Extensible registry system allows plugins to register custom components
+- **Validation Pipeline:** Built-in validation ensures data integrity across all operations
+- **Lazy Initialization:** Sequential initialization process with dependency management
 
-**Main LayoutPanels:**
-- **Blocks LayoutPanel:** Add new blocks to the page. Provides a searchable, categorized list of all available blocks.
-- **Inspector LayoutPanel:** Manage block settings, including attributes and style values. Edit the details of the selected block.
-- **Action LayoutPanel:** Each block can register its own controls here (e.g., order, rename, or any block-specific actions). This LayoutPanel is context-aware and adapts to the selected block.
+### Advanced Block System
+- **Block Registry:** Centralized `BlockRegistry` for managing all block definitions and instances
+- **Hierarchical Structure:** Nested block support with parent-child relationships
+- **Type-Safe Definitions:** Full TypeScript interfaces for `BlockDefinition` and `BlockInstance`
+- **Block CRUD Operations:** Comprehensive managers for create, read, update, delete, copy, paste operations
+- **Drag & Drop:** Visual block reordering with validation (in progress)
+- **Permitted Content Rules:** Define which blocks can contain others
+- **Custom Block Plugins:** Register custom blocks via the registry system
 
-**LayoutPanel Layout Features:**
-- Each LayoutPanel can be **dragged** and **resized** from any corner or side.
-- LayoutPanels can be **locked in place** to prevent accidental movement or resizing.
-- *(Planned)* Ability to **save and load custom layouts**, enabling users to create and switch between personalized Workbench arrangements.
+**Current Blocks:**
+- Container (div, section, article, aside, nav)
+- Text (span, p, h1-h6, label)
 
-This modular and flexible LayoutPanel system makes the editor highly extensible and customizable for different workflows and plugins.
+### Professional Style Editor
+- **Token-Based System:** All CSS data types, keywords, and functions represented as tokens
+- **Slot-Based Value Editing:** Incremental, context-aware editing for complex CSS patterns
+- **Comprehensive Property Support:** Full CSS property coverage with organized categories
+- **Responsive Styling:** Device, orientation, and pseudo-class specific styles
+- **Lookup Tables:** Optimized style resolution with centralized definitions
+- **Validation & Error Feedback:** Real-time CSS validation against specifications
+- **Style Cascade:** Proper inheritance and style propagation through block hierarchy
 
----
+**Style Selectors:**
+- **Device Selection:** Desktop, tablet, mobile breakpoints
+- **Orientation Support:** Portrait and landscape styling
+- **Pseudo-Class States:** Hover, focus, active, visited, and more
 
-## ✨ Features
+### Flexible Layout System
+- **Panel Architecture:** Modular panel system for organizing editor UI
+- **Dynamic Panels:** Draggable, resizable panels with lock/unlock functionality
+- **Bars & Tabs:** Organized navigation with action bars and tabbed interfaces
+- **Workbench System:** Multiple workspace modes (Design, Logic, Semantics, Main)
+- **Context-Aware UI:** Panels adapt to selected block and current workbench
 
-### 🧩 Block Editor
+**Core Panels:**
+- **Block Library:** Searchable, categorized list of available blocks
+- **Block Inspector:** Edit block attributes and styles for selected block
+- **Block Hierarchy:** Visual tree representation of page structure
 
-- **Plugin Support:** All blocks are registered in a central `BlocksRegistry`, allowing plugins to register their own custom blocks.
-- **Current Blocks:** Includes container and text blocks.
-- **Upcoming Blocks:** Future support for input, button, rich-text, and more.
-- **Block Nesting:** Blocks can be nested to create complex layouts.
-- **Add/Delete Blocks:** Easily add or delete blocks in the editor.
-- **Block-Level Controls:** Each block can add its own actions to the BlockActionLayoutPanel.
-- **Ordering & Drag-and-Drop:** (Planned) Reordering and drag-and-drop support for blocks.
-- **Extensible Block Registry:** Register custom block types and definitions via plugins.
+### State Management
+- **Zustand-Powered:** Lightweight, performant state management
+- **Modular Stores:** Separate stores for blocks, layout, and page state
+- **Manager Services:** Clean API layer abstracting store operations
+- **Reactive Hooks:** Real-time UI updates with optimized re-renders
+- **Validation Pipeline:** Consistent data validation across all operations
 
-### 🎨 Style Editor
-
-- **Slot-based CSS Value Editor:** Incremental, context-aware editing for complex CSS value patterns.
-- **Token System:** All CSS data types, keywords, and functions are represented as tokens for robust parsing and validation.
-- **Lazy Evaluation:** Syntax parsing and expansion are performed on-demand for performance and circular dependency safety.
-- **Comprehensive Lookup Tables:** Centralized definitions for CSS properties, tokens, and units.
-- **Robust Parsing & Validation:** All value editing is validated against the CSS spec, with error feedback.
-- **DeviceDefinition, OrientationDefinition, and PseudoDefinition Selection:** Style editor supports device-specific, orientation-specific, and pseudo-class styling and selection for advanced responsive and stateful layouts.
-- **Componentized Value Editors:** Modular editors for color, dimension, keyword, function, and more.
-
-### ⚙️ Logic Editor
-
-- **Visual Logic and Workflow Editor:** (Planned) Compose conditional logic, event handling, and data flow visually.
-- **Roadmap:** Integrate logic with blocks and styles for dynamic, interactive pages.
-
----
-
-## 📚 Documentation Structure
-
-All documentation is in the [`docs/`](docs/) folder. Key topics are organized by editor and component:
-
-### Block Editor
-
-- [`editor.md`](docs/block/editor.md): Overview of the block editor system and its architecture.
-- [`store.md`](docs/block/store.md): Zustand store for block state management.
-- [`hook.md`](docs/block/hook.md): Block manager hook for actions and selectors.
-- [`components/blocks.md`](docs/block/components/blocks.md): Renders all root blocks in the editor.
-- [`components/block.md`](docs/block/components/block.md): Renders a single block instance.
-- [`components/block-library.md`](docs/block/components/block-library.md): Searchable, categorized block list LayoutPanel.
-
-### Style Editor
-
-- [`editor.md`](docs/style/editor.md): Overview of the style editor, slot-based value editing, and context.
-- [`hooks/manager.md`](docs/style/hooks/manager.md): Style manager hook for getting, setting, copying, and resetting styles.
-- [`hooks/factory.md`](docs/style/hooks/factory.md): Factory hook for rendering style-related UI components.
-- [`components/layout.md`](docs/style/components/layout.md): Layout container for style editor categories.
-- [`components/category.md`](docs/style/components/category.md): Renders a list of property groups.
-- [`components/group.md`](docs/style/components/group.md): Renders a grid of property editors.
-- [`components/property.md`](docs/style/components/property.md): Renders an individual property editor with actions.
-- [`components/value.md`](docs/style/components/value.md): Modular editors for all CSS value types (dimension, color, keyword, function, etc.).
-
-### Page Context
-
-- [`store.md`](docs/page/store.md): Zustand store for page-level device, orientation, and pseudo-state.
-- [`hooks/manager.md`](docs/page/hooks/manager.md): Page manager hook for device context.
-- [`hooks/factory.md`](docs/page/hooks/factory.md): Factory hook for rendering page-level UI controls (e.g., device selector).
+### Extensibility & Services
+- **Service Layer Architecture:** Managers (CRUD, Registry, Page) and Helpers (Fetch, Validate, Block operations)
+- **Helper Utilities:** Reusable functions for block operations, validation, and data fetching
+- **Manager Pattern:** Organized business logic with clear separation of concerns
+- **Plugin System:** Register custom blocks, panels, workbenches, and actions
 
 ---
 
-## 🧪 Testing
+## Architecture Overview
 
-All tests are located in the [`tests/`](tests/) folder.
+Triax follows a **layered, modular architecture** designed for maintainability and extensibility:
 
-- **Utility tests:** [`tests/utilities/`](tests/utilities/)
-- **Component tests:** Will be written when the UI is stabilized
+```
+src/page-builder/
+├── config/          # Configuration & definitions
+│   ├── blocks/      # Core block definitions (container, text)
+│   ├── layouts/     # Panel, bar, and tab definitions
+│   ├── viewports/   # Viewport configurations
+│   ├── workbenches/ # Workbench definitions (design, logic, etc.)
+│   ├── page/        # Page-level configs (device, orientation, pseudo)
+│   └── init/        # Initialization steps and sequences
+│
+├── core/            # Type definitions & interfaces
+│   ├── block/       # Block types and interfaces
+│   ├── editor/      # Editor types (layout, workbench)
+│   ├── page/        # Page types (device, orientation, pseudo)
+│   └── init/        # Initialization types
+│
+├── services/        # Business logic layer
+│   ├── managers/    # High-level operations (CRUD, registry, page)
+│   └── helpers/     # Utility functions (fetch, validate, block ops)
+│
+├── state/           # State management
+│   ├── registries/  # Component registries (singleton pattern)
+│   └── stores/      # Zustand stores (block, layout, page)
+│
+└── ui/              # React components
+    ├── editors/     # Editor components (page, viewport, workbench, layout)
+    ├── inspectors/  # Block inspector and property editors
+    ├── blocks/      # Block render components
+    ├── views/       # View components (hierarchy, library)
+    ├── actions/     # Action components
+    └── benches/     # Workbench implementations
+```
+
+### Key Design Patterns
+
+- **Registry Pattern:** Centralized component registration with validation
+- **Manager Pattern:** Service layer abstracting store operations
+- **Store Pattern:** Zustand stores for reactive state management
+- **Provider Pattern:** Hierarchical data flow through React context
+- **Validation Pipeline:** Consistent data validation with error handling
 
 ---
 
-## 🚀 Getting Started
+## Tech Stack
 
-1. **Download the repository:**  
-   ```sh
+- **Framework:** Next.js 15.3.1 (React 19)
+- **Language:** TypeScript 5
+- **State Management:** Zustand 5.0.3
+- **Styling:** SCSS/Sass 1.89.2
+- **Build Tool:** Turbopack (Next.js)
+- **Testing:** Jest 29 + ts-jest
+- **Dev Tools:** ESLint, Commitizen (conventional commits)
+- **Deployment:** Docker support included
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20+ 
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
    git clone https://github.com/ChouseinKec/triax-page.git
-   ```
-2. **Navigate to the project directory:**  
-   ```sh
    cd triax-page
    ```
-3. **Install dependencies:**  
-   ```sh
+
+2. **Install dependencies:**
+   ```bash
    npm install
    ```
-4. **Run the development server:**  
-   ```sh
+
+3. **Run development server:**
+   ```bash
    npm run dev
    ```
-5. **Run tests:**  
-   ```sh
-   npm test
+   Open [http://localhost:3000](http://localhost:3000) to see the builder in action.
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   npm start
    ```
 
 ---
 
-## 📝 License
+## Roadmap
+
+### Completed (v0.5)
+- Registry-based architecture
+- Block system with CRUD operations
+- Advanced style editor with token system
+- LayoutPanel-based UI
+- Responsive styling (device, orientation, pseudo)
+- Zustand state management
+- Service layer (managers + helpers)
+- Validation pipeline
+- Block drag & drop (in progress)
+
+###  In Progress
+-  Additional core blocks (media, table, input, rich-text ...)
+-  CSS variables, custom properties, classes
+-  Advanced drag & drop with visual feedback
+-  Undo/redo system
+-  Keyboard shortcuts
+
+### Planned Features
+- Logic Editor (visual workflow and event handling)
+- Custom layout persistence (save/load workbench arrangements)
+- Export functionality (HTML,CSS,JS)
+- Plugin marketplace
+
+---
+
+## Contributing
+
+Contributions are welcome! This project uses **Conventional Commits** for consistent commit messages.
+
+### Commit Convention
+```bash
+npm run commit  # Interactive commit with Commitizen
+```
+
+Format: `type(scope): description`
+
+**Types:** `feat`, `fix`, `refactor`, `docs`, `style`, `perf`, `test`, `build`, `ci`, `chore`
+
+**Example:**
+```bash
+feat(block): add image block with responsive controls
+fix(style): correct token parsing for gradient values
+refactor(registry): simplify validation pipeline
+```
+
+---
+
+## License
 
 MIT License
 
 Copyright (c) 2025 Chousein Kechagia
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Author
+
+**Chousein Kechagia**
+- Email: chouseinkechagia@outlook.com
+- GitHub: [@ChouseinKec](https://github.com/ChouseinKec)
+- Demo: [demo.chouseinkechagia.com](https://demo.chouseinkechagia.com/)
+
+---
