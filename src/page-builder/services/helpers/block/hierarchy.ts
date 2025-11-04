@@ -141,15 +141,36 @@ export function findBlockLastDescendant(blockInstance: BlockInstance, allBlocks:
 }
 
 /**
+ * Finds the next sibling of any ancestor by climbing up the parent chain.
+ * Recursively traverses parent blocks until finding one with a next sibling.
+ *
+ * @param blockID - The starting block ID to climb from
+ * @param allBlocks - All blocks collection
+ * @returns The next sibling of an ancestor, or null if none found
+ */
+export function findBlockNextAncestorSibling (blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
+	let currentParentID = allBlocks[blockID]?.parentID;
+	
+	while (currentParentID) {
+		const parentNextSibling = findBlockNextSibling(currentParentID, allBlocks);
+		if (parentNextSibling) return parentNextSibling;
+		
+		// Move up one more level
+		const parentBlock = allBlocks[currentParentID];
+		if (!parentBlock) break;
+		currentParentID = parentBlock.parentID;
+	}
+	
+	return null;
+}
+
+/**
  * Recursively gets all descendant block IDs from a given block ID.
  * Includes the input block ID in the result for deletion operations.
  *
  * @param blockID - The starting block ID
  * @param allBlocks - The collection of all blocks
  * @returns Array of all descendant block IDs including the starting ID
- *
- * @example
- * findBlockDescendants('parent-1', allBlocks) // → ['parent-1', 'child-1', 'grandchild-1']
  */
 export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): BlockID[] {
 	const result: string[] = [];

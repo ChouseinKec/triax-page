@@ -11,7 +11,7 @@ import { devLog } from '@/src/shared/utilities/dev';
 // Helpers
 import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
 import { validateBlockID } from '@/src/page-builder/services/helpers/validate';
-import { canBlockMoveInto, moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, canBlockMoveBefore, canBlockMoveAfter } from '@/src/page-builder/services/helpers/block';
+import { canBlockMoveInto, moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextAncestorSibling, canBlockMoveBefore, canBlockMoveAfter } from '@/src/page-builder/services/helpers/block';
 
 /**
  * Retrieves the next block in the hierarchy for block hierarchy operations.
@@ -36,14 +36,14 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
 	if (!safeData) return;
 
 	// If it has children, return the first child
-	const nextSibling = findBlockNextSibling(safeData.block.id, blockStore.allBlocks);
 	if (safeData.block.contentIDs?.length > 0) return blockStore.getBlock(safeData.block.contentIDs[0]);
 
 	// If no children, get the next sibling
+	const nextSibling = findBlockNextSibling(safeData.block.id, blockStore.allBlocks);
 	if (nextSibling) return nextSibling;
 
-	// If no next sibling, check the parent's next sibling
-	return findBlockNextSibling(safeData.block.parentID, blockStore.allBlocks);
+	// If no next sibling, recursively climb up to find the parent's next sibling
+	return findBlockNextAncestorSibling(safeData.block.id, blockStore.allBlocks);
 }
 
 /**
@@ -69,9 +69,9 @@ export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undef
 		.execute();
 	if (!safeData) return;
 
-	// If previous sibling has children, return its last descendant, otherwise the sibling itself
+	// If previous sibling exists, return its last descendant (or itself if no children)
 	const prevSibling = findBlockPreviousSibling(safeData.blockInstance.id, blockStore.allBlocks);
-	if (prevSibling) return findBlockLastDescendant(prevSibling, blockStore.allBlocks) || prevSibling;
+	if (prevSibling) return findBlockLastDescendant(prevSibling, blockStore.allBlocks);
 
 	// If no previous sibling, return the parent
 	return blockStore.getBlock(safeData.blockInstance.parentID);
