@@ -3,7 +3,7 @@ import type { StyleKey, StyleValue } from '@/src/page-builder/core/block/style/t
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Constants
-import { STYLE_DEFINITIONS, VALUE_SEPARATOR_DEFAULTS } from '@/src/page-builder/core/block/style/constants';
+import { STYLE_DEFINITIONS, DEFAULT_VALUE_SEPARATORS } from '@/src/page-builder/core/block/style/constants';
 
 // Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
@@ -63,7 +63,7 @@ export function validateStyleValue(styleKey: unknown, styleValue: unknown): Vali
 	if (!syntaxNormalized) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
 
 	// Split the value into its components
-	const values = splitAdvanced(valueValidation.value, VALUE_SEPARATOR_DEFAULTS);
+	const values = splitAdvanced(valueValidation.value, DEFAULT_VALUE_SEPARATORS);
 
 	// Convert the values to their token representations
 	const valueTokens = getValueTokens(values).join(' ');

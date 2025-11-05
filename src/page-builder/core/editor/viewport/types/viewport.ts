@@ -5,14 +5,10 @@ import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types
 
 /**
  * Unique identifier for the Viewport
- *
  * Must be unique across all registered Viewports.
- *
  * Used to reference the Viewport in the application.
- *
- * Example: "block", "behaviour"
  */
-export type ViewportID = 'block';
+export type ViewportID = string;
 
 /**
  * Title of the Viewport
@@ -31,7 +27,6 @@ export type ViewportRender = () => ReactNode;
 
 /**
  * Defines the structure for viewport configurations in the page builder.
- *
  * Viewports provide different editing contexts and toolsets.
  */
 export interface ViewportDefinition {

@@ -2,12 +2,8 @@ import { ReactNode, ReactElement } from 'react';
 
 /**
  * Unique identifier for the Workbench
- *
- *  Must be unique across all registered Workbenchs.
- *
- *  Used to reference the Workbench in the application.
- *
- *  Example: "main", "design", "code"
+ * Must be unique across all registered Workbenchs.
+ * Used to reference the Workbench in the application.
  */
 export type WorkbenchID = string;
 
@@ -43,7 +39,6 @@ export type WorkbenchRender = () => ReactNode;
 
 /**
  * Defines the structure for workbench configurations in the page builder.
- *
  * Workbenches provide different editing contexts and toolsets.
  */
 export interface WorkbenchDefinition {

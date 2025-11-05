@@ -16,20 +16,10 @@ export type UnitTypes = 'length' | 'angle' | 'flex' | 'percentage';
  * Used for unit lookup, validation, and UI rendering.
  */
 export interface UnitDefinition {
-	/**
-	 * The canonical name of the CSS unit (e.g. 'px', 'em', 'vh').
-	 */
+	/** The canonical name of the CSS unit (e.g. 'px', 'em', 'vh'). */
 	name: UnitKeys;
-
-	/**
-	 * The value of the CSS unit (usually same as name).
-	 * Used for value comparisons and serialization.
-	 */
+	/** The value of the CSS unit (usually same as name). */
 	value: `${number}${UnitKeys}`;
-
-	/**
-	 * The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex').
-	 * Used for functional grouping in the UI.
-	 */
+	/** The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex'). */
 	type: UnitTypes;
 }

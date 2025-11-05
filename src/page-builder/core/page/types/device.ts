@@ -10,8 +10,7 @@ export type DeviceName = string;
 
 /**
  * Represents the unique value identifier for a device (e.g., 'iphone-14', 'desktop-fhd').
- * This is the internal key used by the system - stores, managers, dropdowns, and UI components
- * work with device values for selection, storage, and display logic.
+ * This is the internal key used by the system - stores, managers, dropdowns, and UI components.
  */
 export type DeviceValue = string;
 
@@ -26,7 +25,9 @@ export type DeviceCategory = string;
  * - max: Maximum width in pixels for this device range (can be Infinity for unbounded).
  */
 export type DeviceMedia = {
+	/** Minimum width in pixels for this device range */
 	min: number;
+	/** Maximum width in pixels for this device range (can be Infinity for unbounded) */
 	max: number;
 };
 
@@ -35,25 +36,42 @@ export type DeviceMedia = {
  * - width: The width in pixels of the device screen.
  * - height: The height in pixels of the device screen.
  */
-export type DeviceTemplate = {
+export type DeviceViewport = {
+	/** Width in pixels of the device screen */
 	width: number;
+	/** Height in pixels of the device screen */
 	height: number;
 };
 
+/**
+ * Registry of all devices by their ID.
+ */
 export type DeviceRecord = Record<DeviceID, DeviceInstance>;
 
 /**
- * Complete definition of a device, including its name, media queries, template, and category.
+ * Defines the structure for device configurations in the page builder.
+ * Devices represent different viewport sizes and categories for responsive design.
  */
 export interface DeviceDefinition {
+	/** Human-readable name of the device */
 	name: DeviceName;
+	/** Unique value identifier for the device */
 	value: DeviceValue;
+	/** Media query breakpoints for this device */
 	media: DeviceMedia;
-	template: DeviceTemplate;
+	/** Template dimensions for the device viewport */
+	template: DeviceViewport;
+	/** Category of the device (e.g., 'phone', 'tablet', 'desktop') */
 	category: DeviceCategory;
+	/** Whether the device should be hidden from UI selectors */
 	hidden?: boolean;
 }
 
+/**
+ * Device instance with registered ID.
+ * Extends DeviceDefinition with a unique identifier assigned during registration.
+ */
 export interface DeviceInstance extends DeviceDefinition {
+	/** Unique identifier assigned during registration */
 	id: DeviceID;
 }

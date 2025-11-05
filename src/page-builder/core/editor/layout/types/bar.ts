@@ -6,7 +6,6 @@ import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types
 export type BarSizeFixed = {
 	/** Current width of the LayoutBar (in any CSS unit) */
 	width: string;
-
 	/** Optional height of the LayoutBar (in any CSS unit) */
 	height?: string;
 };
@@ -17,6 +16,7 @@ export type BarSizeAuto = {
 	/** Maximum width of the LayoutBar (in any CSS unit) */
 	maxWidth: string;
 };
+
 /**
  * Represents the size of the LayoutBar.
  */
@@ -48,38 +48,17 @@ export type BarTitle = string;
  * This is used to register LayoutBars in the layout context.
  */
 export interface BarDefinition {
-	/**
-	 * Unique identifier for the LayoutBar
-	 */
+	/** Unique identifier for the LayoutBar */
 	id: BarID;
-
-	/**
-	 * Title of the LayoutBar, displayed in the header
-	 * @default "LayoutBar"
-	 */
+	/** Title of the LayoutBar, displayed in the header */
 	title: BarTitle;
-
-	/**
-	 * Position of the LayoutBar on the screen
-	 */
+	/** Position of the LayoutBar on the screen */
 	position: BarPosition;
-
-	/**
-	 * Size of the LayoutBar
-	 * @default { width: '25%', height: '35px' }
-	 */
+	/** Size of the LayoutBar */
 	size: BarSize;
-
-	/**
-	 * Background color of the LayoutBar
-	 * @default 'transparent'
-	 */
+	/** Background color of the LayoutBar */
 	isTransparent?: boolean;
-
-	/**
-	 * Optional Workbench identifier for the LayoutBar
-	 * Used to differentiate LayoutBars in different Workbenchs
-	 */
+	/** Workbench identifier for the LayoutBar */
 	workbenchID: WorkbenchID;
 }
 

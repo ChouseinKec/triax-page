@@ -78,6 +78,9 @@ export type AttributeCategories = 'global' | 'accesibility' | 'schema' | 'specif
  */
 export type AttributeDescription = string;
 
+/**
+ *  Value type for HTML attributes.
+ */
 export type AttributeValue = string;
 
 /**

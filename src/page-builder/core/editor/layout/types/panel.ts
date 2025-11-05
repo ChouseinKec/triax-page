@@ -59,56 +59,23 @@ export type PanelOrder = number;
  * This is used to register LayoutPanels in the layout context.
  */
 export interface PanelDefinition {
-	/**
-	 * Unique identifier for the LayoutPanel
-	 */
+	/** Unique identifier for the LayoutPanel */
 	id: PanelID;
-
-	/**
-	 * Title of the LayoutPanel, displayed in the header
-	 * @default "LayoutPanel"
-	 */
+	/** Title of the LayoutPanel, displayed in the header */
 	title: PanelTitle;
-
-	/**
-	 * Order of the LayoutPanel in the layout, used for sorting
-	 * @default 0
-	 */
+	/** Order of the LayoutPanel in the layout, used for sorting */
 	order: PanelOrder;
-
-	/**
-	 * Icon of the LayoutPanel, displayed in the left bar
-	 */
+	/** Icon of the LayoutPanel, displayed in the left bar */
 	icon: PanelIcon;
-
-	/**
-	 * Optional Workbench identifier for the LayoutPanel
-	 * Used to differentiate LayoutPanels in different Workbenchs
-	 */
+	/** Optional Workbench identifier for the LayoutPanel */
 	workbenchID: WorkbenchID;
-
-	/**
-	 *  Initial position of the LayoutPanel
-	 *  @default { top: '0px', left: '0px' }
-	 */
+	/** Initial position of the LayoutPanel	 */
 	initialPosition: PanelPosition;
-
-	/**
-	 *  Initial size and constraints of the LayoutPanel
-	 *  @default { width: '250px', height: '250px', minWidth: 250, minHeight: 250 }
-	 */
+	/**	Initial size and constraints of the LayoutPanel	 */
 	initialSize: PanelSize;
-
-	/**
-	 * Optional initial locked state of the LayoutPanel
-	 * @default true
-	 */
+	/** Optional initial locked state of the LayoutPanel */
 	initialLocked: boolean;
-
-	/**
-	 * Optional initial open state of the LayoutPanel
-	 * @default false
-	 */
+	/** Optional initial open state of the LayoutPanel	 */
 	initialOpen: boolean;
 }
 
@@ -120,17 +87,9 @@ export interface PanelDefinition {
 export interface PanelInstance extends PanelDefinition {
 	/** The content (LayoutPanel items) to render inside the group */
 	tabs: TabRecord;
-
-	/**
-	 * Whether the LayoutPanel is currently locked
-	 * @default true
-	 */
+	/**	Whether the LayoutPanel is currently locked	 */
 	isLocked: boolean;
-
-	/**
-	 * Whether the LayoutPanel group is open or closed
-	 * @default true
-	 */
+	/** Whether the LayoutPanel group is open or closed */
 	isOpen: boolean;
 }
 
@@ -152,16 +111,12 @@ export type TabRecord = Record<TabID, TabInstance>;
 export interface TabInstance {
 	/** Unique identifier for the tab */
 	id: TabID;
-
 	/** Title of the tab */
 	title: TabTitle;
-
 	/** Content of the tab */
 	render: () => TabComponent;
-
 	/** Icon for the tab, displayed in the LayoutPanel header */
 	icon: () => TabIcon;
-
 	/** Priority of the tab, used for sorting */
 	order: TabOrder;
 }

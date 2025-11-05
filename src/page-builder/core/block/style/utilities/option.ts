@@ -1,5 +1,5 @@
 // Constants
-import { VALUE_FUNCTION_DEFAULTS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/page-builder/core/block/style/constants';
+import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/page-builder/core/block/style/constants';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/page-builder/core/block/style/utilities';
@@ -31,7 +31,7 @@ export function createFunctionOption(token: string): OptionFunctionDefinition | 
 	const { syntax } = param;
 
 	// Get the default function value from the constants
-	const defaultValue = VALUE_FUNCTION_DEFAULTS[baseName];
+	const defaultValue = DEFAULT_VALUE_FUNCTIONS[baseName];
 
 	// If no default value is defined for this function, return undefined
 	if (!defaultValue) return undefined;

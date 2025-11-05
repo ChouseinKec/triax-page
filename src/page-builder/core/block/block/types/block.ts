@@ -40,8 +40,7 @@ export type BlockStyles = {
 };
 
 /**
- * Block attributes structure:
- * key -> value
+ * Record of block attributes
  */
 export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 

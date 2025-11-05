@@ -2,7 +2,7 @@
 import type { StyleDefinition, StyleKey } from '@/src/page-builder/core/block/style/types';
 
 // Constants
-import { VALUE_SEPARATOR_DEFAULTS } from './value';
+import { DEFAULT_VALUE_SEPARATORS } from './value';
 
 // Utilities
 import { getColumnSets } from '@/src/shared/utilities/array';
@@ -42,7 +42,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
 
 		get syntaxSet() {
 			if (_set === undefined) {
-				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, VALUE_SEPARATOR_DEFAULTS));
+				const tokens = this.syntaxParsed.map((variation) => splitAdvanced(variation, DEFAULT_VALUE_SEPARATORS));
 				const columnArrays = getColumnSets(tokens);
 				_set = columnArrays.map((col) => new Set(col));
 			}
@@ -52,7 +52,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
 		get syntaxNormalized() {
 			if (_normalized === undefined) {
 				_normalized = this.syntaxParsed.map((variation) =>
-					splitAdvanced(variation, VALUE_SEPARATOR_DEFAULTS)
+					splitAdvanced(variation, DEFAULT_VALUE_SEPARATORS)
 						.map((token) => getTokenCanonical(token))
 						.join(' ')
 				);

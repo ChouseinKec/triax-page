@@ -19,13 +19,8 @@ export type TokenParam = { type: 'function'; syntax: string } | { type: 'range';
  * Represents a single CSS data type definition, including its name and syntax.
  */
 export interface TokenDefinition {
-	/**
-	 * The canonical name of the CSS data type (e.g. '<number>', '<length>').
-	 */
+	/** The canonical name of the CSS data type (e.g. '<number>', '<length>'). */
 	type: TokenKeys;
-
-	/**
-	 * The value definition syntax for this data type (may reference other data types).
-	 */
+	/** The value definition syntax for this data type (may reference other data types). */
 	syntax: string;
 }

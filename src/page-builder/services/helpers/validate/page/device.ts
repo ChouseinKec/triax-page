@@ -1,5 +1,5 @@
 // Types
-import type { DeviceDefinition, DeviceID, DeviceName, DeviceValue, DeviceMedia, DeviceTemplate, DeviceCategory } from '@/src/page-builder/core/page/types/device';
+import type { DeviceDefinition, DeviceID, DeviceName, DeviceValue, DeviceMedia, DeviceViewport, DeviceCategory } from '@/src/page-builder/core/page/types/device';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
@@ -69,15 +69,15 @@ export function validateDeviceMedia(deviceMedia: unknown): ValidateResult<Device
  * Validates device template for device operations.
  * Checks if the template configuration is valid.
  *
- * @param deviceTemplate - The device template to validate
- * @returns ValidateResult containing validity and the validated DeviceTemplate if valid
+ * @param deviceViewport - The device template to validate
+ * @returns ValidateResult containing validity and the validated DeviceViewport if valid
  *
  * @example
  * validateDeviceTemplate({ width: 1024, height: 768 }) → { valid: true, value: { width: 1024, height: 768 } }
  */
-export function validateDeviceTemplate(deviceTemplate: unknown): ValidateResult<DeviceTemplate> {
-	if (!isDeviceTemplateValid(deviceTemplate)) return { valid: false, message: `Device template must be valid, got: ${JSON.stringify(deviceTemplate)}` };
-	return { valid: true, value: deviceTemplate as DeviceTemplate };
+export function validateDeviceTemplate(deviceViewport: unknown): ValidateResult<DeviceViewport> {
+	if (!isDeviceTemplateValid(deviceViewport)) return { valid: false, message: `Device template must be valid, got: ${JSON.stringify(deviceViewport)}` };
+	return { valid: true, value: deviceViewport as DeviceViewport };
 }
 
 /**

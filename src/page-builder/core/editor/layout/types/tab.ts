@@ -34,34 +34,16 @@ export type TabOrder = number;
  * This is used to register panel tabs in the panel context.
  */
 export interface TabDefinition {
-	/**
-	 * Unique identifier for the panel tab
-	 */
+	/** Unique identifier for the panel tab */
 	id: TabID;
-
-	/**
-	 * ID of the panel this tab belongs to
-	 */
+	/** ID of the panel this tab belongs to */
 	panelID: PanelID;
-
-	/**
-	 * Display title of the panel tab
-	 */
+	/** Display title of the panel tab */
 	title: TabTitle;
-
-	/**
-	 * Icon component or element for the panel tab
-	 */
+	/** Icon component or element for the panel tab */
 	icon: TabIcon;
-
-	/**
-	 * React component to render as the tab content
-	 */
+	/** React component to render as the tab content */
 	component: TabComponent;
-
-	/**
-	 * Order of the panel tab within its panel, used for sorting
-	 * @default 10
-	 */
+	/** Order of the panel tab within its panel, used for sorting */
 	order: TabOrder;
 }
