@@ -26,10 +26,27 @@ const ViewportEditor: React.FC = () => {
     const baseWidth = selectedDevice?.template?.width || 1920;
     const baseHeight = selectedDevice?.template?.height || 1080;
 
-    // Swap dimensions if orientation is landscape
-    const isLandscape = selectedOrientation?.value === 'landscape';
-    const deviceWidth = isLandscape ? Math.max(baseWidth, baseHeight) : Math.min(baseWidth, baseHeight);
-    const deviceHeight = isLandscape ? Math.min(baseWidth, baseHeight) : Math.max(baseWidth, baseHeight);
+
+    // For 'all' orientation, use template dimensions as-is
+    // For 'landscape', ensure width > height
+    // For 'portrait', ensure height > width
+    const orientationValue = selectedOrientation?.value;
+    let deviceWidth: number;
+    let deviceHeight: number;
+    switch (orientationValue) {
+        case 'all':
+            deviceWidth = baseWidth;
+            deviceHeight = baseHeight;
+            break;
+        case 'landscape':
+            deviceWidth = Math.max(baseWidth, baseHeight);
+            deviceHeight = Math.min(baseWidth, baseHeight);
+            break;
+        default:
+            deviceWidth = Math.min(baseWidth, baseHeight);
+            deviceHeight = Math.max(baseWidth, baseHeight);
+            break;
+    }
 
     /**
      * Use native event listener to properly prevent default on wheel events
