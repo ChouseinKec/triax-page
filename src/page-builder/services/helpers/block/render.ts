@@ -18,8 +18,7 @@ import { generateCSSSelector, generateCSSRule, cascadeCSSStyles, normalizeAttrib
  * @param pseudo - Current pseudo-class context for cascade resolution
  * @returns Formatted CSS string with selector and properties
  * @example
- * renderBlockStyles(styles, 'block-123', 'mobile', 'portrait', 'hover')
- * // Returns: "#block-block-123:hover {\n  color: red;\n}\n"
+ * renderBlockStyles(styles, 'block-123', 'mobile', 'portrait', 'hover') → "#block-block-123:hover {\n  color: red;\n}\n"
  */
 export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device: DeviceValue, orientation: OrientationValue, pseudo: PseudoValue): string {
 	const cssStyles = cascadeCSSStyles(styles, device, orientation, pseudo);
@@ -34,8 +33,7 @@ export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device:
  * @param attributes - The block's attribute definition object
  * @returns Normalized attributes object ready for React component props
  * @example
- * renderBlockAttributes({ class: 'btn', disabled: 'true' })
- * // Returns: { className: 'btn', disabled: true }
+ * renderBlockAttributes({ class: 'btn', disabled: 'true' }) → { className: 'btn', disabled: true }
  */
 export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> {
 	const normalizedAttributes: Record<string, string | boolean> = {};

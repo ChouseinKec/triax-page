@@ -188,23 +188,14 @@ export function validateBlockStyles(blockStyles: unknown): ValidateResult<BlockS
 }
 
 /**
- * Checks if the instance has all required properties (id, type, parentID, contentIDs, attributes, styles)
- * and that each property is valid according to its respective validation rules.
+ * Checks if the instance has required properties (id, type, parentID, contentIDs, attributes, styles)
+ * and that each property is valid.
  *
- * @param blockInstance - The block instance object to validate
- * @returns ValidateResult containing validity and the validated BlockInstance if valid
+ * @param blockInstance - The block instance to validate
+ * @returns ValidateResult<BlockInstance>
  *
  * @example
- * validateBlockInstance({
- *   id: 'block-1',
- *   type: 'text',
- *   parentID: 'container-1',
- *   contentIDs: [],
- *   attributes: { className: 'text-block' },
- *   styles: { color: 'black' }
- * }) → { valid: true, value: {...} }
- *
- * validateBlockInstance({}) → { valid: false, message: 'Invalid block instance: missing required keys: id, type, parentID, contentIDs, attributes, styles' }
+ * validateBlockInstance({ id: 'block-1', type: 'text', parentID: 'root', contentIDs: [], attributes: {}, styles: {} }) → { valid: true, value: {...} }
  */
 export function validateBlockInstance(blockInstance: unknown): ValidateResult<BlockInstance> {
 	const validation = validateObject(blockInstance, ['id', 'type', 'parentID', 'contentIDs', 'attributes', 'styles']);
@@ -230,16 +221,7 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
  * @returns ValidateResult containing validity and the validated BlockDefinition if valid
  *
  * @example
- * validateBlockDefinition({
- *   type: 'text',
- *   tags: ['span'],
- *   render: () => <span>Text</span>,
- *   permittedContent: [],
- *   icon: <TextIcon />,
- *   category: 'content'
- * }) → { valid: true, value: {...} }
- *
- * validateBlockDefinition({}) → { valid: false, message: 'Invalid block definition: missing required keys: type, tags, render, permittedContent, icon, category' }
+ * validateBlockDefinition({type: 'text',tags: ['span'],render: () => <span>Text</span>,permittedContent: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
 	const validation = validateObject(blockDefinition, ['type', 'tags', 'permittedContent', 'icon', 'category', 'render']);

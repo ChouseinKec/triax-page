@@ -24,8 +24,7 @@ import { DEFAULT_PSEUDO_ID } from '@/src/page-builder/core/page/constants';
  * @returns Formatted CSS properties string with each property on a new line
  *
  * @example
- * generateCSSProperties({ backgroundColor: 'red', fontSize: '14px' }, 1)
- * // Returns: "  background-color: red;\n  font-size: 14px;\n"
+ * generateCSSProperties({ backgroundColor: 'red', fontSize: '14px' }, 1) → "  background-color: red;\n  font-size: 14px;\n"
  */
 export function generateCSSProperties(styles: Record<string, string>, indentLevel: number = 1): string {
 	const indent = '  '.repeat(indentLevel);
@@ -55,7 +54,7 @@ export function generateCSSProperties(styles: Record<string, string>, indentLeve
  * @returns CSS selector string for the block
  *
  * @example
- * generateCSSSelector('block-123', 'hover') // Returns: "#block-block-123:hover"
+ * generateCSSSelector('block-123', 'hover') → "#block-block-123:hover"
  */
 export function generateCSSSelector(blockID: BlockID, pseudoName: string): string {
 	// Add pseudo-class if specified (skip 'all' which means no pseudo)
@@ -79,8 +78,7 @@ export function generateCSSSelector(blockID: BlockID, pseudoName: string): strin
  * @returns New object with only the resolved properties applicable to the current context
  *
  * @example
- * cascadeCSSStyles(styles, 'mobile', 'portrait', 'hover')
- * // Returns: { color: 'blue', fontSize: '16px' } // only properties that apply to mobile+portrait+hover
+ * cascadeCSSStyles(styles, 'mobile', 'portrait', 'hover') → { color: 'blue', fontSize: '16px' }
  */
 export function cascadeCSSStyles(styles: BlockStyles, device: DeviceName, orientation: OrientationName, pseudo: PseudoName): Record<string, string> {
 	// Collect all unique style keys from all device/orientation/pseudo contexts
@@ -114,8 +112,7 @@ export function cascadeCSSStyles(styles: BlockStyles, device: DeviceName, orient
  * @returns Complete CSS rule block with proper formatting
  *
  * @example
- * generateCSSRule('#block-123', { color: 'red' }, 0)
- * // Returns: "#block-123 {\n  color: red;\n}\n"
+ * generateCSSRule('#block-123', { color: 'red' }, 0) → "#block-123 {\n  color: red;\n}\n"
  */
 export function generateCSSRule(selector: string, styles: Record<string, string>, indentLevel: number = 0): string {
 	const indent = '  '.repeat(indentLevel);

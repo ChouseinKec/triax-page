@@ -263,8 +263,8 @@ export function cloneBlock(blockID: BlockID, allBlocks: BlockRecord): BlockRecor
  * @returns BlockRecord with the target block overwritten and source tree cloned
  *
  * @example
- * const updatedBlocks = overwriteBlock(clipboardBlock, 'target-123', allBlocks)
- */
+ * overwriteBlock(sourceBlock, 'target-123', allBlocks) → updated allBlocks with target block overwritten by source block tree	
+*/
 export function overwriteBlock(sourceBlock: BlockInstance, targetBlockID: BlockID, allBlocks: BlockRecord): BlockRecord {
 	const targetBlock = allBlocks[targetBlockID];
 	if (!targetBlock) return allBlocks;

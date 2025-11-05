@@ -34,6 +34,9 @@ export function isBlockDescendant(parentBlock: BlockInstance, targetID: BlockID,
  * @param targetIndex - The index position within the target parent's contentIDs
  * @param allBlocks - All blocks collection
  * @returns Updated blocks record with the block moved to new position
+ *
+ * @example
+ * moveBlock('block-123', 'parent-456', 2, allBlocks) → Updated BlockRecord
  */
 export function moveBlock(sourceBlockID: BlockID, parentBlockID: BlockID, targetIndex: number, allBlocks: BlockRecord): BlockRecord {
 	const block = allBlocks[sourceBlockID];
@@ -87,6 +90,9 @@ export function moveBlock(sourceBlockID: BlockID, parentBlockID: BlockID, target
  * @param blockID - The block ID to find the next sibling for
  * @param allBlocks - All blocks collection
  * @returns The next sibling block instance or null
+ *
+ * @example
+ * findBlockNextSibling('block-123', allBlocks) → { id: 'sibling-124', ... }
  */
 export function findBlockNextSibling(blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
 	const block = allBlocks[blockID];
@@ -107,6 +113,9 @@ export function findBlockNextSibling(blockID: BlockID, allBlocks: BlockRecord): 
  * @param blockID - The block ID to find the previous sibling for
  * @param allBlocks - All blocks collection
  * @returns The previous sibling block instance or null
+ *
+ * @example
+ * findBlockPreviousSibling('block-123', allBlocks) → { id: 'sibling-122', ... }
  */
 export function findBlockPreviousSibling(blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
 	const block = allBlocks[blockID];
@@ -127,6 +136,9 @@ export function findBlockPreviousSibling(blockID: BlockID, allBlocks: BlockRecor
  * @param block - The starting block
  * @param allBlocks - All blocks collection
  * @returns The last descendant block instance or null if input is invalid
+ *
+ * @example
+ * findBlockLastDescendant('block-123', allBlocks) → { id: 'deepest-child', ... }
  */
 export function findBlockLastDescendant(blockInstance: BlockInstance, allBlocks: BlockRecord): BlockInstance | null {
 	let current = blockInstance;
@@ -147,20 +159,23 @@ export function findBlockLastDescendant(blockInstance: BlockInstance, allBlocks:
  * @param blockID - The starting block ID to climb from
  * @param allBlocks - All blocks collection
  * @returns The next sibling of an ancestor, or null if none found
+ *
+ * @example
+ * findBlockNextAncestorSibling('block-123', allBlocks) → { id: 'ancestor-sibling', ... }
  */
-export function findBlockNextAncestorSibling (blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
+export function findBlockNextAncestorSibling(blockID: BlockID, allBlocks: BlockRecord): BlockInstance | null {
 	let currentParentID = allBlocks[blockID]?.parentID;
-	
+
 	while (currentParentID) {
 		const parentNextSibling = findBlockNextSibling(currentParentID, allBlocks);
 		if (parentNextSibling) return parentNextSibling;
-		
+
 		// Move up one more level
 		const parentBlock = allBlocks[currentParentID];
 		if (!parentBlock) break;
 		currentParentID = parentBlock.parentID;
 	}
-	
+
 	return null;
 }
 
@@ -171,6 +186,9 @@ export function findBlockNextAncestorSibling (blockID: BlockID, allBlocks: Block
  * @param blockID - The starting block ID
  * @param allBlocks - The collection of all blocks
  * @returns Array of all descendant block IDs including the starting ID
+ *
+ * @example
+ * findBlockDescendants('block-123', allBlocks) → ['block-123', 'child-1', 'child-2', ...]
  */
 export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): BlockID[] {
 	const result: string[] = [];
@@ -192,6 +210,16 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 	return result;
 }
 
+/**
+ * Checks if a block of a certain type can be moved into a parent block of another type.
+ * Considers the permittedContent definitions of the parent block type.
+ * @param parentBlockType - The type of the parent block
+ * @param childBlockType - The type of the child block to move
+ * @returns True if the child block can be moved into the parent block, false otherwise
+ *
+ * @example
+ * canBlockMoveInto('section', 'text') → true
+ */
 export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: BlockType): boolean {
 	const registeredBlocks = blockRegistry.getRegisteredBlocks();
 
@@ -213,6 +241,9 @@ export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: Blo
  * @param targetBlock - The target block for positioning reference
  * @param parentBlock - The parent block containing both source and target
  * @returns Target index if move is needed, null if already positioned correctly or invalid
+ * 
+ * @example
+ * canBlockMoveBefore(sourceBlock, targetBlock, parentBlock) → 2 | null
  */
 export function canBlockMoveBefore(sourceBlock: BlockInstance, targetBlock: BlockInstance, parentBlock: BlockInstance): number | null {
 	const sourceIndex = parentBlock.contentIDs.indexOf(sourceBlock.id);
@@ -236,6 +267,9 @@ export function canBlockMoveBefore(sourceBlock: BlockInstance, targetBlock: Bloc
  * @param targetBlock - The target block for positioning reference
  * @param parentBlock - The parent block containing both source and target
  * @returns Target index if move is needed, null if already positioned correctly or invalid
+ * 
+ * @example
+ * canBlockMoveAfter(sourceBlock, targetBlock, parentBlock) → 3 | null
  */
 export function canBlockMoveAfter(sourceBlock: BlockInstance, targetBlock: BlockInstance, parentBlock: BlockInstance): number | null {
 	const sourceIndex = parentBlock.contentIDs.indexOf(sourceBlock.id);

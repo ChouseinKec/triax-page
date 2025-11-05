@@ -43,9 +43,13 @@ export function getStyleShorthand(styleKey: StyleKey): StyleKey[] {
  *
  * @param values - Array of CSS values from shorthand longhand properties
  * @returns The resolved CSS value, or empty string if values are mixed
+ * 
+ * @example
+ * resolveStyleShorthand(['10px', '10px', '10px', '10px']) → '10px'
+ * resolveStyleShorthand(['10px', '15px', '10px', '20px']) → 'mixed'
  */
-export function resolveStyleShorthand(values: string[]): string {
-	const filteredValues = values.filter(Boolean);
+export function resolveStyleShorthand(styleShorthands: string[]): string {
+	const filteredValues = styleShorthands.filter(Boolean);
 	const uniqueValues = Array.from(new Set(filteredValues));
 
 	return uniqueValues.length === 1 ? uniqueValues[0] : 'mixed';
