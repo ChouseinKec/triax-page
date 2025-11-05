@@ -9,6 +9,7 @@ export type PseudoRecord = Record<PseudoID, PseudoInstance>;
 export interface PseudoDefinition {
 	name: PseudoName;
 	value: PseudoValue;
+	hidden?: boolean;
 }
 
 export interface PseudoInstance extends PseudoDefinition {

@@ -9,6 +9,7 @@ export type OrientationRecord = Record<string, OrientationInstance>;
 export interface OrientationDefinition {
 	name: OrientationName;
 	value: OrientationValue;
+	hidden?: boolean;
 }
 
 export interface OrientationInstance extends OrientationDefinition {

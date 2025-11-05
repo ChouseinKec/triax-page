@@ -51,6 +51,7 @@ export interface DeviceDefinition {
 	media: DeviceMedia;
 	template: DeviceTemplate;
 	category: DeviceCategory;
+	hidden?: boolean;
 }
 
 export interface DeviceInstance extends DeviceDefinition {
