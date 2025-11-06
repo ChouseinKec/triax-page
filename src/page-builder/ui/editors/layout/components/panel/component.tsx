@@ -8,7 +8,7 @@ import ActionGroup from "@/src/shared/components/group/action/component";
 import CSS from "./styles.module.scss";
 
 // Types
-import type { LayoutPanelProps } from "@/src/page-builder/ui/editors/layout/types/panel";
+import type { LayoutPanelProps } from "./types";
 
 // Hooks
 import { useDrag } from "@/src/shared/hooks/interface/useDrag";

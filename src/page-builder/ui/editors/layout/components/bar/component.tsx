@@ -9,8 +9,8 @@ import ActionGroup from "@/src/shared/components/group/action/component";
 import CSS from "./styles.module.scss";
 
 // Types
+import type { LayoutBarProps } from "./types";
 import type { BarActionInstance } from "@/src/page-builder/core/editor/layout/types/bar";
-import type { LayoutBarProps } from "@/src/page-builder/ui/editors/layout/types/bar";
 
 // Managers
 import { useBarActions } from "@/src/page-builder/services/managers/layout/bar";

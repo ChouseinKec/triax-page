@@ -4,19 +4,24 @@ import { create } from 'zustand';
 import type { PanelID, PanelInstance, TabInstance, PanelRecord } from '@/src/page-builder/core/editor/layout/types';
 import type { BarDefinition, BarID } from '@/src/page-builder/core/editor/layout/types';
 import type { BarRecord, BarActionInstance, BarActionID } from '@/src/page-builder/core/editor/layout/types/bar';
+import type { InfoDefinition, InfoID, InfoRecord, InfoDataInstance, InfoDataID } from '@/src/page-builder/core/editor/layout/types/info';
 
 // Registry
-import { getRegisteredPanels, getRegisteredTabs, getRegisteredBars } from '@/src/page-builder/state/registries/layout';
+import { getRegisteredPanels, getRegisteredTabs, getRegisteredBars, getRegisteredInfos } from '@/src/page-builder/state/registries/layout';
 
 interface LayoutStoreState {
 	layoutPanels: PanelRecord;
 	layoutBars: BarRecord;
+	layoutInfos: InfoRecord;
 
 	updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => void;
 	getPanel: (panelID: PanelID) => PanelInstance | undefined;
 	getBar: (barID: BarID) => BarRecord[BarID] | undefined;
+	getInfo: (infoID: InfoID) => InfoRecord[InfoID] | undefined;
 	registerBarAction: (barID: BarID, action: BarActionInstance) => void;
 	unregisterBarAction: (barID: BarID, actionID: BarActionID) => void;
+	registerInfoData: (infoID: InfoID, dataItem: InfoDataInstance) => void;
+	unregisterInfoData: (infoID: InfoID, dataID: InfoDataID) => void;
 }
 type LayoutStore = LayoutStoreState;
 
@@ -72,10 +77,18 @@ export function createLayoutStore() {
 			})
 		);
 
+		// Build initial infos
+		const initialInfos: InfoRecord = Object.fromEntries(
+			Object.values(getRegisteredInfos()).map((infoDef: InfoDefinition) => {
+				return [infoDef.id, { ...infoDef, data: {} }];
+			})
+		);
+
 		return {
 			// Initial state
 			layoutPanels: initialPanels,
 			layoutBars: initialBars,
+			layoutInfos: initialInfos,
 
 			// Panel actions
 			updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => {
@@ -101,6 +114,10 @@ export function createLayoutStore() {
 
 			getBar: (barID: BarID) => {
 				return get().layoutBars[barID];
+			},
+
+			getInfo: (infoID: InfoID) => {
+				return get().layoutInfos[infoID];
 			},
 
 			registerBarAction: (barID: BarID, action: BarActionInstance) => {
@@ -150,6 +167,59 @@ export function createLayoutStore() {
 							[barID]: {
 								...bar,
 								actions: sortedActions,
+							},
+						},
+					};
+				});
+			},
+
+			registerInfoData: (infoID: InfoID, dataItem: InfoDataInstance) => {
+				set((state) => {
+					const info = state.layoutInfos[infoID];
+					if (!info) return state;
+
+					const updatedData = {
+						...info.data,
+						[dataItem.id]: dataItem,
+					};
+
+					const sortedData = Object.fromEntries(
+						Object.values(updatedData)
+							.sort((a: InfoDataInstance, b: InfoDataInstance) => a.order - b.order)
+							.map((item: InfoDataInstance) => [item.id, item])
+					);
+
+					return {
+						layoutInfos: {
+							...state.layoutInfos,
+							[infoID]: {
+								...info,
+								data: sortedData,
+							},
+						},
+					};
+				});
+			},
+
+			unregisterInfoData: (infoID: InfoID, dataID: InfoDataID) => {
+				set((state) => {
+					const info = state.layoutInfos[infoID];
+					if (!info || !info.data[dataID]) return state;
+
+					const { [dataID]: _, ...restData } = info.data;
+
+					const sortedData = Object.fromEntries(
+						Object.values(restData)
+							.sort((a: InfoDataInstance, b: InfoDataInstance) => a.order - b.order)
+							.map((item: InfoDataInstance) => [item.id, item])
+					);
+
+					return {
+						layoutInfos: {
+							...state.layoutInfos,
+							[infoID]: {
+								...info,
+								data: sortedData,
 							},
 						},
 					};

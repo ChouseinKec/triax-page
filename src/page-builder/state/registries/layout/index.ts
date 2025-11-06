@@ -1,17 +1,18 @@
 // Types
-import type { PanelDefinition, BarDefinition, TabDefinition } from '@/src/page-builder/core/editor/layout/types';
+import type { PanelDefinition, BarDefinition, TabDefinition, InfoDefinition } from '@/src/page-builder/core/editor/layout/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
 import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/validate';
 
 /**
- * Class-based layout registry for managing panels and bars
+ * Class-based layout registry for managing panels, bars, and infos
  */
 class LayoutRegistry {
 	private panels: Record<string, PanelDefinition> = {};
 	private bars: Record<string, BarDefinition> = {};
 	private tabs: Record<string, TabDefinition> = {};
+	private infos: Record<string, InfoDefinition> = {};
 
 	/**
 	 * Registers a LayoutPanel definition in the layout context.
@@ -110,6 +111,36 @@ class LayoutRegistry {
 	getTabById(id: string): TabDefinition | undefined {
 		return this.tabs[id];
 	}
+
+	/**
+	 * Registers a LayoutInfo definition in the layout context.
+	 * @param info - The LayoutInfo definition to register.
+	 * @returns Success status with optional error message
+	 */
+	registerInfo(info: InfoDefinition): ValidateResult<InfoDefinition> {
+		// Check for duplicates
+		if (this.infos[info.id]) {
+			return { valid: false, message: `Info with id "${info.id}" already registered` };
+		}
+
+		// Register info
+		this.infos = { ...this.infos, [info.id]: info };
+		return { valid: true, value: info };
+	}
+
+	/**
+	 * Retrieves all registered LayoutInfos.
+	 */
+	getRegisteredInfos(): Readonly<Record<string, InfoDefinition>> {
+		return { ...this.infos };
+	}
+
+	/**
+	 * Retrieves a specific info by ID.
+	 */
+	getInfoById(id: string): InfoDefinition | undefined {
+		return this.infos[id];
+	}
 }
 
 // Create singleton instance and initialization tracking
@@ -119,9 +150,12 @@ const layoutRegistry = new LayoutRegistry();
 export const registerPanel = (panel: PanelDefinition) => layoutRegistry.registerPanel(panel);
 export const registerBar = (bar: BarDefinition) => layoutRegistry.registerBar(bar);
 export const registerTab = (tab: TabDefinition) => layoutRegistry.registerTab(tab);
+export const registerInfo = (info: InfoDefinition) => layoutRegistry.registerInfo(info);
 export const getRegisteredPanels = () => layoutRegistry.getRegisteredPanels();
 export const getRegisteredBars = () => layoutRegistry.getRegisteredBars();
 export const getRegisteredTabs = () => layoutRegistry.getRegisteredTabs();
+export const getRegisteredInfos = () => layoutRegistry.getRegisteredInfos();
 export const getPanelById = (id: string) => layoutRegistry.getPanelById(id);
 export const getBarById = (id: string) => layoutRegistry.getBarById(id);
 export const getTabById = (id: string) => layoutRegistry.getTabById(id);
+export const getInfoById = (id: string) => layoutRegistry.getInfoById(id);

@@ -7,12 +7,13 @@ import CSS from "./styles.module.scss";
 // Components
 import LayoutPanel from "@/src/page-builder/ui/editors/layout/components/panel/component";
 import LayoutBar from "@/src/page-builder/ui/editors/layout/components/bar/component";
+import LayoutInfo from "@/src/page-builder/ui/editors/layout/components/info/component";
 import ActionGroup from "@/src/shared/components/group/action/component";
 
 // Managers
 import { useSelectedWorkbenchID } from "@/src/page-builder/services/managers/page";
-import { useAllPanels, useOpenPanels, togglePanel } from "@/src/page-builder/services/managers/layout/panel";
-import { getBarsByWorkbench } from "@/src/page-builder/services/managers/layout/bar";
+
+import { useAllPanels, useOpenPanels, togglePanel, getBarsByWorkbench, getInfosByWorkbench } from "@/src/page-builder/services/managers/layout";
 
 /**
  * LayoutEditor Component
@@ -25,6 +26,7 @@ const LayoutEditor: React.FC = () => {
     const allPanels = useAllPanels(selectedWorkbench);
     const openPanels = useOpenPanels(selectedWorkbench);
     const allBars = getBarsByWorkbench(selectedWorkbench);
+    const allInfos = getInfosByWorkbench(selectedWorkbench);
 
     /**
      * Renders LayoutBar components for all open LayoutBars.
@@ -43,6 +45,25 @@ const LayoutEditor: React.FC = () => {
             ))
             : null
     ), [allBars]
+    );
+
+    /**
+     * Renders LayoutInfo components for all infos.
+     */
+    const infoInstances = useMemo(() => (
+        allInfos && allInfos.length > 0
+            ? allInfos.map(info => (
+                <LayoutInfo
+                    key={info.id}
+                    infoID={info.id}
+                    position={info.position}
+                    size={info.size}
+                    grid={info.grid}
+                    title={info.title}
+                />
+            ))
+            : null
+    ), [allInfos]
     );
 
     /**
@@ -99,8 +120,11 @@ const LayoutEditor: React.FC = () => {
             {/* Render all open LayoutPanels */}
             {panelInstances}
 
-            {/* Render all open LayoutBars */}
+            {/* Render all LayoutBars */}
             {barInstances}
+
+            {/* Render all LayoutInfos */}
+            {infoInstances}
 
         </div >
     );

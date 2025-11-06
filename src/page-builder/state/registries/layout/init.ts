@@ -1,13 +1,14 @@
 // Registry
-import { registerPanel, registerBar, registerTab } from '.';
+import { registerPanel, registerBar, registerTab, registerInfo } from '.';
 
 // Definitions
 import { CorePanels } from '@/src/page-builder/config/layouts/panels';
 import { CoreBars } from '@/src/page-builder/config/layouts/bars';
 import { CoreTabs } from '@/src/page-builder/config/layouts/tabs';
+import { CoreInfos } from '@/src/page-builder/config/layouts/info';
 
 // Types
-import type { PanelDefinition, BarDefinition, TabDefinition } from '@/src/page-builder/core/editor/layout/types';
+import type { PanelDefinition, BarDefinition, TabDefinition, InfoDefinition } from '@/src/page-builder/core/editor/layout/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
@@ -26,7 +27,7 @@ function initializeTabs() {
 		if (result.valid) {
 			devLog.info(`         ${tab.id} registration successful.`);
 		} else {
-			console.log(result.message)
+			console.log(result.message);
 			devLog.error(`         ${tab.id} registration failed. ${result.message}`);
 		}
 	});
@@ -71,12 +72,32 @@ function initializeBars() {
 }
 
 /**
+ * Initialize and register core infos
+ */
+function initializeInfos() {
+	const infos = CoreInfos.filter((info): info is InfoDefinition => info !== null);
+	if (infos.length === 0) return devLog.warn('[LayoutInit] No core infos found to register');
+
+	devLog.info('[LayoutInit] Initializing Infos:');
+
+	infos.forEach((info) => {
+		const result = registerInfo(info);
+		if (result.valid) {
+			devLog.info(`         ${info.id} registration successful.`);
+		} else {
+			devLog.error(`         ${info.id} registration failed. ${result.message}`);
+		}
+	});
+}
+
+/**
  * Initialize and register all core layout components
  */
 export async function initializeRegistry(): Promise<void> {
 	return new Promise<void>((resolve) => {
 		initializePanels();
 		initializeBars();
+		initializeInfos();
 		initializeTabs();
 		resolve();
 	});
