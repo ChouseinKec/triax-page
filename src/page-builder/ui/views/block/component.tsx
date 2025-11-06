@@ -34,7 +34,9 @@ const BlockView: React.FC = () => {
             <div className={CSS.Header}>
                 {deviceInfo}
             </div>
+
             {rootBlock && <Block key={rootBlock.id} blockID={rootBlock.id} />}
+            
         </div>
     );
 };

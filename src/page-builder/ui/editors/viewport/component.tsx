@@ -151,7 +151,7 @@ const ViewportEditor: React.FC = () => {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={() => setIsPanning(false)}
-            style={{ 
+            style={{
                 cursor: isPanning ? 'grabbing' : 'default',
                 backgroundSize: `${30 * zoom}px ${30 * zoom}px`
             }}

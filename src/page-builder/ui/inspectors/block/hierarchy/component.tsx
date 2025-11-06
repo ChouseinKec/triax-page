@@ -66,7 +66,6 @@ const BlocksHierarchy: React.FC = () => {
             onKeyUp={handleKeyUp}
             tabIndex={0}
         >
-
             {
                 rootBlock
                     ? <Entry key={rootBlock.id} blockID={rootBlock.id} />

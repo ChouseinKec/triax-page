@@ -67,6 +67,7 @@ export function createBlock(blockDefinition: BlockDefinition, parentID: BlockID)
 	const block: BlockInstance = {
 		id: createBlockID(),
 		parentID,
+		tag: blockDefinition.tag,
 		contentIDs: [],
 
 		styles: createBlockStyles({}, blockStyles),

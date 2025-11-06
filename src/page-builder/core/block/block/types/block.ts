@@ -97,10 +97,12 @@ export interface BlockDefinition {
 export interface BlockInstance {
 	/** Unique identifier for this block instance */
 	id: BlockID;
-	/** The kind of block (text, container, media) */
-	type: BlockType;
 	/** ID of the parent block, null if root */
 	parentID: BlockID;
+	/** The kind of block (text, container, media) */
+	type: BlockType;
+	/** The primary HTML tag for this block */
+	tag: ElementTag;
 	/** IDs of child blocks in order */
 	contentIDs: BlockID[];
 	/** Instance-specific attributes that override defaults */

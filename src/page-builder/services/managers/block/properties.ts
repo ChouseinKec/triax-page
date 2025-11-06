@@ -6,6 +6,7 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
 import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
+import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 
 // Utilities
 import { ValidationPipeline } from '@/src/shared/utilities/validation';
@@ -27,7 +28,28 @@ export function useBlockType(blockID: BlockID): BlockType | undefined {
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.type : undefined);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.type : undefined));
+}
+
+/**
+ * Reactive hook to get a block's HTML tag for block properties operations.
+ * Returns the block's primary HTML tag and updates reactively when it changes.
+ *
+ * @param blockID - The block identifier
+ * @returns The block's HTML tag or undefined if block doesn't exist
+ *
+ * @example
+ * useBlockTag('block-123') → 'div'
+ * useBlockTag('body') → 'body'
+ */
+export function useBlockTag(blockID: BlockID): ElementTag | undefined {
+	const safeData = new ValidationPipeline('[BlockManager → useBlockTag]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.tag : undefined));
 }
 
 /**
@@ -47,7 +69,7 @@ export function useBlockID(blockID: BlockID): BlockID | undefined {
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.id : undefined);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.id : undefined));
 }
 
 /**
@@ -67,7 +89,7 @@ export function useBlockContentIDs(blockID: BlockID): BlockID[] | undefined {
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.contentIDs : []);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.contentIDs : []));
 }
 
 /**
@@ -87,7 +109,7 @@ export function useBlockAttributes(blockID: BlockID): BlockAttributes | undefine
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.attributes : undefined);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.attributes : undefined));
 }
 
 /**
@@ -107,7 +129,7 @@ export function useBlockStyles(blockID: BlockID): BlockStyles | undefined {
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID]?.styles : undefined);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID]?.styles : undefined));
 }
 
 /**
@@ -127,5 +149,5 @@ export function useBlock(blockID: BlockID): BlockInstance | undefined {
 		})
 		.execute();
 
-	return useBlockStore((state) => safeData ? state.allBlocks[safeData.blockID] : undefined);
+	return useBlockStore((state) => (safeData ? state.allBlocks[safeData.blockID] : undefined));
 }

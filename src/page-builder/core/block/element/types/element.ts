@@ -3,7 +3,7 @@ import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types
 /**
  * All supported HTML element tags.
  */
-export type ElementTag = 'div' | 'section' | 'article' | 'aside' | 'nav' | 'p' | 'span' | 'b' | 'strong' | 'i' | 'em' | 'u' | 'small' | 'mark' | 'sub' | 'sup' | 'code' | 'abbr' | 's' | 'del' | 'ins' | 'q' | 'cite' | 'dfn';
+export type ElementTag = 'body' | 'div' | 'section' | 'article' | 'aside' | 'nav' | 'p' | 'span' | 'b' | 'strong' | 'i' | 'em' | 'u' | 'small' | 'mark' | 'sub' | 'sup' | 'code' | 'abbr' | 's' | 'del' | 'ins' | 'q' | 'cite' | 'dfn';
 
 /**
  * Description of an HTML element.

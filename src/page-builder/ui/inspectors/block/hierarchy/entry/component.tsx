@@ -7,8 +7,7 @@ import CSS from "./styles.module.scss";
 
 // Managers
 import {
-    useBlockType,
-    useBlockContentIDs,
+    useBlock,
     selectBlock,
     useIsBlockSelected,
     getBlockIcon,
@@ -24,10 +23,12 @@ import {
     moveBlockBefore,
     canBlockHaveChildren,
     moveBlockInto,
+    getRegisteredBlock,
 } from "@/src/page-builder/services/managers/block";
 
 // Types
 import type { EntryProps } from "./types";
+import type { BlockID } from "@/src/page-builder/core/block/block/types";
 
 // Components
 import FloatReveal from "@/src/shared/components/reveal/float/component";
@@ -53,13 +54,19 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
     const revealButtonRef = useRef<HTMLButtonElement | null>(null);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
-    const blockType = useBlockType(blockID);
-    const blockContentIDsRaw = useBlockContentIDs(blockID);
-    const blockContentIDs = useMemo(() => blockContentIDsRaw || [], [blockContentIDsRaw]);
+
+    // Get block instance
+    const block = useBlock(blockID);
+    const blockType = block?.type;
+    const blockContentIDs = block?.contentIDs || [];
+
+    // Get block definition for tag
+    const blockTag = block?.tag;
+
     const isBlockSelected = useIsBlockSelected(blockID);
     const blockIcon = blockType ? getBlockIcon(blockType) : null;
     const canHaveChildren = canBlockHaveChildren(blockID);
-    const hasChildren = blockContentIDs && blockContentIDs.length > 0 ? true : false;
+    const hasChildren = blockContentIDs.length > 0;
 
     // Drag and drop hook
     const {
@@ -88,10 +95,12 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
 
     // Handle context menu
     const handleRightClick = useCallback((e: React.MouseEvent) => {
+        // Prevent context menu on body block
+        if (blockTag === 'body') return;
         e.preventDefault();
         e.stopPropagation();
         setIsContextMenuOpen(true);
-    }, []);
+    }, [blockTag]);
 
     // Handle action click
     const handleActionClick = (action: () => void) => {
@@ -132,7 +141,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
 
         const children =
             hasChildren
-                ? blockContentIDs.map((childID) => (
+                ? blockContentIDs.map((childID: BlockID) => (
                     <Entry key={childID} blockID={childID} />
                 ))
                 : null;
