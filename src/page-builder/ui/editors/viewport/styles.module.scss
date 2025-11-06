@@ -8,19 +8,20 @@ $offset: 40px;
 	top: $offset;
 	left: $offset;
 
+	// Grid dot pattern
+	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
 	background-size: 30px 30px;
 
 	overflow: hidden;
 	z-index: 10;
-
 }
 
-.ViewportEditor__Content {
+.Content {
 	padding: var(--size-lg);
-	overflow: auto;
+	overflow: hidden;
 }
 
-.ViewportEditor__Empty {
+.Empty {
 	color: var(--color-white);
 	text-align: center;
 }

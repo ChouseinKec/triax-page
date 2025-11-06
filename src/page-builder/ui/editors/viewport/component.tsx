@@ -151,11 +151,14 @@ const ViewportEditor: React.FC = () => {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={() => setIsPanning(false)}
-            style={{ cursor: isPanning ? 'grabbing' : 'default' }}
+            style={{ 
+                cursor: isPanning ? 'grabbing' : 'default',
+                backgroundSize: `${30 * zoom}px ${30 * zoom}px`
+            }}
         >
             {/* Content with zoom and pan transforms */}
             <div
-                className={CSS.ViewportEditor__Content}
+                className={CSS.Content}
                 style={{
                     transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
                     transformOrigin: '0 0',
@@ -169,7 +172,7 @@ const ViewportEditor: React.FC = () => {
                 {viewportInstance
                     ? viewportInstance
                     :
-                    <div className={CSS.ViewportEditor__Empty}>
+                    <div className={CSS.Empty}>
                         No viewport available
                     </div>
                 }

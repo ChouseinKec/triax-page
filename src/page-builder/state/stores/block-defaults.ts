@@ -9,7 +9,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				all: {
 					all: {
 						width: '100%',
-						'min-height': '100vh',
+						'height': '100%',
+						'overflow': 'auto',
 						'background-color': '#ffffff',
 						display: 'flex',
 						'flex-direction': 'column',

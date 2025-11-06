@@ -213,6 +213,7 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 /**
  * Checks if a block of a certain type can be moved into a parent block of another type.
  * Considers the permittedContent definitions of the parent block type.
+ * Validates against the child block's tag (HTML element) rather than its type.
  * @param parentBlockType - The type of the parent block
  * @param childBlockType - The type of the child block to move
  * @returns True if the child block can be moved into the parent block, false otherwise
@@ -221,16 +222,22 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
  * canBlockMoveInto('section', 'text') → true
  */
 export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: BlockType): boolean {
+	// Get all registered blocks
 	const registeredBlocks = blockRegistry.getRegisteredBlocks();
 
+	// Fetch parent block definition to get its permittedContent
 	const parentBlockDefinition = registeredBlocks[parentBlockType];
 	if (!parentBlockDefinition) return false;
 
+	// Fetch child block definition to get its tag
 	const childBlockDefinition = registeredBlocks[childBlockType];
 	if (!childBlockDefinition) return false;
 
+	// If permittedContent is null, parent accepts any child
 	if (parentBlockDefinition.permittedContent == null) return true;
-	return parentBlockDefinition.permittedContent.includes(childBlockDefinition.type);
+	
+	// Check if parent's permittedContent includes the child's tag
+	return parentBlockDefinition.permittedContent.includes(childBlockDefinition.tag);
 }
 
 /**
