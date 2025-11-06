@@ -7,7 +7,7 @@ import { BarDefinition } from '@/src/page-builder/core/editor/layout/types';
  */
 const WorkbenchActions: BarDefinition = {
 	id: 'workbenchmain-actions',
-	position: { top: '7%', left: '50%' },
+	position: { top: '7%', left: '46%' },
 	size: { minWidth: 'auto', maxWidth: '25%' },
 	title: 'Workbench Actions',
 	workbenchID: 'main',
