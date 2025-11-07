@@ -275,11 +275,15 @@ export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, 
  * setBlockContent('block-123', { text: 'New text', format: 'bold' })
  */
 export function setBlockContent(blockID: BlockID, content: BlockContent): void {
-	const safeData = validateBlockID(blockID);
-	if (!safeData.valid) return;
+	const safeData = new ValidationPipeline('[BlockCommands → setBlockContent]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return;
 
-	const currentBlock = useBlockStore.getState().allBlocks[blockID];
+	const currentBlock = useBlockStore.getState().allBlocks[safeData.blockID];
 	if (!currentBlock) return;
 
-	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, content } });
+	useBlockStore.getState().updateBlocks({ [safeData.blockID]: { ...currentBlock, content } });
 }

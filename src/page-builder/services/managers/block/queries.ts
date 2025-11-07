@@ -382,10 +382,14 @@ export function useRenderedBlockAttributes(blockID: BlockID): Record<string, str
  * const content = getBlockContent('block-123') // Returns { text: 'Hello World' }
  */
 export function getBlockContent(blockID: BlockID): BlockContent | undefined {
-	const safeData = validateBlockID(blockID);
-	if (!safeData.valid) return undefined;
+	const safeData = new ValidationPipeline('[BlockQueries → getBlockContent]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!safeData) return undefined;
 
-	const block = useBlockStore.getState().allBlocks[blockID];
+	const block = useBlockStore.getState().allBlocks[safeData.blockID];
 	return block?.content;
 }
 
@@ -400,10 +404,19 @@ export function getBlockContent(blockID: BlockID): BlockContent | undefined {
  * const content = useBlockContent('block-123') // Returns { text: 'Hello World' }
  */
 export function useBlockContent(blockID: BlockID): BlockContent | undefined {
-	const safeData = validateBlockID(blockID);
-	if (!safeData.valid) return undefined;
+	const safeData = useMemo(
+		() =>
+			new ValidationPipeline('[BlockQueries → useBlockContent]')
+				.validate({
+					blockID: validateBlockID(blockID),
+				})
+				.execute(),
+		[blockID]
+	);
 
-	return useBlockStore((state) => state.allBlocks[blockID]?.content);
+	if (!safeData) return undefined;
+
+	return useBlockStore((state) => state.allBlocks[safeData.blockID]?.content);
 }
 
 // ------------------------- REGISTRY -------------------------
