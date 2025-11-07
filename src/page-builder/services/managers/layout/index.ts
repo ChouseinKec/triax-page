@@ -1,3 +1,3 @@
-export * from './bar';
-export * from './panel';
-export * from './info';
+export * from './queries';
+export * from './commands';
+export * from './operations';

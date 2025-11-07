@@ -1,108 +1,86 @@
-import { useMemo } from 'react';
-
-// Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
-
-// Helpers
-import { applyStyle, resolveStyle } from '@/src/page-builder/services/helpers/block';
-import { validateBlockID, validateStyleKey, validateStyleValue, validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/page-builder/services/helpers/validate';
-import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
-
-// Managers
-import { useSelectedDeviceID, getSelectedDeviceID, useSelectedOrientationID, getSelectedOrientationID, useSelectedPseudoID, getSelectedPseudoID } from '@/src/page-builder/services/managers/page';
-
 // Stores
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
-import type { BlockID } from '@/src/page-builder/core/block/block/types';
+import type { BlockID, BlockContent } from '@/src/page-builder/core/block/block/types';
+import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 import type { StyleKey } from '@/src/page-builder/core/block/style/types';
+import type { AttributeKey, AttributeValue } from '@/src/page-builder/core/block/attribute/types';
+
+// Utilities
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { devLog } from '@/src/shared/utilities/dev';
+
+// Helpers
+import { validateBlockID, validateStyleKey, validateStyleValue, validateAttributeKey, validateAttributeValue, validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/page-builder/services/helpers/validate';
+import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
+import { applyStyle } from '@/src/page-builder/services/helpers/block';
+
+// Managers
+import { getSelectedDeviceID, getSelectedOrientationID, getSelectedPseudoID } from '@/src/page-builder/services/managers/page';
+
+// Helpers
+import { getBlockStyle } from './queries';
+
+// -------------------------  PROPERTY -------------------------
 
 /**
- * Gets a style key value with CSS cascade fallback logic for block style operations.
- * Resolves the style value considering device, orientation, and pseudo contexts.
+ * Sets the HTML tag for a specific block.
+ * Updates the block's primary HTML element tag.
  *
  * @param blockID - The block identifier
- * @param styleKey - The CSS style key to lookup
- * @returns The resolved value or undefined if not found
+ * @param tag - The new HTML tag to set
+ * @returns void
  *
  * @example
- * getBlockStyle('block-123', 'color') → 'red'
+ * setBlockTag('block-123', 'div')
  */
-export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
-	const blockStore = useBlockStore.getState();
-	const safeData = new ValidationPipeline('[BlockManager → getBlockStyle]')
+export function setBlockTag(blockID: BlockID, tag: ElementTag): void {
+	const safeData = new ValidationPipeline('[BlockCommands → setBlockTag]')
 		.validate({
 			blockID: validateBlockID(blockID),
-			styleKey: validateStyleKey(styleKey),
-			deviceID: validateDeviceID(getSelectedDeviceID()),
-			orientationID: validateOrientationID(getSelectedOrientationID()),
-			pseudoID: validatePseudoID(getSelectedPseudoID()),
 		})
-		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
-		}))
 		.execute();
-	if (!safeData) return undefined;
 
-	return resolveStyle(
-		safeData.block.styles, //
-		safeData.styleKey,
-		safeData.deviceID,
-		safeData.orientationID,
-		safeData.pseudoID
-	);
+	if (!safeData) return;
+
+	const currentBlock = useBlockStore.getState().allBlocks[blockID];
+	if (!currentBlock) return;
+
+	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, tag } });
 }
 
 /**
- * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.
- * Returns the resolved style value considering device, orientation, and pseudo contexts.
+ * Selects a block as the currently active block for editing in block CRUD operations.
+ * Sets the selected block ID in the store.
  *
- * @param blockID - The block identifier
- * @param styleKey - The CSS style key to retrieve
- * @returns The resolved style value or undefined if not found
+ * @param blockID - The block identifier to select, or null to clear selection
+ * @returns void
  *
  * @example
- * const color = useBlockStyle('block-123', 'color') // Returns 'red' or undefined
+ * selectBlock('block-123')
+ * selectBlock(null)
  */
-export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
-	const deviceID = useSelectedDeviceID();
-	const orientationID = useSelectedOrientationID();
-	const pseudoID = useSelectedPseudoID();
+export function selectBlock(blockID: BlockID | null): void {
+	const { selectedBlockID, selectBlock: selectBlockAction } = useBlockStore.getState();
 
-	const safeData = useMemo(() => new ValidationPipeline('[BlockManager → getBlockStyle]')
+	// If null, clear selection
+	if (blockID === null) return selectBlockAction(null);
+
+	// If already selected, do nothing
+	if (blockID === selectedBlockID) return;
+
+	const safeData = new ValidationPipeline('[BlockCommands → selectBlock]')
 		.validate({
 			blockID: validateBlockID(blockID),
-			styleKey: validateStyleKey(styleKey),
-			deviceID: validateDeviceID(deviceID),
-			orientationID: validateOrientationID(orientationID),
-			pseudoID: validatePseudoID(pseudoID),
 		})
-		.fetch((data) => ({
-			block: fetchBlock(data.blockID, useBlockStore.getState().allBlocks),
-		}))
-		.execute(), [blockID, styleKey, deviceID, orientationID, pseudoID]);
+		.execute();
+	if (!safeData) return;
 
-	return useBlockStore(
-		useMemo(
-			() => (state) => {
-				if (!safeData) return undefined;
-				const styles = state.allBlocks[blockID]?.styles;
-				if (!styles) return undefined;
-
-				return resolveStyle(
-					styles, //
-					styleKey,
-					safeData.deviceID,
-					safeData.orientationID,
-					safeData.pseudoID
-				);
-			},
-			[blockID, styleKey, safeData]
-		)
-	);
+	selectBlockAction(safeData.blockID);
 }
+
+// ------------------------- STYLE -------------------------
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -242,4 +220,66 @@ export function resetBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 	if (!safeData) return;
 
 	setBlockStyle(safeData.blockID, safeData.styleKey, '');
+}
+
+// ------------------------- ATTRIBUTE -------------------------
+
+/**
+ * Sets the attribute value for a specific block in block attribute operations.
+ * Updates the block's attributes with the provided key-value pair after validation.
+ *
+ * @param blockID - The block identifier to update
+ * @param attributeKey - The attribute key to set
+ * @param attributeValue - The new value for the attribute
+ * @returns void
+ *
+ * @example
+ * setBlockAttribute('block-1', 'className', 'my-class')
+ */
+export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
+	const blockStore = useBlockStore.getState();
+	const safeData = new ValidationPipeline('[BlockManager → setBlockAttribute]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			attributeKey: validateAttributeKey(attributeKey),
+			attributeValue: validateAttributeValue(attributeValue),
+		})
+		.fetch((data) => ({
+			block: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
+
+	blockStore.updateBlocks({
+		[safeData.blockID]: {
+			...safeData.block,
+			attributes: {
+				...safeData.block.attributes,
+				[safeData.attributeKey]: safeData.attributeValue,
+			},
+		},
+	});
+}
+
+// ------------------------- CONTENT -------------------------
+
+/**
+ * Sets the content data for a specific block.
+ * Merges the new content with existing content.
+ *
+ * @param blockID - The block identifier
+ * @param content - The content data to set
+ * @returns void
+ *
+ * @example
+ * setBlockContent('block-123', { text: 'New text', format: 'bold' })
+ */
+export function setBlockContent(blockID: BlockID, content: BlockContent): void {
+	const safeData = validateBlockID(blockID);
+	if (!safeData.valid) return;
+
+	const currentBlock = useBlockStore.getState().allBlocks[blockID];
+	if (!currentBlock) return;
+
+	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, content } });
 }

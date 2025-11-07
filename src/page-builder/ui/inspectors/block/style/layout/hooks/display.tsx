@@ -5,8 +5,7 @@ import { useMemo } from "react";
 import type { LayoutProps } from "./types";
 
 // Managers
-import { useBlockStyle } from "@/src/page-builder/services/managers/block/style";
-import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
+import { useBlockStyle,useSelectedBlockID } from "@/src/page-builder/services/managers/block/";
 
 // Factory
 import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style/layout/hooks/factory";

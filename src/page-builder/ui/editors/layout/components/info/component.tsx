@@ -10,7 +10,7 @@ import type { InfoDataInstance } from "@/src/page-builder/core/editor/layout/typ
 import type { LayoutInfoProps } from "./types";
 
 // Managers
-import { useInfoData } from "@/src/page-builder/services/managers/layout/info";
+import { useInfoData } from "@/src/page-builder/services/managers/layout";
 
 /**
  * LayoutInfo Component

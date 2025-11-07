@@ -13,7 +13,7 @@ import type { LayoutBarProps } from "./types";
 import type { BarActionInstance } from "@/src/page-builder/core/editor/layout/types/bar";
 
 // Managers
-import { useBarActions } from "@/src/page-builder/services/managers/layout/bar";
+import { useBarActions } from "@/src/page-builder/services/managers/layout";
 
 /**
  * LayoutBar Component

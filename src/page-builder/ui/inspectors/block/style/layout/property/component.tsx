@@ -15,7 +15,7 @@ import type { PropertyProps } from "./types";
 import { STYLE_DEFINITIONS } from "@/src/page-builder/core/block/style/constants";
 
 // Hooks
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from "@/src/page-builder/services/managers/block/style";
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from "@/src/page-builder/services/managers/block/commands";
 
 // Managers
 import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";

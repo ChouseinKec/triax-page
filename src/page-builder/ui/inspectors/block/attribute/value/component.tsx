@@ -8,7 +8,7 @@ import type { BlockAttributesValueProps } from "./types";
 import { ATTRIBUTE_DEFINITIONS } from "@/src/page-builder/core/block/attribute/constants";
 
 // Managers
-import { useBlockAttribute, setBlockAttribute } from "@/src/page-builder/services/managers/block/attribute";
+import { useBlockAttribute,setBlockAttribute } from "@/src/page-builder/services/managers/block";
 
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";

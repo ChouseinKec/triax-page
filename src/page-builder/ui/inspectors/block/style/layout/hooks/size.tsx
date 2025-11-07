@@ -13,8 +13,7 @@ import PositionSelect from "@/src/shared/components/select/position/component";
 import { StyleValueRenderer } from "@/src/page-builder/ui/inspectors/block/style/layout/hooks/factory";
 
 // Managers
-import { useBlockStyle } from "@/src/page-builder/services/managers/block/style";
-import { useSelectedBlockID } from "@/src/page-builder/services/managers/block";
+import { useBlockStyle,useSelectedBlockID} from "@/src/page-builder/services/managers/block";
 
 // Utilities
 import { generateStyleKey } from "@/src/page-builder/core/block/style/utilities";

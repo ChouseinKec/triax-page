@@ -5,7 +5,8 @@ import React from "react";
 import { DEFAULT_DEVICE_ID } from "@/src/page-builder/core/page/constants/defaults";
 
 // Managers
-import { getAllDevices, useSelectedDeviceID, setSelectedDeviceID } from "@/src/page-builder/services/managers/page";
+import { getAllDevices, useSelectedDeviceID } from "@/src/page-builder/services/managers/page/queries";
+import { setSelectedDeviceID } from "@/src/page-builder/services/managers/page/commands";
 
 // Components
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";

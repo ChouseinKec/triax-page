@@ -5,7 +5,8 @@ import React from "react";
 import { DEFAULT_PSEUDO_ID } from "@/src/page-builder/core/page/constants/defaults";
 
 // Managers
-import { getAllPseudos, useSelectedPseudoID, setSelectedPseudoID } from "@/src/page-builder/services/managers/page";
+import { getAllPseudos, useSelectedPseudoID } from "@/src/page-builder/services/managers/page/queries";
+import { setSelectedPseudoID } from "@/src/page-builder/services/managers/page/commands";
 
 // Components
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
