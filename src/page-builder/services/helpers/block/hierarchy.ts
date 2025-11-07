@@ -2,7 +2,8 @@
 import * as blockRegistry from '@/src/page-builder/state/registries/block';
 
 // Types
-import type { BlockType, BlockInstance, BlockID, BlockRecord } from '@/src/page-builder/core/block/block/types';
+import type { BlockInstance, BlockID, BlockRecord } from '@/src/page-builder/core/block/block/types';
+import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 
 /**
  * Checks if a target block is a descendant of a parent block.
@@ -211,33 +212,33 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 }
 
 /**
- * Checks if a block of a certain type can be moved into a parent block of another type.
- * Considers the permittedContent definitions of the parent block type.
- * Validates against the child block's tag (HTML element) rather than its type.
- * @param parentBlockType - The type of the parent block
- * @param childBlockType - The type of the child block to move
- * @returns True if the child block can be moved into the parent block, false otherwise
+ * Checks if a child block can be moved into a parent block based on HTML tag compatibility.
+ * Determines if the parent block's permitted content includes the child block's tag.
+ *
+ * @param parentTag - The HTML tag of the parent block
+ * @param childTag - The HTML tag of the child block
+ * @returns True if the child can be moved into the parent, false otherwise
  *
  * @example
- * canBlockMoveInto('section', 'text') → true
+ * canBlockMoveInto('section', 'p') → true
+ * canBlockMoveInto('div', 'h1') → true
  */
-export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: BlockType): boolean {
+export function canBlockMoveInto(parentTag: ElementTag, childTag: ElementTag): boolean {
+	// If parent is body, always allow any child
+	if (parentTag === 'body') return true;
+
 	// Get all registered blocks
 	const registeredBlocks = blockRegistry.getRegisteredBlocks();
 
-	// Fetch parent block definition to get its permittedContent
-	const parentBlockDefinition = registeredBlocks[parentBlockType];
+	// Find parent block definition by tag
+	const parentBlockDefinition = Object.values(registeredBlocks).find((block) => block.tag === parentTag);
 	if (!parentBlockDefinition) return false;
-
-	// Fetch child block definition to get its tag
-	const childBlockDefinition = registeredBlocks[childBlockType];
-	if (!childBlockDefinition) return false;
 
 	// If permittedContent is null, parent accepts any child
 	if (parentBlockDefinition.permittedContent == null) return true;
-	
+
 	// Check if parent's permittedContent includes the child's tag
-	return parentBlockDefinition.permittedContent.includes(childBlockDefinition.tag);
+	return parentBlockDefinition.permittedContent.includes(childTag);
 }
 
 /**
@@ -248,7 +249,7 @@ export function canBlockMoveInto(parentBlockType: BlockType, childBlockType: Blo
  * @param targetBlock - The target block for positioning reference
  * @param parentBlock - The parent block containing both source and target
  * @returns Target index if move is needed, null if already positioned correctly or invalid
- * 
+ *
  * @example
  * canBlockMoveBefore(sourceBlock, targetBlock, parentBlock) → 2 | null
  */
@@ -274,7 +275,7 @@ export function canBlockMoveBefore(sourceBlock: BlockInstance, targetBlock: Bloc
  * @param targetBlock - The target block for positioning reference
  * @param parentBlock - The parent block containing both source and target
  * @returns Target index if move is needed, null if already positioned correctly or invalid
- * 
+ *
  * @example
  * canBlockMoveAfter(sourceBlock, targetBlock, parentBlock) → 3 | null
  */

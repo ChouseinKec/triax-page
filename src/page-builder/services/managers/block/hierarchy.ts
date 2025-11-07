@@ -106,7 +106,7 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.tag, safeData.sourceBlock.tag);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockAfter] Block type not allowed as sibling`);
 
 	// Check if move is needed
@@ -152,7 +152,7 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetParentBlock.tag, safeData.sourceBlock.tag);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
 
 	// Check if move is needed
@@ -192,7 +192,7 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 	if (!safeData) return;
 
 	// If child is not compatible
-	const isChildBlockPermitted = canBlockMoveInto(safeData.targetBlock.type, safeData.sourceBlock.type);
+	const isChildBlockPermitted = canBlockMoveInto(safeData.targetBlock.tag, safeData.sourceBlock.tag);
 	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
 
 	blockStore.updateBlocks(

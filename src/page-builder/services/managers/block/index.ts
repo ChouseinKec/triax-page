@@ -1,4 +1,5 @@
 export * from './attribute';
+export * from './children';
 export * from './content';
 export * from './crud';
 export * from './registry';

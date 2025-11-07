@@ -41,7 +41,7 @@ const BlockLibrary: React.FC = () => {
 
         return Object.fromEntries(
             Object.entries(registeredBlocks).filter(([, block]) => {
-                return canBlockAcceptChild(selectedBlockType, block.type);
+                return canBlockAcceptChild(blockDef.tag, block.tag);
             })
         );
     }, [selectedBlockType, registeredBlocks]
