@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import Block from "./block";
+import BlockRender from "./block";
 
 // Managers
 import { useBlock } from "@/src/page-builder/services/managers/block";
@@ -35,7 +35,7 @@ const BlockView: React.FC = () => {
                 {deviceInfo}
             </div>
 
-            {rootBlock && <Block key={rootBlock.id} blockID={rootBlock.id} />}
+            {rootBlock && <BlockRender key={rootBlock.id} blockID={rootBlock.id} />}
             
         </div>
     );

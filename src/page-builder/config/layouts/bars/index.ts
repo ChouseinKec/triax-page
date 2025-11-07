@@ -1,3 +1,3 @@
 import WorkbenchActions from './workbench-actions';
-
-export const CoreBars = [WorkbenchActions];
+import MainSelectedActions from './block-actions';
+export const CoreBars = [WorkbenchActions, MainSelectedActions];

@@ -110,7 +110,7 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
 
 	const bar = layoutStore.getBar(safeData.barID);
 	if (!bar) return devLog.warn(`[LayoutManager → unregisterBarAction] Bar with ID "${safeData.barID}" not found.`);
-	if (!bar.actions) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${safeData.actionID}" not found in bar "${safeData.barID}". Skipping.`);
+	if (!bar.actions[actionID]) return devLog.warn(`[LayoutManager → unregisterBarAction] Action with ID "${safeData.actionID}" not found in bar "${safeData.barID}". Skipping.`);
 
 	layoutStore.unregisterBarAction(safeData.barID, safeData.actionID);
 }
@@ -136,17 +136,42 @@ export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
 		[barID]
 	);
 
-	const actionsRecord = useLayoutStore((state) => {
-		if (!safeData) return undefined;
-		return state.getBar(safeData.barID)?.actions;
-	});
+	if (!safeData) return undefined;
+	const actionsRecord = useLayoutStore((state) => state.getBar(safeData.barID)?.actions);
 
 	return useMemo(() => {
-		if (!safeData || !actionsRecord) {
-			if (!safeData) return undefined;
+		if (!actionsRecord) {
 			devLog.warn(`[LayoutManager → useBarActions] Actions for bar with ID "${safeData.barID}" not found.`);
 			return undefined;
 		}
+
 		return Object.values(actionsRecord);
-	}, [actionsRecord, safeData]);
+	}, [actionsRecord, safeData.barID]);
+}
+
+/**
+ * Checks if a specific action is registered in a bar for layout management operations.
+ * Returns true if the action exists in the bar's actions collection.
+ *
+ * @param barID - The bar identifier
+ * @param actionID - The action identifier to check
+ * @returns True if the action is registered, false otherwise
+ *
+ * @example
+ * const isRegistered = isBarActionRegistered('bar-123', 'action-456') // Returns true/false
+ */
+export function isBarActionRegistered(barID: BarID, actionID: BarActionID): boolean {
+	const layoutStore = useLayoutStore.getState();
+	const safeData = new ValidationPipeline('[LayoutManager → isBarActionRegistered]')
+		.validate({
+			barID: validateBarID(barID),
+			actionID: validateBarActionID(actionID),
+		})
+		.execute();
+	if (!safeData) return false;
+
+	const bar = layoutStore.getBar(safeData.barID);
+	if (!bar) return false;
+
+	return !!bar.actions[actionID];
 }

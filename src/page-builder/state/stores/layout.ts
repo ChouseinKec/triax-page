@@ -153,7 +153,7 @@ export function createLayoutStore() {
 					const bar = state.layoutBars[barID];
 					if (!bar || !bar.actions[actionID]) return state;
 
-					const { ...restActions } = bar.actions;
+					const { [actionID]: _, ...restActions } = bar.actions;
 
 					const sortedActions = Object.fromEntries(
 						Object.values(restActions)

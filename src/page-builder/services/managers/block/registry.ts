@@ -8,6 +8,7 @@ import { devLog } from '@/src/shared/utilities/dev';
 // Types
 import type { BlockDefinition, BlockType, BlockID } from '@/src/page-builder/core/block/block/types';
 import type { ReactNode } from 'react';
+import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 
 // Helpers
 import { canBlockMoveInto } from '@/src/page-builder/services/helpers/block';
@@ -65,7 +66,6 @@ export function canBlockAcceptChild(parentType: BlockType, childType: BlockType)
 	return canBlockMoveInto(parentType, childType);
 }
 
-
 /**
  * Checks if a block type can have children based on its permittedContent property.
  * @param parentType - The parent block type to check
@@ -119,7 +119,7 @@ export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
  * @example
  * const render = getBlockRender('text'); // (block, children) => <TextBlock ... />
  */
-export function getBlockRender(blockType: BlockType | undefined) {
+export function getBlockRender(blockType: BlockType) {
 	const safeData = new ValidationPipeline('[BlockManager → getBlockRender]')
 		.validate({
 			blockType: validateBlockType(blockType),
@@ -128,4 +128,23 @@ export function getBlockRender(blockType: BlockType | undefined) {
 	if (!safeData) return;
 
 	return getRegisteredBlock(safeData.blockType)?.render;
+}
+
+/**
+ * Gets the available HTML element tags for a specific block type.
+ * @param blockType - The block type to get tags for
+ * @returns Array of available HTML element tags for the block type, or undefined if block type not found
+ * @example
+ * const tags = getBlockTags('container'); // ['div', 'section', 'article', 'aside', 'nav']
+ */
+export function getBlockTags(blockType: BlockType): ElementTag[] | undefined {
+	const safeData = new ValidationPipeline('[BlockManager → getBlockTags]')
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
+		.execute();
+	if (!safeData) return;
+
+	const blockDefinition = getRegisteredBlock(safeData.blockType);
+	return blockDefinition?.tags;
 }

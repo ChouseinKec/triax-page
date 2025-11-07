@@ -9,16 +9,17 @@ import { getBlockContent, setBlockContent } from '@/src/page-builder/services/ma
 
 const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
+    const BlockTag = instance.tag;
     const isSelected = useIsBlockSelected(blockID);
-    const blockAttributes = useRenderedBlockAttributes(blockID);
-    const blockStyles = useRenderedBlockStyles(blockID);
+    const renderedAttributes = useRenderedBlockAttributes(blockID);
+    const renderedStyles = useRenderedBlockStyles(blockID);
 
     // Get the current text value from content
     const content = getBlockContent(blockID);
     const text = content?.text || "Enter something...";
 
     // Ref to access the <p> element
-    const textRef = useRef<HTMLParagraphElement>(null);
+    const textRef = useRef<HTMLElement>(null);
 
     // Handle block selection
     const handleSelectBlock = useCallback(
@@ -38,8 +39,8 @@ const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
 
     return (
         <>
-            <p
-                ref={textRef}
+            <BlockTag
+                ref={textRef as React.RefObject<any>}
                 id={`block-${blockID}`}
                 onClick={handleSelectBlock}
                 onBlur={handleBlur}
@@ -47,12 +48,12 @@ const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
                 data-is-selected={isSelected}
                 contentEditable
                 suppressContentEditableWarning
-                {...blockAttributes}
+                {...renderedAttributes}
             >
                 {text}
 
-            </p>
-            <style>{blockStyles}</style>
+            </BlockTag>
+            <style>{renderedStyles}</style>
         </>
     );
 }

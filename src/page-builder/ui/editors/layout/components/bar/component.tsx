@@ -24,6 +24,7 @@ import { useBarActions } from "@/src/page-builder/services/managers/layout/bar";
  */
 const LayoutBar: React.FC<LayoutBarProps> = ({ title = "LayoutBar", position = { top: "0px", left: "0px" }, size = { width: "25%", height: "35px" }, barID, isTransparent }) => {
     const actions = useBarActions(barID);
+    // console.log(barID, actions);
 
     const actionInstances = useMemo(() => (
         actions && actions.length > 0

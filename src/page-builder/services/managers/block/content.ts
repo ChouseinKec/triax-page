@@ -62,24 +62,3 @@ export function setBlockContent(blockID: BlockID, content: BlockContent): void {
 
 	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, content } });
 }
-
-/**
- * Updates specific properties in a block's content data.
- * Merges the updates with existing content.
- *
- * @param blockID - The block identifier
- * @param updates - Partial content updates to merge
- * @returns void
- *
- * @example
- * updateBlockContent('block-123', { text: 'Updated text' })
- */
-export function updateBlockContent(blockID: BlockID, updates: Partial<BlockContent>): void {
-	const safeData = validateBlockID(blockID);
-	if (!safeData.valid) return;
-
-	const currentContent = getBlockContent(blockID) || {};
-	const newContent = { ...currentContent, ...updates };
-
-	setBlockContent(blockID, newContent);
-}
