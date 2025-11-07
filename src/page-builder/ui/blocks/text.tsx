@@ -5,7 +5,7 @@ import type { BlockInstance } from '@/src/page-builder/core/block/block/types';
 
 // Managers
 import { useIsBlockSelected, selectBlock, useRenderedBlockAttributes, useRenderedBlockStyles } from '@/src/page-builder/services/managers/block';
-import { setBlockAttribute, useBlockAttribute } from "@/src/page-builder/services/managers/block/attribute";
+import { getBlockContent, setBlockContent } from '@/src/page-builder/services/managers/block';
 
 const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
@@ -13,8 +13,9 @@ const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockAttributes = useRenderedBlockAttributes(blockID);
     const blockStyles = useRenderedBlockStyles(blockID);
 
-    // Get the current text value from attributes
-    const text = useBlockAttribute(blockID, "text") || "Enter something...";
+    // Get the current text value from content
+    const content = getBlockContent(blockID);
+    const text = content?.text || "Enter something...";
 
     // Ref to access the <p> element
     const textRef = useRef<HTMLParagraphElement>(null);
@@ -28,10 +29,10 @@ const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
         [blockID]
     );
 
-    // Commit text to block attribute only on blur (focus lost)
+    // Commit text to block content only on blur (focus lost)
     const handleBlur = useCallback(() => {
         const currentText = textRef.current?.innerText ?? "";
-        setBlockAttribute(blockID, "text", currentText);
+        setBlockContent(blockID, { text: currentText });
     }, [blockID]
     );
 

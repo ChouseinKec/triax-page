@@ -45,6 +45,12 @@ export type BlockStyles = {
 export type BlockAttributes = Partial<Record<AttributeKey, string>>;
 
 /**
+ * Generic content data for blocks - flexible structure for plugin developers
+ * Can contain any data structure needed by different block types
+ */
+export type BlockContent = Record<string, any>;
+
+/**
  * Children blocks (React nodes)
  */
 export type BlockChildren = ReactElement | ReactElement[];
@@ -84,6 +90,8 @@ export interface BlockDefinition {
 	styles: BlockStyles;
 	/** Default attributes for the block */
 	attributes: BlockAttributes;
+	/** Default content data for the block */
+	content?: BlockContent;
 	/** Category for organizing blocks */
 	category: BlockCategory;
 	/** Render function that returns JSX for the block */
@@ -109,4 +117,6 @@ export interface BlockInstance {
 	attributes: BlockAttributes;
 	/** Instance-specific styles that override defaults */
 	styles: BlockStyles;
+	/** Generic content data - flexible structure for any block-specific data */
+	content?: BlockContent;
 }

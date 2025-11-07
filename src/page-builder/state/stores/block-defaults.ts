@@ -27,6 +27,28 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					},
 				},
 			},
+			mobile: {
+				all: {
+					all: {
+						'background-color': '#f0f9ff',
+						'padding-top': '20px',
+						'padding-right': '16px',
+						'padding-bottom': '20px',
+						'padding-left': '16px',
+					},
+				},
+			},
+			tablet: {
+				all: {
+					all: {
+						'background-color': '#fef3c7',
+						'padding-top': '30px',
+						'padding-right': '20px',
+						'padding-bottom': '30px',
+						'padding-left': '20px',
+					},
+				},
+			},
 		},
 		tag: 'body',
 		attributes: {},
@@ -61,6 +83,36 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						color: '#111827',
 						position: 'relative',
 					},
+					hover: {
+						'box-shadow': '0 16px 64px rgba(0,0,0,0.15), 0px 4px 16px rgba(0,0,0,0.1)',
+						transform: 'translateY(-2px)',
+					},
+				},
+			},
+			mobile: {
+				all: {
+					all: {
+						'max-width': '100%',
+						'padding-top': '40px',
+						'padding-right': '20px',
+						'padding-bottom': '40px',
+						'padding-left': '20px',
+						'border-radius': '12px',
+						'background-color': '#e0f2fe',
+					},
+				},
+			},
+			tablet: {
+				all: {
+					all: {
+						'max-width': '90%',
+						'padding-top': '60px',
+						'padding-right': '40px',
+						'padding-bottom': '60px',
+						'padding-left': '40px',
+						'border-radius': '16px',
+						'background-color': '#fef3c7',
+					},
 				},
 			},
 		},
@@ -86,9 +138,26 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					},
 				},
 			},
+			mobile: {
+				all: {
+					all: {
+						'font-size': '2.5rem',
+						'margin-bottom': '16px',
+					},
+				},
+			},
+			tablet: {
+				all: {
+					all: {
+						'font-size': '3rem',
+						'margin-bottom': '18px',
+					},
+				},
+			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Design websites visually',
 		},
 		parentID: 'hero',
@@ -112,7 +181,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Create responsive, professional websites with a visual page builder. Drag, drop, and customize blocks to build exactly what you need.',
 		},
 		parentID: 'hero',
@@ -139,6 +209,30 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 					},
 				},
 			},
+			mobile: {
+				all: {
+					all: {
+						'grid-template-columns': '1fr',
+						gap: '20px',
+						'padding-top': '10px',
+						'padding-bottom': '10px',
+						'margin-top': '10px',
+						'margin-bottom': '10px',
+					},
+				},
+			},
+			tablet: {
+				all: {
+					all: {
+						'grid-template-columns': 'repeat(2, 1fr)',
+						gap: '30px',
+						'padding-top': '15px',
+						'padding-bottom': '15px',
+						'margin-top': '15px',
+						'margin-bottom': '15px',
+					},
+				},
+			},
 		},
 		tag: 'div',
 		attributes: {},
@@ -158,6 +252,11 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						'border-radius': '12px',
 						'backdrop-filter': 'blur(10px)',
 						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+					hover: {
+						'box-shadow': '0px 12px 48px rgba(0,0,0,0.18), 0px 4px 16px rgba(0,0,0,0.12)',
+						transform: 'translateY(-4px)',
+						'background-color': '#f8fafc',
 					},
 				},
 			},
@@ -183,7 +282,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Visual drag-and-drop interface',
 		},
 		parentID: 'feature-1',
@@ -202,6 +302,11 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						'border-radius': '12px',
 						'backdrop-filter': 'blur(10px)',
 						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+					hover: {
+						'box-shadow': '0px 12px 48px rgba(0,0,0,0.18), 0px 4px 16px rgba(0,0,0,0.12)',
+						transform: 'translateY(-4px)',
+						'background-color': '#f8fafc',
 					},
 				},
 			},
@@ -227,7 +332,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Responsive design across devices',
 		},
 		parentID: 'feature-2',
@@ -246,6 +352,11 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						'border-radius': '12px',
 						'backdrop-filter': 'blur(10px)',
 						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+					hover: {
+						'box-shadow': '0px 12px 48px rgba(0,0,0,0.18), 0px 4px 16px rgba(0,0,0,0.12)',
+						transform: 'translateY(-4px)',
+						'background-color': '#f8fafc',
 					},
 				},
 			},
@@ -271,7 +382,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Real-time style customization',
 		},
 		parentID: 'feature-3',
@@ -290,6 +402,11 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						'border-radius': '12px',
 						'backdrop-filter': 'blur(10px)',
 						'box-shadow': '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+					},
+					hover: {
+						'box-shadow': '0px 12px 48px rgba(0,0,0,0.18), 0px 4px 16px rgba(0,0,0,0.12)',
+						transform: 'translateY(-4px)',
+						'background-color': '#f8fafc',
 					},
 				},
 			},
@@ -315,7 +432,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: 'Nested component architecture',
 		},
 		parentID: 'feature-4',
@@ -348,6 +466,11 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 						'align-items': 'center',
 						color: '#111827',
 						'text-align': 'center',
+					},
+					hover: {
+						'box-shadow': '0px 12px 48px rgba(0,0,0,0.18), 0px 4px 16px rgba(0,0,0,0.12)',
+						transform: 'translateY(-4px)',
+						'background-color': '#f8fafc',
 					},
 				},
 			},
@@ -491,7 +614,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: '[Block Hierarchy] Added keyboard navigation for block selection using arrow keys.',
 		},
 		parentID: 'timeline-item-1',
@@ -561,7 +685,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: '[Block Hierarchy] Added right-click context menu for copy, paste, duplicate, and delete block operations.',
 		},
 		parentID: 'timeline-item-2',
@@ -631,7 +756,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 			},
 		},
 		tag: 'p',
-		attributes: {
+		attributes: {},
+		content: {
 			text: '[Block Hierarchy] Added drag-and-drop functionality for block repositioning.',
 		},
 		parentID: 'timeline-item-3',

@@ -1,4 +1,5 @@
 export * from './attribute';
+export * from './content';
 export * from './crud';
 export * from './registry';
 export * from './hierarchy';
