@@ -2,7 +2,7 @@ import type { BlockDefinition, BlockType } from '@/src/page-builder/core/block/b
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateBlockDefinition } from '@/src/page-builder/services/helpers/validate';
+import { validateBlockDefinition } from '@/src/page-builder/services/helpers/block';
 
 /**
  * Class-based block registry for managing block definitions

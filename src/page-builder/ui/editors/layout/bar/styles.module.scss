@@ -1,0 +1,15 @@
+.Bar {
+	padding: var(--size-xs) var(--size-md);
+	position: fixed;
+
+	border-radius: var(--size-md);
+	background: var(--theme-color-primary);
+	box-shadow: var(--theme-shadow-border);
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: var(--size-sm);
+
+	z-index: 99999;
+}

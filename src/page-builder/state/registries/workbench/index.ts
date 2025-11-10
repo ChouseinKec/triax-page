@@ -3,7 +3,7 @@ import type { WorkbenchDefinition, WorkbenchID } from '@/src/page-builder/core/e
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateWorkbench } from '@/src/page-builder/services/helpers/validate';
+import { validateWorkbench } from '@/src/page-builder/services/helpers/editor';
 
 /**
  * Class-based workbench registry for managing workbench definitions

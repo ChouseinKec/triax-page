@@ -2,8 +2,7 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedWorkbenchID } from "@/src/page-builder/services/managers/page/queries";
-import { setSelectedWorkbenchID } from "@/src/page-builder/services/managers/page/commands";
+import { useSelectedWorkbenchID,setSelectedWorkbenchID } from "@/src/page-builder/services/managers/page/";
 import { useWorkbenchs } from "@/src/page-builder/services/managers/workbench";
 
 // Components

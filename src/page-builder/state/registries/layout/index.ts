@@ -3,7 +3,7 @@ import type { PanelDefinition, BarDefinition, TabDefinition, InfoDefinition } fr
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/validate';
+import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/layout';
 
 /**
  * Class-based layout registry for managing panels, bars, and infos
@@ -138,7 +138,7 @@ class LayoutRegistry {
 	/**
 	 * Retrieves a specific info by ID.
 	 */
-	getInfoById(id: string): InfoDefinition | undefined {
+	getInfo(id: string): InfoDefinition | undefined {
 		return this.infos[id];
 	}
 }
@@ -158,4 +158,4 @@ export const getRegisteredInfos = () => layoutRegistry.getRegisteredInfos();
 export const getPanelById = (id: string) => layoutRegistry.getPanelById(id);
 export const getBarById = (id: string) => layoutRegistry.getBarById(id);
 export const getTabById = (id: string) => layoutRegistry.getTabById(id);
-export const getInfoById = (id: string) => layoutRegistry.getInfoById(id);
+export const getInfo = (id: string) => layoutRegistry.getInfo(id);

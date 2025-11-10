@@ -12,9 +12,10 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
 import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
-import { validateBlockID, validateStyleKey, validateStyleValue, validateAttributeKey, validateAttributeValue, validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/page-builder/services/helpers/validate';
-import { fetchBlock } from '@/src/page-builder/services/helpers/fetch';
-import { applyStyle } from '@/src/page-builder/services/helpers/block';
+import { applyStyle } from '@/src/page-builder/services/helpers/block/style';
+import { validateBlockID, validateStyleKey, validateStyleValue, validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/validate';
+import { fetchBlock } from '@/src/page-builder/services/helpers/block/fetch';
+import { validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/page-builder/services/helpers/page/validate';
 
 // Managers
 import { getSelectedDeviceID, getSelectedOrientationID, getSelectedPseudoID } from '@/src/page-builder/services/managers/page';
@@ -41,7 +42,6 @@ export function setBlockTag(blockID: BlockID, tag: ElementTag): void {
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-
 	if (!safeData) return;
 
 	const currentBlock = useBlockStore.getState().allBlocks[blockID];

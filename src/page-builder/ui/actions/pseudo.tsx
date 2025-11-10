@@ -5,7 +5,7 @@ import React from "react";
 import { DEFAULT_PSEUDO_ID } from "@/src/page-builder/core/page/constants/defaults";
 
 // Managers
-import { getAllPseudos, useSelectedPseudoID } from "@/src/page-builder/services/managers/page/queries";
+import { getAllPseudos, useSelectedPseudoID } from "@/src/page-builder/services/managers/page";
 import { setSelectedPseudoID } from "@/src/page-builder/services/managers/page/commands";
 
 // Components

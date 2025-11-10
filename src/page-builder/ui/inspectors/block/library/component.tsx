@@ -20,6 +20,10 @@ import type { BlockDefinition, BlockType } from "@/src/page-builder/core/block/b
  */
 const BlockLibrary: React.FC = () => {
     const registeredBlocks = getRegisteredBlocks();
+    if (!registeredBlocks || Object.keys(registeredBlocks).length === 0) {
+        return <div className={CSS.Fallback}>No blocks available.</div>;
+    }
+
     const selectedBlockType = useSelectedBlockType();
     const [search, setSearch] = useState("");
 
@@ -113,11 +117,6 @@ const BlockLibrary: React.FC = () => {
         ));
     }, [searchedBlocks, groupedBlocks, createBlockButton]
     );
-
-    // If no blocks are registered, show an Fallback state
-    if (Object.keys(registeredBlocks).length === 0) {
-        return <div className={CSS.Fallback}>No blocks available.</div>;
-    }
 
     // If selected block permitted content is Fallback, show an Fallback state
     if (Object.keys(filteredBlocks).length === 0) {

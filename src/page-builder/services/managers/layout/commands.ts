@@ -9,7 +9,8 @@ import { devLog } from '@/src/shared/utilities/dev';
 import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateBarActionInstance, validateBarID, validateBarActionID, validateInfoID, validateInfoDataID, validatePanelID } from '@/src/page-builder/services/helpers/validate';
+import { validateBarActionInstance, validateBarID, validateBarActionID, validateInfoID, validateInfoDataID, validatePanelID } from '@/src/page-builder/services/helpers/layout/validate';
+import { fetchBar, fetchInfo, fetchPanel } from '@/src/page-builder/services/helpers/layout/fetch';
 
 // ------------------------- BAR -------------------------
 
@@ -31,12 +32,12 @@ export function registerBarAction(barID: BarID, action: BarActionInstance): void
 			barID: validateBarID(barID),
 			action: validateBarActionInstance(action),
 		})
+		.fetch((data) => ({
+			bar: fetchBar(data.barID, layoutStore.allBars),
+		}))
 		.execute();
 	if (!safeData) return;
-
-	const bar = layoutStore.getBar(safeData.barID);
-	if (!bar) return devLog.error(`[LayoutCommands → registerBarAction] Bar with ID "${safeData.barID}" not found.`);
-	if (bar.actions[action.id]) return devLog.warn(`[LayoutCommands → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
+	if (safeData.bar.actions[action.id]) return devLog.warn(`[LayoutCommands → registerBarAction] Action with ID "${action.id}" already exists in bar "${barID}". Skipping.`);
 
 	layoutStore.registerBarAction(barID, action);
 }
@@ -59,12 +60,12 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
 			barID: validateBarID(barID),
 			actionID: validateBarActionID(actionID),
 		})
+		.fetch((data) => ({
+			bar: fetchBar(data.barID, layoutStore.allBars),
+		}))
 		.execute();
 	if (!safeData) return;
-
-	const bar = layoutStore.getBar(safeData.barID);
-	if (!bar) return devLog.warn(`[LayoutCommands → unregisterBarAction] Bar with ID "${safeData.barID}" not found.`);
-	if (!bar.actions[actionID]) return devLog.warn(`[LayoutCommands → unregisterBarAction] Action with ID "${safeData.actionID}" not found in bar "${safeData.barID}". Skipping.`);
+	if (!safeData.bar.actions[actionID]) return devLog.warn(`[LayoutCommands → unregisterBarAction] Action with ID "${safeData.actionID}" not found in bar "${safeData.barID}". Skipping.`);
 
 	layoutStore.unregisterBarAction(safeData.barID, safeData.actionID);
 }
@@ -88,12 +89,12 @@ export function registerInfoData(infoID: InfoID, dataItem: InfoDataInstance): vo
 		.validate({
 			infoID: validateInfoID(infoID),
 		})
+		.fetch((data) => ({
+			info: fetchInfo(data.infoID, layoutStore.allInfos),
+		}))
 		.execute();
 	if (!safeData) return;
-
-	const info = layoutStore.getInfo(safeData.infoID);
-	if (!info) return devLog.error(`[LayoutCommands → registerInfoData] Info with ID "${safeData.infoID}" not found.`);
-	if (info.data[dataItem.id]) return devLog.warn(`[LayoutCommands → registerInfoData] Data item with ID "${dataItem.id}" already exists in info "${infoID}". Skipping.`);
+	if (safeData.info.data[dataItem.id]) return devLog.warn(`[LayoutCommands → registerInfoData] Data item with ID "${dataItem.id}" already exists in info "${infoID}". Skipping.`);
 
 	layoutStore.registerInfoData(infoID, dataItem);
 }
@@ -116,12 +117,13 @@ export function unregisterInfoData(infoID: InfoID, dataID: InfoDataID): void {
 			infoID: validateInfoID(infoID),
 			dataID: validateInfoDataID(dataID),
 		})
+		.fetch((data) => ({
+			info: fetchInfo(data.infoID, layoutStore.allInfos),
+		}))
 		.execute();
 	if (!safeData) return;
 
-	const info = layoutStore.getInfo(safeData.infoID);
-	if (!info) return devLog.warn(`[LayoutCommands → unregisterInfoData] Info with ID "${safeData.infoID}" not found.`);
-	if (!info.data) return devLog.warn(`[LayoutCommands → unregisterInfoData] Data item with ID "${safeData.dataID}" not found in info "${safeData.infoID}". Skipping.`);
+	if (!safeData.info.data) return devLog.warn(`[LayoutCommands → unregisterInfoData] Data item with ID "${safeData.dataID}" not found in info "${safeData.infoID}". Skipping.`);
 
 	layoutStore.unregisterInfoData(safeData.infoID, safeData.dataID);
 }
@@ -144,11 +146,11 @@ export function togglePanel(panelID: PanelID): void {
 		.validate({
 			panelID: validatePanelID(panelID),
 		})
+		.fetch((data) => ({
+			panel: fetchPanel(data.panelID, layoutStore.allPanels),
+		}))
 		.execute();
 	if (!safeData) return;
 
-	const panel = layoutStore.getPanel(safeData.panelID);
-	if (!panel) return devLog.error(`[LayoutCommands → togglePanel] Panel with ID "${safeData.panelID}" not found.`);
-
-	layoutStore.updatePanel(safeData.panelID, { isOpen: !panel.isOpen });
+	layoutStore.updatePanel(safeData.panelID, { isOpen: !safeData.panel.isOpen });
 }

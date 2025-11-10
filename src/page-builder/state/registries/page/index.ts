@@ -5,7 +5,7 @@ import type { BarActionInstance, BarActionID, BarActionRecord } from '@/src/page
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition } from '@/src/page-builder/services/helpers/validate';
+import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition } from '@/src/page-builder/services/helpers/page';
 
 /**
  * Class-based device registry for managing device definitions

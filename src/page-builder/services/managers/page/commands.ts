@@ -9,7 +9,8 @@ import type { WorkbenchID } from '@/src/page-builder/core/editor/workbench/types
 import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Helpers
-import { validateWorkbenchID, validateDeviceID, validateOrientationID, validatePseudoID } from '@/src/page-builder/services/helpers/validate';
+import { validateDeviceID, validateOrientationID, validatePseudoID } from '@/src/page-builder/services/helpers/page/validate';
+import { validateWorkbenchID } from '@/src/page-builder/services/helpers/editor/validate';
 
 // Constants
 import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/page-builder/core/page/constants';

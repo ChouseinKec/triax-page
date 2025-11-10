@@ -10,20 +10,18 @@ import type { InfoDefinition, InfoID, InfoRecord, InfoDataInstance, InfoDataID }
 import { getRegisteredPanels, getRegisteredTabs, getRegisteredBars, getRegisteredInfos } from '@/src/page-builder/state/registries/layout';
 
 interface LayoutStoreState {
-	layoutPanels: PanelRecord;
-	layoutBars: BarRecord;
-	layoutInfos: InfoRecord;
+	allPanels: PanelRecord;
+	allBars: BarRecord;
+	allInfos: InfoRecord;
 
 	updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => void;
-	getPanel: (panelID: PanelID) => PanelInstance | undefined;
-	getBar: (barID: BarID) => BarRecord[BarID] | undefined;
-	getInfo: (infoID: InfoID) => InfoRecord[InfoID] | undefined;
 	registerBarAction: (barID: BarID, action: BarActionInstance) => void;
 	unregisterBarAction: (barID: BarID, actionID: BarActionID) => void;
 	registerInfoData: (infoID: InfoID, dataItem: InfoDataInstance) => void;
 	unregisterInfoData: (infoID: InfoID, dataID: InfoDataID) => void;
 }
 type LayoutStore = LayoutStoreState;
+export type { LayoutStore };
 
 /**
  * Creates the layout store after registries are initialized
@@ -86,19 +84,19 @@ export function createLayoutStore() {
 
 		return {
 			// Initial state
-			layoutPanels: initialPanels,
-			layoutBars: initialBars,
-			layoutInfos: initialInfos,
+			allPanels: initialPanels,
+			allBars: initialBars,
+			allInfos: initialInfos,
 
 			// Panel actions
 			updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => {
 				set((state) => {
-					const panel = state.layoutPanels[panelID];
+					const panel = state.allPanels[panelID];
 					if (!panel) return state;
 
 					return {
-						layoutPanels: {
-							...state.layoutPanels,
+						allPanels: {
+							...state.allPanels,
 							[panelID]: {
 								...panel,
 								...updates,
@@ -108,21 +106,9 @@ export function createLayoutStore() {
 				});
 			},
 
-			getPanel: (panelID: PanelID) => {
-				return get().layoutPanels[panelID];
-			},
-
-			getBar: (barID: BarID) => {
-				return get().layoutBars[barID];
-			},
-
-			getInfo: (infoID: InfoID) => {
-				return get().layoutInfos[infoID];
-			},
-
 			registerBarAction: (barID: BarID, action: BarActionInstance) => {
 				set((state) => {
-					const bar = state.layoutBars[barID];
+					const bar = state.allBars[barID];
 					if (!bar) return state;
 
 					const updatedActions = {
@@ -137,8 +123,8 @@ export function createLayoutStore() {
 					);
 
 					return {
-						layoutBars: {
-							...state.layoutBars,
+						allBars: {
+							...state.allBars,
 							[barID]: {
 								...bar,
 								actions: sortedActions,
@@ -150,7 +136,7 @@ export function createLayoutStore() {
 
 			unregisterBarAction: (barID: BarID, actionID: BarActionID) => {
 				set((state) => {
-					const bar = state.layoutBars[barID];
+					const bar = state.allBars[barID];
 					if (!bar || !bar.actions[actionID]) return state;
 
 					const { [actionID]: _, ...restActions } = bar.actions;
@@ -162,8 +148,8 @@ export function createLayoutStore() {
 					);
 
 					return {
-						layoutBars: {
-							...state.layoutBars,
+						allBars: {
+							...state.allBars,
 							[barID]: {
 								...bar,
 								actions: sortedActions,
@@ -175,7 +161,7 @@ export function createLayoutStore() {
 
 			registerInfoData: (infoID: InfoID, dataItem: InfoDataInstance) => {
 				set((state) => {
-					const info = state.layoutInfos[infoID];
+					const info = state.allInfos[infoID];
 					if (!info) return state;
 
 					const updatedData = {
@@ -190,8 +176,8 @@ export function createLayoutStore() {
 					);
 
 					return {
-						layoutInfos: {
-							...state.layoutInfos,
+						allInfos: {
+							...state.allInfos,
 							[infoID]: {
 								...info,
 								data: sortedData,
@@ -203,7 +189,7 @@ export function createLayoutStore() {
 
 			unregisterInfoData: (infoID: InfoID, dataID: InfoDataID) => {
 				set((state) => {
-					const info = state.layoutInfos[infoID];
+					const info = state.allInfos[infoID];
 					if (!info || !info.data[dataID]) return state;
 
 					const { [dataID]: _, ...restData } = info.data;
@@ -215,8 +201,8 @@ export function createLayoutStore() {
 					);
 
 					return {
-						layoutInfos: {
-							...state.layoutInfos,
+						allInfos: {
+							...state.allInfos,
 							[infoID]: {
 								...info,
 								data: sortedData,

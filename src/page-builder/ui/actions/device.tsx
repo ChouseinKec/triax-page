@@ -5,7 +5,7 @@ import React from "react";
 import { DEFAULT_DEVICE_ID } from "@/src/page-builder/core/page/constants/defaults";
 
 // Managers
-import { getAllDevices, useSelectedDeviceID } from "@/src/page-builder/services/managers/page/queries";
+import { getAllDevices, useSelectedDeviceID } from "@/src/page-builder/services/managers/page";
 import { setSelectedDeviceID } from "@/src/page-builder/services/managers/page/commands";
 
 // Components

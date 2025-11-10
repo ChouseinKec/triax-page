@@ -2,9 +2,10 @@
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Helpers
-import { fetchBlock, fetchRegisteredBlock } from '@/src/page-builder/services/helpers/fetch';
-import { validateBlockType, validateBlockID } from '@/src/page-builder/services/helpers/validate';
-import { moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextAncestorSibling, canBlockMoveBefore, canBlockMoveAfter, canBlockMoveInto, createBlock, deleteBlockFromParent, cloneBlock, overwriteBlock, addBlockToTree, deleteBlockFromTree } from '@/src/page-builder/services/helpers/block';
+import { validateBlockType, validateBlockID } from '@/src/page-builder/services/helpers/block/validate';
+import { fetchBlock, fetchRegisteredBlock } from '@/src/page-builder/services/helpers/block/fetch';
+import { moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextAncestorSibling, canBlockMoveBefore, canBlockMoveAfter, canBlockMoveInto } from '@/src/page-builder/services/helpers/block/hierarchy';
+import { createBlock, deleteBlockFromParent, cloneBlock, overwriteBlock, addBlockToTree, deleteBlockFromTree } from '@/src/page-builder/services/helpers/block/crud';
 
 // Types
 import type { BlockInstance, BlockType, BlockID, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
@@ -144,7 +145,7 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
 	if (!safeData) return;
 
 	// If it has children, return the first child
-	if (safeData.block.contentIDs?.length > 0) return blockStore.getBlock(safeData.block.contentIDs[0]);
+	if (safeData.block.contentIDs?.length > 0) return blockStore.allBlocks[safeData.block.contentIDs[0]];
 
 	// If no children, get the next sibling
 	const nextSibling = findBlockNextSibling(safeData.block.id, blockStore.allBlocks);
@@ -182,7 +183,7 @@ export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undef
 	if (prevSibling) return findBlockLastDescendant(prevSibling, blockStore.allBlocks);
 
 	// If no previous sibling, return the parent
-	return blockStore.getBlock(safeData.blockInstance.parentID);
+	return blockStore.allBlocks[safeData.blockInstance.parentID];
 }
 
 /**

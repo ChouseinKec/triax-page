@@ -5,7 +5,7 @@ import React from "react";
 import { DEFAULT_ORIENTATION_ID } from "@/src/page-builder/core/page/constants/defaults";
 
 // Managers
-import { getAllOrientations, useSelectedOrientationID } from "@/src/page-builder/services/managers/page/queries";
+import { getAllOrientations, useSelectedOrientationID } from "@/src/page-builder/services/managers/page";
 import { setSelectedOrientationID } from "@/src/page-builder/services/managers/page/commands";
 
 // Components

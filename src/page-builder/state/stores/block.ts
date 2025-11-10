@@ -11,17 +11,6 @@ export interface BlockStoreProps {
 	allBlocks: BlockRecord;
 
 	/**
-	 * Retrieves a single block instance from the store.
-	 *
-	 * @param blockID - The ID of the block to retrieve.
-	 * @returns The block instance if found, otherwise undefined.
-	 *
-	 * @example
-	 * const block = getBlock('block-123');
-	 */
-	getBlock: (blockID: BlockID) => BlockInstance | undefined;
-
-	/**
 	 * Sets the currently selected block by ID.
 	 * Accepts null to clear selection.
 	 * Pure data mutation without validation
@@ -68,9 +57,6 @@ export function createBlockStore() {
 
 		// Collection of all blocks in the store
 		allBlocks: DefaultBlocks,
-
-		// Retrieves a single block instance from the store
-		getBlock: (blockID) => get().allBlocks[blockID],
 
 		// Sets the currently selected block by ID
 		selectBlock: (blockID) => set({ selectedBlockID: blockID }),

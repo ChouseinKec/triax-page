@@ -13,19 +13,15 @@ import { DEFAULT_WORKBENCH_ID } from '@/src/page-builder/core/editor/workbench/c
 export type PageStore = {
 	selectedDeviceID: DeviceID;
 	setSelectedDeviceID: (value: DeviceID) => void;
-	getSelectedDeviceID: () => DeviceID;
 
 	selectedOrientationID: OrientationID;
 	setSelectedOrientationID: (value: OrientationID) => void;
-	getSelectedOrientationID: () => OrientationID;
 
 	selectedPseudoID: PseudoID;
 	setSelectedPseudoID: (value: PseudoID) => void;
-	getSelectedPseudoID: () => PseudoID;
 
 	selectedWorkbenchID: WorkbenchID;
 	setSelectedWorkbenchID: (id: WorkbenchID) => void;
-	getSelectedWorkbenchID: () => WorkbenchID;
 };
 
 /**
@@ -65,8 +61,6 @@ export function createPageStore() {
 			set({ selectedDeviceID: device });
 		},
 
-		getSelectedDeviceID: () => get().selectedDeviceID,
-
 		/**
 		 * Sets the current orientation based on the provided value.
 		 * Throws an error if the orientation value is invalid.
@@ -77,8 +71,6 @@ export function createPageStore() {
 			set({ selectedOrientationID: value });
 		},
 
-		getSelectedOrientationID: () => get().selectedOrientationID,
-
 		/**
 		 * Sets the current pseudo class based on the provided value.
 		 * Throws an error if the pseudo class value is invalid.
@@ -88,8 +80,6 @@ export function createPageStore() {
 		setSelectedPseudoID: (value: string) => {
 			set({ selectedPseudoID: value });
 		},
-
-		getSelectedPseudoID: () => get().selectedPseudoID,
 
 		/**
 		 * Sets the current workbench.

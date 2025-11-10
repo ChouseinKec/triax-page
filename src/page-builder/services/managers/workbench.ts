@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
-
-// Registry
-import { getRegisteredWorkbenchs } from '@/src/page-builder/state/registries/workbench';
+// Helpers
+import { fetchAllWorkbenches } from '@/src/page-builder/services/helpers/editor/fetch';
+import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Types
-import type { WorkbenchDefinition } from '@/src/page-builder/core/editor/workbench/types';
+import type { WorkbenchDefinition } from '@/src/page-builder/core/editor/workbench/types/workbench';
 
 /**
  * Reactive hook to get all registered workbenches.
@@ -13,5 +12,12 @@ import type { WorkbenchDefinition } from '@/src/page-builder/core/editor/workben
  * @returns Record of all registered workbenches keyed by their IDs
  */
 export function useWorkbenchs(): Record<string, WorkbenchDefinition> {
-	return useMemo(() => getRegisteredWorkbenchs(), []);
+	const safeData = new ValidationPipeline('[WorkbenchManager → useWorkbenchs]')
+		.fetch(() => ({
+			workbenches: fetchAllWorkbenches(),
+		}))
+		.execute();
+	if (!safeData) return {};
+
+	return safeData.workbenches;
 }

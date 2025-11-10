@@ -4,15 +4,15 @@ import React, { useCallback, useRef } from "react";
 import type { BlockInstance } from '@/src/page-builder/core/block/block/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock, useRenderedBlockAttributes, useRenderedBlockStyles } from '@/src/page-builder/services/managers/block';
+import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes, getBlockRenderedStyles } from '@/src/page-builder/services/managers/block';
 import { getBlockContent, setBlockContent } from '@/src/page-builder/services/managers/block';
 
 const TextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
     const BlockTag = instance.tag;
     const isSelected = useIsBlockSelected(blockID);
-    const renderedAttributes = useRenderedBlockAttributes(blockID);
-    const renderedStyles = useRenderedBlockStyles(blockID);
+    const renderedAttributes = getBlockRenderedAttributes(blockID);
+    const renderedStyles = getBlockRenderedStyles(blockID);
 
     // Get the current text value from content
     const content = getBlockContent(blockID);
