@@ -1,5 +1,5 @@
 // Types
-import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockPermitedContent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockAllowedContent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/page-builder/core/block/block/types';
 import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 import type { AttributeKey, AttributeValue } from '@/src/page-builder/core/block/attribute/types';
 import type { StyleKey, StyleValue } from '@/src/page-builder/core/block/style/types/';
@@ -109,12 +109,12 @@ export function validateBlockRender(blockRender: unknown): ValidateResult<BlockR
  * Checks if all content types in the array are valid block types that this block can contain.
  *
  * @param blockPermittedContent - The array of permitted content types to validate
- * @returns ValidateResult containing validity and the validated BlockPermitedContent array if all types are valid
+ * @returns ValidateResult containing validity and the validated BlockAllowedContent array if all types are valid
  *
  * @example
  * validateBlockPermittedContent(['text', 'image']) → { valid: true, value: ['text', 'image'] }
  */
-export function validateBlockPermittedContent(blockPermittedContent: unknown): ValidateResult<BlockPermitedContent> {
+export function validateBlockPermittedContent(blockPermittedContent: unknown): ValidateResult<BlockAllowedContent> {
 	if (blockPermittedContent === null) {
 		return { valid: true, value: [] };
 	}
@@ -128,7 +128,7 @@ export function validateBlockPermittedContent(blockPermittedContent: unknown): V
 		if (!typeValidation.valid) return typeValidation;
 	}
 
-	return { valid: true, value: blockPermittedContent as BlockPermitedContent };
+	return { valid: true, value: blockPermittedContent as BlockAllowedContent };
 }
 
 /**
@@ -223,17 +223,17 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 }
 
 /**
- * Checks if the definition has all required properties (type, tags, render, permittedContent, icon, category)
+ * Checks if the definition has all required properties (type, tags, render, allowedContent, icon, category)
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
  * @returns ValidateResult containing validity and the validated BlockDefinition if valid
  *
  * @example
- * validateBlockDefinition({type: 'text',tags: ['span'],render: () => <span>Text</span>,permittedContent: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
+ * validateBlockDefinition({type: 'text',tags: ['span'],render: () => <span>Text</span>,allowedContent: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
-	const validation = validateObject(blockDefinition, ['type', 'tags', 'permittedContent', 'icon', 'category', 'render']);
+	const validation = validateObject(blockDefinition, ['type', 'tags', 'allowedContent', 'icon', 'category', 'render']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const typeValidation = validateBlockType(validation.value.type);
@@ -245,7 +245,7 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidateResul
 	const renderValidation = validateBlockRender(validation.value.render);
 	if (!renderValidation.valid) return { valid: false, message: renderValidation.message };
 
-	const permittedContentValidation = validateBlockPermittedContent(validation.value.permittedContent);
+	const permittedContentValidation = validateBlockPermittedContent(validation.value.allowedContent);
 	if (!permittedContentValidation.valid) return { valid: false, message: permittedContentValidation.message };
 
 	const categoryValidation = validateBlockCategory(validation.value.category);

@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import BlockStylesLayouts from "@/src/page-builder/component/inspectors/block/style/layout/component";
 
 // Managers
-import { useSelectedBlockID } from "@/src/page-builder/service/managers/block";
+import { useSelectedBlockID, canBlockHaveStyles } from "@/src/page-builder/service/managers/block";
 
 /**
  * BlockStyles Component
@@ -22,20 +22,27 @@ import { useSelectedBlockID } from "@/src/page-builder/service/managers/block";
  * @note Relies on block selection state to determine which style controls to display
  */
 const BlockStyles: React.FC = () => {
-    // Get the currently selected block ID
     const selectedBlockID = useSelectedBlockID();
+    const canHaveStyles = selectedBlockID ? canBlockHaveStyles(selectedBlockID) : false;
 
-    return (
-        <div className={CSS.BlockStyles}>
-            {/* Render style layout if a block is selected, otherwise show fallback */}
-            {selectedBlockID
-                ? <BlockStylesLayouts />
-                : <p className={CSS.BlockStyles__Empty}>
+    const renderContent = () => {
+        if (!selectedBlockID) {
+            return (
+                <p className={CSS.Empty}>
                     No block selected. Select a block to see style-specific settings.
                 </p>
-            }
-        </div>
-    );
+            );
+        }
+        if (!canHaveStyles) {
+            return (
+                <p className={CSS.Empty}>
+                    The selected block does not have configurable styles.
+                </p>
+            );
+        }
+        return <BlockStylesLayouts />;
+    };
+    return <div className={CSS.BlockStyles}>{renderContent()}</div>;
 };
 
 export default BlockStyles;

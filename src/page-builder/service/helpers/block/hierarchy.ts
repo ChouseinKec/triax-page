@@ -234,11 +234,11 @@ export function canBlockMoveInto(parentTag: ElementTag, childTag: ElementTag): b
 	const parentBlockDefinition = Object.values(registeredBlocks).find((block) => block.tag === parentTag);
 	if (!parentBlockDefinition) return false;
 
-	// If permittedContent is null, parent accepts any child
-	if (parentBlockDefinition.permittedContent == null) return true;
+	// If allowedContent is null, parent accepts any child
+	if (parentBlockDefinition.allowedContent == null) return true;
 
-	// Check if parent's permittedContent includes the child's tag
-	return parentBlockDefinition.permittedContent.includes(childTag);
+	// Check if parent's allowedContent includes the child's tag
+	return parentBlockDefinition.allowedContent.includes(childTag);
 }
 
 /**

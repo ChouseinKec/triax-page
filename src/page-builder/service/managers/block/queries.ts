@@ -2,7 +2,7 @@
 import { useBlockStore } from '@/src/page-builder/state/stores/block';
 
 // Types
-import type { BlockDefinition, BlockID, BlockType, BlockContent } from '@/src/page-builder/core/block/block/types';
+import type { BlockDefinition, BlockID, BlockType, BlockContent, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/page-builder/core/block/block/types';
 import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 import type { StyleKey } from '@/src/page-builder/core/block/style/types';
 import type { ReactNode } from 'react';
@@ -184,7 +184,7 @@ export function canBlockAcceptChild(parentTag: ElementTag, childTag: ElementTag)
 }
 
 /**
- * Checks if a block type can have children based on its permittedContent property.
+ * Checks if a block type can have children based on its allowedContent property.
  * @param blockID - The block ID to check
  * @returns True if the block type can have children, false otherwise
  * @example
@@ -205,10 +205,48 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 		.execute();
 	if (!safeParams) return false;
 
-	// If permittedContent is undefined or null, the block can have any content
-	if (safeParams.blockDefinition.permittedContent == null) return true;
+	// If allowedContent is undefined or null, the block can have any content
+	if (safeParams.blockDefinition.allowedContent == null) return true;
 
-	return safeParams.blockDefinition.permittedContent.length > 0;
+	return safeParams.blockDefinition.allowedContent.length > 0;
+}
+
+export function canBlockHaveStyles(blockID: BlockID): boolean {
+	const blockStore = useBlockStore.getState();
+	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyles]')
+		.validate({ blockID: validateBlockID(blockID) })
+		.fetch((data) => ({
+			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+		}))
+		.execute();
+	if (!safeParams) return false;
+
+	// If allowedStyles is undefined or null, the block can have any styles
+	if (safeParams.blockDefinition.allowedStyles == null) return true;
+
+	return safeParams.blockDefinition.allowedStyles.length > 0;
+}
+
+export function canBlockHaveAttributes(blockID: BlockID): boolean {
+	const blockStore = useBlockStore.getState();
+	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttributes]')
+		.validate({ blockID: validateBlockID(blockID) })
+		.fetch((data) => ({
+			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+		}))
+		.execute();
+	if (!safeParams) return false;
+
+	// If allowedAttributes is undefined or null, the block can have any attributes
+	if (safeParams.blockDefinition.allowedAttributes == null) return true;
+
+	return safeParams.blockDefinition.allowedAttributes.length > 0;
 }
 
 /**
@@ -302,4 +340,28 @@ export function getBlockTags(blockType: BlockType): ElementTag[] | undefined {
 	if (!safeParams) return;
 
 	return safeParams.blockDefinition.tags;
+}
+
+export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedStyles]')
+		.validate({ blockType: validateBlockType(blockType) })
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockType),
+		}))
+		.execute();
+	if (!safeParams) return;
+
+	return safeParams.blockDefinition.allowedStyles;
+}
+
+export function getBlockAllowedAttributes(blockType: BlockType): BlockAllowedAttributes | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedAttributes]')
+		.validate({ blockType: validateBlockType(blockType) })
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockType),
+		}))
+		.execute();
+	if (!safeParams) return;
+
+	return safeParams.blockDefinition.allowedAttributes;
 }

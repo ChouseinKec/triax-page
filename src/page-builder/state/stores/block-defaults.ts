@@ -54,7 +54,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'root',
 		contentIDs: ['hero', 'features-grid', 'timeline'],
-		type: 'container',
+		type: 'core-container',
 	},
 
 	// Hero section
@@ -120,7 +120,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'body',
 		contentIDs: ['hero-title', 'hero-desc'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'hero-title': {
 		id: 'hero-title',
@@ -162,7 +162,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'hero',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'hero-desc': {
 		id: 'hero-desc',
@@ -187,7 +187,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'hero',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 
 	// Features section
@@ -238,7 +238,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'body',
 		contentIDs: ['feature-1', 'feature-2', 'feature-3', 'feature-4'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'feature-1': {
 		id: 'feature-1',
@@ -265,7 +265,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'features-grid',
 		contentIDs: ['feature-1-label'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'feature-1-label': {
 		id: 'feature-1-label',
@@ -288,7 +288,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-1',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'feature-2': {
 		id: 'feature-2',
@@ -315,7 +315,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'features-grid',
 		contentIDs: ['feature-2-label'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'feature-2-label': {
 		id: 'feature-2-label',
@@ -338,7 +338,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-2',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'feature-3': {
 		id: 'feature-3',
@@ -365,7 +365,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'features-grid',
 		contentIDs: ['feature-3-label'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'feature-3-label': {
 		id: 'feature-3-label',
@@ -388,7 +388,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-3',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'feature-4': {
 		id: 'feature-4',
@@ -415,7 +415,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'features-grid',
 		contentIDs: ['feature-4-label'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'feature-4-label': {
 		id: 'feature-4-label',
@@ -438,7 +438,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-4',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 
 	// Timeline
@@ -479,7 +479,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'body',
 		contentIDs: ['timeline-container'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-title': {
 		id: 'timeline-title',
@@ -503,7 +503,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'timeline-container': {
 		id: 'timeline-container',
@@ -526,7 +526,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline',
 		contentIDs: ['timeline-line', 'timeline-item-1', 'timeline-item-2', 'timeline-item-3'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-line': {
 		id: 'timeline-line',
@@ -549,7 +549,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-container',
 		contentIDs: [],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-item-1': {
 		id: 'timeline-item-1',
@@ -570,7 +570,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-1', 'timeline-content-1'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-dot-1': {
 		id: 'timeline-dot-1',
@@ -597,7 +597,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-item-1',
 		contentIDs: [],
-		type: 'container',
+		type: 'core-container',
 	},
 
 	'timeline-content-1': {
@@ -620,7 +620,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-1',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'timeline-item-2': {
 		id: 'timeline-item-2',
@@ -641,7 +641,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-2', 'timeline-content-2'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-dot-2': {
 		id: 'timeline-dot-2',
@@ -668,7 +668,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-item-2',
 		contentIDs: [],
-		type: 'container',
+		type: 'core-container',
 	},
 
 	'timeline-content-2': {
@@ -691,7 +691,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-2',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 	'timeline-item-3': {
 		id: 'timeline-item-3',
@@ -712,7 +712,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-3', 'timeline-content-3'],
-		type: 'container',
+		type: 'core-container',
 	},
 	'timeline-dot-3': {
 		id: 'timeline-dot-3',
@@ -739,7 +739,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		attributes: {},
 		parentID: 'timeline-item-3',
 		contentIDs: [],
-		type: 'container',
+		type: 'core-container',
 	},
 
 	'timeline-content-3': {
@@ -762,6 +762,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-3',
 		contentIDs: [],
-		type: 'text',
+		type: 'core-plain-text',
 	},
 };

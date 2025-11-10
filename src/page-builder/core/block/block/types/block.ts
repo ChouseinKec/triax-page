@@ -26,6 +26,16 @@ export type BlockCategory = string;
 export type BlockType = string;
 
 /**
+ *  Name for the block type
+ */
+export type BlockName = string;
+
+/**
+ *  Description for the block type
+ */
+export type BlockDescription = string;
+
+/**
  * Block styles structure:
  * device -> orientation -> pseudo -> styles
  */
@@ -61,9 +71,19 @@ export type BlockChildren = ReactElement | ReactElement[];
 export type BlockRender = (instance: BlockInstance, children?: BlockChildren) => ReactElement;
 
 /**
+ * Indicates if a block can have styles
+ */
+export type BlockAllowedStyles = StyleKey[] | null;
+
+/**
+ * Indicates if a block can have attributes
+ */
+export type BlockAllowedAttributes = AttributeKey[] | null;
+
+/**
  * Permitted content types that can be contained within this block
  */
-export type BlockPermitedContent = BlockType[] | null;
+export type BlockAllowedContent = BlockType[] | null;
 
 /**
  * Record of all block instances by their ID.
@@ -75,25 +95,36 @@ export type BlockRecord = Record<BlockID, BlockInstance>;
  * Defines the structure, behavior, and rendering logic for a block.
  */
 export interface BlockDefinition {
-	/** The kind of block (text, container, media) */
+	/** The unique type for this block (plain-text, rich-text, container, media) */
 	type: BlockType;
+	/** Name for the block type. See BlockName. @see {@link BlockName} */
+	name: BlockName;
+	/** The description for this block type to display in the UI */
+	description: BlockDescription;
+	/** Category for organizing blocks */
+	category: BlockCategory;
+	/** Icon representation for the block */
+	icon: BlockIcon;
+
 	/** The primary HTML tag for this block */
 	tag: ElementTag;
 	/** All supported HTML tags for this block type */
 	tags: ElementTag[];
-	/** Block kinds that can be contained within this block */
-	permittedContent: BlockPermitedContent;
 
-	/** Icon representation for the block */
-	icon: BlockIcon;
+	/** Indicates if this block type can have styles */
+	allowedStyles: BlockAllowedStyles;
+	/** Indicates if this block type can have attributes */
+	allowedAttributes: BlockAllowedAttributes;
+	/** Block kinds that can be contained within this block */
+	allowedContent: BlockAllowedContent;
+
 	/** Default styles for the block */
 	styles: BlockStyles;
 	/** Default attributes for the block */
 	attributes: BlockAttributes;
 	/** Default content data for the block */
-	content?: BlockContent;
-	/** Category for organizing blocks */
-	category: BlockCategory;
+	content: BlockContent;
+
 	/** Render function that returns JSX for the block */
 	render: BlockRender;
 }

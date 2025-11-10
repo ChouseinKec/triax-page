@@ -31,7 +31,6 @@ import { useBackgroundLayout } from "./hooks/background";
  * @note Uses custom hooks to generate layout configurations for each style category
  */
 const BlockStylesLayouts: React.FC = () => {
-
     // Fetch all layouts
     const allLayouts: LayoutProps[] = [
         useDisplayLayout(),

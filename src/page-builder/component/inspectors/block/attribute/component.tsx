@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import BlockAttributesLayouts from "@/src/page-builder/component/inspectors/block/attribute/layout/component";
 
 // Managers
-import { useSelectedBlockID } from "@/src/page-builder/service/managers/block";
+import { useSelectedBlockID, canBlockHaveAttributes } from "@/src/page-builder/service/managers/block";
 
 /**
  * BlockAttributes Component
@@ -19,17 +19,27 @@ import { useSelectedBlockID } from "@/src/page-builder/service/managers/block";
  */
 const BlockAttributes: React.FC = () => {
     const selectedBlockID = useSelectedBlockID();
+    const canHaveAttributes = selectedBlockID ? canBlockHaveAttributes(selectedBlockID) : false;
 
-    return (
-        <div className={CSS.BlockAttributes} >
-            {selectedBlockID
-                ? <BlockAttributesLayouts />
-                : <p className={CSS.Empty}>
+    const renderContent = () => {
+        if (!selectedBlockID) {
+            return (
+                <p className={CSS.Empty}>
                     No block selected. Select a block to see attribute-specific settings.
                 </p>
-            }
-        </div>
-    );
+            );
+        }
+        if (!canHaveAttributes) {
+            return (
+                <p className={CSS.Empty}>
+                    The selected block does not have configurable attributes.
+                </p>
+            );
+        }
+        return <BlockAttributesLayouts />;
+    };
+
+    return <div className={CSS.BlockAttributes}>{renderContent()}</div>;
 };
 
 BlockAttributes.displayName = "BlockAttributes";
