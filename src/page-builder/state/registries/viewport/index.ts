@@ -3,7 +3,7 @@ import type { ViewportDefinition, ViewportID } from '@/src/page-builder/core/edi
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateViewport } from '@/src/page-builder/services/helpers/editor';
+import { validateViewport } from '@/src/page-builder/service/helpers/editor';
 
 /**
  * Class-based viewport registry for managing viewport definitions

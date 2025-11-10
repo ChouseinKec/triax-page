@@ -1,7 +1,7 @@
 "use client";
 
 // Components
-import TextRender from "@/src/page-builder/ui/blocks/text";
+import TextRender from "@/src/page-builder/component/blocks/text";
 
 // Types
 import { BlockDefinition } from '@/src/page-builder/core/block/block/types';

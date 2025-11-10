@@ -1,7 +1,7 @@
 "use client";
 
 // Components
-import ContainerRender from '@/src/page-builder/ui/blocks/container';
+import ContainerRender from '@/src/page-builder/component/blocks/container';
 
 // Types
 import { BlockDefinition } from '@/src/page-builder/core/block/block/types';

@@ -2,7 +2,7 @@
 import type { TabDefinition } from '@/src/page-builder/core/editor/layout/types/tab';
 
 // Components
-import BlockLibrary from '@/src/page-builder/ui/inspectors/block/library/component';
+import BlockLibrary from '@/src/page-builder/component/inspectors/block/library/component';
 
 export const BlockLibraryTab: TabDefinition = {
 	id: 'block-library',

@@ -1,5 +1,5 @@
 import React from "react";
-import WorkbenchSelect from "@/src/page-builder/ui/actions/workbench";
+import WorkbenchSelect from "@/src/page-builder/component/actions/workbench";
 
 /**
  * Workbench Select Action Instance

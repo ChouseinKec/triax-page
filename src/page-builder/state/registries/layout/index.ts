@@ -3,7 +3,7 @@ import type { PanelDefinition, BarDefinition, TabDefinition, InfoDefinition } fr
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/services/helpers/layout';
+import { validatePanelDefinition, validateTabDefinition, validateBarDefinition } from '@/src/page-builder/service/helpers/layout';
 
 /**
  * Class-based layout registry for managing panels, bars, and infos

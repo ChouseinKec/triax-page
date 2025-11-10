@@ -2,7 +2,7 @@
 import type { TabDefinition } from '@/src/page-builder/core/editor/layout/types/tab';
 	
 // Components
-import BlocksHierarchy from '@/src/page-builder/ui/inspectors/block/hierarchy/component';
+import BlocksHierarchy from '@/src/page-builder/component/inspectors/block/hierarchy/component';
 
 export const BlockHierarchyTab: TabDefinition = {
 	id: 'block-hierarchy',

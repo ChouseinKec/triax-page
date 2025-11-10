@@ -2,7 +2,7 @@
 import type { WorkbenchDefinition } from '@/src/page-builder/core/editor/workbench/types';
 
 // Components
-import MainRender from "@/src/page-builder/ui/benches/main/component"
+import MainRender from "@/src/page-builder/component/benches/main/component"
 
 const icon = (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">

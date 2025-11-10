@@ -2,7 +2,7 @@
 import type { TabDefinition } from '@/src/page-builder/core/editor/layout/types/tab';
 
 // Component
-import BlockAttributes from '@/src/page-builder/ui/inspectors/block/attribute/component';
+import BlockAttributes from '@/src/page-builder/component/inspectors/block/attribute/component';
 
 export const BlockAttributeTab: TabDefinition = {
 	id: 'block-attribute',
