@@ -37,21 +37,22 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
     onChange,
     searchable = false,
     groupable = false,
+    clearable = true,
     prioritizeIcons = false,
 }) => {
     const [search, setSearch] = useState<string>("");
 
     // Handle option selection changes
     const handleChange = useCallback((option: string): void => {
-        // Clear selection if the same option is clicked
-        if (value === option) {
-            onChange("");
-            return;
-        }
+        // Clear selection if the same option is clicked and clearable is enabled
+        if (clearable && value === option) return onChange("");
+
+        // Prevent clearing selection if clearable is disabled and empty option is selected
+        if (!clearable && (!option || option === '')) return;
 
         // Otherwise, select the new option
         onChange(option);
-    }, [onChange, value]);
+    }, [onChange, value, clearable]);
 
     // Handle search input changes
     const handleSearch = useCallback((input: string): void => {
@@ -79,7 +80,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
     );
 
     // Render the search input element if searchable and enough options
-    const renderSearch = useCallback((): ReactElement | null => {
+    const searchElement = useMemo((): ReactElement | null => {
         if (!searchable || options.length < 10) return null;
         return (
             <div className={`${CSS.Search} Search`}>
@@ -95,7 +96,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
     );
 
     // Render the list of options, grouped or ungrouped
-    const renderOptions = useCallback(() => {
+    const optionsElement = useMemo(() => {
         // If the search result is null
         if (filteredOptions.length === 0) {
             return <div className={CSS.Empty}>No options found.</div>;
@@ -158,8 +159,8 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
 
     return (
         <>
-            {renderSearch()}
-            {renderOptions()}
+            {searchElement}
+            {optionsElement}
         </>
     )
 };

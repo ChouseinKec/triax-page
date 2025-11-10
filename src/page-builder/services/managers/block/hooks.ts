@@ -17,7 +17,7 @@ import { useSelectedDeviceID, useSelectedOrientationID, useSelectedPseudoID } fr
 // Helpers
 import { resolveStyle } from '@/src/page-builder/services/helpers/block/style';
 import { validateStyleKey, validateAttributeKey, validateBlockID } from '@/src/page-builder/services/helpers/block/validate';
-import { validateDeviceID, validateOrientationID, validatePseudoID } from '../../helpers';
+import { validateDeviceID, validateOrientationID, validatePseudoID } from '@/src/page-builder/services/helpers/page/validate';
 
 // ------------------------- INSTANCE -------------------------
 

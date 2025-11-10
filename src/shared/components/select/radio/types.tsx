@@ -12,5 +12,7 @@ export type RadioSelectProps = {
     className?: string;
     /** Optional flag to prioritize icons over text in the options. */
     prioritizeIcons?: boolean;
+    /** Allows the selection to be cleared (default: true) */
+    clearable?: boolean;
 };
 

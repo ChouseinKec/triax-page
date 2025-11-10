@@ -41,6 +41,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     forcePlaceholder = false,
     groupable = false,
     searchable = false,
+    clearable = true,
     isDisabled = false,
     title = "Toggle Dropdown",
     className = "DropdownSelect"
@@ -67,6 +68,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
                         options={options}
                         value={value}
                         onChange={handleOptionChange}
+                        clearable={clearable}
                     />
                     : <span className={CSS.Empty}>No options available</span>
             }

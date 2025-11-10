@@ -17,6 +17,8 @@ export type DropdownSelectProps = {
   searchable?: boolean;
   /** Whether the options should be displayed in groupable sections */
   groupable?: boolean;
+  /** Whether the dropdown allows clearing the selection */
+  clearable?: boolean;
   /** Optional title for the dropdown button */
   title?: string;
   /** Whether the dropdown is disabled */

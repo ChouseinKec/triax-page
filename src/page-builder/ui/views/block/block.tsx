@@ -41,7 +41,7 @@ const Block: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
     );
 
     useEffect(() => {
-        const barID = "main-selected-actions";
+        const barID = "main-block-actions";
         const blockActionTag = `${blockID}-tag`;
 
         if (!instance || !isSelected) {
@@ -60,6 +60,7 @@ const Block: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
                     key={instance.tag}
                     searchable={false}
                     groupable={false}
+                    clearable={false}
                     placeholder={getBlockIcon(instance.type)}
                     forcePlaceholder={true}
                     options={tags ? tags.map(tag => ({ name: tag, value: tag })) : []}
@@ -76,7 +77,8 @@ const Block: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
             }
         };
 
-    }, [blockID, instance, isSelected, tags]);
+    }, [blockID, instance, isSelected, tags]
+    );
 
 
     // Early return if block doesn't exist

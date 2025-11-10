@@ -13,7 +13,7 @@ import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
 import { applyStyle } from '@/src/page-builder/services/helpers/block/style';
-import { validateBlockID, validateStyleKey, validateStyleValue, validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/validate';
+import { validateBlockTag, validateBlockID, validateStyleKey, validateStyleValue, validateAttributeKey, validateAttributeValue } from '@/src/page-builder/services/helpers/block/validate';
 import { fetchBlock } from '@/src/page-builder/services/helpers/block/fetch';
 import { validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/page-builder/services/helpers/page/validate';
 
@@ -36,10 +36,11 @@ import { getBlockStyle } from './queries';
  * @example
  * setBlockTag('block-123', 'div')
  */
-export function setBlockTag(blockID: BlockID, tag: ElementTag): void {
+export function setBlockTag(blockID: BlockID, blockTag: ElementTag): void {
 	const safeData = new ValidationPipeline('[BlockCommands → setBlockTag]')
 		.validate({
 			blockID: validateBlockID(blockID),
+			blockTag: validateBlockTag(blockTag),
 		})
 		.execute();
 	if (!safeData) return;
@@ -47,7 +48,7 @@ export function setBlockTag(blockID: BlockID, tag: ElementTag): void {
 	const currentBlock = useBlockStore.getState().allBlocks[blockID];
 	if (!currentBlock) return;
 
-	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, tag } });
+	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, tag: safeData.blockTag } });
 }
 
 /**

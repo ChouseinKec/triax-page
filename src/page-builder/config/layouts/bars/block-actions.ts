@@ -6,7 +6,7 @@ import { BarDefinition } from '@/src/page-builder/core/editor/layout/types';
  * A generic container that can hold other blocks.
  */
 const MainSelectedActions: BarDefinition = {
-    id: 'main-selected-actions',
+    id: 'main-block-actions',
     position: { top: '93.5%', left: '46%' },
     size: { minWidth: '5%', maxWidth: '25%' },
     title: 'Main Selected Actions',

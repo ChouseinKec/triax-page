@@ -37,7 +37,8 @@ const RadioSelect: React.FC<RadioSelectProps> = ({
     options,
     onChange,
     className = "",
-    prioritizeIcons = true
+    prioritizeIcons = true,
+    clearable = true,
 }): ReactElement => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { isOverflowing } = useSize(containerRef);
@@ -49,6 +50,7 @@ const RadioSelect: React.FC<RadioSelectProps> = ({
             value={value}
             options={options}
             onChange={onChange}
+            clearable={clearable}
         />
     );
 

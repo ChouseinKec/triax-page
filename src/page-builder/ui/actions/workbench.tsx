@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedWorkbenchID,setSelectedWorkbenchID } from "@/src/page-builder/services/managers/page/";
+import { useSelectedWorkbenchID, setSelectedWorkbenchID } from "@/src/page-builder/services/managers/page/";
 import { useWorkbenchs } from "@/src/page-builder/services/managers/workbench";
 
 // Components
@@ -16,7 +16,7 @@ import RadioSelect from "@/src/shared/components/select/radio/component";
  */
 const WorkbenchSelect: React.FC = () => {
     const workbenchs = useWorkbenchs();
-    const selectedWorkbench = useSelectedWorkbenchID();
+    const selectedWorkbenchID = useSelectedWorkbenchID();
 
     // Prepare options for the workbench selector
     const workbenchOptions = useMemo(() => {
@@ -30,10 +30,11 @@ const WorkbenchSelect: React.FC = () => {
 
     return (
         <RadioSelect
-            value={selectedWorkbench}
+            value={selectedWorkbenchID}
             options={workbenchOptions}
             onChange={setSelectedWorkbenchID}
             prioritizeIcons
+            clearable={false}
         />
     );
 };
