@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import type { LayoutProps } from "./types";
 
 // Managers
-import { useBlockStyle,useSelectedBlockID } from "@/src/page-builder/service/managers/block/";
+import { useBlockStyle, useSelectedBlockID } from "@/src/page-builder/service/managers/block/";
 
 // Factory
 import { StyleValueRenderer } from "@/src/page-builder/component/inspectors/block/style/layout/hooks/factory";
@@ -20,7 +20,7 @@ import { StyleValueRenderer } from "@/src/page-builder/component/inspectors/bloc
 export const useDisplayLayout = (): LayoutProps => {
     const selectedBlockID = useSelectedBlockID();
     const layoutIcon = <svg aria-label="Display & Layout Icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256">            <path fill="black" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z" /> </svg>
-    
+
     // Always call hooks in the same order
     const displayValue = useBlockStyle(selectedBlockID || "", "display");
     const flexWrapValue = useBlockStyle(selectedBlockID || "", "flex-wrap");

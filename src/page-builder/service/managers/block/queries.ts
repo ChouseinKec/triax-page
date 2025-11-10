@@ -5,6 +5,7 @@ import { useBlockStore } from '@/src/page-builder/state/stores/block';
 import type { BlockDefinition, BlockID, BlockType, BlockContent, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/page-builder/core/block/block/types';
 import type { ElementTag } from '@/src/page-builder/core/block/element/types';
 import type { StyleKey } from '@/src/page-builder/core/block/style/types';
+import type { AttributeKey } from '@/src/page-builder/core/block/attribute/types';
 import type { ReactNode } from 'react';
 
 // Helpers
@@ -12,7 +13,7 @@ import { fetchBlock, fetchRegisteredBlock, fetchRegisteredBlocks, fetchBlockAttr
 import { canBlockMoveInto } from '@/src/page-builder/service/helpers/block/hierarchy';
 import { renderBlockStyles, renderBlockAttributes } from '@/src/page-builder/service/helpers/block/render';
 import { resolveStyle } from '@/src/page-builder/service/helpers/block/style';
-import { validateStyleKey, validateBlockTag, validateBlockType, validateBlockID } from '@/src/page-builder/service/helpers/block/validate';
+import { validateAttributeKey, validateStyleKey, validateBlockTag, validateBlockType, validateBlockID } from '@/src/page-builder/service/helpers/block/validate';
 
 // Managers
 import { getSelectedDeviceID, getSelectedOrientationID, getSelectedPseudoID } from '@/src/page-builder/service/managers/page';
@@ -211,6 +212,13 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 	return safeParams.blockDefinition.allowedContent.length > 0;
 }
 
+/**
+ * Checks if a block type can have styles based on its allowedStyles property.
+ * @param blockID - The block ID to check
+ * @returns True if the block type can have styles, false otherwise
+ * @example
+ * const canHaveStyles = canBlockHaveStyles('block-123'); → true
+ */
 export function canBlockHaveStyles(blockID: BlockID): boolean {
 	const blockStore = useBlockStore.getState();
 	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyles]')
@@ -230,6 +238,43 @@ export function canBlockHaveStyles(blockID: BlockID): boolean {
 	return safeParams.blockDefinition.allowedStyles.length > 0;
 }
 
+/**
+ * Checks if a block type can have a specific style based on its allowedStyles property.
+ * @param blockID - The block ID to check
+ * @param styleKey - The style key to check
+ * @returns True if the block type can have the specific style, false otherwise
+ * @example
+ * const canHaveStyle = canBlockHaveStyle('block-123', 'color'); → true
+ */
+export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean {
+	const blockStore = useBlockStore.getState();
+	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyle]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			styleKey: validateStyleKey(styleKey),
+		})
+		.fetch((data) => ({
+			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+		}))
+		.execute();
+	if (!safeParams) return false;
+
+	// If allowedStyles is undefined or null, the block can have any styles
+	if (safeParams.blockDefinition.allowedStyles == null) return true;
+
+	return safeParams.blockDefinition.allowedStyles.includes(safeParams.styleKey);
+}
+
+/**
+ * Checks if a block type can have attributes based on its allowedAttributes property.
+ * @param blockID - The block ID to check
+ * @returns True if the block type can have attributes, false otherwise
+ * @example
+ * const canHaveAttributes = canBlockHaveAttributes('block-123'); → true
+ */
 export function canBlockHaveAttributes(blockID: BlockID): boolean {
 	const blockStore = useBlockStore.getState();
 	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttributes]')
@@ -247,6 +292,36 @@ export function canBlockHaveAttributes(blockID: BlockID): boolean {
 	if (safeParams.blockDefinition.allowedAttributes == null) return true;
 
 	return safeParams.blockDefinition.allowedAttributes.length > 0;
+}
+
+/**
+ * Checks if a block type can have a specific attribute based on its allowedAttributes property.
+ * @param blockID - The block ID to check
+ * @param attributeKey - The attribute key to check
+ * @returns True if the block type can have the specific attribute, false otherwise
+ * @example
+ * const canHaveAttribute = canBlockHaveAttribute('block-123', 'fontSize'); → true
+*/
+export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeKey): boolean {
+	const blockStore = useBlockStore.getState();
+	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttribute]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			attributeKey: validateAttributeKey(attributeKey),
+		})
+		.fetch((data) => ({
+			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+		}))
+		.execute();
+	if (!safeParams) return false;
+
+	// If allowedAttributes is undefined or null, the block can have any attributes
+	if (safeParams.blockDefinition.allowedAttributes == null) return true;
+
+	return safeParams.blockDefinition.allowedAttributes.includes(safeParams.attributeKey);
 }
 
 /**
@@ -342,6 +417,13 @@ export function getBlockTags(blockType: BlockType): ElementTag[] | undefined {
 	return safeParams.blockDefinition.tags;
 }
 
+/**
+ * Gets the allowed styles for a specific block type.
+ * @param blockType - The block type to get allowed styles for
+ * @returns Array of allowed styles for the block type, or undefined if block type not found
+ * @example
+ * const styles = getBlockAllowedStyles('text'); → ['color', 'font-size', 'margin']
+ */
 export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedStyles]')
 		.validate({ blockType: validateBlockType(blockType) })
@@ -354,6 +436,13 @@ export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles 
 	return safeParams.blockDefinition.allowedStyles;
 }
 
+/**
+ * Gets the allowed attributes for a specific block type.
+ * @param blockType - The block type to get allowed attributes for
+ * @returns Array of allowed attributes for the block type, or undefined if block type not found
+ * @example
+ * const attributes = getBlockAllowedAttributes('text'); → ['id', 'class', 'style']
+ */
 export function getBlockAllowedAttributes(blockType: BlockType): BlockAllowedAttributes | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedAttributes]')
 		.validate({ blockType: validateBlockType(blockType) })
