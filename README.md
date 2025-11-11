@@ -81,7 +81,7 @@ Triax is a modular, registry-based page builder for React that provides a comple
 Triax follows a **layered, modular architecture** designed for maintainability and extensibility:
 
 ```
-src/page-builder/
+src/page/
 ├── config/          # Configuration & definitions
 │   ├── blocks/      # Core block definitions (container, text)
 │   ├── layouts/     # Panel, bar, and tab definitions
@@ -106,7 +106,7 @@ src/page-builder/
 │
 └── ui/              # React components
     ├── editors/     # Editor components (page, viewport, workbench, layout)
-    ├── inspectors/  # Block inspector and property editors
+    ├──   # Block inspector and property editors
     ├── blocks/      # Block render components
     ├── views/       # View components (hierarchy, library)
     ├── actions/     # Action components

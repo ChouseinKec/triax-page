@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy } from "react";
 
 // Initialization
-import { initCoordinator } from "@/src/page-builder/core/init";
+import { initCoordinator } from "@/src/page/core/init";
 
 // Styles
 import CSS from "./page.module.scss";
@@ -15,7 +15,7 @@ import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 import { devLog } from "@/src/shared/utilities/dev";
 
 // Lazy load PageEditor to prevent import cascade
-const PageEditor = lazy(() => import("@/src/page-builder/component/editors/page/component"));
+const PageEditor = lazy(() => import("@/src/page/component/page/component"));
 
 export default function Home() {
   const [isReady, setIsReady] = useState(false);

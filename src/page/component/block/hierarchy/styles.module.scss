@@ -1,0 +1,175 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.BlocksHierarchy {
+	display: flex;
+	flex-direction: column;
+
+	overflow: auto;
+	outline: none !important;
+	height: 100%;
+}
+
+.Empty {
+	@include inputMixins.components--flex-vertical($align: center);
+	height: 100%;
+	color: var(--color-white);
+	font-size: var(--font-size-md);
+	text-align: center;
+}
+
+.Entry {
+	display: flex;
+	flex-direction: column;
+
+	// When this entry is being dragged
+	&[data-is-dragged='true'] {
+		opacity: 0.15;
+
+		// Disable drop zones during drag to prevent self-dropping
+		.DropZone {
+			pointer-events: none;
+		}
+
+		// Hide tree line during drag for cleaner visual feedback
+		.Content::after {
+			background-color: transparent !important;
+		}
+
+		// Highlight the dragged entry with theme color
+		.RevealButton {
+			border: none !important;
+			box-shadow: none !important;
+			color: var(--color-white) !important;
+			background-color: var(--theme-color-secondary) !important;
+
+			svg,
+			svg * {
+				fill: var(--color-white) !important;
+			}
+		}
+	}
+
+	// When this entry can have children but currently has no children and it's being drag-over, show a bottom border to indicate drop target
+	// This provides a visual cue that the entry can accept children
+	&[data-drag-over='over'][data-children-allowed='true'][data-has-children='false'] {
+		.Content {
+			&::after {
+				content: '';
+				width: 90%;
+				height: 1px;
+				display: block;
+				background: var(--theme-color-secondary);
+			}
+		}
+	}
+
+	// When a direct child entry is being drag-over, highlight the tree line to show drop target
+	.Content:has(> .Entry[data-drag-over='before'])::after,
+	.Content:has(> .Entry[data-drag-over='after'])::after {
+		background-color: var(--theme-color-secondary) !important;
+		opacity: 0.8;
+	}
+
+	// Show after drop zone only for the last child entry
+	.Entry:last-child {
+		> .DropZone[data-drag-position='after'] {
+			display: flex;
+		}
+	}
+}
+
+.Context {
+	background: var(--theme-color-primary-tint);
+}
+
+.Dropdown {
+	width: 100%;
+	background: var(--theme-color-primary-tint);
+
+	:global(.FloatReveal) {
+		background: var(--theme-color-primary-tint);
+	}
+}
+
+.DropdownIcon {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: var(--size-xl);
+}
+
+.Action {
+	width: 100%;
+	@include inputMixins.components--button($background: none, $justify: flex-start, $gap: var(--size-xl));
+}
+
+.Content {
+	display: flex;
+	flex-direction: column;
+	padding-left: var(--size-xl);
+	position: relative;
+
+	// Tree line visualization connecting parent to children
+	&::after {
+		content: '';
+		display: block;
+		width: 1px;
+		height: 100%;
+		position: absolute;
+		left: 10px;
+		top: 0%;
+		background-color: var(--theme-color-primary-tint);
+	}
+}
+
+.Reveal {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+.RevealButton {
+	@include inputMixins.components--button($background: none, $justify: space-between);
+
+	span {
+		width: auto;
+		display: flex;
+		align-items: center;
+		gap: var(--size-sm);
+		overflow: hidden;
+	}
+}
+
+.RevealArrow {
+	position: absolute;
+	top: 0;
+	right: 0;
+	@include inputMixins.components--button($background: none);
+	@include inputMixins.icon-arrow();
+}
+
+.DropZone {
+	// margin: 1px 0;
+	height: 7px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	// Show visual indicator line when hovering drop zone
+	&[data-drag-over='true'] {
+		&::after {
+			content: '';
+			width: 100%;
+			height: 1px;
+			display: block;
+			background: var(--theme-color-secondary);
+		}
+	}
+
+	// Hide after drop zones by default (only shown for last child)
+	&[data-drag-position='after'] {
+		display: none;
+	}
+}
