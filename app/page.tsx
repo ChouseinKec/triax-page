@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy } from "react";
 
 // Initialization
-import { initCoordinator } from "@/src/page/core/init";
+import { init } from "@/src/core/init";
 
 // Styles
 import CSS from "./page.module.scss";
@@ -15,18 +15,16 @@ import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 import { devLog } from "@/src/shared/utilities/dev";
 
 // Lazy load PageEditor to prevent import cascade
-const PageEditor = lazy(() => import("@/src/page/component/page/component"));
+const PageEditor = lazy(() => import("@/src/core/layout/page/component"));
 
 export default function Home() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    initCoordinator.initialize()
+    init.run()
       .then((result) => {
         if (result.valid) {
-          setTimeout(() => {
-            setIsReady(true);
-          }, 3000);
+          setIsReady(true);
         } else {
           devLog.error('Initialization error:', result.message || 'Unknown initialization error');
         }

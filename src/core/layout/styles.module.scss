@@ -1,0 +1,34 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+$offset: 40px;
+
+.LayoutEditor {
+	width: 100%;
+	height: 100%;
+	padding-top: $offset;
+}
+
+.Bar {
+	width: 35px;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	z-index: 1;
+
+	@include inputMixins.components--container($radius: 0, $background: var(--theme-color-primary), $shadow: none);
+
+	border-top: 1px solid var(--theme-color-primary-tint);
+	padding-top: var(--size-lg);
+
+
+	
+	// :global(.LayoutEditorActionBar) {
+	
+	// }
+}

@@ -4,7 +4,7 @@
 	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);
 
 	&[data-direction='vertical'] {
-		@include inputMixins.components--flex-vertical($gap: var(--size-lg), $align: center, $justify: flex-start);
+		@include inputMixins.components--flex-vertical($gap: var(--size-sm), $align: center, $justify: flex-start);
 	}
 
 	button {

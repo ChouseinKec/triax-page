@@ -17,7 +17,7 @@ Triax is a modular, registry-based page builder for React that provides a comple
 ## Key Features
 
 ### Registry-Based Architecture
-- **Centralized Management:** All components (blocks, layouts, viewports, workbenches) registered in type-safe registries
+- **Centralized Management:** All components (blocks, layouts, viewports, workbenches) registered in type-safe REGISTRY_DEFINITIONS
 - **Plugin-Ready:** Extensible registry system allows plugins to register custom components
 - **Validation Pipeline:** Built-in validation ensures data integrity across all operations
 - **Lazy Initialization:** Sequential initialization process with dependency management
@@ -81,7 +81,7 @@ Triax is a modular, registry-based page builder for React that provides a comple
 Triax follows a **layered, modular architecture** designed for maintainability and extensibility:
 
 ```
-src/page/
+src/core/
 ├── config/          # Configuration & definitions
 │   ├── blocks/      # Core block definitions (container, text)
 │   ├── layouts/     # Panel, bar, and tab definitions
@@ -101,7 +101,7 @@ src/page/
 │   └── helpers/     # Utility functions (fetch, validate, block ops)
 │
 ├── state/           # State management
-│   ├── registries/  # Component registries (singleton pattern)
+│   ├── REGISTRY_DEFINITIONS/  # Component REGISTRY_DEFINITIONS (singleton pattern)
 │   └── stores/      # Zustand stores (block, layout, page)
 │
 └── ui/              # React components
