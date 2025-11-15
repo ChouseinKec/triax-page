@@ -1,0 +1,29 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.BlockStyleTabRender {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: column;
+
+	position: relative;
+	color: var(--color-white);
+}
+
+.Empty {
+	width: 100%;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	font-size: var(--font-size-md);
+	font-family: 'Geist';
+}
+
+.Layout {
+	height: 93%;
+}

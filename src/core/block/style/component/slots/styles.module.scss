@@ -1,0 +1,23 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.BlockStyleSlots {
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	gap: var(--size-md);
+
+	overflow: hidden;
+	position: relative;
+
+	> :global(.BlockStylesNextSlot) {
+		flex: unset;
+		:global(.Toggle) {
+			@include inputMixins.components--button-dropdown($isRound: true);
+		}
+	}
+
+	> * {
+		flex: 1;
+	}
+}

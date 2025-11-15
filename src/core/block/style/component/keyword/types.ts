@@ -1,0 +1,11 @@
+import type { OptionDefinition } from '@/src/shared/components/types/option';
+
+/** Props for keyword style value editor components. */
+export type KeywordValueProps = {
+	/** Current keyword value */
+	value: string;
+	/** Available keyword options */
+	options: OptionDefinition[];
+	/** Callback when the value changes */
+	onChange: (value: string) => void;
+};

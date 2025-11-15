@@ -1,0 +1,18 @@
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.FunctionValue {
+	@include inputMixins.components--flex-horizontal($align: center);
+
+	// Function Change Dropdown
+	> :global(.DropdownReveal) {
+		flex: 0 0 auto;
+		> :global(.Toggle) {
+			@include inputMixins.components--button-dropdown($isRound: true);
+		}
+	}
+}
+
+.Separator {
+	color: var(--color-gray);
+	font-size: var(--font-size-2xl);
+}
