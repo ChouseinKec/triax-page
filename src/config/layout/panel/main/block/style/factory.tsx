@@ -10,7 +10,7 @@ import { STYLE_DEFINITIONS } from '@/src/core/block/style/core/constants';
 // Components
 import BlockStyleValue from '@/src/core/block/style/component';
 import Property from '@/src/shared/components/layout/property/component';
-import PropertyActions from '@/src/config/layout/panel/main/tabs/block/style/actions';
+import PropertyActions from '@/src/config/layout/panel/main/block/style/actions';
 
 // Types
 import type { StyleKey } from '@/src/core/block/style/core/types';

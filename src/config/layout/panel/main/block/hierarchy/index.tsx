@@ -2,7 +2,7 @@
 import type { PanelTabDefinition } from '@/src/core/layout/panel/types';
 	
 // Components
-import BlocksHierarchyRender from '@/src/config/layout/panel/main/tabs/block/hierarchy/render';
+import BlocksHierarchyRender from '@/src/config/layout/panel/main/block/hierarchy/render';
 
 export const BlockHierarchyTab: PanelTabDefinition = {
 	id: 'block-hierarchy',

@@ -8,7 +8,7 @@ import type { BlockAttributesValueProps } from "./types";
 import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants";
 
 // Managers
-import { useBlockAttribute,setBlockAttribute } from "@/src/core/block/instance/manager";
+import { useBlockAttribute, setBlockAttribute } from "@/src/core/block/instance/manager";
 
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";
@@ -22,14 +22,14 @@ import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 import RadioSelect from "@/src/shared/components/select/radio/component";
 
 /**
- * BlockAttributesValue Component
+ * BlockAttributeValue Component
  * Main entry for rendering a HTML property value editor.
  *
  * @param blockID - The ID of the block
  * @param propertyName - The HTML property key
  * @returns ReactElement - The rendered value editor UI for the property.
  */
-const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, attribute }) => {
+const BlockAttributeValue: React.FC<BlockAttributesValueProps> = ({ blockID, attribute }) => {
     const value = useBlockAttribute(blockID, attribute) || "";
 
     const handleChange = useCallback((newValue: string) => {
@@ -38,11 +38,11 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
     );
 
     const definition = ATTRIBUTE_DEFINITIONS[attribute];
-    if (!definition) return devRender.error(`[BlockAttributesValue] No definition found for ${attribute}`, { definition });
+    if (!definition) return devRender.error(`[BlockAttributeValue] No definition found for ${attribute}`, { definition });
 
     const renderValue = () => {
         const { type } = definition.syntax;
-        if (!type) return devRender.error(`[BlockAttributesValue] No type defined for ${attribute}`, { definition });
+        if (!type) return devRender.error(`[BlockAttributeValue] No type defined for ${attribute}`, { definition });
 
         switch (type) {
             case "string":
@@ -61,6 +61,6 @@ const BlockAttributesValue: React.FC<BlockAttributesValueProps> = ({ blockID, at
     return renderValue();
 };
 
-BlockAttributesValue.displayName = "BlockAttributesValue";
-export default memo(BlockAttributesValue);
+BlockAttributeValue.displayName = "BlockAttributeValue";
+export default memo(BlockAttributeValue);
 

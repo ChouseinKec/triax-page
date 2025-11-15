@@ -2,7 +2,7 @@
 import type { PanelTabDefinition } from '@/src/core/layout/panel/types';
 
 // Component
-import BlockAttributes from '@/src/core/block/attribute/component/component';
+import BlockAttributeTabRender from '@/src/config/layout/panel/main/block/attribute/render';
 
 export const BlockAttributeTab: PanelTabDefinition = {
 	id: 'block-attribute',
@@ -14,7 +14,7 @@ export const BlockAttributeTab: PanelTabDefinition = {
 		</svg>
 	),
 	order: 20,
-	component: BlockAttributes,
+	component: BlockAttributeTabRender,
 };
 
 

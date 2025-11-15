@@ -19,6 +19,8 @@
 }
 
 .Label {
+	width: 100px;
+
 	> span {
 		text-overflow: ellipsis;
 		white-space: nowrap;
@@ -35,6 +37,9 @@
 
 .Value {
 	width: 100%;
+	> * {
+		width: 100%;
+	}
 }
 
 .Title {
