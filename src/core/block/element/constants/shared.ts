@@ -39,6 +39,162 @@ export const GENERAL_ARIA_ATTRIBUTES: AttributeKey[] = [
 // Attributes specific to text-bearing inline elements
 export const TEXT_ONLY_ATTRIBUTES: AttributeKey[] = ['text'];
 
+// ============================================
+// ATTRIBUTE PRESETS (element-specific)
+// ============================================
+
+// Links and interactive controls
+export const LINK_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'href', 'target', 'rel', 'download', 'referrerpolicy', 'type'
+];
+
+export const BUTTON_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'type','disabled','name','value','form','formaction','formmethod'
+];
+
+export const INPUT_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'type','name','value','placeholder','disabled','readonly','required','min','max','step','pattern','accept','checked',
+	'maxlength','minlength','autocomplete','autofocus','list','multiple','size','form'
+];
+
+export const SELECT_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'name','required','multiple','disabled','size','form','autocomplete','autofocus'
+];
+
+export const TEXTAREA_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'name','placeholder','required','disabled','readonly','maxlength','minlength','rows','cols','wrap','form','autocomplete','autofocus'
+];
+
+export const LABEL_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'for','form'
+];
+
+export const DETAILS_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'open'
+];
+
+export const DIALOG_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'open'
+];
+
+// Media and embedded
+export const IMAGE_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'alt','src','srcset','sizes','width','height','loading','decoding','crossorigin','referrerpolicy','fetchpriority'
+];
+
+export const IFRAME_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'src','name','referrerpolicy','loading','width','height'
+];
+
+export const CANVAS_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'width','height'
+];
+
+export const AUDIO_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'src','preload','autoplay','loop','muted','controls','crossorigin'
+];
+
+export const VIDEO_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'src','preload','autoplay','loop','muted','controls','poster','width','height','crossorigin'
+];
+
+export const SOURCE_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'src','type','srcset','sizes','media'
+];
+
+export const TRACK_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'kind','src','srclang','label','default'
+];
+
+export const OBJECT_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'type','name','form','width','height'
+];
+
+export const EMBED_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'src','type','width','height'
+];
+
+export const MAP_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'name'
+];
+
+export const AREA_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'alt','href','target','download','rel','referrerpolicy'
+];
+
+// Flow/structure specifics
+export const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'cite'
+];
+
+export const OL_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	'reversed','start','type'
+];
+
+export const LI_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	...TEXT_ONLY_ATTRIBUTES,
+	'value'
+];
+
+// Table specifics
+export const TH_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	...TEXT_ONLY_ATTRIBUTES,
+	'scope','colspan','rowspan','headers'
+];
+
+export const TD_ATTRIBUTES: AttributeKey[] = [
+	...BASE_GLOBAL_ATTRIBUTES,
+	...GENERAL_ARIA_ATTRIBUTES,
+	...TEXT_ONLY_ATTRIBUTES,
+	'colspan','rowspan','headers'
+];
+
 // Phrasing content: inline/text-level elements
 export const PHRASING_CONTENT: ElementTag[] = [
 	'span','b','strong','i','em','u','small','mark','sub','sup','code','abbr','s','del','ins','q','cite','dfn',

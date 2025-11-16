@@ -1,8 +1,13 @@
 import type { ElementRecord } from '@/src/core/block/element/types';
+import type { AttributeKey } from '@/src/core/block/attribute/types';
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, LIST_ITEM_ONLY, DESCRIPTION_LIST_CONTENT, FLOW_NO_LI, PHRASING_CONTENT, FLOW_CONTENT } from './shared';
 
-const LIST_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
-const LIST_TEXT_ATTRIBUTES = [...LIST_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
+const LIST_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
+const LIST_TEXT_ATTRIBUTES: AttributeKey[] = [...LIST_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
+
+const OL_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'reversed', 'start', 'type'];
+
+const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'value'];
 
 export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	ul: {
@@ -11,12 +16,12 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Unordered (bulleted) list. Contains list items (li).',
 	},
 	ol: {
-		attributes: LIST_ATTRIBUTES,
+		attributes: OL_ATTRIBUTES,
 		allowedContent: LIST_ITEM_ONLY,
 		description: 'Ordered (numbered) list. Contains list items (li).',
 	},
 	li: {
-		attributes: LIST_TEXT_ATTRIBUTES,
+		attributes: LI_ATTRIBUTES,
 		allowedContent: FLOW_NO_LI,
 		description: 'List item. May contain flow content such as paragraphs, nested lists, or other blocks.',
 	},
