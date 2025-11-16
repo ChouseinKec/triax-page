@@ -3,14 +3,14 @@ import type { BlockStyles, BlockID } from '@/src/core/block/instance/types';
 import type { DeviceValue, DeviceName } from '@/src/core/layout/page/types';
 import type { OrientationValue, OrientationName } from '@/src/core/layout/page/types';
 import type { PseudoValue, PseudoName } from '@/src/core/layout/page/types';
-import type { StyleKey } from '@/src/core/block/style/core/types/';
+import type { StyleKey } from '@/src/core/block/style/types/';
 
 // Registry
 import { getRegisteredPseudos } from '@/src/core/layout/page/registry';
 
 // Constants
 import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
-import { STYLE_SHORTHAND_DEFINITIONS } from '@/src/core/block/style/core/constants';
+import { STYLE_SHORTHAND_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { toKebabCase } from '@/src/shared/utilities/string';

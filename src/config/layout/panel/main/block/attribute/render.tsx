@@ -12,6 +12,7 @@ import TabGroup from "@/src/shared/components/group/tab/component";
 
 // Renderers
 import { renderGlobalTab } from "./global";
+import { renderAccessibilityTab } from "./accessibility";
 
 
 // Tab icons object
@@ -36,6 +37,8 @@ const BlockAttributeTabRender: React.FC = () => {
     const tabItems = selectedBlockID
         ? [
             { label: TAB_ICONS.global, title: 'Global', content: renderGlobalTab(selectedBlockID) },
+            { label: TAB_ICONS.specific, title: 'Accessibility', content: renderAccessibilityTab(selectedBlockID) },
+
         ]
         : [];
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 // Types
 import type { BlockID } from "@/src/core/block/instance/types";
-import type { StyleKey } from "@/src/core/block/style/core/types";
+import type { StyleKey } from "@/src/core/block/style/types";
 import type { Side } from "@/src/shared/components/select/position/types";
 
 // Components
@@ -13,7 +13,7 @@ import Property from "@/src/shared/components/layout/property/component";
 import { renderStyleRow } from "./factory";
 
 // Utilities
-import { generateStyleKey } from "@/src/core/block/style/core/utilities";
+import { generateStyleKey } from "@/src/core/block/style/utilities";
 
 // Managers
 import { useBlockStyle } from "@/src/core/block/instance/manager";

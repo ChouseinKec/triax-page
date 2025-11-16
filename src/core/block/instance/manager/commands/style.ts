@@ -3,7 +3,7 @@ import { useBlockStore } from '@/src/core/block/store';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 
 // Utilities
 import { ValidationPipeline } from '@/src/shared/utilities/validation';

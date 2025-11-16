@@ -8,7 +8,7 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 
 // Hooks
 import { useSelectedDeviceID, useSelectedOrientationID, useSelectedPseudoID } from '@/src/core/layout/page/manager';

@@ -6,11 +6,11 @@ import { memo } from "react";
 import type { BlockStyleValue } from "./types";
 
 // Constants
-import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/core/constants";
+import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
-import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/core/utilities";
+import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/utilities";
 import { mergeArrays } from "@/src/shared/utilities/array";
 
 // Components

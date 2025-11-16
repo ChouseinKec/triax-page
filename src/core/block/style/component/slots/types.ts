@@ -1,4 +1,4 @@
-import type { StyleOptionDefinition } from '@/src/core/block/style/core/types';
+import type { StyleOptionDefinition } from '@/src/core/block/style/types';
 
 /** Props for multiple slot style value editor components */
 export type BlockStyleSlotsProps = {

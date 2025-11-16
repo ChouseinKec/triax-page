@@ -1,9 +1,9 @@
 // Utilities
-import { getTokenCanonical, extractDimensionNumber, extractDimensionUnit, getDimensionType } from '@/src/core/block/style/core/utilities';
+import { getTokenCanonical, extractDimensionNumber, extractDimensionUnit, getDimensionType } from '@/src/core/block/style/utilities';
 import { isColor } from '@/src/shared/utilities/color';
 
 // Types
-import type { TokenTypes, StyleOptionDefinition } from '@/src/core/block/style/core/types';
+import type { TokenTypes, StyleOptionDefinition } from '@/src/core/block/style/types';
 
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').

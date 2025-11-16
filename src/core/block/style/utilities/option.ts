@@ -1,12 +1,12 @@
 // Constants
-import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/core/block/style/core/constants';
+import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/core/block/style/constants';
 
 // Utilities
-import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/core/utilities';
+import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/utilities';
 
 // Types
-import type { StyleOptionDefinition, OptionGenericDefinition, OptionKeywordDefinition, OptionFunctionDefinition, OptionDimensionDefinition } from '@/src/core/block/style/core/types';
-import type { UnitTypes } from '@/src/core/block/style/core/types';
+import type { StyleOptionDefinition, OptionGenericDefinition, OptionKeywordDefinition, OptionFunctionDefinition, OptionDimensionDefinition } from '@/src/core/block/style/types';
+import type { UnitTypes } from '@/src/core/block/style/types';
 
 /**
  * Creates a OptionFunctionDefinition object for a given function token.

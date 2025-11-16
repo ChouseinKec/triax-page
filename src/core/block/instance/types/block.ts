@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
 // Types
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ElementTag } from '@/src/core/block/element/types';
 

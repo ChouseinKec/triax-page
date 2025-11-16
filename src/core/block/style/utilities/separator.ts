@@ -1,8 +1,8 @@
 // Constants
-import { DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/core/constants';
+import { DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/constants';
 
 // Types
-import type { StyleValueSeparator } from '@/src/core/block/style/core/types';
+import type { StyleValueSeparator } from '@/src/core/block/style/types';
 
 /**
  * Extracts separators from a single variation string.

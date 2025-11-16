@@ -12,7 +12,7 @@ import GenericInput from "@/src/shared/components/input/generic/component";
 import SelectDropdown from "@/src/shared/components/select/dropdown/component";
 
 // Utilities
-import { extractDimensionUnit, extractDimensionDefaults, extractDimensionRange, extractDimensionValues } from "@/src/core/block/style/core/utilities";
+import { extractDimensionUnit, extractDimensionDefaults, extractDimensionRange, extractDimensionValues } from "@/src/core/block/style/utilities";
 import { devLog } from "@/src/shared/utilities/dev";
 
 /**

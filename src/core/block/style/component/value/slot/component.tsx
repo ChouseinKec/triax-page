@@ -13,7 +13,7 @@ import Color from "@/src/shared/components/input/color/component";
 import type { BlockStylesSlotProps } from "./types";
 
 // Utilities
-import { getValueType, getValueDefaultType } from "@/src/core/block/style/core/utilities";
+import { getValueType, getValueDefaultType } from "@/src/core/block/style/utilities";
 
 // CSS
 import CSS from "./styles.module.scss";

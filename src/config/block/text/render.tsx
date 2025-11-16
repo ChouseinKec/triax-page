@@ -9,7 +9,7 @@ import { getBlockContent, setBlockContent } from '@/src/core/block/instance/mana
 
 const BlockTextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
-    const BlockTag = instance.tag;
+    const BlockTag = instance.tag as React.ElementType;
     const isSelected = useIsBlockSelected(blockID);
 
     // Get the current text value from content

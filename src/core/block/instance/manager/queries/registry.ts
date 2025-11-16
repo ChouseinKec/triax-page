@@ -4,7 +4,7 @@ import { useBlockStore } from '@/src/core/block/store';
 // Types
 import type { BlockDefinition, BlockID, BlockType, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/core/block/instance/types';
 import type { ElementTag } from '@/src/core/block/element/types';
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ReactNode } from 'react';
 

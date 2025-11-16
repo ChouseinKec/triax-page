@@ -12,7 +12,7 @@ import SelectDropdown from "@/src/shared/components/select/dropdown/component";
 import { NumberValueProps } from "./types";
 
 // Constants
-import { STYLE_ICON_DEFINITIONS } from "@/src/core/block/style/core/constants/icon";
+import { STYLE_ICON_DEFINITIONS } from "@/src/core/block/style/constants/icon";
 
 
 /**

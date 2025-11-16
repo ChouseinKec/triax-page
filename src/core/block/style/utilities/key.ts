@@ -1,5 +1,5 @@
 // Types
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 import type { Side, Corner } from '@/src/shared/components/select/position/types';
 
 /**

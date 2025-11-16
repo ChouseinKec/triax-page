@@ -1,9 +1,9 @@
 // Constants
-import { UNIT_DEFINITIONS } from '@/src/core/block/style/core/constants';
+import { UNIT_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Types
-import type { UnitTypes } from '@/src/core/block/style/core/types';
-import type { UnitKeys } from '@/src/core/block/style/core/types';
+import type { UnitTypes } from '@/src/core/block/style/types';
+import type { UnitKeys } from '@/src/core/block/style/types';
 
 /**
  * Extracts the numeric value from a CSS dimension string (e.g., '10px', '25%', '0.1rem').

@@ -9,7 +9,7 @@ import GroupLayout from "@/src/shared/components/layout/group/component";
 import { renderAttributeRow } from "./factory";
 
 // Constants
-import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants";
+import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants/";
 
 // Utilities
 import { toKebabCase } from "@/src/shared/utilities/string";

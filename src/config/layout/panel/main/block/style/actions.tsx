@@ -2,7 +2,7 @@
 import React, { memo } from "react";
 
 // Types
-import type { StyleKey } from "@/src/core/block/style/core/types";
+import type { StyleKey } from "@/src/core/block/style/types";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Commands

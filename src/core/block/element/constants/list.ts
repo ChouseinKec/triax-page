@@ -1,0 +1,38 @@
+import type { ElementRecord } from '@/src/core/block/element/types';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, LIST_ITEM_ONLY, DESCRIPTION_LIST_CONTENT, FLOW_NO_LI, PHRASING_CONTENT, FLOW_CONTENT } from './shared';
+
+const LIST_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
+const LIST_TEXT_ATTRIBUTES = [...LIST_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
+
+export const LIST_ELEMENTS: Partial<ElementRecord> = {
+	ul: {
+		attributes: LIST_ATTRIBUTES,
+		allowedContent: LIST_ITEM_ONLY,
+		description: 'Unordered (bulleted) list. Contains list items (li).',
+	},
+	ol: {
+		attributes: LIST_ATTRIBUTES,
+		allowedContent: LIST_ITEM_ONLY,
+		description: 'Ordered (numbered) list. Contains list items (li).',
+	},
+	li: {
+		attributes: LIST_TEXT_ATTRIBUTES,
+		allowedContent: FLOW_NO_LI,
+		description: 'List item. May contain flow content such as paragraphs, nested lists, or other blocks.',
+	},
+	dl: {
+		attributes: LIST_ATTRIBUTES,
+		allowedContent: DESCRIPTION_LIST_CONTENT,
+		description: 'Description list (also called definition list). Contains terms (dt) and descriptions (dd).',
+	},
+	dt: {
+		attributes: LIST_TEXT_ATTRIBUTES,
+		allowedContent: PHRASING_CONTENT,
+		description: 'Description term (the item being described).',
+	},
+	dd: {
+		attributes: LIST_TEXT_ATTRIBUTES,
+		allowedContent: FLOW_CONTENT,
+		description: 'Description details for a term.',
+	},
+};

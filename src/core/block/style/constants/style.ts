@@ -1,14 +1,20 @@
 // Types
-import type { StyleDefinition, StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleDefinition, StyleKey } from '@/src/core/block/style/types';
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from './value';
+import { BACKGROUND_PROPERTIES } from './properties/background';
+import { BORDER_PROPERTIES } from './properties/border';
+import { DISPLAY_PROPERTIES } from './properties/display';
+import { EFFECT_PROPERTIES } from './properties/effect';
+import { FONT_PROPERTIES } from './properties/font';
+import { SIZE_PROPERTIES } from './properties/size';
+import { SHORTHANDS } from './properties/shorthands';
 
 // Utilities
 import { getColumnSets } from '@/src/shared/utilities/array';
 import { splitAdvanced } from '@/src/shared/utilities/string';
-import { getTokenCanonical, expandTokens, parseSyntax, extractSeparators } from '@/src/core/block/style/core/utilities';
-import JSON from './style.json';
+import { getTokenCanonical, expandTokens, parseSyntax, extractSeparators } from '@/src/core/block/style/utilities';
 
 /**
  * Helper function to create a StyleDefinition object.
@@ -73,8 +79,17 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
  * A lookup table of all supported CSS properties and their metadata.
  * Each entry is a StyleDefinition object describing the property's name, syntax, description, and category.
  */
-export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entries(JSON.properties).reduce((acc, [key, data]) => {
-	acc[key as StyleKey] = createProperty(key as StyleKey, data.syntax, data.description);
+const MERGED = {
+	...BACKGROUND_PROPERTIES,
+	...BORDER_PROPERTIES,
+	...DISPLAY_PROPERTIES,
+	...EFFECT_PROPERTIES,
+	...FONT_PROPERTIES,
+	...SIZE_PROPERTIES,
+};
+
+export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entries(MERGED).reduce((acc, [key, data]) => {
+	acc[key as StyleKey] = createProperty(key as StyleKey, (data as any).syntax, (data as any).description);
 	return acc;
 }, {} as Record<StyleKey, StyleDefinition>);
 
@@ -82,4 +97,4 @@ export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entri
  * A lookup table of CSS shorthand properties and their expanded definitions.
  * Each entry maps a shorthand property to an array of its longhand properties.
  */
-export const STYLE_SHORTHAND_DEFINITIONS: Partial<Record<StyleKey, StyleKey[]>> = JSON.shorthands as Partial<Record<StyleKey, StyleKey[]>>;
+export const STYLE_SHORTHAND_DEFINITIONS: Partial<Record<StyleKey, StyleKey[]>> = SHORTHANDS;

@@ -12,7 +12,7 @@ import Property from "@/src/shared/components/layout/property/component";
 import { renderStyleRow } from "./factory";
 
 // Utilities
-import { generateStyleKey } from "@/src/core/block/style/core/utilities/key";
+import { generateStyleKey } from "@/src/core/block/style/utilities/key";
 //
 
 /**

@@ -4,7 +4,7 @@ import React from "react";
 import { canBlockHaveAttribute } from "@/src/core/block/instance/manager/queries";
 
 // Constants
-import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants";
+import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants/";
 
 // Components
 import BlockAttributeValue from "@/src/core/block/attribute/component";

@@ -1,5 +1,5 @@
 // Types
-import type { StyleValueSeparator } from '@/src/core/block/style/core/types';
+import type { StyleValueSeparator } from '@/src/core/block/style/types';
 
 /**
  * Default function value mappings for CSS style properties.

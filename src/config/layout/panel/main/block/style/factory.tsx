@@ -5,7 +5,7 @@ import { useBlockStyle, setBlockStyle } from '@/src/core/block/instance/manager/
 import { canBlockHaveStyle } from '@/src/core/block/instance/manager/queries';
 
 // Constants
-import { STYLE_DEFINITIONS } from '@/src/core/block/style/core/constants';
+import { STYLE_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Components
 import BlockStyleValue from '@/src/core/block/style/component';
@@ -13,7 +13,7 @@ import Property from '@/src/shared/components/layout/property/component';
 import PropertyActions from '@/src/config/layout/panel/main/block/style/actions';
 
 // Types
-import type { StyleKey } from '@/src/core/block/style/core/types';
+import type { StyleKey } from '@/src/core/block/style/types';
 import type { BlockID } from '@/src/core/block/instance/types';
 import type { CSSProperties } from 'react';
 

@@ -1,6 +1,6 @@
 import { getValueToken } from './value';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { OptionFunctionDefinition } from '@/src/core/block/style/core/types/option';
+import type { OptionFunctionDefinition } from '@/src/core/block/style/types/option';
 
 /**
  * Extracts the function name from a CSS function string.

@@ -4,15 +4,14 @@ import React, { useCallback, useRef, useEffect } from "react";
 import type { BlockInstance } from '@/src/core/block/instance/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes, getBlockRenderedStyles } from '@/src/core/block/instance/manager';
+import { useIsBlockSelected, selectBlock, getBlockRenderedStyles } from '@/src/core/block/instance/manager';
 import { getBlockContent, setBlockContent } from '@/src/core/block/instance/manager';
 import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/manager";
 
 const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
-    const BlockTag = instance.tag;
+    const BlockTag = instance.tag as React.ElementType;
     const isSelected = useIsBlockSelected(blockID);
-    const renderedAttributes = getBlockRenderedAttributes(blockID);
     const renderedStyles = getBlockRenderedStyles(blockID);
 
     // Get the current text value from content
@@ -37,7 +36,6 @@ const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }
         setBlockContent(blockID, { text: currentText });
     }, [blockID]
     );
-
 
     useEffect(() => {
         const barID = "main-block-actions";
@@ -69,7 +67,6 @@ const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }
     }, [blockID, instance, isSelected]
     );
 
-
     return (
         <>
             <BlockTag
@@ -81,7 +78,6 @@ const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }
                 data-is-selected={isSelected}
                 contentEditable
                 suppressContentEditableWarning
-                {...renderedAttributes}
             >
                 {text}
 

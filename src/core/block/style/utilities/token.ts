@@ -1,8 +1,8 @@
 // Type
-import type { TokenTypes, TokenKeys, TokenParam } from '@/src/core/block/style/core/types';
+import type { TokenTypes, TokenKeys, TokenParam } from '@/src/core/block/style/types';
 
 // Constants
-import { TOKEN_DEFAULTS, TOKEN_DEFINITIONS } from '@/src/core/block/style/core/constants';
+import { TOKEN_DEFAULTS, TOKEN_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { extractBetween } from '@/src/shared/utilities/string';

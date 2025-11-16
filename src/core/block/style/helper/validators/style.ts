@@ -1,13 +1,13 @@
 // Types
-import type { StyleKey, StyleValue } from '@/src/core/block/style/core/types/';
+import type { StyleKey, StyleValue } from '@/src/core/block/style/types/';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Constants
-import { STYLE_DEFINITIONS, DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/core/constants';
+import { STYLE_DEFINITIONS, DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
-import { getValueTokens } from '@/src/core/block/style/core/utilities';
+import { getValueTokens } from '@/src/core/block/style/utilities';
 
 // Helpers
 import { validateString } from '@/src/shared/helpers';
