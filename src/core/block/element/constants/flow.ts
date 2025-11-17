@@ -13,37 +13,37 @@ const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [
 
 export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	div: {
-		attributes: FLOW_ATTRIBUTES,
+		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Generic flow container used to group content without semantic meaning.',
 	},
 	p: {
-		attributes: TEXT_ATTRIBUTES,
+		allowedAttributes: TEXT_ATTRIBUTES,
 		allowedContent: PHRASING_CONTENT,
 		description: 'Paragraph for grouping runs of phrasing text.',
 	},
 	main: {
-		attributes: FLOW_ATTRIBUTES,
+		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Main landmark for dominant page content. Must be unique and typically excludes repeated site-wide content.',
 	},
 	pre: {
-		attributes: TEXT_ATTRIBUTES,
+		allowedAttributes: TEXT_ATTRIBUTES,
 		allowedContent: PHRASING_CONTENT,
 		description: 'Preformatted text preserving whitespace and newlines.',
 	},
 	blockquote: {
-		attributes: BLOCKQUOTE_ATTRIBUTES,
+		allowedAttributes: BLOCKQUOTE_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Section quoted from another source with optional citation.',
 	},
 	figure: {
-		attributes: FLOW_ATTRIBUTES,
+		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedContent: FLOW_WITH_FIGCAPTION,
 		description: 'Self-contained content (image, code, etc.) with an optional figcaption.',
 	},
 	figcaption: {
-		attributes: FLOW_ATTRIBUTES,
+		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Caption for the nearest figure.',
 	},

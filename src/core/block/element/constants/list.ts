@@ -11,32 +11,32 @@ const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 
 export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	ul: {
-		attributes: LIST_ATTRIBUTES,
+		allowedAttributes: LIST_ATTRIBUTES,
 		allowedContent: LIST_ITEM_ONLY,
 		description: 'Unordered (bulleted) list. Contains list items (li).',
 	},
 	ol: {
-		attributes: OL_ATTRIBUTES,
+		allowedAttributes: OL_ATTRIBUTES,
 		allowedContent: LIST_ITEM_ONLY,
 		description: 'Ordered (numbered) list. Contains list items (li).',
 	},
 	li: {
-		attributes: LI_ATTRIBUTES,
+		allowedAttributes: LI_ATTRIBUTES,
 		allowedContent: FLOW_NO_LI,
 		description: 'List item. May contain flow content such as paragraphs, nested lists, or other blocks.',
 	},
 	dl: {
-		attributes: LIST_ATTRIBUTES,
+		allowedAttributes: LIST_ATTRIBUTES,
 		allowedContent: DESCRIPTION_LIST_CONTENT,
 		description: 'Description list (also called definition list). Contains terms (dt) and descriptions (dd).',
 	},
 	dt: {
-		attributes: LIST_TEXT_ATTRIBUTES,
+		allowedAttributes: LIST_TEXT_ATTRIBUTES,
 		allowedContent: PHRASING_CONTENT,
 		description: 'Description term (the item being described).',
 	},
 	dd: {
-		attributes: LIST_TEXT_ATTRIBUTES,
+		allowedAttributes: LIST_TEXT_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Description details for a term.',
 	},

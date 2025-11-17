@@ -121,7 +121,7 @@ export type ElementRecord = Record<ElementTag, ElementDefinition>;
  */
 export interface ElementDefinition {
 	/** Array of supported attributes for this element */
-	attributes: AttributeKey[];
+	allowedAttributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */
 	allowedContent: ElementTag[] | null;
 	/** Human-readable description of the element */

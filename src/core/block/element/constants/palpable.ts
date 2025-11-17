@@ -5,17 +5,17 @@ const PALPABLE_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUT
 
 export const PALPABLE_ELEMENTS: Partial<ElementRecord> = {
 	hr: {
-		attributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
 		allowedContent: VOID_CONTENT,
 		description: 'Thematic break between paragraphs of a section (void element).',
 	},
 	br: {
-		attributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
 		allowedContent: VOID_CONTENT,
 		description: 'Line break within text (void element).',
 	},
 	body: {
-		attributes: PALPABLE_ATTRIBUTES,
+		allowedAttributes: PALPABLE_ATTRIBUTES,
 		allowedContent: FLOW_CONTENT,
 		description: 'Document body containing all renderable content.',
 	},
