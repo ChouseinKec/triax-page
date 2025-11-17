@@ -3,7 +3,6 @@ import * as blockRegistry from '@/src/core/block/instance/registry';
 
 // Types
 import type { BlockInstance, BlockID, BlockRecord } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
 
 /**
  * Checks if a target block is a descendant of a parent block.
@@ -212,8 +211,8 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 }
 
 /**
- * Checks if a child block can be moved into a parent block based on HTML defaultTag compatibility.
- * Determines if the parent block's permitted content includes the child block's defaultTag.
+ * Checks if a child block can be moved into a parent block.
+ * Determines if the parent block's allowed elements includes the child block's tag.
  *
  * @param parentTag - The HTML defaultTag of the parent block
  * @param childTag - The HTML defaultTag of the child block
@@ -223,22 +222,16 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
  * canBlockMoveInto('section', 'p') → true
  * canBlockMoveInto('div', 'h1') → true
  */
-export function canBlockMoveInto(parentTag: ElementTag, childTag: ElementTag): boolean {
-	// If parent is body, always allow any child
-	if (parentTag === 'body') return true;
-
-	// Get all registered blocks
-	const registeredBlocks = blockRegistry.getRegisteredBlocks();
-
+export function canBlockMoveInto(childBlock: BlockInstance, parentBlock: BlockInstance): boolean {
 	// Find parent block definition by tag
-	const parentBlockDefinition = Object.values(registeredBlocks).find((block) => block.defaultTag === parentTag);
+	const parentBlockDefinition = blockRegistry.getRegisteredBlock(parentBlock.type);
 	if (!parentBlockDefinition) return false;
 
 	// If allowedElements is null, parent accepts any child
 	if (parentBlockDefinition.allowedElements == null) return true;
 
 	// Check if parent's allowedElements includes the child's tag
-	return parentBlockDefinition.allowedElements.includes(childTag);
+	return parentBlockDefinition.allowedElements.includes(childBlock.tag);
 }
 
 /**

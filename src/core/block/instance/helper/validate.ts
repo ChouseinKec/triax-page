@@ -62,21 +62,21 @@ export function validateBlockTag(blockTag: unknown): ValidateResult<ElementTag> 
 }
 
 /**
- * Checks if all allowedTags in the array are valid HTML element allowedTags.
+ * Checks if all availableTags in the array are valid HTML element availableTags.
  *
- * @param blockAllowedTags - The array of block allowedTags to validate
- * @returns ValidateResult containing validity and the validated ElementTag array if all allowedTags are valid
+ * @param blockAllowedTags - The array of block availableTags to validate
+ * @returns ValidateResult containing validity and the validated ElementTag array if all availableTags are valid
  *
  * @example
- * validateBlockAllowedTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
+ * validateBlockAvailableTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
  */
-export function validateBlockAllowedTags(blockTags: unknown): ValidateResult<ElementTag[]> {
+export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<ElementTag[]> {
 	const validation = validateArray(blockTags);
 	if (!validation.valid) return validation;
 
 	for (const tag of validation.value) {
 		const tagValidation = validateBlockTag(tag);
-		if (!tagValidation.valid) return { valid: false, message: `Invalid block allowedTags: '${tag}' is not a valid HTML element tag` };
+		if (!tagValidation.valid) return { valid: false, message: `Invalid block availableTags: '${tag}' is not a valid HTML element tag` };
 	}
 
 	return { valid: true, value: validation.value as ElementTag[] };
@@ -214,17 +214,17 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 }
 
 /**
- * Checks if the definition has all required properties (type, allowedTags, render, allowedElements, icon, category)
+ * Checks if the definition has all required properties (type, availableTags, render, allowedElements, icon, category)
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
  * @returns ValidateResult containing validity and the validated BlockDefinition if valid
  *
  * @example
- * validateBlockDefinition({type: 'text',allowedTags: ['span'],render: () => <span>Text</span>,allowedElements: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
+ * validateBlockDefinition({type: 'text',availableTags: ['span'],render: () => <span>Text</span>,allowedElements: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
-	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'render', 'allowedTags', 'allowedElements']);
+	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'render', 'availableTags', 'allowedElements']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const typeValidation = validateBlockType(validation.value.type);
@@ -233,7 +233,7 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidateResul
 	const tagValidation = validateBlockTag(validation.value.defaultTag);
 	if (!tagValidation.valid) return { valid: false, message: tagValidation.message };
 
-	const allowedTagsValidation = validateBlockAllowedTags(validation.value.allowedTags);
+	const allowedTagsValidation = validateBlockAvailableTags(validation.value.availableTags);
 	if (!allowedTagsValidation.valid) return { valid: false, message: allowedTagsValidation.message };
 
 	const renderValidation = validateBlockRender(validation.value.render);

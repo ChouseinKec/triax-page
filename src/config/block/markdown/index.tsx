@@ -16,7 +16,7 @@ const BlockMarkdownDefinition: BlockDefinition = {
 	),
 
 	defaultTag: "p",
-	allowedTags: [
+	availableTags: [
 		"p",
 		"span",
 		"b",
@@ -41,6 +41,9 @@ const BlockMarkdownDefinition: BlockDefinition = {
 	allowedElements: [],
 	allowedStyles: null,
 	allowedAttributes: null,
+	forbiddenAncestors: null,
+	uniqueElements: null,
+	orderedElements: null,
 
 	defaultStyles: {},
 	defaultAttributes: {},

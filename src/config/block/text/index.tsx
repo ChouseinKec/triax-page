@@ -16,11 +16,14 @@ const BlockTextDefinition: BlockDefinition = {
     ),
 
     defaultTag: "span",
-    allowedTags: ["span"],
+    availableTags: ["span"],
 
     allowedAttributes: [],
     allowedStyles: [],
     allowedElements: [],
+    forbiddenAncestors: null,
+    uniqueElements: null,
+    orderedElements: null,
 
     defaultStyles: {},
     defaultAttributes: {},

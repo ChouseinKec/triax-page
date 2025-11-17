@@ -124,6 +124,12 @@ export interface ElementDefinition {
 	allowedAttributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */
 	allowedElements: ElementTag[] | null;
+	/** Array of element tags that cannot appear as ancestors, null if no restrictions */
+	forbiddenAncestors: ElementTag[] | null;
+	/** Record of element tags that can only appear a limited number of times as children, null if no restrictions */
+	uniqueElements: Partial<Record<ElementTag, number>> | null;
+	/** Array of element tag groups that must appear in a specific order, null if no ordering required */
+	orderedElements: ElementTag[][] | null;
 	/** Human-readable description of the element */
 	description: ElementDescription;
 }

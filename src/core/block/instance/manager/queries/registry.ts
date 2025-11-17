@@ -35,7 +35,12 @@ export function canBlockAcceptChild(parentTag: ElementTag, childTag: ElementTag)
 		.execute();
 	if (!safeParams) return false;
 
-	return canBlockMoveInto(safeParams.parentTag, safeParams.childTag);
+	// return canBlockMoveInto(safeParams.childTag, safeParams.parentTag);
+
+	// This function validates at the tag level, not instance level
+	// For now, we'll just return true since we need access to element definitions
+	// TODO: Implement proper element-level validation using element registry
+	return true;
 }
 
 /**
@@ -253,14 +258,14 @@ export function getBlockRender(blockType: BlockType) {
 }
 
 /**
- * Gets the available HTML element allowedTags for a specific block type.
- * @param blockType - The block type to get allowedTags for
- * @returns Array of available HTML element allowedTags for the block type, or undefined if block type not found
+ * Gets the available HTML element availableTags for a specific block type.
+ * @param blockType - The block type to get availableTags for
+ * @returns Array of available HTML element availableTags for the block type, or undefined if block type not found
  * @example
- * const allowedTags = getBlockAllowedTags('container'); → ['div', 'section', 'article', 'aside', 'nav']
+ * const availableTags = getBlockAvailableTags('container'); → ['div', 'section', 'article', 'aside', 'nav']
  */
-export function getBlockAllowedTags(blockType: BlockType): ElementTag[] | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedTags]')
+export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAvailableTags]')
 		.validate({ blockType: validateBlockType(blockType) })
 		.fetch((data) => ({
 			blockDefinition: fetchRegisteredBlock(data.blockType),
@@ -268,7 +273,7 @@ export function getBlockAllowedTags(blockType: BlockType): ElementTag[] | undefi
 		.execute();
 	if (!safeParams) return;
 
-	return safeParams.blockDefinition.allowedTags;
+	return safeParams.blockDefinition.availableTags;
 }
 
 /**

@@ -83,7 +83,22 @@ export type BlockAllowedAttributes = AttributeKey[] | null;
 /**
  * Permitted content types that can be contained within this block
  */
-export type BlockAllowedElements = BlockType[] | null;
+export type BlockAllowedElements = ElementTag[] | null;
+
+/**
+ * Tags that cannot appear anywhere in the ancestor chain above this block
+ */
+export type BlockForbiddenAncestors = ElementTag[] | null;
+
+/**
+ * Elements that can appear only once as direct children (e.g., figcaption in figure)
+ */
+export type BlockUniqueElements = Partial<Record<ElementTag, number>> | null;
+
+/**
+ * Ordered groups of elements that must appear in sequence (e.g., table structure)
+ */
+export type BlockOrderedElements = ElementTag[][] | null;
 
 /**
  * Record of all block instances by their ID.
@@ -109,7 +124,7 @@ export interface BlockDefinition {
 	/** The primary HTML tag for this block */
 	defaultTag: ElementTag;
 	/** All allowed HTML tags for this block type */
-	allowedTags: ElementTag[];
+	availableTags: ElementTag[];
 
 	/** Indicates if this block type can have styles */
 	allowedStyles: BlockAllowedStyles;
@@ -117,6 +132,13 @@ export interface BlockDefinition {
 	allowedAttributes: BlockAllowedAttributes;
 	/** Block kinds that can be contained within this block */
 	allowedElements: BlockAllowedElements;
+
+	/** Tags that cannot appear anywhere in the ancestor chain */
+	forbiddenAncestors: BlockForbiddenAncestors;
+	/** Elements that can appear only once as direct children */
+	uniqueElements: BlockUniqueElements;
+	/** Ordered groups of elements enforcing sequence */
+	orderedElements: BlockOrderedElements;
 
 	/** Default styles for the block */
 	defaultStyles: BlockStyles;

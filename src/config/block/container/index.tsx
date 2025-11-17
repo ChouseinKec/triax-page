@@ -20,11 +20,14 @@ const BlockContainerDefinition: BlockDefinition = {
 	),
 
 	defaultTag: 'div',
-	allowedTags: ['div', 'section', 'article', 'aside', 'nav'],
+	availableTags: ['div', 'section', 'article', 'aside', 'nav'],
 
 	allowedStyles: null,
 	allowedAttributes: null,
 	allowedElements: null,
+	forbiddenAncestors: null,
+	uniqueElements: null,
+	orderedElements: null,
 
 	defaultStyles: {},
 	defaultAttributes: {},
