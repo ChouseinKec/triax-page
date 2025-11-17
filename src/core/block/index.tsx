@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Manager
-import { useBlock, getBlockRender, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockTags } from "@/src/core/block/instance/manager";
+import { useBlock, getBlockRender, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockAllowedTags } from "@/src/core/block/instance/manager";
 import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/manager";
 
 // Utilities
@@ -29,7 +29,7 @@ const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
     const instance = useBlock(blockID);
     const render = getBlockRender(instance?.type || '');
     const isSelected = useIsBlockSelected(blockID);
-    const tags = getBlockTags(instance?.type || '');
+    const allowedTags = getBlockAllowedTags(instance?.type || '');
 
     // Render child blocks recursively
     const children = useMemo(() => {
@@ -65,7 +65,7 @@ const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
                     clearable={false}
                     placeholder={getBlockIcon(instance.type)}
                     forcePlaceholder={true}
-                    options={tags ? tags.map(tag => ({ name: tag, value: tag })) : []}
+                    options={allowedTags ? allowedTags.map(tag => ({ name: tag, value: tag })) : []}
                     value={instance.tag}
                     onChange={(value) => setBlockTag(instance.id, value as ElementTag)}
                 />
@@ -90,7 +90,7 @@ const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
             if (isBarActionRegistered(barID, blockActionDivider)) unregisterBarAction(barID, blockActionDivider);
         };
 
-    }, [blockID, instance, isSelected, tags]
+    }, [blockID, instance, isSelected, allowedTags]
     );
 
     // Early return if block doesn't exist

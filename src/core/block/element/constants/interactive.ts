@@ -24,47 +24,47 @@ const DIALOG_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL
 export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	a: {
 		allowedAttributes: LINK_ATTRIBUTES,
-		allowedContent: PHRASING_CONTENT,
+		allowedElements: PHRASING_CONTENT,
 		description: 'Hyperlink anchor for navigation or actions. Should not wrap interactive controls.',
 	},
 	button: {
 		allowedAttributes: BUTTON_ATTRIBUTES,
-		allowedContent: PHRASING_CONTENT,
+		allowedElements: PHRASING_CONTENT,
 		description: 'Button control for actions and form submission. Cannot be nested within interactive controls.',
 	},
 	input: {
 		allowedAttributes: INPUT_ATTRIBUTES,
-		allowedContent: VOID_CONTENT,
+		allowedElements: VOID_CONTENT,
 		description: 'Form input control (void element). Type attribute defines behavior.',
 	},
 	select: {
 		allowedAttributes: SELECT_ATTRIBUTES,
-		allowedContent: SELECT_CONTENT,
+		allowedElements: SELECT_CONTENT,
 		description: 'Selection dropdown containing option and optgroup elements.',
 	},
 	textarea: {
 		allowedAttributes: TEXTAREA_ATTRIBUTES,
-		allowedContent: VOID_CONTENT,
+		allowedElements: VOID_CONTENT,
 		description: 'Multi-line text input containing raw text only.',
 	},
 	label: {
 		allowedAttributes: LABEL_ATTRIBUTES,
-		allowedContent: PHRASING_CONTENT,
+		allowedElements: PHRASING_CONTENT,
 		description: 'Caption for a form control. Associates to a control by for attribute or nesting.',
 	},
 	details: {
 		allowedAttributes: DETAILS_ATTRIBUTES,
-		allowedContent: FLOW_WITH_SUMMARY,
+		allowedElements: FLOW_WITH_SUMMARY,
 		description: 'Disclosure widget for expandable content. Must include a summary element.',
 	},
 	summary: {
 		allowedAttributes: TEXT_INTERACTIVE_ATTRIBUTES,
-		allowedContent: PHRASING_CONTENT,
+		allowedElements: PHRASING_CONTENT,
 		description: 'Caption for the details control.',
 	},
 	dialog: {
 		allowedAttributes: DIALOG_ATTRIBUTES,
-		allowedContent: FLOW_CONTENT,
+		allowedElements: FLOW_CONTENT,
 		description: 'Dialog box or modal window for interactive content.',
 	},
 };

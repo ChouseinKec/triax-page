@@ -19,16 +19,16 @@ const BlockContainerDefinition: BlockDefinition = {
 		</svg>
 	),
 
-	tag: 'div',
-	tags: ['div', 'section', 'article', 'aside', 'nav'],
+	defaultTag: 'div',
+	allowedTags: ['div', 'section', 'article', 'aside', 'nav'],
 
 	allowedStyles: null,
 	allowedAttributes: null,
-	allowedContent: null,
+	allowedElements: null,
 
-	styles: {},
-	attributes: {},
-	content: {},
+	defaultStyles: {},
+	defaultAttributes: {},
+	defaultContent: {},
 
 	render: (instance, children) => <BlockContainerRender instance={instance}>{children}</BlockContainerRender>,
 };

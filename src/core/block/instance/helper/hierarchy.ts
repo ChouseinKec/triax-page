@@ -212,11 +212,11 @@ export function findBlockDescendants(blockID: BlockID, allBlocks: BlockRecord): 
 }
 
 /**
- * Checks if a child block can be moved into a parent block based on HTML tag compatibility.
- * Determines if the parent block's permitted content includes the child block's tag.
+ * Checks if a child block can be moved into a parent block based on HTML defaultTag compatibility.
+ * Determines if the parent block's permitted content includes the child block's defaultTag.
  *
- * @param parentTag - The HTML tag of the parent block
- * @param childTag - The HTML tag of the child block
+ * @param parentTag - The HTML defaultTag of the parent block
+ * @param childTag - The HTML defaultTag of the child block
  * @returns True if the child can be moved into the parent, false otherwise
  *
  * @example
@@ -231,14 +231,14 @@ export function canBlockMoveInto(parentTag: ElementTag, childTag: ElementTag): b
 	const registeredBlocks = blockRegistry.getRegisteredBlocks();
 
 	// Find parent block definition by tag
-	const parentBlockDefinition = Object.values(registeredBlocks).find((block) => block.tag === parentTag);
+	const parentBlockDefinition = Object.values(registeredBlocks).find((block) => block.defaultTag === parentTag);
 	if (!parentBlockDefinition) return false;
 
-	// If allowedContent is null, parent accepts any child
-	if (parentBlockDefinition.allowedContent == null) return true;
+	// If allowedElements is null, parent accepts any child
+	if (parentBlockDefinition.allowedElements == null) return true;
 
-	// Check if parent's allowedContent includes the child's tag
-	return parentBlockDefinition.allowedContent.includes(childTag);
+	// Check if parent's allowedElements includes the child's tag
+	return parentBlockDefinition.allowedElements.includes(childTag);
 }
 
 /**

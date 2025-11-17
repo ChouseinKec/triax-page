@@ -83,7 +83,7 @@ export type BlockAllowedAttributes = AttributeKey[] | null;
 /**
  * Permitted content types that can be contained within this block
  */
-export type BlockAllowedContent = BlockType[] | null;
+export type BlockAllowedElements = BlockType[] | null;
 
 /**
  * Record of all block instances by their ID.
@@ -107,23 +107,24 @@ export interface BlockDefinition {
 	icon: BlockIcon;
 
 	/** The primary HTML tag for this block */
-	tag: ElementTag;
-	/** All supported HTML tags for this block type */
-	tags: ElementTag[];
+	defaultTag: ElementTag;
+	/** All allowed HTML tags for this block type */
+	allowedTags: ElementTag[];
 
 	/** Indicates if this block type can have styles */
 	allowedStyles: BlockAllowedStyles;
 	/** Indicates if this block type can have attributes */
 	allowedAttributes: BlockAllowedAttributes;
 	/** Block kinds that can be contained within this block */
-	allowedContent: BlockAllowedContent;
+	allowedElements: BlockAllowedElements;
 
 	/** Default styles for the block */
-	styles: BlockStyles;
+	defaultStyles: BlockStyles;
 	/** Default attributes for the block */
-	attributes: BlockAttributes;
+	defaultAttributes: BlockAttributes;
+
 	/** Default content data for the block */
-	content: BlockContent;
+	defaultContent: BlockContent;
 
 	/** Render function that returns JSX for the block */
 	render: BlockRender;

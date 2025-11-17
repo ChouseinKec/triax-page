@@ -15,16 +15,16 @@ const BlockTextDefinition: BlockDefinition = {
         </svg>
     ),
 
-    tag: "span",
-    tags: ["span"],
+    defaultTag: "span",
+    allowedTags: ["span"],
 
     allowedAttributes: [],
     allowedStyles: [],
-    allowedContent: [],
+    allowedElements: [],
 
-    styles: {},
-    attributes: {},
-    content: {},
+    defaultStyles: {},
+    defaultAttributes: {},
+    defaultContent: {},
 
     render: (instance) => <BlockTextRender instance={instance} />,
 };

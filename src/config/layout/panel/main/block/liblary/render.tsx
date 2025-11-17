@@ -40,12 +40,12 @@ const BlockLibraryRender: React.FC = () => {
     const filteredBlocks = useMemo(() => {
         if (!selectedBlockType) return registeredBlocks;
 
-        const blockDef = getRegisteredBlock(selectedBlockType);
-        if (!blockDef) return registeredBlocks;
+        const selectedBlockDef = getRegisteredBlock(selectedBlockType);
+        if (!selectedBlockDef) return registeredBlocks;
 
         return Object.fromEntries(
             Object.entries(registeredBlocks).filter(([, block]) => {
-                return canBlockAcceptChild(blockDef.tag, block.tag);
+                return canBlockAcceptChild(selectedBlockDef.defaultTag, block.defaultTag);
             })
         );
     }, [selectedBlockType, registeredBlocks]

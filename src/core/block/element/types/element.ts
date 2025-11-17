@@ -123,7 +123,7 @@ export interface ElementDefinition {
 	/** Array of supported attributes for this element */
 	allowedAttributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */
-	allowedContent: ElementTag[] | null;
+	allowedElements: ElementTag[] | null;
 	/** Human-readable description of the element */
 	description: ElementDescription;
 }

@@ -58,8 +58,6 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
     const block = useBlock(blockID);
     const blockType = block?.type;
     const blockContentIDs = block?.contentIDs || [];
-
-    // Get block definition for tag
     const blockTag = block?.tag;
 
     const isBlockSelected = useIsBlockSelected(blockID);

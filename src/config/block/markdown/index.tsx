@@ -15,8 +15,8 @@ const BlockMarkdownDefinition: BlockDefinition = {
 		</svg>
 	),
 
-	tag: "p",
-	tags: [
+	defaultTag: "p",
+	allowedTags: [
 		"p",
 		"span",
 		"b",
@@ -38,13 +38,13 @@ const BlockMarkdownDefinition: BlockDefinition = {
 		"dfn"
 	],
 
-	allowedContent: [],
+	allowedElements: [],
 	allowedStyles: null,
 	allowedAttributes: null,
 
-	styles: {},
-	attributes: {},
-	content: {},
+	defaultStyles: {},
+	defaultAttributes: {},
+	defaultContent: {},
 
 	render: (instance) => <BlockMarkdownRender instance={instance} />,
 };

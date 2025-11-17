@@ -1,5 +1,5 @@
 // Types
-import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockAllowedContent, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockAllowedElements, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
 import type { ElementTag } from '@/src/core/block/element/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
@@ -62,21 +62,21 @@ export function validateBlockTag(blockTag: unknown): ValidateResult<ElementTag> 
 }
 
 /**
- * Checks if all tags in the array are valid HTML element tags.
+ * Checks if all allowedTags in the array are valid HTML element allowedTags.
  *
- * @param blockTags - The array of block tags to validate
- * @returns ValidateResult containing validity and the validated ElementTag array if all tags are valid
+ * @param blockAllowedTags - The array of block allowedTags to validate
+ * @returns ValidateResult containing validity and the validated ElementTag array if all allowedTags are valid
  *
  * @example
- * validateBlockTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
+ * validateBlockAllowedTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
  */
-export function validateBlockTags(blockTags: unknown): ValidateResult<ElementTag[]> {
+export function validateBlockAllowedTags(blockTags: unknown): ValidateResult<ElementTag[]> {
 	const validation = validateArray(blockTags);
 	if (!validation.valid) return validation;
 
 	for (const tag of validation.value) {
 		const tagValidation = validateBlockTag(tag);
-		if (!tagValidation.valid) return { valid: false, message: `Invalid block tags: '${tag}' is not a valid HTML element tag` };
+		if (!tagValidation.valid) return { valid: false, message: `Invalid block allowedTags: '${tag}' is not a valid HTML element tag` };
 	}
 
 	return { valid: true, value: validation.value as ElementTag[] };
@@ -100,27 +100,27 @@ export function validateBlockRender(blockRender: unknown): ValidateResult<BlockR
 /**
  * Checks if all content types in the array are valid block types that this block can contain.
  *
- * @param blockPermittedContent - The array of permitted content types to validate
- * @returns ValidateResult containing validity and the validated BlockAllowedContent array if all types are valid
+ * @param allowedElements - The array of permitted content types to validate
+ * @returns ValidateResult containing validity and the validated BlockAllowedElements array if all types are valid
  *
  * @example
- * validateBlockPermittedContent(['text', 'image']) → { valid: true, value: ['text', 'image'] }
+ * validateBlockAllowedElements(['text', 'image']) → { valid: true, value: ['text', 'image'] }
  */
-export function validateBlockPermittedContent(blockPermittedContent: unknown): ValidateResult<BlockAllowedContent> {
-	if (blockPermittedContent === null) {
+export function validateBlockAllowedElements(allowedElements: unknown): ValidateResult<BlockAllowedElements> {
+	if (allowedElements === null) {
 		return { valid: true, value: [] };
 	}
 
-	if (!Array.isArray(blockPermittedContent)) {
-		return { valid: false, message: `Invalid block permitted content: expected an array or null, got ${typeof blockPermittedContent}` };
+	if (!Array.isArray(allowedElements)) {
+		return { valid: false, message: `Invalid block allowed elements: expected an array or null, got ${typeof allowedElements}` };
 	}
 
-	for (const type of blockPermittedContent) {
+	for (const type of allowedElements) {
 		const typeValidation = validateBlockType(type);
 		if (!typeValidation.valid) return typeValidation;
 	}
 
-	return { valid: true, value: blockPermittedContent as BlockAllowedContent };
+	return { valid: true, value: allowedElements as BlockAllowedElements };
 }
 
 /**
@@ -214,29 +214,32 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 }
 
 /**
- * Checks if the definition has all required properties (type, tags, render, allowedContent, icon, category)
+ * Checks if the definition has all required properties (type, allowedTags, render, allowedElements, icon, category)
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
  * @returns ValidateResult containing validity and the validated BlockDefinition if valid
  *
  * @example
- * validateBlockDefinition({type: 'text',tags: ['span'],render: () => <span>Text</span>,allowedContent: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
+ * validateBlockDefinition({type: 'text',allowedTags: ['span'],render: () => <span>Text</span>,allowedElements: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
-	const validation = validateObject(blockDefinition, ['type', 'tags', 'allowedContent', 'icon', 'category', 'render']);
+	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'render', 'allowedTags', 'allowedElements']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const typeValidation = validateBlockType(validation.value.type);
 	if (!typeValidation.valid) return { valid: false, message: typeValidation.message };
 
-	const tagsValidation = validateBlockTags(validation.value.tags);
-	if (!tagsValidation.valid) return { valid: false, message: tagsValidation.message };
+	const tagValidation = validateBlockTag(validation.value.defaultTag);
+	if (!tagValidation.valid) return { valid: false, message: tagValidation.message };
+
+	const allowedTagsValidation = validateBlockAllowedTags(validation.value.allowedTags);
+	if (!allowedTagsValidation.valid) return { valid: false, message: allowedTagsValidation.message };
 
 	const renderValidation = validateBlockRender(validation.value.render);
 	if (!renderValidation.valid) return { valid: false, message: renderValidation.message };
 
-	const permittedContentValidation = validateBlockPermittedContent(validation.value.allowedContent);
+	const permittedContentValidation = validateBlockAllowedElements(validation.value.allowedElements);
 	if (!permittedContentValidation.valid) return { valid: false, message: permittedContentValidation.message };
 
 	const categoryValidation = validateBlockCategory(validation.value.category);

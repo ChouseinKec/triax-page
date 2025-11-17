@@ -12,52 +12,52 @@ const TD_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	table: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: TABLE_SECTIONS,
+		allowedElements: TABLE_SECTIONS,
 		description: 'Tabular data container. May contain caption, column groups, header/body/footer sections, or rows.',
 	},
 	caption: {
 		allowedAttributes: TABLE_TEXT_ATTRIBUTES,
-		allowedContent: FLOW_CONTENT,
+		allowedElements: FLOW_CONTENT,
 		description: 'Table caption describing the table purpose.',
 	},
 	colgroup: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: ['col'],
+		allowedElements: ['col'],
 		description: 'Groups columns for shared presentation. Contains col elements only.',
 	},
 	col: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: VOID_CONTENT,
+		allowedElements: VOID_CONTENT,
 		description: 'Represents a table column (void element, no children).',
 	},
 	thead: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: TR_ONLY,
+		allowedElements: TR_ONLY,
 		description: 'Table header section grouping header rows (tr).',
 	},
 	tbody: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: TR_ONLY,
+		allowedElements: TR_ONLY,
 		description: 'Table body section grouping data rows (tr).',
 	},
 	tfoot: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: TR_ONLY,
+		allowedElements: TR_ONLY,
 		description: 'Table footer section grouping summary rows (tr).',
 	},
 	tr: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedContent: TABLE_CELLS,
+		allowedElements: TABLE_CELLS,
 		description: 'Table row containing header (th) or data (td) cells.',
 	},
 	th: {
 		allowedAttributes: TH_ATTRIBUTES,
-		allowedContent: FLOW_CONTENT,
+		allowedElements: FLOW_CONTENT,
 		description: 'Header cell for labeling columns/rows. Can contain flow content.',
 	},
 	td: {
 		allowedAttributes: TD_ATTRIBUTES,
-		allowedContent: FLOW_CONTENT,
+		allowedElements: FLOW_CONTENT,
 		description: 'Data cell. Can contain flow content such as paragraphs, lists, or images.',
 	},
 };

@@ -39,7 +39,7 @@ export function canBlockAcceptChild(parentTag: ElementTag, childTag: ElementTag)
 }
 
 /**
- * Checks if a block type can have children based on its allowedContent property.
+ * Checks if a block type can have children based on its allowedElements property.
  * @param blockID - The block ID to check
  * @returns True if the block type can have children, false otherwise
  * @example
@@ -60,10 +60,10 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 		.execute();
 	if (!safeParams) return false;
 
-	// If allowedContent is undefined or null, the block can have any content
-	if (safeParams.blockDefinition.allowedContent == null) return true;
+	// If allowedElements is undefined or null, the block can have any content
+	if (safeParams.blockDefinition.allowedElements == null) return true;
 
-	return safeParams.blockDefinition.allowedContent.length > 0;
+	return safeParams.blockDefinition.allowedElements.length > 0;
 }
 
 /**
@@ -253,14 +253,14 @@ export function getBlockRender(blockType: BlockType) {
 }
 
 /**
- * Gets the available HTML element tags for a specific block type.
- * @param blockType - The block type to get tags for
- * @returns Array of available HTML element tags for the block type, or undefined if block type not found
+ * Gets the available HTML element allowedTags for a specific block type.
+ * @param blockType - The block type to get allowedTags for
+ * @returns Array of available HTML element allowedTags for the block type, or undefined if block type not found
  * @example
- * const tags = getBlockTags('container'); → ['div', 'section', 'article', 'aside', 'nav']
+ * const allowedTags = getBlockAllowedTags('container'); → ['div', 'section', 'article', 'aside', 'nav']
  */
-export function getBlockTags(blockType: BlockType): ElementTag[] | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockTags]')
+export function getBlockAllowedTags(blockType: BlockType): ElementTag[] | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedTags]')
 		.validate({ blockType: validateBlockType(blockType) })
 		.fetch((data) => ({
 			blockDefinition: fetchRegisteredBlock(data.blockType),
@@ -268,7 +268,7 @@ export function getBlockTags(blockType: BlockType): ElementTag[] | undefined {
 		.execute();
 	if (!safeParams) return;
 
-	return safeParams.blockDefinition.tags;
+	return safeParams.blockDefinition.allowedTags;
 }
 
 /**

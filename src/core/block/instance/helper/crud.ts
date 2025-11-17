@@ -61,13 +61,13 @@ export function createBlockID(): BlockID {
  * createBlock('text', 'parent-123') → { id: '...', parentID: 'parent-123', ... }
  */
 export function createBlock(blockDefinition: BlockDefinition, parentID: BlockID): BlockInstance {
-	const blockStyles = blockDefinition.styles;
-	const blockAttributes = blockDefinition.attributes;
+	const blockStyles = blockDefinition.defaultStyles;
+	const blockAttributes = blockDefinition.defaultAttributes;
 
 	const block: BlockInstance = {
 		id: createBlockID(),
 		parentID,
-		tag: blockDefinition.tag,
+		tag: blockDefinition.defaultTag,
 		contentIDs: [],
 
 		styles: createBlockStyles({}, blockStyles),
