@@ -12,7 +12,7 @@ const TD_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	table: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: TABLE_SECTIONS,
+		allowedChildren: TABLE_SECTIONS,
 		forbiddenAncestors: null,
 		uniqueElements: { caption: 1 },
 		orderedElements: [['caption'], ['colgroup'], ['thead'], ['tbody', 'tfoot', 'tr']],
@@ -20,7 +20,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	caption: {
 		allowedAttributes: TABLE_TEXT_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -28,7 +28,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	colgroup: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: ['col'],
+		allowedChildren: ['col'],
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -36,7 +36,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	col: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -44,7 +44,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	thead: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: TR_ONLY,
+		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -52,7 +52,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	tbody: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: TR_ONLY,
+		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -60,7 +60,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	tfoot: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: TR_ONLY,
+		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -68,7 +68,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	tr: {
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedElements: TABLE_CELLS,
+		allowedChildren: TABLE_CELLS,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -76,7 +76,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	th: {
 		allowedAttributes: TH_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -84,7 +84,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	td: {
 		allowedAttributes: TD_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

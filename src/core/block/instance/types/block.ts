@@ -83,7 +83,7 @@ export type BlockAllowedAttributes = AttributeKey[] | null;
 /**
  * Permitted content types that can be contained within this block
  */
-export type BlockAllowedElements = ElementTag[] | null;
+export type BlockAllowedChildren = ElementTag[] | null;
 
 /**
  * Tags that cannot appear anywhere in the ancestor chain above this block
@@ -131,7 +131,7 @@ export interface BlockDefinition {
 	/** Indicates if this block type can have attributes */
 	allowedAttributes: BlockAllowedAttributes;
 	/** Block kinds that can be contained within this block */
-	allowedElements: BlockAllowedElements;
+	allowedChildren: BlockAllowedChildren;
 
 	/** Tags that cannot appear anywhere in the ancestor chain */
 	forbiddenAncestors: BlockForbiddenAncestors;

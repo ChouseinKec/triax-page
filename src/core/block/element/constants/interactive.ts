@@ -24,7 +24,7 @@ const DIALOG_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL
 export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	a: {
 		allowedAttributes: LINK_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
 		uniqueElements: null,
 		orderedElements: null,
@@ -32,7 +32,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	button: {
 		allowedAttributes: BUTTON_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
 		uniqueElements: null,
 		orderedElements: null,
@@ -40,7 +40,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	input: {
 		allowedAttributes: INPUT_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -48,7 +48,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	select: {
 		allowedAttributes: SELECT_ATTRIBUTES,
-		allowedElements: SELECT_CONTENT,
+		allowedChildren: SELECT_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -56,7 +56,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	textarea: {
 		allowedAttributes: TEXTAREA_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -64,7 +64,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	label: {
 		allowedAttributes: LABEL_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -72,7 +72,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	details: {
 		allowedAttributes: DETAILS_ATTRIBUTES,
-		allowedElements: FLOW_WITH_SUMMARY,
+		allowedChildren: FLOW_WITH_SUMMARY,
 		forbiddenAncestors: null,
 		uniqueElements: { summary: 1 },
 		orderedElements: [['summary']],
@@ -80,7 +80,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	summary: {
 		allowedAttributes: TEXT_INTERACTIVE_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -88,7 +88,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	dialog: {
 		allowedAttributes: DIALOG_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

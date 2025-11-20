@@ -3,7 +3,7 @@ import type { BlockDefinition, BlockID, BlockInstance, BlockRecord, BlockAttribu
 import type { FetchResult } from '@/src/shared/types/result';
 
 // Registry
-import { getRegisteredBlock, getRegisteredBlocks } from '@/src/core/block/instance/registry';
+import { BlockRegistryRecord } from '@/src/core/block/instance/registry';
 
 /**
  * Fetches a block instance from the block collection by its ID.
@@ -28,11 +28,11 @@ export function fetchBlock(blockID: BlockID, allBlocks: BlockRecord): FetchResul
  * @param blockType - The type identifier of the block definition to fetch
  * @returns FetchResult containing the block definition or error message
  * @example
- * fetchRegisteredBlock('text') → { success: true, data: BlockDefinition }
- * fetchRegisteredBlock('invalid-type') → { success: false, error: 'Block type not registered...' }
+ * fetchBlockDefinition('text') → { success: true, data: BlockDefinition }
+ * fetchBlockDefinition('invalid-type') → { success: false, error: 'Block type not registered...' }
  */
-export function fetchRegisteredBlock(blockType: BlockType): FetchResult<BlockDefinition> {
-	const block = getRegisteredBlock(blockType);
+export function fetchBlockDefinition(blockType: BlockType, registeredBlocks: BlockRegistryRecord): FetchResult<BlockDefinition> {
+	const block = registeredBlocks[blockType];
 	if (!block) return { success: false, error: `Block type not registered: '${blockType}' is not a recognized block type` };
 
 	return { success: true, data: block };
@@ -43,10 +43,9 @@ export function fetchRegisteredBlock(blockType: BlockType): FetchResult<BlockDef
  * Returns a result object with all block definitions keyed by their type.
  * @returns FetchResult containing all registered block definitions
  * @example
- * fetchRegisteredBlocks() → { success: true, data: { 'text': BlockDefinition, 'container': BlockDefinition } }
+ * fetchBlockDefinitions() → { success: true, data: { 'text': BlockDefinition, 'container': BlockDefinition } }
  */
-export function fetchRegisteredBlocks(): FetchResult<Record<string, BlockDefinition>> {
-	const registeredBlocks = getRegisteredBlocks();
+export function fetchBlockDefinitions(registeredBlocks: BlockRegistryRecord): FetchResult<Record<string, BlockDefinition>> {
 	if (!registeredBlocks) return { success: false, error: `No registered blocks found in the block registry` };
 
 	return { success: true, data: registeredBlocks };

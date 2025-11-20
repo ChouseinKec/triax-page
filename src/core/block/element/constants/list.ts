@@ -12,7 +12,7 @@ const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	ul: {
 		allowedAttributes: LIST_ATTRIBUTES,
-		allowedElements: LIST_ITEM_ONLY,
+		allowedChildren: LIST_ITEM_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -20,7 +20,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	},
 	ol: {
 		allowedAttributes: OL_ATTRIBUTES,
-		allowedElements: LIST_ITEM_ONLY,
+		allowedChildren: LIST_ITEM_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -28,7 +28,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	},
 	li: {
 		allowedAttributes: LI_ATTRIBUTES,
-		allowedElements: FLOW_NO_LI,
+		allowedChildren: FLOW_NO_LI,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -36,7 +36,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	},
 	dl: {
 		allowedAttributes: LIST_ATTRIBUTES,
-		allowedElements: DESCRIPTION_LIST_CONTENT,
+		allowedChildren: DESCRIPTION_LIST_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -44,7 +44,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	},
 	dt: {
 		allowedAttributes: LIST_TEXT_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -52,7 +52,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	},
 	dd: {
 		allowedAttributes: LIST_TEXT_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

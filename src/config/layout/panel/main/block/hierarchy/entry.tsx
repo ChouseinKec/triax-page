@@ -88,7 +88,8 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
         } else {
             selectBlock(blockID);
         }
-    }, [isBlockSelected, blockID])
+    }, [isBlockSelected, blockID]
+    )
 
     // Handle context menu
     const handleRightClick = useCallback((e: React.MouseEvent) => {
@@ -97,7 +98,8 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
         e.preventDefault();
         e.stopPropagation();
         setIsContextMenuOpen(true);
-    }, [blockTag]);
+    }, [blockTag]
+    );
 
     // Handle action click
     const handleActionClick = (action: () => void) => {
@@ -244,7 +246,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             <button {...attributes}>
                 <span>
                     {blockIcon}
-                    <span>{blockID}</span>
+                    <span>{`${blockID} (${blockTag})`}</span>
                 </span>
 
                 {hasChildren && (

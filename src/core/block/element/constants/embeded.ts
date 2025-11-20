@@ -73,7 +73,7 @@ const AREA_ATTRIBUTES: AttributeKey[] = [
 export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	img: {
 		allowedAttributes: IMAGE_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -81,7 +81,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	iframe: {
 		allowedAttributes: IFRAME_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -89,7 +89,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	canvas: {
 		allowedAttributes: CANVAS_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -97,7 +97,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	audio: {
 		allowedAttributes: AUDIO_ATTRIBUTES,
-		allowedElements: PHRASING_WITH_MEDIA,
+		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -105,7 +105,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	video: {
 		allowedAttributes: VIDEO_ATTRIBUTES,
-		allowedElements: PHRASING_WITH_MEDIA,
+		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -113,7 +113,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	source: {
 		allowedAttributes: SOURCE_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -121,7 +121,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	track: {
 		allowedAttributes: TRACK_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -129,7 +129,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	picture: {
 		allowedAttributes: EMBEDDED_ATTRIBUTES,
-		allowedElements: PICTURE_CONTENT,
+		allowedChildren: PICTURE_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: { img: 1 },
 		orderedElements: null,
@@ -137,7 +137,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	object: {
 		allowedAttributes: OBJECT_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -145,7 +145,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	embed: {
 		allowedAttributes: EMBED_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -153,7 +153,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	map: {
 		allowedAttributes: MAP_ATTRIBUTES,
-		allowedElements: PHRASING_WITH_AREA,
+		allowedChildren: PHRASING_WITH_AREA,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -161,7 +161,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	area: {
 		allowedAttributes: AREA_ATTRIBUTES,
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -169,7 +169,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	},
 	svg: {
 		allowedAttributes: EMBEDDED_ATTRIBUTES,
-		allowedElements: null,
+		allowedChildren: null,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

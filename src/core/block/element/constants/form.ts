@@ -7,7 +7,7 @@ const FORM_TEXT_ATTRIBUTES = [...FORM_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
 export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	form: {
 		allowedAttributes: [...FORM_ATTRIBUTES, 'action','method','autocomplete','name','target'],
-		allowedElements: FLOW_NO_FORM,
+		allowedChildren: FLOW_NO_FORM,
 		forbiddenAncestors: ['form'],
 		uniqueElements: null,
 		orderedElements: null,
@@ -15,7 +15,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	fieldset: {
 		allowedAttributes: [...FORM_ATTRIBUTES, 'disabled','form','name'],
-		allowedElements: FLOW_WITH_LEGEND,
+		allowedChildren: FLOW_WITH_LEGEND,
 		forbiddenAncestors: null,
 		uniqueElements: { legend: 1 },
 		orderedElements: [['legend']],
@@ -23,7 +23,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	legend: {
 		allowedAttributes: FORM_TEXT_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -31,7 +31,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	option: {
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','label','selected','disabled'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -39,7 +39,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	optgroup: {
 		allowedAttributes: [...FORM_ATTRIBUTES, 'label','disabled'],
-		allowedElements: OPTION_ONLY,
+		allowedChildren: OPTION_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -47,7 +47,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	datalist: {
 		allowedAttributes: FORM_ATTRIBUTES,
-		allowedElements: OPTION_ONLY,
+		allowedChildren: OPTION_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -55,7 +55,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	output: {
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'for','form','name'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -63,7 +63,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	progress: {
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','max'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -71,7 +71,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	},
 	meter: {
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','min','max','low','high','optimum'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

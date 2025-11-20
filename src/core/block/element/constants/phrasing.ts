@@ -6,7 +6,7 @@ const PHRASING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUT
 export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	span: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -14,7 +14,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	b: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -22,7 +22,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	strong: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -30,7 +30,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	i: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -38,7 +38,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	em: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -46,7 +46,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	u: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -54,7 +54,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	small: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -62,7 +62,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	mark: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -70,7 +70,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	sub: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -78,7 +78,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	sup: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -86,7 +86,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	code: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -94,7 +94,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	abbr: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -102,7 +102,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	s: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -110,7 +110,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	del: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite', 'datetime'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -118,7 +118,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	ins: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite', 'datetime'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -126,7 +126,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	q: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -134,7 +134,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	cite: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -142,7 +142,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	dfn: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'title'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -150,7 +150,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	var: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -158,7 +158,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	samp: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -166,7 +166,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	kbd: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -174,7 +174,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	time: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'datetime'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -182,7 +182,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	data: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'value'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -190,7 +190,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	wbr: {
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -198,7 +198,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	bdi: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -206,7 +206,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	bdo: {
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'dir'],
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -214,7 +214,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	ruby: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_WITH_RUBY,
+		allowedChildren: PHRASING_WITH_RUBY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -222,7 +222,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	rt: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -230,7 +230,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	rp: {
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

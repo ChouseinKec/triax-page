@@ -162,7 +162,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'hero',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'hero-desc': {
 		id: 'hero-desc',
@@ -187,7 +187,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'hero',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 
 	// Features section
@@ -288,7 +288,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-1',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'feature-2': {
 		id: 'feature-2',
@@ -338,7 +338,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-2',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'feature-3': {
 		id: 'feature-3',
@@ -388,7 +388,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-3',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'feature-4': {
 		id: 'feature-4',
@@ -438,7 +438,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'feature-4',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 
 	// Timeline
@@ -503,7 +503,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'timeline-container': {
 		id: 'timeline-container',
@@ -620,7 +620,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-1',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'timeline-item-2': {
 		id: 'timeline-item-2',
@@ -691,7 +691,7 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-2',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 	'timeline-item-3': {
 		id: 'timeline-item-3',
@@ -762,6 +762,6 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 		},
 		parentID: 'timeline-item-3',
 		contentIDs: [],
-		type: 'core-plain-text',
+		type: 'core-text',
 	},
 };

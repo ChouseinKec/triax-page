@@ -14,7 +14,7 @@ const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [
 export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	div: {
 		allowedAttributes: FLOW_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -22,7 +22,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	p: {
 		allowedAttributes: TEXT_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -30,7 +30,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	main: {
 		allowedAttributes: FLOW_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -38,7 +38,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	pre: {
 		allowedAttributes: TEXT_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -46,7 +46,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	blockquote: {
 		allowedAttributes: BLOCKQUOTE_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -54,7 +54,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	figure: {
 		allowedAttributes: FLOW_ATTRIBUTES,
-		allowedElements: FLOW_WITH_FIGCAPTION,
+		allowedChildren: FLOW_WITH_FIGCAPTION,
 		forbiddenAncestors: null,
 		uniqueElements: { figcaption: 1 },
 		orderedElements: null,
@@ -62,7 +62,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	},
 	figcaption: {
 		allowedAttributes: FLOW_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

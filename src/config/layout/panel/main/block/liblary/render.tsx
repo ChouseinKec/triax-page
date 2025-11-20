@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addBlock, canBlockAcceptChild, getSelectedBlockID, useSelectedBlockType, getRegisteredBlocks, getRegisteredBlock } from "@/src/core/block/instance/manager";
+import { addBlock, canBlockAcceptChild,  useSelectedBlockType, useSelectedBlockID, getBlockDefinitions, getBlockDefinition } from "@/src/core/block/instance/manager";
 
 // Components
 import GenericInput from "@/src/shared/components/input/generic/component";
@@ -19,36 +19,33 @@ import type { BlockDefinition, BlockType } from "@/src/core/block/instance/types
  *
  */
 const BlockLibraryRender: React.FC = () => {
-    const registeredBlocks = getRegisteredBlocks();
+    const registeredBlocks = getBlockDefinitions();
     if (!registeredBlocks || Object.keys(registeredBlocks).length === 0) {
         return <div className={CSS.Fallback}>No blocks available.</div>;
     }
 
     const selectedBlockType = useSelectedBlockType();
+    const selectedBlockID = useSelectedBlockID();
     const [search, setSearch] = useState("");
 
     // Handle adding a new block, optionally nesting inside the selected block
     const handleAddBlock = useCallback((blockType: BlockType) => {
-        const selectedBlockID = getSelectedBlockID();
         if (!selectedBlockID) return;
 
         addBlock(blockType, selectedBlockID);
-    }, []
+    }, [selectedBlockID]
     );
 
     // Filter blocks based on the selected block's permitted content
     const filteredBlocks = useMemo(() => {
-        if (!selectedBlockType) return registeredBlocks;
-
-        const selectedBlockDef = getRegisteredBlock(selectedBlockType);
-        if (!selectedBlockDef) return registeredBlocks;
+        if (!selectedBlockID) return registeredBlocks;
 
         return Object.fromEntries(
             Object.entries(registeredBlocks).filter(([, block]) => {
-                return canBlockAcceptChild(selectedBlockDef.defaultTag, block.defaultTag);
+                return canBlockAcceptChild(selectedBlockID, block.defaultTag);
             })
         );
-    }, [selectedBlockType, registeredBlocks]
+    }, [selectedBlockID, registeredBlocks]
     );
 
     // Filter blocks based on the search term

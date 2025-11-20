@@ -9,11 +9,18 @@ import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ReactNode } from 'react';
 
 // Helpers
-import { fetchBlock, fetchRegisteredBlock, fetchRegisteredBlocks } from '@/src/core/block/instance/helper/fetch';
-import { canBlockMoveInto } from '@/src/core/block/instance/helper/hierarchy';
+import { fetchBlock, fetchBlockDefinition, fetchBlockDefinitions } from '@/src/core/block/instance/helper/fetch';
 import { validateBlockTag, validateBlockType, validateBlockID } from '@/src/core/block/instance/helper/validate';
 import { validateAttributeKey } from '@/src/core/block/attribute/helper';
 import { validateStyleKey } from '@/src/core/block/style/helper';
+import { isAllowedChild, hasForbiddenAncestor, exceedsUniqueElementLimit, violatesOrderedElements } from '@/src/core/block/instance/helper/hierarchy';
+import { fetchElementDefinition } from '@/src/core/block/element/helper/fetchers';
+
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registry';
+
+// Constants
+import { getElementDefinitions } from '@/src/core/block/element/constants';
 
 // Utilities
 import { ValidationPipeline } from '@/src/shared/utilities/validation';
@@ -26,25 +33,40 @@ import { ValidationPipeline } from '@/src/shared/utilities/validation';
  * @example
  * const allowed = canBlockAcceptChild('container', 'text'); → true
  */
-export function canBlockAcceptChild(parentTag: ElementTag, childTag: ElementTag): boolean {
+export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: ElementTag): boolean {
+	const blockStore = useBlockStore.getState();
 	const safeParams = new ValidationPipeline('[BlockQueries → canBlockAcceptChild]')
 		.validate({
-			parentTag: validateBlockTag(parentTag),
-			childTag: validateBlockTag(childTag),
+			parentBlock: validateBlockID(parentBlockID),
+			childBlockTag: validateBlockTag(childBlockTag),
 		})
+		.fetch((data) => ({
+			parentBlockInstance: fetchBlock(data.parentBlock, useBlockStore.getState().allBlocks),
+		}))
+		.fetch((data) => ({
+			parentBlockDefinition: fetchBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
+			childBlockDefinition: fetchElementDefinition(data.childBlockTag, getElementDefinitions()),
+		}))
 		.execute();
 	if (!safeParams) return false;
 
-	// return canBlockMoveInto(safeParams.childTag, safeParams.parentTag);
+	// Check allowed children
+	if (!isAllowedChild(safeParams.parentBlockDefinition, childBlockTag)) return false;
 
-	// This function validates at the tag level, not instance level
-	// For now, we'll just return true since we need access to element definitions
-	// TODO: Implement proper element-level validation using element registry
+	// Check forbidden ancestors
+	if (hasForbiddenAncestor(safeParams.childBlockDefinition, safeParams.parentBlockInstance, blockStore.allBlocks)) return false;
+
+	// Check unique elements
+	if (exceedsUniqueElementLimit(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, blockStore.allBlocks)) return false;
+
+	// Check ordered elements
+	if (violatesOrderedElements(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, safeParams.parentBlockInstance.contentIDs.length, blockStore.allBlocks)) return false;
+
 	return true;
 }
 
 /**
- * Checks if a block type can have children based on its allowedElements property.
+ * Checks if a block type can have children based on its allowedChildren property.
  * @param blockID - The block ID to check
  * @returns True if the block type can have children, false otherwise
  * @example
@@ -60,15 +82,15 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
 
-	// If allowedElements is undefined or null, the block can have any content
-	if (safeParams.blockDefinition.allowedElements == null) return true;
+	// If allowedChildren is undefined or null, the block can have any content
+	if (safeParams.blockDefinition.allowedChildren == null) return true;
 
-	return safeParams.blockDefinition.allowedElements.length > 0;
+	return safeParams.blockDefinition.allowedChildren.length > 0;
 }
 
 /**
@@ -86,7 +108,7 @@ export function canBlockHaveStyles(blockID: BlockID): boolean {
 			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -116,7 +138,7 @@ export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean
 			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -142,7 +164,7 @@ export function canBlockHaveAttributes(blockID: BlockID): boolean {
 			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -172,7 +194,7 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
 			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockInstance.type),
+			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -187,17 +209,17 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
  * Gets all registered block definitions from the registry.
  * @returns Record of all registered block definitions keyed by type
  * @example
- * const blocks = getRegisteredBlocks(); → { 'text': BlockDefinition, 'container': BlockDefinition }
+ * const blocks = getBlockDefinitions(); → { 'text': BlockDefinition, 'container': BlockDefinition }
  */
-export function getRegisteredBlocks(): Record<string, BlockDefinition> | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getRegisteredBlocks]')
+export function getBlockDefinitions(): Record<string, BlockDefinition> | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockDefinitions]')
 		.fetch(() => ({
-			registeredBlocks: fetchRegisteredBlocks(),
+			blockDefinitions: fetchBlockDefinitions(getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return undefined;
 
-	return safeParams.registeredBlocks;
+	return safeParams.blockDefinitions;
 }
 
 /**
@@ -205,18 +227,20 @@ export function getRegisteredBlocks(): Record<string, BlockDefinition> | undefin
  * @param blockType - The block type to retrieve
  * @returns The block definition or undefined if not found
  * @example
- * const blockDef = getRegisteredBlock('text'); → BlockDefinition | undefined
+ * const blockDef = getBlockDefinition('text'); → BlockDefinition | undefined
  */
-export function getRegisteredBlock(blockType: BlockType): BlockDefinition | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getRegisteredBlock]')
-		.validate({ blockType: validateBlockType(blockType) })
+export function getBlockDefinition(blockType: BlockType): BlockDefinition | undefined {
+	const safeParams = new ValidationPipeline('[BlockQueries → getBlockDefinition]')
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			registeredBlocks: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
 
-	return safeParams.registeredBlocks;
+	return safeParams.blockDefinition;
 }
 
 /**
@@ -228,9 +252,11 @@ export function getRegisteredBlock(blockType: BlockType): BlockDefinition | unde
  */
 export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockIcon]')
-		.validate({ blockType: validateBlockType(blockType) })
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -247,9 +273,11 @@ export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
  */
 export function getBlockRender(blockType: BlockType) {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockRender]')
-		.validate({ blockType: validateBlockType(blockType) })
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -266,9 +294,11 @@ export function getBlockRender(blockType: BlockType) {
  */
 export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAvailableTags]')
-		.validate({ blockType: validateBlockType(blockType) })
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -285,9 +315,11 @@ export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | unde
  */
 export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedStyles]')
-		.validate({ blockType: validateBlockType(blockType) })
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -304,9 +336,11 @@ export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles 
  */
 export function getBlockAllowedAttributes(blockType: BlockType): BlockAllowedAttributes | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedAttributes]')
-		.validate({ blockType: validateBlockType(blockType) })
+		.validate({
+			blockType: validateBlockType(blockType),
+		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;

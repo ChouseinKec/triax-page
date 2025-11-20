@@ -5,8 +5,8 @@ import BlockTextRender from "@/src/config/block/text/render";
 import { BlockDefinition } from '@/src/core/block/instance/types';
 
 const BlockTextDefinition: BlockDefinition = {
-    type: "core-plain-text",
-    name: "Plain Text",
+    type: "core-text",
+    name: "Text",
     description: "A simple block for adding and formatting plain text content.",
     category: "core",
     icon: (
@@ -15,12 +15,12 @@ const BlockTextDefinition: BlockDefinition = {
         </svg>
     ),
 
-    defaultTag: "span",
-    availableTags: ["span"],
+    defaultTag: "p",
+    availableTags: ["p"],
 
     allowedAttributes: [],
     allowedStyles: [],
-    allowedElements: [],
+    allowedChildren: [],
     forbiddenAncestors: null,
     uniqueElements: null,
     orderedElements: null,

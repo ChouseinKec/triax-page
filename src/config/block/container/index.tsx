@@ -24,7 +24,7 @@ const BlockContainerDefinition: BlockDefinition = {
 
 	allowedStyles: null,
 	allowedAttributes: null,
-	allowedElements: null,
+	allowedChildren: null,
 	forbiddenAncestors: null,
 	uniqueElements: null,
 	orderedElements: null,

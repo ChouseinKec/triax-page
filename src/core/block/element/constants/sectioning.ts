@@ -6,7 +6,7 @@ const SECTIONING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIB
 export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	header: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_NO_HEADER_FOOTER,
+		allowedChildren: FLOW_NO_HEADER_FOOTER,
 		forbiddenAncestors: ['header', 'footer'],
 		uniqueElements: null,
 		orderedElements: null,
@@ -14,7 +14,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	footer: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_NO_HEADER_FOOTER,
+		allowedChildren: FLOW_NO_HEADER_FOOTER,
 		forbiddenAncestors: ['header', 'footer'],
 		uniqueElements: null,
 		orderedElements: null,
@@ -22,7 +22,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	section: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -30,7 +30,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	article: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -38,7 +38,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	aside: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -46,7 +46,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	nav: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -54,7 +54,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	address: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -62,7 +62,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	hgroup: {
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedElements: HEADINGS_ONLY,
+		allowedChildren: HEADINGS_ONLY,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

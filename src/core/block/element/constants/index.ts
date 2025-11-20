@@ -1,4 +1,7 @@
-import type { ElementDefinition, ElementTag } from '@/src/core/block/element/types';
+// Types
+import type { ElementDefinition, ElementTag, ElementRecord } from '@/src/core/block/element/types';
+
+// Constants
 import { FLOW_ELEMENTS } from './flow';
 import { SECTIONING_ELEMENTS } from './sectioning';
 import { HEADING_ELEMENTS } from './heading';
@@ -12,8 +15,9 @@ import { FORM_ELEMENTS } from './form';
 
 /**
  * Registry of element definitions mapped by their tags.
+ * Frozen to prevent mutations.
  */
-export const ELEMENT_DEFINITIONS: Partial<Record<ElementTag, ElementDefinition>> = {
+const ELEMENT_DEFINITIONS: Partial<ElementRecord> = {
 	...FLOW_ELEMENTS,
 	...SECTIONING_ELEMENTS,
 	...HEADING_ELEMENTS,
@@ -23,5 +27,25 @@ export const ELEMENT_DEFINITIONS: Partial<Record<ElementTag, ElementDefinition>>
 	...PALPABLE_ELEMENTS,
 	...LIST_ELEMENTS,
 	...TABLE_ELEMENTS,
-	...FORM_ELEMENTS
+	...FORM_ELEMENTS,
+};
+
+/**
+ * Retrieves all element definitions, returning a deep-frozen record to prevent mutations.
+ * @returns The frozen record of all element definitions
+ */
+export const getElementDefinitions = (): Partial<ElementRecord> => {
+	return ELEMENT_DEFINITIONS;
+};
+
+/**
+ * Retrieves an element definition by tag, returning a deep-frozen copy to prevent mutations.
+ * @param elementTag - The element tag to retrieve
+ * @returns The element definition if found, undefined otherwise
+ */
+export const getElementDefinition = (elementTag: ElementTag): ElementDefinition | undefined => {
+	const definition = ELEMENT_DEFINITIONS[elementTag];
+	if (!definition) return undefined;
+
+	return definition;
 };

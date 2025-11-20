@@ -6,7 +6,7 @@ const PALPABLE_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUT
 export const PALPABLE_ELEMENTS: Partial<ElementRecord> = {
 	hr: {
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -14,7 +14,7 @@ export const PALPABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	br: {
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedElements: VOID_CONTENT,
+		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -22,7 +22,7 @@ export const PALPABLE_ELEMENTS: Partial<ElementRecord> = {
 	},
 	body: {
 		allowedAttributes: PALPABLE_ATTRIBUTES,
-		allowedElements: FLOW_CONTENT,
+		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

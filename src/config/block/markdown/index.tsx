@@ -5,8 +5,8 @@ import BlockMarkdownRender from "@/src/config/block/markdown/render";
 import { BlockDefinition } from '@/src/core/block/instance/types';
 
 const BlockMarkdownDefinition: BlockDefinition = {
-	type: "core-rich-text",
-	name: "Rich Text",
+	type: "core-markdown",
+	name: "Markdown",
 	description: "A block for adding and formatting rich text content.",
 	category: "core",
 	icon: (
@@ -38,7 +38,7 @@ const BlockMarkdownDefinition: BlockDefinition = {
 		"dfn"
 	],
 
-	allowedElements: [],
+	allowedChildren: [],
 	allowedStyles: null,
 	allowedAttributes: null,
 	forbiddenAncestors: null,

@@ -4,11 +4,13 @@ import type { ValidateResult } from '@/src/shared/types/result';
 // Helpers
 import { validateBlockDefinition } from '@/src/core/block/instance/helper';
 
+export type BlockRegistryRecord = Readonly<Record<string, BlockDefinition>>;
+
 /**
  * Class-based block registry for managing block definitions
  */
 class BlockRegistry {
-	private blocks: Record<string, BlockDefinition> = {};
+	private blocks: BlockRegistryRecord = {};
 
 	/**
 	 * Registers a block definition in the block registry.
@@ -32,7 +34,7 @@ class BlockRegistry {
 	 * Retrieves all registered block definitions.
 	 * @returns Readonly record of all registered blocks keyed by their type
 	 */
-	getRegisteredBlocks(): Readonly<Record<string, BlockDefinition>> {
+	getRegisteredBlocks(): BlockRegistryRecord {
 		return { ...this.blocks };
 	}
 

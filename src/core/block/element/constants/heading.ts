@@ -6,7 +6,7 @@ const HEADING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTE
 export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	h1: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -14,7 +14,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	h2: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -22,7 +22,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	h3: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -30,7 +30,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	h4: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -38,7 +38,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	h5: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,
@@ -46,7 +46,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	},
 	h6: {
 		allowedAttributes: HEADING_ATTRIBUTES,
-		allowedElements: PHRASING_CONTENT,
+		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueElements: null,
 		orderedElements: null,

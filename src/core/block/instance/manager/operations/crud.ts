@@ -3,7 +3,7 @@ import { useBlockStore } from '@/src/core/block/store';
 
 // Helpers
 import { validateBlockType, validateBlockID } from '@/src/core/block/instance/helper/validate';
-import { fetchRegisteredBlock } from '@/src/core/block/instance/helper/fetch';
+import { fetchBlockDefinition } from '@/src/core/block/instance/helper/fetch';
 import { createBlock, deleteBlockFromParent, cloneBlock, addBlockToTree, deleteBlockFromTree } from '@/src/core/block/instance/helper/crud';
 
 // Types
@@ -32,7 +32,7 @@ export function addBlock(blockType: BlockType, parentID: BlockID): void {
 			parentID: validateBlockID(parentID),
 		})
 		.fetch((data) => ({
-			blockDefinition: fetchRegisteredBlock(data.blockType),
+			blockDefinition: fetchBlockDefinition(data.blockType),
 		}))
 		.execute();
 	if (!safeData) return;
