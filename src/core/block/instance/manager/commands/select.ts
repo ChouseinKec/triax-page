@@ -5,7 +5,7 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID } from '@/src/core/block/instance/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateBlockID } from '@/src/core/block/instance/helper';

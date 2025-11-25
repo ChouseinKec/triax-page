@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Types
 import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 
 /**
  * React hook to get the content data for a specific block.

@@ -2,9 +2,11 @@
 import { useBlockStore } from '@/src/core/block/store';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
-import { fetchBlock, fetchBlockDefinition } from '@/src/core/block/instance/helper/fetch';
-import { moveBlock, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextParentSibling, findBlockMoveBeforeIndex, findBlockMoveAfterIndex, findBlockMoveIntoIndex, canBlockMove } from '@/src/core/block/instance/helper/hierarchy';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
+import { fetchBlockInstance, fetchBlockDefinition } from '@/src/core/block/instance/helper/fetchers';
+import { findBlockFirstChild, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextParentSibling, findBlockMoveBeforeIndex, findBlockMoveAfterIndex, findBlockMoveIntoIndex } from '@/src/core/block/instance/helper/finders';
+import { moveBlock } from '@/src/core/block/instance/helper/operations';
+import { canBlockMove } from '@/src/core/block/instance/helper/checkers';
 import { fetchElementDefinition } from '@/src/core/block/element/helper/fetchers';
 
 // Types
@@ -12,7 +14,7 @@ import type { BlockInstance, BlockID } from '@/src/core/block/instance/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Registry
 import { getRegisteredBlocks } from '@/src/core/block/instance/registry';
@@ -37,23 +39,27 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			parentBlockInstance: fetchBlock(data.blockInstance.parentID, blockStore.allBlocks),
+			parentBlockInstance: fetchBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
 
 	// If it has children, return the first child
-	if (safeData.blockInstance.contentIDs?.length > 0) return blockStore.allBlocks[safeData.blockInstance.contentIDs[0]];
+	const firstChild = findBlockFirstChild(safeData.blockInstance, blockStore.allBlocks);
+	if (firstChild.status === 'found') return firstChild.data;
 
 	// If no children, get the next sibling
-	const nextSibling = findBlockNextSibling(safeData.blockInstance, safeData.parentBlockInstance, blockStore.allBlocks);
-	if (nextSibling) return nextSibling;
+	const nextSibling = findBlockNextSibling(safeData.blockInstance, blockStore.allBlocks);
+	if (nextSibling.status === 'found') return nextSibling.data;
 
 	// If no next sibling, recursively climb up to find the parent's next sibling
-	return findBlockNextParentSibling(safeData.blockInstance, blockStore.allBlocks);
+	const nextParentSibling = findBlockNextParentSibling(safeData.blockInstance, blockStore.allBlocks);
+	if (nextParentSibling.status === 'found') return nextParentSibling.data;
+
+	return null;
 }
 
 /**
@@ -73,18 +79,26 @@ export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undef
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		}))
+		.fetch((data) => ({
+			parentBlockInstance: fetchBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
 		}))
 
 		.execute();
 	if (!safeData) return;
 
 	// If previous sibling exists, return its last descendant (or itself if no children)
-	const prevSibling = findBlockPreviousSibling(safeData.blockInstance.id, blockStore.allBlocks);
-	if (prevSibling) return findBlockLastDescendant(prevSibling, blockStore.allBlocks);
+	const prevSibling = findBlockPreviousSibling(safeData.blockInstance, blockStore.allBlocks);
 
-	// If no previous sibling, return the parent
-	return blockStore.allBlocks[safeData.blockInstance.parentID];
+	if (prevSibling.status === 'found') {
+		const lastDescResult = findBlockLastDescendant(prevSibling.data, blockStore.allBlocks);
+		if (lastDescResult.status === 'found') return lastDescResult.data;
+		return null;
+	}
+
+	// If no previous sibling, return the parent instance fetched earlier (may be undefined)
+	return safeData.parentBlockInstance;
 }
 
 /**
@@ -106,11 +120,11 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 			targetBlockID: validateBlockID(targetBlockID),
 		})
 		.fetch((data) => ({
-			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
-			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+			sourceBlock: fetchBlockInstance(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.targetBlockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			targetParentBlock: fetchBlock(data.targetBlock.parentID, blockStore.allBlocks),
+			targetParentBlock: fetchBlockInstance(data.targetBlock.parentID!, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			parentBlockDefinition: fetchBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
@@ -120,21 +134,18 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 	if (!safeData) return;
 
 	// Check if move is needed
-	const targetIndex = findBlockMoveAfterIndex(safeData.sourceBlockID, safeData.targetBlockID, blockStore.allBlocks);
-	if (targetIndex === null) return devLog.warn(`[BlockManager → moveBlockAfter] Block is already positioned after target or invalid operation`);
+	const targetIndexResult = findBlockMoveAfterIndex(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
+	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveBlockAfter] Block is already positioned after target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetParentBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndex + 1);
-	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockAfter] Block type not allowed as sibling`);
+	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetParentBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndexResult.data + 1);
+	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveBlockAfter] ${isChildBlockPermitted.error}`);
+	if (!isChildBlockPermitted.ok) return devLog.error(`[BlockManager → moveBlockAfter] Block type not allowed as sibling`);
 
-	blockStore.updateBlocks(
-		moveBlock(
-			safeData.sourceBlock, //
-			safeData.targetParentBlock,
-			targetIndex + 1,
-			blockStore.allBlocks
-		)
-	);
+	// Use the target's parent as the attachment point — moveBlock expects the
+	// destination parent instance rather than a sibling instance.
+	const moveResult = moveBlock(safeData.sourceBlock, safeData.targetParentBlock, blockStore.allBlocks, targetIndexResult.data + 1);
+	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
 }
 
 /**
@@ -149,7 +160,6 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
  * moveBlockBefore('block-456', 'block-123')
  */
 export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID): void {
-	console.log('moveBlockBefore called');
 	const blockStore = useBlockStore.getState();
 	const safeData = new ValidationPipeline('[BlockManager → moveBlockBefore]')
 		.validate({
@@ -157,11 +167,11 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 			targetBlockID: validateBlockID(targetBlockID),
 		})
 		.fetch((data) => ({
-			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
-			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+			sourceBlock: fetchBlockInstance(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.targetBlockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
-			targetParentBlock: fetchBlock(data.targetBlock.parentID, blockStore.allBlocks),
+			targetParentBlock: fetchBlockInstance(data.targetBlock.parentID!, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			parentBlockDefinition: fetchBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
@@ -171,21 +181,16 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 	if (!safeData) return;
 
 	// Check if move is needed
-	const targetIndex = findBlockMoveBeforeIndex(safeData.sourceBlockID, safeData.targetBlockID, blockStore.allBlocks);
-	if (targetIndex === null) return devLog.warn(`[BlockManager → moveBlockBefore] Block is already positioned before target or invalid operation`);
+	const targetIndexResult = findBlockMoveBeforeIndex(safeData.sourceBlock, safeData.targetBlock, safeData.targetParentBlock);
+	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveBlockBefore] Block is already positioned before target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetParentBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndex);
-	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
+	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetParentBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndexResult.data);
+	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveBlockBefore] ${isChildBlockPermitted.error}`);
+	if (!isChildBlockPermitted.ok) return devLog.error(`[BlockManager → moveBlockBefore] Block type not allowed as sibling`);
 
-	blockStore.updateBlocks(
-		moveBlock(
-			safeData.sourceBlock, //
-			safeData.targetParentBlock,
-			targetIndex,
-			blockStore.allBlocks
-		)
-	);
+	const moveResult = moveBlock(safeData.sourceBlock, safeData.targetParentBlock, blockStore.allBlocks, targetIndexResult.data);
+	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
 }
 
 /**
@@ -207,8 +212,8 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 			targetBlockID: validateBlockID(targetBlockID),
 		})
 		.fetch((data) => ({
-			sourceBlock: fetchBlock(data.sourceBlockID, blockStore.allBlocks),
-			targetBlock: fetchBlock(data.targetBlockID, blockStore.allBlocks),
+			sourceBlock: fetchBlockInstance(data.sourceBlockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.targetBlockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			parentBlockDefinition: fetchBlockDefinition(data.targetBlock.type, getRegisteredBlocks()),
@@ -218,20 +223,16 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 	if (!safeData) return;
 
 	// Calculate target index (append to end)
-	// const targetIndex = safeData.targetBlock.contentIDs.length;
-	const targetIndex = findBlockMoveIntoIndex(safeData.sourceBlockID, safeData.targetBlockID, blockStore.allBlocks);
-	if (targetIndex === null) return devLog.warn(`[BlockManager → moveBlockInto] Block cannot be moved into target or invalid operation`);
+	const targetIndexResult = findBlockMoveIntoIndex(safeData.sourceBlock, safeData.targetBlock);
+	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveBlockInto] Block cannot be moved into target or invalid operation`);
 
 	// If child is not compatible with parent (validate with target index)
-	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndex);
-	if (!isChildBlockPermitted) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
+	const isChildBlockPermitted = canBlockMove(safeData.sourceBlock, safeData.targetBlock, safeData.parentBlockDefinition, safeData.sourceBlockDefinition, blockStore.allBlocks, targetIndexResult.data);
+	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveBlockInto] ${isChildBlockPermitted.error}`);
+	if (!isChildBlockPermitted.ok) return devLog.error(`[BlockManager → moveBlockInto] Block type not allowed as child`);
 
-	blockStore.updateBlocks(
-		moveBlock(
-			safeData.sourceBlock, //
-			safeData.targetBlock,
-			targetIndex,
-			blockStore.allBlocks
-		)
-	);
+	// For move-into the `targetBlock` *is* the destination parent and is
+	// already passed as the second argument.
+	const moveResult = moveBlock(safeData.sourceBlock, safeData.targetBlock, blockStore.allBlocks, targetIndexResult.data);
+	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
 }

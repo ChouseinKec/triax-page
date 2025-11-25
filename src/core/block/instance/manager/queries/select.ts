@@ -5,10 +5,10 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID } from '@/src/core/block/instance/types';
 
 // Helpers
-import { fetchSelectedBlock } from '@/src/core/block/instance/helper/fetch';
+import { fetchSelectedBlock } from '@/src/core/block/instance/helper/fetchers';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 /**
  * Gets the currently selected block ID from the store.

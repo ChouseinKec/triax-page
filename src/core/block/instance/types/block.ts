@@ -103,7 +103,12 @@ export type BlockOrderedElements = ElementTag[][] | null;
 /**
  * Record of all block instances by their ID.
  */
-export type BlockRecord = Record<BlockID, BlockInstance>;
+export type BlockInstanceRecord = Record<BlockID, BlockInstance>;
+
+/**
+ * Record of all block definitions by their type.
+ */
+export type BlockDefinitionRecord = Record<BlockType, BlockDefinition>;
 
 /**
  * Blueprint/definition for a block type (core or plugin).

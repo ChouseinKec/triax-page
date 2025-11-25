@@ -5,7 +5,7 @@ import { usePageStore } from '@/src/core/store';
 import type { OrientationID } from '@/src/core/layout/page/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateOrientationID } from '@/src/core/layout/page/helper/validators';

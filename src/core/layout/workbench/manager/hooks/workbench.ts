@@ -1,6 +1,6 @@
 // Helpers
 import { fetchAllWorkbenches } from '@/src/core/layout/workbench/helper/fetchers';
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Types
 import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';

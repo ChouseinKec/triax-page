@@ -6,16 +6,16 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { StyleKey } from '@/src/core/block/style/types';
 
 // Helpers
-import { fetchBlock, renderBlockStyles } from '@/src/core/block/instance/helper';
+import { fetchBlockInstance, renderBlockStyles } from '@/src/core/block/instance/helper';
 import { resolveStyle, validateStyleKey } from '@/src/core/block/style/helper';
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 
 // Managers
 import { getSelectedDeviceID, getSelectedOrientationID, getSelectedPseudoID } from '@/src/core/layout/page/manager';
 import { validateDeviceID, validateOrientationID, validatePseudoID } from '@/src/core/layout/page/helper/validators';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 /**
  * Gets a style key value with CSS cascade fallback logic for block style operations.
@@ -39,7 +39,7 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 			pseudoID: validatePseudoID(getSelectedPseudoID()),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeParams) return undefined;
@@ -73,7 +73,7 @@ export function getBlockRenderedStyles(blockID: BlockID): string | undefined {
 			pseudoID: validatePseudoID(getSelectedPseudoID()),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeParams) return undefined;

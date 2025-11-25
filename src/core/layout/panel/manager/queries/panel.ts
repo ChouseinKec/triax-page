@@ -5,7 +5,7 @@ import { useLayoutStore } from '@/src/core/layout/store';
 import type { PanelID, PanelInstance } from '@/src/core/layout/panel/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validatePanelID } from '@/src/core/layout/panel/helper/validators';

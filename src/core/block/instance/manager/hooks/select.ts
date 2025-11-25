@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Types
 import type { BlockID, BlockType } from '@/src/core/block/instance/types';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 
 /**
  * Reactive hook to check if a specific block is currently selected.

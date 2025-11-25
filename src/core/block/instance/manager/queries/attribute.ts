@@ -8,7 +8,7 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import { fetchBlockAttributes, renderBlockAttributes, validateBlockID } from '@/src/core/block/instance/helper';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 /**
  * Reactive hook to get rendered HTML attributes for a block in block rendering operations.

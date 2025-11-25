@@ -84,12 +84,8 @@ export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<E
 
 /**
  * Checks if the render configuration is a valid function that can render the block.
- *
  * @param blockRender - The block render configuration to validate
  * @returns ValidateResult containing validity and the validated BlockRender function if valid
- *
- * @example
- * validateBlockRender(() => <div>Hello</div>) → { valid: true, value: () => <div>Hello</div> }
  */
 export function validateBlockRender(blockRender: unknown): ValidateResult<BlockRender> {
 	const validation = validateFunction(blockRender);

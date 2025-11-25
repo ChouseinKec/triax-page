@@ -2,16 +2,16 @@
 import { useBlockStore } from '@/src/core/block/store';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
-import { fetchBlock } from '@/src/core/block/instance/helper/fetch';
-import { overwriteBlock } from '@/src/core/block/instance/helper/crud';
+import { validateBlockID, validateBlockInstance } from '@/src/core/block/instance/helper/validators';
+import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { overwriteBlockInTree } from '@/src/core/block/instance/helper/operations/tree';
 
 // Types
 import type { BlockInstance, BlockID, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Clipboard storage for copy/paste operations
 let blockClipboard: BlockInstance | null = null;
@@ -35,7 +35,7 @@ export function copyBlock(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
@@ -62,14 +62,18 @@ export function pasteBlock(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		}))
+		.validate(() => ({
+			clipboardBlock: validateBlockInstance(blockClipboard),
+		}))
+		.mutate((data) => ({
+			pastedBlocks: overwriteBlockInTree(data.clipboardBlock, data.targetBlock, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
 
-	// Overwrite the target block with the clipboard content, cloning the entire tree
-	const blocksWithPaste = overwriteBlock(blockClipboard, safeData.blockID, blockStore.allBlocks);
-	blockStore.updateBlocks(blocksWithPaste);
+	blockStore.updateBlocks(safeData.pastedBlocks);
 }
 
 /**
@@ -89,7 +93,7 @@ export function copyBlockStyles(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
@@ -115,7 +119,7 @@ export function pasteBlockStyles(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
@@ -145,7 +149,7 @@ export function copyBlockAttributes(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
@@ -171,7 +175,7 @@ export function pasteBlockAttributes(blockID: BlockID): void {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			targetBlock: fetchBlock(data.blockID, blockStore.allBlocks),
+			targetBlock: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;

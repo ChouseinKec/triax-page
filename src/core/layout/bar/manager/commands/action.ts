@@ -6,7 +6,7 @@ import type {  BarActionID, BarID, BarActionInstance} from '@/src/core/layout/ba
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateBarActionInstance, validateBarID, validateBarActionID} from '@/src/core/layout/bar/helper/validators';

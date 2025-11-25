@@ -6,7 +6,7 @@ import type { BarInstance } from '@/src/core/layout/bar/types';
 import type { WorkbenchID } from '@/src/core/layout/workbench/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateWorkbenchID } from '@/src/core/layout/workbench/helper';

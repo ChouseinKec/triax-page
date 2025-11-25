@@ -2,18 +2,18 @@
 import { useBlockStore } from '@/src/core/block/store';
 
 // Types
-import type { BlockDefinition, BlockID, BlockType, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/core/block/instance/types';
+import type { BlockDefinition, BlockID, BlockType, BlockAllowedStyles, BlockAllowedAttributes, BlockDefinitionRecord } from '@/src/core/block/instance/types';
 import type { ElementTag } from '@/src/core/block/element/types';
 import type { StyleKey } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ReactNode } from 'react';
 
 // Helpers
-import { fetchBlock, fetchBlockDefinition, fetchBlockDefinitions } from '@/src/core/block/instance/helper/fetch';
-import { validateBlockTag, validateBlockType, validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { fetchBlockInstance, fetchBlockDefinition, fetchBlockDefinitions } from '@/src/core/block/instance/helper/fetchers';
+import { validateBlockTag, validateBlockType, validateBlockID } from '@/src/core/block/instance/helper/validators';
 import { validateAttributeKey } from '@/src/core/block/attribute/helper';
 import { validateStyleKey } from '@/src/core/block/style/helper';
-import { isAllowedChild, hasForbiddenAncestor, exceedsUniqueElementLimit, violatesOrderedElements } from '@/src/core/block/instance/helper/hierarchy';
+import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/src/core/block/instance/helper/checkers';
 import { fetchElementDefinition } from '@/src/core/block/element/helper/fetchers';
 
 // Registry
@@ -23,7 +23,7 @@ import { getRegisteredBlocks } from '@/src/core/block/instance/registry';
 import { getElementDefinitions } from '@/src/core/block/element/constants';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 /**
  * Checks if a child block type is permitted within a parent block type.
@@ -41,7 +41,7 @@ export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: Eleme
 			childBlockTag: validateBlockTag(childBlockTag),
 		})
 		.fetch((data) => ({
-			parentBlockInstance: fetchBlock(data.parentBlock, useBlockStore.getState().allBlocks),
+			parentBlockInstance: fetchBlockInstance(data.parentBlock, useBlockStore.getState().allBlocks),
 		}))
 		.fetch((data) => ({
 			parentBlockDefinition: fetchBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
@@ -51,16 +51,24 @@ export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: Eleme
 	if (!safeParams) return false;
 
 	// Check allowed children
-	if (!isAllowedChild(safeParams.parentBlockDefinition, childBlockTag)) return false;
+	const allowedRes = isBlockChildAllowed(safeParams.parentBlockDefinition, childBlockTag);
+	if (!allowedRes.success) return false;
+	if (!allowedRes.ok) return false;
 
 	// Check forbidden ancestors
-	if (hasForbiddenAncestor(safeParams.childBlockDefinition, safeParams.parentBlockInstance, blockStore.allBlocks)) return false;
+	const forbiddenRes = hasBlockForbiddenAncestor(safeParams.childBlockDefinition, safeParams.parentBlockInstance, blockStore.allBlocks);
+	if (!forbiddenRes.success) return false;
+	if (forbiddenRes.ok) return false;
 
 	// Check unique elements
-	if (exceedsUniqueElementLimit(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, blockStore.allBlocks)) return false;
+	const exceedsRes = doesBlockElementExceeds(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, blockStore.allBlocks);
+	if (!exceedsRes.success) return false;
+	if (exceedsRes.ok) return false;
 
 	// Check ordered elements
-	if (violatesOrderedElements(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, safeParams.parentBlockInstance.contentIDs.length, blockStore.allBlocks)) return false;
+	const violatesRes = doesBlockElementViolatesOrder(safeParams.parentBlockDefinition, safeParams.parentBlockInstance, childBlockTag, blockStore.allBlocks, safeParams.parentBlockInstance.contentIDs.length);
+	if (!violatesRes.success) return false;
+	if (violatesRes.ok) return false;
 
 	return true;
 }
@@ -79,7 +87,7 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 			blockID: validateBlockID(blockID),
 		})
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
@@ -105,7 +113,7 @@ export function canBlockHaveStyles(blockID: BlockID): boolean {
 	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyles]')
 		.validate({ blockID: validateBlockID(blockID) })
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
@@ -135,7 +143,7 @@ export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean
 			styleKey: validateStyleKey(styleKey),
 		})
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
@@ -161,7 +169,7 @@ export function canBlockHaveAttributes(blockID: BlockID): boolean {
 	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttributes]')
 		.validate({ blockID: validateBlockID(blockID) })
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
@@ -191,7 +199,7 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
 			attributeKey: validateAttributeKey(attributeKey),
 		})
 		.fetch((data) => ({
-			blockInstance: fetchBlock(data.blockID, blockStore.allBlocks),
+			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.fetch((data) => ({
 			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
@@ -207,11 +215,11 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
 
 /**
  * Gets all registered block definitions from the registry.
- * @returns Record of all registered block definitions keyed by type
+ * @returns BlockDefinitionRecord of all registered block definitions keyed by type
  * @example
  * const blocks = getBlockDefinitions(); → { 'text': BlockDefinition, 'container': BlockDefinition }
  */
-export function getBlockDefinitions(): Record<string, BlockDefinition> | undefined {
+export function getBlockDefinitions(): BlockDefinitionRecord | undefined {
 	const safeParams = new ValidationPipeline('[BlockQueries → getBlockDefinitions]')
 		.fetch(() => ({
 			blockDefinitions: fetchBlockDefinitions(getRegisteredBlocks()),

@@ -1,10 +1,10 @@
-import type { BlockDefinition, BlockType } from '@/src/core/block/instance/types';
+import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/src/core/block/instance/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
 import { validateBlockDefinition } from '@/src/core/block/instance/helper';
 
-export type BlockRegistryRecord = Readonly<Record<string, BlockDefinition>>;
+export type BlockRegistryRecord = Readonly<BlockDefinitionRecord>;
 
 /**
  * Class-based block registry for managing block definitions

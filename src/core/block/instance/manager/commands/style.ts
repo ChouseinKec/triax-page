@@ -6,19 +6,17 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { StyleKey } from '@/src/core/block/style/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
 import { applyStyle, validateStyleKey, validateStyleValue } from '@/src/core/block/style/helper';
 import { getBlockStyle } from '@/src/core/block/instance/manager/queries';
-import { validateBlockID, fetchBlock } from '@/src/core/block/instance/helper';
+import { validateBlockID, fetchBlockInstance } from '@/src/core/block/instance/helper';
 import { validatePseudoID, validateOrientationID, validateDeviceID } from '@/src/core/layout/page/helper';
 
 // Managers
 import { getSelectedDeviceID, getSelectedOrientationID, getSelectedPseudoID } from '@/src/core/layout/page/manager';
-
-
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -44,7 +42,7 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 			pseudoID: validatePseudoID(getSelectedPseudoID()),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;
@@ -83,10 +81,10 @@ export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 			styleKey: validateStyleKey(styleKey),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.derive((data) => ({
-			style: getBlockStyle(data.blockID, data.styleKey),
+			style: { success: true, data: getBlockStyle(data.blockID, data.styleKey) },
 		}))
 		.execute();
 	if (!safeData) return;

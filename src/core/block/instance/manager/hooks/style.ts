@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
@@ -14,7 +14,7 @@ import type { StyleKey } from '@/src/core/block/style/types';
 import { useSelectedDeviceID, useSelectedOrientationID, useSelectedPseudoID } from '@/src/core/layout/page/manager';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 import { validateStyleKey, resolveStyle } from '@/src/core/block/style/helper';
 
 import { validateDeviceID, validateOrientationID, validatePseudoID } from '@/src/core/layout/page/helper/validators';

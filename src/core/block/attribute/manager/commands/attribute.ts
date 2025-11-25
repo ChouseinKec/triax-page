@@ -6,12 +6,12 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { AttributeKey, AttributeValue } from '@/src/core/block/attribute/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validate';
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 import { validateAttributeKey, validateAttributeValue } from '@/src/core/block/attribute/helper';
-import { fetchBlock } from '@/src/core/block/instance/helper/fetch';
+import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
 
 /**
  * Sets the attribute value for a specific block in block attribute operations.
@@ -34,7 +34,7 @@ export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, 
 			attributeValue: validateAttributeValue(attributeValue),
 		})
 		.fetch((data) => ({
-			block: fetchBlock(data.blockID, blockStore.allBlocks),
+			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;

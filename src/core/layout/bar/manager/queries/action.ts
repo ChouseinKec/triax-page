@@ -5,7 +5,7 @@ import { useLayoutStore } from '@/src/core/layout/store';
 import type { BarID } from '@/src/core/layout/bar/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateBarID } from '@/src/core/layout/bar/helper/validators';

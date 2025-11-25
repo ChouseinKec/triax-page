@@ -6,7 +6,7 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { ElementTag } from '@/src/core/block/element/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/validation';
+import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
 
 // Helpers
 import { validateBlockTag, validateBlockID } from '@/src/core/block/instance/helper';
