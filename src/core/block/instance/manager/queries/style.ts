@@ -44,13 +44,15 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 		.execute();
 	if (!safeParams) return undefined;
 
-	return resolveStyle(
+	const r = resolveStyle(
 		safeParams.block.styles, //
 		safeParams.styleKey,
 		safeParams.deviceID,
 		safeParams.orientationID,
 		safeParams.pseudoID
 	);
+	if (!r.success) return undefined;
+	return r.data;
 }
 
 /**

@@ -53,12 +53,13 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 		const block = state.allBlocks[safeParams.blockID];
 		if (!block) return undefined;
 
-		return resolveStyle(
+		const res = resolveStyle(
 			block.styles, //
 			safeParams.styleKey,
 			safeParams.deviceID,
 			safeParams.orientationID,
 			safeParams.pseudoID
 		);
+		return res.success ? res.data : undefined;
 	});
 }

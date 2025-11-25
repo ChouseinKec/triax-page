@@ -47,17 +47,21 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 		.execute();
 	if (!safeData) return;
 
+	const applyResult = applyStyle(
+		styleKey, //
+		value,
+		safeData.block.styles,
+		safeData.deviceID,
+		safeData.orientationID,
+		safeData.pseudoID
+	);
+
+	if (!applyResult.success) return devLog.error(`[BlockManager → setBlockStyle] ${applyResult.error}`), undefined;
+
 	blockStore.updateBlocks({
 		[blockID]: {
 			...safeData.block,
-			styles: applyStyle(
-				styleKey, //
-				value,
-				safeData.block.styles,
-				safeData.deviceID,
-				safeData.orientationID,
-				safeData.pseudoID
-			),
+			styles: applyResult.data,
 		},
 	});
 }

@@ -60,20 +60,34 @@ export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, device:
 		const allPseudos = getRegisteredPseudos();
 
 		for (const [pseudoId] of Object.entries(allPseudos)) {
-			const cssStyles = cascadeCSSStyles(styles, device, orientation, pseudoId);
+			const cssStylesRes = cascadeCSSStyles(styles, device, orientation, pseudoId);
+			if (!cssStylesRes.success) continue;
+			const cssStyles = cssStylesRes.data;
 
 			// Skip empty style objects
 			if (Object.keys(cssStyles).length === 0) continue;
 
-			const cssSelector = generateCSSSelector(blockID, pseudoId);
-			css += generateCSSRule(cssSelector, cssStyles);
+			const cssSelectorRes = generateCSSSelector(blockID, pseudoId);
+			if (!cssSelectorRes.success) continue;
+
+			const cssRuleRes = generateCSSRule(cssSelectorRes.data, cssStyles);
+			if (!cssRuleRes.success) continue;
+
+			css += cssRuleRes.data;
 		}
 
 		return css;
 	}
 
 	// When pseudo is specific, generate preview styles applied to base selector
-	const cssStyles = cascadeCSSStyles(styles, device, orientation, pseudo);
-	const cssSelector = generateCSSSelector(blockID, DEFAULT_PSEUDO_ID);
-	return generateCSSRule(cssSelector, cssStyles);
+	const cssStylesRes = cascadeCSSStyles(styles, device, orientation, pseudo);
+	if (!cssStylesRes.success) return '';
+	const cssStyles = cssStylesRes.data;
+
+	const cssSelectorRes = generateCSSSelector(blockID, DEFAULT_PSEUDO_ID);
+	if (!cssSelectorRes.success) return '';
+
+	const cssRuleRes = generateCSSRule(cssSelectorRes.data, cssStyles);
+	if (!cssRuleRes.success) return '';
+	return cssRuleRes.data;
 }
