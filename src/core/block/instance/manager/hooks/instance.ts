@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Types
 import type { BlockID, BlockInstance, BlockType, BlockContent } from '@/src/core/block/instance/types';
@@ -25,7 +25,7 @@ import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 export function useBlock(blockID: BlockID): BlockInstance | undefined {
 	const safeParam = useMemo(
 		() =>
-			new ValidationPipeline('[BlockQueries → useBlock]')
+			new ResultPipeline('[BlockQueries → useBlock]')
 				.validate({
 					blockID: validateBlockID(blockID),
 				})

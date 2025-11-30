@@ -9,7 +9,7 @@ import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ReactNode } from 'react';
 
 // Helpers
-import { fetchBlockInstance, fetchBlockDefinition, fetchBlockDefinitions } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance, pickBlockDefinition } from '@/src/core/block/instance/helper/pickers';
 import { validateBlockTag, validateBlockType, validateBlockID } from '@/src/core/block/instance/helper/validators';
 import { validateAttributeKey } from '@/src/core/block/attribute/helper';
 import { validateStyleKey } from '@/src/core/block/style/helper';
@@ -23,7 +23,7 @@ import { getRegisteredBlocks } from '@/src/core/block/instance/registry';
 import { getElementDefinitions } from '@/src/core/block/element/constants';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 /**
  * Checks if a child block type is permitted within a parent block type.
@@ -35,16 +35,16 @@ import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
  */
 export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: ElementTag): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockAcceptChild]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockAcceptChild]')
 		.validate({
 			parentBlock: validateBlockID(parentBlockID),
 			childBlockTag: validateBlockTag(childBlockTag),
 		})
-		.fetch((data) => ({
-			parentBlockInstance: fetchBlockInstance(data.parentBlock, useBlockStore.getState().allBlocks),
+		.pick((data) => ({
+			parentBlockInstance: pickBlockInstance(data.parentBlock, useBlockStore.getState().allBlocks),
 		}))
-		.fetch((data) => ({
-			parentBlockDefinition: fetchBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			parentBlockDefinition: pickBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
 			childBlockDefinition: fetchElementDefinition(data.childBlockTag, getElementDefinitions()),
 		}))
 		.execute();
@@ -82,15 +82,15 @@ export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: Eleme
  */
 export function canBlockHaveChildren(blockID: BlockID): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveChildren]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockHaveChildren]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})
-		.fetch((data) => ({
-			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -110,13 +110,13 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
  */
 export function canBlockHaveStyles(blockID: BlockID): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyles]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockHaveStyles]')
 		.validate({ blockID: validateBlockID(blockID) })
-		.fetch((data) => ({
-			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -137,16 +137,16 @@ export function canBlockHaveStyles(blockID: BlockID): boolean {
  */
 export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveStyle]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockHaveStyle]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			styleKey: validateStyleKey(styleKey),
 		})
-		.fetch((data) => ({
-			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -166,13 +166,13 @@ export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean
  */
 export function canBlockHaveAttributes(blockID: BlockID): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttributes]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockHaveAttributes]')
 		.validate({ blockID: validateBlockID(blockID) })
-		.fetch((data) => ({
-			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -193,16 +193,16 @@ export function canBlockHaveAttributes(blockID: BlockID): boolean {
  */
 export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeKey): boolean {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → canBlockHaveAttribute]')
+	const safeParams = new ResultPipeline('[BlockQueries → canBlockHaveAttribute]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			attributeKey: validateAttributeKey(attributeKey),
 		})
-		.fetch((data) => ({
-			blockInstance: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return false;
@@ -220,14 +220,7 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
  * const blocks = getBlockDefinitions(); → { 'text': BlockDefinition, 'container': BlockDefinition }
  */
 export function getBlockDefinitions(): BlockDefinitionRecord | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockDefinitions]')
-		.fetch(() => ({
-			blockDefinitions: fetchBlockDefinitions(getRegisteredBlocks()),
-		}))
-		.execute();
-	if (!safeParams) return undefined;
-
-	return safeParams.blockDefinitions;
+	return getRegisteredBlocks();
 }
 
 /**
@@ -238,12 +231,12 @@ export function getBlockDefinitions(): BlockDefinitionRecord | undefined {
  * const blockDef = getBlockDefinition('text'); → BlockDefinition | undefined
  */
 export function getBlockDefinition(blockType: BlockType): BlockDefinition | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockDefinition]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockDefinition]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -259,12 +252,12 @@ export function getBlockDefinition(blockType: BlockType): BlockDefinition | unde
  * const icon = getBlockIcon('text'); → <TextIcon />
  */
 export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockIcon]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockIcon]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -280,12 +273,12 @@ export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
  * const render = getBlockRender('text'); → <TextBlock ... />
  */
 export function getBlockRender(blockType: BlockType) {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockRender]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockRender]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -301,12 +294,12 @@ export function getBlockRender(blockType: BlockType) {
  * const availableTags = getBlockAvailableTags('container'); → ['div', 'section', 'article', 'aside', 'nav']
  */
 export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAvailableTags]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockAvailableTags]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -322,12 +315,12 @@ export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | unde
  * const styles = getBlockAllowedStyles('text'); → ['color', 'font-size', 'margin']
  */
 export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedStyles]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockAllowedStyles]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;
@@ -343,12 +336,12 @@ export function getBlockAllowedStyles(blockType: BlockType): BlockAllowedStyles 
  * const attributes = getBlockAllowedAttributes('text'); → ['id', 'class', 'style']
  */
 export function getBlockAllowedAttributes(blockType: BlockType): BlockAllowedAttributes | undefined {
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockAllowedAttributes]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockAllowedAttributes]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
-		.fetch((data) => ({
-			blockDefinition: fetchBlockDefinition(data.blockType, getRegisteredBlocks()),
+		.pick((data) => ({
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!safeParams) return;

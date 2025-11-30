@@ -1,4 +1,5 @@
 export * from './generate';
 export * from './cascade';
 export * from './shorthands';
-export * from './apply';
+export * from './update';
+export * from './render';

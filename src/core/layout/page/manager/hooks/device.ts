@@ -17,7 +17,7 @@ import { getRegisteredDevice } from '@/src/core/layout/page/registry';
  * const device = useSelectedDevice() // Returns { id: 'mobile', name: 'Mobile', ... }
  */
 export function useSelectedDevice(): DeviceInstance | undefined {
-	const selectedDeviceID = usePageStore((state) => state.selectedDeviceID);
+	const selectedDeviceID = usePageStore((state) => state.selected.deviceID);
 	return getRegisteredDevice(selectedDeviceID);
 }
 
@@ -31,5 +31,5 @@ export function useSelectedDevice(): DeviceInstance | undefined {
  * const deviceID = useSelectedDeviceID() // Returns 'mobile' or undefined
  */
 export function useSelectedDeviceID(): DeviceID {
-	return usePageStore((state) => state.selectedDeviceID);
+	return usePageStore((state) => state.selected.deviceID);
 }

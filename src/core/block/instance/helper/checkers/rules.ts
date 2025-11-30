@@ -1,10 +1,10 @@
 // Types
 import type { BlockDefinition, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementTag,ElementDefinition } from '@/src/core/block/element/types';
 import type { CheckResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 
 /**
  * Check whether the parent block definition allows a child with the specified element tag.
@@ -31,7 +31,7 @@ export function isBlockChildAllowed(parentBlockDefinition: BlockDefinition, chil
  * @param parentBlockInstance - the immediate parent instance where the child would be placed
  * @param storedBlocks - record of all block instances (used to walk up the tree)
  */
-export function hasBlockForbiddenAncestor(childElementDefinition: any, parentBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): CheckResult {
+export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinition, parentBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): CheckResult {
 	// If there are no forbidden ancestors declared, this rule can't be violated
 	const forbiddenAncestors = childElementDefinition.forbiddenAncestors;
 	if (!forbiddenAncestors) return { success: true, ok: false };
@@ -48,7 +48,7 @@ export function hasBlockForbiddenAncestor(childElementDefinition: any, parentBlo
 		if (forbiddenSet.has(currentBlockInstance.tag)) return { success: true, ok: true };
 
 		// Fetch the next parent in the chain; propagate fetch errors as failures
-		const parentResult = fetchBlockInstance(currentBlockInstance.parentID, storedBlocks);
+		const parentResult = pickBlockInstance(currentBlockInstance.parentID, storedBlocks);
 		if (!parentResult.success) return { success: false, error: parentResult.error };
 		currentBlockInstance = parentResult.data;
 	}
@@ -80,7 +80,7 @@ export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, 
 	let existingCount = 0;
 	for (const contentID of parentBlockInstance.contentIDs) {
 		if (contentID === excludeBlockID) continue;
-		const siblingBlockInstance = fetchBlockInstance(contentID, storedBlocks);
+		const siblingBlockInstance = pickBlockInstance(contentID, storedBlocks);
 		if (!siblingBlockInstance.success) return { success: false, error: siblingBlockInstance.error };
 		if (siblingBlockInstance.data.tag === childElementTag) existingCount++;
 	}
@@ -107,7 +107,7 @@ export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefini
 	// Collect current sibling tags in order
 	const currentChildTags: ElementTag[] = [];
 	for (const contentID of parentBlockInstance.contentIDs) {
-		const siblingBlockInstance = fetchBlockInstance(contentID, storedBlocks);
+		const siblingBlockInstance = pickBlockInstance(contentID, storedBlocks);
 		if (!siblingBlockInstance.success) return { success: false, error: siblingBlockInstance.error };
 		currentChildTags.push(siblingBlockInstance.data.tag);
 	}

@@ -125,3 +125,4 @@ export function validateDeviceDefinition(deviceDefinition: unknown): ValidateRes
 
     return { valid: true, value: deviceDefinition as DeviceDefinition };
 }
+

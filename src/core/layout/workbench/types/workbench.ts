@@ -25,7 +25,7 @@ export type WorkbenchOrder = number;
 /**
  * Registry of all Workbenchs by their ID.
  */
-export type WorkbenchRegistry = Record<WorkbenchID, WorkbenchDefinition>;
+export type WorkbenchRegistry = Record<WorkbenchID, WorkbenchInstance>;
 
 /**
  * Children blocks to render inside the Workbench
@@ -41,7 +41,7 @@ export type WorkbenchRender = () => ReactNode;
  * Defines the structure for workbench configurations in the page builder.
  * Workbenches provide different editing contexts and toolsets.
  */
-export interface WorkbenchDefinition {
+export interface WorkbenchInstance {
     /** Unique identifier for the Workbench	 */
     id: WorkbenchID;
     /** Title of the Workbench */

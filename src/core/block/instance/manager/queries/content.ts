@@ -5,11 +5,11 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
 
 // Helpers
-import { fetchBlockContent } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockContent } from '@/src/core/block/instance/helper/pickers';
 import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 /**
  * Gets the content data for a specific block.
@@ -23,10 +23,10 @@ import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
  */
 export function getBlockContent(blockID: BlockID): BlockContent | undefined {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → getBlockContent]')
+	const safeParams = new ResultPipeline('[BlockQueries → getBlockContent]')
 		.validate({ blockID: validateBlockID(blockID) })
-		.fetch((data) => ({
-			content: fetchBlockContent(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			content: pickBlockContent(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeParams) return undefined;

@@ -44,11 +44,6 @@ export type DeviceViewport = {
 };
 
 /**
- * Registry of all devices by their ID.
- */
-export type DeviceRecord = Record<DeviceID, DeviceInstance>;
-
-/**
  * Defines the structure for device configurations in the page builder.
  * Devices represent different viewport sizes and categories for responsive design.
  */
@@ -75,3 +70,8 @@ export interface DeviceInstance extends DeviceDefinition {
 	/** Unique identifier assigned during registration */
 	id: DeviceID;
 }
+
+/**
+ * Registry of all devices by their ID.
+ */
+export type DeviceRecord = Record<DeviceID, DeviceInstance>;

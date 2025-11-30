@@ -3,7 +3,7 @@ import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instan
 import type { FindResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 
 /**
  * Find ancestor BlockInstance objects for the given block instance.
@@ -24,7 +24,7 @@ export function findBlockAncestors(sourceBlockInstance: BlockInstance, storedBlo
 		seen.add(current.parentID);
 
 		// Fetch the parent instance
-		const parentResult = fetchBlockInstance(current.parentID, storedBlocks);
+		const parentResult = pickBlockInstance(current.parentID, storedBlocks);
 		if (!parentResult.success) return { status: 'error', error: `Failed to find ancestor: ${parentResult.error}` };
 
 		// Add the parent instance to the ancestors list

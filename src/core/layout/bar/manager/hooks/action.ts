@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import type {  BarID, BarActionInstance} from '@/src/core/layout/bar/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBarID } from '@/src/core/layout/bar/helper/validators';
@@ -26,7 +26,7 @@ import { validateBarID } from '@/src/core/layout/bar/helper/validators';
 export function useBarActions(barID: BarID): BarActionInstance[] | undefined {
     const safeParams = useMemo(
         () =>
-            new ValidationPipeline('[LayoutQueries → useBarActions]')
+            new ResultPipeline('[LayoutQueries → useBarActions]')
                 .validate({
                     barID: validateBarID(barID),
                 })

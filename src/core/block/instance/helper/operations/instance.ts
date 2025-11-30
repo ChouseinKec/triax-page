@@ -1,5 +1,6 @@
 // Types
 import type { BlockDefinition, BlockID, BlockInstance, BlockStyles, BlockAttributes } from '@/src/core/block/instance/types';
+import type { OperateResult } from '@/src/shared/types/result';
 
 /**
  * Compose the final styles for a block instance.
@@ -73,9 +74,7 @@ export function createBlock(blockDefinition: BlockDefinition, parentID: BlockID)
  * @param parentBlockInstance - the parent block instance
  * @param childBlockID - the child block ID to remove
  */
-import type { OperationResult } from '@/src/shared/types/result';
-
-export function detachBlockFromContentIDs(parentBlockInstance: BlockInstance, childBlockID: BlockID): OperationResult<BlockInstance> {
+export function detachBlockFromContentIDs(parentBlockInstance: BlockInstance, childBlockID: BlockID): OperateResult<BlockInstance> {
 	// If the child is not present, return the parent unchanged
 	if (!parentBlockInstance.contentIDs.includes(childBlockID)) return { success: true, data: parentBlockInstance };
 
@@ -97,7 +96,7 @@ export function detachBlockFromContentIDs(parentBlockInstance: BlockInstance, ch
  * @param childBlockID - the child block ID to add
  * @param targetIndex - the index at which to insert the child ID
  */
-export function attachBlockToContentIDs(parentBlockInstance: BlockInstance, childBlockID: BlockID, targetIndex: number): OperationResult<BlockInstance> {
+export function attachBlockToContentIDs(parentBlockInstance: BlockInstance, childBlockID: BlockID, targetIndex: number): OperateResult<BlockInstance> {
 	// Remove any existing occurrence first so insertion will not create duplicates
 	const withoutChild = parentBlockInstance.contentIDs.filter((id) => id !== childBlockID);
 
@@ -111,10 +110,12 @@ export function attachBlockToContentIDs(parentBlockInstance: BlockInstance, chil
 }
 
 /**
- * Return a new BlockInstance where the parentID is changed to the supplied
- * value. This is useful to update the child side of a parent/child change.
+ * Update the parentID of a block instance.
+ *
+ * @param blockInstance - the block instance to update
+ * @param parentID - the new parent ID
  */
-export function updateBlockParentID(blockInstance: BlockInstance, parentID: BlockID): OperationResult<BlockInstance> {
+export function updateBlockParentID(blockInstance: BlockInstance, parentID: BlockID): OperateResult<BlockInstance> {
 	// If the parentID is already the desired value, return success with the original instance
 	if (blockInstance.parentID === parentID) return { success: true, data: blockInstance };
 

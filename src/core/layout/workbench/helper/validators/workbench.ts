@@ -1,5 +1,5 @@
 // Types
-import type { WorkbenchDefinition, WorkbenchID, WorkbenchIcon, WorkbenchOrder, WorkbenchTitle, WorkbenchRender } from '@/src/core/layout/workbench/types';
+import type { WorkbenchInstance, WorkbenchID, WorkbenchIcon, WorkbenchOrder, WorkbenchTitle, WorkbenchRender } from '@/src/core/layout/workbench/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
@@ -85,12 +85,12 @@ export function validateWorkbenchIcon(icon: unknown): ValidateResult<WorkbenchIc
  * Checks if the definition has all required valid properties including ID, title, icon, order, and render.
  *
  * @param workbench - The workbench definition to validate
- * @returns ValidateResult containing validity and the validated WorkbenchDefinition if valid
+ * @returns ValidateResult containing validity and the validated WorkbenchInstance if valid
  *
  * @example
  * validateWorkbench({ id: 'wb-1', title: 'My Workbench', icon: <Icon />, order: 1, render: () => <div>Content</div> }) → { valid: true, value: {...} }
  */
-export function validateWorkbench(workbench: unknown): ValidateResult<WorkbenchDefinition> {
+export function validateWorkbench(workbench: unknown): ValidateResult<WorkbenchInstance> {
 	if (!isWorkbenchDefinitionValid(workbench)) return { valid: false, message: `Workbench must be an object with required properties, got: ${typeof workbench}` };
 
 	const idValidation = validateWorkbenchID(workbench.id);
@@ -108,5 +108,5 @@ export function validateWorkbench(workbench: unknown): ValidateResult<WorkbenchD
 	const renderValidation = validateWorkbenchRender(workbench.render);
 	if (!renderValidation.valid) return renderValidation;
 
-	return { valid: true, value: workbench as WorkbenchDefinition };
+	return { valid: true, value: workbench as WorkbenchInstance };
 }

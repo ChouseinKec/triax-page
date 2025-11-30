@@ -1,10 +1,10 @@
 // Types
 import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { OperationResult } from '@/src/shared/types/result';
+import type { OperateResult } from '@/src/shared/types/result';
 
 // Helpers
 import { findBlockDescendants, findBlockChildIndex } from '@/src/core/block/instance/helper/finders';
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 import { detachBlockFromContentIDs, attachBlockToContentIDs, updateBlockParentID } from '@/src/core/block/instance/helper/operations/instance';
 
 // External
@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @param parentBlockInstance - the current parent block instance
  * @param storedBlocks - the current block instance record
  */
-export function detachBlockFromParent(sourceBlockInstance: BlockInstance, parentBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function detachBlockFromParent(sourceBlockInstance: BlockInstance, parentBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Remove the child ID from the parent's contentIDs cleanly using the
 	const mutatedParentResult = detachBlockFromContentIDs(parentBlockInstance, sourceBlockInstance.id);
 	if (!mutatedParentResult.success) return { success: false, error: `Failed to detach child from parent: ${mutatedParentResult.error}` };
@@ -54,7 +54,7 @@ export function detachBlockFromParent(sourceBlockInstance: BlockInstance, parent
  * @param targetIndex - the index within the parent's contentIDs to insert at
  * @param storedBlocks - the current record of all block instances
  */
-export function attachBlockToParent(sourceBlockInstance: BlockInstance, parentBlockInstance: BlockInstance, targetIndex: number, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function attachBlockToParent(sourceBlockInstance: BlockInstance, parentBlockInstance: BlockInstance, targetIndex: number, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Add the child ID into the parent's contentIDs cleanly using the
 	const mutatedParentResult = attachBlockToContentIDs(parentBlockInstance, sourceBlockInstance.id, targetIndex);
 	if (!mutatedParentResult.success) return { success: false, error: `Failed to attach child to parent: ${mutatedParentResult.error}` };
@@ -80,7 +80,7 @@ export function attachBlockToParent(sourceBlockInstance: BlockInstance, parentBl
  * @param blockID - id of the root block to delete
  * @param storedBlocks - the current block instance record
  */
-export function deleteBlockFromTree(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function deleteBlockFromTree(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Set to track all block ids to delete
 	const blocksToDelete = new Set<BlockID>([sourceBlockInstance.id]);
 
@@ -103,12 +103,12 @@ export function deleteBlockFromTree(sourceBlockInstance: BlockInstance, storedBl
  * @param blockInstance - the block instance to add
  * @param storedBlocks - the current block instance record
  */
-export function addBlockToTree(blockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function addBlockToTree(blockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Add the instance into the store copy upfront so downstream operations
 	const mutatedBlocks = { ...storedBlocks, [blockInstance.id]: blockInstance };
 
 	// Fetch the parent block instance
-	const parentInstanceResult = fetchBlockInstance(blockInstance.parentID, mutatedBlocks);
+	const parentInstanceResult = pickBlockInstance(blockInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return parentInstanceResult;
 
 	// Add the block to its parent at the end of the contentIDs
@@ -181,7 +181,7 @@ export function cloneBlock(rootBlockInstance: BlockInstance, storedBlocks: Block
  * @param sourceBlockInstance - the block instance to duplicate
  * @param storedBlocks - record of all block instances used to resolve children
  */
-export function duplicateBlockInTree(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function duplicateBlockInTree(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Clone the subtree
 	const { clonedInstance, clonedBlocks } = cloneBlock(sourceBlockInstance, storedBlocks);
 
@@ -189,7 +189,7 @@ export function duplicateBlockInTree(sourceBlockInstance: BlockInstance, storedB
 	const mutatedBlocks = { ...storedBlocks, ...clonedBlocks };
 
 	// Fetch the parent block instance
-	const parentInstanceResult = fetchBlockInstance(sourceBlockInstance.parentID, mutatedBlocks);
+	const parentInstanceResult = pickBlockInstance(sourceBlockInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return { success: false, error: parentInstanceResult.error };
 
 	// Find the index of the source block within its parent's contentIDs
@@ -205,7 +205,7 @@ export function duplicateBlockInTree(sourceBlockInstance: BlockInstance, storedB
 	return { success: true, data: attachedBlocksResult.data };
 }
 
-export function overwriteBlockInTree(sourceBlock: BlockInstance, targetBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperationResult<BlockInstanceRecord> {
+export function overwriteBlockInTree(sourceBlock: BlockInstance, targetBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): OperateResult<BlockInstanceRecord> {
 	// Clone the subtree
 	const { clonedInstance, clonedBlocks } = cloneBlock(sourceBlock, storedBlocks, targetBlockInstance.parentID);
 
@@ -213,7 +213,7 @@ export function overwriteBlockInTree(sourceBlock: BlockInstance, targetBlockInst
 	const mutatedBlocks = { ...storedBlocks, ...clonedBlocks };
 
 	// Fetch the parent block instance
-	const parentInstanceResult = fetchBlockInstance(targetBlockInstance.parentID, mutatedBlocks);
+	const parentInstanceResult = pickBlockInstance(targetBlockInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return parentInstanceResult;
 
 	// Find the index of the source block within its parent's contentIDs

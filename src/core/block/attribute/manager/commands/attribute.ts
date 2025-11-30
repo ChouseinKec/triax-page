@@ -6,12 +6,12 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { AttributeKey, AttributeValue } from '@/src/core/block/attribute/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 import { validateAttributeKey, validateAttributeValue } from '@/src/core/block/attribute/helper';
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 
 /**
  * Sets the attribute value for a specific block in block attribute operations.
@@ -27,14 +27,14 @@ import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
  */
 export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
 	const blockStore = useBlockStore.getState();
-	const safeData = new ValidationPipeline('[BlockManager → setBlockAttribute]')
+	const safeData = new ResultPipeline('[BlockManager → setBlockAttribute]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			attributeKey: validateAttributeKey(attributeKey),
 			attributeValue: validateAttributeValue(attributeValue),
 		})
-		.fetch((data) => ({
-			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			block: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;

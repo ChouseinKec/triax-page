@@ -6,7 +6,7 @@ import type { StyleKey } from "@/src/core/block/style/types";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Commands
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from "@/src/core/block/instance/manager/commands";
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/manager';
 
 // Managers
 import { canBlockHaveStyle } from "@/src/core/block/instance/manager/queries";

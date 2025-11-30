@@ -6,7 +6,7 @@ import type { BarInstance } from '@/src/core/layout/bar/types';
 import type { WorkbenchID } from '@/src/core/layout/workbench/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateWorkbenchID } from '@/src/core/layout/workbench/helper';
@@ -24,11 +24,11 @@ import { fetchBarsByWorkbench } from '@/src/core/layout/bar/helper/fetchers';
  */
 export function getBarsByWorkbench(workbenchID: WorkbenchID): BarInstance[] | undefined {
 	const layoutStore = useLayoutStore.getState();
-	const safeParams = new ValidationPipeline('[LayoutQueries → getBarsByWorkbench]')
+	const safeParams = new ResultPipeline('[LayoutQueries → getBarsByWorkbench]')
 		.validate({
 			workbenchID: validateWorkbenchID(workbenchID),
 		})
-		.fetch((data) => ({
+		.pick((data) => ({
 			barsByWorkbench: fetchBarsByWorkbench(data.workbenchID, layoutStore.allBars),
 		}))
 		.execute();

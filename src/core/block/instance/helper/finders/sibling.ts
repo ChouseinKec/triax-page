@@ -3,7 +3,7 @@ import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instan
 import type { FindResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 import { findBlockAncestors } from '@/src/core/block/instance/helper/finders/ancestor';
 import { findBlockChildIndex } from '@/src/core/block/instance/helper/finders/child';
 import { isBlockLastChild, isBlockFirstChild } from '@/src/core/block/instance/helper/checkers';
@@ -16,7 +16,7 @@ import { isBlockLastChild, isBlockFirstChild } from '@/src/core/block/instance/h
  */
 export function findBlockNextSibling(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): FindResult<BlockInstance> {
 	// Find the parent block instance
-	const parentBlockInstance = fetchBlockInstance(sourceBlockInstance.parentID, storedBlocks);
+	const parentBlockInstance = pickBlockInstance(sourceBlockInstance.parentID, storedBlocks);
 	if (!parentBlockInstance.success) return { status: 'error', error: parentBlockInstance.error };
 
 	// Find the source's position inside the parent's children.
@@ -31,7 +31,7 @@ export function findBlockNextSibling(sourceBlockInstance: BlockInstance, storedB
 
 	// Fetch the sibling that immediately follows the source
 	const nextSiblingID = parentBlockInstance.data.contentIDs[currentIndexResult.data + 1];
-	const nextSiblingResult = fetchBlockInstance(nextSiblingID, storedBlocks);
+	const nextSiblingResult = pickBlockInstance(nextSiblingID, storedBlocks);
 	if (!nextSiblingResult.success) return { status: 'error', error: nextSiblingResult.error };
 
 	// Return the next sibling
@@ -46,7 +46,7 @@ export function findBlockNextSibling(sourceBlockInstance: BlockInstance, storedB
  */
 export function findBlockPreviousSibling(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): FindResult<BlockInstance> {
 	// Find the parent block instance
-	const parentBlockInstance = fetchBlockInstance(sourceBlockInstance.parentID, storedBlocks);
+	const parentBlockInstance = pickBlockInstance(sourceBlockInstance.parentID, storedBlocks);
 	if (!parentBlockInstance.success) return { status: 'error', error: parentBlockInstance.error };
 
 	// Find the source's position inside the parent's children.
@@ -61,7 +61,7 @@ export function findBlockPreviousSibling(sourceBlockInstance: BlockInstance, sto
 
 	// Fetch the sibling that immediately precedes the source
 	const previousSiblingID = parentBlockInstance.data.contentIDs[currentIndexResult.data - 1];
-	const previousSiblingResult = fetchBlockInstance(previousSiblingID, storedBlocks);
+	const previousSiblingResult = pickBlockInstance(previousSiblingID, storedBlocks);
 	if (!previousSiblingResult.success) return { status: 'error', error: previousSiblingResult.error };
 
 	// Return the previous sibling
@@ -96,7 +96,7 @@ export function findBlockNextParentSibling(sourceBlockInstance: BlockInstance, s
 
 		// Fetch the sibling block instance
 		const siblingID = grandParent.contentIDs[nextSiblingIndex];
-		const siblingResult = fetchBlockInstance(siblingID, storedBlocks);
+		const siblingResult = pickBlockInstance(siblingID, storedBlocks);
 		if (!siblingResult.success) return { status: 'error', error: siblingResult.error };
 
 		// Return the found sibling

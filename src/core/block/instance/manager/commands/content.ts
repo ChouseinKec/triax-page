@@ -5,7 +5,7 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBlockID } from '@/src/core/block/instance/helper';
@@ -22,7 +22,7 @@ import { validateBlockID } from '@/src/core/block/instance/helper';
  * setBlockContent('block-123', { text: 'New text', format: 'bold' })
  */
 export function setBlockContent(blockID: BlockID, content: BlockContent): void {
-	const safeData = new ValidationPipeline('[BlockCommands → setBlockContent]')
+	const safeData = new ResultPipeline('[BlockCommands → setBlockContent]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})

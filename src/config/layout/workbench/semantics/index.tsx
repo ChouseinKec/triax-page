@@ -2,9 +2,9 @@
 import WorkbenchSemanticRender from '@/src/config/layout/workbench/semantics/render';
 
 // Types
-import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
+import type { WorkbenchInstance } from '@/src/core/layout/workbench/types';
 
-export const WorkbenchSemanticDefinition: WorkbenchDefinition = {
+export const WorkbenchSemanticDefinition: WorkbenchInstance = {
 	id: 'semantics',
 	title: 'Semantic (HTML)',
 	order: 10,

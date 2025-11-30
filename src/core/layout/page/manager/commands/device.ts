@@ -5,13 +5,13 @@ import { usePageStore } from '@/src/core/store';
 import type { DeviceID } from '@/src/core/layout/page/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateDeviceID } from '@/src/core/layout/page/helper/validators';
 
-// Constants
-import { DEFAULT_DEVICE_ID } from '@/src/core/layout/page/constants';
+// Managers
+import { getDeviceDefaultID } from '@/src/core/layout/page/manager/queries';
 
 /**
  * Sets the currently selected device by ID for page commands.
@@ -24,14 +24,14 @@ import { DEFAULT_DEVICE_ID } from '@/src/core/layout/page/constants';
  * setSelectedDeviceID('mobile') // Sets current device to mobile
  */
 export function setSelectedDeviceID(deviceID: DeviceID): void {
-	if (!deviceID) deviceID = DEFAULT_DEVICE_ID;
+	if (!deviceID) deviceID = getDeviceDefaultID();
 
-	const safeData = new ValidationPipeline('[PageCommands → setSelectedDeviceID]')
+	const safeData = new ResultPipeline('[PageCommands → setSelectedDeviceID]')
 		.validate({
 			deviceID: validateDeviceID(deviceID),
 		})
 		.execute();
 	if (!safeData) return;
 
-	usePageStore.getState().setSelectedDeviceID(safeData.deviceID);
+	usePageStore.getState().setSelected({ deviceID: safeData.deviceID });
 }

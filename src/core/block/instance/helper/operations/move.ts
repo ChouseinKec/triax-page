@@ -1,9 +1,9 @@
 // Types
 import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { OperationResult } from '@/src/shared/types/result';
+import type { OperateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 import { detachBlockFromParent, attachBlockToParent } from '@/src/core/block/instance/helper/operations';
 
 /**
@@ -14,12 +14,12 @@ import { detachBlockFromParent, attachBlockToParent } from '@/src/core/block/ins
  * @param storedBlocks - the current block instance record
  * @param targetIndex - the index in the target parent's contentIDs to insert at
  */
-export function moveBlock(sourceBlockInstance: BlockInstance, targetParentInstance: BlockInstance, storedBlocks: BlockInstanceRecord, targetIndex: number): OperationResult<BlockInstanceRecord> {
+export function moveBlock(sourceBlockInstance: BlockInstance, targetParentInstance: BlockInstance, storedBlocks: BlockInstanceRecord, targetIndex: number): OperateResult<BlockInstanceRecord> {
 	// Create a shallow copy of the stored blocks to avoid mutating the original.
 	const clonedBlocks = { ...storedBlocks };
 
 	// Fetch the source's parent instance
-	const sourceParentResult = fetchBlockInstance(sourceBlockInstance.parentID, clonedBlocks);
+	const sourceParentResult = pickBlockInstance(sourceBlockInstance.parentID, clonedBlocks);
 	if (!sourceParentResult.success) return { success: false, error: sourceParentResult.error };
 
 	// Detach the source from its parent
@@ -27,7 +27,7 @@ export function moveBlock(sourceBlockInstance: BlockInstance, targetParentInstan
 	if (!deleteResult.success) return deleteResult;
 
 	// Fetch the target parent instance from the post-delete store.
-	const targetParentResult = fetchBlockInstance(targetParentInstance.id, deleteResult.data);
+	const targetParentResult = pickBlockInstance(targetParentInstance.id, deleteResult.data);
 	if (!targetParentResult.success) return { success: false, error: targetParentResult.error };
 
 	// Attach the source to the target parent at the desired index.

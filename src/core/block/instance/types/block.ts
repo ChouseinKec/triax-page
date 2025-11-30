@@ -1,10 +1,12 @@
 import type { ReactElement } from 'react';
 
 // Types
-import type { StyleKey } from '@/src/core/block/style/types';
+import type { StyleKey, StyleValue } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ElementTag } from '@/src/core/block/element/types';
-
+import type { DeviceName } from '@/src/core/layout/page/types';
+import type { OrientationName } from '@/src/core/layout/page/types';
+import type { PseudoName } from '@/src/core/layout/page/types';
 /**
  * Unique identifier for a block instance
  */
@@ -40,10 +42,10 @@ export type BlockDescription = string;
  * device -> orientation -> pseudo -> styles
  */
 export type BlockStyles = {
-	[deviceName: string]: {
-		[orientationName: string]: {
-			[pseudoName: string]: {
-				[key in StyleKey]?: string;
+	[deviceName: DeviceName]: {
+		[orientationName: OrientationName]: {
+			[pseudoName: PseudoName]: {
+				[key in StyleKey]?: StyleValue;
 			};
 		};
 	};

@@ -4,7 +4,8 @@ import React, { useCallback, memo, useRef } from 'react';
 import type { BlockChildren, BlockInstance } from '@/src/core/block/instance/types';
 
 // Manager
-import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes, getBlockRenderedStyles } from '@/src/core/block/instance/manager';
+import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes } from '@/src/core/block/instance/manager';
+import { useBlockRenderedStyles } from '@/src/core/block/style/manager/';
 
 
 /**
@@ -18,7 +19,7 @@ const BlockContainerRender: React.FC<{ instance: BlockInstance; children?: Block
     const blockID = instance.id;
     const isSelected = useIsBlockSelected(blockID);
     const blockAttributes = getBlockRenderedAttributes(blockID);
-    const blockStyles = getBlockRenderedStyles(blockID);
+    const blockStyles = useBlockRenderedStyles(blockID);
     const containerRef = useRef<HTMLDivElement>(null);
 
     /**

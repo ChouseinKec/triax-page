@@ -9,7 +9,7 @@ import GroupLayout from "@/src/shared/components/layout/group/component";
 import { renderStyleRow } from "./factory";
 
 // Managers
-import { useBlockStyle } from "@/src/core/block/instance/manager/";
+import { useBlockStyle } from "@/src/core/block/style/manager/";
 
 /**
  * Renders the Display & Layout tab content

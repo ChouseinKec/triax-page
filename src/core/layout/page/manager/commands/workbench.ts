@@ -5,7 +5,7 @@ import { usePageStore } from '@/src/core/store';
 import type { WorkbenchID } from '@/src/core/layout/workbench/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateWorkbenchID } from '@/src/core/layout/workbench/helper/validators';
@@ -21,12 +21,12 @@ import { validateWorkbenchID } from '@/src/core/layout/workbench/helper/validato
  * setSelectedWorkbenchID('workbench-123') // Sets current workbench to workbench-123
  */
 export function setSelectedWorkbenchID(workbenchID: WorkbenchID): void {
-    const safeData = new ValidationPipeline('[PageCommands → setSelectedWorkbenchID]')
+    const safeData = new ResultPipeline('[PageCommands → setSelectedWorkbenchID]')
         .validate({
             workbenchID: validateWorkbenchID(workbenchID),
         })
         .execute();
     if (!safeData) return;
 
-    usePageStore.getState().setSelectedWorkbenchID(safeData.workbenchID);
+    usePageStore.getState().setSelected({ workbenchID: safeData.workbenchID });
 }

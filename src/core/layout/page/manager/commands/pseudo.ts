@@ -5,13 +5,13 @@ import { usePageStore } from '@/src/core/store';
 import type { PseudoID } from '@/src/core/layout/page/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validatePseudoID } from '@/src/core/layout/page/helper/validators';
 
-// Constants
-import { DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
+// Managers
+import { getDefaultPseudoID } from '@/src/core/layout/page/manager/queries';
 
 /**
  * Sets the currently selected pseudo by ID for page commands.
@@ -24,13 +24,13 @@ import { DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
  * setSelectedPseudoID('hover') // Sets current pseudo to hover
  */
 export function setSelectedPseudoID(pseudoID: PseudoID): void {
-	if (!pseudoID) pseudoID = DEFAULT_PSEUDO_ID;
-	const safeData = new ValidationPipeline('[PageCommands → setSelectedPseudoID]')
+	if (!pseudoID) pseudoID = getDefaultPseudoID();
+	const safeData = new ResultPipeline('[PageCommands → setSelectedPseudoID]')
 		.validate({
 			pseudoID: validatePseudoID(pseudoID),
 		})
 		.execute();
 	if (!safeData) return;
 
-	usePageStore.getState().setSelectedPseudoID(safeData.pseudoID);
+	usePageStore.getState().setSelected({ pseudoID: safeData.pseudoID });
 }

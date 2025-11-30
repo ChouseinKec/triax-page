@@ -7,29 +7,26 @@ import type { DeviceDefinition, DeviceID } from '@/src/core/layout/page/types';
 // Registry
 import { getRegisteredDevices } from '@/src/core/layout/page/registry';
 
+// Constants
+import { DEFAULT_DEVICE_ID } from '@/src/core/layout/page/constants';
 
 /**
  * Gets the currently selected device ID from the page store for page queries.
- * Returns the device identifier from the current store state.
- *
- * @returns The current device ID or undefined if not set
- *
- * @example
- * const deviceID = getSelectedDeviceID() // Returns 'mobile' or undefined
  */
 export function getSelectedDeviceID(): DeviceID {
-	return usePageStore.getState().selectedDeviceID;
+	return usePageStore.getState().selected.deviceID;
 }
 
 /**
  * Gets all available device definitions for page queries.
- * Returns an array of all registered device definitions from the registry.
- *
- * @returns Array of all device definitions
- *
- * @example
- * const devices = getAllDevices() // Returns [{ id: 'all', name: 'All' }, { id: 'mobile', name: 'Mobile' }, ...]
  */
-export function getAllDevices(): DeviceDefinition[] {
+export function getDeviceDefinitions(): DeviceDefinition[] {
 	return Object.values(getRegisteredDevices());
+}
+
+/**
+ * Gets the default device ID used for page layout and style fallbacks.
+ */
+export function getDeviceDefaultID(): DeviceID {
+	return DEFAULT_DEVICE_ID;
 }

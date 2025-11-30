@@ -1,5 +1,5 @@
 // Types
-import type { StyleDefinition, StyleKey } from '@/src/core/block/style/types';
+import type { StyleDefinition, StyleKey,StyleShorthandRecord } from '@/src/core/block/style/types';
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from './value';
@@ -97,4 +97,4 @@ export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entri
  * A lookup table of CSS shorthand properties and their expanded definitions.
  * Each entry maps a shorthand property to an array of its longhand properties.
  */
-export const STYLE_SHORTHAND_DEFINITIONS: Partial<Record<StyleKey, StyleKey[]>> = SHORTHANDS;
+export const STYLE_SHORTHAND_DEFINITIONS: StyleShorthandRecord = SHORTHANDS;

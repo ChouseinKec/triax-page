@@ -18,9 +18,6 @@ import { validateString } from '@/src/shared/helpers';
  *
  * @param styleKey - The CSS style key to validate
  * @returns ValidateResult containing validity and the validated StyleKey if valid
- *
- * @example
- * validateStyleKey('display') → { valid: true, value: 'display' }
  */
 export function validateStyleKey(styleKey: unknown): ValidateResult<StyleKey> {
 	const validation = validateString(styleKey);
@@ -39,9 +36,6 @@ export function validateStyleKey(styleKey: unknown): ValidateResult<StyleKey> {
  * @param styleKey - The CSS property key this value is for
  * @param styleValue - The CSS style value to validate
  * @returns ValidateResult containing validity and the validated StyleValue if valid
- *
- * @example
- * validateStyleValue('display', 'block') → { valid: true, value: 'display', 'block' }
  */
 export function validateStyleValue(styleKey: unknown, styleValue: unknown): ValidateResult<StyleValue> {
 	// Validate the style key first

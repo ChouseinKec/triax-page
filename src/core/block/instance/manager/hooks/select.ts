@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Types
 import type { BlockID, BlockType } from '@/src/core/block/instance/types';
@@ -22,7 +22,7 @@ import { validateBlockID } from '@/src/core/block/instance/helper/validators';
 export function useIsBlockSelected(blockID: BlockID): boolean {
 	const safeParam = useMemo(
 		() =>
-			new ValidationPipeline('[BlockQueries → useIsBlockSelected]')
+			new ResultPipeline('[BlockQueries → useIsBlockSelected]')
 				.validate({
 					blockID: validateBlockID(blockID),
 				})

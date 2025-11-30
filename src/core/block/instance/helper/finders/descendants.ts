@@ -3,7 +3,7 @@ import type { BlockInstance, BlockID, BlockInstanceRecord } from '@/src/core/blo
 import type { FindResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstances } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstances } from '@/src/core/block/instance/helper/pickers';
 import { findBlockLastChild } from '@/src/core/block/instance/helper/finders/child';
 
 /**
@@ -43,7 +43,7 @@ export function findBlockLastDescendant(sourceBlockInstance: BlockInstance, stor
  */
 export function findBlockDescendants(sourceBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): FindResult<BlockInstance[]> {
 	// Fetch initial children
-	const initialChildren = fetchBlockInstances(sourceBlockInstance.contentIDs, storedBlocks);
+	const initialChildren = pickBlockInstances(sourceBlockInstance.contentIDs, storedBlocks);
 	if (!initialChildren.success) return { status: 'error', error: `Failed to find descendants: ${initialChildren.error}` };
 
 	// If there are no direct children, we don't have descendants
@@ -59,7 +59,7 @@ export function findBlockDescendants(sourceBlockInstance: BlockInstance, storedB
 		descendants.push(current);
 
 		// Fetch children of the current node
-		const childrenResult = fetchBlockInstances(current.contentIDs, storedBlocks);
+		const childrenResult = pickBlockInstances(current.contentIDs, storedBlocks);
 		if (!childrenResult.success) return { status: 'error', error: `Failed to find descendants: ${childrenResult.error}` };
 
 		// Add unvisited children to the stack for processing

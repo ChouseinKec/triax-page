@@ -6,10 +6,10 @@ import CSS from "./styles.module.scss";
 
 // Managers
 import { useSelectedWorkbenchID } from "@/src/core/layout/page/manager";
-import { useWorkbenchs } from "@/src/core/layout/workbench/manager/hooks";
+import { getWorkbenchInstance } from "@/src/core/layout/workbench/manager";
 
 // Types
-import { WorkbenchDefinition } from "@/src/core/layout/workbench/types";
+import { WorkbenchInstance } from "@/src/core/layout/workbench/types";
 
 // Utilities
 import { devLog } from "@/src/shared/utilities/dev";
@@ -21,7 +21,7 @@ import { devLog } from "@/src/shared/utilities/dev";
  * @param workbench - The workbench definition to render
  * @returns The rendered workbench component
  */
-const Workbench: React.FC<{ workbench: WorkbenchDefinition }> = ({ workbench }) => {
+const Workbench: React.FC<{ workbench: WorkbenchInstance }> = ({ workbench }) => {
     return workbench.render();
 };
 
@@ -32,11 +32,11 @@ const Workbench: React.FC<{ workbench: WorkbenchDefinition }> = ({ workbench }) 
  * @returns The rendered workbench editor with selection controls
  */
 const WorkbenchEditor: React.FC = () => {
-    const workbenchs = useWorkbenchs();
     const selectedWorkbench = useSelectedWorkbenchID();
-    const currentWorkbench = workbenchs[selectedWorkbench];
+    const currentWorkbench = getWorkbenchInstance(selectedWorkbench);
 
-    if (!selectedWorkbench || !workbenchs[selectedWorkbench]) {
+
+    if (!selectedWorkbench || !currentWorkbench) {
         devLog.error("[WorkbenchEditor] No workbench found for the current selection.", { selectedWorkbenchID: selectedWorkbench });
         return null;
     }

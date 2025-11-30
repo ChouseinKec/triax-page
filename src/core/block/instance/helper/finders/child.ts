@@ -3,7 +3,7 @@ import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instan
 import type { FindResult } from '@/src/shared/types/result';
 
 // Helpers
-import { fetchBlockInstance } from '@/src/core/block/instance/helper/fetchers';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 
 /**
  * Find the index position of a child block inside its parent's contentIDs array.
@@ -34,7 +34,7 @@ export function findBlockFirstChild(sourceBlockInstance: BlockInstance, storedBl
 
 	// Resolve the first child id and fetch the BlockInstance
 	const firstChildID = sourceBlockInstance.contentIDs[0];
-	const firstChildResult = fetchBlockInstance(firstChildID, storedBlocks);
+	const firstChildResult = pickBlockInstance(firstChildID, storedBlocks);
 	if (!firstChildResult.success) return { status: 'error', error: firstChildResult.error };
 
 	// Return the BlockInstance
@@ -53,7 +53,7 @@ export function findBlockLastChild(sourceBlockInstance: BlockInstance, storedBlo
 
 	// Resolve the last child id and fetch the BlockInstance
 	const lastChildID = sourceBlockInstance.contentIDs[sourceBlockInstance.contentIDs.length - 1];
-	const lastChildResult = fetchBlockInstance(lastChildID, storedBlocks);
+	const lastChildResult = pickBlockInstance(lastChildID, storedBlocks);
 	if (!lastChildResult.success) return { status: 'error', error: lastChildResult.error };
 
 	// Return the BlockInstance

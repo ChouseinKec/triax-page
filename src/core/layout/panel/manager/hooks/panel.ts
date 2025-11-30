@@ -9,7 +9,7 @@ import type { PanelInstance } from '@/src/core/layout/panel/types';
 import type { WorkbenchID } from '@/src/core/layout/workbench/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateWorkbenchID } from '@/src/core/layout/workbench/helper';
@@ -27,7 +27,7 @@ import { validateWorkbenchID } from '@/src/core/layout/workbench/helper';
 export function usePanelsByWorkbench(workbenchID: WorkbenchID): PanelInstance[] | undefined {
     const safeParams = useMemo(
         () =>
-            new ValidationPipeline('[LayoutQueries → usePanelsByWorkbench]')
+            new ResultPipeline('[LayoutQueries → usePanelsByWorkbench]')
                 .validate({
                     workbenchID: validateWorkbenchID(workbenchID),
                 })
@@ -56,7 +56,7 @@ export function usePanelsByWorkbench(workbenchID: WorkbenchID): PanelInstance[] 
 export function useOpenPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
     const safeParams = useMemo(
         () =>
-            new ValidationPipeline('[LayoutQueries → useOpenPanels]')
+            new ResultPipeline('[LayoutQueries → useOpenPanels]')
                 .validate({
                     workbenchID: validateWorkbenchID(workbenchID),
                 })

@@ -1,17 +1,19 @@
-// Types
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { OperationResult } from '@/src/shared/types/result';
+import type { OperateResult } from '@/src/shared/types/result';
 
-// Constants
-import { STYLE_SHORTHAND_DEFINITIONS } from '@/src/core/block/style/constants';
+/**
+ * Resolves multiple shorthand style values into a single value.
+ * If all values are identical, that value is returned.
+ * If values differ, 'mixed' is returned to indicate inconsistency.
+ *
+ * @param styleShorthands - An array of shorthand style values to resolve.
+ */
+export function resolveStyleShorthand(styleShorthands: string[]): OperateResult<string> {
+	// Get unique values
+	const uniqueValues = Array.from(new Set(styleShorthands));
 
-export function resolveStyleShorthand(styleShorthands: string[]): OperationResult<string> {
-    try {
-        const filteredValues = styleShorthands.filter(Boolean);
-        const uniqueValues = Array.from(new Set(filteredValues));
-        const data = uniqueValues.length === 1 ? uniqueValues[0] : 'mixed';
-        return { success: true, data };
-    } catch (err: any) {
-        return { success: false, error: err?.message ?? String(err) };
-    }
+	// Determine resolved value
+	const data = uniqueValues.length === 1 ? uniqueValues[0] : 'mixed';
+
+	// Return the resolved value
+	return { success: true, data };
 }

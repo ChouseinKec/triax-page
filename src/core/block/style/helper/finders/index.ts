@@ -1,3 +1,1 @@
-export {};
-
-export * from './findStyleShorthand';
+export * from './shorthand';

@@ -5,10 +5,10 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID } from '@/src/core/block/instance/types';
 
 // Helpers
-import { fetchSelectedBlock } from '@/src/core/block/instance/helper/fetchers';
+import { pickSelectedBlock } from '@/src/core/block/instance/helper/pickers';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 /**
  * Gets the currently selected block ID from the store.
@@ -18,9 +18,9 @@ import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
  */
 export function getSelectedBlockID(): BlockID | null {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ValidationPipeline('[BlockQueries → getSelectedBlockID]')
-		.fetch(() => ({
-			selectedBlockID: fetchSelectedBlock(blockStore.selectedBlockID, blockStore.allBlocks),
+	const safeParams = new ResultPipeline('[BlockQueries → getSelectedBlockID]')
+		.pick(() => ({
+			selectedBlockID: pickSelectedBlock(blockStore.selectedBlockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeParams) return null;

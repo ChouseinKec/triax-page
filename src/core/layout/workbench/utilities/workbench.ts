@@ -1,5 +1,5 @@
 // Types
-import type { WorkbenchID, WorkbenchOrder, WorkbenchTitle, WorkbenchRender, WorkbenchDefinition, WorkbenchIcon } from '@/src/core/layout/workbench/types';
+import type { WorkbenchID, WorkbenchOrder, WorkbenchTitle, WorkbenchRender, WorkbenchInstance, WorkbenchIcon } from '@/src/core/layout/workbench/types';
 
 /**
  * Validates if a value is a valid workbench order.
@@ -70,11 +70,11 @@ export function isWorkbenchIDValid(workbenchID: unknown): workbenchID is Workben
  * Validates if a value is a valid workbench definition.
  * Checks if the value is an object with all required workbench properties.
  * @param workbenchDefinition - The value to validate
- * @returns True if valid WorkbenchDefinition, false otherwise
+ * @returns True if valid WorkbenchInstance, false otherwise
  * @example
  * isWorkbenchDefinitionValid({ id: 'wb1', title: 'Design', icon: <Icon />, order: 1, render: () => {} }) → true
  */
-export function isWorkbenchDefinitionValid(workbenchDefinition: unknown): workbenchDefinition is WorkbenchDefinition {
+export function isWorkbenchDefinitionValid(workbenchDefinition: unknown): workbenchDefinition is WorkbenchInstance {
     return (
         typeof workbenchDefinition === 'object' && //
         workbenchDefinition !== null &&

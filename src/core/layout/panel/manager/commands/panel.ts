@@ -5,7 +5,7 @@ import { useLayoutStore } from '@/src/core/layout/store';
 import type { PanelID } from '@/src/core/layout/panel/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validatePanelID } from '@/src/core/layout/panel/helper/validators';
@@ -23,11 +23,11 @@ import { fetchPanel } from '@/src/core/layout/panel/helper/fetchers';
  */
 export function togglePanel(panelID: PanelID): void {
     const layoutStore = useLayoutStore.getState();
-    const safeData = new ValidationPipeline('[LayoutCommands → togglePanel]')
+    const safeData = new ResultPipeline('[LayoutCommands → togglePanel]')
         .validate({
             panelID: validatePanelID(panelID),
         })
-        .fetch((data) => ({
+        .pick((data) => ({
             panel: fetchPanel(data.panelID, layoutStore.allPanels),
         }))
         .execute();

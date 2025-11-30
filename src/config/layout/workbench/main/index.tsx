@@ -1,10 +1,10 @@
 // Types
-import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
+import type { WorkbenchInstance } from '@/src/core/layout/workbench/types';
 
 // Components
 import WorkbenchMainRender from "@/src/config/layout/workbench/main/render"
 
-export const WorkbenchMainDefinition: WorkbenchDefinition = {
+export const WorkbenchMainDefinition: WorkbenchInstance = {
     id: 'main',
     title: 'Main',
     order: 0,

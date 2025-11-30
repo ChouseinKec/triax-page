@@ -17,7 +17,7 @@ import { getRegisteredPseudo } from '@/src/core/layout/page/registry';
  * const pseudo = useSelectedPseudo() // Returns { id: 'hover', name: 'Hover', ... }
  */
 export function useSelectedPseudo(): PseudoInstance | undefined {
-	const selectedPseudoID = usePageStore((state) => state.selectedPseudoID);
+	const selectedPseudoID = usePageStore((state) => state.selected.pseudoID);
 	return getRegisteredPseudo(selectedPseudoID);
 }
 
@@ -31,5 +31,5 @@ export function useSelectedPseudo(): PseudoInstance | undefined {
  * const pseudoID = useSelectedPseudoID() // Returns 'hover' or undefined
  */
 export function useSelectedPseudoID(): PseudoID {
-	return usePageStore((state) => state.selectedPseudoID);
+	return usePageStore((state) => state.selected.pseudoID);
 }

@@ -17,7 +17,7 @@ import { getRegisteredOrientation } from '@/src/core/layout/page/registry';
  * const orientation = useSelectedOrientation() // Returns { id: 'portrait', name: 'Portrait', ... }
  */
 export function useSelectedOrientation(): OrientationInstance | undefined {
-	const selectedOrientationID = usePageStore((state) => state.selectedOrientationID);
+	const selectedOrientationID = usePageStore((state) => state.selected.orientationID);
 	return getRegisteredOrientation(selectedOrientationID);
 }
 
@@ -31,5 +31,5 @@ export function useSelectedOrientation(): OrientationInstance | undefined {
  * const orientationID = useSelectedOrientationID() // Returns 'portrait' or undefined
  */
 export function useSelectedOrientationID(): OrientationID {
-	return usePageStore((state) => state.selectedOrientationID);
+	return usePageStore((state) => state.selected.orientationID);
 }

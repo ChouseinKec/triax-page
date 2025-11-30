@@ -5,7 +5,7 @@ import { useLayoutStore } from '@/src/core/layout/store';
 import type { PanelID, PanelInstance } from '@/src/core/layout/panel/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validatePanelID } from '@/src/core/layout/panel/helper/validators';
@@ -23,11 +23,11 @@ import { fetchPanel } from '@/src/core/layout/panel/helper/fetchers';
  */
 export function getPanelById(panelID: PanelID): PanelInstance | undefined {
 	const layoutStore = useLayoutStore.getState();
-	const safeParams = new ValidationPipeline('[LayoutQueries → getPanelById]')
+	const safeParams = new ResultPipeline('[LayoutQueries → getPanelById]')
 		.validate({
 			panelID: validatePanelID(panelID),
 		})
-		.fetch((data) => ({
+		.pick((data) => ({
 			panel: fetchPanel(data.panelID, layoutStore.allPanels),
 		}))
 		.execute();

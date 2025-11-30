@@ -1,83 +1,106 @@
 // Types
 import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { OperationResult } from '@/src/shared/types/result';
+import type { StyleContext, StyleKey, StylesRecord, StyleValue } from '@/src/core/block/style/types';
+import type { OperateResult } from '@/src/shared/types/result';
+import type { PageContext } from '@/src/core/layout/page/types/context';
 
-// Constants
-import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
+// Helpers
+import { findStyleShorthand, resolveStyleShorthand } from '@/src/core/block/style/helper/';
+import { collectBlockStyleKeys, generateCascadePaths } from '@/src/core/block/style/helper';
 
 /**
- * Resolve a single style value using the cascade order.
+ * Resolves a single style value using the custom cascade order.
+ * Checks all combinations of device, orientation, and pseudo, falling back to defaults as needed.
+ * @see {@link cascadeBlockStyles}, {@link cascadeBlockStyle}
+ *
+ * @param blockStyles - The block's complete style definition
+ * @param styleKey - The style key to resolve
+ * @param pageContext - The current page state including selected device, orientation, and pseudo
  */
-export function cascadeStyle(styles: BlockStyles, styleKey: StyleKey, device: string, orientation: string, pseudo: string): OperationResult<string> {
-    try {
-        const value = (
-            styles[device]?.[orientation]?.[pseudo]?.[styleKey] ??
-            styles[device]?.[orientation]?.[DEFAULT_PSEUDO_ID]?.[styleKey] ??
-            styles[device]?.[DEFAULT_ORIENTATION_ID]?.[pseudo]?.[styleKey] ??
-            styles[device]?.[DEFAULT_ORIENTATION_ID]?.[DEFAULT_PSEUDO_ID]?.[styleKey] ??
-            styles[DEFAULT_DEVICE_ID]?.[orientation]?.[pseudo]?.[styleKey] ??
-            styles[DEFAULT_DEVICE_ID]?.[orientation]?.[DEFAULT_PSEUDO_ID]?.[styleKey] ??
-            styles[DEFAULT_DEVICE_ID]?.[DEFAULT_ORIENTATION_ID]?.[pseudo]?.[styleKey] ??
-            styles[DEFAULT_DEVICE_ID]?.[DEFAULT_ORIENTATION_ID]?.[DEFAULT_PSEUDO_ID]?.[styleKey] ??
-            ''
-        );
-        return { success: true, data: value };
-    } catch (err: any) {
-        return { success: false, error: err?.message ?? String(err) };
-    }
+export function cascadeStyleLonghandValue(styleKey: StyleKey, blockStyles: BlockStyles, pageContext: PageContext): OperateResult<StyleValue> {
+	const device = pageContext.store.selectedDeviceID;
+	const orientation = pageContext.store.selectedOrientationID;
+	const pseudo = pageContext.store.selectedPseudoID;
+	const paths = generateCascadePaths(device, orientation, pseudo, pageContext);
+
+	let value: string = '';
+	for (const [device, orientation, pseudo] of paths) {
+		// Check the style value at the current cascade path
+		const candidate = blockStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
+
+		// If a valid value is found, use it and stop searching
+		if (candidate != null && candidate !== '') {
+			value = candidate;
+			break;
+		}
+	}
+
+	// Return the resolved value
+	return { success: true, data: value };
 }
 
 /**
- * Collect all keys and produce a cascaded map for the provided context.
+ * Resolves and merges longhand values for a shorthand style key using cascade logic.
+ * Uses resolveStyleShorthand from shorthands.ts.
+ * @param blockStyles - The block's complete style definition
+ * @param longhands - Array of longhand keys (StyleKey[])
+ * @param styleContext - The current page state
  */
-export function cascadeCSSStyles(styles: BlockStyles, device: string, orientation: string, pseudo: string): OperationResult<Record<string, string>> {
-    try {
-        const allKeys = new Set<string>();
-        Object.values(styles).forEach((deviceStyles) => {
-            Object.values(deviceStyles).forEach((orientationStyles) => {
-                Object.values(orientationStyles).forEach((pseudoStyles) => {
-                    Object.keys(pseudoStyles).forEach((key) => allKeys.add(key));
-                });
-            });
-        });
+export function cascadeStyleShorthandValue(styleKeys: StyleKey[], blockStyles: BlockStyles, pageContext: PageContext): OperateResult<StyleValue> {
+	const values: string[] = [];
 
-        const resolved: Record<string, string> = {};
-        for (const key of allKeys) {
-            const r = cascadeStyle(styles, key as StyleKey, device, orientation, pseudo);
-            if (!r.success) return r as OperationResult<Record<string, string>>;
-            resolved[key] = r.data;
-        }
+	for (const styleKey of styleKeys) {
+		const longhandResult = cascadeStyleLonghandValue(styleKey, blockStyles, pageContext);
+		if (!longhandResult.success) return { success: false, error: longhandResult.error };
 
-        return { success: true, data: resolved };
-    } catch (err: any) {
-        return { success: false, error: err?.message ?? String(err) };
-    }
+		values.push(longhandResult.data);
+	}
+	return resolveStyleShorthand(values);
 }
 
 /**
- * Resolve a style value that may be shorthand — tries cascade and shorthand merging.
+ * Collects all style keys and produces a cascaded map for the provided styleContext.
+ * Iterates through all device/orientation/pseudo combinations to gather all possible style keys.
+ *
+ * @param blockStyles - The block's complete style definition
+ * @param styleContext - The current page state including selected device, orientation, and pseudo
  */
-import { resolveStyleShorthand } from './shorthands';
-import { findStyleShorthand } from '@/src/core/block/style/helper/finders';
-export function resolveStyle(styles: BlockStyles, styleKey: StyleKey, device: string, orientation: string, pseudo: string): OperationResult<string> {
-    try {
-        // First check if shorthand definition exists
-        const shorthandRes = findStyleShorthand(styleKey);
-        if (shorthandRes.status === 'error') return { success: false, error: shorthandRes.error };
-        if (shorthandRes.status === 'found') {
-            // compute each longhand and then resolve
-            const values = shorthandRes.data.map((longhand) => {
-                const r = cascadeStyle(styles, longhand, device, orientation, pseudo);
-                return r.success ? r.data : '';
-            });
-            const shorthandResult = resolveStyleShorthand(values);
-            return shorthandResult as OperationResult<string>;
-        }
+export function cascadeBlockStyles(blockStyles: BlockStyles, styleContext: StyleContext, pageContext: PageContext): OperateResult<StylesRecord> {
+	// Collect all unique style keys using the collector helper
+	const keyResult = collectBlockStyleKeys(blockStyles);
+	if (!keyResult.success) return { success: false, error: keyResult.error };
 
-        // Not a shorthand — single value
-        return cascadeStyle(styles, styleKey, device, orientation, pseudo);
-    } catch (err: any) {
-        return { success: false, error: err?.message ?? String(err) };
-    }
+	// Resolve each key using the cascade logic (handles both longhand and shorthand)
+	const resolved: StylesRecord = {};
+
+	for (const key of keyResult.data) {
+		const cascadeResult = cascadeBlockStyle(key, blockStyles, styleContext, pageContext);
+		if (!cascadeResult.success) return cascadeResult;
+		resolved[key] = cascadeResult.data;
+	}
+
+	// Return the cascaded style map
+	return { success: true, data: resolved };
+}
+
+/**
+ * Resolves a style value that may be shorthand, using cascade and shorthand merging logic.
+ * If the style key is a shorthand, resolves each longhand and merges the results.
+ * Otherwise, resolves the single style value using cascade.
+ * @see {@link cascadeStyle}, {@link resolveStyleShorthand}
+ *
+ * @param styleKey - The style key to resolve (shorthand or longhand)
+ * @param blockStyles - The block's complete style definition
+ * @param styleContext - The current page state including selected device, orientation, and pseudo
+ */
+export function cascadeBlockStyle(styleKey: StyleKey, blockStyles: BlockStyles, styleContext: StyleContext, pageContext: PageContext): OperateResult<StyleValue> {
+	// Check if the styleKey is a shorthand
+	const shorthandResult = findStyleShorthand(styleKey, styleContext.constant.shorthands);
+	if (shorthandResult.status === 'error') return { success: false, error: shorthandResult.error };
+
+	// If it's a shorthand, cascade each longhand and merge
+	if (shorthandResult.status === 'found') return cascadeStyleShorthandValue(shorthandResult.data, blockStyles, pageContext);
+
+	// Otherwise, cascade as a single longhand style
+	return cascadeStyleLonghandValue(styleKey, blockStyles, pageContext);
 }

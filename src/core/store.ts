@@ -10,18 +10,16 @@ import type { PseudoID } from '@/src/core/layout/page/types';
 import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
 import { DEFAULT_WORKBENCH_ID } from '@/src/core/layout/workbench/constants';
 
+export type Selected = {
+	deviceID: DeviceID;
+	orientationID: OrientationID;
+	pseudoID: PseudoID;
+	workbenchID: WorkbenchID;
+};
+
 export type PageStore = {
-	selectedDeviceID: DeviceID;
-	setSelectedDeviceID: (value: DeviceID) => void;
-
-	selectedOrientationID: OrientationID;
-	setSelectedOrientationID: (value: OrientationID) => void;
-
-	selectedPseudoID: PseudoID;
-	setSelectedPseudoID: (value: PseudoID) => void;
-
-	selectedWorkbenchID: WorkbenchID;
-	setSelectedWorkbenchID: (id: WorkbenchID) => void;
+	selected: Selected;
+	setSelected: (selected: Partial<Selected>) => void;
 };
 
 /**
@@ -30,66 +28,24 @@ export type PageStore = {
  */
 export function createPageStore() {
 	return create<PageStore>()((set, get) => ({
+		selected: {
+			deviceID: DEFAULT_DEVICE_ID,
+			orientationID: DEFAULT_ORIENTATION_ID,
+			pseudoID: DEFAULT_PSEUDO_ID,
+			workbenchID: DEFAULT_WORKBENCH_ID,
+		},
 		/**
-		 * The currently selected workbench.
-		 * Defaults to 'main'.
+		 * Updates selected values. Accepts a partial Selected object.
 		 */
-		selectedWorkbenchID: DEFAULT_WORKBENCH_ID,
-
-		/**
-		 * The currently selected device.
-		 */
-		selectedDeviceID: DEFAULT_DEVICE_ID,
-
-		/**
-		 * The currently selected orientation.
-		 */
-		selectedOrientationID: DEFAULT_ORIENTATION_ID,
-
-		/**
-		 * The currently selected pseudo class.
-		 */
-		selectedPseudoID: DEFAULT_PSEUDO_ID,
-
-		/**
-		 * Sets the current device based on the provided value.
-		 * Throws an error if the device value is invalid.
-		 *
-		 * @param device - The value of the device to select.
-		 */
-		setSelectedDeviceID: (device) => {
-			set({ selectedDeviceID: device });
+		setSelected: (selected: Partial<Selected>) => {
+			set((state) => ({
+				selected: {
+					...state.selected,
+					...selected,
+				},
+			}));
 		},
 
-		/**
-		 * Sets the current orientation based on the provided value.
-		 * Throws an error if the orientation value is invalid.
-		 *
-		 * @param  value - The value of the orientation to select.
-		 */
-		setSelectedOrientationID: (value) => {
-			set({ selectedOrientationID: value });
-		},
-
-		/**
-		 * Sets the current pseudo class based on the provided value.
-		 * Throws an error if the pseudo class value is invalid.
-		 *
-		 * @param  value - The value of the pseudo class to select.
-		 */
-		setSelectedPseudoID: (value: string) => {
-			set({ selectedPseudoID: value });
-		},
-
-		/**
-		 * Sets the current workbench.
-		 * @param id - The WorkbenchID to set as current
-		 */
-		setSelectedWorkbenchID: (workbenchID: WorkbenchID) => {
-			set({ selectedWorkbenchID: workbenchID });
-		},
-
-		getSelectedWorkbenchID: () => get().selectedWorkbenchID,
 	}));
 }
 

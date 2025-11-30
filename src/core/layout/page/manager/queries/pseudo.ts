@@ -7,28 +7,26 @@ import type { PseudoID, PseudoInstance } from '@/src/core/layout/page/types';
 // Registry
 import { getRegisteredPseudos } from '@/src/core/layout/page/registry';
 
+// Constants
+import { DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
+
 /**
  * Gets the currently selected pseudo ID from the page store for page queries.
- * Returns the pseudo identifier from the current store state.
- *
- * @returns The current pseudo ID or undefined if not set
- *
- * @example
- * const pseudoID = getSelectedPseudoID() // Returns 'hover' or undefined
  */
 export function getSelectedPseudoID(): PseudoID {
-	return usePageStore.getState().selectedPseudoID;
+	return usePageStore.getState().selected.pseudoID;
 }
 
 /**
  * Gets all available pseudo instances for page queries.
- * Returns an array of all registered pseudo definitions from the registry.
- *
- * @returns Array of all pseudo instances
- *
- * @example
- * const pseudos = getAllPseudos() // Returns [{ id: 'all', name: 'All' }, { id: 'hover', name: 'Hover' }, ...]
  */
 export function getAllPseudos(): PseudoInstance[] {
 	return Object.values(getRegisteredPseudos());
+}
+
+/**
+ * Gets the default pseudo ID used for page layout and style fallbacks.
+ */
+export function getDefaultPseudoID(): PseudoID {
+	return DEFAULT_PSEUDO_ID;
 }

@@ -1,6 +1,6 @@
-import type { StyleKey } from '@/src/core/block/style/types';
+import type { StyleShorthandRecord } from '@/src/core/block/style/types';
 
-export const SHORTHANDS: Partial<Record<StyleKey, StyleKey[]>> = {
+export const SHORTHANDS: StyleShorthandRecord = {
 	'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
 	'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
 	'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],

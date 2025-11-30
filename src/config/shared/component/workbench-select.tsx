@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 
 // Managers
 import { useSelectedWorkbenchID, setSelectedWorkbenchID } from "@/src/core/layout/page/manager/";
-import { useWorkbenchs } from "@/src/core/layout/workbench/manager/hooks";
+import { getWorkbenchInstances } from "@/src/core/layout/workbench/manager/";
 
 // Components
 import RadioSelect from "@/src/shared/components/select/radio/component";
@@ -15,7 +15,7 @@ import RadioSelect from "@/src/shared/components/select/radio/component";
  * @returns The rendered workbench selector component
  */
 const WorkbenchSelect: React.FC = () => {
-    const workbenchs = useWorkbenchs();
+    const workbenchs = getWorkbenchInstances();
     const selectedWorkbenchID = useSelectedWorkbenchID();
 
     // Prepare options for the workbench selector

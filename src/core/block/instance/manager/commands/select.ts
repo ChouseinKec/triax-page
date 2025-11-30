@@ -5,7 +5,7 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID } from '@/src/core/block/instance/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBlockID } from '@/src/core/block/instance/helper';
@@ -30,7 +30,7 @@ export function selectBlock(blockID: BlockID | null): void {
 	// If already selected, do nothing
 	if (blockID === selectedBlockID) return;
 
-	const safeData = new ValidationPipeline('[BlockCommands → selectBlock]')
+	const safeData = new ResultPipeline('[BlockCommands → selectBlock]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})

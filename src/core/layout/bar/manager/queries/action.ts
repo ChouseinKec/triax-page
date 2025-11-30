@@ -5,7 +5,7 @@ import { useLayoutStore } from '@/src/core/layout/store';
 import type { BarID } from '@/src/core/layout/bar/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBarID } from '@/src/core/layout/bar/helper/validators';
@@ -24,11 +24,11 @@ import { fetchBarActions } from '@/src/core/layout/bar/helper/fetchers';
  */
 export function isBarActionRegistered(barID: BarID, actionID: string): boolean {
 	const layoutStore = useLayoutStore.getState();
-	const safeParams = new ValidationPipeline('[LayoutQueries → isBarActionRegistered]')
+	const safeParams = new ResultPipeline('[LayoutQueries → isBarActionRegistered]')
 		.validate({
 			barID: validateBarID(barID),
 		})
-		.fetch((data) => ({
+		.pick((data) => ({
 			barActions: fetchBarActions(data.barID, layoutStore.allBars),
 		}))
 		.execute();

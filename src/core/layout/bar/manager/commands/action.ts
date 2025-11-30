@@ -6,7 +6,7 @@ import type {  BarActionID, BarID, BarActionInstance} from '@/src/core/layout/ba
 
 // Utilities
 import { devLog } from '@/src/shared/utilities/dev';
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBarActionInstance, validateBarID, validateBarActionID} from '@/src/core/layout/bar/helper/validators';
@@ -25,12 +25,12 @@ import { fetchBar } from '@/src/core/layout/bar/helper/fetchers';
  */
 export function registerBarAction(barID: BarID, action: BarActionInstance): void {
     const layoutStore = useLayoutStore.getState();
-    const safeData = new ValidationPipeline('[LayoutCommands → registerBarAction]')
+    const safeData = new ResultPipeline('[LayoutCommands → registerBarAction]')
         .validate({
             barID: validateBarID(barID),
             action: validateBarActionInstance(action),
         })
-        .fetch((data) => ({
+        .pick((data) => ({
             bar: fetchBar(data.barID, layoutStore.allBars),
         }))
         .execute();
@@ -53,12 +53,12 @@ export function registerBarAction(barID: BarID, action: BarActionInstance): void
  */
 export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
     const layoutStore = useLayoutStore.getState();
-    const safeData = new ValidationPipeline('[LayoutCommands → unregisterBarAction]')
+    const safeData = new ResultPipeline('[LayoutCommands → unregisterBarAction]')
         .validate({
             barID: validateBarID(barID),
             actionID: validateBarActionID(actionID),
         })
-        .fetch((data) => ({
+        .pick((data) => ({
             bar: fetchBar(data.barID, layoutStore.allBars),
         }))
         .execute();

@@ -1,0 +1,84 @@
+// Stores
+import { useBlockStore } from '@/src/core/block/store';
+
+// Helpers
+import { validateBlockID } from '@/src/core/block/instance/helper/validators';
+import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
+import { findBlockFirstChild, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextParentSibling } from '@/src/core/block/instance/helper/finders';
+
+// Types
+import type { BlockInstance, BlockID } from '@/src/core/block/instance/types';
+
+// Utilities
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+
+/**
+ * Retrieves the next block in the hierarchy for block hierarchy operations.
+ * Checks for children first, then siblings, and finally parent's next sibling.
+ *
+ * @param blockID - The block identifier to find the next block for
+ */
+export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined {
+	const blockStore = useBlockStore.getState();
+	const safeData = new ResultPipeline('[BlockManager → getNextBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+		}))
+		.pick((data) => ({
+			parentBlockInstance: pickBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
+		}))
+		.execute();
+	if (!safeData) return;
+
+	// If it has children, return the first child
+	const firstChild = findBlockFirstChild(safeData.blockInstance, blockStore.allBlocks);
+	if (firstChild.status === 'found') return firstChild.data;
+
+	// If no children, get the next sibling
+	const nextSibling = findBlockNextSibling(safeData.blockInstance, blockStore.allBlocks);
+	if (nextSibling.status === 'found') return nextSibling.data;
+
+	// If no next sibling, recursively climb up to find the parent's next sibling
+	const nextParentSibling = findBlockNextParentSibling(safeData.blockInstance, blockStore.allBlocks);
+	if (nextParentSibling.status === 'found') return nextParentSibling.data;
+
+	return null;
+}
+
+/**
+ * Retrieves the previous block in the hierarchy for block hierarchy operations.
+ * Checks for previous sibling's last descendant, then the sibling itself, or the parent.
+ *
+ * @param blockID - The block identifier to find the previous block for
+ */
+export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undefined {
+	const blockStore = useBlockStore.getState();
+	const safeData = new ResultPipeline('[BlockManager → getPreviousBlock]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+		}))
+		.pick((data) => ({
+			parentBlockInstance: pickBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
+		}))
+
+		.execute();
+	if (!safeData) return;
+
+	// If previous sibling exists, return its last descendant (or itself if no children)
+	const prevSibling = findBlockPreviousSibling(safeData.blockInstance, blockStore.allBlocks);
+
+	if (prevSibling.status === 'found') {
+		const lastDescResult = findBlockLastDescendant(prevSibling.data, blockStore.allBlocks);
+		if (lastDescResult.status === 'found') return lastDescResult.data;
+		return null;
+	}
+
+	// If no previous sibling, return the parent instance fetched earlier (may be undefined)
+	return safeData.parentBlockInstance;
+}

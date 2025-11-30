@@ -1,3 +1,5 @@
+import { StyleValue } from '@/src/core/block/style/types/value';
+
 /**
  * All valid CSS property names supported by the style system.
  * These correspond to official CSS property names (e.g. 'width', 'color', 'display').
@@ -236,3 +238,15 @@ export interface StyleDefinition {
 	 */
 	syntaxSeparators: StyleSeparator[][];
 }
+
+export type StylesRecord = Partial<Record<StyleKey, StyleValue>>;
+
+/**
+ *  Definition for a CSS shorthand property, listing its longhand components.
+ */
+export type StyleShorthandDefinition = StyleKey[];
+
+/**
+ * Record mapping shorthand StyleKeys to their corresponding longhand StyleKeys.
+ */
+export type StyleShorthandRecord = Partial<Record<StyleKey, StyleShorthandDefinition>>;

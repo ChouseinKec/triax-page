@@ -6,10 +6,10 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import type { AttributeKey, AttributeValue } from '@/src/core/block/attribute/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockID, fetchBlockInstance } from '@/src/core/block/instance/helper';
+import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helper';
 import { validateAttributeKey, validateAttributeValue } from '@/src/core/block/attribute/helper';
 
 /**
@@ -26,14 +26,14 @@ import { validateAttributeKey, validateAttributeValue } from '@/src/core/block/a
  */
 export function setBlockAttribute(blockID: BlockID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
 	const blockStore = useBlockStore.getState();
-	const safeData = new ValidationPipeline('[BlockManager → setBlockAttribute]')
+	const safeData = new ResultPipeline('[BlockManager → setBlockAttribute]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			attributeKey: validateAttributeKey(attributeKey),
 			attributeValue: validateAttributeValue(attributeValue),
 		})
-		.fetch((data) => ({
-			block: fetchBlockInstance(data.blockID, blockStore.allBlocks),
+		.pick((data) => ({
+			block: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!safeData) return;

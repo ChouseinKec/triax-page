@@ -4,15 +4,16 @@ import React, { useCallback, useRef, useEffect } from "react";
 import type { BlockInstance } from '@/src/core/block/instance/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock, getBlockRenderedStyles } from '@/src/core/block/instance/manager';
+import { useIsBlockSelected, selectBlock, } from '@/src/core/block/instance/manager';
 import { getBlockContent, setBlockContent } from '@/src/core/block/instance/manager';
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/manager";
+import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/src/core/layout/bar/manager';
+import { useBlockRenderedStyles } from '@/src/core/block/style/manager/';
 
 const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;
     const BlockTag = instance.tag as React.ElementType;
     const isSelected = useIsBlockSelected(blockID);
-    const renderedStyles = getBlockRenderedStyles(blockID);
+    const renderedStyles = useBlockRenderedStyles(blockID);
 
     // Get the current text value from content
     const content = getBlockContent(blockID);

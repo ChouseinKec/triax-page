@@ -5,13 +5,13 @@ import { usePageStore } from '@/src/core/store';
 import type { OrientationID } from '@/src/core/layout/page/types';
 
 // Utilities
-import { ValidationPipeline } from '@/src/shared/utilities/pipeline/validation';
+import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateOrientationID } from '@/src/core/layout/page/helper/validators';
 
-// Constants
-import { DEFAULT_ORIENTATION_ID } from '@/src/core/layout/page/constants';
+// Managers
+import { getDefaultOrientationID } from '@/src/core/layout/page/manager/queries';
 
 /**
  * Sets the currently selected orientation by ID for page commands.
@@ -24,14 +24,14 @@ import { DEFAULT_ORIENTATION_ID } from '@/src/core/layout/page/constants';
  * setSelectedOrientationID('portrait') // Sets current orientation to portrait
  */
 export function setSelectedOrientationID(orientationID: OrientationID): void {
-	if (!orientationID) orientationID = DEFAULT_ORIENTATION_ID;
+	if (!orientationID) orientationID = getDefaultOrientationID();
 
-	const safeData = new ValidationPipeline('[PageCommands → setSelectedOrientationID]')
+	const safeData = new ResultPipeline('[PageCommands → setSelectedOrientationID]')
 		.validate({
 			orientationID: validateOrientationID(orientationID),
 		})
 		.execute();
 	if (!safeData) return;
 
-	usePageStore.getState().setSelectedOrientationID(safeData.orientationID);
+	usePageStore.getState().setSelected({ orientationID: safeData.orientationID });
 }
