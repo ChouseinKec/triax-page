@@ -15,10 +15,10 @@ export function isBlockChild(sourceBlockInstance: BlockInstance, parentBlockInst
 	// Find the child index to determine if it's a child
 	const childIndex = findBlockChildIndex(sourceBlockInstance, parentBlockInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, ok: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false };
 
 	// Return true since the child was found
-	return { success: true, ok: true };
+	return { success: true, passed: true };
 }
 
 /**
@@ -30,10 +30,10 @@ export function isBlockLastChild(sourceBlockInstance: BlockInstance, parentBlock
 	// Find the child's index inside the parent
 	const childIndex = findBlockChildIndex(sourceBlockInstance, parentBlockInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, ok: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false };
 
 	// Compare index with parent's length to determine last-child status.
-	return { success: true, ok: childIndex.data === parentBlockInstance.contentIDs.length - 1 };
+	return { success: true, passed: childIndex.data === parentBlockInstance.contentIDs.length - 1 };
 }
 
 /**
@@ -45,8 +45,8 @@ export function isBlockFirstChild(sourceBlockInstance: BlockInstance, parentBloc
 	// Find the child's index inside the parent
 	const childIndex = findBlockChildIndex(sourceBlockInstance, parentBlockInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, ok: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false };
 
 	// Return true if the index is 0
-	return { success: true, ok: childIndex.data === 0 };
+	return { success: true, passed: childIndex.data === 0 };
 }

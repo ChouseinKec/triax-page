@@ -15,20 +15,19 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
  * Processes block attributes for HTML rendering with any necessary transformations.
  *
  * @param blockID - The block identifier
- * @returns Rendered attributes object or undefined if block doesn't exist or has no attributes
- *
- * @example
- * getBlockRenderedAttributes('block-123') → { class: 'my-class', id: 'block-123' }
  */
 export function getBlockRenderedAttributes(blockID: BlockID): Record<string, string | boolean> | undefined {
 	const blockStore = useBlockStore.getState();
-	const safeParams = new ResultPipeline('[BlockQueries → getBlockRenderedAttributes]')
+
+	// Validate, pick, and operate on necessary data
+	const results = new ResultPipeline('[BlockQueries → getBlockRenderedAttributes]')
 		.validate({ blockID: validateBlockID(blockID) })
 		.pick((data) => ({
 			attributes: pickBlockAttributes(data.blockID, blockStore.allBlocks),
 		}))
 		.execute();
-	if (!safeParams) return undefined;
+	if (!results) return undefined;
 
-	return renderBlockAttributes(safeParams.attributes);
+	// Render and return the block attributes
+	return renderBlockAttributes(results.attributes);
 }

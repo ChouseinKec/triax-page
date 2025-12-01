@@ -9,7 +9,7 @@ import type { ElementTag } from '@/src/core/block/element/types';
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockTag, validateBlockID } from '@/src/core/block/instance/helper';
+import { validateBlockTag, validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helper';
 
 /**
  * Sets the HTML tag for a specific block.
@@ -17,22 +17,20 @@ import { validateBlockTag, validateBlockID } from '@/src/core/block/instance/hel
  *
  * @param blockID - The block identifier
  * @param tag - The new HTML tag to set
- * @returns void
- *
- * @example
- * setBlockTag('block-123', 'div')
  */
 export function setBlockTag(blockID: BlockID, blockTag: ElementTag): void {
-	const safeData = new ResultPipeline('[BlockCommands → setBlockTag]')
+	// Validate, pick, and operate on necessary data
+	const results = new ResultPipeline('[BlockCommands → setBlockTag]')
 		.validate({
 			blockID: validateBlockID(blockID),
 			blockTag: validateBlockTag(blockTag),
 		})
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, useBlockStore.getState().allBlocks),
+		}))
 		.execute();
-	if (!safeData) return;
+	if (!results) return;
 
-	const currentBlock = useBlockStore.getState().allBlocks[blockID];
-	if (!currentBlock) return;
-
-	useBlockStore.getState().updateBlocks({ [blockID]: { ...currentBlock, tag: safeData.blockTag } });
+	// Update the block tag in the store
+	useBlockStore.getState().updateBlocks({ [blockID]: { ...results.blockInstance, tag: results.blockTag } });
 }

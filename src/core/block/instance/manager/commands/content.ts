@@ -8,7 +8,7 @@ import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper';
+import { pickBlockInstance, validateBlockID } from '@/src/core/block/instance/helper';
 
 /**
  * Sets the content data for a specific block.
@@ -16,21 +16,23 @@ import { validateBlockID } from '@/src/core/block/instance/helper';
  *
  * @param blockID - The block identifier
  * @param content - The content data to set
- * @returns void
- *
- * @example
- * setBlockContent('block-123', { text: 'New text', format: 'bold' })
  */
 export function setBlockContent(blockID: BlockID, content: BlockContent): void {
-	const safeData = new ResultPipeline('[BlockCommands → setBlockContent]')
+	const blockStore = useBlockStore.getState();
+
+	// Validate and pick the blockInstance to update
+	const results = new ResultPipeline('[BlockCommands → setBlockContent]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})
+		.pick((data) => ({
+			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+		}))
 		.execute();
-	if (!safeData) return;
+	if (!results) return;
 
-	const currentBlock = useBlockStore.getState().allBlocks[safeData.blockID];
-	if (!currentBlock) return;
-
-	useBlockStore.getState().updateBlocks({ [safeData.blockID]: { ...currentBlock, content } });
+	// Update the block content in the store
+	blockStore.updateBlocks({
+		[results.blockID]: { ...results.blockInstance, content },
+	});
 }

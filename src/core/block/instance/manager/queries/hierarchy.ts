@@ -20,7 +20,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
  */
 export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined {
 	const blockStore = useBlockStore.getState();
-	const safeData = new ResultPipeline('[BlockManager → getNextBlock]')
+	const results = new ResultPipeline('[BlockManager → getNextBlock]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})
@@ -31,18 +31,18 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
 			parentBlockInstance: pickBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
 		}))
 		.execute();
-	if (!safeData) return;
+	if (!results) return;
 
 	// If it has children, return the first child
-	const firstChild = findBlockFirstChild(safeData.blockInstance, blockStore.allBlocks);
+	const firstChild = findBlockFirstChild(results.blockInstance, blockStore.allBlocks);
 	if (firstChild.status === 'found') return firstChild.data;
 
 	// If no children, get the next sibling
-	const nextSibling = findBlockNextSibling(safeData.blockInstance, blockStore.allBlocks);
+	const nextSibling = findBlockNextSibling(results.blockInstance, blockStore.allBlocks);
 	if (nextSibling.status === 'found') return nextSibling.data;
 
 	// If no next sibling, recursively climb up to find the parent's next sibling
-	const nextParentSibling = findBlockNextParentSibling(safeData.blockInstance, blockStore.allBlocks);
+	const nextParentSibling = findBlockNextParentSibling(results.blockInstance, blockStore.allBlocks);
 	if (nextParentSibling.status === 'found') return nextParentSibling.data;
 
 	return null;
@@ -56,7 +56,9 @@ export function getNextBlock(blockID: BlockID): BlockInstance | null | undefined
  */
 export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undefined {
 	const blockStore = useBlockStore.getState();
-	const safeData = new ResultPipeline('[BlockManager → getPreviousBlock]')
+
+	// Validate, pick, and find necessary data
+	const results = new ResultPipeline('[BlockManager → getPreviousBlock]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})
@@ -66,19 +68,19 @@ export function getPreviousBlock(blockID: BlockID): BlockInstance | null | undef
 		.pick((data) => ({
 			parentBlockInstance: pickBlockInstance(data.blockInstance.parentID, blockStore.allBlocks),
 		}))
-
+		.find((data) => ({
+			prevSiblingInstance: findBlockPreviousSibling(data.blockInstance, blockStore.allBlocks),
+		}))
 		.execute();
-	if (!safeData) return;
+	if (!results) return;
 
-	// If previous sibling exists, return its last descendant (or itself if no children)
-	const prevSibling = findBlockPreviousSibling(safeData.blockInstance, blockStore.allBlocks);
-
-	if (prevSibling.status === 'found') {
-		const lastDescResult = findBlockLastDescendant(prevSibling.data, blockStore.allBlocks);
+	// If there is a previous sibling, return its last descendant
+	if (results.prevSiblingInstance) {
+		const lastDescResult = findBlockLastDescendant(results.prevSiblingInstance, blockStore.allBlocks);
 		if (lastDescResult.status === 'found') return lastDescResult.data;
 		return null;
 	}
 
 	// If no previous sibling, return the parent instance fetched earlier (may be undefined)
-	return safeData.parentBlockInstance;
+	return results.parentBlockInstance;
 }

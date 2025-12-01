@@ -1,43 +1,38 @@
-import { useMemo } from 'react';
-
 // Stores
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/src/shared/utilities/dev';
 
 // Types
 import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validators';
+import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helper';
 
 /**
  * React hook to get the content data for a specific block.
  * Returns the block's content object or undefined if not found.
  *
  * @param blockID - The block identifier
- * @returns The block's content data or undefined
- *
- * @example
- * const content = useBlockContent('block-123') // Returns { text: 'Hello World' }
  */
 export function useBlockContent(blockID: BlockID): BlockContent | undefined {
-	const safeParam = useMemo(
-		() =>
-			new ResultPipeline('[BlockQueries → useBlockContent]')
-				.validate({
-					blockID: validateBlockID(blockID),
-				})
-				.execute(),
-		[blockID]
-	);
-	if (!safeParam) return undefined;
+	// Validate, pick, and operate on necessary data
+	const results = new ResultPipeline('[BlockQueries → useBlockContent]')
+		.validate({
+			blockID: validateBlockID(blockID),
+		})
+		.execute();
+	if (!results) return undefined;
 
+	// Return a reactive content value
 	return useBlockStore((state) => {
-		const block = state.allBlocks[safeParam.blockID];
-		if (!block) return undefined;
+		// Pick and operate on necessary data
+		const blockResult = pickBlockInstance(results.blockID, state.allBlocks);
+		if (!blockResult.success) return devLog.error(`[BlockQueries → useBlockContent] Block not found: ${results.blockID}`), undefined;
 
-		return block.content;
+		// Return the block content data
+		return blockResult.data.content;
 	});
 }

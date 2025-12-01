@@ -15,8 +15,7 @@ import {
     copyBlock,
     pasteBlock,
     duplicateBlock,
-    copyBlockStyles,
-    pasteBlockStyles,
+
     copyBlockAttributes,
     pasteBlockAttributes,
     moveBlockAfter,
@@ -24,7 +23,7 @@ import {
     canBlockHaveChildren,
     moveBlockInto,
 } from "@/src/core/block/instance/manager";
-
+import { copyBlockStyles, pasteBlockStyles } from "@/src/core/block/style/manager";
 // Types
 import type { EntryProps } from "./types";
 import type { BlockID } from "@/src/core/block/instance/types";

@@ -15,27 +15,24 @@ import { validateBlockID } from '@/src/core/block/instance/helper';
  * Sets the selected block ID in the store.
  *
  * @param blockID - The block identifier to select, or null to clear selection
- * @returns void
- *
- * @example
- * selectBlock('block-123')
- * selectBlock(null)
  */
 export function selectBlock(blockID: BlockID | null): void {
-	const { selectedBlockID, selectBlock: selectBlockAction } = useBlockStore.getState();
+	const blockStore = useBlockStore.getState();
 
 	// If null, clear selection
-	if (blockID === null) return selectBlockAction(null);
+	if (blockID === null) return blockStore.selectBlock(null);
 
 	// If already selected, do nothing
-	if (blockID === selectedBlockID) return;
+	if (blockID === blockStore.selectedBlockID) return;
 
-	const safeData = new ResultPipeline('[BlockCommands → selectBlock]')
+	// Validate, pick, and operate on necessary data
+	const results = new ResultPipeline('[BlockCommands → selectBlock]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})
 		.execute();
-	if (!safeData) return;
+	if (!results) return;
 
-	selectBlockAction(safeData.blockID);
+	// Select the block in the store
+	blockStore.selectBlock(results.blockID);
 }

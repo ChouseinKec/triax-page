@@ -16,24 +16,24 @@ import type { CheckResult } from '@/src/shared/types/result';
  * @param targetIndex - The index at which the source block is to be inserted in the target.
  */
 export function canBlockMove(sourceBlockInstance: BlockInstance, targetBlockInstance: BlockInstance, parentBlockDefinition: BlockDefinition, sourceBlockDefinition: any, storedBlocks: BlockInstanceRecord, targetIndex: number): CheckResult {
-	return { success: true, ok: true };
+	return { success: true, passed: true };
 
 	// Execute checks sequentially and return the first failure/denial
 	// const isChildAllowed = isBlockChildAllowed(parentBlockDefinition, sourceBlockInstance.tag);
 	// if (!isChildAllowed.success) return isChildAllowed;
-	// if (!isChildAllowed.ok) return { success: true, ok: false };
+	// if (!isChildAllowed.passed) return { success: true, passed: false };
 
 	// const forbiddenAncestor = hasBlockForbiddenAncestor(sourceBlockDefinition, targetBlockInstance, storedBlocks);
 	// if (!forbiddenAncestor.success) return forbiddenAncestor;
-	// if (!forbiddenAncestor.ok) return { success: true, ok: false };
+	// if (!forbiddenAncestor.passed) return { success: true, passed: false };
 
 	// const exceeds = doesBlockElementExceeds(parentBlockDefinition, targetBlockInstance, sourceBlockInstance.tag, storedBlocks, sourceBlockInstance.id);
 	// if (!exceeds.success) return exceeds;
-	// if (!exceeds.ok) return { success: true, ok: false };
+	// if (!exceeds.passed) return { success: true, passed: false };
 
 	// const violates = doesBlockElementViolatesOrder(parentBlockDefinition, targetBlockInstance, sourceBlockInstance.tag, storedBlocks, targetIndex);
 	// if (!violates.success) return violates;
-	// if (!violates.ok) return { success: true, ok: false };
+	// if (!violates.passed) return { success: true, passed: false };
 
-	// return { success: true, ok: true };
+	// return { success: true, passed: true };
 }

@@ -27,7 +27,7 @@ export function findBlockNextSibling(sourceBlockInstance: BlockInstance, storedB
 	// If the source is the last child there is no next sibling.
 	const isBlockLastChildResult = isBlockLastChild(sourceBlockInstance, parentBlockInstance.data);
 	if (!isBlockLastChildResult.success) return { status: 'error', error: isBlockLastChildResult.error };
-	if (isBlockLastChildResult.ok === true) return { status: 'not-found' };
+	if (isBlockLastChildResult.passed === true) return { status: 'not-found' };
 
 	// Fetch the sibling that immediately follows the source
 	const nextSiblingID = parentBlockInstance.data.contentIDs[currentIndexResult.data + 1];
@@ -57,7 +57,7 @@ export function findBlockPreviousSibling(sourceBlockInstance: BlockInstance, sto
 	// If the source is the first child there is no previous sibling.
 	const isFirstChildResult = isBlockFirstChild(sourceBlockInstance, parentBlockInstance.data);
 	if (!isFirstChildResult.success) return { status: 'error', error: isFirstChildResult.error };
-	if (isFirstChildResult.ok === true) return { status: 'not-found' };
+	if (isFirstChildResult.passed === true) return { status: 'not-found' };
 
 	// Fetch the sibling that immediately precedes the source
 	const previousSiblingID = parentBlockInstance.data.contentIDs[currentIndexResult.data - 1];

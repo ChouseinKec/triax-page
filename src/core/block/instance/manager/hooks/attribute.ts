@@ -1,17 +1,16 @@
-import { useMemo } from 'react';
-
 // Stores
 import { useBlockStore } from '@/src/core/block/store';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/src/shared/utilities/dev';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helper/validators';
+import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helper';
 import { validateAttributeKey } from '@/src/core/block/attribute/helper/validators';
 
 /**
@@ -20,28 +19,24 @@ import { validateAttributeKey } from '@/src/core/block/attribute/helper/validato
  *
  * @param blockID - The block identifier to subscribe to
  * @param attributeKey - The attribute key to watch for changes
- * @returns The current attribute value or undefined if not found
- *
- * @example
- * useBlockAttribute('block-1', 'className') → 'my-class'
  */
 export function useBlockAttribute(blockID: BlockID, attributeKey: AttributeKey): string | undefined {
-	const safeParams = useMemo(
-		() =>
-			new ResultPipeline('[BlockQueries → useBlockAttribute]')
-				.validate({
-					blockID: validateBlockID(blockID),
-					attributeKey: validateAttributeKey(attributeKey),
-				})
-				.execute(),
-		[blockID, attributeKey]
-	);
-	if (!safeParams) return undefined;
+	// Validate, pick, and operate on necessary data
+	const results = new ResultPipeline('[BlockQueries → useBlockAttribute]')
+		.validate({
+			blockID: validateBlockID(blockID),
+			attributeKey: validateAttributeKey(attributeKey),
+		})
+		.execute();
+	if (!results) return undefined;
 
+	// Return a reactive attribute value
 	return useBlockStore((state) => {
-		const block = state.allBlocks[safeParams.blockID];
-		if (!block) return undefined;
+		// Pick and operate on necessary data
+		const blockResult = pickBlockInstance(results.blockID, state.allBlocks);
+		if (!blockResult.success) return devLog.error(`[BlockQueries → useBlockAttribute] Block not found: ${results.blockID}`), undefined;
 
-		return block.attributes[safeParams.attributeKey];
+		// Return the block attribute data
+		return blockResult.data.attributes[results.attributeKey];
 	});
 }

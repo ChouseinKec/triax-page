@@ -1,6 +1,6 @@
 // Types
 import type { BlockDefinition, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { ElementTag,ElementDefinition } from '@/src/core/block/element/types';
+import type { ElementTag, ElementDefinition } from '@/src/core/block/element/types';
 import type { CheckResult } from '@/src/shared/types/result';
 
 // Helpers
@@ -15,13 +15,13 @@ import { pickBlockInstance } from '@/src/core/block/instance/helper/pickers';
 export function isBlockChildAllowed(parentBlockDefinition: BlockDefinition, childElementTag: ElementTag): CheckResult {
 	// If the parent does not restrict allowed children, the child is permitted
 	const allowedChildren = parentBlockDefinition.allowedChildren;
-	if (!allowedChildren) return { success: true, ok: true };
+	if (!allowedChildren) return { success: true, passed: true };
 
 	// If the allowed list explicitly contains the child's tag it's permitted
-	if (allowedChildren.includes(childElementTag)) return { success: true, ok: true };
+	if (allowedChildren.includes(childElementTag)) return { success: true, passed: true };
 
 	// Otherwise the child's element type is not permitted by this parent
-	return { success: true, ok: false };
+	return { success: true, passed: false };
 }
 
 /**
@@ -34,7 +34,7 @@ export function isBlockChildAllowed(parentBlockDefinition: BlockDefinition, chil
 export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinition, parentBlockInstance: BlockInstance, storedBlocks: BlockInstanceRecord): CheckResult {
 	// If there are no forbidden ancestors declared, this rule can't be violated
 	const forbiddenAncestors = childElementDefinition.forbiddenAncestors;
-	if (!forbiddenAncestors) return { success: true, ok: false };
+	if (!forbiddenAncestors) return { success: true, passed: false };
 
 	// Convert to a Set for efficient membership tests
 	const forbiddenSet = new Set(forbiddenAncestors);
@@ -44,8 +44,8 @@ export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinit
 	while (currentBlockInstance) {
 		if (!currentBlockInstance.parentID) break; // reached the root
 
-		// If the current ancestor's tag is forbidden, we report ok:true
-		if (forbiddenSet.has(currentBlockInstance.tag)) return { success: true, ok: true };
+		// If the current ancestor's tag is forbidden, we report passed:true
+		if (forbiddenSet.has(currentBlockInstance.tag)) return { success: true, passed: true };
 
 		// Fetch the next parent in the chain; propagate fetch errors as failures
 		const parentResult = pickBlockInstance(currentBlockInstance.parentID, storedBlocks);
@@ -54,7 +54,7 @@ export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinit
 	}
 
 	// No forbidden ancestor found
-	return { success: true, ok: false };
+	return { success: true, passed: false };
 }
 
 /**
@@ -70,11 +70,11 @@ export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinit
 export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementTag, storedBlocks: BlockInstanceRecord, excludeBlockID?: string): CheckResult {
 	// If the parent has no unique element limits, the child can't exceed them
 	const uniqueElements = parentBlockDefinition.uniqueElements;
-	if (!uniqueElements) return { success: true, ok: false };
+	if (!uniqueElements) return { success: true, passed: false };
 
 	// Find the configured limit for this element tag — if none is set, it can't exceed
 	const limit = uniqueElements[childElementTag];
-	if (!limit) return { success: true, ok: false };
+	if (!limit) return { success: true, passed: false };
 
 	// Count existing matching child elements, skipping the excludeBlockID if provided
 	let existingCount = 0;
@@ -86,7 +86,7 @@ export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, 
 	}
 
 	// If the existing count is already >= limit then adding would exceed
-	return { success: true, ok: existingCount >= limit };
+	return { success: true, passed: existingCount >= limit };
 }
 
 /**
@@ -102,7 +102,7 @@ export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, 
 export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementTag, storedBlocks: BlockInstanceRecord, targetIndex: number): CheckResult {
 	// If there are no ordered rules, insertion can't violate ordering
 	const orderedElements = parentBlockDefinition.orderedElements;
-	if (!orderedElements) return { success: true, ok: false };
+	if (!orderedElements) return { success: true, passed: false };
 
 	// Collect current sibling tags in order
 	const currentChildTags: ElementTag[] = [];
@@ -130,10 +130,10 @@ export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefini
 		}
 
 		// If the tag is not part of any allowed group (or would force re-ordering backwards),
-		// then this insertion violates the ordered constraints — report ok:true
-		if (!foundInGroup) return { success: true, ok: true };
+		// then this insertion violates the ordered constraints — report passed:true
+		if (!foundInGroup) return { success: true, passed: true };
 	}
 
 	// No ordering violations detected
-	return { success: true, ok: false };
+	return { success: true, passed: false };
 }

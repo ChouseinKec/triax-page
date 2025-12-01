@@ -9,7 +9,7 @@ import type { BlockID } from "@/src/core/block/instance/types";
 import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/manager';
 
 // Managers
-import { canBlockHaveStyle } from "@/src/core/block/instance/manager/queries";
+import { canBlockHaveStyle } from '@/src/core/block/style/manager';
 
 /**
  * PropertyActions Component

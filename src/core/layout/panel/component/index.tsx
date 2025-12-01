@@ -129,6 +129,7 @@ const Panel: React.FC<PanelProps> = ({
      */
     const currentTabContent = useMemo(() => {
         const Content = tabs[currentPanelTabID]?.render();
+
         if (!Content) return <p>Tab content not available</p>;
 
         return <Content />;

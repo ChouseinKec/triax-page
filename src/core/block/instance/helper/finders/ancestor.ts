@@ -25,7 +25,7 @@ export function findBlockAncestors(sourceBlockInstance: BlockInstance, storedBlo
 
 		// Fetch the parent instance
 		const parentResult = pickBlockInstance(current.parentID, storedBlocks);
-		if (!parentResult.success) return { status: 'error', error: `Failed to find ancestor: ${parentResult.error}` };
+		if (!parentResult.success) break; // Stop if parent not found (e.g., virtual root)
 
 		// Add the parent instance to the ancestors list
 		ancestors.push(parentResult.data);

@@ -40,9 +40,9 @@ export type FindResult<T> = { status: 'found'; data: T } | { status: 'not-found'
 
 /**
  * Check-style result used for boolean validations.
- * Returns success:true with ok:boolean on non-error cases, or failure with error message.
+ * Returns success:true with passed:boolean on non-error cases, or failure with error message.
  */
-export type CheckResult = { success: true; ok: boolean } | { success: false; error: string };
+export type CheckResult = { success: true; passed: boolean } | { success: false; error: string };
 
 
 /**

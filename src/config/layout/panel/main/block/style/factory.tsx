@@ -1,9 +1,7 @@
 import React from 'react';
 
 // Managers
-import { useBlockStyle } from '@/src/core/block/style/manager/';
-import { canBlockHaveStyle } from '@/src/core/block/instance/manager/queries';
-import { setBlockStyle } from '@/src/core/block/style/manager';
+import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/src/core/block/style/manager/';
 
 // Constants
 import { STYLE_DEFINITIONS } from '@/src/core/block/style/constants';

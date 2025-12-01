@@ -87,7 +87,7 @@ export function check<T extends Record<string, CheckResult>>(checks: T): { succe
 		if (!result.success) {
 			return { success: false, error: result.error };
 		}
-		data[key] = result.ok;
+		data[key] = result.passed;
 	}
 
 	return { success: true, data };
