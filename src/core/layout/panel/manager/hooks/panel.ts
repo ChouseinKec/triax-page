@@ -1,5 +1,5 @@
 // Stores
-import { useLayoutStore } from '@/src/core/layout/store';
+import { useLayoutStore } from '@/src/state/layout/layout';
 
 // React
 import { useMemo } from 'react';

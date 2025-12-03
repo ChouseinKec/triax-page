@@ -1,7 +1,7 @@
 // Store initialization functions
-import { initLayoutStore } from '@/src/core/layout/store';
-import { initializeBlockStore } from '@/src/core/block/store';
-import { initializePageStore } from '@/src/core/store';
+import { initLayoutStore } from '@/src/state/layout/layout';
+import { initializeBlockStore } from '@/src/state/block/block';
+import { initializePageStore } from '@/src/state/layout/page';
 
 // Types
 import type { StoreDefinition } from '@/src/core/init/store/types';

@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/src/core/block/store';
+import { useBlockStore } from '@/src/state/block/block';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';

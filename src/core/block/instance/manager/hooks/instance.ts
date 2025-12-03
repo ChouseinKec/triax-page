@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/src/core/block/store';
+import { useBlockStore } from '@/src/state/block/block';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';

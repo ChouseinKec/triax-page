@@ -7,7 +7,7 @@ import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/src/core/bloc
 import { STYLE_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Components
-import BlockStyleValue from '@/src/core/block/style/component';
+import BlockStyleValue from '@/src/features/block/style';
 import Property from '@/src/shared/components/layout/property/component';
 import PropertyActions from '@/src/config/layout/panel/main/block/style/actions';
 

@@ -7,8 +7,8 @@ import CSS from "./styles.module.scss";
 // Components
 import ActionGroup from "@/src/shared/components/group/action/component";
 
-import BarSection from "@/src/core/layout/bar/component/section";
-import PanelSection from "@/src/core/layout/panel/component/section";
+import BarSection from "@/src/features/layout/bar/section";
+import PanelSection from "@/src/features/layout/panel/section";
 
 // Managers
 import { useSelectedWorkbenchID } from "@/src/core/layout/page/manager";

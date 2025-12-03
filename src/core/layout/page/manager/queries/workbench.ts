@@ -2,7 +2,7 @@
 import type { WorkbenchID } from 'src/core/layout/workbench/types';
 
 // Stores
-import { usePageStore } from '@/src/core/store';
+import { usePageStore } from '@/src/state/layout/page';
 
 /**
  * Gets the currently selected workbench ID for page queries.

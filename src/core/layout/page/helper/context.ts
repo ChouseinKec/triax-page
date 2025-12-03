@@ -3,7 +3,7 @@ import type { PageContext } from 'src/core/layout/page/types';
 import type { ContextResult } from '@/src/shared/types/result';
 
 // Stores
-import { usePageStore } from 'src/core/store';
+import { usePageStore } from '@/src/state/layout/page';
 
 // Managers
 import { useSelectedOrientationID, useSelectedDeviceID, useSelectedPseudoID, useSelectedWorkbenchID } from '@/src/core/layout/page/manager/';

@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
 
 // Default
-import { DefaultBlocks } from './block-defaults';
+import { DefaultBlocks } from '@/src/state/block/defaults';
 
 export interface BlockStoreProps {
 	selectedBlockID: BlockID | null;

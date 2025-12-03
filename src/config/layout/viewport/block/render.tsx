@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockEditor from "@/src/core/block";
+import BlockEditor from "@/src/features/block/instance";
 
 // Managers
 import { useBlock } from "@/src/core/block/instance/manager";

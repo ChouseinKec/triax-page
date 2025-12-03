@@ -11,7 +11,7 @@ import type { StyleKey } from "@/src/core/block/style/types";
 // Components
 import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import BlockStyleValue from "@/src/core/block/style/component";
+import BlockStyleValue from "@/src/features/block/style";
 
 // Constants
 import { createProperty } from "@/src/core/block/style/constants";

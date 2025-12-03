@@ -3,7 +3,7 @@
 import { memo } from "react";
 
 // Types
-import type { BlockStyleValue } from "./types";
+import type { BlockStylesValue } from "./types";
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
@@ -14,11 +14,11 @@ import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/bl
 import { mergeArrays } from "@/src/shared/utilities/array";
 
 // Components
-import BlockStyleSlots from "@/src/core/block/style/component/slots/component";
+import BlockStylesSlots from "@/src/features/block/style/value/slots/component";
 
 
 /**
- * BlockStyleValue Component
+ * BlockStylesValue Component
  *
  * The primary CSS property value editor that orchestrates complex syntax parsing and multi-slot editing.
  * Handles CSS property syntax normalization, value tokenization, and separator management for advanced properties.
@@ -32,7 +32,7 @@ import BlockStyleSlots from "@/src/core/block/style/component/slots/component";
  *
  * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
  */
-const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property }) => {
+const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, property }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
     const { syntaxSet, syntaxParsed, syntaxNormalized, syntaxSeparators } = property;
 
@@ -78,9 +78,9 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property 
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <BlockStyleSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <BlockStylesSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
-BlockStyleValue.displayName = "BlockStyleValue";
-export default memo(BlockStyleValue);
+BlockStylesValue.displayName = "BlockStylesValue";
+export default memo(BlockStylesValue);
 

@@ -8,7 +8,7 @@ import { getRegisteredWorkbenchs } from '@/src/core/layout/workbench/registry';
 import { DEFAULT_WORKBENCH_ID } from '@/src/core/layout/workbench/constants';
 
 // Stores
-import { usePageStore } from '@/src/core/store';
+import { usePageStore } from '@/src/state/layout/page';
 
 /**
  * Gets the currently selected workbench ID from the page store for page queries.

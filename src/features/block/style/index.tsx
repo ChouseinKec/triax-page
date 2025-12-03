@@ -3,7 +3,7 @@
 import { memo } from "react";
 
 // Types
-import type { BlockStylesValue } from "./types";
+import type { BlockStyleValue } from "./types";
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
@@ -14,11 +14,11 @@ import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/bl
 import { mergeArrays } from "@/src/shared/utilities/array";
 
 // Components
-import BlockStylesSlots from "@/src/core/block/style/component/value/slots/component";
+import BlockStyleSlots from "@/src/features/block/style/slots/component";
 
 
 /**
- * BlockStylesValue Component
+ * BlockStyleValue Component
  *
  * The primary CSS property value editor that orchestrates complex syntax parsing and multi-slot editing.
  * Handles CSS property syntax normalization, value tokenization, and separator management for advanced properties.
@@ -32,7 +32,7 @@ import BlockStylesSlots from "@/src/core/block/style/component/value/slots/compo
  *
  * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
  */
-const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, property }) => {
+const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
     const { syntaxSet, syntaxParsed, syntaxNormalized, syntaxSeparators } = property;
 
@@ -78,9 +78,9 @@ const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, propert
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <BlockStylesSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <BlockStyleSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
-BlockStylesValue.displayName = "BlockStylesValue";
-export default memo(BlockStylesValue);
+BlockStyleValue.displayName = "BlockStyleValue";
+export default memo(BlockStyleValue);
 

@@ -25,7 +25,7 @@ import { ElementTag } from "@/src/core/block/element/types";
  * @param blockID - The block identifier
  * @returns The rendered block with recursive children for block editing
  */
-const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
+const Block: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
     const instance = useBlock(blockID);
     const render = getBlockRender(instance?.type || '');
     const isSelected = useIsBlockSelected(blockID);
@@ -38,7 +38,7 @@ const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
         const contentIDs = instance.contentIDs || [];
         if (contentIDs.length <= 0) return [];
 
-        return contentIDs.map(childID => <BlockEditor key={childID} blockID={childID} />);
+        return contentIDs.map(childID => <Block key={childID} blockID={childID} />);
     }, [instance]
     );
 
@@ -103,4 +103,4 @@ const BlockEditor: React.FC<{ blockID: BlockID }> = ({ blockID }) => {
     return render(instance, children);
 };
 
-export default memo(BlockEditor);
+export default memo(Block);

@@ -7,7 +7,7 @@ import { canBlockHaveAttribute } from "@/src/core/block/instance/manager/queries
 import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants/";
 
 // Components
-import BlockAttributeValue from "@/src/core/block/attribute/component";
+import BlockAttributeValue from "@/src/features/block/attribute";
 import Property from "@/src/shared/components/layout/property/component";
 import PropertyActions from "@/src/config/layout/panel/main/block/attribute/actions";
 

@@ -1,5 +1,5 @@
 // Stores
-import { usePageStore } from '@/src/core/store';
+import { usePageStore } from '@/src/state/layout/page';
 
 // Types
 import type { OrientationID, OrientationInstance } from '@/src/core/layout/page/types';

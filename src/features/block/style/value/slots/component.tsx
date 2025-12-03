@@ -5,14 +5,14 @@ import React, { Fragment, memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockStyleSlot from "@/src/core/block/style/component/slot/component";
+import BlockStylesSlot from "@/src/features/block/style/value/slot/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 
 // Types
-import type { BlockStyleSlotsProps } from "./types";
+import type { BlockStylesSlotsProps } from "./types";
 
 /**
- * BlockStyleSlots Component
+ * BlockStylesSlots Component
  *
  * A multi-slot value editor that manages arrays of CSS property values with incremental slot addition.
  * Renders individual slot editors for each value and provides intelligent UI for adding subsequent slots.
@@ -26,7 +26,7 @@ import type { BlockStyleSlotsProps } from "./types";
  *
  * @note Automatically chooses between radio and dropdown UI based on next slot's option complexity
  */
-const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onChange }) => {
+const BlockStylesSlots: React.FC<BlockStylesSlotsProps> = ({ values, options, onChange }) => {
     const valuesLength = values.length;
     const nextOptions = options[valuesLength];
     const slotsLength = options.length;
@@ -45,7 +45,7 @@ const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onCh
         // Handle empty values case - render first slot with empty value
         if (!values || valuesLength === 0) {
             return (
-                <BlockStyleSlot
+                <BlockStylesSlot
                     key={0}
                     value={""}
                     options={options[0]}
@@ -58,7 +58,7 @@ const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onCh
         return values.map((slotValue, slotIndex) => {
             return (
                 <Fragment key={slotIndex}>
-                    <BlockStyleSlot
+                    <BlockStylesSlot
                         value={slotValue}
                         options={options[slotIndex]}
                         onChange={val => handleSlotChange(val, slotIndex)}
@@ -81,7 +81,7 @@ const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onCh
         // Render radio select for single keyword options (simpler UI)
         if (isSingleKeyword) {
             return (
-                <BlockStyleSlot
+                <BlockStylesSlot
                     value={""}
                     options={nextOptions}
                     onChange={(val: string) => handleSlotChange(val, valuesLength)}
@@ -107,12 +107,12 @@ const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onCh
     };
 
     return (
-        <div className={CSS.BlockStyleSlots}>
+        <div className={CSS.BlockStylesSlots}>
             {renderCurrentSlots()}
             {renderNextSlot()}
         </div>
     );
 };
 
-BlockStyleSlots.displayName = "BlockStyleSlots";
-export default memo(BlockStyleSlots);
+BlockStylesSlots.displayName = "BlockStylesSlots";
+export default memo(BlockStylesSlots);
