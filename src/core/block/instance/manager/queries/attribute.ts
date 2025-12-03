@@ -5,7 +5,8 @@ import { useBlockStore } from '@/src/core/block/store';
 import type { BlockID } from '@/src/core/block/instance/types';
 
 // Helpers
-import { pickBlockAttributes, renderBlockAttributes, validateBlockID } from '@/src/core/block/instance/helper';
+import { validateBlockID } from '@/src/core/block/instance/helper';
+import { pickBlockAttributes, renderBlockAttributes } from '@/src/core/block/attribute/helper/';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';

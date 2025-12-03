@@ -73,10 +73,6 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
  *
  * @param sourceBlockID - The block ID to move
  * @param targetBlockID - The target block ID to position before
- * @returns void
- *
- * @example
- * moveBlockBefore('block-456', 'block-123')
  */
 export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID): void {
 	const blockStore = useBlockStore.getState();
@@ -122,10 +118,6 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
  *
  * @param sourceBlockID - The block ID to move
  * @param targetBlockID - The target block ID to move into as the last child
- * @returns void
- *
- * @example
- * moveBlockInto('block-456', 'block-123')
  */
 export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): void {
 	const blockStore = useBlockStore.getState();

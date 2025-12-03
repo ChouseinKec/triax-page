@@ -1,6 +1,7 @@
 // Types
 import type { StyleKey, StyleValue } from '@/src/core/block/style/types/';
 import type { ValidateResult } from '@/src/shared/types/result';
+import type { BlockStyles } from '@/src/core/block/instance/types';
 
 // Constants
 import { STYLE_DEFINITIONS, DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/constants';
@@ -10,7 +11,10 @@ import { splitAdvanced } from '@/src/shared/utilities/string';
 import { getValueTokens } from '@/src/core/block/style/utilities';
 
 // Helpers
-import { validateString } from '@/src/shared/helpers';
+import { validateString ,validateObject} from '@/src/shared/helpers';
+
+
+
 
 /**
  * Validates a CSS style key for block style operations.
@@ -69,4 +73,20 @@ export function validateStyleValue(styleKey: unknown, styleValue: unknown): Vali
 	if (!isValid) return { valid: false, message: `Invalid style value: '${styleValue}' is not valid for property '${styleKey}'` };
 
 	return { valid: true, value: styleValue as StyleValue };
+}
+
+/**
+ * Checks if the styles is a valid object containing CSS styles for the block.
+ *
+ * @param blockStyles - The block styles object to validate
+ * @returns ValidateResult containing validity and the validated BlockStyles if valid
+ *
+ * @example
+ * validateBlockStyles({ color: 'red', fontSize: '14px' }) → { valid: true, value: { color: 'red', fontSize: '14px' } }
+ */
+export function validateBlockStyles(blockStyles: unknown): ValidateResult<BlockStyles> {
+	const validation = validateObject(blockStyles);
+	if (!validation.valid) return validation;
+
+	return { valid: true, value: validation.value as BlockStyles };
 }

@@ -1,4 +1,3 @@
-export * from './attribute';
 export * from './content';
 export * from './select';
 export * from './tag';

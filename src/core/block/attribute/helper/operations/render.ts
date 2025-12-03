@@ -9,9 +9,6 @@ import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/core/block
  * Renders block attributes into a normalized React-compatible object.
  * Converts HTML attribute names to React equivalents and normalizes boolean values.
  * @param attributes - The block's attribute definition object
- * @returns Normalized attributes object ready for React component props
- * @example
- * renderBlockAttributes({ class: 'btn', disabled: 'true' }) → { className: 'btn', disabled: true }
  */
 export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> {
 	const normalizedAttributes: Record<string, string | boolean> = {};

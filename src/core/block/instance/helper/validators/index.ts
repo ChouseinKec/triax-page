@@ -8,15 +8,12 @@ import { getElementDefinitions } from '@/src/core/block/element/constants';
 
 // Helpers
 import { validateString, validateArray, validateFunction, validateObject, validateElement } from '@/src/shared/helpers';
-
+import { validateBlockStyles } from '@/src/core/block/style/helper/';
+import { validateBlockAttributes } from '@/src/core/block/attribute/helper/';
 /**
  * Checks if the ID is a valid non-empty string identifier.
  *
  * @param blockID - The block ID to validate
- * @returns ValidateResult containing validity and the validated BlockID if valid
- *
- * @example
- * validateBlockID('block-123') → { valid: true, value: 'block-123' }
  */
 export function validateBlockID(blockID: unknown): ValidateResult<BlockID> {
 	const validation = validateString(blockID);
@@ -29,10 +26,6 @@ export function validateBlockID(blockID: unknown): ValidateResult<BlockID> {
  * Checks if the type is a valid non-empty string representing a registered block type.
  *
  * @param blockType - The block type to validate
- * @returns ValidateResult containing validity and the validated BlockType if valid
- *
- * @example
- * validateBlockType('text') → { valid: true, value: 'text' }
  */
 export function validateBlockType(blockType: unknown): ValidateResult<BlockType> {
 	const validation = validateString(blockType);
@@ -45,10 +38,6 @@ export function validateBlockType(blockType: unknown): ValidateResult<BlockType>
  * Checks if the tag is a valid HTML element tag from the predefined element definitions.
  *
  * @param blockTag - The block tag to validate
- * @returns ValidateResult containing validity and the validated ElementTag if valid
- *
- * @example
- * validateBlockTag('div') → { valid: true, value: 'div' }
  */
 export function validateBlockTag(blockTag: unknown): ValidateResult<ElementTag> {
 	const validation = validateString(blockTag);
@@ -65,10 +54,6 @@ export function validateBlockTag(blockTag: unknown): ValidateResult<ElementTag> 
  * Checks if all availableTags in the array are valid HTML element availableTags.
  *
  * @param blockAllowedTags - The array of block availableTags to validate
- * @returns ValidateResult containing validity and the validated ElementTag array if all availableTags are valid
- *
- * @example
- * validateBlockAvailableTags(['div', 'span']) → { valid: true, value: ['div', 'span'] }
  */
 export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<ElementTag[]> {
 	const validation = validateArray(blockTags);
@@ -97,10 +82,6 @@ export function validateBlockRender(blockRender: unknown): ValidateResult<BlockR
  * Checks if all content types in the array are valid block types that this block can contain.
  *
  * @param allowedChildren - The array of permitted content types to validate
- * @returns ValidateResult containing validity and the validated BlockAllowedChildren array if all types are valid
- *
- * @example
- * validateBlockAllowedChildren(['text', 'image']) → { valid: true, value: ['text', 'image'] }
  */
 export function validateBlockAllowedChildren(allowedChildren: unknown): ValidateResult<BlockAllowedChildren> {
 	if (allowedChildren === null) {
@@ -123,10 +104,6 @@ export function validateBlockAllowedChildren(allowedChildren: unknown): Validate
  * Checks if the category is a valid non-empty string representing a block category.
  *
  * @param blockCategory - The block category to validate
- * @returns ValidateResult containing validity and the validated BlockCategory if valid
- *
- * @example
- * validateBlockCategory('layout') → { valid: true, value: 'layout' }
  */
 export function validateBlockCategory(blockCategory: unknown): ValidateResult<BlockCategory> {
 	const validation = validateString(blockCategory);
@@ -139,10 +116,6 @@ export function validateBlockCategory(blockCategory: unknown): ValidateResult<Bl
  * Checks if the icon is a valid React component.
  *
  * @param blockIcon - The block icon React component to validate
- * @returns ValidateResult containing validity and the validated BlockIcon if valid
- *
- * @example
- * validateBlockIcon(<StarIcon />) → { valid: true, value: <StarIcon /> }
  */
 export function validateBlockIcon(blockIcon: unknown): ValidateResult<BlockIcon> {
 	const componentValidation = validateElement(blockIcon);
@@ -152,46 +125,10 @@ export function validateBlockIcon(blockIcon: unknown): ValidateResult<BlockIcon>
 }
 
 /**
- * Checks if the attributes is a valid object containing HTML attributes for the block.
- *
- * @param blockAttributes - The block attributes object to validate
- * @returns ValidateResult containing validity and the validated BlockAttributes if valid
- *
- * @example
- * validateBlockAttributes({ className: 'my-class', id: 'block-1' }) → { valid: true, value: { className: 'my-class', id: 'block-1' } }
- */
-export function validateBlockAttributes(blockAttributes: unknown): ValidateResult<BlockAttributes> {
-	const validation = validateObject(blockAttributes);
-	if (!validation.valid) return validation;
-
-	return { valid: true, value: validation.value as BlockAttributes };
-}
-
-/**
- * Checks if the styles is a valid object containing CSS styles for the block.
- *
- * @param blockStyles - The block styles object to validate
- * @returns ValidateResult containing validity and the validated BlockStyles if valid
- *
- * @example
- * validateBlockStyles({ color: 'red', fontSize: '14px' }) → { valid: true, value: { color: 'red', fontSize: '14px' } }
- */
-export function validateBlockStyles(blockStyles: unknown): ValidateResult<BlockStyles> {
-	const validation = validateObject(blockStyles);
-	if (!validation.valid) return validation;
-
-	return { valid: true, value: validation.value as BlockStyles };
-}
-
-/**
  * Checks if the instance has required properties (id, type, parentID, contentIDs, attributes, styles)
  * and that each property is valid.
  *
  * @param blockInstance - The block instance to validate
- * @returns ValidateResult<BlockInstance>
- *
- * @example
- * validateBlockInstance({ id: 'block-1', type: 'text', parentID: 'root', contentIDs: [], attributes: {}, styles: {} }) → { valid: true, value: {...} }
  */
 export function validateBlockInstance(blockInstance: unknown): ValidateResult<BlockInstance> {
 	const validation = validateObject(blockInstance, ['id', 'type', 'parentID', 'contentIDs', 'attributes', 'styles']);
@@ -214,10 +151,6 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
- * @returns ValidateResult containing validity and the validated BlockDefinition if valid
- *
- * @example
- * validateBlockDefinition({type: 'text',availableTags: ['span'],render: () => <span>Text</span>,allowedChildren: [],icon: <TextIcon />,category: 'content'}) → { valid: true, value: {...} }
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
 	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'render', 'availableTags', 'allowedChildren']);

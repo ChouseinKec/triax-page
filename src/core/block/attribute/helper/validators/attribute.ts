@@ -6,16 +6,14 @@ import type { ValidateResult } from '@/src/shared/types/result';
 import { ATTRIBUTE_DEFINITIONS } from '@/src/core/block/attribute/constants';
 
 // Helpers
-import { validateString } from '@/src/shared/helpers';
+import { validateString, validateObject } from '@/src/shared/helpers';
+// Types
+import type { BlockAttributes } from '@/src/core/block/instance/types';
 
 /**
  * Checks if the key is a valid HTML attribute key from the predefined attribute definitions.
  *
  * @param attributeKey - The HTML attribute key to validate
- * @returns ValidateResult containing validity and the validated AttributeKey if valid
- *
- * @example
- * validateAttributeKey('className') → { valid: true, value: 'className' }
  */
 export function validateAttributeKey(attributeKey: unknown): ValidateResult<AttributeKey> {
 	const validation = validateString(attributeKey);
@@ -33,10 +31,6 @@ export function validateAttributeKey(attributeKey: unknown): ValidateResult<Attr
  * Checks if the value is a valid non-empty string that can be used as an HTML attribute value.
  *
  * @param attributeValue - The attribute value to validate
- * @returns ValidateResult containing validity and the validated AttributeValue if valid
- *
- * @example
- * validateAttributeValue('my-class') → { valid: true, value: 'my-class' }
  */
 export function validateAttributeValue(attributeValue: unknown): ValidateResult<AttributeValue> {
 	if (attributeValue === '') return { valid: true, value: '' };
@@ -45,4 +39,16 @@ export function validateAttributeValue(attributeValue: unknown): ValidateResult<
 	if (!validation.valid) return validation;
 
 	return { valid: true, value: validation.value as AttributeValue };
+}
+
+/**
+ * Checks if the attributes is a valid object containing HTML attributes for the block.
+ *
+ * @param blockAttributes - The block attributes object to validate
+ */
+export function validateBlockAttributes(blockAttributes: unknown): ValidateResult<BlockAttributes> {
+	const validation = validateObject(blockAttributes);
+	if (!validation.valid) return validation;
+
+	return { valid: true, value: validation.value as BlockAttributes };
 }
