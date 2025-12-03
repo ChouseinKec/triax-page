@@ -5,10 +5,10 @@ import React, { useState, useCallback, MouseEvent, useRef, useEffect, memo, useM
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedDevice, useSelectedOrientation, useSelectedWorkbenchID } from "@/src/core/layout/page/manager";
+import { useSelectedDevice, useSelectedOrientation, useSelectedWorkbenchID } from "@/src/core/layout/page/managers";
 
 // REGISTRY_DEFINITIONS
-import { getRegisteredViewportByWorkbenchID } from "@/src/core/layout/viewport/registry";
+import { getRegisteredViewportByWorkbenchID } from "@/src/core/layout/viewport/registries";
 
 const ViewportEditor: React.FC = () => {
     const [zoom, setZoom] = useState(0.8);

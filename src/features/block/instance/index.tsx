@@ -8,8 +8,8 @@ import CSS from "./styles.module.scss";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Manager
-import { useBlock, getBlockRender, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockAvailableTags } from "@/src/core/block/instance/manager";
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/manager";
+import { useBlock, getBlockRender, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockAvailableTags } from "@/src/core/block/instance/managers";
+import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/managers";
 
 // Utilities
 import { devRender } from "@/src/shared/utilities/dev";

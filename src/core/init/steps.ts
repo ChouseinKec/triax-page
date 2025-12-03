@@ -1,9 +1,9 @@
 // Constants
-import { REGISTRY_DEFINITIONS } from '@/src/core/init/registry/constants';
+import { REGISTRY_DEFINITIONS } from '@/src/core/init/registries/constants';
 import { STORE_DEFINITIONS } from '@/src/core/init/store/constants';
 
 // Init
-import { InitRegistry } from '@/src/core/init/registry';
+import { InitRegistry } from '@/src/core/init/registries';
 import { InitStore } from '@/src/core/init/store';
 
 // Types

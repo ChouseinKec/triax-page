@@ -8,8 +8,8 @@ import CSS from "./styles.module.scss";
 import BlockEditor from "@/src/features/block/instance";
 
 // Managers
-import { useBlock } from "@/src/core/block/instance/manager";
-import { useSelectedDevice, useSelectedOrientation } from "@/src/core/layout/page/manager";
+import { useBlock } from "@/src/core/block/instance/managers";
+import { useSelectedDevice, useSelectedOrientation } from "@/src/core/layout/page/managers";
 
 /**
  * BlockEditor Component

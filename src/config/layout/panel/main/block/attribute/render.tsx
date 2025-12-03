@@ -5,7 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedBlockID, canBlockHaveAttributes } from "@/src/core/block/instance/manager";
+import { useSelectedBlockID, canBlockHaveAttributes } from "@/src/core/block/instance/managers";
 
 // Components
 import TabGroup from "@/src/shared/components/group/tab/component";

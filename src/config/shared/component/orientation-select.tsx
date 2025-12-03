@@ -2,8 +2,8 @@
 import React from "react";
 
 // Managers
-import { getAllOrientations, useSelectedOrientationID, getDefaultOrientationID } from "@/src/core/layout/page/manager";
-import { setSelectedOrientationID } from "@/src/core/layout/page/manager/commands";
+import { getAllOrientations, useSelectedOrientationID, getDefaultOrientationID } from "@/src/core/layout/page/managers";
+import { setSelectedOrientationID } from "@/src/core/layout/page/managers/commands";
 
 // Components
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";

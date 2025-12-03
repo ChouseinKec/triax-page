@@ -13,7 +13,7 @@ import type { BarProps } from "./types";
 import type { BarActionInstance } from "@/src/core/layout/bar/types";
 
 // Managers
-import { useBarActions } from "@/src/core/layout/bar/manager";
+import { useBarActions } from "@/src/core/layout/bar/managers";
 
 /**
  * Bar Component

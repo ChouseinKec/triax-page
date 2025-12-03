@@ -5,8 +5,8 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedWorkbenchID } from "@/src/core/layout/page/manager";
-import { getWorkbenchInstance } from "@/src/core/layout/workbench/manager";
+import { useSelectedWorkbenchID } from "@/src/core/layout/page/managers";
+import { getWorkbenchInstance } from "@/src/core/layout/workbench/managers";
 
 // Types
 import { WorkbenchInstance } from "@/src/core/layout/workbench/types";

@@ -11,9 +11,9 @@ import BarSection from "@/src/features/layout/bar/section";
 import PanelSection from "@/src/features/layout/panel/section";
 
 // Managers
-import { useSelectedWorkbenchID } from "@/src/core/layout/page/manager";
+import { useSelectedWorkbenchID } from "@/src/core/layout/page/managers";
 
-import { usePanelsByWorkbench, togglePanel } from "@/src/core/layout/panel/manager";
+import { usePanelsByWorkbench, togglePanel } from "@/src/core/layout/panel/managers";
 
 /**
  * LayoutEditor Component

@@ -10,7 +10,7 @@ import ViewportEditor from "@/src/features/layout/viewport";
 import LayoutEditor from "@/src/core/layout";
 
 //Managers
-import { usePageActions } from "@/src/core/layout/page/manager";
+import { usePageActions } from "@/src/core/layout/page/managers";
 
 /**
  * PageEditor Component

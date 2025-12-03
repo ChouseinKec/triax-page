@@ -16,7 +16,7 @@ import { renderStyleRow } from "./factory";
 import { generateStyleKey } from "@/src/core/block/style/utilities";
 
 // Managers
-import { useBlockStyle } from "@/src/core/block/style/manager";
+import { useBlockStyle } from "@/src/core/block/style/managers";
 
 /**
  * Renders the Size & Position tab content

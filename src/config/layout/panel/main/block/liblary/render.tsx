@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addBlock, canBlockAcceptChild,  useSelectedBlockType, useSelectedBlockID, getBlockDefinitions, getBlockDefinition } from "@/src/core/block/instance/manager";
+import { addBlock, canBlockAcceptChild,  useSelectedBlockType, useSelectedBlockID, getBlockDefinitions, getBlockDefinition } from "@/src/core/block/instance/managers";
 
 // Components
 import GenericInput from "@/src/shared/components/input/generic/component";

@@ -6,8 +6,8 @@ import type { BarDefinition, BarID } from '@/src/core/layout/bar/types';
 import type { BarRecord, BarActionInstance, BarActionID } from '@/src/core/layout/bar/types';
 
 // Registry
-import { getRegisteredPanels, getRegisteredPanelTabs } from '@/src/core/layout/panel/registry';
-import { getRegisteredBars } from '@/src/core/layout/bar/registry';
+import { getRegisteredPanels, getRegisteredPanelTabs } from '@/src/core/layout/panel/registries';
+import { getRegisteredBars } from '@/src/core/layout/bar/registries';
 
 interface LayoutStore {
 	allPanels: PanelRecord;

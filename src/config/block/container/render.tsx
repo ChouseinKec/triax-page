@@ -4,8 +4,8 @@ import React, { useCallback, memo, useRef } from 'react';
 import type { BlockChildren, BlockInstance } from '@/src/core/block/instance/types';
 
 // Manager
-import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes } from '@/src/core/block/instance/manager';
-import { useBlockRenderedStyles } from '@/src/core/block/style/manager/';
+import { useIsBlockSelected, selectBlock, getBlockRenderedAttributes } from '@/src/core/block/instance/managers';
+import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
 
 
 /**

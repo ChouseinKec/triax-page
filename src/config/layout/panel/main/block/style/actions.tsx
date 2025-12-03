@@ -6,10 +6,10 @@ import type { StyleKey } from "@/src/core/block/style/types";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Commands
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/manager';
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/managers';
 
 // Managers
-import { canBlockHaveStyle } from '@/src/core/block/style/manager';
+import { canBlockHaveStyle } from '@/src/core/block/style/managers';
 
 /**
  * PropertyActions Component

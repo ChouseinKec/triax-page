@@ -4,10 +4,10 @@ import React, { useCallback, useRef, useEffect } from "react";
 import type { BlockInstance } from '@/src/core/block/instance/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock, } from '@/src/core/block/instance/manager';
-import { getBlockContent, setBlockContent } from '@/src/core/block/instance/manager';
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/src/core/layout/bar/manager';
-import { useBlockRenderedStyles } from '@/src/core/block/style/manager/';
+import { useIsBlockSelected, selectBlock, } from '@/src/core/block/instance/managers';
+import { getBlockContent, setBlockContent } from '@/src/core/block/instance/managers';
+import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/src/core/layout/bar/managers';
+import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
 
 const BlockMarkdownRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;

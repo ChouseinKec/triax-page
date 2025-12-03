@@ -1,7 +1,7 @@
 import React from "react";
 
 // Managers
-import { canBlockHaveAttribute } from "@/src/core/block/instance/manager/queries";
+import { canBlockHaveAttribute } from "@/src/core/block/instance/managers/queries";
 
 // Constants
 import { ATTRIBUTE_DEFINITIONS } from "@/src/core/block/attribute/constants/";

@@ -2,8 +2,8 @@
 import React from "react";
 
 // Managers
-import { getAllPseudos, useSelectedPseudoID, getDefaultPseudoID } from "@/src/core/layout/page/manager";
-import { setSelectedPseudoID } from "@/src/core/layout/page/manager/commands";
+import { getAllPseudos, useSelectedPseudoID, getDefaultPseudoID } from "@/src/core/layout/page/managers";
+import { setSelectedPseudoID } from "@/src/core/layout/page/managers/commands";
 
 // Components
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";

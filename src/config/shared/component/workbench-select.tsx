@@ -2,8 +2,8 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedWorkbenchID, setSelectedWorkbenchID } from "@/src/core/layout/page/manager/";
-import { getWorkbenchInstances } from "@/src/core/layout/workbench/manager/";
+import { useSelectedWorkbenchID, setSelectedWorkbenchID } from "@/src/core/layout/page/managers/";
+import { getWorkbenchInstances } from "@/src/core/layout/workbench/managers/";
 
 // Components
 import RadioSelect from "@/src/shared/components/select/radio/component";

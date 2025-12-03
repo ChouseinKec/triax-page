@@ -8,7 +8,7 @@ import Panel from ".";
 import type { PanelSectionProps } from "./types";
 
 // Managers
-import { useOpenPanels, togglePanel } from "@/src/core/layout/panel/manager";
+import { useOpenPanels, togglePanel } from "@/src/core/layout/panel/managers";
 
 const InfoSection: React.FC<PanelSectionProps> = ({ selectedWorkbenchID }) => {
     const openPanels = useOpenPanels(selectedWorkbenchID);

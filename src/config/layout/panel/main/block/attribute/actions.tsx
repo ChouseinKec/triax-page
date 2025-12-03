@@ -6,7 +6,7 @@ import type { AttributeKey } from "@/src/core/block/attribute/types";
 import type { BlockID } from "@/src/core/block/instance/types";
 
 // Managers
-import { canBlockHaveAttribute } from "@/src/core/block/instance/manager/queries";
+import { canBlockHaveAttribute } from "@/src/core/block/instance/managers/queries";
 
 /**
  * PropertyActions Component

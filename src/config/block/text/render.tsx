@@ -4,8 +4,8 @@ import React, { useCallback, useRef } from "react";
 import type { BlockInstance } from '@/src/core/block/instance/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock } from '@/src/core/block/instance/manager';
-import { getBlockContent, setBlockContent } from '@/src/core/block/instance/manager';
+import { useIsBlockSelected, selectBlock } from '@/src/core/block/instance/managers';
+import { getBlockContent, setBlockContent } from '@/src/core/block/instance/managers';
 
 const BlockTextRender: React.FC<{ instance: BlockInstance }> = ({ instance }) => {
     const blockID = instance.id;

@@ -2,8 +2,8 @@
 import React from "react";
 
 // Managers
-import { getDeviceDefinitions, useSelectedDeviceID, getDeviceDefaultID } from "@/src/core/layout/page/manager";
-import { setSelectedDeviceID } from "@/src/core/layout/page/manager/commands";
+import { getDeviceDefinitions, useSelectedDeviceID, getDeviceDefaultID } from "@/src/core/layout/page/managers";
+import { setSelectedDeviceID } from "@/src/core/layout/page/managers/commands";
 
 // Components
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";

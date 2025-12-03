@@ -2,7 +2,7 @@
 import { useEffect, memo, useCallback } from "react";
 
 // Managers
-import { registerBarAction, unregisterBarAction } from "@/src/core/layout/bar/manager";
+import { registerBarAction, unregisterBarAction } from "@/src/core/layout/bar/managers";
 
 // Components
 import DeviceSelect from "@/src/config/shared/component/device-select";
