@@ -5,9 +5,6 @@
  * contains one element from each input array, in order.
  *
  * @param arrays - Array of arrays
- * @returns Array of arrays (cross product)
- * @example
- * generateCrossProduct([[1, 2], ['a', 'b']]) → [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
  */
 export function generateCrossProduct<T>(arrays: T[][]): T[][] {
 	if (!arrays.length) return [[]];
@@ -27,9 +24,6 @@ export function generateCrossProduct<T>(arrays: T[][]): T[][] {
  * Returns all subsets of an array (the power set).
  * Uses bitwise operations to efficiently generate every possible subset.
  * @param arr - The input array
- * @returns Array of subsets (combinations)
- * @example
- * generateAllSubsets(['a', 'b']) → [[], ['a'], ['b'], ['a', 'b']]
  *
  */
 export function generateAllSubsets<T>(arr: T[]): T[][] {
@@ -48,9 +42,6 @@ export function generateAllSubsets<T>(arr: T[]): T[][] {
 /**
  * Generates all possible permutations of the input array.
  * @param arr - Array of elements
- * @returns Array of permutations (arrays)
- * @example
- * generatePermutations(['a', 'b']) → [['a', 'b'], ['b', 'a']]
  */
 export function generatePermutations(arr: string[]): string[][] {
 	if (arr.length === 0) return [[]];
@@ -71,14 +62,6 @@ export function generatePermutations(arr: string[]): string[][] {
  * across all rows of the input 2D array.
  *
  * @param rows - A 2D array (array of arrays) of values.
- * @returns Array of arrays, one for each column.
- * @example
- * getColumnValueSets([
- *   ['a', 'b'],
- *   ['a', 'c'],
- *   ['d', 'b']
- * ]) // [['a', 'd'], ['b', 'c']]
- * → [['a', 'd'], ['b', 'c']]
  */
 export function getColumnSets<T>(rows: T[][]): T[][] {
 	if (!rows.length) return [];
@@ -98,10 +81,6 @@ export function getColumnSets<T>(rows: T[][]): T[][] {
  * Groups an array of objects by a given property.
  * @param arr - The array of objects to group
  * @param prop - The property name to group by
- * @returns An object where keys are property values and values are arrays of objects with that property
- * @example
- * groupBy([{type: 'a'}, {type: 'b'}, {type: 'a'}], 'type')
- * → { a: [{type: 'a'}, {type: 'a'}], b: [{type: 'b'}] }
  */
 export function groupBy<T extends Record<string, unknown>>(arr: T[], prop: keyof T): Record<string, T[]> {
 	return arr.reduce((acc, item) => {
@@ -118,11 +97,6 @@ export function groupBy<T extends Record<string, unknown>>(arr: T[], prop: keyof
  * array, while preserving existing values.
  * @param target - The target array to fill, which may contain undefined, null, or empty string values.
  * @param reference - The reference array containing the values to use for filling.
- * @return A new array where each position is filled with the corresponding value from the reference array,
- * or the existing value from the target array if it is not undefined, null, or an empty string.
- * @example
- * mergeArrays([undefined, 'b', null, ''], ['a', 'b', 'c', 'd']) → ['a', 'b', 'c', 'd']
- * mergeArrays(['x'], ['a', 'b', 'c']) → ['x', 'b', 'c']
  */
 export function mergeArrays<T>(target: (T | undefined | null | '')[], reference: T[]): T[] {
 	return reference.map((ref, index) => {

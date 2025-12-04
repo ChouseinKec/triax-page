@@ -1,5 +1,5 @@
 import React from "react";
-import WorkbenchSelect from "@/src/config/shared/component/workbench-select";
+import WorkbenchSelect from "@/src/features/shared/component/workbench-select";
 
 /**
  * Workbench Select Action Instance

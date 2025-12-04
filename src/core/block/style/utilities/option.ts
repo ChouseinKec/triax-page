@@ -12,9 +12,6 @@ import type { UnitTypes } from '@/src/core/block/style/types';
  * Creates a OptionFunctionDefinition object for a given function token.
  *
  * @param token - The function token string (e.g., 'calc(<length>|<percentage>)')
- * @returns OptionFunctionDefinition | undefined - The created function option or undefined if invalid.
- * @example
- * createFunctionOption('calc(<length>|<percentage>)') → { name: 'calc()', value: 'calc(0px)', syntax: '<length>|<percentage>', category: 'function', type: 'function' }
  */
 export function createFunctionOption(token: string): OptionFunctionDefinition | undefined {
 	// Check if the token is empty or undefined
@@ -50,9 +47,6 @@ export function createFunctionOption(token: string): OptionFunctionDefinition | 
  * Creates an array of OptionDimensionDefinition objects for a given dimension token.
  *
  * @param token - The dimension token string (e.g., '<length [0,100]>')
- * @returns OptionDimensionDefinition[] | undefined - An array of dimension options or undefined if invalid.
- * @example
- * createDimensionOptions('<length [0,100]>') → [{ name: 'px', value: '0px', type: 'length', min: 0, max: 100 }, ...]
  */
 export function createDimensionOptions(token: string): OptionDimensionDefinition[] | undefined {
 	// Check if the token is empty or undefined
@@ -84,9 +78,6 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
  *
  * @param token - The keyword token string (e.g., 'auto')
  * @param key - The name of the CSS property being edited (for keyword options)
- * @returns OptionKeywordDefinition | undefined - The created keyword option or undefined if empty.
- * @example
- * createKeywordOption('auto') → { name: 'auto', value: 'auto', category: 'keyword', icon: <Icon />, type: 'keyword' }
  */
 export function createKeywordOption(token: string, styleKey: string): OptionKeywordDefinition | undefined {
 	// Check if the token is empty or undefined
@@ -108,9 +99,6 @@ export function createKeywordOption(token: string, styleKey: string): OptionKeyw
  * Creates a NumberOptionData object for a given number token (e.g., '<number [0,25]>').
  *
  * @param token - The number token string (e.g., '<number [0,25]>')
- * @returns NumberOptionData | undefined - The created number option or undefined if invalid.
- * @example
- * createNumberOption('<number [0,25]>') → { name: 'number', value: '0', min: 0, max: 25, category: 'other', type: 'number' }
  */
 export function createNumberOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
@@ -131,9 +119,6 @@ export function createNumberOption(token: string): OptionGenericDefinition | und
  * Creates an IntegerOptionData object for a given integer token (e.g., '<integer [0,100]>').
  *
  * @param token - The integer token string (e.g., '<integer [0,100]>')
- * @returns NumberOptionData | undefined - The created integer option or undefined if invalid.
- * @example
- * createIntegerOption('<integer [0,100]>') → { name: 'integer', value: '0', min: 0, max: 100, category: 'other', type: 'integer' }
  */
 export function createIntegerOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
@@ -153,9 +138,6 @@ export function createIntegerOption(token: string): OptionGenericDefinition | un
  * Creates a color option for a given token (e.g., 'color').
  *
  * @param token - The color token string (e.g., 'color')
- * @returns OptionGenericDefinition | undefined - The created color option or undefined if empty.
- * @example
- * createColorOption('color') → { name: 'color', value: '#000000', category: 'other', type: 'color' }
  */
 export function createColorOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
@@ -171,9 +153,6 @@ export function createColorOption(token: string): OptionGenericDefinition | unde
  * Creates a link option for a given token (e.g., 'link').
  *
  * @param token - The link token string (e.g., 'link')
- * @returns OptionGenericDefinition | undefined - The created link option or undefined if empty.
- * @example
- * createLinkOption('link') → { name: 'link', value: 'https://example.com', category: 'other', type: 'link' }
  */
 export function createLinkOption(token: string): OptionGenericDefinition | undefined {
 	if (!token) return undefined;
@@ -192,9 +171,6 @@ export function createLinkOption(token: string): OptionGenericDefinition | undef
  * @param slotIndex - The index of the slot being checked
  * @param validValueSet - Set of all valid value strings (normalized)
  * @param currentTokens - The current value tokens for all slots (canonicalized)
- * @returns True if the token is valid for this slot in the current context
- * @example
- * isSlotOptionValid('auto', 0, validValueSet, ['auto', '10px']) → true
  */
 export function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
 	const tokenCanonical = getTokenCanonical(token);
@@ -218,7 +194,6 @@ export function isSlotOptionValid(token: string, slotIndex: number, validValueSe
  *
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
  * @param styleKey - The name of the CSS property being edited (for keyword options)
- * @returns StyleOptionDefinition | StyleOptionDefinition[] | undefined
  */
 export function createOption(token: string, styleKey: string): StyleOptionDefinition | StyleOptionDefinition[] | undefined {
 	const type = getTokenType(token);
@@ -251,7 +226,6 @@ export function createOption(token: string, styleKey: string): StyleOptionDefini
  * @param slotTokenSets - Array of arrays, each containing all possible tokens for that slot
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @param styleKey - The name of the CSS property being edited (for keyword options)
- * @returns 2D array of StyleOptionDefinition for each slot
  */
 export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], styleKey: string): StyleOptionDefinition[][] {
 	// Normalize the current values to canonical tokens

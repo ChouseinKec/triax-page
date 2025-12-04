@@ -7,9 +7,6 @@ import type { StyleValueSeparator } from '@/src/core/block/style/types';
 /**
  * Extracts separators from a single variation string.
  * @param variation - The variation string to extract separators from.
- * @returns An array of separators found in the string.
- * @example
- * extractSeparator('a b / c') → [' ', '/']
  */
 export function extractSeparator(variation: string): string[] {
 	// Clean and normalize the variation string for consistent separator extraction
@@ -52,10 +49,6 @@ export function extractSeparator(variation: string): string[] {
  * Extracts separators between tokens for each variation in variations.
  * Returns an array of arrays: one array of separators per variation.
  * @param variations - An array of CSS value variations (e.g., ['a b / c', 'd e / f']).
- * @return An array of arrays of separators for each variation.
- *
- * @example
- * extractSeparators(['a b / c', 'd e / f']) → [[' ', '/'], [' ', '/']]
  */
 export function extractSeparators(variations: string[]): string[][] {
 	const arr = Array.isArray(variations) ? variations : [...variations];

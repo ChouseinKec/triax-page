@@ -1,5 +1,5 @@
 // Constants
-import { UNIT_DEFINITIONS } from '@/src/core/block/style/constants';
+import { UNIT_DEFINITIONS } from '@/src/core/block/style/constants/unit';
 
 // Types
 import type { UnitTypes } from '@/src/core/block/style/types';
@@ -9,9 +9,6 @@ import type { UnitKeys } from '@/src/core/block/style/types';
  * Extracts the numeric value from a CSS dimension string (e.g., '10px', '25%', '0.1rem').
  * Returns the numeric value as a number, or undefined if not found.
  * @param input - The CSS value string.
- * @returns The numeric value (number) or undefined if not found.
- * @example
- * extractDimensionNumber('10px') → 10
  */
 export function extractDimensionNumber(input: string): string | undefined {
 	const match = input.match(/^([+-]?\d*\.?\d+(?:[eE][+-]?\d+)?)/);
@@ -22,9 +19,6 @@ export function extractDimensionNumber(input: string): string | undefined {
  * Extracts the unit from a CSS dimension string (e.g., '10px', '25%', '0.1rem').
  * Returns the unit as a string, or undefined if not found.
  * @param input - The CSS value string.
- * @returns The unit (string) or undefined if not found.
- * @example
- * extractDimensionUnit('10px') → 'px'
  */
 export function extractDimensionUnit(input: string): string | undefined {
 	const match = input.match(/^[+-]?\d*\.?\d+(?:[eE][+-]?\d+)?([a-zA-Z%]*)$/);
@@ -86,12 +80,6 @@ export function extractDimensionDefaults(options: Array<{ category?: string; nam
  * Uses isValueDimension for validation.
  *
  * @param input - The CSS value string (e.g., '10px').
- * @returns The CSS dimension group or undefined if not recognized.
- * @example
- * getDimensionType('10px') → 'length'
- * getDimensionType('25%') → 'percentage'
- * getDimensionType('180deg') → 'angle'
- * getDimensionType('1fr') → 'flex'
  */
 export function getDimensionType(input: string): UnitTypes | undefined {
 	const unit = extractDimensionUnit(input) as UnitKeys;

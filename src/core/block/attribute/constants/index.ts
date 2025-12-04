@@ -1,4 +1,4 @@
-import type { AttributeDefinition, AttributeKey, AttributeRecord } from '@/src/core/block/attribute/types';
+import type { AttributeRecord } from '@/src/core/block/attribute/types';
 import { GLOBAL_ATTRIBUTES } from './global';
 import { ACCESSIBILITY_ATTRIBUTES } from './accessibility';
 import { ELEMENT_ATTRIBUTES } from './element';

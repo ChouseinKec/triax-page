@@ -14,7 +14,7 @@ import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/bl
 import { mergeArrays } from "@/src/shared/utilities/array";
 
 // Components
-import BlockStylesSlots from "@/src/features/block/style/value/slots/component";
+import BlockStylesSlots from "@/src/features/block/style/slots/component";
 
 
 /**

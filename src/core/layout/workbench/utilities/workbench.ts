@@ -5,10 +5,6 @@ import type { WorkbenchID, WorkbenchOrder, WorkbenchTitle, WorkbenchRender, Work
  * Validates if a value is a valid workbench order.
  * Checks if the value is a valid number (not NaN).
  * @param workbenchOrder - The value to validate
- * @returns True if valid WorkbenchOrder, false otherwise
- * @example
- * isWorkbenchOrderValid(1) → true
- * isWorkbenchOrderValid(NaN) → false
  */
 export function isWorkbenchOrderValid(workbenchOrder: unknown): workbenchOrder is WorkbenchOrder {
     return typeof workbenchOrder === 'number' && !isNaN(workbenchOrder);
@@ -18,10 +14,6 @@ export function isWorkbenchOrderValid(workbenchOrder: unknown): workbenchOrder i
  * Validates if a value is a valid workbench title.
  * Checks if the value is a non-empty string.
  * @param workbenchTitle - The value to validate
- * @returns True if valid WorkbenchTitle, false otherwise
- * @example
- * isWorkbenchTitleValid('Design Workbench') → true
- * isWorkbenchTitleValid('') → false
  */
 export function isWorkbenchTitleValid(workbenchTitle: unknown): workbenchTitle is WorkbenchTitle {
     return typeof workbenchTitle === 'string' && workbenchTitle.length > 0;
@@ -31,10 +23,6 @@ export function isWorkbenchTitleValid(workbenchTitle: unknown): workbenchTitle i
  * Validates if a value is a valid workbench render function.
  * Checks if the value is a function (React component).
  * @param workbenchRender - The value to validate
- * @returns True if valid WorkbenchRender, false otherwise
- * @example
- * isWorkbenchRenderValid(() => <div />) → true
- * isWorkbenchRenderValid('string') → false
  */
 export function isWorkbenchRenderValid(workbenchRender: unknown): workbenchRender is WorkbenchRender {
     return typeof workbenchRender === 'function';
@@ -44,10 +32,6 @@ export function isWorkbenchRenderValid(workbenchRender: unknown): workbenchRende
  * Validates if a value is a valid workbench icon.
  * Checks if the value is not null or undefined.
  * @param workbenchIcon - The value to validate
- * @returns True if valid WorkbenchIcon, false otherwise
- * @example
- * isWorkbenchIconValid(<Icon />) → true
- * isWorkbenchIconValid(null) → false
  */
 export function isWorkbenchIconValid(workbenchIcon: unknown): workbenchIcon is WorkbenchIcon {
     return workbenchIcon != null;
@@ -57,10 +41,6 @@ export function isWorkbenchIconValid(workbenchIcon: unknown): workbenchIcon is W
  * Validates if a value is a valid workbench identifier.
  * Checks if the value is a non-empty string.
  * @param workbenchID - The value to validate
- * @returns True if valid WorkbenchID, false otherwise
- * @example
- * isWorkbenchIDValid('design-workbench') → true
- * isWorkbenchIDValid('') → false
  */
 export function isWorkbenchIDValid(workbenchID: unknown): workbenchID is WorkbenchID {
     return typeof workbenchID === 'string' && workbenchID.length > 0;
@@ -70,9 +50,6 @@ export function isWorkbenchIDValid(workbenchID: unknown): workbenchID is Workben
  * Validates if a value is a valid workbench definition.
  * Checks if the value is an object with all required workbench properties.
  * @param workbenchDefinition - The value to validate
- * @returns True if valid WorkbenchInstance, false otherwise
- * @example
- * isWorkbenchDefinitionValid({ id: 'wb1', title: 'Design', icon: <Icon />, order: 1, render: () => {} }) → true
  */
 export function isWorkbenchDefinitionValid(workbenchDefinition: unknown): workbenchDefinition is WorkbenchInstance {
     return (

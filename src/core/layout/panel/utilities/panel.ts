@@ -5,10 +5,6 @@ import { PanelPosition, PanelSize, PanelID, PanelTitle, PanelIcon, PanelOrder, P
  * Validates if a value is a valid panel identifier.
  * Checks if the value is a non-empty string.
  * @param panelID - The value to validate
- * @returns True if valid PanelID, false otherwise
- * @example
- * isPanelIDValid('properties-panel') → true
- * isPanelIDValid('') → false
  */
 export function isPanelIDValid(panelID: unknown): panelID is PanelID {
 	return typeof panelID === 'string' && panelID.length > 0;
@@ -18,9 +14,6 @@ export function isPanelIDValid(panelID: unknown): panelID is PanelID {
  * Validates if a value is a valid panel title.
  * Checks if the value is a non-empty string.
  * @param panelTitle - The value to validate
- * @returns True if valid PanelTitle, false otherwise
- * @example
- * isPanelTitleValid('Properties Panel') → true
  */
 export function isPanelTitleValid(panelTitle: unknown): panelTitle is PanelTitle {
 	return typeof panelTitle === 'string' && panelTitle.length > 0;
@@ -30,9 +23,6 @@ export function isPanelTitleValid(panelTitle: unknown): panelTitle is PanelTitle
  * Validates if a value is a valid panel position.
  * Checks if the value is an object with top and left string properties.
  * @param panelPosition - The value to validate
- * @returns True if valid PanelPosition, false otherwise
- * @example
- * isPanelPositionValid({ top: '10px', left: '20px' }) → true
  */
 export function isPanelPositionValid(panelPosition: unknown): panelPosition is PanelPosition {
 	return (
@@ -47,9 +37,6 @@ export function isPanelPositionValid(panelPosition: unknown): panelPosition is P
  * Validates if a value is a valid panel size configuration.
  * Checks if the value has width, height (strings) and minWidth, minHeight (numbers).
  * @param panelSize - The value to validate
- * @returns True if valid PanelSize, false otherwise
- * @example
- * isPanelSizeValid({ width: '300px', height: '400px', minWidth: 200, minHeight: 300 }) → true
  */
 export function isPanelSizeValid(panelSize: unknown): panelSize is PanelSize {
 	return (
@@ -66,10 +53,6 @@ export function isPanelSizeValid(panelSize: unknown): panelSize is PanelSize {
  * Validates if a value is a valid panel order.
  * Checks if the value is a valid number (not NaN).
  * @param panelOrder - The value to validate
- * @returns True if valid PanelOrder, false otherwise
- * @example
- * isPanelOrderValid(5) → true
- * isPanelOrderValid(NaN) → false
  */
 export function isPanelOrderValid(panelOrder: unknown): panelOrder is PanelOrder {
 	return typeof panelOrder === 'number' && !isNaN(panelOrder);
@@ -79,10 +62,6 @@ export function isPanelOrderValid(panelOrder: unknown): panelOrder is PanelOrder
  * Validates if a value is a valid panel icon.
  * Checks if the value is not null or undefined.
  * @param panelIcon - The value to validate
- * @returns True if valid PanelIcon, false otherwise
- * @example
- * isPanelIconValid(<Icon />) → true
- * isPanelIconValid(null) → false
  */
 export function isPanelIconValid(panelIcon: unknown): panelIcon is PanelIcon {
 	return panelIcon != null;
@@ -92,10 +71,6 @@ export function isPanelIconValid(panelIcon: unknown): panelIcon is PanelIcon {
  * Validates if a value is a valid panel locked state.
  * Checks if the value is a boolean.
  * @param panelLocked - The value to validate
- * @returns True if valid boolean, false otherwise
- * @example
- * isPanelLockedValid(true) → true
- * isPanelLockedValid('true') → false
  */
 export function isPanelLockedValid(panelLocked: unknown): panelLocked is boolean {
 	return typeof panelLocked === 'boolean';
@@ -105,9 +80,6 @@ export function isPanelLockedValid(panelLocked: unknown): panelLocked is boolean
  * Validates if a value is a valid panel open state.
  * Checks if the value is a boolean.
  * @param panelOpen - The value to validate
- * @returns True if valid boolean, false otherwise
- * @example
- * isPanelOpenValid(false) → true
  */
 export function isPanelOpenValid(panelOpen: unknown): panelOpen is boolean {
 	return typeof panelOpen === 'boolean';
@@ -117,9 +89,6 @@ export function isPanelOpenValid(panelOpen: unknown): panelOpen is boolean {
  * Validates if a value is a valid panel definition.
  * Checks if the value is an object with all required panel properties.
  * @param panelDefinition - The value to validate
- * @returns True if valid PanelDefinition, false otherwise
- * @example
- * isPanelDefinitionValid({ id: 'panel1', title: 'Panel', order: 1, icon: <Icon />, workbenchID: 'main', ... }) → true
  */
 export function isPanelDefinitionValid(panelDefinition: unknown): panelDefinition is PanelDefinition {
 	return (

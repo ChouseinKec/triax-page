@@ -14,13 +14,6 @@ import type { Side, Corner } from '@/src/shared/components/select/position/types
  * @param key - The base CSS property (e.g., 'border', 'padding', 'background').
  * @param position - The position/side for the property (e.g., 'top', 'left', 'top-left').
  * @param suffix - The suffix to append (e.g., 'width', 'style', 'color').
- * @returns The generated CSS property name.
- *
- * @example
- * generateStyleKey('padding', 'top'); → 'padding-top'
- * generateStyleKey('border', 'top', 'width'); → 'border-top-width'
- * generateStyleKey('background', undefined, 'color'); → 'background-color'
- * generateStyleKey('color'); → 'color'
  */
 export function generateStyleKey(styleKey: string, position?: Side | Corner, suffix?: string): StyleKey | undefined {
 	// Pattern 4: Just the base property (e.g., 'color', 'display')

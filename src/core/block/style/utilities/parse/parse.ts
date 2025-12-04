@@ -12,8 +12,6 @@ export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
  * - Ensures '|' has no space before or after.
  * - Ensures '*', '+', '?' have no space before them.
  * @param syntax - The syntax string
- * @returns The normalized syntax string
- * @example normalizeSyntax('a || b && c') → 'a || b&&c'
  */
 export function normalizeSyntax(syntax: string): string {
 	// Normalize '||' to have spaces before and after
@@ -39,8 +37,6 @@ export function normalizeSyntax(syntax: string): string {
  * Main parser for CSS Value Definition Syntax.
  * Recursively parses the syntax string, handling combinators in precedence order.
  * @param syntax - The syntax string
- * @returns All possible combinations as strings
- * @example parseSyntax('a || b && c') → ['a', 'b c', 'c b', 'a b c', 'a c b', 'b c a', 'c b a']
  */
 export function parseSyntax(syntax: string): string[] {
 	const normalizedSyntax = normalizeSyntax(syntax.trim());
@@ -87,8 +83,3 @@ export function parseSyntax(syntax: string): string[] {
 	// Remove duplicates and sort by length
 	return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
 }
-
-export default {
-    normalize: normalizeSyntax,
-    parse: parseSyntax
-} as const;

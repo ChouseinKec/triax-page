@@ -3,14 +3,8 @@ type symbolType = '()' | '[]' | '{}' | '<>';
 /**
  * Splits a string by one or more separators at the top level (not inside brackets or quotes).
  * Handles (), [], <>, {}, and "" as grouping symbols.
- * @param s - The string to split
- * @param seps - The separator string or array of separator strings
- * @returns Array of split strings
- * @example
- * splitAdvanced('a [b|c] d|e', ['|', ' ']); → ['a', '[b|c]', 'd', 'e']
- * splitAdvanced('x(y z) a|b', [' ', '|']); → ['x(y z)', 'a', 'b']
- * splitAdvanced('a <b> c|d', ['|', ' ']); → ['a', '<b>', 'c', 'd']
- * splitAdvanced('foo "bar baz"|qux', ['|', ' ']); → ['foo', '"bar baz"', 'qux']
+ * @param input - The string to split
+ * @param separators - The separator string or array of separator strings
  */
 export function splitAdvanced(input: string, separators: string | string[]): string[] {
 	// Normalize separators to an array
@@ -74,11 +68,8 @@ export function splitAdvanced(input: string, separators: string | string[]): str
 /**
  * Joins an array of values with their corresponding separators.
  * If no separators are provided, joins with a single space.
- * @param vals - The array of values to join.
- * @param seps - The array of separators to use between values.(Defaults to a single space if empty)
- * @returns A single string with values joined by their respective separators.
- * @example
- * joinAdvanced(['10px', 'auto'], [' ', '/']) → '10px auto'
+ * @param inputs - The array of values to join.
+ * @param separators - The array of separators to use between values.(Defaults to a single space if empty)
  */
 export function joinAdvanced(inputs: string[], separators: string[]): string {
 	if (!separators.length) return inputs.join(' ');
@@ -97,12 +88,6 @@ export function joinAdvanced(inputs: string[], separators: string[]): string {
  *
  * @param input - The input string to search within.
  * @param symbol - The paired symbol type: 'parenthesis', 'bracket', 'brace', or 'angle'
- * @returns The first extracted string between the symbols, or empty string if none found.
- *
- * @example
- * extractBetween('text (content1) more (content2) end', 'parenthesis'); → Returns 'content1'
- * extractBetween('outer (inner (nested) content) more', 'parenthesis'); → Returns 'inner (nested) content'
- * extractBetween('data [array1] text [array2]', 'bracket'); → Returns 'array1'
  */
 export function extractBetween(input: string, symbol: symbolType): string | undefined {
 	// Map symbols to their opening and closing characters
@@ -150,6 +135,12 @@ export function extractBetween(input: string, symbol: symbolType): string | unde
 	return undefined; // No matching symbol pair found
 }
 
+/**
+ * Converts a given string to kebab-case.
+ * Replaces spaces and underscores with hyphens, and converts to lowercase.
+ *
+ * @param input - The input string to convert.
+ */
 export function toKebabCase(input: string): string {
 	return input
 		.replace(/([a-z])([A-Z])/g, '$1-$2') // Insert hyphen between lowercase and uppercase letters

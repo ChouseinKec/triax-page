@@ -5,9 +5,9 @@ import { useEffect, memo, useCallback } from "react";
 import { registerBarAction, unregisterBarAction } from "@/src/core/layout/bar/managers";
 
 // Components
-import DeviceSelect from "@/src/config/shared/component/device-select";
-import OrientationSelect from "@/src/config/shared/component/orientation-select";
-import PseudoSelect from "@/src/config/shared/component/pseudo-select";
+import DeviceSelect from "@/src/features/shared/component/device-select";
+import OrientationSelect from "@/src/features/shared/component/orientation-select";
+import PseudoSelect from "@/src/features/shared/component/pseudo-select";
 
 // Styles
 import CSS from "./styles.module.scss";

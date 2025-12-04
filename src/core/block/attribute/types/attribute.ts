@@ -214,7 +214,8 @@ export type AttributeKey =
 	| 'crossorigin'
 	| 'referrerpolicy'
 	| 'fetchpriority'
-	| 'blocking';
+	| 'blocking'
+	| `data-${string}`;
 
 /**
  * Categories for organizing HTML attributes.

@@ -7,7 +7,7 @@ import CSS from "./styles.module.scss";
 // Editors
 import WorkbenchEditor from "@/src/features/layout/workbench";
 import ViewportEditor from "@/src/features/layout/viewport";
-import LayoutEditor from "@/src/core/layout";
+import LayoutEditor from "@/src/features/layout";
 
 //Managers
 import { usePageActions } from "@/src/core/layout/page/managers";

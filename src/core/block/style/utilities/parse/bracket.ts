@@ -4,9 +4,6 @@ import { parseSyntax, MAX_MULTIPLIER_DEPTH } from './parse';
  * Checks if the input starts and ends with brackets ([a b]).
  * This is used to determine if the input is a bracketed group.
  * @param input - The input string to check for brackets.
- * @return boolean - Returns true if the input is a bracketed group, false otherwise.
- * @example
- * hasBrackets('[a b]') → true
  */
 export function hasBrackets(input: string): boolean {
 	return input.startsWith('[') && input.endsWith(']');
@@ -16,9 +13,6 @@ export function hasBrackets(input: string): boolean {
  * Checks if the input is a bracketed group with a multiplier ([a b]+).
  * This is used to determine if the input is a bracketed group that can be repeated.
  * @param input - The input string to check for a bracketed group with a multiplier.
- * @return boolean - Returns true if the input is a bracketed group with a multiplier, false otherwise.
- * @example
- * hasBracketsMultiplier('[a b]+') → true
  */
 export function hasBracketsMultiplier(input: string): boolean {
 	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(input);
@@ -27,8 +21,6 @@ export function hasBracketsMultiplier(input: string): boolean {
 /**
  * Parses an optional group in brackets.
  * @param s - The syntax string (e.g. '[a b]')
- * @returns All possible combinations (with and without the group)
- * @example parseBrackets('[a b]') → ['', 'a b']
  */
 export function parseBrackets(input: string): string[] {
 	const inner = input.slice(1, -1);
@@ -50,10 +42,6 @@ export function parseBrackets(input: string): string[] {
  * Parses a bracketed group with a multiplier (e.g., [a b]+) and returns all possible combinations.
  * Handles group extraction, recursive parsing, and multiplier logic internally.
  * @param input - The syntax string to parse, expected to be in the format [group]multiplier (e.g., [a b]+).
- * @return string[] - Returns an array of strings with all possible combinations based on the group
- * and multiplier.
- * @example
- * parseBracketsMultiplier('[a b]+') → ['a b', 'a b a b', 'a b a b a b']
  */
 export function parseBracketsMultiplier(input: string): string[] {
 	// syntax is expected to be something like: [group]multiplier
@@ -107,13 +95,3 @@ export function parseBracketsMultiplier(input: string): string[] {
 	return Array.from(new Set(results));
 }
 
-export default {
-	parse: {
-		brackets: parseBrackets,
-		bracketsWithMultiplier: parseBracketsMultiplier,
-	},
-	has: {
-		brackets: hasBrackets,
-		bracketsWithMultiplier: hasBracketsMultiplier,
-	},
-} as const;

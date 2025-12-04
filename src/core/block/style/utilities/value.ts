@@ -8,12 +8,6 @@ import type { TokenTypes, StyleOptionDefinition } from '@/src/core/block/style/t
 /**
  * Checks if a value is a CSS keyword (e.g., 'auto', 'none', 'inherit').
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid keyword format, false otherwise.
- * @example
- * isValueKeyword('auto') → true
- * isValueKeyword('10px') → false
- * isValueKeyword('10') → false
- * isValueKeyword('function(args)') → false
  */
 export function isValueKeyword(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -23,11 +17,6 @@ export function isValueKeyword(input: unknown): boolean {
 /**
  * Checks if a value is a CSS function (e.g., functionName(args)).
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid function format, false otherwise.
- * @example
- * isValueFunction('fit-content(10px)') → true
- * isValueFunction('10px') → false
- * isValueFunction('auto') → false
  */
 export function isValueFunction(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -37,10 +26,6 @@ export function isValueFunction(input: unknown): boolean {
 /**
  * Checks if a value is a number (e.g., '10', '-5.5', '0.1').
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid number format, false otherwise.
- * @example
- * isValueNumber('10') → true
- * isValueNumber('abc') → false
  */
 export function isValueNumber(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -50,10 +35,6 @@ export function isValueNumber(input: unknown): boolean {
 /**
  * Checks if a value is an integer (e.g., '10', '-5').
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid integer format, false otherwise.
- * @example
- * isValueInteger('10') → true
- * isValueInteger('10.5') → false
  */
 export function isValueInteger(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -63,11 +44,6 @@ export function isValueInteger(input: unknown): boolean {
 /**
  * Checks if a value is a CSS color (e.g., '#fff', 'rgba(255, 0, 0)', 'hsl(120, 100%, 50%)').
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid color format, false otherwise.
- * @example
- * isValueColor('#fff') → true
- * isValueColor('rgba(255, 0, 0)') → true
- * isValueColor('10px') → false
  */
 export function isValueColor(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -77,11 +53,6 @@ export function isValueColor(input: unknown): boolean {
 /**
  * Checks if a value is a link (e.g., 'https://example.com', '/path/to/resource').
  * @param input - The string to check.
- * @returns {boolean} True if the input is a valid link format, false otherwise.
- * @example
- * isValueLink('"https://example.com"') → true
- * isValueLink('"./path/to/resource"') → true
- * isValueLink('10px') → false
  */
 export function isValueLink(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -93,14 +64,6 @@ export function isValueLink(input: unknown): boolean {
  * Validates both the numeric part and that the unit is a known CSS unit.
  *
  * @param input - The CSS value string to check (e.g., '10px', '2.5rem').
- * @returns True if the input is a valid dimension value, false otherwise.
- * @example
- * isValueDimension('10px') → true
- * isValueDimension('25%') → true
- * isValueDimension('180deg') → true
- * isValueDimension('1fr') → true
- * isValueDimension('auto') → false
- * isValueDimension('10') → false
  */
 export function isValueDimension(input: unknown): boolean {
 	if (typeof input !== 'string') return false;
@@ -120,15 +83,6 @@ export function isValueDimension(input: unknown): boolean {
  * Determines the type of a CSS value based on its format.
  * Uses specific checks for dimension, keyword, function, and number.
  * @param input - The CSS value string to classify.
- * @returns {TokenTypes | undefined} The detected value type or undefined if not recognized.
- * @example
- * getValueType('10px') → 'dimension'
- * getValueType('auto') → 'keyword'
- * getValueType('fit-content(10px)') → 'function'
- * getValueType('10') → 'integer'
- * getValueType('10.5') → 'number'
- * getValueType('#fff') → 'color'
- * getValueType('"https://example.com"') → 'link'
  */
 export function getValueType(input: unknown): TokenTypes | undefined {
 	if (typeof input !== 'string') return undefined;
@@ -153,12 +107,6 @@ export function getValueType(input: unknown): TokenTypes | undefined {
  * Converts keywords to their canonical form, numbers to '<number>', and dimensions to '<dimensionType>'.
  * If the value type is not recognized, returns undefined.
  * @param input - The CSS value string to convert.
- * @returns {string | undefined} The token representation of the value or undefined if not recognized.
- * @example
- * getValueToken('10px') → '<length>'
- * getValueToken('auto') → 'auto'
- * getValueToken('fit-content(10px)') → 'fit-content()'
- * getValueToken('10') → '<number>'
  */
 export function getValueToken(input: unknown): string | undefined {
 	if (typeof input !== 'string') return undefined;
@@ -186,9 +134,6 @@ export function getValueToken(input: unknown): string | undefined {
  * Uses getValueToken to convert each value to its token representation.
  * Filters out any unrecognized values (returns null for those).
  * @param inputs - An array of CSS value strings to convert.
- * @returns {string[]} An array of value tokens corresponding to the input values.
- * @example
- * getValueTokens(['10px', 'auto', 'fit-content(10px)', '10']) → ['<length>', 'auto', 'fit-content()', '<number>']
  */
 export function getValueTokens(input: unknown[]): string[] {
 	return input.map(getValueToken).filter((token): token is string => token !== undefined);
@@ -199,10 +144,6 @@ export function getValueTokens(input: unknown[]): string[] {
  * Prioritizes certain types (dimension > keyword > color > function) based on available options.
  * Falls back to the first option's type if no prioritized types are available.
  * @param options - Array of option definitions containing type information
- * @returns {TokenTypes | undefined} The default type to use or undefined if no options available
- * @example
- * getValueDefaultType([[{type: 'dimension'}, {type: 'keyword'}]]) → 'dimension'
- * getValueDefaultType([[{type: 'color'}, {type: 'function'}]]) → 'color'
  */
 export function getValueDefaultType(options: StyleOptionDefinition[]): TokenTypes | undefined {
 	if (!options || !Array.isArray(options) || options.length === 0) return undefined;

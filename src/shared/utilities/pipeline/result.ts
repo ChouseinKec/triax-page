@@ -111,8 +111,6 @@ export function operate<T extends Record<string, OperateResult<unknown>>>(operat
 	return { success: true, data };
 }
 
-
-
 /**
  * Validation pipeline for chaining dependent validations.
  * Allows building complex validation flows where each step can use results from previous steps.
@@ -222,7 +220,6 @@ export class ResultPipeline<TData extends Record<string, unknown> = Record<strin
 		Object.assign(this.validatedData, result.data);
 		return this as ResultPipeline<TData & { [K in keyof TOperates]: TOperates[K] extends OperateResult<infer U> ? U : never }>;
 	}
-
 
 	run(sideEffect: (data: TData) => { success: boolean; error?: string } | void, failOnError: boolean = false): ResultPipeline<TData> {
 		if (this.hasFailed) return this;

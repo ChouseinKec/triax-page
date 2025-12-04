@@ -5,10 +5,6 @@ import { MAX_MULTIPLIER_DEPTH } from './parse';
  * This is used to generate all possible combinations for multipliers that allow one or more occurrences.
  * @param input - The input string to duplicate.
  * @param maxDepth - The maximum depth to duplicate the token.
- * @return string[] - Returns an array of strings with the token duplicated up to maxDepth
- * @example
- * duplicateToken('a', 3) → ['a', 'a a', 'a a a']
- * duplicateToken('b', 2) → ['b', 'b b']
  */
 export function duplicateToken(input: string, maxDepth: number): string[] {
 	const arr: string[] = [];
@@ -22,12 +18,6 @@ export function duplicateToken(input: string, maxDepth: number): string[] {
  * Checks if the input ends with a multiplier (?, +, *, {m,n}).
  * This is used to determine if the input has a multiplier that affects how many times the preceding token can occur.
  * @param input - The input string to check for a multiplier.
- * @return boolean - Returns true if the input has a multiplier, false otherwise.
- * @example
- * hasMultiplier('a?') → true
- * hasMultiplier('a b') → false
- * hasMultiplier('c*') → true
- * hasMultiplier('d{2,4}') → true
  */
 export function hasMultiplier(input: string): boolean {
 	return /[?+*]|\{\d+(,\d+)?\}$/.test(input);
@@ -37,10 +27,6 @@ export function hasMultiplier(input: string): boolean {
  * Returns ['', input] for the ? multiplier (zero or one occurrence).
  * This is used to handle cases where the preceding token can occur zero or one time.
  * @param input - The input string to parse.
- * @return string[] - Returns an array with an empty string and the input.
- * @example
- * parseMultiplierQuestion('a?') → ['', 'a']
- * parseMultiplierQuestion('b') → ['', 'b']
  */
 export function parseMultiplierQuestion(input: string): string[] {
 	return ['', input];
@@ -51,10 +37,6 @@ export function parseMultiplierQuestion(input: string): string[] {
  * This is used to generate all possible combinations for multipliers that require at least one occurrence.
  * @param input - The input string to parse.
  * @param maxDepth - The maximum depth to duplicate the token.
- * @return string[] - Returns an array of strings with the token duplicated up to maxDepth times.
- * @example
- * parseMultiplierPlus('a+', 3) → ['a', 'a a', 'a a a']
- * parseMultiplierPlus('b+', 2) → ['b', 'b b']
  */
 export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
 	return duplicateToken(input, maxDepth);
@@ -65,10 +47,6 @@ export function parseMultiplierPlus(input: string, maxDepth: number = MAX_MULTIP
  * This is used to generate all possible combinations for multipliers that allow zero or more occurrences.
  * @param input - The input string to parse.
  * @param maxDepth - The maximum depth to duplicate the token.
- * @return string[] - Returns an array of strings with the token duplicated up to maxDepth times, including an empty string.
- * @example
- * parseMultiplierStar('a*', 3) → ['', 'a', 'a a', 'a a a']
- * parseMultiplierStar('b*', 2) → ['', 'b', 'b b']
  */
 export function parseMultiplierStar(input: string, maxDepth: number = MAX_MULTIPLIER_DEPTH): string[] {
 	return ['', ...duplicateToken(input, maxDepth)];
@@ -78,11 +56,6 @@ export function parseMultiplierStar(input: string, maxDepth: number = MAX_MULTIP
  * Parses a multiplier (?, +, *, {m,n}) and returns all possible combinations.
  * Handles different multiplier types and returns an array of strings.
  * @param input - The input string to parse.
- * @return string[] - Returns an array of strings with all possible combinations based on the multiplier.
- * @example
- * parseMultiplier('a?') → ['', 'a']
- * parseMultiplier('b+') → ['b', 'b b']
- * parseMultiplier('c*') → ['', 'c', 'c c', 'c c c']
  */
 export function parseMultiplier(input: string): string[] {
 	if (input.endsWith('?')) {
@@ -111,18 +84,3 @@ export function parseMultiplier(input: string): string[] {
 	}
 	return [input];
 }
-
-export default {
-	parse: {
-		question: parseMultiplierQuestion,
-		plus: parseMultiplierPlus,
-		star: parseMultiplierStar,
-		multiplier: parseMultiplier,
-	},
-	has: {
-		multiplier: hasMultiplier,
-	},
-	duplicate: {
-		token: duplicateToken,
-	},
-} as const;

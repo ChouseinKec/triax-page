@@ -10,11 +10,6 @@ import { extractBetween } from '@/src/shared/utilities/string';
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data keyword, false otherwise.
- * @example
- * isTokenKeyword('auto') → true
- * isTokenKeyword('fit-content') → true
- * isTokenKeyword('10px') → false
  */
 export function isTokenKeyword(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -25,12 +20,6 @@ export function isTokenKeyword(input: string): boolean {
 /**
  * Checks if a value is a CSS dimension (e.g., <length>, <percentage>).
  * @param input - The string to check.
- * @returns True if the input is a valid dimension format, false otherwise.
- * @example
- * isTokenDimension('<length>') → true
- * isTokenDimension('<percentage>') → true
- * isTokenDimension('10px') → false
- * isTokenDimension('fit-content(10px)') → false
  */
 export function isTokenDimension(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -44,10 +33,6 @@ export function isTokenDimension(input: string): boolean {
 /**
  * Checks if the input string is a valid CSS data integer (e.g., '<integer>').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data integer, false otherwise.
- * @example
- * isTokenInteger('<integer>') → true
- * isTokenInteger('<number>') → false
  */
 export function isTokenInteger(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -57,10 +42,6 @@ export function isTokenInteger(input: string): boolean {
 /**
  * Checks if the input string is a valid CSS data number (e.g., '<number>').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data number, false otherwise.
- * @example
- * isTokenNumber('<number>') → true
- * isTokenNumber('<integer>') → false
  */
 export function isTokenNumber(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -70,11 +51,6 @@ export function isTokenNumber(input: string): boolean {
 /**
  * Checks if the input string is a valid CSS data function (e.g., 'fit-content(10px)', 'calc(100% - 20px)').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data function, false otherwise.
- * @example
- * isTokenFunction('fit-content(10px)') → true
- * isTokenFunction('calc(100% - 20px)') → true
- * isTokenFunction('10px') → false
  */
 export function isTokenFunction(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -87,10 +63,6 @@ export function isTokenFunction(input: string): boolean {
 /**
  * Checks if the input string is a valid CSS data color (e.g., '<color>').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data color, false otherwise.
- * @example
- * isTokenColor('<color>') → true
- * isTokenColor('rgb(255, 0, 0)') → false
  */
 export function isTokenColor(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -100,10 +72,6 @@ export function isTokenColor(input: string): boolean {
 /**
  * Checks if the input string is a valid CSS data link (e.g., '<link>').
  * @param input - The string to check.
- * @returns True if the input is a valid CSS data link, false otherwise.
- * @example
- * isTokenLink('<link>') → true
- * isTokenLink('https://example.com/image.png') → false
  */
 export function isTokenLink(input: string): boolean {
 	const canonical = getTokenCanonical(input);
@@ -113,14 +81,6 @@ export function isTokenLink(input: string): boolean {
 /**
  * Determines the group of a CSS data token based on its format.
  * @param input - The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
- * @returns The group of the token as a string ('keyword', 'dimension', 'function', 'integer', 'number') or undefined if not recognized.
- * @example
- * getTokenType('auto') → 'keyword'
- * getTokenType('<length>') → 'dimension'
- * getTokenType('fit-content(10px)') → 'function'
- * getTokenType('<integer>') → 'integer'
- * getTokenType('<number>') → 'number'
- * getTokenType('<link>') → 'link'
  */
 export function getTokenType(input: string): TokenTypes | undefined {
 	if (isTokenKeyword(input)) return 'keyword';
@@ -136,13 +96,6 @@ export function getTokenType(input: string): TokenTypes | undefined {
 /**
  * Extracts the canonical type string from a CSS data type string.
  * @param input - The CSS data type string (e.g., 'fit-content(10px)', '<length [0,10]>').
- * @returns The canonical type string (e.g., 'fit-content()', '<length>') or undefined if not recognized.
- * @example
- * getTokenCanonical('fit-content(<length> <percentage>)') → 'fit-content()'
- * getTokenCanonical('<length [0,10]>') → '<length>'
- * getTokenCanonical('auto') → 'auto'
- * getTokenCanonical('10px') → undefined
- * getTokenCanonical('10') → undefined
  */
 export function getTokenCanonical(input: string): string | undefined {
 	if (!input) return undefined;
@@ -163,11 +116,6 @@ export function getTokenCanonical(input: string): string | undefined {
 /**
  * Extracts the base token from a CSS data type string, removing any range or step part.
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
- * @returns The base token string (e.g., 'length', 'fit-content') or undefined if not recognized.
- * @example
- * getTokenBase('<length [0,10]>') → 'length'
- * getTokenBase('fit-content(<length> <percentage>)') → 'fit-content'
- * getTokenBase('auto') → 'auto'
  *
  */
 export function getTokenBase(input: string): string | undefined {
@@ -182,10 +130,6 @@ export function getTokenBase(input: string): string | undefined {
 /**
  * Extracts the range part from a CSS data type string, if present.
  * @param input - The CSS data type string (e.g., '<length [0,10]>').
- * @returns The range string (e.g., '[0,10]') or undefined if not present.
- * @example
- * getTokenRange('<length [0,10]>') → '[0,10]'
- * getTokenRange('fit-content(<length> <percentage>)') → undefined
  */
 export function getTokenRange(input: string): string | undefined {
 	const range = extractBetween(input, '[]');
@@ -195,11 +139,6 @@ export function getTokenRange(input: string): string | undefined {
 /**
  * Extracts the type arguments (e.g. range, min/max, step) from a CSS data type string.
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
- * @returns An object with the extracted arguments (e.g., { min: '0', max: '10', step: '1' } or { args: '<length> <percentage>' }) or undefined if not recognized.
- * @example
- * getTokenParam('<length [0,10]>') → { min: 0, max: 10 }
- * getTokenParam('fit-content(<length> <percentage>)') → { syntax: '<length> <percentage>' }
- * getTokenParam('<number [0,15]>') → { min: 0, max: 15 }
  *
  */
 export function getTokenParam(input: string): TokenParam | undefined {
@@ -231,13 +170,6 @@ export function getTokenParam(input: string): TokenParam | undefined {
 /**
  * Converts a single token (e.g., <length>, <color>) to its default value.
  * @param token - The token string (without brackets or with brackets)
- * @returns The default value for the token, or the token itself if not found
- * @example
- * getTokenValue('<length>') → '0px'
- * getTokenValue('<color>') → '#ffffff'
- * getTokenValue('<angle>') → '0deg'
- * getTokenValue('<percentage>') → '0%'
- * getTokenValue('<number>') → '0.0'
  */
 export function getTokenValue(token: string): string | undefined {
 	if (isTokenKeyword(token)) return token;
@@ -252,9 +184,6 @@ export function getTokenValue(token: string): string | undefined {
 /**
  * Converts an array of tokens to their default values.
  * @param tokens - An array of token strings (e.g., ['<length>', '<color>', '<angle>'])
- * @returns An array of default values for the tokens, filtering out any undefined values
- * @example
- * getTokenValues(['<length>', '<color>', '<angle>']) → ['0px', '#ffffff', '0deg']
  */
 export function getTokenValues(tokens: string[]): string[] {
 	return tokens.map(getTokenValue).filter((token): token is string => token !== undefined);
@@ -265,9 +194,6 @@ export function getTokenValues(tokens: string[]): string[] {
  * If a token is not found, it is left as-is.
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
  * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
- * @returns The syntax string with all known tokens recursively expanded
- * @example
- * expandTokens('auto || <ratio>') → 'auto || <number> / <number>'
  */
 export function expandTokens(syntax: string, seen = new Set<string>()): string {
 	// Start with the input syntax string
