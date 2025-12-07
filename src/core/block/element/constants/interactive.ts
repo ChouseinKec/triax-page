@@ -23,6 +23,7 @@ const DIALOG_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL
 
 export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 	a: {
+		tag: 'a',
 		allowedAttributes: LINK_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
@@ -31,6 +32,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Hyperlink anchor for navigation or actions. Should not wrap interactive controls.',
 	},
 	button: {
+		tag: 'button',
 		allowedAttributes: BUTTON_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
@@ -39,6 +41,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Button control for actions and form submission. Cannot be nested within interactive controls.',
 	},
 	input: {
+		tag: 'input',
 		allowedAttributes: INPUT_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -47,6 +50,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Form input control (void element). Type attribute defines behavior.',
 	},
 	select: {
+		tag: 'select',
 		allowedAttributes: SELECT_ATTRIBUTES,
 		allowedChildren: SELECT_CONTENT,
 		forbiddenAncestors: null,
@@ -55,6 +59,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Selection dropdown containing option and optgroup elements.',
 	},
 	textarea: {
+		tag: 'textarea',
 		allowedAttributes: TEXTAREA_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -63,6 +68,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Multi-line text input containing raw text only.',
 	},
 	label: {
+		tag: 'label',
 		allowedAttributes: LABEL_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -71,6 +77,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Caption for a form control. Associates to a control by for attribute or nesting.',
 	},
 	details: {
+		tag: 'details',
 		allowedAttributes: DETAILS_ATTRIBUTES,
 		allowedChildren: FLOW_WITH_SUMMARY,
 		forbiddenAncestors: null,
@@ -79,6 +86,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Disclosure widget for expandable content. Must include a summary element.',
 	},
 	summary: {
+		tag: 'summary',
 		allowedAttributes: TEXT_INTERACTIVE_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -87,6 +95,7 @@ export const INTERACTIVE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Caption for the details control.',
 	},
 	dialog: {
+		tag: 'dialog',
 		allowedAttributes: DIALOG_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,

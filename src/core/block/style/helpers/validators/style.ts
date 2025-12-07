@@ -14,14 +14,11 @@ import { getValueTokens } from '@/src/core/block/style/utilities';
 import { validateString ,validateObject} from '@/src/shared/helpers';
 
 
-
-
 /**
  * Validates a CSS style key for block style operations.
  * Checks if the key is a valid CSS property key from the predefined style definitions.
  *
  * @param styleKey - The CSS style key to validate
- * @returns ValidateResult containing validity and the validated StyleKey if valid
  */
 export function validateStyleKey(styleKey: unknown): ValidateResult<StyleKey> {
 	const validation = validateString(styleKey);
@@ -39,7 +36,6 @@ export function validateStyleKey(styleKey: unknown): ValidateResult<StyleKey> {
  *
  * @param styleKey - The CSS property key this value is for
  * @param styleValue - The CSS style value to validate
- * @returns ValidateResult containing validity and the validated StyleValue if valid
  */
 export function validateStyleValue(styleKey: unknown, styleValue: unknown): ValidateResult<StyleValue> {
 	// Validate the style key first
@@ -79,10 +75,6 @@ export function validateStyleValue(styleKey: unknown, styleValue: unknown): Vali
  * Checks if the styles is a valid object containing CSS styles for the block.
  *
  * @param blockStyles - The block styles object to validate
- * @returns ValidateResult containing validity and the validated BlockStyles if valid
- *
- * @example
- * validateBlockStyles({ color: 'red', fontSize: '14px' }) → { valid: true, value: { color: 'red', fontSize: '14px' } }
  */
 export function validateBlockStyles(blockStyles: unknown): ValidateResult<BlockStyles> {
 	const validation = validateObject(blockStyles);

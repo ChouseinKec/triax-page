@@ -5,6 +5,7 @@ const PHRASING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUT
 
 export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 	span: {
+		tag: 'span',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -13,6 +14,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Generic inline container with no semantic meaning. Useful for styling parts of text.',
 	},
 	b: {
+		tag: 'b',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -21,6 +23,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Stylistically offset text (typically bold) without conveying importance.',
 	},
 	strong: {
+		tag: 'strong',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -29,6 +32,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Indicates strong importance, seriousness, or urgency.',
 	},
 	i: {
+		tag: 'i',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -37,6 +41,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Text in an alternate voice or mood (typically italic), such as technical terms or idioms.',
 	},
 	em: {
+		tag: 'em',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -45,6 +50,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Emphasized text indicating stress emphasis.',
 	},
 	u: {
+		tag: 'u',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -53,6 +59,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Text that is stylistically different from normal text (often underlined).',
 	},
 	small: {
+		tag: 'small',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -61,6 +68,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Side-comments and small print; typically rendered in a smaller font.',
 	},
 	mark: {
+		tag: 'mark',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -69,6 +77,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Text highlighted for reference or relevance within a context.',
 	},
 	sub: {
+		tag: 'sub',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -77,6 +86,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Subscript inline text for chemical formulas, math, etc.',
 	},
 	sup: {
+		tag: 'sup',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -85,6 +95,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Superscript inline text for footnotes, exponents, etc.',
 	},
 	code: {
+		tag: 'code',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -93,6 +104,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Inline fragment of computer code.',
 	},
 	abbr: {
+		tag: 'abbr',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -101,6 +113,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Abbreviation or acronym; title attribute can provide expansion.',
 	},
 	s: {
+		tag: 's',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -109,6 +122,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Text that is no longer accurate or relevant (rendered with a strikethrough).',
 	},
 	del: {
+		tag: 'del',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite', 'datetime'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -117,6 +131,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'A range of text that has been removed from a document. May carry cite/datetime meta.',
 	},
 	ins: {
+		tag: 'ins',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite', 'datetime'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -125,6 +140,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'A range of text that has been added to a document. May carry cite/datetime meta.',
 	},
 	q: {
+		tag: 'q',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'cite'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -133,6 +149,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Short inline quotation; cite attribute may reference the source.',
 	},
 	cite: {
+		tag: 'cite',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -141,6 +158,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Title of a work or reference to a source.',
 	},
 	dfn: {
+		tag: 'dfn',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'title'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -149,6 +167,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Term being defined; title attribute can provide a definition hint.',
 	},
 	var: {
+		tag: 'var',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -157,6 +176,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Variable in programming or mathematics.',
 	},
 	samp: {
+		tag: 'samp',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -165,6 +185,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Sample output from programs or systems.',
 	},
 	kbd: {
+		tag: 'kbd',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -173,6 +194,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'User input, typically keyboard input.',
 	},
 	time: {
+		tag: 'time',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'datetime'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -181,6 +203,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Date and/or time, optionally machine-readable via datetime attribute.',
 	},
 	data: {
+		tag: 'data',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'value'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -189,6 +212,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Associates content with a machine-readable value.',
 	},
 	wbr: {
+		tag: 'wbr',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -197,6 +221,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Word break opportunity (void element) suggesting where line breaks may occur.',
 	},
 	bdi: {
+		tag: 'bdi',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -205,6 +230,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Isolates a span of text with a different directionality from its surroundings.',
 	},
 	bdo: {
+		tag: 'bdo',
 		allowedAttributes: [...PHRASING_ATTRIBUTES, 'dir'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -213,6 +239,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Overrides the text direction of its children using the dir attribute.',
 	},
 	ruby: {
+		tag: 'ruby',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_WITH_RUBY,
 		forbiddenAncestors: null,
@@ -221,6 +248,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Ruby annotation for East Asian typography. Contains base text with rt/rp annotations.',
 	},
 	rt: {
+		tag: 'rt',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -229,6 +257,7 @@ export const PHRASING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Ruby text providing pronunciation or annotation.',
 	},
 	rp: {
+		tag: 'rp',
 		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,

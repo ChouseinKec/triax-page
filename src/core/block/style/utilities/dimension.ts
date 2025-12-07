@@ -68,7 +68,7 @@ export function extractDimensionValues(input: string): { number: string | undefi
  * @param options - Array of unit options with categories
  * @returns Object with default unit and number values
  */
-export function extractDimensionDefaults(options: Array<{ category?: string; name?: string }>): { unit: string; number: string } {
+export function extractDimensionDefaults(options: Array<{ category?: string; name: string }>): { unit: string; number: string } {
 	const unit = options.find((option) => option.category === 'dimension')?.name || 'px';
 	const number = '0';
 

@@ -11,10 +11,6 @@ import { isBarActionInstanceValid, isBarActionIDValid, isBarActionOrderValid, is
  * Checks if the ID is a valid string identifier.
  *
  * @param actionID - The bar action ID to validate
- * @returns ValidateResult containing validity and the validated BarActionID if valid
- *
- * @example
- * validateBarActionID('action-123') → { valid: true, value: 'action-123' }
  */
 export function validateBarActionID(actionID: unknown): ValidateResult<BarActionID> {
     if (!isBarActionIDValid(actionID)) return { valid: false, message: `Bar action ID must be a valid string, got: ${actionID}` };
@@ -26,10 +22,6 @@ export function validateBarActionID(actionID: unknown): ValidateResult<BarAction
  * Checks if the title is a valid string.
  *
  * @param actionTitle - The bar action title to validate
- * @returns ValidateResult containing validity and the validated BarActionTitle if valid
- *
- * @example
- * validateBarActionTitle('Save') → { valid: true, value: 'Save' }
  */
 export function validateBarActionTitle(actionTitle: unknown): ValidateResult<BarActionTitle> {
     if (!isBarActionTitleValid(actionTitle)) return { valid: false, message: `Bar action title must be a valid string, got: ${actionTitle}` };
@@ -41,10 +33,6 @@ export function validateBarActionTitle(actionTitle: unknown): ValidateResult<Bar
  * Checks if the order is a valid number.
  *
  * @param actionOrder - The bar action order to validate
- * @returns ValidateResult containing validity and the validated BarActionOrder if valid
- *
- * @example
- * validateBarActionOrder(1) → { valid: true, value: 1 }
  */
 export function validateBarActionOrder(actionOrder: unknown): ValidateResult<BarActionOrder> {
     if (!isBarActionOrderValid(actionOrder)) return { valid: false, message: `Bar action order must be a valid number, got: ${actionOrder}` };
@@ -56,10 +44,6 @@ export function validateBarActionOrder(actionOrder: unknown): ValidateResult<Bar
  * Checks if the render is a valid function or Vue component.
  *
  * @param actionRender - The bar action render to validate
- * @returns ValidateResult containing validity and the validated BarActionRender if valid
- *
- * @example
- * validateBarActionRender(() => <button>Click</button>) → { valid: true, value: () => <button>Click</button> }
  */
 export function validateBarActionRender(actionRender: unknown): ValidateResult<BarActionRender> {
     if (!isBarActionRenderValid(actionRender)) return { valid: false, message: `Bar action render must be a valid function or Vue component, got: ${actionRender}` };
@@ -71,12 +55,21 @@ export function validateBarActionRender(actionRender: unknown): ValidateResult<B
  * Checks if the instance is a valid bar action object.
  *
  * @param action - The bar action instance to validate
- * @returns ValidateResult containing validity and the validated BarActionInstance if valid
- *
- * @example
- * validateBarActionInstance({ id: 'action-1', title: 'Save', order: 1, render: () => <button>Save</button> }) → { valid: true, value: {...} }
  */
 export function validateBarActionInstance(action: unknown): ValidateResult<BarActionInstance> {
     if (!isBarActionInstanceValid(action)) return { valid: false, message: `Bar action instance is not a valid object, got: ${JSON.stringify(action)}` };
+
+    const idValidation = validateBarActionID((action as BarActionInstance).id);
+    if (!idValidation.valid) return idValidation;
+
+    const titleValidation = validateBarActionTitle((action as BarActionInstance).title);
+    if (!titleValidation.valid) return titleValidation;
+
+    const orderValidation = validateBarActionOrder((action as BarActionInstance).order);
+    if (!orderValidation.valid) return orderValidation;
+
+    const renderValidation = validateBarActionRender((action as BarActionInstance).render);
+    if (!renderValidation.valid) return renderValidation;
+
     return { valid: true, value: action as BarActionInstance };
 }

@@ -10,7 +10,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateWorkbenchID } from '@/src/core/layout/workbench/helpers';
-import { fetchBarsByWorkbench } from '@/src/core/layout/bar/helpers/fetchers';
+import { pickBarsByWorkbench } from '@/src/core/layout/bar/helpers/pickers';
 
 /**
  * Gets all bar instances filtered by workbench ID for layout queries.
@@ -29,7 +29,7 @@ export function getBarsByWorkbench(workbenchID: WorkbenchID): BarInstance[] | un
 			workbenchID: validateWorkbenchID(workbenchID),
 		})
 		.pick((data) => ({
-			barsByWorkbench: fetchBarsByWorkbench(data.workbenchID, layoutStore.allBars),
+			barsByWorkbench: pickBarsByWorkbench(data.workbenchID, layoutStore.allBars),
 		}))
 		.execute();
 	if (!safeParams) return undefined;

@@ -3,7 +3,7 @@ import { isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid, isBa
 
 // Bar ID validation: non-empty string checks
 describe('isBarIDValid', () => {
-	it('accepts valid non-empty strings', () => {
+	it('accepts non-empty strings', () => {
 		expect(isBarIDValid('top-bar')).toBe(true);
 		expect(isBarIDValid('sidebar-1')).toBe(true);
 	});
@@ -18,11 +18,15 @@ describe('isBarIDValid', () => {
 		expect(isBarIDValid(undefined)).toBe(false);
 		expect(isBarIDValid({})).toBe(false);
 	});
+
+	it('rejects whitespace-only strings', () => {
+		expect(isBarIDValid('   ')).toBe(false);
+	});
 });
 
 // Bar title validation: non-empty string checks
 describe('isBarTitleValid', () => {
-	it('accepts valid non-empty strings', () => {
+	it('accepts non-empty strings', () => {
 		expect(isBarTitleValid('Main Toolbar')).toBe(true);
 		expect(isBarTitleValid('Sidebar')).toBe(true);
 	});
@@ -35,21 +39,25 @@ describe('isBarTitleValid', () => {
 		expect(isBarTitleValid(456)).toBe(false);
 		expect(isBarTitleValid(null)).toBe(false);
 	});
+
+	it('rejects whitespace-only strings', () => {
+		expect(isBarTitleValid('   ')).toBe(false);
+	});
 });
 
 // Bar position validation: object with top and left string properties
 describe('isBarPositionValid', () => {
-	it('accepts valid position objects', () => {
+	it('accepts position objects with string coords', () => {
 		expect(isBarPositionValid({ top: '10px', left: '20px' })).toBe(true);
 		expect(isBarPositionValid({ top: '0', left: '0' })).toBe(true);
 	});
 
-	it('rejects objects with non-string top or left', () => {
+	it('rejects non-string coords', () => {
 		expect(isBarPositionValid({ top: 10, left: '20px' })).toBe(false);
 		expect(isBarPositionValid({ top: '10px', left: 20 })).toBe(false);
 	});
 
-	it('rejects objects missing required properties', () => {
+	it('rejects missing top or left', () => {
 		expect(isBarPositionValid({ top: '10px' })).toBe(false);
 		expect(isBarPositionValid({ left: '20px' })).toBe(false);
 		expect(isBarPositionValid({})).toBe(false);
@@ -59,6 +67,10 @@ describe('isBarPositionValid', () => {
 		expect(isBarPositionValid(null)).toBe(false);
 		expect(isBarPositionValid(undefined)).toBe(false);
 		expect(isBarPositionValid('position')).toBe(false);
+	});
+
+	it('rejects extra keys without required ones', () => {
+		expect(isBarPositionValid({ top: '10px', extra: 'x' } as any)).toBe(false);
 	});
 });
 
@@ -74,7 +86,7 @@ describe('isBarSizeValid', () => {
 		expect(isBarSizeValid({ minWidth: '0', maxWidth: '100%' })).toBe(true);
 	});
 
-	it('rejects partial auto size (missing minWidth or maxWidth)', () => {
+	it('rejects partial auto size', () => {
 		expect(isBarSizeValid({ minWidth: '100px' })).toBe(false);
 		expect(isBarSizeValid({ maxWidth: '300px' })).toBe(false);
 	});
@@ -98,6 +110,10 @@ describe('isBarSizeValid', () => {
 	it('rejects empty objects', () => {
 		expect(isBarSizeValid({})).toBe(false);
 	});
+
+	it('rejects width with whitespace only', () => {
+		expect(isBarSizeValid({ width: '   ' } as any)).toBe(false);
+	});
 });
 
 // Bar definition validation: object with all required properties
@@ -113,7 +129,7 @@ describe('isBarDefinitionValid', () => {
 		expect(isBarDefinitionValid(bar)).toBe(true);
 	});
 
-	it('rejects objects missing required properties', () => {
+	it('rejects missing required properties', () => {
 		const barNoId = { title: 'Top Bar', position: {}, size: {}, workbenchID: 'main' };
 		expect(isBarDefinitionValid(barNoId)).toBe(false);
 

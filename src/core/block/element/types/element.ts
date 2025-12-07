@@ -120,6 +120,8 @@ export type ElementRecord = Record<ElementTag, ElementDefinition>;
  * These correspond to the official HTML specifications.
  */
 export interface ElementDefinition {
+	/** The HTML tag for this element */
+	tag: ElementTag;
 	/** Array of supported attributes for this element */
 	allowedAttributes: AttributeKey[];
 	/** Array of allowed child element tags, null for any content */

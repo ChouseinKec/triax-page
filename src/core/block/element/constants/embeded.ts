@@ -72,6 +72,7 @@ const AREA_ATTRIBUTES: AttributeKey[] = [
 
 export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 	img: {
+		tag: 'img',
 		allowedAttributes: IMAGE_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -80,6 +81,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Image element (void). Displays raster graphics. No children.',
 	},
 	iframe: {
+		tag: 'iframe',
 		allowedAttributes: IFRAME_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -88,6 +90,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Inline frame embedding an external HTML page. No children.',
 	},
 	canvas: {
+		tag: 'canvas',
 		allowedAttributes: CANVAS_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -96,6 +99,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Scriptable bitmap canvas with fallback content when scripting is disabled.',
 	},
 	audio: {
+		tag: 'audio',
 		allowedAttributes: AUDIO_ATTRIBUTES,
 		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
@@ -104,6 +108,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Audio player with optional source/track elements and fallback content.',
 	},
 	video: {
+		tag: 'video',
 		allowedAttributes: VIDEO_ATTRIBUTES,
 		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
@@ -112,6 +117,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Video player with optional source/track elements and fallback content.',
 	},
 	source: {
+		tag: 'source',
 		allowedAttributes: SOURCE_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -120,6 +126,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Media resource for picture/video/audio (void element). No children.',
 	},
 	track: {
+		tag: 'track',
 		allowedAttributes: TRACK_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -128,6 +135,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Timed text track (captions, subtitles) for video/audio (void element).',
 	},
 	picture: {
+		tag: 'picture',
 		allowedAttributes: EMBEDDED_ATTRIBUTES,
 		allowedChildren: PICTURE_CONTENT,
 		forbiddenAncestors: null,
@@ -136,6 +144,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Container for responsive images. Contains one img and zero or more source elements.',
 	},
 	object: {
+		tag: 'object',
 		allowedAttributes: OBJECT_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -144,6 +153,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Generic external resource with fallback content.',
 	},
 	embed: {
+		tag: 'embed',
 		allowedAttributes: EMBED_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -152,6 +162,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Container for external resources (void element).',
 	},
 	map: {
+		tag: 'map',
 		allowedAttributes: MAP_ATTRIBUTES,
 		allowedChildren: PHRASING_WITH_AREA,
 		forbiddenAncestors: null,
@@ -160,6 +171,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Image map defining clickable regions via area elements.',
 	},
 	area: {
+		tag: 'area',
 		allowedAttributes: AREA_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -168,6 +180,7 @@ export const EMBEDED_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Clickable area within an image map (void element). No children.',
 	},
 	svg: {
+		tag: 'svg',
 		allowedAttributes: EMBEDDED_ATTRIBUTES,
 		allowedChildren: null,
 		forbiddenAncestors: null,

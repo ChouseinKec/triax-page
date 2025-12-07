@@ -13,6 +13,7 @@ const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [
 
 export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 	div: {
+		tag: 'div',
 		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -21,6 +22,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Generic flow container used to group content without semantic meaning.',
 	},
 	p: {
+		tag: 'p',
 		allowedAttributes: TEXT_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -29,6 +31,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Paragraph for grouping runs of phrasing text.',
 	},
 	main: {
+		tag: 'main',
 		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -37,6 +40,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Main landmark for dominant page content. Must be unique and typically excludes repeated site-wide content.',
 	},
 	pre: {
+		tag: 'pre',
 		allowedAttributes: TEXT_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -45,6 +49,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Preformatted text preserving whitespace and newlines.',
 	},
 	blockquote: {
+		tag: 'blockquote',
 		allowedAttributes: BLOCKQUOTE_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -53,6 +58,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Section quoted from another source with optional citation.',
 	},
 	figure: {
+		tag: 'figure',
 		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedChildren: FLOW_WITH_FIGCAPTION,
 		forbiddenAncestors: null,
@@ -61,6 +67,7 @@ export const FLOW_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Self-contained content (image, code, etc.) with an optional figcaption.',
 	},
 	figcaption: {
+		tag: 'figcaption',
 		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,

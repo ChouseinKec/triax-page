@@ -9,7 +9,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBarID } from '@/src/core/layout/bar/helpers/validators';
-import { fetchBarActions } from '@/src/core/layout/bar/helpers/fetchers';
+import { pickBarActions } from '@/src/core/layout/bar/helpers/pickers';
 
 /**
  * Checks if a specific action is registered in a bar for layout queries.
@@ -29,7 +29,7 @@ export function isBarActionRegistered(barID: BarID, actionID: string): boolean {
 			barID: validateBarID(barID),
 		})
 		.pick((data) => ({
-			barActions: fetchBarActions(data.barID, layoutStore.allBars),
+			barActions: pickBarActions(data.barID, layoutStore.allBars),
 		}))
 		.execute();
 	if (!safeParams) return false;

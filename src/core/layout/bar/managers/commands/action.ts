@@ -10,7 +10,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validateBarActionInstance, validateBarID, validateBarActionID} from '@/src/core/layout/bar/helpers/validators';
-import { fetchBar } from '@/src/core/layout/bar/helpers/fetchers';
+import { pickBar } from '@/src/core/layout/bar/helpers/pickers';
 
 /**
  * Registers a new action instance to a bar for layout commands.
@@ -31,7 +31,7 @@ export function registerBarAction(barID: BarID, action: BarActionInstance): void
             action: validateBarActionInstance(action),
         })
         .pick((data) => ({
-            bar: fetchBar(data.barID, layoutStore.allBars),
+            bar: pickBar(data.barID, layoutStore.allBars),
         }))
         .execute();
     if (!safeData) return;
@@ -59,7 +59,7 @@ export function unregisterBarAction(barID: BarID, actionID: BarActionID): void {
             actionID: validateBarActionID(actionID),
         })
         .pick((data) => ({
-            bar: fetchBar(data.barID, layoutStore.allBars),
+            bar: pickBar(data.barID, layoutStore.allBars),
         }))
         .execute();
     if (!safeData) return;

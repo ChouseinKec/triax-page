@@ -9,7 +9,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validatePanelID } from '@/src/core/layout/panel/helpers/validators';
-import { fetchPanel } from '@/src/core/layout/panel/helpers/fetchers';
+import { pickPanel } from '@/src/core/layout/panel/helpers/pickers';
 
 /**
  * Toggles the open/closed state of a panel for layout commands.
@@ -28,7 +28,7 @@ export function togglePanel(panelID: PanelID): void {
             panelID: validatePanelID(panelID),
         })
         .pick((data) => ({
-            panel: fetchPanel(data.panelID, layoutStore.allPanels),
+            panel: pickPanel(data.panelID, layoutStore.allPanels),
         }))
         .execute();
     if (!safeData) return;

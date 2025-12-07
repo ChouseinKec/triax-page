@@ -11,6 +11,7 @@ const TD_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 
 export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 	table: {
+		tag: 'table',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: TABLE_SECTIONS,
 		forbiddenAncestors: null,
@@ -19,6 +20,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Tabular data container. May contain caption, column groups, header/body/footer sections, or rows.',
 	},
 	caption: {
+		tag: 'caption',
 		allowedAttributes: TABLE_TEXT_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -27,6 +29,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Table caption describing the table purpose.',
 	},
 	colgroup: {
+		tag: 'colgroup',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: ['col'],
 		forbiddenAncestors: null,
@@ -35,6 +38,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Groups columns for shared presentation. Contains col elements only.',
 	},
 	col: {
+		tag: 'col',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: VOID_CONTENT,
 		forbiddenAncestors: null,
@@ -43,6 +47,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Represents a table column (void element, no children).',
 	},
 	thead: {
+		tag: 'thead',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
@@ -51,6 +56,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Table header section grouping header rows (tr).',
 	},
 	tbody: {
+		tag: 'tbody',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
@@ -59,6 +65,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Table body section grouping data rows (tr).',
 	},
 	tfoot: {
+		tag: 'tfoot',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: TR_ONLY,
 		forbiddenAncestors: null,
@@ -67,6 +74,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Table footer section grouping summary rows (tr).',
 	},
 	tr: {
+		tag: 'tr',
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: TABLE_CELLS,
 		forbiddenAncestors: null,
@@ -75,6 +83,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Table row containing header (th) or data (td) cells.',
 	},
 	th: {
+		tag: 'th',
 		allowedAttributes: TH_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -83,6 +92,7 @@ export const TABLE_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Header cell for labeling columns/rows. Can contain flow content.',
 	},
 	td: {
+		tag: 'td',
 		allowedAttributes: TD_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,

@@ -6,6 +6,7 @@ const FORM_TEXT_ATTRIBUTES = [...FORM_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
 
 export const FORM_ELEMENTS: Partial<ElementRecord> = {
 	form: {
+		tag: 'form',
 		allowedAttributes: [...FORM_ATTRIBUTES, 'action','method','autocomplete','name','target'],
 		allowedChildren: FLOW_NO_FORM,
 		forbiddenAncestors: ['form'],
@@ -14,6 +15,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Form container for collecting user input and submitting data.',
 	},
 	fieldset: {
+		tag: 'fieldset',
 		allowedAttributes: [...FORM_ATTRIBUTES, 'disabled','form','name'],
 		allowedChildren: FLOW_WITH_LEGEND,
 		forbiddenAncestors: null,
@@ -22,6 +24,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Groups related form controls. Typically starts with a legend.',
 	},
 	legend: {
+		tag: 'legend',
 		allowedAttributes: FORM_TEXT_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -30,6 +33,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Caption describing a fieldset purpose.',
 	},
 	option: {
+		tag: 'option',
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','label','selected','disabled'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -38,6 +42,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Selectable option within a select or datalist.',
 	},
 	optgroup: {
+		tag: 'optgroup',
 		allowedAttributes: [...FORM_ATTRIBUTES, 'label','disabled'],
 		allowedChildren: OPTION_ONLY,
 		forbiddenAncestors: null,
@@ -46,6 +51,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Groups related options inside a select.',
 	},
 	datalist: {
+		tag: 'datalist',
 		allowedAttributes: FORM_ATTRIBUTES,
 		allowedChildren: OPTION_ONLY,
 		forbiddenAncestors: null,
@@ -54,6 +60,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Provides suggested options for an associated input.',
 	},
 	output: {
+		tag: 'output',
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'for','form','name'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -62,6 +69,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Displays the result of a calculation.',
 	},
 	progress: {
+		tag: 'progress',
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','max'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -70,6 +78,7 @@ export const FORM_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Progress bar indicating completion percentage for a task.',
 	},
 	meter: {
+		tag: 'meter',
 		allowedAttributes: [...FORM_TEXT_ATTRIBUTES, 'value','min','max','low','high','optimum'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,

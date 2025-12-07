@@ -81,7 +81,7 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
  */
 export function createKeywordOption(token: string, styleKey: string): OptionKeywordDefinition | undefined {
 	// Check if the token is empty or undefined
-	if (!token) return undefined;
+	if (!token || !token.trim()) return undefined;
 
 	const icon = STYLE_ICON_DEFINITIONS?.[`${styleKey}-${token}` as CSSIcons];
 

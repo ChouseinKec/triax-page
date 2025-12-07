@@ -1,56 +1,71 @@
 import { normalizeSyntax, parseSyntax, MAX_MULTIPLIER_DEPTH } from '@/src/core/block/style/utilities/parse/parse';
 
 describe('normalizeSyntax', () => {
-	it('normalizes spaces around || to have spaces', () => {
+	it('returns spaced ||', () => {
 		expect(normalizeSyntax('a||b')).toBe('a || b');
 		expect(normalizeSyntax('a || b')).toBe('a || b');
 	});
-	it('normalizes && to have no spaces', () => {
+
+	it('returns compact &&', () => {
 		expect(normalizeSyntax('a && b')).toBe('a&&b');
 		expect(normalizeSyntax('a&&b')).toBe('a&&b');
 	});
-	it('normalizes single | to have no spaces (not affecting ||)', () => {
+
+	it('returns compact | while keeping ||', () => {
 		expect(normalizeSyntax('a | b')).toBe('a|b');
 		expect(normalizeSyntax('a || b')).toBe('a || b');
 	});
-	it('removes spaces before *, +, ?', () => {
+
+	it('removes spaces before multipliers', () => {
 		expect(normalizeSyntax('a *')).toBe('a*');
 		expect(normalizeSyntax('a +')).toBe('a+');
 		expect(normalizeSyntax('a ?')).toBe('a?');
 	});
-	it('collapses multiple spaces and trims', () => {
+
+	it('handles extra spaces and trims', () => {
 		expect(normalizeSyntax('  a   b  ')).toBe('a b');
+	});
+
+	it('returns empty string for empty input', () => {
+		expect(normalizeSyntax('')).toBe('');
 	});
 });
 
 describe('parseSyntax', () => {
-	it('parses comma-separated lists first', () => {
+	it('returns comma-expanded values', () => {
 		expect(parseSyntax('a, b')).toEqual(['a,b']);
 	});
-	it('parses double bar with precedence', () => {
+	
+	it('returns double-bar expansions with precedence', () => {
 		const res = parseSyntax('a || b c');
 		expect(res).toEqual(expect.arrayContaining(['a', 'b c', 'a b c', 'b c a']));
 	});
-	it('parses double ampersand', () => {
+
+	it('returns double-amp expansions', () => {
 		const res = parseSyntax('a && b');
 		expect(res).toEqual(expect.arrayContaining(['a b', 'b a']));
 	});
-	it('parses sequences', () => {
+	
+	it('returns sequence expansions', () => {
 		expect(parseSyntax('a b')).toEqual(expect.arrayContaining(['a b']));
 	});
-	it('parses single bar', () => {
+
+	it('returns single-bar options', () => {
 		const res = parseSyntax('a | b c');
 		expect(res).toEqual(expect.arrayContaining(['a c', 'b c']));
 	});
-	it('parses bracket group', () => {
+
+	it('returns bracket group expansion', () => {
 		expect(parseSyntax('[a]')).toEqual(['', 'a']);
 	});
-	it('parses bracket group with multiplier', () => {
+
+	it('returns bracket+multiplier expansion', () => {
 		const res = parseSyntax('[a]+');
 		expect(res[0]).toBe('a');
 		expect(res.length).toBeLessThanOrEqual(MAX_MULTIPLIER_DEPTH);
 	});
-	it('parses multipliers (?, +, *, {m,n})', () => {
+
+	it('returns multiplier expansions', () => {
 		expect(parseSyntax('a?')).toEqual(['', 'a']);
 		const plus = parseSyntax('a+');
 		expect(plus[0]).toBe('a');
@@ -58,11 +73,17 @@ describe('parseSyntax', () => {
 		expect(star[0]).toBe('');
 		expect(parseSyntax('a{2,3}')).toEqual(['a a', 'a a a']);
 	});
+
 	it('returns atomic value when no combinators', () => {
 		expect(parseSyntax('a')).toEqual(['a']);
 	});
+
 	it('deduplicates and sorts by length', () => {
 		const res = parseSyntax('a | a');
 		expect(res).toEqual(['a']);
+	});
+	
+	it('returns empty array for empty input', () => {
+		expect(parseSyntax('')).toEqual(['']);
 	});
 });

@@ -13,10 +13,6 @@ import { validateWorkbenchID } from '@/src/core/layout/workbench/helpers';
  * Checks if the ID is a valid string identifier.
  *
  * @param barID - The bar ID to validate
- * @returns ValidateResult containing validity and the validated BarID if valid
- *
- * @example
- * validateBarID('bar-123') → { valid: true, value: 'bar-123' }
  */
 export function validateBarID(barID: unknown): ValidateResult<BarID> {
 	if (!isBarIDValid(barID)) return { valid: false, message: `Bar ID must be a valid string, got: ${barID}` };
@@ -28,10 +24,6 @@ export function validateBarID(barID: unknown): ValidateResult<BarID> {
  * Checks if the title is a valid string.
  *
  * @param barTitle - The bar title to validate
- * @returns ValidateResult containing validity and the validated BarTitle if valid
- *
- * @example
- * validateBarTitle('My Bar') → { valid: true, value: 'My Bar' }
  */
 export function validateBarTitle(barTitle: unknown): ValidateResult<BarTitle> {
 	if (!isBarTitleValid(barTitle)) return { valid: false, message: `Bar title must be a valid string, got: ${barTitle}` };
@@ -43,10 +35,6 @@ export function validateBarTitle(barTitle: unknown): ValidateResult<BarTitle> {
  * Checks if the position is a valid position object.
  *
  * @param barPosition - The bar position to validate
- * @returns ValidateResult containing validity and the validated BarPosition if valid
- *
- * @example
- * validateBarPosition({ x: 10, y: 20 }) → { valid: true, value: { x: 10, y: 20 } }
  */
 export function validateBarPosition(barPosition: unknown): ValidateResult<BarPosition> {
 	if (!isBarPositionValid(barPosition)) return { valid: false, message: `Bar position must be a valid object, got: ${JSON.stringify(barPosition)}` };
@@ -58,10 +46,6 @@ export function validateBarPosition(barPosition: unknown): ValidateResult<BarPos
  * Checks if the size is a valid size object.
  *
  * @param barSize - The bar size to validate
- * @returns ValidateResult containing validity and the validated BarSize if valid
- *
- * @example
- * validateBarSize({ width: 100, height: 50 }) → { valid: true, value: { width: 100, height: 50 } }
  */
 export function validateBarSize(barSize: unknown): ValidateResult<BarSize> {
 	if (!isBarSizeValid(barSize)) return { valid: false, message: `Bar size must be a valid object, got: ${JSON.stringify(barSize)}` };
@@ -73,10 +57,6 @@ export function validateBarSize(barSize: unknown): ValidateResult<BarSize> {
  * Checks if the definition has all required valid properties including ID, title, position, size, and workbench ID.
  *
  * @param barDefinition - The bar definition to validate
- * @returns ValidateResult containing validity and the validated BarDefinition if valid
- *
- * @example
- * validateBarDefinition({ id: 'bar-1', title: 'My Bar', position: { x: 0, y: 0 }, size: { width: 200, height: 50 }, workbenchID: 'wb-1' }) → { valid: true, value: {...} }
  */
 export function validateBarDefinition(barDefinition: unknown): ValidateResult<BarDefinition> {
 	if (!isBarDefinitionValid(barDefinition)) return { valid: false, message: `Bar definition is not a valid object, got: ${JSON.stringify(barDefinition)}` };

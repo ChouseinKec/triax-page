@@ -13,6 +13,9 @@ import { findBlockChildIndex } from '@/src/core/block/instance/helpers/finders/c
  * @param targetBlockInstance - block that will become the new parent
  */
 export function findBlockMoveIntoIndex(sourceBlockInstance: BlockInstance, targetBlockInstance: BlockInstance): FindResult<number> {
+	// If the source is the same as the target, cannot move into itself
+	if (sourceBlockInstance.id === targetBlockInstance.id) return { status: 'error', error: 'Source and target blocks are the same.' };
+
 	// If the source is already inside the target, there is nothing to do
 	if (sourceBlockInstance.parentID === targetBlockInstance.id) return { status: 'not-found' };
 
@@ -29,6 +32,9 @@ export function findBlockMoveIntoIndex(sourceBlockInstance: BlockInstance, targe
  * @param parentBlockInstance - parent that contains the target block
  */
 export function findBlockMoveBeforeIndex(sourceBlockInstance: BlockInstance, targetBlockInstance: BlockInstance, parentBlockInstance: BlockInstance): FindResult<number> {
+	// If the source is the same as the target, cannot move before itself
+	if (sourceBlockInstance.id === targetBlockInstance.id) return { status: 'error', error: 'Source and target blocks are the same.' };
+
 	// Resolve the target first and fail fast if it's missing. The target
 	// must be a child of the provided parent for this operation to make sense.
 	const targetIndexResult = findBlockChildIndex(targetBlockInstance, parentBlockInstance);
@@ -61,7 +67,7 @@ export function findBlockMoveBeforeIndex(sourceBlockInstance: BlockInstance, tar
 	// shift left once after removal; otherwise it remains unchanged.
 	const insertIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
 
-    // Return the computed index
+	// Return the computed index
 	return { status: 'found', data: insertIndex };
 }
 
@@ -74,6 +80,9 @@ export function findBlockMoveBeforeIndex(sourceBlockInstance: BlockInstance, tar
  * @param parentBlockInstance - parent that contains the target block
  */
 export function findBlockMoveAfterIndex(sourceBlockInstance: BlockInstance, targetBlockInstance: BlockInstance, parentBlockInstance: BlockInstance): FindResult<number> {
+	// If the source is the same as the target, cannot move after itself
+	if (sourceBlockInstance.id === targetBlockInstance.id) return { status: 'error', error: 'Source and target blocks are the same.' };
+
 	// Resolve the target first and fail fast if it's missing. The target
 	// must be a child of the provided parent for this operation to make sense.
 	const targetIndexResult = findBlockChildIndex(targetBlockInstance, parentBlockInstance);
@@ -84,7 +93,7 @@ export function findBlockMoveAfterIndex(sourceBlockInstance: BlockInstance, targ
 	const sourceIndexResult = findBlockChildIndex(sourceBlockInstance, parentBlockInstance);
 	if (sourceIndexResult.status === 'error') return sourceIndexResult;
 
-    // Resolve indexes
+	// Resolve indexes
 	const sourceIndex = sourceIndexResult.status === 'found' ? sourceIndexResult.data : -1;
 	const targetIndex = targetIndexResult.data;
 
@@ -102,6 +111,6 @@ export function findBlockMoveAfterIndex(sourceBlockInstance: BlockInstance, targ
 	// target index to move left; insertion after must account for that shift.
 	const insertIndex = sourceIndex < targetIndex ? targetIndex : targetIndex + 1;
 
-    // Return the computed index
+	// Return the computed index
 	return { status: 'found', data: insertIndex };
 }

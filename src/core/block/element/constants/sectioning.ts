@@ -5,6 +5,7 @@ const SECTIONING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIB
 
 export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 	header: {
+		tag: 'header',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_NO_HEADER_FOOTER,
 		forbiddenAncestors: ['header', 'footer'],
@@ -13,6 +14,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Introductory content or navigational aids for a section or page header.',
 	},
 	footer: {
+		tag: 'footer',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_NO_HEADER_FOOTER,
 		forbiddenAncestors: ['header', 'footer'],
@@ -21,6 +23,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Footer content for a section or page, typically containing metadata and related links.',
 	},
 	section: {
+		tag: 'section',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -29,6 +32,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Thematic grouping of content, usually with a heading.',
 	},
 	article: {
+		tag: 'article',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -37,6 +41,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Self-contained composition (e.g., blog post, comment) intended for reuse or distribution.',
 	},
 	aside: {
+		tag: 'aside',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -45,6 +50,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Tangentially related content (e.g., sidebars, callouts).',
 	},
 	nav: {
+		tag: 'nav',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
@@ -53,6 +59,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Section of navigation links (commonly lists and headings).',
 	},
 	address: {
+		tag: 'address',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -61,6 +68,7 @@ export const SECTIONING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Contact information for the nearest article or body (names, addresses, links).',
 	},
 	hgroup: {
+		tag: 'hgroup',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: HEADINGS_ONLY,
 		forbiddenAncestors: null,

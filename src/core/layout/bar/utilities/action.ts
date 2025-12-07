@@ -7,7 +7,7 @@ import { BarActionInstance, BarActionID, BarActionTitle, BarActionOrder, BarActi
  * @param actionID - The value to validate
  */
 export function isBarActionIDValid(actionID: unknown): actionID is BarActionID {
-	return typeof actionID === 'string' && actionID.length > 0;
+	return typeof actionID === 'string' && actionID.trim().length > 0;
 }
 
 /**
@@ -16,7 +16,7 @@ export function isBarActionIDValid(actionID: unknown): actionID is BarActionID {
  * @param actionTitle - The value to validate
  */
 export function isBarActionTitleValid(actionTitle: unknown): actionTitle is BarActionTitle {
-	return typeof actionTitle === 'string' && actionTitle.length > 0;
+	return typeof actionTitle === 'string' && actionTitle.trim().length > 0;
 }
 
 /**

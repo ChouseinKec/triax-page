@@ -7,7 +7,7 @@ import {  BarDefinition, BarID, BarTitle, BarPosition, BarSize,} from '@/src/cor
  * @param barID - The value to validate
  */
 export function isBarIDValid(barID: unknown): barID is BarID {
-    return typeof barID === 'string' && barID.length > 0;
+    return typeof barID === 'string' && barID.trim().length > 0;
 }
 
 /**
@@ -16,7 +16,7 @@ export function isBarIDValid(barID: unknown): barID is BarID {
  * @param barTitle - The value to validate
  */
 export function isBarTitleValid(barTitle: unknown): barTitle is BarTitle {
-    return typeof barTitle === 'string' && barTitle.length > 0;
+    return typeof barTitle === 'string' && barTitle.trim().length > 0;
 }
 
 /**
@@ -44,7 +44,7 @@ export function isBarSizeValid(barSize: unknown): barSize is BarSize {
     const size = barSize as Record<string, unknown>;
 
     // Check for BarSizeFixed: must have width as string
-    if (typeof size.width === 'string') {
+    if (typeof size.width === 'string' &&  size.width.trim().length > 0) {
         // Ensure no other properties that would make it invalid
         const allowedKeys = new Set(['width']);
         const actualKeys = Object.keys(size);
@@ -52,8 +52,8 @@ export function isBarSizeValid(barSize: unknown): barSize is BarSize {
     }
 
     // Check for BarSizeAuto: must have both minWidth and maxWidth as strings
-    const hasMinWidth = typeof size.minWidth === 'string';
-    const hasMaxWidth = typeof size.maxWidth === 'string';
+    const hasMinWidth = typeof size.minWidth === 'string' && size.minWidth.trim().length > 0;
+    const hasMaxWidth = typeof size.maxWidth === 'string' && size.maxWidth.trim().length > 0;
 
     if (hasMinWidth && hasMaxWidth) {
         // Ensure no other properties that would make it invalid

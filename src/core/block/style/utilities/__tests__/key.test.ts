@@ -1,29 +1,59 @@
 // Utilities
 import { generateStyleKey } from '@/src/core/block/style/utilities/key';
 
-// Key generation: compose property keys with optional position and suffix
 describe('generateStyleKey', () => {
-	// Returns base property when no position or suffix provided
-	it('returns base property when no position or suffix', () => {
+	it('returns base property', () => {
 		expect(generateStyleKey('color')).toBe('color');
-		expect(generateStyleKey('display')).toBe('display');
 	});
 
-	// Returns property-suffix when only suffix provided
-	it('returns property-suffix when only suffix provided', () => {
+	it('ignores undefined position and suffix', () => {
+		expect(generateStyleKey('display', undefined, undefined)).toBe('display');
+	});
+
+	it('appends suffix with hyphen', () => {
 		expect(generateStyleKey('background', undefined, 'color')).toBe('background-color');
-		expect(generateStyleKey('font', undefined, 'size')).toBe('font-size');
 	});
 
-	// Returns property-position when only position provided
-	it('returns property-position when only position provided', () => {
+	it('supports different suffixes', () => {
+		expect(generateStyleKey('font', undefined, 'weight')).toBe('font-weight');
+	});
+
+	it('appends position with hyphen', () => {
 		expect(generateStyleKey('padding', 'top')).toBe('padding-top');
-		expect(generateStyleKey('margin', 'left')).toBe('margin-left');
 	});
 
-	// Returns property-position-suffix when both position and suffix provided
-	it('returns property-position-suffix when both provided', () => {
+	it('differentiates positions', () => {
+		const top = generateStyleKey('margin', 'top');
+		const bottom = generateStyleKey('margin', 'bottom');
+		expect(top).not.toBe(bottom);
+	});
+
+	it('combines property-position-suffix in order', () => {
 		expect(generateStyleKey('border', 'top', 'width')).toBe('border-top-width');
-		expect(generateStyleKey('border', 'left', 'style')).toBe('border-left-style');
+	});
+
+	it('supports compound positions', () => {
+		expect(generateStyleKey('border', 'top-left', 'radius')).toBe('border-top-left-radius');
+	});
+
+	it('returns kebab-case strings', () => {
+		const result = generateStyleKey('border', 'top', 'width');
+		expect(result).toBe('border-top-width');
+	});
+
+	it('returns string type for any combination', () => {
+		const result = generateStyleKey('border', 'left', 'style');
+		expect(typeof result).toBe('string');
+	});
+
+	it('generates consistent key for same inputs', () => {
+		const a = generateStyleKey('color');
+		const b = generateStyleKey('color');
+		expect(a).toBe(b);
+	});
+
+	it('returns defined string for empty suffix', () => {
+		const result = generateStyleKey('margin', 'top', '');
+		expect(result).toBe('margin-top');
 	});
 });

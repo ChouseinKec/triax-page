@@ -3,7 +3,7 @@ import { isBarActionIDValid, isBarActionTitleValid, isBarActionOrderValid, isBar
 
 // Action ID validation: non-empty string checks
 describe('isBarActionIDValid', () => {
-	it('accepts valid non-empty strings', () => {
+	it('accepts non-empty strings', () => {
 		expect(isBarActionIDValid('save-action')).toBe(true);
 		expect(isBarActionIDValid('action-123')).toBe(true);
 	});
@@ -18,11 +18,15 @@ describe('isBarActionIDValid', () => {
 		expect(isBarActionIDValid(undefined)).toBe(false);
 		expect(isBarActionIDValid({})).toBe(false);
 	});
+
+	it('rejects whitespace-only strings', () => {
+		expect(isBarActionIDValid('   ')).toBe(false);
+	});
 });
 
 // Action title validation: non-empty string checks
 describe('isBarActionTitleValid', () => {
-	it('accepts valid non-empty strings', () => {
+	it('accepts non-empty strings', () => {
 		expect(isBarActionTitleValid('Save File')).toBe(true);
 		expect(isBarActionTitleValid('Action')).toBe(true);
 	});
@@ -34,6 +38,10 @@ describe('isBarActionTitleValid', () => {
 	it('rejects non-string values', () => {
 		expect(isBarActionTitleValid(456)).toBe(false);
 		expect(isBarActionTitleValid(null)).toBe(false);
+	});
+
+	it('rejects whitespace-only strings', () => {
+		expect(isBarActionTitleValid('   ')).toBe(false);
 	});
 });
 
@@ -59,6 +67,10 @@ describe('isBarActionOrderValid', () => {
 		expect(isBarActionOrderValid('5')).toBe(false);
 		expect(isBarActionOrderValid(null)).toBe(false);
 		expect(isBarActionOrderValid(undefined)).toBe(false);
+	});
+
+	it('rejects Infinity', () => {
+		expect(isBarActionOrderValid(Infinity)).toBe(false);
 	});
 });
 
@@ -114,4 +126,6 @@ describe('isBarActionInstanceValid', () => {
 		};
 		expect(isBarActionInstanceValid(action)).toBe(true);
 	});
+
+
 });

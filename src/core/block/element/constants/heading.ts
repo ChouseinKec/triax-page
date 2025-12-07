@@ -5,6 +5,7 @@ const HEADING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTE
 
 export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 	h1: {
+		tag: 'h1',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -13,6 +14,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Top-level section heading.',
 	},
 	h2: {
+		tag: 'h2',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -21,6 +23,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Second-level section heading.',
 	},
 	h3: {
+		tag: 'h3',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -29,6 +32,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Third-level section heading.',
 	},
 	h4: {
+		tag: 'h4',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -37,6 +41,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Fourth-level section heading.',
 	},
 	h5: {
+		tag: 'h5',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -45,6 +50,7 @@ export const HEADING_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Fifth-level section heading.',
 	},
 	h6: {
+		tag: 'h6',
 		allowedAttributes: HEADING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,

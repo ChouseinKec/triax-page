@@ -10,10 +10,6 @@ import { isPseudoDefinitionValid, isPseudoIDValid, isPseudoNameValid, isPseudoVa
  * Checks if the ID is a valid string identifier.
  *
  * @param pseudoID - The pseudo ID to validate
- * @returns ValidateResult containing validity and the validated PseudoID if valid
- *
- * @example
- * validatePseudoID('pseudo-123') → { valid: true, value: 'pseudo-123' }
  */
 export function validatePseudoID(pseudoID: unknown): ValidateResult<PseudoID> {
     if (!isPseudoIDValid(pseudoID)) return { valid: false, message: `Pseudo ID must be a valid string, got: ${pseudoID}` };
@@ -25,10 +21,6 @@ export function validatePseudoID(pseudoID: unknown): ValidateResult<PseudoID> {
  * Checks if the name is a valid string.
  *
  * @param pseudoName - The pseudo name to validate
- * @returns ValidateResult containing validity and the validated PseudoName if valid
- *
- * @example
- * validatePseudoName('hover') → { valid: true, value: 'hover' }
  */
 export function validatePseudoName(pseudoName: unknown): ValidateResult<PseudoName> {
     if (!isPseudoNameValid(pseudoName)) return { valid: false, message: `Pseudo name must be a valid string, got: ${pseudoName}` };
@@ -40,10 +32,6 @@ export function validatePseudoName(pseudoName: unknown): ValidateResult<PseudoNa
  * Checks if the value is a valid string.
  *
  * @param pseudoValue - The pseudo value to validate
- * @returns ValidateResult containing validity and the validated PseudoValue if valid
- *
- * @example
- * validatePseudoValue(':hover') → { valid: true, value: ':hover' }
  */
 export function validatePseudoValue(pseudoValue: unknown): ValidateResult<PseudoValue> {
     if (!isPseudoValueValid(pseudoValue)) return { valid: false, message: `Pseudo value must be a valid string, got: ${pseudoValue}` };
@@ -55,10 +43,6 @@ export function validatePseudoValue(pseudoValue: unknown): ValidateResult<Pseudo
  * Checks if the definition has all required valid properties including name and value.
  *
  * @param pseudoDefinition - The pseudo definition to validate
- * @returns ValidateResult containing validity and the validated PseudoDefinition if valid
- *
- * @example
- * validatePseudoDefinition({ name: 'hover', value: ':hover' }) → { valid: true, value: { name: 'hover', value: ':hover' } }
  */
 export function validatePseudoDefinition(pseudoDefinition: unknown): ValidateResult<PseudoDefinition> {
     if (!isPseudoDefinitionValid(pseudoDefinition)) return { valid: false, message: `Pseudo definition must be an object with required properties, got: ${typeof pseudoDefinition}` };

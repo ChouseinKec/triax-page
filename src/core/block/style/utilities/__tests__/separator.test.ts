@@ -6,54 +6,59 @@ jest.mock('@/src/core/block/style/constants/icon', () => ({
 	STYLE_ICON_DEFINITIONS: {},
 }));
 
-// Basic case: single-space between tokens and a slash separator
 describe('extractSeparator', () => {
-	it('extracts space and slash separators', () => {
+	it('returns space and slash separators', () => {
 		expect(extractSeparator('a b / c')).toEqual([' ', '/']);
 	});
 
-	// Multiple spaces collapse to normalized spaces in sequence
-	it('normalizes multiple spaces into a single space separator', () => {
+	it('returns normalized spaces as separators', () => {
 		expect(extractSeparator('a    b   c')).toEqual([' ', ' ']);
 	});
 
-	// Trims spaces around comma and slash; order preserved
-	it('removes spaces around comma and slash', () => {
+	it('returns comma and slash separators, trims spaces', () => {
 		expect(extractSeparator('a , b /  c , d')).toEqual([',', '/', ',']);
 	});
 
-	// Angle-bracketed tokens are treated as atomic; only separators returned
-	it('ignores angle-bracketed tokens as values and only returns separators', () => {
+	it('returns separators, ignores angle-bracketed tokens', () => {
 		expect(extractSeparator('<length> <percentage> / <length>')).toEqual([' ', '/']);
 	});
 
-	// Functions (and their inner content) are collapsed to a token; separators outside are kept
-	it('treats functions as tokens and extracts separators outside', () => {
+	it('returns separators, ignores function content', () => {
 		expect(extractSeparator('calc(10px + 5%) / min(10px, 2em)')).toEqual(['/']);
 	});
 
-	// Nested/complex function-like strings: only top-level separators extracted
-	it('handles nested function-like content robustly', () => {
+	it('returns only top-level separators for nested functions', () => {
 		expect(extractSeparator('func(inner(1,2), 3) , other() / token')).toEqual([',', '/']);
 	});
 
-	// No separators → empty list
-	it('returns empty array when no separators are present', () => {
+	it('returns empty array if no separators', () => {
 		expect(extractSeparator('singletoken')).toEqual([]);
+	});
+
+	it('handles empty string', () => {
+		expect(extractSeparator('')).toEqual([]);
+	});
+
+	it('handles only separators', () => {
+		expect(extractSeparator(' / , ')).toEqual(['/', ',']);
+	});
+
+	it('handles multiple types of separators', () => {
+		expect(extractSeparator('a,b/c d')).toEqual([',', '/', ' ']);
 	});
 });
 
-// Applies extractSeparator to each variation; preserves per-variation results
 describe('extractSeparators', () => {
-	it('maps variations to arrays of separators', () => {
-		const res = extractSeparators(['a b / c', 'd,e']);
-		expect(res).toEqual([[' ', '/'], [',']]);
+	it('returns arrays of separators for each variation', () => {
+		expect(extractSeparators(['a b / c', 'd,e'])).toEqual([[' ', '/'], [',']]);
 	});
 
-	// Array-like input should be handled without mutation
-	it('accepts array-like inputs and handles gracefully', () => {
+	it('accepts array-like input', () => {
 		const arrLike = Object.assign(['x y', 'p / q'], { length: 2 });
-		const res = extractSeparators(arrLike);
-		expect(res).toEqual([[' '], ['/']]);
+		expect(extractSeparators(arrLike)).toEqual([[' '], ['/']]);
+	});
+
+	it('returns empty arrays for empty or no-separator variations', () => {
+		expect(extractSeparators(['', 'token'])).toEqual([[], []]);
 	});
 });

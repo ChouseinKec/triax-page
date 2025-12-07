@@ -11,6 +11,7 @@ const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARI
 
 export const LIST_ELEMENTS: Partial<ElementRecord> = {
 	ul: {
+		tag: 'ul',
 		allowedAttributes: LIST_ATTRIBUTES,
 		allowedChildren: LIST_ITEM_ONLY,
 		forbiddenAncestors: null,
@@ -19,6 +20,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Unordered (bulleted) list. Contains list items (li).',
 	},
 	ol: {
+		tag: 'ol',
 		allowedAttributes: OL_ATTRIBUTES,
 		allowedChildren: LIST_ITEM_ONLY,
 		forbiddenAncestors: null,
@@ -27,6 +29,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Ordered (numbered) list. Contains list items (li).',
 	},
 	li: {
+		tag: 'li',
 		allowedAttributes: LI_ATTRIBUTES,
 		allowedChildren: FLOW_NO_LI,
 		forbiddenAncestors: null,
@@ -35,6 +38,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'List item. May contain flow content such as paragraphs, nested lists, or other blocks.',
 	},
 	dl: {
+		tag: 'dl',
 		allowedAttributes: LIST_ATTRIBUTES,
 		allowedChildren: DESCRIPTION_LIST_CONTENT,
 		forbiddenAncestors: null,
@@ -43,6 +47,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Description list (also called definition list). Contains terms (dt) and descriptions (dd).',
 	},
 	dt: {
+		tag: 'dt',
 		allowedAttributes: LIST_TEXT_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
@@ -51,6 +56,7 @@ export const LIST_ELEMENTS: Partial<ElementRecord> = {
 		description: 'Description term (the item being described).',
 	},
 	dd: {
+		tag: 'dd',
 		allowedAttributes: LIST_TEXT_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,

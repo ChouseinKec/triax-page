@@ -9,7 +9,7 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
 import { validatePanelID } from '@/src/core/layout/panel/helpers/validators';
-import { fetchPanel } from '@/src/core/layout/panel/helpers/fetchers';
+import { pickPanel } from '@/src/core/layout/panel/helpers/pickers';
 
 /**
  * Gets a panel instance by its unique identifier for layout queries.
@@ -28,7 +28,7 @@ export function getPanelById(panelID: PanelID): PanelInstance | undefined {
 			panelID: validatePanelID(panelID),
 		})
 		.pick((data) => ({
-			panel: fetchPanel(data.panelID, layoutStore.allPanels),
+			panel: pickPanel(data.panelID, layoutStore.allPanels),
 		}))
 		.execute();
 	if (!safeParams) return;

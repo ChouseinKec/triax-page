@@ -13,10 +13,6 @@ import { validatePanelID } from '@/src/core/layout/panel/helpers/validators/pane
  * Checks if the ID is a valid string identifier.
  *
  * @param PanelTabID - The tab ID to validate
- * @returns ValidateResult containing validity and the validated PanelTabID if valid
- *
- * @example
- * validatePanelTabID('tab-123') → { valid: true, value: 'tab-123' }
  */
 export function validatePanelTabID(PanelTabID: unknown): ValidateResult<PanelTabID> {
     if (!isPanelTabIDValid(PanelTabID)) return { valid: false, message: `Tab ID must be a valid string, got: ${PanelTabID}` };
@@ -28,10 +24,6 @@ export function validatePanelTabID(PanelTabID: unknown): ValidateResult<PanelTab
  * Checks if the title is a valid string.
  *
  * @param PanelTabTitle - The tab title to validate
- * @returns ValidateResult containing validity and the validated PanelTabTitle if valid
- *
- * @example
- * validatePanelTabTitle('My Tab') → { valid: true, value: 'My Tab' }
  */
 export function validatePanelTabTitle(PanelTabTitle: unknown): ValidateResult<PanelTabTitle> {
     if (!isPanelTabTitleValid(PanelTabTitle)) return { valid: false, message: `Tab title must be a valid string, got: ${PanelTabTitle}` };
@@ -43,10 +35,6 @@ export function validatePanelTabTitle(PanelTabTitle: unknown): ValidateResult<Pa
  * Checks if the component is a valid React component.
  *
  * @param PanelTabComponent - The tab component to validate
- * @returns ValidateResult containing validity and the validated PanelTabComponent if valid
- *
- * @example
- * validatePanelTabComponent(MyComponent) → { valid: true, value: MyComponent }
  */
 export function validatePanelTabComponent(PanelTabComponent: unknown): ValidateResult<PanelTabComponent> {
     if (!isPanelTabComponentValid(PanelTabComponent)) return { valid: false, message: `Tab component must be a valid React component, got: ${PanelTabComponent}` };
@@ -58,10 +46,6 @@ export function validatePanelTabComponent(PanelTabComponent: unknown): ValidateR
  * Checks if the icon is a valid React icon.
  *
  * @param PanelTabIcon - The tab icon to validate
- * @returns ValidateResult containing validity and the validated PanelTabIcon if valid
- *
- * @example
- * validatePanelTabIcon(<Icon name="star" />) → { valid: true, value: <Icon name="star" /> }
  */
 export function validatePanelTabIcon(PanelTabIcon: unknown): ValidateResult<PanelTabIcon> {
     if (!isPanelTabIconValid(PanelTabIcon)) return { valid: false, message: `Tab icon must be a valid React icon, got: ${PanelTabIcon}` };
@@ -73,10 +57,6 @@ export function validatePanelTabIcon(PanelTabIcon: unknown): ValidateResult<Pane
  * Checks if the order is a valid number.
  *
  * @param PanelTabOrder - The tab order to validate
- * @returns ValidateResult containing validity and the validated PanelTabOrder if valid
- *
- * @example
- * validatePanelTabOrder(1) → { valid: true, value: 1 }
  */
 export function validatePanelTabOrder(PanelTabOrder: unknown): ValidateResult<PanelTabOrder> {
     if (!isPanelTabOrderValid(PanelTabOrder)) return { valid: false, message: `Tab order must be a valid number, got: ${PanelTabOrder}` };
@@ -88,10 +68,6 @@ export function validatePanelTabOrder(PanelTabOrder: unknown): ValidateResult<Pa
  * Checks if the definition has all required valid properties including ID, title, component, icon, order, and panel ID.
  *
  * @param PanelTabDefinition - The tab definition to validate
- * @returns ValidateResult containing validity and the validated PanelTabDefinition if valid
- *
- * @example
- * validatePanelTabDefinition({ id: 'tab-1', title: 'My Tab', component: MyComponent, icon: <Icon />, order: 1, panelID: 'panel-1' }) → { valid: true, value: {...} }
  */
 export function validatePanelTabDefinition(PanelTabDefinition: unknown): ValidateResult<PanelTabDefinition> {
     if (!isPanelTabDefinitionValid(PanelTabDefinition)) return { valid: false, message: `Invalid tab definition shape: ${JSON.stringify(PanelTabDefinition)}` };
