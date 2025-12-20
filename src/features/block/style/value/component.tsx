@@ -40,7 +40,7 @@ const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, propert
     const values = splitAdvanced(value, [...DEFAULT_VALUE_SEPARATORS]);
 
     // Compute the possible slot options for each slot, based on current values and property syntax
-    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, property.name);
+    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, property);
 
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = (input: string[]) => {

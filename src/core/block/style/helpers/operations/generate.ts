@@ -1,7 +1,7 @@
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
 import type { OperateResult } from '@/src/shared/types/result';
-import type { StylesRecord } from '@/src/core/block/style/types';
+import type { StyleRecord } from '@/src/core/block/style/types';
 import type { DeviceID, PseudoID, OrientationID, PageContext } from '@/src/core/layout/page/types';
 
 // Utilities
@@ -16,7 +16,7 @@ import { toKebabCase } from '@/src/shared/utilities/string';
  * @param styles - the style properties and values to convert
  * @param indentLevel - the indentation level for formatting
  */
-export function generateCSSProperties(styles: StylesRecord, indentLevel = 1): OperateResult<string> {
+export function generateCSSProperties(styles: StyleRecord, indentLevel = 1): OperateResult<string> {
 	// Calculate indentation based on the given level
 	const indent = '  '.repeat(indentLevel);
 	let css = '';
@@ -68,7 +68,7 @@ export function generateCSSSelector(blockID: BlockID, pseudoName: string, pageCo
  * @param styles - the style properties and values to include in the rule
  * @param indentLevel - the indentation level for formatting
  */
-export function generateCSSRule(selector: string, styles: StylesRecord, indentLevel = 0): OperateResult<string> {
+export function generateCSSRule(selector: string, styles: StyleRecord, indentLevel = 0): OperateResult<string> {
 	// Calculate indentation for the rule
 	const indent = '  '.repeat(indentLevel);
 

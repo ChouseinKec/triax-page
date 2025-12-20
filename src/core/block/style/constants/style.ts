@@ -1,5 +1,5 @@
 // Types
-import type { StyleDefinition, StyleKey,StyleShorthandRecord } from '@/src/core/block/style/types';
+import type { StyleDefinition, StyleKey, StyleShorthandRecord, StyleTokenIconMap } from '@/src/core/block/style/types';
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from './value';
@@ -23,7 +23,7 @@ import { getTokenCanonical, expandTokens, parseSyntax, extractSeparators } from 
  * @param description - The description of the CSS property.
  * @returns A StyleDefinition object with all metadata fields populated, including expanded and parsed syntax.
  */
-export function createProperty(name: StyleKey, syntax: string, description: string = ''): StyleDefinition {
+export function createProperty(name: StyleKey, syntax: string, description: string = '', icons?: StyleTokenIconMap): StyleDefinition {
 	let _expanded: string | undefined;
 	let _parsed: string[] | undefined;
 	let _set: Set<string>[] | undefined;
@@ -33,6 +33,7 @@ export function createProperty(name: StyleKey, syntax: string, description: stri
 	return {
 		name,
 		description,
+		icons,
 		syntaxRaw: syntax,
 		get syntaxExpanded() {
 			if (_expanded === undefined) _expanded = expandTokens(syntax);
@@ -89,7 +90,7 @@ const MERGED = {
 };
 
 export const STYLE_DEFINITIONS: Record<StyleKey, StyleDefinition> = Object.entries(MERGED).reduce((acc, [key, data]) => {
-	acc[key as StyleKey] = createProperty(key as StyleKey, (data as any).syntax, (data as any).description);
+	acc[key as StyleKey] = createProperty(key as StyleKey, (data as any).syntax, (data as any).description, (data as any).icons);
 	return acc;
 }, {} as Record<StyleKey, StyleDefinition>);
 

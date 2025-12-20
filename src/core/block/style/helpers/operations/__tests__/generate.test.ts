@@ -3,11 +3,11 @@ import { generateCSSProperties, generateCSSSelector, generateCSSRule, generateCa
 import { mockPageContext } from '@/src/shared/helpers/mock';
 
 // Types
-import type { StylesRecord } from '@/src/core/block/style/types';
+import type { StyleRecord } from '@/src/core/block/style/types';
 
 describe('generateCSSProperties', () => {
 	it('returns CSS properties from styles object', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: 'red' };
+		const styles: StyleRecord = { 'font-size': '16px', color: 'red' };
 		const result = generateCSSProperties(styles);
 		expect(result.success).toBe(true);
 
@@ -18,7 +18,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('returns success status', () => {
-		const styles: StylesRecord = { padding: '10px' };
+		const styles: StyleRecord = { padding: '10px' };
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -26,7 +26,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('returns empty string for empty styles', () => {
-		const styles: StylesRecord = {};
+		const styles: StyleRecord = {};
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -36,7 +36,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('excludes empty values', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: '', padding: '10px' };
+		const styles: StyleRecord = { 'font-size': '16px', color: '', padding: '10px' };
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -48,7 +48,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('converts camelCase property names to kebab-case', () => {
-		const styles: StylesRecord = { fontSize: '16px', backgroundColor: 'blue' } as any;
+		const styles: StyleRecord = { fontSize: '16px', backgroundColor: 'blue' } as any;
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -59,7 +59,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('applies default indentation level', () => {
-		const styles: StylesRecord = { 'font-size': '16px' };
+		const styles: StyleRecord = { 'font-size': '16px' };
 		const result = generateCSSProperties(styles);
 		expect(result.success).toBe(true);
 
@@ -69,7 +69,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('applies custom indentation level', () => {
-		const styles: StylesRecord = { 'font-size': '16px' };
+		const styles: StyleRecord = { 'font-size': '16px' };
 		const result = generateCSSProperties(styles, 2);
 
 		expect(result.success).toBe(true);
@@ -79,7 +79,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('handles multiple properties', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: 'red', padding: '10px', margin: '5px' };
+		const styles: StyleRecord = { 'font-size': '16px', color: 'red', padding: '10px', margin: '5px' };
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -90,7 +90,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('excludes properties with empty keys', () => {
-		const styles: StylesRecord = { 'font-size': '16px', '': 'value' } as any;
+		const styles: StyleRecord = { 'font-size': '16px', '': 'value' } as any;
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -101,7 +101,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('formats properties with correct syntax', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: 'red' };
+		const styles: StyleRecord = { 'font-size': '16px', color: 'red' };
 		const result = generateCSSProperties(styles);
 
 		if (!result.success) return;
@@ -110,7 +110,7 @@ describe('generateCSSProperties', () => {
 	});
 
 	it('handles special characters in property values', () => {
-		const styles: StylesRecord = { 'font-family': 'Arial, sans-serif', content: '"quote"' } as any;
+		const styles: StyleRecord = { 'font-family': 'Arial, sans-serif', content: '"quote"' } as any;
 		const result = generateCSSProperties(styles);
 
 		expect(result.success).toBe(true);
@@ -202,7 +202,7 @@ describe('generateCSSSelector', () => {
 
 describe('generateCSSRule', () => {
 	it('returns complete CSS rule', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: 'red' };
+		const styles: StyleRecord = { 'font-size': '16px', color: 'red' };
 		const result = generateCSSRule('#block-1', styles);
 
 		expect(result.success).toBe(true);
@@ -215,7 +215,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('returns success status', () => {
-		const styles: StylesRecord = { padding: '10px' };
+		const styles: StyleRecord = { padding: '10px' };
 		const result = generateCSSRule('.test', styles);
 
 		expect(result.success).toBe(true);
@@ -223,7 +223,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('handles empty styles object', () => {
-		const styles: StylesRecord = {};
+		const styles: StyleRecord = {};
 		const result = generateCSSRule('#block-1', styles);
 
 		expect(result.success).toBe(true);
@@ -234,7 +234,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('applies default indentation level', () => {
-		const styles: StylesRecord = { 'font-size': '16px' };
+		const styles: StyleRecord = { 'font-size': '16px' };
 		const result = generateCSSRule('#block-1', styles);
 
 		expect(result.success).toBe(true);
@@ -244,7 +244,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('applies custom indentation level', () => {
-		const styles: StylesRecord = { 'font-size': '16px' };
+		const styles: StyleRecord = { 'font-size': '16px' };
 		const result = generateCSSRule('#block-1', styles, 1);
 
 		expect(result.success).toBe(true);
@@ -254,7 +254,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('includes property names in kebab-case', () => {
-		const styles: StylesRecord = { 'font-size': '16px', 'background-color': 'blue' };
+		const styles: StyleRecord = { 'font-size': '16px', 'background-color': 'blue' };
 		const result = generateCSSRule('.test', styles);
 
 		expect(result.success).toBe(true);
@@ -265,7 +265,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('excludes empty values', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: '', padding: '10px' };
+		const styles: StyleRecord = { 'font-size': '16px', color: '', padding: '10px' };
 		const result = generateCSSRule('#block-1', styles);
 
 		expect(result.success).toBe(true);
@@ -277,7 +277,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('formats rule with proper structure', () => {
-		const styles: StylesRecord = { 'font-size': '16px' };
+		const styles: StyleRecord = { 'font-size': '16px' };
 		const result = generateCSSRule('#block-1', styles);
 
 		expect(result.success).toBe(true);
@@ -287,7 +287,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('handles multiple selectors', () => {
-		const styles: StylesRecord = { color: 'red', padding: '10px' };
+		const styles: StyleRecord = { color: 'red', padding: '10px' };
 		const result1 = generateCSSRule('#block-1', styles);
 		const result2 = generateCSSRule('.element', styles);
 
@@ -296,7 +296,7 @@ describe('generateCSSRule', () => {
 	});
 
 	it('returns same rule for repeated calls', () => {
-		const styles: StylesRecord = { 'font-size': '16px', color: 'red' };
+		const styles: StyleRecord = { 'font-size': '16px', color: 'red' };
 		const result1 = generateCSSRule('#block-1', styles);
 		const result2 = generateCSSRule('#block-1', styles);
 

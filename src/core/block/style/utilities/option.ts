@@ -1,11 +1,11 @@
 // Constants
-import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS, STYLE_ICON_DEFINITIONS, CSSIcons } from '@/src/core/block/style/constants';
+import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/utilities';
 
 // Types
-import type { StyleOptionDefinition, OptionGenericDefinition, OptionKeywordDefinition, OptionFunctionDefinition, OptionDimensionDefinition } from '@/src/core/block/style/types';
+import type { StyleDefinition, StyleOptionDefinition, OptionGenericDefinition, OptionKeywordDefinition, OptionFunctionDefinition, OptionDimensionDefinition, StyleTokenIconMap } from '@/src/core/block/style/types';
 import type { UnitTypes } from '@/src/core/block/style/types';
 
 /**
@@ -79,11 +79,12 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
  * @param token - The keyword token string (e.g., 'auto')
  * @param key - The name of the CSS property being edited (for keyword options)
  */
-export function createKeywordOption(token: string, styleKey: string): OptionKeywordDefinition | undefined {
+export function createKeywordOption(token: string, styleKey: string, icons?: StyleTokenIconMap): OptionKeywordDefinition | undefined {
 	// Check if the token is empty or undefined
 	if (!token || !token.trim()) return undefined;
 
-	const icon = STYLE_ICON_DEFINITIONS?.[`${styleKey}-${token}` as CSSIcons];
+	const canonical = getTokenCanonical(token);
+	const icon = canonical && icons ? icons[canonical] ?? icons[token] : undefined;
 
 	// Create and return the OptionKeywordDefinition object for the keyword
 	return {
@@ -110,7 +111,7 @@ export function createNumberOption(token: string): OptionGenericDefinition | und
 		category: 'other',
 		min: param?.type === 'range' ? param.min : undefined,
 		max: param?.type === 'range' ? param.max : undefined,
-		icon: STYLE_ICON_DEFINITIONS?.number,
+		icon: undefined,
 		type: 'number',
 	};
 }
@@ -129,7 +130,7 @@ export function createIntegerOption(token: string): OptionGenericDefinition | un
 		category: 'other',
 		min: param?.type === 'range' ? param.min : undefined,
 		max: param?.type === 'range' ? param.max : undefined,
-		icon: STYLE_ICON_DEFINITIONS?.number,
+		icon: undefined,
 		type: 'integer',
 	};
 }
@@ -195,13 +196,13 @@ export function isSlotOptionValid(token: string, slotIndex: number, validValueSe
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
  * @param styleKey - The name of the CSS property being edited (for keyword options)
  */
-export function createOption(token: string, styleKey: string): StyleOptionDefinition | StyleOptionDefinition[] | undefined {
+export function createOption(token: string, styleKey: string, icons?: StyleTokenIconMap): StyleOptionDefinition | StyleOptionDefinition[] | undefined {
 	const type = getTokenType(token);
 	switch (type) {
 		case 'color':
 			return createColorOption(token);
 		case 'keyword':
-			return createKeywordOption(token, styleKey);
+			return createKeywordOption(token, styleKey, icons);
 		case 'number':
 			return createNumberOption(token);
 		case 'integer':
@@ -227,7 +228,7 @@ export function createOption(token: string, styleKey: string): StyleOptionDefini
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @param styleKey - The name of the CSS property being edited (for keyword options)
  */
-export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], styleKey: string): StyleOptionDefinition[][] {
+export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], property: StyleDefinition): StyleOptionDefinition[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
 	// Build the options table for each slot
@@ -241,7 +242,7 @@ export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<str
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
 			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
-				const option = createOption(token, styleKey);
+				const option = createOption(token, property.name, property.icons);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}
 			return [];

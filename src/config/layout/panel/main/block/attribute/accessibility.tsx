@@ -20,7 +20,7 @@ export const renderAccessibilityTab = (blockID: BlockID): React.ReactElement => 
         <GroupLayout
             styles={{ gridTemplateColumns: "1fr" }}
             content={() => Object.values(ATTRIBUTE_DEFINITIONS).map((attribute) =>
-                attribute.category === 'accessibility'
+                attribute?.category === 'accessibility'
                     ? renderAttributeRow({
                         blockID,
                         label: toKebabCase(attribute.name).replace('-', ' '),

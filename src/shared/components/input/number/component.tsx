@@ -11,9 +11,6 @@ import SelectDropdown from "@/src/shared/components/select/dropdown/component";
 // Types
 import { NumberValueProps } from "./types";
 
-// Constants
-import { STYLE_ICON_DEFINITIONS } from "@/src/core/block/style/constants/icon";
-
 
 /**
  * NumberValue Component
@@ -147,7 +144,7 @@ const NumberValue: React.FC<NumberValueProps> = ({ value, onChange, options, for
                     onChange={handleOptionChange}
                     searchable={true}
                     groupable={true}
-                    placeholder={STYLE_ICON_DEFINITIONS.number || "NUM"}
+                    placeholder={"NUM"}
                     forcePlaceholder={true}
                     isDisabled={options.length <= 1}
                     title="Change Value Type"

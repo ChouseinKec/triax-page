@@ -1,6 +1,6 @@
 // Types
 import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleContext, StyleKey, StylesRecord, StyleValue } from '@/src/core/block/style/types';
+import type { StyleContext, StyleKey, StyleRecord, StyleValue } from '@/src/core/block/style/types';
 import type { OperateResult } from '@/src/shared/types/result';
 import type { PageContext } from '@/src/core/layout/page/types/context';
 
@@ -65,13 +65,13 @@ export function cascadeStyleShorthandValue(styleKeys: StyleKey[], blockStyles: B
  * @param blockStyles - The block's complete style definition
  * @param styleContext - The current page state including selected device, orientation, and pseudo
  */
-export function cascadeBlockStyles(blockStyles: BlockStyles, styleContext: StyleContext, pageContext: PageContext): OperateResult<StylesRecord> {
+export function cascadeBlockStyles(blockStyles: BlockStyles, styleContext: StyleContext, pageContext: PageContext): OperateResult<StyleRecord> {
 	// Collect all unique style keys using the collector helper
 	const keyResult = collectBlockStyleKeys(blockStyles);
 	if (!keyResult.success) return { success: false, error: keyResult.error };
 
 	// Resolve each key using the cascade logic (handles both longhand and shorthand)
-	const resolved: StylesRecord = {};
+	const resolved: StyleRecord = {};
 
 	for (const key of keyResult.data) {
 		const cascadeResult = cascadeBlockStyle(key, blockStyles, styleContext, pageContext);

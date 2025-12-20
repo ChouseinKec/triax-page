@@ -1,6 +1,6 @@
 // Types
 import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleKey, StylesRecord, StyleValue, StyleContext } from '@/src/core/block/style/types';
+import type { StyleKey, StyleRecord, StyleValue, StyleContext } from '@/src/core/block/style/types';
 import type { OperateResult } from '@/src/shared/types/result';
 import type { PageContext } from '@/src/core/layout/page/types';
 
@@ -21,7 +21,7 @@ import { findStyleShorthand } from '@/src/core/block/style/helpers';
  */
 export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleValue, blockStyles: BlockStyles, pageContext: PageContext): OperateResult<BlockStyles> {
 	// Build the property updates map
-	const propertyUpdates: StylesRecord = Object.fromEntries(styleKeys.map((key) => [key, styleValue]));
+	const propertyUpdates: StyleRecord = Object.fromEntries(styleKeys.map((key) => [key, styleValue]));
 
 	// Return the updated styles
 	return updateBlockStyles(blockStyles, propertyUpdates, pageContext);
@@ -41,7 +41,7 @@ export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleV
  */
 export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue, blockStyles: BlockStyles, pageContext: PageContext): OperateResult<BlockStyles> {
 	// Build the property updates map
-	const properties: StylesRecord = { [styleKey]: styleValue };
+	const properties: StyleRecord = { [styleKey]: styleValue };
 
 	// Return the updated styles
 	return updateBlockStyles(blockStyles, properties, pageContext);
@@ -58,7 +58,7 @@ export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue
  * @param newStyles - the style properties and values to update
  * @param pageContext - the current page state including selected device, orientation, and pseudo info
  */
-export function updateBlockStyles(blockStyles: BlockStyles, newStyles: StylesRecord, pageContext: PageContext): OperateResult<BlockStyles> {
+export function updateBlockStyles(blockStyles: BlockStyles, newStyles: StyleRecord, pageContext: PageContext): OperateResult<BlockStyles> {
 	const selectedDeviceID = pageContext.store.selectedDeviceID;
 	const selectedOrientationID = pageContext.store.selectedOrientationID;
 	const selectedPseudoID = pageContext.store.selectedPseudoID;

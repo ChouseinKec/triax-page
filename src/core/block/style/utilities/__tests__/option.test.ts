@@ -2,10 +2,8 @@
 import { createKeywordOption, createFunctionOption, createDimensionOptions, createNumberOption, createIntegerOption, isSlotOptionValid, createOptionTable } from '@/src/core/block/style/utilities/option';
 import { getTokenCanonical } from '@/src/core/block/style/utilities';
 
-// Mock icons to avoid JSX in tests
-jest.mock('@/src/core/block/style/constants/icon', () => ({
-	STYLE_ICON_DEFINITIONS: {},
-}));
+
+const mockProperty = { name: 'display', icons: undefined } as any;
 
 describe('createKeywordOption', () => {
 	it('returns keyword option with name and value', () => {
@@ -125,7 +123,7 @@ describe('createOptionTable', () => {
 		const syntaxNormalized = ['', 'flex', 'grid', 'none', 'block'];
 		const syntaxSet = [new Set(['...', 'flex', 'grid', 'none', 'block'])];
 		const values = ['flex'];
-		const table = createOptionTable(syntaxNormalized, syntaxSet, values, 'display');
+		const table = createOptionTable(syntaxNormalized, syntaxSet, values, mockProperty);
 
 		expect(table[0].some((o) => o.value === 'none')).toBe(true);
 	});
@@ -134,14 +132,14 @@ describe('createOptionTable', () => {
 		const syntaxNormalized = ['', 'flex', 'grid', 'block'];
 		const syntaxSet = [new Set(['...', 'flex', 'grid', 'block'])];
 		const values = ['invalid-token'];
-		const table = createOptionTable(syntaxNormalized, syntaxSet, values, 'display');
+		const table = createOptionTable(syntaxNormalized, syntaxSet, values, mockProperty);
 
 		expect(table[0].some((o) => o.value === 'invalid-token')).toBe(false);
 		expect(table[0].some((o) => o.value === 'flex')).toBe(true);
 	});
 
 	it('handles empty inputs', () => {
-		const table = createOptionTable([], [new Set<string>()], [], 'display');
+		const table = createOptionTable([], [new Set<string>()], [], mockProperty);
 		expect(Array.isArray(table)).toBe(true);
 		expect(table[0].length).toBe(0);
 	});
@@ -150,7 +148,7 @@ describe('createOptionTable', () => {
 		const syntaxNormalized = ['', 'flex', 'grid'];
 		const syntaxSet = [new Set(['flex', 'grid', 'foobar'])];
 		const values = ['flex'];
-		const table = createOptionTable(syntaxNormalized, syntaxSet, values, 'display');
+		const table = createOptionTable(syntaxNormalized, syntaxSet, values, mockProperty);
 
 		expect(table[0].some((o) => o.value === 'foobar')).toBe(false);
 		expect(table[0].some((o) => o.value === 'grid')).toBe(true);
@@ -160,7 +158,7 @@ describe('createOptionTable', () => {
 		const syntaxNormalized = ['', 'flex', 'grid'];
 		const syntaxSet = [new Set(['flex', 'grid'])];
 		const values = ['grid'];
-		const table = createOptionTable(syntaxNormalized, syntaxSet, values, 'display');
+		const table = createOptionTable(syntaxNormalized, syntaxSet, values, mockProperty);
 
 		const grids = table[0].filter((o) => o.value === 'grid');
 		expect(new Set(grids.map((o) => o.value)).size).toBe(1);
@@ -170,7 +168,7 @@ describe('createOptionTable', () => {
 		const syntaxNormalized = ['', 'Flex', 'GRID'];
 		const syntaxSet = [new Set(['Flex', 'GRID', 'none'])];
 		const values = ['flex'];
-		const table = createOptionTable(syntaxNormalized, syntaxSet, values, 'display');
+		const table = createOptionTable(syntaxNormalized, syntaxSet, values, mockProperty);
 
 		expect(table[0].some((o) => o.value.toLowerCase() === 'flex')).toBe(true);
 		expect(table[0].some((o) => o.value.toLowerCase() === 'grid')).toBe(true);

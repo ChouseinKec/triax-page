@@ -20,7 +20,7 @@ export const renderGlobalTab = (blockID: BlockID): React.ReactElement => {
         <GroupLayout
             styles={{ gridTemplateColumns: "1fr" }}
             content={() => Object.values(ATTRIBUTE_DEFINITIONS).map((attribute) =>
-                attribute.category === 'global'
+                attribute?.category === 'global'
                     ? renderAttributeRow({
                         blockID,
                         label: toKebabCase(attribute.name).replace('-', ' '),

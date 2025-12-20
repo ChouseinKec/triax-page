@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { StyleValue } from '@/src/core/block/style/types/value';
 
 /**
@@ -160,7 +161,12 @@ export type StyleDescription = string;
  * Icon name for a CSS property.
  * This should correspond to an icon in the icon set used by the UI library.
  */
-export type StyleIcon = string;
+export type StyleIcon = ReactElement;
+
+/**
+ * Icon lookup keyed by token/value for a property.
+ */
+export type StyleTokenIconMap = Record<string, StyleIcon>;
 
 /**
  * CSS Value Definition Syntax string.
@@ -193,11 +199,14 @@ export interface StyleDefinition {
 	description: StyleDescription;
 
 	/**
-	 * The icon name for the CSS property.
-	 * This is used for UI representation, typically as an icon in the property editor.
-	 * It should correspond to an icon in the icon set used by the UI library.
+	 * Optional icon for the property itself (used in UI lists).
 	 */
 	icon?: StyleIcon;
+
+	/**
+	 * Optional map of token/value to icon elements for this property.
+	 */
+	icons?: StyleTokenIconMap;
 
 	/**
 	 * CSS Value Definition Syntax string.
@@ -239,7 +248,7 @@ export interface StyleDefinition {
 	syntaxSeparators: StyleSeparator[][];
 }
 
-export type StylesRecord = Partial<Record<StyleKey, StyleValue>>;
+export type StyleRecord = Partial<Record<StyleKey, StyleValue>>;
 
 /**
  *  Definition for a CSS shorthand property, listing its longhand components.
