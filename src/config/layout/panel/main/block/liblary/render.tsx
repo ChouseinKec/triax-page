@@ -5,13 +5,16 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addBlock, canBlockAcceptChild,  useSelectedBlockType, useSelectedBlockID, getBlockDefinitions, getBlockDefinition } from "@/src/core/block/instance/managers";
+import { addBlock, canBlockAcceptChild, useSelectedBlockType, useSelectedBlockID } from "@/src/core/block/instance/managers";
 
-// Components
-import GenericInput from "@/src/shared/components/input/generic/component";
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
 
 // Types
 import type { BlockDefinition, BlockType } from "@/src/core/block/instance/types";
+
+// Components
+import GenericInput from "@/src/shared/components/input/generic/component";
 
 /**
  * BlockLibrary Component
@@ -19,7 +22,7 @@ import type { BlockDefinition, BlockType } from "@/src/core/block/instance/types
  *
  */
 const BlockLibraryRender: React.FC = () => {
-    const registeredBlocks = getBlockDefinitions();
+    const registeredBlocks = getRegisteredBlocks();
     if (!registeredBlocks || Object.keys(registeredBlocks).length === 0) {
         return <div className={CSS.Fallback}>No blocks available.</div>;
     }

@@ -11,8 +11,11 @@ import type { StyleKey } from '@/src/core/block/style/types';
 
 // Helpers
 import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers/';
-import { validateStyleKey, cascadeBlockStyle, pickBlockStyles, renderBlockStyles, useStyleContext } from '@/src/core/block/style/helpers';
+import { validateStyleKey, cascadeBlockStyle, pickBlockStyles, renderBlockStyles, pickStyleDefinition } from '@/src/core/block/style/helpers';
 import { usePageContext } from '@/src/core/layout/page/helpers';
+
+// Registry
+import { getRegisteredStyles } from '@/src/core/block/style/registries';
 
 /**
  * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.
@@ -35,9 +38,6 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 	const pageContextResult = usePageContext();
 	if (!pageContextResult.success) return devLog.error(`[BlockQueries → useBlockStyle] ${pageContextResult.error}`), undefined;
 
-	// Fetch the style context reactively
-	const styleContextResult = useStyleContext();
-	if (!styleContextResult.success) return devLog.error(`[BlockQueries → useBlockStyle] ${styleContextResult.error}`), undefined;
 
 	// Return a reactive style value
 	return useBlockStore((state) => {
@@ -48,12 +48,13 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 			}))
 			.pick((data) => ({
 				blockStyles: pickBlockStyles(data.blockInstance),
+				styleDefinition: pickStyleDefinition(safeParams.styleKey, getRegisteredStyles()),
 			}))
 			.operate((data) => ({
 				styleValue: cascadeBlockStyle(
 					safeParams.styleKey,
 					data.blockStyles, //
-					styleContextResult.data,
+					data.styleDefinition,
 					pageContextResult.data
 				),
 			}))
@@ -98,6 +99,7 @@ export function useBlockRenderedStyles(blockID: BlockID): string | undefined {
 				renderedStyles: renderBlockStyles(
 					data.blockStyles, //
 					blockID,
+					getRegisteredStyles(),
 					pageContextResult.data
 				),
 			}))

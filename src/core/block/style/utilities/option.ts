@@ -231,6 +231,7 @@ export function createOption(token: string, styleKey: string, icons?: StyleToken
 export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], property: StyleDefinition): StyleOptionDefinition[][] {
 	// Normalize the current values to canonical tokens
 	const valueTokens = getValueTokens(values);
+
 	// Build the options table for each slot
 	return syntaxSet.map((tokenSet, setIndex) => {
 		if (!tokenSet || tokenSet.size === 0) return [];
@@ -242,7 +243,7 @@ export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<str
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
 			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
-				const option = createOption(token, property.name, property.icons);
+				const option = createOption(token, property.key, property.icons);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}
 			return [];

@@ -7,13 +7,15 @@ import type { StyleKey } from '@/src/core/block/style/types';
 
 // Helpers
 import { pickBlockInstance } from '@/src/core/block/instance/helpers';
-import { cascadeBlockStyle, validateStyleKey, renderBlockStyles, pickBlockStyles } from '@/src/core/block/style/helpers';
+import { cascadeBlockStyle, validateStyleKey, renderBlockStyles, pickBlockStyles, pickStyleDefinition } from '@/src/core/block/style/helpers';
 import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
 import { fetchPageContext } from '@/src/core/layout/page/helpers';
-import { fetchStyleContext } from '@/src/core/block/style/helpers';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+
+// Registry
+import { getRegisteredStyles } from '@/src/core/block/style/registries';
 
 /**
  * Gets a style key value with CSS cascade fallback logic for block style operations.
@@ -37,16 +39,16 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 		}))
 		.pick((data) => ({
 			blockStyles: pickBlockStyles(data.blockInstance),
+			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
 		}))
 		.pick(() => ({
-			styleContext: fetchStyleContext(),
 			pageContext: fetchPageContext(),
 		}))
 		.operate((data) => ({
 			styleValue: cascadeBlockStyle(
 				data.styleKey,
 				data.blockStyles, //
-				data.styleContext,
+				data.styleDefinition,
 				data.pageContext
 			),
 		}))
@@ -84,6 +86,7 @@ export function getBlockRenderedStyles(blockID: BlockID): string | undefined {
 			renderedStyles: renderBlockStyles(
 				data.blockStyles, //
 				blockID,
+				getRegisteredStyles(),
 				data.pageContext
 			),
 		}))

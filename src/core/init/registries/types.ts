@@ -1,10 +1,9 @@
-
 import type { ValidateResult } from '@/src/shared/types/result';
 
 export type RegistryDefinition<T> = {
 	category: string;
-	items: () => T[]; // lazy getter for tree-shaking friendliness
+	items: T[];
 	registerFn: (item: T) => ValidateResult<any>;
 	getIdFn: (item: T) => string;
-	validateFn?: (item: T) => boolean;
+	validateFn: (item: T) => ValidateResult<T>;
 };

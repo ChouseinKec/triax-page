@@ -5,11 +5,11 @@ import type { OperateResult } from '@/src/shared/types/result';
  * If all values are identical, that value is returned.
  * If values differ, 'mixed' is returned to indicate inconsistency.
  *
- * @param styleShorthands - An array of shorthand style values to resolve.
+ * @param StyleLonghands - An array of shorthand style values to resolve.
  */
-export function resolveStyleShorthand(styleShorthands: string[]): OperateResult<string> {
+export function resolveStyleLonghand(StyleLonghands: string[]): OperateResult<string> {
 	// Get unique values
-	const uniqueValues = Array.from(new Set(styleShorthands));
+	const uniqueValues = Array.from(new Set(StyleLonghands));
 
 	// Determine resolved value
 	const data = uniqueValues.length === 1 ? uniqueValues[0] : 'mixed';

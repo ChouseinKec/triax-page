@@ -1,1 +1,1 @@
-export * from './shorthand';
+export {};

@@ -11,10 +11,10 @@ import type { StyleKey } from "@/src/core/block/style/types";
 // Components
 import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import BlockStylesValue from "@/src/features/block/style/value/component";
+import BlockStyleValue from "@/src/features/block/style/value/";
 
 // Constants
-import { createProperty } from "@/src/core/block/style/constants";
+// import { createProperty } from "@/src/core/block/style/constants";
 
 // Utilities
 import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from "@/src/core/block/style/utilities";
@@ -36,7 +36,9 @@ import { devRender } from "@/src/shared/utilities/dev";
 const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
     const functionOptions = filterFunctionOptions(options);
     const currentOption = matchFunctionOption(functionOptions, value);
-    const createdProperty = currentOption ? createProperty(currentOption.name as StyleKey, currentOption.syntax) : undefined;
+    // const createdProperty = currentOption ? createProperty(currentOption.name as StyleKey, currentOption.syntax) : undefined;
+    const createdProperty =  undefined;
+
     const extractedValue = extractFunctionValue(value);
 
     // Handle changes to CSS function value arguments
@@ -95,7 +97,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
                 <span className={CSS.Separator} aria-hidden="true">⇄</span>
 
                 {/* Function arguments editor */}
-                <BlockStylesValue
+                <BlockStyleValue
                     value={extractedValue.value}
                     property={createdProperty}
                     onChange={handleValueChange}

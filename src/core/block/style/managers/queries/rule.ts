@@ -13,8 +13,8 @@ import { validateStyleKey } from '@/src/core/block/style/helpers';
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
-// Manager
-import { getBlockDefinitions } from '@/src/core/block/instance/managers';
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
 
 /**
  * Checks if a block type can have styles based on its allowedStyles property.
@@ -28,7 +28,7 @@ export function canBlockHaveStyles(blockID: BlockID): boolean {
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockInstance.type, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!results) return false;
@@ -55,7 +55,7 @@ export function canBlockHaveStyle(blockID: BlockID, styleKey: StyleKey): boolean
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockInstance.type, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!results) return false;

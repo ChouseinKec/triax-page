@@ -3,11 +3,9 @@ import React from 'react';
 // Managers
 import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/src/core/block/style/managers/';
 
-// Constants
-import { STYLE_DEFINITIONS } from '@/src/core/block/style/constants';
 
 // Components
-import BlockStyleValue from '@/src/features/block/style';
+import BlockStyleValue from '@/src/features/block/style/value';
 import Property from '@/src/shared/components/layout/property/component';
 import PropertyActions from '@/src/config/layout/panel/main/block/style/actions';
 
@@ -19,21 +17,24 @@ import type { CSSProperties } from 'react';
 // Utilties
 import { devRender } from '@/src/shared/utilities/dev';
 
+// Registry
+import { getRegisteredStyle } from '@/src/core/block/style/registries';
+
 /**
  * Memoized component to render the appropriate value editor for a CSS property
  * Handles data fetching and component selection reactively
  */
 const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: string; propertyName: StyleKey }): React.ReactElement | null => {
     const value = useBlockStyle(blockID, propertyName);
-    const property = STYLE_DEFINITIONS[propertyName];
+    const styleDefinition = getRegisteredStyle(propertyName);
 
-    if (!property) return devRender.error("[StyleValueRenderer] No property definition found", { propertyName });
+    if (!styleDefinition) return devRender.error("[StyleValueRenderer] No property definition found", { propertyName });
 
     return (
         <BlockStyleValue
             value={value || ''}
             onChange={(newValue) => setBlockStyle(blockID, propertyName, newValue)}
-            property={property}
+            property={styleDefinition}
         />
     );
 });
@@ -64,13 +65,14 @@ export function renderStyleRow(options: RenderStyleRowOptions): React.ReactEleme
     const { blockID, propertyName } = options;
     if (!canBlockHaveStyle(blockID, propertyName)) return null;
 
-    const propertyDef = STYLE_DEFINITIONS[propertyName];
+    const styleDefinition = getRegisteredStyle(propertyName);
+    if (!styleDefinition) return devRender.error("[renderStyleRow] No style definition found", { propertyName });
 
     return (
         <Property
+            name={styleDefinition.key}
+            description={styleDefinition.description}
             label={options.label ?? null}
-            name={propertyDef?.name || propertyName}
-            description={propertyDef?.description || ''}
             styles={options?.styles}
             disabled={options?.disabled}
             content={() => (

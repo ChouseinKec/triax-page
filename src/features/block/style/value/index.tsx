@@ -3,7 +3,7 @@
 import { memo } from "react";
 
 // Types
-import type { BlockStylesValue } from "./types";
+import type { BlockStyleValue } from "./types";
 
 // Constants
 import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
@@ -12,13 +12,14 @@ import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
 import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/utilities";
 import { mergeArrays } from "@/src/shared/utilities/array";
+import { getSyntaxSet, getSyntaxNormalized, getSyntaxParsed, getSyntaxSeparators } from "@/src/core/block/style/utilities/syntax";
 
 // Components
-import BlockStylesSlots from "@/src/features/block/style/slots/component";
+import BlockStyleSlots from "@/src/features/block/style/slots/component";
 
 
 /**
- * BlockStylesValue Component
+ * BlockStyleValue Component
  *
  * The primary CSS property value editor that orchestrates complex syntax parsing and multi-slot editing.
  * Handles CSS property syntax normalization, value tokenization, and separator management for advanced properties.
@@ -32,9 +33,12 @@ import BlockStylesSlots from "@/src/features/block/style/slots/component";
  *
  * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
  */
-const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, property }) => {
+const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
-    const { syntaxSet, syntaxParsed, syntaxNormalized, syntaxSeparators } = property;
+    const syntaxSet = getSyntaxSet(getSyntaxParsed(property.syntax));
+    const syntaxParsed = getSyntaxParsed(property.syntax);
+    const syntaxNormalized = getSyntaxNormalized(property.syntax);
+    const syntaxSeparators = getSyntaxSeparators(property.syntax);
 
     // Split the value string into slots (e.g., ["10px", "auto"])
     const values = splitAdvanced(value, [...DEFAULT_VALUE_SEPARATORS]);
@@ -78,9 +82,9 @@ const BlockStylesValue: React.FC<BlockStylesValue> = ({ value, onChange, propert
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <BlockStylesSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <BlockStyleSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
-BlockStylesValue.displayName = "BlockStylesValue";
-export default memo(BlockStylesValue);
+BlockStyleValue.displayName = "BlockStyleValue";
+export default memo(BlockStyleValue);
 

@@ -1,7 +1,10 @@
-export const DISPLAY_PROPERTIES = {
-	display: {
-		syntax: 'block | inline | inline-block | flex | grid | none | ...',
+import type { StyleDefinition } from "@/src/core/block/style/types";
+
+export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
+	{
+		key: 'display',
 		description: 'Controls the element\'s display type and how it participates in layout.',
+		syntax: 'block | inline | inline-block | flex | grid | none | ...',
 		icons: {
 			'block': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /></svg>
@@ -23,9 +26,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'flex-direction': {
-		syntax: 'row | row-reverse | column | column-reverse',
+	{
+		key: 'flex-direction',
 		description: 'Defines the main axis direction for flex container children.',
+		syntax: 'row | row-reverse | column | column-reverse',
 		icons: {
 			'column': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" /></svg>
@@ -42,9 +46,10 @@ export const DISPLAY_PROPERTIES = {
 
 		},
 	},
-	'flex-wrap': {
-		syntax: 'nowrap | wrap | wrap-reverse',
+	{
+		key: 'flex-wrap',
 		description: 'Specifies whether flex items are forced onto a single line or can wrap.',
+		syntax: 'nowrap | wrap | wrap-reverse',
 		icons: {
 			'wrap': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 12h18" /><path fill='black' d="M3 18h18" /><path fill='black' d="M3 6h18" /></svg>
@@ -57,9 +62,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'align-items': {
-		syntax: 'flex-start | flex-end | center | baseline | stretch',
+	{
+		key: 'align-items',
 		description: 'Aligns flex items along the cross axis of the flex container.',
+		syntax: 'flex-start | flex-end | center | baseline | stretch',
 		icons: {
 			'center': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
@@ -78,9 +84,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'align-content': {
-		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch',
+	{
+		key: 'align-content',
 		description: 'Aligns flex lines within a flex container when there is extra space.',
+		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch',
 		icons: {
 			'flex-end': (
 				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill="black" d="M22,22H2v-2h20V22z M10,2H7v16h3V2z M17,8h-3v10h3V8z" /></svg>
@@ -105,9 +112,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'justify-content': {
-		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly',
+	{
+		key: 'justify-content',
 		description: 'Aligns flex items along the main axis of the flex container.',
+		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly',
 		icons: {
 			'center': (
 				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><polygon fill="black" points="11,2 13,2 13,7 21,7 21,10 13,10 13,14 18,14 18,17 13,17 13,22 11,22 11,17 6,17 6,14 11,14 11,10 3,10 3,7 11,7" /></svg>
@@ -129,9 +137,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'row-gap': {
-		syntax: '<length-percentage>',
+	{
+		key: 'row-gap',
 		description: 'Sets the size of the gap between grid rows.',
+		syntax: '<length-percentage>',
 		icons: {
 			'center': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
@@ -150,17 +159,20 @@ export const DISPLAY_PROPERTIES = {
 			),
 		}
 	},
-	'column-gap': {
-		syntax: '<length-percentage>',
+	{
+		key: 'column-gap',
 		description: 'Sets the size of the gap between grid columns.',
+		syntax: '<length-percentage>',
 	},
-	gap: {
-		syntax: '<row-gap> <column-gap>',
+	{
+		key: 'gap',
 		description: 'Shorthand for setting both row-gap and column-gap.',
+		syntax: '<row-gap> <column-gap>',
 	},
-	'justify-items': {
-		syntax: 'flex-start | flex-end | center | baseline | stretch',
+	{
+		key: 'justify-items',
 		description: 'Aligns items along the main axis in a single line or grid cell.',
+		syntax: 'flex-start | flex-end | center | baseline | stretch',
 		icons: {
 			'center': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
@@ -179,9 +191,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'grid-auto-flow': {
-		syntax: 'row|column|[row dense]|[column dense]',
+	{
+		key: 'grid-auto-flow',
 		description: 'Controls the placement algorithm for auto-placed grid items.',
+		syntax: 'row|column|[row dense]|[column dense]',
 		icons: {
 			'column': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" /></svg>
@@ -195,25 +208,30 @@ export const DISPLAY_PROPERTIES = {
 
 		},
 	},
-	'grid-auto-rows': {
-		syntax: '<track-size>+',
+	{
+		key: 'grid-auto-rows',
 		description: 'Specifies the size of rows created automatically in the grid.',
-	},
-	'grid-auto-columns': {
 		syntax: '<track-size>+',
+	},
+	{
+		key: 'grid-auto-columns',
 		description: 'Specifies the size of columns created automatically in the grid.',
+		syntax: '<track-size>+',
 	},
-	'grid-template-rows': {
-		syntax: 'none | <track-list> | <auto-track-list>',
+	{
+		key: 'grid-template-rows',
 		description: 'Defines the row structure of the grid.',
+		syntax: 'none | <track-list> | <auto-track-list>',
 	},
-	'grid-template-columns': {
-		syntax: '<track-list>',
+	{
+		key: 'grid-template-columns',
 		description: 'Defines the column structure of the grid.',
+		syntax: '<track-list>',
 	},
-	direction: {
-		syntax: 'ltr | rtl',
+	{
+		key: 'direction',
 		description: 'Specifies the base writing direction for text and layout.',
+		syntax: 'ltr | rtl',
 		icons: {
 			'ltr': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 19V5" /><path fill='black' d="m13 6-6 6 6 6" /><path fill='black' d="M7 12h14" /></svg>
@@ -223,9 +241,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'box-sizing': {
-		syntax: 'content-box | border-box',
+	{
+		key: 'box-sizing',
 		description: 'Controls how the total width and height of an element are calculated.',
+		syntax: 'content-box | border-box',
 		icons: {
 			'border-box': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill="black" d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" /></svg>
@@ -236,9 +255,10 @@ export const DISPLAY_PROPERTIES = {
 
 		},
 	},
-	visibility: {
-		syntax: 'visible | hidden | collapse',
+	{
+		key: 'visibility',
 		description: 'Specifies whether the element is visible, hidden, or collapses its space.',
+		syntax: 'visible | hidden | collapse',
 		icons: {
 			'visible': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" /></svg>
@@ -252,9 +272,10 @@ export const DISPLAY_PROPERTIES = {
 
 		},
 	},
-	float: {
-		syntax: 'left|right|none',
+	{
+		key: 'float',
 		description: 'Removes the element from normal flow and positions it to the left or right.',
+		syntax: 'left|right|none',
 		icons: {
 			'left': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 19V5" /><path fill='black' d="m13 6-6 6 6 6" /><path fill='black' d="M7 12h14" /></svg>
@@ -267,9 +288,10 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	clear: {
-		syntax: 'none|left|right|both',
+	{
+		key: 'clear',
 		description: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
+		syntax: 'none|left|right|both',
 		icons: {
 			'left': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 19V5" /><path fill='black' d="m13 6-6 6 6 6" /><path fill='black' d="M7 12h14" /></svg>
@@ -285,13 +307,15 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-	'object-position': {
-		syntax: '[[left|center|right]&&[top|center|bottom]] | <length-percentage> | [<length-percentage> <length-percentage>]',
+	{
+		key: 'object-position',
 		description: 'Defines the alignment of replaced content within its box.',
+		syntax: '[[left|center|right]&&[top|center|bottom]] | <length-percentage> | [<length-percentage> <length-percentage>]',
 	},
-	'object-fit': {
-		syntax: 'fill|contain|cover|none|scale-down',
+	{
+		key: 'object-fit',
 		description: 'Specifies how replaced content should be resized to fit its container.',
+		syntax: 'fill|contain|cover|none|scale-down',
 		icons: {
 			'fill': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill="black" d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H6V6h12v12z" /></svg>
@@ -310,4 +334,4 @@ export const DISPLAY_PROPERTIES = {
 			),
 		},
 	},
-};
+]

@@ -1,5 +1,5 @@
 // Utilities
-import { cascadeStyleLonghandValue, cascadeStyleShorthandValue, cascadeBlockStyles, cascadeBlockStyle } from '../cascade';
+import { cascadeStyleLonghandValue, cascadeStyleLonghandValue, cascadeBlockStyles, cascadeBlockStyle } from '../cascade';
 import { mockBlockStyles, mockPageContext, mockStyleContext } from '@/src/shared/helpers/mock';
 
 // Types
@@ -91,12 +91,12 @@ describe('cascadeStyleLonghandValue', () => {
 	});
 });
 
-describe('cascadeStyleShorthandValue', () => {
+describe('cascadeStyleLonghandValue', () => {
 	it('returns shorthand values from longhand array', () => {
 		const blockStyles = mockBlockStyles({ margin: '10px 10px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 	});
@@ -105,7 +105,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles({ 'margin-top': '10px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 		expect(result).toHaveProperty('data');
@@ -115,7 +115,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles();
 		const pageContext = mockPageContext();
 		const styleKeys: any[] = [];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 	});
@@ -124,7 +124,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles({ 'padding-top': '10px', 'padding-right': '15px', 'padding-bottom': '10px', 'padding-left': '15px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 		if (!result.success) return;
@@ -136,7 +136,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles({ 'font-size': '16px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 		if (!result.success) return;
@@ -148,7 +148,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles({ 'margin-top': '10px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['margin-top'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 	});
@@ -157,7 +157,7 @@ describe('cascadeStyleShorthandValue', () => {
 		const blockStyles = mockBlockStyles({ 'padding-top': '10px', 'padding-bottom': '10px' });
 		const pageContext = mockPageContext();
 		const styleKeys = ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'] as StyleKey[];
-		const result = cascadeStyleShorthandValue(styleKeys, blockStyles, pageContext);
+		const result = cascadeStyleLonghandValue(styleKeys, blockStyles, pageContext);
 
 		expect(result.success).toBe(true);
 		if (!result.success) return;

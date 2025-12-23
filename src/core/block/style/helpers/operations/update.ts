@@ -1,11 +1,11 @@
 // Types
 import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleKey, StyleRecord, StyleValue, StyleContext } from '@/src/core/block/style/types';
+import type { StyleDefinition, StyleKey, StyleRecord, StyleValue, StyleContext } from '@/src/core/block/style/types';
 import type { OperateResult } from '@/src/shared/types/result';
 import type { PageContext } from '@/src/core/layout/page/types';
 
 // Helpers
-import { findStyleShorthand } from '@/src/core/block/style/helpers';
+import { pickStyleLonghand } from '@/src/core/block/style/helpers/pickers/';
 
 /**
  * Update all longhand style properties for a shorthand style key.
@@ -84,22 +84,22 @@ export function updateBlockStyles(blockStyles: BlockStyles, newStyles: StyleReco
 /**
  * Update a style property for a block instance, supporting both shorthand and longhand keys.
  *
- * This checks if the style key is a shorthand, expands it if needed, and updates the relevant properties.
+ * This checks if the style key is a longhand, expands it if needed, and updates the relevant properties.
  * @see {@link updateBlockStyleValue}, {@link updateBlockStyleValues}, {@link updateBlockStyles}
  *
  * @param styleKey - the style key to update (shorthand or longhand)
- * @param styleShorthands - the record of all shorthand definitions
+ * @param styleDefinition - the definition of the style property
  * @param styleValue - the value to set for the style key(s)
  * @param blockStyles - the current BlockStyles map to update
  * @param pageContext - the current page state including selected device, orientation, and pseudo info
  */
-export function updateBlockStyle(styleKey: StyleKey, styleValue: StyleValue, blockStyles: BlockStyles, styleContext: StyleContext, pageContext: PageContext): OperateResult<BlockStyles> {
-	// Find if the styleKey is a shorthand
-	const shorthandResult = findStyleShorthand(styleKey, styleContext.constant.shorthands);
+export function updateBlockStyle(styleKey: StyleKey, styleValue: StyleValue, styleDefinition: StyleDefinition, blockStyles: BlockStyles, pageContext: PageContext): OperateResult<BlockStyles> {
+	// Pick longhand keys from the style definition
+	const longhandResult = pickStyleLonghand(styleDefinition);
 
-	// Apply shorthand if found
-	if (shorthandResult.status === 'found') return updateBlockStyleValues(shorthandResult.data, styleValue, blockStyles, pageContext);
+	// Apply longhand if found
+	if (longhandResult.success === true) return updateBlockStyleValues(longhandResult.data, styleValue, blockStyles, pageContext);
 
-	// Otherwise, apply longhand
+	// Otherwise, apply shorthand
 	return updateBlockStyleValue(styleKey, styleValue, blockStyles, pageContext);
 }

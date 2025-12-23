@@ -19,8 +19,8 @@ import { getElementDefinitions } from '@/src/core/block/element/constants';
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
-// Managers
-import { getBlockDefinitions } from '@/src/core/block/instance/managers';
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
 
 /**
  * Checks if a child block type is permitted within a parent block type.
@@ -38,7 +38,7 @@ export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: Eleme
 			parentBlockInstance: pickBlockInstance(data.parentBlock, useBlockStore.getState().allBlocks),
 		}))
 		.pick((data) => ({
-			parentBlockDefinition: pickBlockDefinition(data.parentBlockInstance.type, getBlockDefinitions()),
+			parentBlockDefinition: pickBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
 			childBlockDefinition: fetchElementDefinition(data.childBlockTag, getElementDefinitions()),
 		}))
 		.check((data) => ({
@@ -90,7 +90,7 @@ export function canBlockHaveChildren(blockID: BlockID): boolean {
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockInstance.type, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!results) return false;
@@ -114,7 +114,7 @@ export function canBlockHaveAttributes(blockID: BlockID): boolean {
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockInstance.type, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!results) return false;
@@ -141,7 +141,7 @@ export function canBlockHaveAttribute(blockID: BlockID, attributeKey: AttributeK
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockInstance.type, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockInstance.type, getRegisteredBlocks()),
 		}))
 		.execute();
 	if (!results) return false;

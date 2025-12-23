@@ -14,8 +14,8 @@ import type { BlockType, BlockID } from '@/src/core/block/instance/types';
 import { devLog } from '@/src/shared/utilities/dev';
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
-// Managers
-import { getBlockDefinitions } from '@/src/core/block/instance/managers';
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
 
 /**
  * Adds a new block of the specified type to the page in block CRUD operations.
@@ -34,7 +34,7 @@ export function addBlock(blockType: BlockType, parentID: BlockID): void {
 			parentID: validateBlockID(parentID),
 		})
 		.pick((data) => ({
-			blockDefinition: pickBlockDefinition(data.blockType, getBlockDefinitions()),
+			blockDefinition: pickBlockDefinition(data.blockType, getRegisteredBlocks()),
 		}))
 		.operate((data) => ({
 			addedBlocks: addBlockToTree(createBlock(data.blockDefinition, data.parentID), blockStore.allBlocks),

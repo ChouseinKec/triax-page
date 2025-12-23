@@ -6,4 +6,4 @@ export * from './separator';
 export * from './token';
 export * from './value';
 export * from './parse';
-
+export * from './syntax';

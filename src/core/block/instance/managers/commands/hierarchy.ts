@@ -19,8 +19,8 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 // Constants
 import { getElementDefinitions } from '@/src/core/block/element/constants';
 
-// Managers
-import { getBlockDefinitions } from '@/src/core/block/instance/managers';
+// Registry
+import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
 
 /**
  * Moves a block to be positioned after a target block in block CRUD operations.
@@ -46,7 +46,7 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 			targetParentBlock: pickBlockInstance(data.targetBlock.parentID!, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getBlockDefinitions()),
+			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
 			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
 		}))
 		.execute();
@@ -91,7 +91,7 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 			targetParentBlock: pickBlockInstance(data.targetBlock.parentID!, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getBlockDefinitions()),
+			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
 			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
 		}))
 		.execute();
@@ -133,7 +133,7 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 			targetBlock: pickBlockInstance(data.targetBlockID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			parentBlockDefinition: pickBlockDefinition(data.targetBlock.type, getBlockDefinitions()),
+			parentBlockDefinition: pickBlockDefinition(data.targetBlock.type, getRegisteredBlocks()),
 			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
 		}))
 		.execute();

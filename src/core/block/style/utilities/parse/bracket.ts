@@ -1,29 +1,33 @@
+// Types
+import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+
+// Utilities
 import { parseSyntax, MAX_MULTIPLIER_DEPTH } from './parse';
 
 /**
- * Checks if the input starts and ends with brackets ([a b]).
- * This is used to determine if the input is a bracketed group.
- * @param input - The input string to check for brackets.
+ * Checks if the syntax starts and ends with brackets ([a b]).
+ * This is used to determine if the syntax is a bracketed group.
+ * @param syntax - The syntax string to check for brackets.
  */
-export function hasBrackets(input: string): boolean {
-	return input.startsWith('[') && input.endsWith(']');
+export function hasBrackets(syntax: StyleSyntax): boolean {
+	return syntax.startsWith('[') && syntax.endsWith(']');
 }
 
 /**
- * Checks if the input is a bracketed group with a multiplier ([a b]+).
- * This is used to determine if the input is a bracketed group that can be repeated.
- * @param input - The input string to check for a bracketed group with a multiplier.
+ * Checks if the syntax is a bracketed group with a multiplier ([a b]+).
+ * This is used to determine if the syntax is a bracketed group that can be repeated.
+ * @param syntax - The syntax string to check for a bracketed group with a multiplier.
  */
-export function hasBracketsMultiplier(input: string): boolean {
-	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(input);
+export function hasBracketsMultiplier(syntax: StyleSyntax): boolean {
+	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(syntax);
 }
 
 /**
  * Parses an optional group in brackets.
  * @param s - The syntax string (e.g. '[a b]')
  */
-export function parseBrackets(input: string): string[] {
-	const inner = input.slice(1, -1);
+export function parseBrackets(syntax: StyleSyntax): StyleSyntaxParsed {
+	const inner = syntax.slice(1, -1);
 	const parsed = parseSyntax(inner);
 
 	// If the parsed result is only an empty string, return ['']
@@ -41,15 +45,14 @@ export function parseBrackets(input: string): string[] {
 /**
  * Parses a bracketed group with a multiplier (e.g., [a b]+) and returns all possible combinations.
  * Handles group extraction, recursive parsing, and multiplier logic internally.
- * @param input - The syntax string to parse, expected to be in the format [group]multiplier (e.g., [a b]+).
+ * @param syntax - The syntax string to parse, expected to be in the format [group]multiplier (e.g., [a b]+).
  */
-export function parseBracketsMultiplier(input: string): string[] {
+export function parseBracketsMultiplier(syntax: StyleSyntax): StyleSyntaxParsed {
 	// syntax is expected to be something like: [group]multiplier
-	const match = input.match(/^(\[.*\])(\*|\+|\?|#|\{\d+(,\d+)?\})$/);
-	if (!match) return [input];
+	const match = syntax.match(/^(\[.*\])(\*|\+|\?|#|\{\d+(,\d+)?\})$/);
+	if (!match) return [syntax];
 	const group = match[1].slice(1, -1); // remove [ and ]
 	const multiplier = match[2];
-	
 
 	// Dynamic require to avoid circular import with parse
 	const groupResults = parseSyntax(group);
@@ -94,4 +97,3 @@ export function parseBracketsMultiplier(input: string): string[] {
 	}
 	return Array.from(new Set(results));
 }
-

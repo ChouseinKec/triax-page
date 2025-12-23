@@ -1,73 +1,77 @@
+// Types
+import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+
+// Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
 import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/src/shared/utilities/array';
 import { parseSyntax } from './parse';
 
 /**
- * Checks if the input contains a double bar (||) combinator at the top level.
- * This is used to determine if the input has multiple options that can be combined.
- * @param input - The input string to check for double bar combinators.
+ * Checks if the syntax contains a double bar (||) combinator at the top level.
+ * This is used to determine if the syntax has multiple options that can be combined.
+ * @param syntax - The syntax string to check for double bar combinators.
  */
-export function hasDoubleBar(input: string): boolean {
-	return splitAdvanced(input, '||').length > 1;
+export function hasDoubleBar(syntax: StyleSyntax): boolean {
+	return splitAdvanced(syntax, '||').length > 1;
 }
 
 /**
- * Checks if the input contains a double ampersand (&&) combinator at the top level.
- * This is used to determine if the input has multiple conditions that must all be satisfied.
- * @param input - The input string to check for double ampersand combinators.
+ * Checks if the syntax contains a double ampersand (&&) combinator at the top level.
+ * This is used to determine if the syntax has multiple conditions that must all be satisfied.
+ * @param syntax - The syntax string to check for double ampersand combinators.
  */
-export function hasDoubleAmp(input: string): boolean {
-	return splitAdvanced(input, '&&').length > 1;
+export function hasDoubleAmp(syntax: StyleSyntax): boolean {
+	return splitAdvanced(syntax, '&&').length > 1;
 }
 
 /**
- * Checks if the input contains a single bar (|) combinator at the top level.
- * This is used to determine if the input has multiple options that can be selected independently.
- * @param input - The input string to check for single bar combinators.
+ * Checks if the syntax contains a single bar (|) combinator at the top level.
+ * This is used to determine if the syntax has multiple options that can be selected independently.
+ * @param syntax - The syntax string to check for single bar combinators.
  */
-export function hasSingleBar(input: string): boolean {
-	return splitAdvanced(input, '|').length > 1;
+export function hasSingleBar(syntax: StyleSyntax): boolean {
+	return splitAdvanced(syntax, '|').length > 1;
 }
 
 /**
- * Checks if the input contains a top-level comma (,) separator.
- * @param input - The input string to check for comma separators.
+ * Checks if the syntax contains a top-level comma (,) separator.
+ * @param syntax - The syntax string to check for comma separators.
  */
-export function hasComma(input: string): boolean {
-	return splitAdvanced(input, ',').length > 1;
+export function hasComma(syntax: StyleSyntax): boolean {
+	return splitAdvanced(syntax, ',').length > 1;
+}
+
+/**
+ * Checks if the syntax contains a sequence combinator (space) at the top level.
+ * @param syntax - The syntax string to check for sequence combinators.
+ */
+export function hasSequence(syntax: StyleSyntax): boolean {
+	return splitAdvanced(syntax, ' ').length > 1;
 }
 
 /**
  * Parses a comma-separated list at the top level.
  * Recursively parses each part and generates the cross product of all possible combinations,
  * then joins each combination with a comma.
- * @param input - The input string to parse.
+ * @param syntax - The syntax string to parse.
  */
-export function parseComma(input: string): string[] {
-	const parts = splitAdvanced(input, ',');
+export function parseComma(syntax: StyleSyntax): StyleSyntaxParsed {
+	const parts = splitAdvanced(syntax, ',');
 	if (parts.length > 1) {
 		const parsedParts = parts.map((part) => parseSyntax(part.trim()));
 		return generateCrossProduct(parsedParts).map((arr) => arr.join(','));
 	}
-	return [input];
-}
-
-/**
- * Checks if the input contains a sequence combinator (space) at the top level.
- * @param input - The input string to check for sequence combinators.
- */
-export function hasSequence(input: string): boolean {
-	return splitAdvanced(input, ' ').length > 1;
+	return [syntax];
 }
 
 /**
  * Parses a double bar (||) combinator.
  * Generates all non-empty subsets and their permutations, then recursively parses each part and returns all possible combinations.
  * This handles cases like 'a || b c' where 'b c' can be permuted and combined with 'a'.
- * @param input - The input string to parse.
+ * @param syntax - The syntax string to parse.
  */
-export function parseDoubleBar(input: string): string[] {
-	const parts = splitAdvanced(input, '||');
+export function parseDoubleBar(syntax: StyleSyntax): StyleSyntaxParsed {
+	const parts = splitAdvanced(syntax, '||');
 	if (parts.length > 1) {
 		// Generate all non-empty subsets and their permutations
 		const combos = generateAllSubsets(parts)
@@ -88,10 +92,10 @@ export function parseDoubleBar(input: string): string[] {
  * Parses a double ampersand (&&) combinator.
  * Generates all permutations, then recursively parses each part and returns all possible combinations.
  * This handles cases like 'a && b c' where 'b c' can be permuted and combined with 'a'.
- * @param input - The input string to parse.
+ * @param syntax - The syntax string to parse.
  */
-export function parseDoubleAmp(input: string): string[] {
-	const parts = splitAdvanced(input, '&&');
+export function parseDoubleAmp(syntax: StyleSyntax): StyleSyntaxParsed {
+	const parts = splitAdvanced(syntax, '&&');
 	if (parts.length > 1) {
 		const combos = generatePermutations(parts).map((perm) => perm.join(' '));
 		const results = combos.flatMap((combo) => {
@@ -107,10 +111,10 @@ export function parseDoubleAmp(input: string): string[] {
  * Parses a single bar (|) combinator.
  * Recursively parses each part and returns all possible combinations.
  * This handles cases like 'a | b c' where 'b c' can be combined with 'a'.
- * @param input - The input string to parse.
+ * @param syntax - The syntax string to parse.
  */
-export function parseSingleBar(input: string): string[] {
-	const parts = splitAdvanced(input, '|');
+export function parseSingleBar(syntax: StyleSyntax): StyleSyntaxParsed {
+	const parts = splitAdvanced(syntax, '|');
 	if (parts.length > 1) {
 		const results = parts.flatMap((part) => parseSyntax(part.trim()));
 		// Remove duplicates and sort by length
@@ -124,14 +128,14 @@ export function parseSingleBar(input: string): string[] {
  * Recursively parses each part and generates the cross product of all possible combinations,
  * then joins each combination with the original separator.
  * This ensures that multipliers and nested syntax are expanded for each part.
- * @param input - The input string to parse.
+ * @param syntax - The syntax string to parse.
  */
-export function parseSequence(input: string): string[] {
+export function parseSequence(syntax: StyleSyntax): StyleSyntaxParsed {
 	let sep = null;
-	if (splitAdvanced(input, ' ').length > 1) sep = ' ';
-	else if (splitAdvanced(input, '/').length > 1) sep = '/';
+	if (splitAdvanced(syntax, ' ').length > 1) sep = ' ';
+	else if (splitAdvanced(syntax, '/').length > 1) sep = '/';
 	if (sep) {
-		const parts = splitAdvanced(input, sep);
+		const parts = splitAdvanced(syntax, sep);
 		const parsedParts = parts.map((part) => parseSyntax(part.trim()));
 		return generateCrossProduct(parsedParts).map((arr) =>
 			arr
@@ -140,5 +144,5 @@ export function parseSequence(input: string): string[] {
 				.trim()
 		);
 	}
-	return [input];
+	return [syntax];
 }

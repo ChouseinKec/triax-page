@@ -10,9 +10,12 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline';
 import { devLog } from '@/src/shared/utilities/dev';
 
 // Helpers
-import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickBlockStyles, fetchStyleContext } from '@/src/core/block/style/helpers';
+import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickBlockStyles, pickStyleDefinition } from '@/src/core/block/style/helpers';
 import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers';
 import { fetchPageContext } from '@/src/core/layout/page/helpers';
+
+// Registry
+import { getRegisteredStyles } from '@/src/core/block/style/registries';
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -38,16 +41,18 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 		.pick((data) => ({
 			blockStyles: pickBlockStyles(data.blockInstance),
 		}))
+		.pick((data) => ({
+			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
+		}))
 		.pick(() => ({
-			styleContext: fetchStyleContext(),
 			pageContext: fetchPageContext(),
 		}))
 		.operate((data) => ({
 			updatedStyles: updateBlockStyle(
 				data.styleKey, //
 				data.value,
+				data.styleDefinition,
 				data.blockStyles,
-				data.styleContext,
 				data.pageContext
 			),
 		}))
@@ -84,13 +89,14 @@ export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 		}))
 		.pick((data) => ({
 			blockStyles: pickBlockStyles(data.blockInstance),
+			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
 		}))
+
 		.pick(() => ({
-			styleContext: fetchStyleContext(),
 			pageContext: fetchPageContext(),
 		}))
 		.operate((data) => ({
-			styleValue: cascadeBlockStyle(data.styleKey, data.blockStyles, data.styleContext, data.pageContext),
+			styleValue: cascadeBlockStyle(data.styleKey, data.blockStyles, data.styleDefinition, data.pageContext),
 		}))
 		.execute();
 	if (!results) return;

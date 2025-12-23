@@ -1,7 +1,6 @@
 // Types
-import type { BlockDefinition, BlockType } from '@/src/core/block/instance/types';
+import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/src/core/block/instance/types';
 import type { PickResult } from '@/src/shared/types/result';
-import type { BlockRegistryRecord } from '@/src/core/block/instance/registries';
 
 /**
  * Fetch a single block definition by its type key from the registry.
@@ -9,7 +8,7 @@ import type { BlockRegistryRecord } from '@/src/core/block/instance/registries';
  * @param blockType - block type key to resolve (e.g. 'container', 'text')
  * @param registeredBlocks - registry containing available block definitions
  */
-export function pickBlockDefinition(blockType: BlockType, registeredBlocks: BlockRegistryRecord): PickResult<BlockDefinition> {
+export function pickBlockDefinition(blockType: BlockType, registeredBlocks: BlockDefinitionRecord): PickResult<BlockDefinition> {
 	// Lookup the block type in the registry map
 	const BlockDefinition = registeredBlocks[blockType];
 
