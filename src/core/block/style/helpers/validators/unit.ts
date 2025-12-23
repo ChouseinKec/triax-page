@@ -49,11 +49,11 @@ export function validateUnitDefinition(unitDefinition: unknown): ValidateResult<
 	const keyValidation = validateString(validation.value.key);
 	if (!keyValidation.valid) return { valid: false, message: `Unit definition "key" is invalid: ${keyValidation.message}` };
 
-    const typeValidation = validateUnitType(validation.value.type);
-    if (!typeValidation.valid) return { valid: false, message: `Unit definition "type" is invalid: ${typeValidation.message}` };
+	const typeValidation = validateUnitType(validation.value.type);
+	if (!typeValidation.valid) return { valid: false, message: `Unit definition "type" is invalid: ${typeValidation.message}` };
 
-    const defaultValidation = validateUnitDefault(validation.value.default);
-    if (!defaultValidation.valid) return { valid: false, message: `Unit definition "default" is invalid: ${defaultValidation.message}` };
+	const defaultValidation = validateUnitDefault(validation.value.default);
+	if (!defaultValidation.valid) return { valid: false, message: `Unit definition "default" is invalid: ${defaultValidation.message}` };
 
 	return { valid: true, value: validation.value as unknown as UnitDefinition };
 }

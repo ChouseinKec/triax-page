@@ -1,5 +1,5 @@
 // Registry functions
-import { registerStyle } from '@/src/core/block/style/registries';
+import { registerStyle, registerUnit } from '@/src/core/block/style/registries';
 
 import { registerBlock } from '@/src/core/block/instance/registries';
 
@@ -15,6 +15,7 @@ import { registerWorkbench } from '@/src/core/layout/workbench/registries';
 import { CoreStyles } from '@/src/config/block/style/definition';
 
 import { CoreBlocks } from '@/src/config/block';
+import { CoreUnits } from '@/src/config/block/style/unit';
 
 import { CorePanels, CoreTabs } from '@/src/config/layout/panel';
 import { CoreBars } from '@/src/config/layout/bar';
@@ -29,7 +30,7 @@ import { WorkbenchSelectAction } from '@/src/config/layout/page/action';
 import { CoreViewports } from '@/src/config/layout/viewport';
 
 // Validators
-import { validateStyleDefinition } from '@/src/core/block/style/helpers';
+import { validateStyleDefinition, validateUnitDefinition } from '@/src/core/block/style/helpers';
 
 // Types
 import type { RegistryDefinition } from '@/src/core/init/registries/types';
@@ -42,6 +43,13 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		registerFn: registerStyle,
 		getIdFn: (style: any) => style.key,
 		validateFn: validateStyleDefinition,
+	},
+	{
+		category: 'Core/Block/Style/Unit',
+		items: CoreUnits,
+		registerFn: registerUnit,
+		getIdFn: (unit: any) => unit.key,
+		validateFn: validateUnitDefinition,
 	},
 
 	// Block Registries

@@ -74,7 +74,7 @@ export function isValueDimension(input: unknown): boolean {
 	// If no number or no unit, not a valid dimension
 	if (value === undefined || !unit) return false;
 
-	// Ensure unit is a valid UnitKeys value
+	// Ensure unit is a valid UnitKey value
 	// if (!(unit in UNIT_DEFINITIONS)) return false; //! If you still see this line, remove it.
 	return true;
 }

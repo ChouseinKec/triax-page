@@ -1,9 +1,8 @@
-// Constants
-import { UNIT_DEFINITIONS } from '@/src/core/block/style/constants/unit';
-
 // Types
-import type { UnitTypes } from '@/src/core/block/style/types';
-import type { UnitKeys } from '@/src/core/block/style/types';
+import type { UnitType, UnitKey } from '@/src/core/block/style/types';
+
+// Registry
+import { getRegisteredUnit } from '@/src/core/block/style/registries';
 
 /**
  * Extracts the numeric value from a CSS dimension string (e.g., '10px', '25%', '0.1rem').
@@ -81,8 +80,10 @@ export function extractDimensionDefaults(options: Array<{ category?: string; nam
  *
  * @param input - The CSS value string (e.g., '10px').
  */
-export function getDimensionType(input: string): UnitTypes | undefined {
-	const unit = extractDimensionUnit(input) as UnitKeys;
-	const unitDef = unit ? UNIT_DEFINITIONS[unit] : undefined;
+export function getDimensionType(input: string): UnitType | undefined {
+	const unit = extractDimensionUnit(input) as UnitKey;
+	const unitDef = unit ? getRegisteredUnit(unit) : undefined;
 	return unitDef?.type;
 }
+
+// UNIT_DEFINITIONS

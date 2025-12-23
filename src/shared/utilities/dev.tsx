@@ -1,6 +1,10 @@
 
 import React from 'react';
 
+// Components
+import DropdownReveal from '@/src/shared/components/reveal/dropdown/component';
+
+
 export const isDevelopment = process.env.NODE_ENV === 'development';
 
 /**
@@ -76,6 +80,49 @@ export const devLog = {
  * Returns null in production. Provides error indicators and debug components for development.
  */
 export const devRender = {
+
+	/**
+	 * Renders a development indicator component with an icon (development only)
+	 * @param icon Icon to display (e.g., emoji or React element)
+	 * @param message Message to display
+	 * @param context Optional context information
+	 * @param color Text color
+	 * @param bgColor Background color
+	 * @param borderColor Border color
+	 * @returns React element in development, null in production
+	 */
+	indicator: (
+		icon: string | React.ReactElement,
+		message: string,
+		context?: Record<string, unknown>,
+		color: string = 'black',
+		bgColor: string = '#f0f0f0',
+		borderColor: string = '#ccc'
+	): React.ReactElement | null => {
+		if (!isDevelopment) return null;
+		const contextStr = context ? ` (${JSON.stringify(context)})` : '';
+		return (
+			<div
+				style={{
+					color,
+					fontSize: '12px',
+					padding: '4px',
+					border: `1px solid ${borderColor}`,
+					backgroundColor: bgColor,
+					borderRadius: '3px'
+				}}
+			>
+
+				<DropdownReveal
+					placeholder={`${icon} Oops`}
+				>
+					{`${message}${contextStr}`}
+
+				</DropdownReveal>
+			</div>
+		);
+	},
+
 	/**
 	 * Renders error indicator component (development only)
 	 * @param message Error message to display
@@ -86,22 +133,7 @@ export const devRender = {
 	 * devRender.error('Block not found', { blockID: 'missing-123' })
 	 */
 	error: (message: string, context?: Record<string, unknown>): React.ReactElement | null => {
-		if (!isDevelopment) return null;
-		const contextStr = context ? ` (${JSON.stringify(context)})` : '';
-		return React.createElement(
-			'div',
-			{
-				style: {
-					color: 'red',
-					fontSize: '12px',
-					padding: '4px',
-					border: '1px solid red',
-					backgroundColor: '#ffeaea',
-					borderRadius: '3px'
-				}
-			},
-			`🚨 ${message}${contextStr}`
-		);
+		return devRender.indicator('🚨', message, context, 'red', '#ffeaea', 'red');
 	},
 
 	/**
@@ -114,22 +146,7 @@ export const devRender = {
 	 * devRender.warn('Performance issue detected')
 	 */
 	warn: (message: string, context?: Record<string, unknown>): React.ReactElement | null => {
-		if (!isDevelopment) return null;
-		const contextStr = context ? ` (${JSON.stringify(context)})` : '';
-		return React.createElement(
-			'div',
-			{
-				style: {
-					color: 'orange',
-					fontSize: '12px',
-					padding: '4px',
-					border: '1px solid orange',
-					backgroundColor: '#fff8e6',
-					borderRadius: '3px'
-				}
-			},
-			`⚠️ ${message}${contextStr}`
-		);
+		return devRender.indicator('⚠️', message, context, 'orange', '#fff8e6', 'orange');
 	},
 
 	/**
@@ -142,21 +159,6 @@ export const devRender = {
 	 * devRender.info('Debug info', { state: currentState })
 	 */
 	info: (message: string, context?: Record<string, unknown>): React.ReactElement | null => {
-		if (!isDevelopment) return null;
-		const contextStr = context ? ` (${JSON.stringify(context)})` : '';
-		return React.createElement(
-			'div',
-			{
-				style: {
-					color: 'blue',
-					fontSize: '12px',
-					padding: '4px',
-					border: '1px solid blue',
-					backgroundColor: '#e6f4ff',
-					borderRadius: '3px'
-				}
-			},
-			`ℹ️ ${message}${contextStr}`
-		);
+		return devRender.indicator('ℹ️', message, context, 'blue', '#e6f4ff', 'blue');
 	},
 };

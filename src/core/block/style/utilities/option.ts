@@ -1,12 +1,15 @@
 // Constants
-import { DEFAULT_VALUE_FUNCTIONS, UNIT_OPTIONS } from '@/src/core/block/style/constants';
+import { DEFAULT_VALUE_FUNCTIONS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { getTokenType, getTokenParam, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/utilities';
 
 // Types
 import type { StyleDefinition, StyleOptionDefinition, OptionGenericDefinition, OptionKeywordDefinition, OptionFunctionDefinition, OptionDimensionDefinition, StyleTokenIconMap } from '@/src/core/block/style/types';
-import type { UnitTypes } from '@/src/core/block/style/types';
+import type { UnitType } from '@/src/core/block/style/types';
+
+// Registry
+import { getRegisteredUnits } from '@/src/core/block/style/registries';
 
 /**
  * Creates a OptionFunctionDefinition object for a given function token.
@@ -53,24 +56,34 @@ export function createDimensionOptions(token: string): OptionDimensionDefinition
 	if (!token) return undefined;
 
 	// Get the base name of the token and check if it's a valid dimension group
-	const baseName = getTokenBase(token) as UnitTypes;
+	const baseName = getTokenBase(token) as UnitType;
 
-	// If the base name is not a valid dimension group, return undefined
-	if (!UNIT_OPTIONS[baseName]) return undefined;
+	// Get registered units and filter by type
+	const registeredUnits = getRegisteredUnits();
+	const unitOptions = Object.values(registeredUnits)
+		.filter((unit) => unit.type === baseName)
+		.map((unit) => ({
+			name: unit.key,
+			value: unit.default,
+			category: 'dimension' as const,
+			type: 'dimension' as const,
+		}));
 
-	// Get the range parameters for the token, and retrieve the unit options for the base name
+	// If no units found for this type, return undefined
+	if (unitOptions.length === 0) return undefined;
+
+	// Get the range parameters for the token
 	const param = getTokenParam(token);
-	const unitOptions = UNIT_OPTIONS[baseName] || [];
 
 	// If no range is specified, return the unit options as is
-	if (!param || param.type !== 'range') return unitOptions as OptionDimensionDefinition[];
+	if (!param || param.type !== 'range') return unitOptions;
 
-	// Map the unit options to include the min and max range values, creating and returning OptionDimensionDefinition objects
+	// Map the unit options to include the min and max range values
 	return unitOptions.map((unit) => ({
 		...unit,
 		min: param.min,
 		max: param.max,
-	})) as OptionDimensionDefinition[];
+	}));
 }
 
 /**
