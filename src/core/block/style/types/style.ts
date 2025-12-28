@@ -31,6 +31,7 @@ export type StyleTokenIconMap = Record<StyleKey, StyleIcon>;
  */
 export type StyleSyntax = string;
 
+
 export type StyleSyntaxParsed = string[];
 
 export type StyleSyntaxSet = Set<string>[];

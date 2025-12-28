@@ -1,6 +1,3 @@
-// Constants
-import { DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/constants';
-
 // Types
 import type { StyleValueSeparator } from '@/src/core/block/style/types';
 
@@ -8,7 +5,7 @@ import type { StyleValueSeparator } from '@/src/core/block/style/types';
  * Extracts separators from a single variation string.
  * @param variation - The variation string to extract separators from.
  */
-export function extractSeparator(variation: string): string[] {
+export function extractSeparator(variation: string, separators: string[] = [' ', ',', '/']): string[] {
 	// Clean and normalize the variation string for consistent separator extraction
 	const cleaned = variation
 		// Normalize whitespace
@@ -33,16 +30,16 @@ export function extractSeparator(variation: string): string[] {
 		.trim();
 
 	// Build a regex to match all possible separators
-	const separatorPattern = DEFAULT_VALUE_SEPARATORS.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
+	const separatorPattern = separators.map((s) => (s === ' ' ? '\\s+' : s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).join('|');
 	const separatorRegex = new RegExp(`(${separatorPattern})`, 'g');
 
 	// Extract separators
-	const separators: string[] = [];
+	const separatorsFound: string[] = [];
 	let match;
 	while ((match = separatorRegex.exec(cleaned)) !== null) {
-		separators.push(match[1] as StyleValueSeparator);
+		separatorsFound.push(match[1] as StyleValueSeparator);
 	}
-	return separators;
+	return separatorsFound;
 }
 
 /**
@@ -52,6 +49,5 @@ export function extractSeparator(variation: string): string[] {
  */
 export function extractSeparators(variations: string[]): string[][] {
 	const arr = Array.isArray(variations) ? variations : [...variations];
-	return arr.map(extractSeparator);
+	return arr.map((variation) => extractSeparator(variation));
 }
-

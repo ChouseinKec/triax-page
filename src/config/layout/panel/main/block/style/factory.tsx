@@ -34,7 +34,7 @@ const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: str
         <BlockStyleValue
             value={value || ''}
             onChange={(newValue) => setBlockStyle(blockID, propertyName, newValue)}
-            property={styleDefinition}
+            styleDefinition={styleDefinition}
         />
     );
 });

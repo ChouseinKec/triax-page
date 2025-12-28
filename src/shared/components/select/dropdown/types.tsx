@@ -1,5 +1,4 @@
 import { OptionDefinition } from "@/src/shared/components/types/option";
-import React from "react";
 
 /** Props definition for the DropdownSelect component. */
 export type DropdownSelectProps = {

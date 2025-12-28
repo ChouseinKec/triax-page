@@ -5,8 +5,6 @@ import { memo } from "react";
 // Types
 import type { BlockStyleValue } from "./types";
 
-// Constants
-import { DEFAULT_VALUE_SEPARATORS } from "@/src/core/block/style/constants";
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
@@ -17,41 +15,43 @@ import { getSyntaxSet, getSyntaxNormalized, getSyntaxParsed, getSyntaxSeparators
 // Components
 import BlockStyleSlots from "@/src/features/block/style/slots/component";
 
+// Registry
+import { getRegisteredTokenTypes, getRegisteredTokens } from "@/src/core/block/style/registries";
 
 /**
  * BlockStyleValue Component
  *
- * The primary CSS property value editor that orchestrates complex syntax parsing and multi-slot editing.
- * Handles CSS property syntax normalization, value tokenization, and separator management for advanced properties.
- * Automatically determines appropriate editing UI based on property syntax definitions and current values.
+ * The primary CSS styleDefinition value editor that orchestrates complex syntax parsing and multi-slot editing.
+ * Handles CSS styleDefinition syntax normalization, value tokenization, and separator management for advanced properties.
+ * Automatically determines appropriate editing UI based on styleDefinition syntax definitions and current values.
  *
  * @param  props - Component properties
- * @param  props.value - Current CSS property value string
- * @param  props.property - Complete CSS property definition with syntax and constraints
- * @param  props.onChange - Callback triggered when property value changes
+ * @param  props.value - Current CSS styleDefinition value string
+ * @param  props.styleDefinition - Complete CSS styleDefinition definition with syntax and constraints
+ * @param  props.onChange - Callback triggered when styleDefinition value changes
  * @returns Rendered multi-slot value editor with syntax-aware editing capabilities
  *
  * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
  */
-const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property }) => {
-    // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the property definition
-    const syntaxSet = getSyntaxSet(getSyntaxParsed(property.syntax));
-    const syntaxParsed = getSyntaxParsed(property.syntax);
-    const syntaxNormalized = getSyntaxNormalized(property.syntax);
-    const syntaxSeparators = getSyntaxSeparators(property.syntax);
+const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefinition }) => {
+    // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the styleDefinition definition
+    const syntaxParsed = getSyntaxParsed(styleDefinition.syntax, getRegisteredTokens());
+    const syntaxSet = getSyntaxSet(syntaxParsed);
+    const syntaxNormalized = getSyntaxNormalized(syntaxParsed);
+    const syntaxSeparators = getSyntaxSeparators(syntaxParsed);
 
     // Split the value string into slots (e.g., ["10px", "auto"])
-    const values = splitAdvanced(value, [...DEFAULT_VALUE_SEPARATORS]);
+    const values = splitAdvanced(value);
 
-    // Compute the possible slot options for each slot, based on current values and property syntax
-    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, property);
+    // Compute the possible slot options for each slot, based on current values and styleDefinition syntax
+    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes());
 
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = (input: string[]) => {
         if (!input || (input.length === 1 && input[0] === "")) return onChange("");
 
         // Normalize updated values to canonical tokens
-        const valueTokens = getValueTokens(input).join(" ");
+        const valueTokens = getValueTokens(input, getRegisteredTokenTypes()).join(" ");
 
         // Find the index of the matching variation with strict matching
         // This will return the index of the variation that matches the updated value tokens
@@ -68,7 +68,7 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, property 
             // This will prevent assignment of invalid syntax when the slot is set to "" or empty
             if (variationIndex === -1) return;
             const syntax = syntaxNormalized[variationIndex];
-            input = mergeArrays(input, getTokenValues(syntax.split(" ")));
+            input = mergeArrays(input, getTokenValues(syntax.split(" "), getRegisteredTokens()));
         }
 
         // Get separators for this variation, or fallback to spaces

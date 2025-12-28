@@ -202,23 +202,6 @@ export const mockPageContext = (overrides?: Partial<PageContext>): PageContext =
 	...overrides,
 });
 
-/**
- * Helper to create minimal StyleContext for testing.
- * Provides all required properties with sensible defaults.
- * Use this to avoid boilerplate when creating test style context.
- */
-export const mockStyleContext = (overrides?: Partial<StyleContext>): StyleContext => ({
-	constant: {
-		shorthands: {
-			'border-width': ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'],
-			'border-color': ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color'],
-			'border-style': ['border-top-style', 'border-right-style', 'border-bottom-style', 'border-left-style'],
-			margin: ['margin-top', 'margin-right', 'margin-bottom', 'margin-left'],
-			padding: ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
-		},
-	},
-	...overrides,
-});
 
 /**
  * Helper to create minimal BarActionInstance for testing.

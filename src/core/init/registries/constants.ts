@@ -1,5 +1,5 @@
 // Registry functions
-import { registerStyle, registerUnit } from '@/src/core/block/style/registries';
+import { registerStyle, registerUnit, registerToken, registerTokenType } from '@/src/core/block/style/registries';
 
 import { registerBlock } from '@/src/core/block/instance/registries';
 
@@ -13,8 +13,10 @@ import { registerWorkbench } from '@/src/core/layout/workbench/registries';
 
 // Config sources
 import { CoreStyles } from '@/src/config/block/style/definition';
+import { CoreTokens } from '@/src/config/block/style/token';
+import { CoreTokenTypes } from '@/src/config/block/style/token';
 
-import { CoreBlocks } from '@/src/config/block';
+import { CoreBlocks } from '@/src/config/block/block';
 import { CoreUnits } from '@/src/config/block/style/unit';
 
 import { CorePanels, CoreTabs } from '@/src/config/layout/panel';
@@ -30,7 +32,7 @@ import { WorkbenchSelectAction } from '@/src/config/layout/page/action';
 import { CoreViewports } from '@/src/config/layout/viewport';
 
 // Validators
-import { validateStyleDefinition, validateUnitDefinition } from '@/src/core/block/style/helpers';
+import { validateStyleDefinition, validateUnitDefinition, validateTokenDefinition, validateTokenTypeDefinition } from '@/src/core/block/style/helpers';
 
 // Types
 import type { RegistryDefinition } from '@/src/core/init/registries/types';
@@ -38,18 +40,34 @@ import type { RegistryDefinition } from '@/src/core/init/registries/types';
 export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 	// Style Registries
 	{
-		category: 'Core/Block/Style',
-		items: CoreStyles,
-		registerFn: registerStyle,
-		getIdFn: (style: any) => style.key,
-		validateFn: validateStyleDefinition,
-	},
-	{
 		category: 'Core/Block/Style/Unit',
 		items: CoreUnits,
 		registerFn: registerUnit,
 		getIdFn: (unit: any) => unit.key,
 		validateFn: validateUnitDefinition,
+	},
+
+	{
+		category: 'Core/Block/Style/Token',
+		items: CoreTokens,
+		registerFn: registerToken,
+		getIdFn: (token: any) => token.key,
+		validateFn: validateTokenDefinition,
+	},
+	{
+		category: 'Core/Block/Style/Token/Type',
+		items: CoreTokenTypes,
+		registerFn: registerTokenType,
+		getIdFn: (tokenType: any) => tokenType.key,
+		validateFn: validateTokenTypeDefinition,
+	},
+
+	{
+		category: 'Core/Block/Style',
+		items: CoreStyles,
+		registerFn: registerStyle,
+		getIdFn: (style: any) => style.key,
+		validateFn: validateStyleDefinition,
 	},
 
 	// Block Registries
@@ -132,5 +150,3 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		validateFn: (viewport: any) => viewport && typeof viewport === 'object' && 'id' in viewport,
 	},
 ];
-
-console.log(REGISTRY_DEFINITIONS);

@@ -1,0 +1,30 @@
+.TokenInteger {
+	position: relative;
+
+	&[data-has-dropdown='true'] {
+		:global(.GenericInput) {
+			padding-right: 40%;
+		}
+	}
+
+	:global(.GenericInput) {
+		width: 100%;
+	}
+
+	:global(.DropdownReveal) {
+		width: 40%;
+		height: 80%;
+		position: absolute;
+		top: 10%;
+		right: 2%;
+
+		:global(.Toggle) {
+			height: 100%;
+
+			svg {
+				width: 10px;
+				height: 10px;
+			}
+		}
+	}
+}

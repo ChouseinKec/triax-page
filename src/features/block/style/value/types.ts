@@ -2,10 +2,10 @@ import type { StyleDefinition } from '@/src/core/block/style/types';
 
 /** Props for style value components.*/
 export interface BlockStyleValue {
-	/** Current value of the style property */
+	/** Current value of the style styleDefinition */
 	value: string;
-	/** The CSS property definition as an object */
-	property: StyleDefinition;
+	/** The CSS styleDefinition definition as an object */
+	styleDefinition: StyleDefinition;
 	/** Callback when the value changes */
 	onChange: (value: string) => void;
 }

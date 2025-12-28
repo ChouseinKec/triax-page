@@ -107,3 +107,10 @@ export function validateElement(input: unknown): ValidateResult<ReactElement> {
 
 	return { valid: false, message: `Invalid component: expected a React element, got ${typeof input}` };
 }
+
+export function validateInteger(input: unknown): ValidateResult<number> {
+	const numberValue = Number(input);
+	if (!Number.isInteger(numberValue)) return { valid: false, message: `Invalid integer: expected an integer, got ${input}` };
+
+	return { valid: true, value: numberValue };
+}

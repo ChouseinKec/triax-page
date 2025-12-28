@@ -10,4 +10,7 @@ export type OptionDefinition = {
 	category?: string;
 	/** Optional icon for the option (SVG element) */
 	icon?: ReactNode;
+} & {
+	/** Allows any additional properties to be added dynamically */
+	[key: string]: unknown;
 };

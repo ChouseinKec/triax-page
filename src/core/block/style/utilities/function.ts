@@ -1,6 +1,6 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { OptionFunctionDefinition } from '@/src/core/block/style/types/option';
+import type { TokenTypeDefinitionRecord } from '@/src/core/block/style/types/';
 
 // Utilities
 import { getValueToken } from './value';
@@ -37,8 +37,8 @@ export function extractFunctionValue(input: string): { name: string | undefined;
  * Filters options to return only those with category "function".
  * @param options - Array of option objects, each with a category property.
  */
-export function filterFunctionOptions(options: OptionDefinition[]): OptionFunctionDefinition[] {
-	return options.filter((opt): opt is OptionFunctionDefinition => opt.category === 'function');
+export function filterFunctionOptions(options: OptionDefinition[]): OptionDefinition[] {
+	return options.filter((opt): opt is OptionDefinition => opt.category === 'function');
 }
 
 /**
@@ -47,9 +47,9 @@ export function filterFunctionOptions(options: OptionDefinition[]): OptionFuncti
  * @param options - Array of function options to search in.
  * @param value - The value to match against.
  */
-export function matchFunctionOption(options: OptionFunctionDefinition[], value: string): OptionFunctionDefinition | undefined {
+export function matchFunctionOption(options: OptionDefinition[], value: string, registeredTokenTypes: TokenTypeDefinitionRecord): OptionDefinition | undefined {
 	if (options.length === 0) return undefined;
 
-	const match = options.find((opt) => getValueToken(value) === getValueToken(opt.value));
+	const match = options.find((opt) => getValueToken(value, registeredTokenTypes) === getValueToken(opt.value, registeredTokenTypes));
 	return match || options[0];
 }

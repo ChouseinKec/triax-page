@@ -1,9 +1,6 @@
 // Types
-import type { StyleDefinition, StyleKey, StyleDescription, StyleSyntax, StyleIcon, StyleLonghand, StyleValue } from '@/src/core/block/style/types/';
+import type { TokenDefinitionRecord, TokenTypeDefinitionRecord, StyleDefinition, StyleKey, StyleDescription, StyleSyntax, StyleIcon, StyleLonghand, StyleValue } from '@/src/core/block/style/types/';
 import type { ValidateResult } from '@/src/shared/types/result';
-
-// Constants
-import { DEFAULT_VALUE_SEPARATORS } from '@/src/core/block/style/constants';
 
 // Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
@@ -12,9 +9,6 @@ import { getSyntaxNormalized } from '@/src/core/block/style/utilities';
 
 // Helpers
 import { validateString, validateObject, validateArray } from '@/src/shared/helpers';
-
-// Registry
-import { getRegisteredStyle } from '@/src/core/block/style/registries';
 
 /**
  * Validates a CSS style key for block style operations.
@@ -120,11 +114,7 @@ export function validateStyleDefinition(styleDefinition: unknown): ValidateResul
  * @param styleKey - The CSS property key this value is for
  * @param styleValue - The CSS style value to validate
  */
-export function validateStyleValue(styleKey: unknown, styleValue: unknown): ValidateResult<StyleValue> {
-	// Validate the style key first
-	const keyValidation = validateStyleKey(styleKey);
-	if (!keyValidation.valid) return { valid: false, message: keyValidation.message };
-
+export function validateStyleValue(styleKey: StyleKey, styleDefinition: StyleDefinition, styleValue: unknown, registeredTokens: TokenDefinitionRecord, registeredTokenTypes: TokenTypeDefinitionRecord): ValidateResult<StyleValue> {
 	// Empty strings are valid CSS values (used to clear/reset properties)
 	if (styleValue === '') return { valid: true, value: '' };
 
@@ -132,19 +122,15 @@ export function validateStyleValue(styleKey: unknown, styleValue: unknown): Vali
 	const valueValidation = validateString(styleValue);
 	if (!valueValidation.valid) return { valid: false, message: valueValidation.message };
 
-	// Fetch the property definition from the STYLE_DEFINITIONS
-	const propertyDef = getRegisteredStyle(keyValidation.value);
-	if (!propertyDef) return { valid: false, message: `Invalid style property: '${styleKey}' is not a recognized CSS property` };
-
 	// Fetch the normalized syntax variations for the property
-	const syntaxNormalized = getSyntaxNormalized(propertyDef.syntax);
+	const syntaxNormalized = getSyntaxNormalized(styleDefinition.syntax, registeredTokens);
 	if (!syntaxNormalized) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
 
 	// Split the value into its components
-	const values = splitAdvanced(valueValidation.value, DEFAULT_VALUE_SEPARATORS);
+	const values = splitAdvanced(valueValidation.value);
 
 	// Convert the values to their token representations
-	const valueTokens = getValueTokens(values).join(' ');
+	const valueTokens = getValueTokens(values, registeredTokenTypes).join(' ');
 	if (valueTokens.length === 0) return { valid: false, message: `Invalid style value: '${styleValue}' contains no valid tokens for property '${styleKey}'` };
 
 	// Check if the tokenized value matches any of the valid syntax patterns

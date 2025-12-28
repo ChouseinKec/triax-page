@@ -1,4 +1,4 @@
-import type { StyleDefinition, StyleKey, StyleDefinitionRecord, UnitKey, UnitDefinition, UnitDefinitionRecord } from '@/src/core/block/style/types';
+import type { StyleDefinition, StyleKey, StyleDefinitionRecord, UnitKey, UnitDefinition, UnitDefinitionRecord, TokenDefinition, TokenDefinitionRecord, TokenKey, TokenType, TokenTypeDefinition, TokenTypeDefinitionRecord } from '@/src/core/block/style/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 /**
@@ -7,6 +7,8 @@ import type { ValidateResult } from '@/src/shared/types/result';
 class StyleRegistry {
 	private styles: Readonly<StyleDefinitionRecord> = {};
 	private units: Readonly<UnitDefinitionRecord> = {};
+	private tokens: Readonly<TokenDefinitionRecord> = {};
+	private tokenTypes: Readonly<TokenTypeDefinitionRecord> = {};
 
 	// ? --------------------------------------------------------- STYLE METHODS --------------------------------------------------------- //
 
@@ -36,6 +38,63 @@ class StyleRegistry {
 	 */
 	getRegisteredStyle(styleKey: StyleKey): StyleDefinition | undefined {
 		return this.styles[styleKey];
+	}
+
+	// ? --------------------------------------------------------- TOKEN METHODS --------------------------------------------------------- //
+	/**
+	 * Registers a token definition in the style registry.
+	 * @param tokenDefinition - The token definition to register
+	*/
+	registerToken(tokenDefinition: TokenDefinition): ValidateResult<TokenDefinition> {
+		// Check for duplicates
+		if (this.tokenTypes[tokenDefinition.key]) return { valid: false, message: `Token with key "${tokenDefinition.key}" already registered` };
+
+		// Register the token
+		this.tokens = { ...this.tokens, [tokenDefinition.key]: tokenDefinition };
+		return { valid: true, value: tokenDefinition };
+	}
+
+	/**
+	 * Retrieves all registered token definitions.
+	 */
+	getRegisteredTokens(): Readonly<TokenDefinitionRecord> {
+		return { ...this.tokens };
+	}
+
+	/**
+	 * Retrieves a specific token definition by its key.
+	 * @param tokenKey - The token key to retrieve
+	 */
+	getRegisteredToken(tokenKey: TokenKey): TokenDefinition | undefined {
+		return this.tokens[tokenKey];
+	}
+
+	/**
+	 * Registers a token type definition in the style registry.
+	 * @param tokenTypeDefinition - The token type definition to register
+	 */
+	registerTokenType(tokenTypeDefinition: TokenTypeDefinition): ValidateResult<TokenTypeDefinition> {
+		// Check for duplicates
+		if (this.tokenTypes[tokenTypeDefinition.key]) return { valid: false, message: `Token type "${tokenTypeDefinition.key}" already registered` };
+
+		// Registration logic would go here (not implemented in this snippet)
+		this.tokenTypes = { ...this.tokenTypes, [tokenTypeDefinition.key]: tokenTypeDefinition };
+		return { valid: true, value: tokenTypeDefinition };
+	}
+
+	/**
+	 * Retrieves all registered token type definitions.
+	 */
+	getRegisteredTokenTypes(): Readonly<TokenTypeDefinitionRecord> {
+		return { ...this.tokenTypes };
+	}
+
+	/**
+	 * Retrieves a specific token type definition by its type.
+	 * @param tokenType - The token type to retrieve
+	 */
+	getRegisteredTokenType(tokenType: TokenType): TokenTypeDefinition | undefined {
+		return this.tokenTypes[tokenType];
 	}
 
 	// ? --------------------------------------------------------- UNIT METHODS --------------------------------------------------------- //
@@ -80,3 +139,12 @@ export const getRegisteredStyle = (styleKey: StyleKey) => styleRegistry.getRegis
 export const registerUnit = (unitDefinition: UnitDefinition) => styleRegistry.registerUnit(unitDefinition);
 export const getRegisteredUnits = () => styleRegistry.getRegisteredUnits();
 export const getRegisteredUnit = (unitKey: UnitKey) => styleRegistry.getRegisteredUnit(unitKey);
+
+
+export const registerToken = (tokenDefinition: TokenDefinition) => styleRegistry.registerToken(tokenDefinition);
+export const getRegisteredTokens = () => styleRegistry.getRegisteredTokens();
+export const getRegisteredToken = (tokenKey: TokenKey) => styleRegistry.getRegisteredToken(tokenKey);
+
+export const registerTokenType = (tokenTypeDefinition: TokenTypeDefinition) => styleRegistry.registerTokenType(tokenTypeDefinition);
+export const getRegisteredTokenTypes = () => styleRegistry.getRegisteredTokenTypes();
+export const getRegisteredTokenType = (tokenType: TokenType) => styleRegistry.getRegisteredTokenType(tokenType);

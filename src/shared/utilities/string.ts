@@ -1,4 +1,4 @@
-type symbolType = '()' | '[]' | '{}' | '<>';
+type SymbolType = '()' | '[]' | '{}' | '<>';
 
 /**
  * Splits a string by one or more separators at the top level (not inside brackets or quotes).
@@ -6,7 +6,7 @@ type symbolType = '()' | '[]' | '{}' | '<>';
  * @param input - The string to split
  * @param separators - The separator string or array of separator strings
  */
-export function splitAdvanced(input: string, separators: string | string[]): string[] {
+export function splitAdvanced(input: string, separators: string | string[] = [' ', ',', '/']): string[] {
 	// Normalize separators to an array
 	const seps = Array.isArray(separators) ? separators : [separators];
 	// Result array to hold split parts
@@ -89,7 +89,7 @@ export function joinAdvanced(inputs: string[], separators: string[]): string {
  * @param input - The input string to search within.
  * @param symbol - The paired symbol type: 'parenthesis', 'bracket', 'brace', or 'angle'
  */
-export function extractBetween(input: string, symbol: symbolType): string | undefined {
+export function extractBetween(input: string, symbol: SymbolType): string | undefined {
 	// Map symbols to their opening and closing characters
 	const symbolMap: Record<string, { open: string; close: string }> = {
 		'()': { open: '(', close: ')' },

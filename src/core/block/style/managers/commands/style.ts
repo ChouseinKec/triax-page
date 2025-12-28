@@ -15,7 +15,7 @@ import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/he
 import { fetchPageContext } from '@/src/core/layout/page/helpers';
 
 // Registry
-import { getRegisteredStyles } from '@/src/core/block/style/registries';
+import { getRegisteredStyles, getRegisteredTokens, getRegisteredTokenTypes } from '@/src/core/block/style/registries';
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -33,7 +33,6 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 		.validate({
 			blockID: validateBlockID(blockID),
 			styleKey: validateStyleKey(styleKey),
-			value: validateStyleValue(styleKey, value),
 		})
 		.pick((data) => ({
 			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
@@ -46,6 +45,9 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 		}))
 		.pick(() => ({
 			pageContext: fetchPageContext(),
+		}))
+		.validate((data) => ({
+			value: validateStyleValue(data.styleKey, data.styleDefinition, value, getRegisteredTokens(), getRegisteredTokenTypes()),
 		}))
 		.operate((data) => ({
 			updatedStyles: updateBlockStyle(
@@ -91,7 +93,6 @@ export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 			blockStyles: pickBlockStyles(data.blockInstance),
 			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
 		}))
-
 		.pick(() => ({
 			pageContext: fetchPageContext(),
 		}))
@@ -125,13 +126,16 @@ export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 			blockID: validateBlockID(blockID),
 			styleKey: validateStyleKey(styleKey),
 		})
+		.pick((data) => ({
+			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
+		}))
 		.execute();
 	if (!results) return;
 
 	navigator.clipboard
 		.readText()
 		.then((text) => {
-			const safeValue = validateStyleValue(results.styleKey, text);
+			const safeValue = validateStyleValue(results.styleKey, results.styleDefinition, text, getRegisteredTokens(), getRegisteredTokenTypes());
 			if (!safeValue.valid) return devLog.error(`[BlockManager → pasteBlockStyle] ${safeValue.message}`);
 
 			setBlockStyle(results.blockID, results.styleKey, safeValue.value);

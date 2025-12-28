@@ -1,0 +1,14 @@
+// Types
+import type { OptionDefinition } from '@/src/shared/components/types/option';
+
+/** Props for number style value editor components. */
+export type TokenNumberProps = {
+	/** Current numeric value as string */
+	value: string;
+
+	/** Available options for the number token */
+	options: OptionDefinition[];
+
+	/** Callback when the value changes */
+	onChange: (value: string) => void;
+};
