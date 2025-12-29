@@ -1,5 +1,5 @@
 // Types
-import type { TokenParam, TokenSyntax, StyleValue } from '@/src/core/block/style/types';
+import type { TokenOptionParams, TokenParam, TokenRaw,TokenCanonical, StyleValue } from '@/src/core/block/style/types';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 
 // Utilities
@@ -10,9 +10,13 @@ import { isValueInteger } from '@/src/shared/utilities/value';
  * Checks if the input string is a valid CSS data integer (e.g., '<integer>').
  * @param input - The string to check.
  */
-export function getTokenType(token: string): 'integer' | undefined {
-	if (token === '<integer>') return 'integer';
+export function getTokenType(tokenRaw: TokenRaw): 'integer' | undefined {
+	if (tokenRaw === '<integer>') return 'integer';
+	return undefined;
+}
 
+export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
+	if( tokenRaw.startsWith('<integer') && tokenRaw.endsWith('>')) return '<integer>';
 	return undefined;
 }
 
@@ -30,11 +34,11 @@ export function getValueToken(styleValue: StyleValue): '<integer>' | undefined {
 
 /**
  * Extracts the type arguments (e.g. range, min/max, step) from a CSS data type string.
- * @param tokenSyntax - The CSS data type string (e.g., '<length [0,10]>').
+ * @param tokenRaw - The CSS data type string (e.g., '<length [0,10]>').
  *
  */
-export function getTokenParam(tokenSyntax: TokenSyntax): TokenParam | undefined {
-	const range = extractBetween(tokenSyntax, '[]');
+export function getTokenParam(tokenRaw: TokenRaw): TokenParam | undefined {
+	const range = extractBetween(tokenRaw, '[]');
 	if (!range) return undefined;
 
 	const rangeValues = range.split(',');
@@ -49,9 +53,9 @@ export function getTokenParam(tokenSyntax: TokenSyntax): TokenParam | undefined 
  *
  * @param params - The parameters containing the token syntax and registry
  */
-export function createOption(params: TokenOptionParams): OptionDefinition {
-	const tokenSyntax = params.syntax.syntaxRaw;
-	const param = getTokenParam(tokenSyntax);
+export function createOption(params: TokenOptionParams): OptionDefinition | undefined {
+	const tokenRaw = params.tokenRaw;
+	const param = getTokenParam(tokenRaw);
 
 	return {
 		name: 'integer',

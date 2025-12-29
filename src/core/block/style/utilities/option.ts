@@ -1,9 +1,9 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenTypeDefinitionRecord } from '@/src/core/block/style/types';
+import type { UnitDefinitionRecord, StyleDefinitionRecord, TokenDefinitionRecord, TokenTypeDefinitionRecord, TokenRaw, StyleKey } from '@/src/core/block/style/types';
 
 // Utilities
-import { getTokenType, getTokenCanonical, getValueTokens } from '@/src/core/block/style/utilities';
+import { getTokenType, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/utilities';
 
 /**
  * Checks if a token is a valid option for a given slot, given the current values and all valid variations.
@@ -13,8 +13,8 @@ import { getTokenType, getTokenCanonical, getValueTokens } from '@/src/core/bloc
  * @param validValueSet - Set of all valid value strings (normalized)
  * @param currentTokens - The current value tokens for all slots (canonicalized)
  */
-export function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
-	const tokenCanonical = getTokenCanonical(token);
+export function isSlotOptionValid(token: string, slotIndex: number, validValueSet: string[], currentTokens: string[], tokenTypeDefinitions: TokenTypeDefinitionRecord): boolean {
+	const tokenCanonical = getTokenCanonical(token, tokenTypeDefinitions);
 	if (!tokenCanonical) return false;
 
 	// Always allow if the current value for this slot matches the candidate token
@@ -23,6 +23,7 @@ export function isSlotOptionValid(token: string, slotIndex: number, validValueSe
 	// Replace only the relevant slot and check validity
 	const testTokens = currentTokens.slice();
 	testTokens[slotIndex] = tokenCanonical;
+
 	const testString = testTokens.join(' ').trim();
 	const matches = validValueSet.find((value) => value.startsWith(testString));
 
@@ -36,14 +37,32 @@ export function isSlotOptionValid(token: string, slotIndex: number, validValueSe
  * @param token - The token string (e.g., 'auto', '<number>', '<length>', 'fit-content(...)')
  * @param styleKey - The name of the CSS property being edited (for keyword options)
  */
-export function createOption(token: string, registeredTokenTypes: TokenTypeDefinitionRecord): OptionDefinition | OptionDefinition[] | undefined {
-	const tokenType = getTokenType(token, registeredTokenTypes);
+export function createOption(styleKey: StyleKey, tokenRaw: TokenRaw, tokenTypeDefinitions: TokenTypeDefinitionRecord, tokenDefinitions: TokenDefinitionRecord, styleDefinitions: StyleDefinitionRecord, unitDefinitions: UnitDefinitionRecord): OptionDefinition | OptionDefinition[] | undefined {
+	const tokenType = getTokenType(tokenRaw, tokenTypeDefinitions);
 	if (!tokenType) return undefined;
 
-	const tokenDefinition = registeredTokenTypes[tokenType];
-	if (!tokenDefinition) return undefined;
+	const tokenTypeDefinition = tokenTypeDefinitions[tokenType];
+	if (!tokenTypeDefinition) return undefined;
 
-	return tokenDefinition.createOption(token);
+	const tokenCanonical = getTokenCanonical(tokenRaw, tokenTypeDefinitions);
+	if (!tokenCanonical) return undefined;
+
+	const tokenBase = getTokenBase(tokenRaw, tokenTypeDefinitions);
+	if (!tokenBase) return undefined;
+
+	const params = {
+		tokenDefinitions,
+		tokenTypeDefinitions,
+		styleDefinitions,
+		unitDefinitions,
+
+		tokenRaw,
+		tokenCanonical,
+		tokenBase,
+		styleKey,
+	};
+
+	return tokenTypeDefinition.createOption(params);
 }
 
 /**
@@ -55,9 +74,9 @@ export function createOption(token: string, registeredTokenTypes: TokenTypeDefin
  * @param values - The current value tokens for all slots (user input, not yet canonicalized)
  * @param styleKey - The name of the CSS property being edited (for keyword options)
  */
-export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], registeredTokenTypes: TokenTypeDefinitionRecord): OptionDefinition[][] {
+export function createOptionTable(styleKey: StyleKey, syntaxNormalized: string[], syntaxSet: Set<string>[], values: string[], tokenTypeDefinitions: TokenTypeDefinitionRecord, tokenDefinitions: TokenDefinitionRecord, styleDefinitions: StyleDefinitionRecord, unitDefinitions: UnitDefinitionRecord): OptionDefinition[][] {
 	// Normalize the current values to canonical tokens
-	const valueTokens = getValueTokens(values, registeredTokenTypes);
+	const valueTokens = getValueTokens(values, tokenTypeDefinitions);
 
 	// Build the options table for each slot
 	return syntaxSet.map((tokenSet, setIndex) => {
@@ -65,13 +84,13 @@ export function createOptionTable(syntaxNormalized: string[], syntaxSet: Set<str
 
 		// Use flatMap for concise option flattening
 		return [...tokenSet].flatMap((token) => {
-			const tokenCanonical = getTokenCanonical(token);
+			const tokenCanonical = getTokenCanonical(token, tokenTypeDefinitions);
 			if (!tokenCanonical) return [];
 
 			// If the token matches the current value for this slot, or is a valid option
 			// for this slot in the context of the current values, create the option
-			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens)) {
-				const option = createOption(token, registeredTokenTypes);
+			if (isSlotOptionValid(token, setIndex, syntaxNormalized, valueTokens, tokenTypeDefinitions)) {
+				const option = createOption(styleKey, token, tokenTypeDefinitions, tokenDefinitions, styleDefinitions, unitDefinitions);
 				return Array.isArray(option) ? option : option ? [option] : [];
 			}
 			return [];

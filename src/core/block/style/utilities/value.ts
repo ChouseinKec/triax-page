@@ -1,8 +1,9 @@
 // Utilities
 import { getTokenCanonical } from '@/src/core/block/style/utilities';
+import { devLog } from '@/src/shared/utilities/dev';
 
 // Types
-import type { TokenType, TokenTypeDefinitionRecord, StyleValue } from '@/src/core/block/style/types';
+import type { TokenTypeKey, TokenTypeDefinitionRecord, StyleValue } from '@/src/core/block/style/types';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 
 /**
@@ -10,15 +11,16 @@ import type { OptionDefinition } from '@/src/shared/components/types/option';
  * Uses registered token types ordered by priority.
  * @param input - The CSS value string to classify.
  */
-export function getValueType(styleValue: StyleValue, registeredTokenTypes: TokenTypeDefinitionRecord): TokenType | undefined {
-	const sortedTypes = Object.values(registeredTokenTypes).sort((a, b) => a.priority - b.priority);
+export function getValueType(styleValue: StyleValue, tokenTypeDefinitions: TokenTypeDefinitionRecord): TokenTypeKey | undefined {
+	const sortedTypes = Object.values(tokenTypeDefinitions).sort((a, b) => a.priority - b.priority);
 
 	for (const typeDef of sortedTypes) {
 		const valueType = typeDef.getValueType(styleValue);
 		if (valueType) return valueType;
 	}
 
-	return undefined;
+	// Log unrecognized value for debugging
+	return devLog.warn('Unrecognized CSS value type:', styleValue), undefined;
 }
 
 /**
@@ -27,9 +29,9 @@ export function getValueType(styleValue: StyleValue, registeredTokenTypes: Token
  * If the value type is not recognized, returns undefined.
  * @param input - The CSS value string to convert.
  */
-export function getValueToken(styleValue: StyleValue, registeredTokenTypes: TokenTypeDefinitionRecord): string | undefined {
+export function getValueToken(styleValue: StyleValue, tokenTypeDefinitions: TokenTypeDefinitionRecord): string | undefined {
 	// Sort token types by priority
-	const sortedTypes = Object.values(registeredTokenTypes).sort((a, b) => a.priority - b.priority);
+	const sortedTypes = Object.values(tokenTypeDefinitions).sort((a, b) => a.priority - b.priority);
 
 	// Try to get the value token from each type definition
 	for (const typeDef of sortedTypes) {
@@ -38,7 +40,7 @@ export function getValueToken(styleValue: StyleValue, registeredTokenTypes: Toke
 	}
 
 	// Fallback: return the canonical form
-	return getTokenCanonical(styleValue);
+	return getTokenCanonical(styleValue, tokenTypeDefinitions);
 }
 
 /**
@@ -47,8 +49,8 @@ export function getValueToken(styleValue: StyleValue, registeredTokenTypes: Toke
  * Filters out any unrecognized values (returns null for those).
  * @param inputs - An array of CSS value strings to convert.
  */
-export function getValueTokens(styleValues: StyleValue[], registeredTokenTypes: TokenTypeDefinitionRecord): string[] {
-	return styleValues.map((styleValue) => getValueToken(styleValue, registeredTokenTypes)).filter((token): token is string => token !== undefined);
+export function getValueTokens(styleValues: StyleValue[], tokenTypeDefinitions: TokenTypeDefinitionRecord): string[] {
+	return styleValues.map((styleValue) => getValueToken(styleValue, tokenTypeDefinitions)).filter((token): token is string => token !== undefined);
 }
 
 /**
@@ -57,11 +59,9 @@ export function getValueTokens(styleValues: StyleValue[], registeredTokenTypes: 
  * Falls back to the first option's type if no prioritized types are available.
  * @param options - Array of option definitions containing type information
  */
-export function getValueDefaultType(options: OptionDefinition[]): TokenType | undefined {
-	if (!options || !Array.isArray(options) || options.length === 0) return undefined;
-
+export function getValueDefaultType(options: OptionDefinition[]): TokenTypeKey | undefined {
 	// Get all unique value types available in options (flatten in case of nested arrays)
-	const allTypes = new Set(options.flat().map((option) => option.type as TokenType));
+	const allTypes = new Set(options.flat().map((option) => option.type as TokenTypeKey));
 
 	// Prioritize certain types for better UX
 	if (allTypes.has('length')) return 'length';
@@ -70,5 +70,5 @@ export function getValueDefaultType(options: OptionDefinition[]): TokenType | un
 	if (allTypes.has('function')) return 'function';
 
 	// Fallback to first option's type
-	return options[0]?.type as TokenType;
+	return options[0]?.type as TokenTypeKey;
 }

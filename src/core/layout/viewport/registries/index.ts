@@ -3,7 +3,7 @@ import type { ViewportDefinition, ViewportID } from '@/src/core/layout/viewport/
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateViewport } from '@/src/core/layout/viewport/helpers/validators';
+import { validateViewportDefinition } from '@/src/core/layout/viewport/helpers/validators';
 
 /**
  * Class-based viewport registry for managing viewport definitions
@@ -17,7 +17,7 @@ class ViewportRegistryClass {
 	 * @returns Success status with optional error message
 	 */
 	registerViewport(viewport: ViewportDefinition): ValidateResult<ViewportDefinition> {
-		const validation = validateViewport(viewport);
+		const validation = validateViewportDefinition(viewport);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates

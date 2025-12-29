@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
 
 // Utilities
 import { parseSyntax, MAX_MULTIPLIER_DEPTH } from './parse';
@@ -9,7 +9,7 @@ import { parseSyntax, MAX_MULTIPLIER_DEPTH } from './parse';
  * This is used to determine if the syntax is a bracketed group.
  * @param syntax - The syntax string to check for brackets.
  */
-export function hasBrackets(syntax: StyleSyntax): boolean {
+export function hasBrackets(syntax: StyleSyntaxRaw): boolean {
 	return syntax.startsWith('[') && syntax.endsWith(']');
 }
 
@@ -18,7 +18,7 @@ export function hasBrackets(syntax: StyleSyntax): boolean {
  * This is used to determine if the syntax is a bracketed group that can be repeated.
  * @param syntax - The syntax string to check for a bracketed group with a multiplier.
  */
-export function hasBracketsMultiplier(syntax: StyleSyntax): boolean {
+export function hasBracketsMultiplier(syntax: StyleSyntaxRaw): boolean {
 	return /^\[.*\](\*|\+|\?|\{\d+(,\d+)?\}|#)$/.test(syntax);
 }
 
@@ -26,7 +26,7 @@ export function hasBracketsMultiplier(syntax: StyleSyntax): boolean {
  * Parses an optional group in brackets.
  * @param s - The syntax string (e.g. '[a b]')
  */
-export function parseBrackets(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseBrackets(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const inner = syntax.slice(1, -1);
 	const parsed = parseSyntax(inner);
 
@@ -47,7 +47,7 @@ export function parseBrackets(syntax: StyleSyntax): StyleSyntaxParsed {
  * Handles group extraction, recursive parsing, and multiplier logic internally.
  * @param syntax - The syntax string to parse, expected to be in the format [group]multiplier (e.g., [a b]+).
  */
-export function parseBracketsMultiplier(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseBracketsMultiplier(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	// syntax is expected to be something like: [group]multiplier
 	const match = syntax.match(/^(\[.*\])(\*|\+|\?|#|\{\d+(,\d+)?\})$/);
 	if (!match) return [syntax];

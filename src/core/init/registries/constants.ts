@@ -33,6 +33,12 @@ import { CoreViewports } from '@/src/config/layout/viewport';
 
 // Validators
 import { validateStyleDefinition, validateUnitDefinition, validateTokenDefinition, validateTokenTypeDefinition } from '@/src/core/block/style/helpers';
+import { validateBlockDefinition } from '@/src/core/block/instance/helpers';
+import { validatePanelDefinition, validatePanelTabDefinition } from '@/src/core/layout/panel/helpers';
+import { validateBarDefinition } from '@/src/core/layout/bar/helpers';
+import { validateWorkbenchDefinition } from '@/src/core/layout/workbench/helpers';
+import { validateViewportDefinition } from '@/src/core/layout/viewport/helpers';
+import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition, validateActionDefinition } from '@/src/core/layout/page/helpers';
 
 // Types
 import type { RegistryDefinition } from '@/src/core/init/registries/types';
@@ -76,7 +82,7 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		items: CoreBlocks,
 		registerFn: registerBlock,
 		getIdFn: (block: any) => block.type,
-		validateFn: (block: any) => block && typeof block === 'object' && 'type' in block,
+		validateFn: validateBlockDefinition,
 	},
 
 	// Layout Registries
@@ -85,21 +91,21 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		items: CorePanels,
 		registerFn: registerPanel,
 		getIdFn: (panel: any) => panel.id,
-		validateFn: (panel: any) => panel && typeof panel === 'object' && 'id' in panel,
+		validateFn: validatePanelDefinition,
 	},
 	{
 		category: 'Core/Panel/Tab',
 		items: CoreTabs,
 		registerFn: registerPanelTab,
 		getIdFn: (tab: any) => tab.id,
-		validateFn: (tab: any) => tab && typeof tab === 'object' && 'id' in tab,
+		validateFn: validatePanelTabDefinition,
 	},
 	{
 		category: 'Core/Bar',
 		items: CoreBars,
 		registerFn: registerBar,
 		getIdFn: (bar: any) => bar.id,
-		validateFn: (bar: any) => bar && typeof bar === 'object' && 'id' in bar,
+		validateFn: validateBarDefinition,
 	},
 
 	// Page Registries
@@ -108,21 +114,21 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		items: CoreDevices,
 		registerFn: registerDevice,
 		getIdFn: (device: any) => device.value,
-		validateFn: (device: any) => device && typeof device === 'object' && 'value' in device,
+		validateFn: validateDeviceDefinition,
 	},
 	{
 		category: 'Core/Orientation',
 		items: CoreOrientations,
 		registerFn: registerOrientation,
 		getIdFn: (orientation: any) => orientation.value,
-		validateFn: (orientation: any) => orientation && typeof orientation === 'object' && 'value' in orientation,
+		validateFn: validateOrientationDefinition,
 	},
 	{
 		category: 'Core/Pseudo',
 		items: CorePseudos,
 		registerFn: registerPseudo,
 		getIdFn: (pseudo: any) => pseudo.value,
-		validateFn: (pseudo: any) => pseudo && typeof pseudo === 'object' && 'value' in pseudo,
+		validateFn: validatePseudoDefinition,
 	},
 
 	// Workbench Registries
@@ -131,14 +137,14 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		items: CoreWorkbenches,
 		registerFn: registerWorkbench,
 		getIdFn: (workbench: any) => workbench.id,
-		validateFn: (workbench: any) => workbench && typeof workbench === 'object' && 'id' in workbench,
+		validateFn: validateWorkbenchDefinition,
 	},
 	{
 		category: 'Core/Workbench/Action',
 		items: [WorkbenchSelectAction],
 		registerFn: registerAction,
 		getIdFn: (action: any) => action.id,
-		validateFn: (action: any) => action && typeof action === 'object' && 'id' in action,
+		validateFn: validateActionDefinition,
 	},
 
 	// Viewport Registries
@@ -147,6 +153,6 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		items: CoreViewports,
 		registerFn: registerViewport,
 		getIdFn: (viewport: any) => viewport.id,
-		validateFn: (viewport: any) => viewport && typeof viewport === 'object' && 'id' in viewport,
+		validateFn: validateViewportDefinition,
 	},
 ];

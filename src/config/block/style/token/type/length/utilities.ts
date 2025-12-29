@@ -1,14 +1,13 @@
 // Types
 import type { UnitType, UnitKey } from '@/src/core/block/style/types';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenSyntax, StyleValue, TokenParam } from '@/src/core/block/style/types';
+import type { TokenRaw, StyleValue, TokenParam, TokenCanonical, TokenOptionParams } from '@/src/core/block/style/types';
 
 // Utilities
-import { getTokenBase } from '@/src/core/block/style/utilities';
 import { extractBetween } from '@/src/shared/utilities/string';
 
 // Registry
-import { getRegisteredUnit, getRegisteredUnits } from '@/src/core/block/style/registries';
+import { getRegisteredUnit } from '@/src/core/block/style/registries';
 
 /**
  * Extracts the numeric value from a CSS length string (e.g., '10px', '25%', '0.1rem').
@@ -89,6 +88,7 @@ export function extractLengthDefaults(options: Array<{ category?: string; name: 
 export function getLengthType(input: string): UnitType | undefined {
 	const unit = extractLengthUnit(input) as UnitKey;
 	const unitDef = unit ? getRegisteredUnit(unit) : undefined;
+
 	return unitDef?.type;
 }
 
@@ -96,8 +96,21 @@ export function getLengthType(input: string): UnitType | undefined {
  * Checks if a value is a CSS length (e.g., <length>, <percentage>).
  * @param input - The string to check.
  */
-export function getTokenType(input: string): 'length' | undefined {
-	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(input)) return 'length';
+export function getTokenType(tokenRaw: TokenRaw): 'length' | undefined {
+	if (['<length>', '<percentage>', '<angle>', '<flex>'].includes(tokenRaw)) return 'length';
+
+	return undefined;
+}
+
+export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
+	if (!tokenRaw.startsWith('<') && !tokenRaw.endsWith('>')) return undefined;
+
+	if(tokenRaw.startsWith('<length-percentage') && tokenRaw.endsWith('>')) return undefined;
+
+	if (tokenRaw.startsWith('<length') && tokenRaw.endsWith('>')) return '<length>';
+	if (tokenRaw.startsWith('<percentage') && tokenRaw.endsWith('>')) return '<percentage>';
+	if (tokenRaw.startsWith('<angle') && tokenRaw.endsWith('>')) return '<angle>';
+	if (tokenRaw.startsWith('<flex') && tokenRaw.endsWith('>')) return '<flex>';
 
 	return undefined;
 }
@@ -133,11 +146,11 @@ export function getValueToken(styleValue: StyleValue): `<${UnitType}>` | undefin
 
 /**
  * Extracts the type arguments (e.g. range, min/max, step) from a CSS data type string.
- * @param tokenSyntax - The CSS data type string (e.g., '<length [0,10]>').
+ * @param tokenRaw - The CSS data type string (e.g., '<length [0,10]>').
  *
  */
-export function getTokenParam(tokenSyntax: TokenSyntax): TokenParam | undefined {
-	const range = extractBetween(tokenSyntax, '[]');
+export function getTokenParam(tokenRaw: TokenRaw): TokenParam | undefined {
+	const range = extractBetween(tokenRaw, '[]');
 	if (!range) return undefined;
 
 	const rangeValues = range.split(',');
@@ -150,29 +163,32 @@ export function getTokenParam(tokenSyntax: TokenSyntax): TokenParam | undefined 
 /**
  * Creates an array of OptionlengthDefinition objects for a given length token.
  *
- * @param params - The parameters containing the token syntax and registry
+ * @param token - The length token string (e.g., '<length [0,100]>')
  */
-export function createOption(params: TokenOptionParams): OptionDefinition[] {
-	const token = params.syntax.syntaxRaw;
+export function createOption(params: TokenOptionParams): OptionDefinition[] | undefined {
 	// Get the base name of the token and check if it's a valid length group
-	const baseName = getTokenBase(token) as UnitType;
+	const tokenBase = params.tokenBase;
+	const tokenRaw = params.tokenRaw;
+	const unitDefinitions = params.unitDefinitions;
+
+	const typeDefault = params.tokenDefinitions['<length>']?.default;
+	if (!typeDefault) return undefined;
 
 	// Get registered units and filter by type
-	const registeredUnits = getRegisteredUnits();
-	const unitOptions = Object.values(registeredUnits)
-		.filter((unit) => unit.type === baseName)
+	const unitOptions = Object.values(unitDefinitions)
+		.filter((unit) => unit.type === tokenBase)
 		.map((unit) => ({
 			name: unit.key,
-			value: unit.default,
-			category: 'length' as const,
-			type: 'length' as const,
+			value: `${typeDefault}${unit.key}`,
+			category: 'length',
+			type: 'length',
 		}));
 
 	// If no units found for this type, return undefined
-	if (unitOptions.length === 0) return [];
+	if (unitOptions.length === 0) return undefined;
 
 	// Get the range parameters for the token
-	const param = getTokenParam(token);
+	const param = getTokenParam(tokenRaw);
 
 	// If no range is specified, return the unit options as is
 	if (!param || param.type !== 'range') return unitOptions;

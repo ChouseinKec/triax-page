@@ -1,9 +1,9 @@
 // Types
-import type { WorkbenchInstance, WorkbenchID, WorkbenchIcon, WorkbenchOrder, WorkbenchTitle, WorkbenchRender } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition, WorkbenchID, WorkbenchIcon, WorkbenchOrder, WorkbenchTitle, WorkbenchRender } from '@/src/core/layout/workbench/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isWorkbenchDefinitionValid, isWorkbenchIDValid, isWorkbenchIconValid, isWorkbenchOrderValid, isWorkbenchRenderValid, isWorkbenchTitleValid } from '@/src/core/layout/workbench/utilities';
+import { validateString, validateInteger, validateFunction, validateElement, validateObject } from '@/src/shared/helpers/validators';
 
 /**
  * Validates a workbench ID for workbench operations.
@@ -12,8 +12,10 @@ import { isWorkbenchDefinitionValid, isWorkbenchIDValid, isWorkbenchIconValid, i
  * @param id - The workbench ID to validate
  */
 export function validateWorkbenchID(id: unknown): ValidateResult<WorkbenchID> {
-	if (!isWorkbenchIDValid(id)) return { valid: false, message: `Workbench ID must be a valid string, got: ${id}` };
-	return { valid: true, value: id as WorkbenchID };
+	const stringValidation = validateString(id);
+	if (!stringValidation.valid) return stringValidation;
+
+	return { valid: true, value: stringValidation.value as WorkbenchID };
 }
 
 /**
@@ -23,8 +25,10 @@ export function validateWorkbenchID(id: unknown): ValidateResult<WorkbenchID> {
  * @param order - The workbench order to validate
  */
 export function validateWorkbenchOrder(order: unknown): ValidateResult<WorkbenchOrder> {
-	if (!isWorkbenchOrderValid(order)) return { valid: false, message: `Workbench order must be a valid number, got: ${order}` };
-	return { valid: true, value: order as WorkbenchOrder };
+	const integerValidation = validateInteger(order);
+	if (!integerValidation.valid) return integerValidation;
+
+	return { valid: true, value: integerValidation.value as WorkbenchOrder };
 }
 
 /**
@@ -34,8 +38,10 @@ export function validateWorkbenchOrder(order: unknown): ValidateResult<Workbench
  * @param title - The workbench title to validate
  */
 export function validateWorkbenchTitle(title: unknown): ValidateResult<WorkbenchTitle> {
-	if (!isWorkbenchTitleValid(title)) return { valid: false, message: `Workbench title must be a valid string, got: ${title}` };
-	return { valid: true, value: title as WorkbenchTitle };
+	const stringValidation = validateString(title);
+	if (!stringValidation.valid) return stringValidation;
+
+	return { valid: true, value: stringValidation.value as WorkbenchTitle };
 }
 
 /**
@@ -45,8 +51,10 @@ export function validateWorkbenchTitle(title: unknown): ValidateResult<Workbench
  * @param render - The workbench render to validate
  */
 export function validateWorkbenchRender(render: unknown): ValidateResult<WorkbenchRender> {
-	if (!isWorkbenchRenderValid(render)) return { valid: false, message: `Workbench render must be a valid function, got: ${render}` };
-	return { valid: true, value: render as WorkbenchRender };
+	const functionValidation = validateFunction(render);
+	if (!functionValidation.valid) return functionValidation;
+
+	return { valid: true, value: functionValidation.value as WorkbenchRender };
 }
 
 /**
@@ -56,8 +64,13 @@ export function validateWorkbenchRender(render: unknown): ValidateResult<Workben
  * @param icon - The workbench icon to validate
  */
 export function validateWorkbenchIcon(icon: unknown): ValidateResult<WorkbenchIcon> {
-	if (!isWorkbenchIconValid(icon)) return { valid: false, message: `Workbench icon must be valid, got: ${icon}` };
-	return { valid: true, value: icon as WorkbenchIcon };
+	const elementValidation = validateElement(icon);
+	if (elementValidation.valid) return { valid: true, value: elementValidation.value as WorkbenchIcon };
+
+	const stringValidation = validateString(icon);
+	if (stringValidation.valid) return { valid: true, value: stringValidation.value as WorkbenchIcon };
+
+	return { valid: false, message: `Workbench icon must be a string or React element, got: ${typeof icon}` };
 }
 
 /**
@@ -66,23 +79,24 @@ export function validateWorkbenchIcon(icon: unknown): ValidateResult<WorkbenchIc
  *
  * @param workbench - The workbench definition to validate
  */
-export function validateWorkbench(workbench: unknown): ValidateResult<WorkbenchInstance> {
-	if (!isWorkbenchDefinitionValid(workbench)) return { valid: false, message: `Workbench must be an object with required properties, got: ${typeof workbench}` };
+export function validateWorkbenchDefinition(workbench: unknown): ValidateResult<WorkbenchDefinition> {
+	const objectValidation = validateObject(workbench, ['id', 'title', 'icon', 'order', 'render']);
+	if (!objectValidation.valid) return objectValidation;
 
-	const idValidation = validateWorkbenchID(workbench.id);
+	const idValidation = validateWorkbenchID(objectValidation.value.id);
 	if (!idValidation.valid) return idValidation;
 
-	const titleValidation = validateWorkbenchTitle(workbench.title);
+	const titleValidation = validateWorkbenchTitle(objectValidation.value.title);
 	if (!titleValidation.valid) return titleValidation;
 
-	const iconValidation = validateWorkbenchIcon(workbench.icon);
+	const iconValidation = validateWorkbenchIcon(objectValidation.value.icon);
 	if (!iconValidation.valid) return iconValidation;
 
-	const orderValidation = validateWorkbenchOrder(workbench.order);
+	const orderValidation = validateWorkbenchOrder(objectValidation.value.order);
 	if (!orderValidation.valid) return orderValidation;
 
-	const renderValidation = validateWorkbenchRender(workbench.render);
+	const renderValidation = validateWorkbenchRender(objectValidation.value.render);
 	if (!renderValidation.valid) return renderValidation;
 
-	return { valid: true, value: workbench as WorkbenchInstance };
+	return { valid: true, value: objectValidation.value as unknown as WorkbenchDefinition };
 }

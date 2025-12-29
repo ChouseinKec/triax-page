@@ -1,14 +1,22 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 import type { StyleValue } from '@/src/core/block/style/types';
-
+import type { TokenOptionParams, TokenRaw, TokenCanonical } from '@/src/core/block/style/types';
 
 /**
  * Checks if the input string is a valid CSS data keyword (e.g., 'auto', 'fit-content').
  * @param input - The string to check.
  */
-export function getTokenType(token: string): 'keyword' | undefined {
-	return /^[a-z-]+$/.test(token) ? 'keyword' : undefined;
+export function getTokenType(tokenRaw: TokenRaw): 'keyword' | undefined {
+	return /^[a-z-]+$/.test(tokenRaw) ? 'keyword' : undefined;
+}
+
+export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
+	if(tokenRaw.startsWith('<') || tokenRaw.endsWith('>')) return undefined;
+	
+	if (/^[a-z-]+$/.test(tokenRaw)) return tokenRaw;
+
+	return undefined;
 }
 
 /**
@@ -33,16 +41,19 @@ export function getValueToken(styleValue: StyleValue): string | undefined {
  * @param token - The keyword token string (e.g., 'auto')
  * @param key - The name of the CSS property being edited (for keyword options)
  */
-export function createOption(token: string): OptionDefinition {
+export function createOption(params: TokenOptionParams): OptionDefinition | undefined {
+	const tokenBase = params.tokenRaw;
+	const styleDefinitions = params.styleDefinitions;
+	const styleKey = params.styleKey;
+
+	const styleIcons = styleDefinitions?.[styleKey]?.icons;
+	const optionIcon = styleIcons?.[tokenBase];
+
 	return {
-		name: token,
-		value: token,
+		name: tokenBase,
+		value: tokenBase,
 		category: 'keyword',
-		icon: (
-			<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-				<path d="M8.5 2.5a.5.5 0 0 0-1 0v3.586L4.5 4.793a.5.5 0 0 0-.707.707l2.5 2.5v.707l-2.5 2.5a.5.5 0 0 0 .707.707L7.5 9.914V13.5a.5.5 0 0 0 1 0V9.914l2.5 2.207a.5.5 0 0 0 .707-.707l-2.5-2.5v-.707l2.5-2.5a.5.5 0 0 0-.707-.707L8.5 6.086V2.5z" />
-			</svg>
-		),
+		icon: optionIcon,
 		type: 'keyword',
 	};
 }

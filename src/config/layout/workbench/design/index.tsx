@@ -2,9 +2,9 @@
 import WorkbenchDesignRender from "@/src/config/layout/workbench/design/render";
 
 // Types
-import type { WorkbenchInstance } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
 
-export const WorkbenchDesignDefinition: WorkbenchInstance = {
+export const WorkbenchDesignDefinition: WorkbenchDefinition = {
 	id: 'design',
 	title: 'Design (CSS)',
 	order: 20,

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 // Types
-import type { PageActionInstance } from '@/src/core/layout/page/types';
+import type { ActionDefinition } from '@/src/core/layout/page/types';
 
 // Registry
 import { getRegisteredPageActions } from '@/src/core/layout/page/registries';
@@ -15,7 +15,7 @@ import { getRegisteredPageActions } from '@/src/core/layout/page/registries';
  * @example
  * const actions = usePageActions() // Returns sorted array of page actions
  */
-export function usePageActions(): PageActionInstance[] {
+export function usePageActions(): ActionDefinition[] {
 	const actions = Object.values(getRegisteredPageActions()).sort((a, b) => a.order - b.order);
 	return useMemo(() => actions, [actions]);
 }

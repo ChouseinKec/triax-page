@@ -63,6 +63,8 @@ export type RenderStyleRowOptions = {
 export function renderStyleRow(options: RenderStyleRowOptions): React.ReactElement | null {
     if (options?.hidden) return null;
     const { blockID, propertyName } = options;
+
+
     if (!canBlockHaveStyle(blockID, propertyName)) return null;
 
     const styleDefinition = getRegisteredStyle(propertyName);
@@ -75,9 +77,7 @@ export function renderStyleRow(options: RenderStyleRowOptions): React.ReactEleme
             label={options.label ?? null}
             styles={options?.styles}
             disabled={options?.disabled}
-            content={() => (
-                <StyleValueRenderer blockID={blockID} propertyName={propertyName} />
-            )}
+            content={() => (<StyleValueRenderer blockID={blockID} propertyName={propertyName} />)}
             actions={() => <PropertyActions blockID={blockID} property={propertyName} />}
         />
     );

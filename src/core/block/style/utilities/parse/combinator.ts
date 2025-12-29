@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
 
 // Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
@@ -11,7 +11,7 @@ import { parseSyntax } from './parse';
  * This is used to determine if the syntax has multiple options that can be combined.
  * @param syntax - The syntax string to check for double bar combinators.
  */
-export function hasDoubleBar(syntax: StyleSyntax): boolean {
+export function hasDoubleBar(syntax: StyleSyntaxRaw): boolean {
 	return splitAdvanced(syntax, '||').length > 1;
 }
 
@@ -20,7 +20,7 @@ export function hasDoubleBar(syntax: StyleSyntax): boolean {
  * This is used to determine if the syntax has multiple conditions that must all be satisfied.
  * @param syntax - The syntax string to check for double ampersand combinators.
  */
-export function hasDoubleAmp(syntax: StyleSyntax): boolean {
+export function hasDoubleAmp(syntax: StyleSyntaxRaw): boolean {
 	return splitAdvanced(syntax, '&&').length > 1;
 }
 
@@ -29,7 +29,7 @@ export function hasDoubleAmp(syntax: StyleSyntax): boolean {
  * This is used to determine if the syntax has multiple options that can be selected independently.
  * @param syntax - The syntax string to check for single bar combinators.
  */
-export function hasSingleBar(syntax: StyleSyntax): boolean {
+export function hasSingleBar(syntax: StyleSyntaxRaw): boolean {
 	return splitAdvanced(syntax, '|').length > 1;
 }
 
@@ -37,7 +37,7 @@ export function hasSingleBar(syntax: StyleSyntax): boolean {
  * Checks if the syntax contains a top-level comma (,) separator.
  * @param syntax - The syntax string to check for comma separators.
  */
-export function hasComma(syntax: StyleSyntax): boolean {
+export function hasComma(syntax: StyleSyntaxRaw): boolean {
 	return splitAdvanced(syntax, ',').length > 1;
 }
 
@@ -45,7 +45,7 @@ export function hasComma(syntax: StyleSyntax): boolean {
  * Checks if the syntax contains a sequence combinator (space) at the top level.
  * @param syntax - The syntax string to check for sequence combinators.
  */
-export function hasSequence(syntax: StyleSyntax): boolean {
+export function hasSequence(syntax: StyleSyntaxRaw): boolean {
 	return splitAdvanced(syntax, ' ').length > 1;
 }
 
@@ -55,7 +55,7 @@ export function hasSequence(syntax: StyleSyntax): boolean {
  * then joins each combination with a comma.
  * @param syntax - The syntax string to parse.
  */
-export function parseComma(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseComma(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const parts = splitAdvanced(syntax, ',');
 	if (parts.length > 1) {
 		const parsedParts = parts.map((part) => parseSyntax(part.trim()));
@@ -70,7 +70,7 @@ export function parseComma(syntax: StyleSyntax): StyleSyntaxParsed {
  * This handles cases like 'a || b c' where 'b c' can be permuted and combined with 'a'.
  * @param syntax - The syntax string to parse.
  */
-export function parseDoubleBar(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseDoubleBar(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const parts = splitAdvanced(syntax, '||');
 	if (parts.length > 1) {
 		// Generate all non-empty subsets and their permutations
@@ -94,7 +94,7 @@ export function parseDoubleBar(syntax: StyleSyntax): StyleSyntaxParsed {
  * This handles cases like 'a && b c' where 'b c' can be permuted and combined with 'a'.
  * @param syntax - The syntax string to parse.
  */
-export function parseDoubleAmp(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseDoubleAmp(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const parts = splitAdvanced(syntax, '&&');
 	if (parts.length > 1) {
 		const combos = generatePermutations(parts).map((perm) => perm.join(' '));
@@ -113,7 +113,7 @@ export function parseDoubleAmp(syntax: StyleSyntax): StyleSyntaxParsed {
  * This handles cases like 'a | b c' where 'b c' can be combined with 'a'.
  * @param syntax - The syntax string to parse.
  */
-export function parseSingleBar(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseSingleBar(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const parts = splitAdvanced(syntax, '|');
 	if (parts.length > 1) {
 		const results = parts.flatMap((part) => parseSyntax(part.trim()));
@@ -130,7 +130,7 @@ export function parseSingleBar(syntax: StyleSyntax): StyleSyntaxParsed {
  * This ensures that multipliers and nested syntax are expanded for each part.
  * @param syntax - The syntax string to parse.
  */
-export function parseSequence(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseSequence(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	let sep = null;
 	if (splitAdvanced(syntax, ' ').length > 1) sep = ' ';
 	else if (splitAdvanced(syntax, '/').length > 1) sep = '/';

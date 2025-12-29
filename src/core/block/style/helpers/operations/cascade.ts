@@ -65,7 +65,7 @@ export function cascadeStyleShorthandValue(styleKeys: StyleKey[], blockStyles: B
  * @param blockStyles - The block's complete style definition
  * @param styleContext - The current page state including selected device, orientation, and pseudo
  */
-export function cascadeBlockStyles(blockStyles: BlockStyles, registeredStyles: StyleDefinitionRecord, pageContext: PageContext): OperateResult<StyleRecord> {
+export function cascadeBlockStyles(blockStyles: BlockStyles, styleDefinitions: StyleDefinitionRecord, pageContext: PageContext): OperateResult<StyleRecord> {
 	// Collect all unique style keys using the collector helper
 	const keyResult = collectBlockStyleKeys(blockStyles);
 	if (!keyResult.success) return { success: false, error: keyResult.error };
@@ -76,7 +76,7 @@ export function cascadeBlockStyles(blockStyles: BlockStyles, registeredStyles: S
 	// Iterate through each collected style key
 	for (const styleKey of keyResult.data) {
 		// Get the style definition for the key
-		const styleDefinition = pickStyleDefinition(styleKey, registeredStyles);
+		const styleDefinition = pickStyleDefinition(styleKey, styleDefinitions);
 		if (!styleDefinition.success) return { success: false, error: `No style definition found for key '${styleKey}'.` };
 
 		// Resolve the style using cascade logic

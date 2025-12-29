@@ -9,7 +9,7 @@ import { useSelectedWorkbenchID } from "@/src/core/layout/page/managers";
 import { getWorkbenchInstance } from "@/src/core/layout/workbench/managers";
 
 // Types
-import { WorkbenchInstance } from "@/src/core/layout/workbench/types";
+import { WorkbenchDefinition } from "@/src/core/layout/workbench/types";
 
 // Utilities
 import { devLog } from "@/src/shared/utilities/dev";
@@ -21,7 +21,7 @@ import { devLog } from "@/src/shared/utilities/dev";
  * @param workbench - The workbench definition to render
  * @returns The rendered workbench component
  */
-const Workbench: React.FC<{ workbench: WorkbenchInstance }> = ({ workbench }) => {
+const Workbench: React.FC<{ workbench: WorkbenchDefinition }> = ({ workbench }) => {
     return workbench.render();
 };
 

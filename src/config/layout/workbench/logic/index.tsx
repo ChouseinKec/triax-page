@@ -2,9 +2,9 @@
 import WorkbenchLogicRender from '@/src/config/layout/workbench/logic/render';
 
 // Types
-import type { WorkbenchInstance } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
 
-export const WorkbenchLogicDefinition: WorkbenchInstance = {
+export const WorkbenchLogicDefinition: WorkbenchDefinition = {
     id: 'logic',
     title: 'Logic (JS)',
     order: 20,

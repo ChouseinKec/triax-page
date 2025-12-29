@@ -13,7 +13,7 @@ import { cascadeBlockStyles, generateCSSSelector, generateCSSRule } from '@/src/
  * @param blockID - The block's unique identifier for selector generation
  * @param pageContext - The current page state including registered pseudos
  */
-function renderBlockStylesAllPseudos(styles: BlockStyles, blockID: BlockID, registeredStyles: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
+function renderBlockStylesAllPseudos(styles: BlockStyles, blockID: BlockID, styleDefinitions: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
 	let css = '';
 
 	// Iterate over all registered pseudos
@@ -28,7 +28,7 @@ function renderBlockStylesAllPseudos(styles: BlockStyles, blockID: BlockID, regi
 		};
 
 		// Render styles for the current pseudo and append to CSS string
-		const result = renderBlockStylesSinglePseudo(styles, blockID, registeredStyles, pseudoPageState);
+		const result = renderBlockStylesSinglePseudo(styles, blockID, styleDefinitions, pseudoPageState);
 		if (!result.success) return result;
 		css += result.data;
 	}
@@ -43,9 +43,9 @@ function renderBlockStylesAllPseudos(styles: BlockStyles, blockID: BlockID, regi
  * @param blockID - The block's unique identifier for selector generation
  * @param pageContext - The current page state including registered pseudos
  */
-function renderBlockStylesSinglePseudo(styles: BlockStyles, blockID: BlockID, registeredStyles: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
+function renderBlockStylesSinglePseudo(styles: BlockStyles, blockID: BlockID, styleDefinitions: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
 	// Cascade styles for the selected pseudo
-	const cssStylesRes = cascadeBlockStyles(styles, registeredStyles, pageContext);
+	const cssStylesRes = cascadeBlockStyles(styles, styleDefinitions, pageContext);
 	if (!cssStylesRes.success) return { success: false, error: cssStylesRes.error };
 
 	// Generate the CSS selector for the block and selected pseudo
@@ -68,10 +68,10 @@ function renderBlockStylesSinglePseudo(styles: BlockStyles, blockID: BlockID, re
  * @param blockID - The block's unique identifier for selector generation
  * @param pageContext - The current page state including registered pseudos
  */
-export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, registeredStyles: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
+export function renderBlockStyles(styles: BlockStyles, blockID: BlockID, styleDefinitions: StyleDefinitionRecord, pageContext: PageContext): OperateResult<string> {
 	// If pseudo is 'all', render styles for all pseudos
-	if (pageContext.store.selectedPseudoID === pageContext.constant.defaultPseudoID) return renderBlockStylesAllPseudos(styles, blockID, registeredStyles, pageContext);
+	if (pageContext.store.selectedPseudoID === pageContext.constant.defaultPseudoID) return renderBlockStylesAllPseudos(styles, blockID, styleDefinitions, pageContext);
 
 	// Otherwise, render styles for the selected pseudo only
-	return renderBlockStylesSinglePseudo(styles, blockID, registeredStyles, pageContext);
+	return renderBlockStylesSinglePseudo(styles, blockID, styleDefinitions, pageContext);
 }

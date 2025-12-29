@@ -2,7 +2,7 @@
 import type { TokenTypeDefinition } from '@/src/core/block/style/types/token';
 
 // Utilities
-import { getValueType, getTokenType, getValueToken, createOption } from '@/src/config/block/style/token/type/function/utilities';
+import { getValueType, getTokenType, getValueToken,getTokenCanonical, createOption } from '@/src/config/block/style/token/type/function/utilities';
 
 // Component
 import TokenFunction from '@/src/config/block/style/token/type/function/component';
@@ -10,7 +10,8 @@ import TokenFunction from '@/src/config/block/style/token/type/function/componen
 export const FUNCTION_DEFINITION: TokenTypeDefinition = {
 	key: 'function',
 	priority: 50,
-	renderComponent: (value, onChange, options) => <TokenFunction value={value} onChange={onChange} options={options} />,
+	getTokenComponent: (value, onChange, options) => <TokenFunction value={value} onChange={onChange} options={options} />,
+	getTokenCanonical,
 	getTokenType,
 	getValueType,
 	getValueToken,

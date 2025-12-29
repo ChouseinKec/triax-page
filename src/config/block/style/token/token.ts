@@ -28,7 +28,7 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	{
 		key: '<length>',
 		syntax: '<length>',
-		default: '0px',
+		default: '0',
 		type: 'length',
 	},
 	{

@@ -1,6 +1,6 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenSyntax, StyleValue } from '@/src/core/block/style/types';
+import type { TokenOptionParams, StyleValue, TokenCanonical, TokenRaw } from '@/src/core/block/style/types';
 
 // Utilities
 import { isValueLink } from '@/src/shared/utilities/value';
@@ -21,8 +21,14 @@ export function getValueToken(styleValue: StyleValue): '<link>' | undefined {
  * Checks if the input string is a valid CSS data link (e.g., '<link>').
  * @param input - The string to check.
  */
-export function getTokenType(input: string): 'link' | undefined {
-	return input === '<link>' ? 'link' : undefined;
+export function getTokenType(tokenRaw: TokenRaw): 'link' | undefined {
+	return tokenRaw === '<link>' ? 'link' : undefined;
+}
+
+export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
+	if (tokenRaw.startsWith('<link') && tokenRaw.endsWith('>')) return '<link>';
+	
+	return undefined;
 }
 
 /**
@@ -30,10 +36,15 @@ export function getTokenType(input: string): 'link' | undefined {
  *
  * @param params - The parameters containing the token syntax and registry
  */
-export function createOption(params: TokenOptionParams): OptionDefinition {
+export function createOption(params: TokenOptionParams): OptionDefinition | undefined {
+	const tokenDefinitions = params.tokenDefinitions;
+
+	const tokenDefault = tokenDefinitions['<link>']?.default;
+	if (!tokenDefault) return undefined;
+
 	return {
 		name: 'link',
-		value: 'https://example.com',
+		value: tokenDefault,
 		category: 'other',
 		icon: undefined,
 		type: 'link',

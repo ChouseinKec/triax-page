@@ -1,28 +1,27 @@
 // Type
-import type { TokenType, TokenParam, TokenBase, TokenCanonical, TokenTypeDefinitionRecord, TokenDefinitionRecord } from '@/src/core/block/style/types';
+import type { TokenRaw, TokenTypeKey, TokenParam, TokenBase, TokenCanonical, TokenTypeDefinitionRecord, TokenDefinitionRecord } from '@/src/core/block/style/types';
 
 // Utilities
-import { extractBetween } from '@/src/shared/utilities/string';
+import { devLog } from '@/src/shared/utilities/dev';
 
 /**
  * Extracts the canonical type string from a CSS data type string.
  * E.g., 'fit-content(10px)' -> 'fit-content()'
  * @param input - The CSS data type string (e.g., 'fit-content(10px)', '<length [0,10]>').
  */
-export function getTokenCanonical(input: string): TokenCanonical | undefined {
-	if (!input) return undefined;
+export function getTokenCanonical(tokenRaw: TokenRaw, tokenTypeDefinitions: TokenTypeDefinitionRecord): TokenCanonical | undefined {
+	// Check each registered token type to see if it matches
+	for (const typeDef of Object.values(tokenTypeDefinitions)) {
+		const canonical = typeDef.getTokenCanonical(tokenRaw);
 
-	// Function: e.g. fit-content(<length [10,20]>)
-	const fnMatch = input.match(/^([a-zA-Z0-9-]+)\((.*)\)$/);
-	if (fnMatch) return `${fnMatch[1]}()`;
+		if (canonical) return canonical;
+	}
 
-	// Dimension: e.g. <length [0,10]>
-	const dimMatch = input.match(/^<([a-zA-Z0-9-]+)(\s*\[[^\]]+\])?>$/);
-	if (dimMatch) return `<${dimMatch[1]}>`;
+	// Generic regex check for tokens with ranges, e.g., '<integer [100,50]>' -> '<integer>'
+	const match = tokenRaw.match(/^<([^>\s]+)(?:\s+\[[^\]]+\])?>$/);
+	if (match) return `<${match[1]}>`;
 
-	// Keyword: e.g. auto
-	if (/^[a-zA-Z-]+$/.test(input)) return input;
-	return undefined;
+	return devLog.warn('Unrecognized token format for canonical extraction:', tokenRaw), undefined;
 }
 
 /**
@@ -31,8 +30,9 @@ export function getTokenCanonical(input: string): TokenCanonical | undefined {
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
  *
  */
-export function getTokenBase(input: string): TokenBase | undefined {
-	const canonical = getTokenCanonical(input);
+export function getTokenBase(tokenRaw: TokenRaw, tokenTypeDefinitions: TokenTypeDefinitionRecord): TokenBase | undefined {
+	const canonical = getTokenCanonical(tokenRaw, tokenTypeDefinitions);
+	// if (!canonical) return devLog.warn('Unrecognized token format for base extraction:', tokenRaw), undefined;
 	if (!canonical) return undefined;
 
 	return canonical
@@ -41,57 +41,50 @@ export function getTokenBase(input: string): TokenBase | undefined {
 }
 
 /**
- * Extracts the range part from a CSS data type string, if present.
- * @param input - The CSS data type string (e.g., '<length [0,10]>').
- */
-export function getTokenRange(input: string): string | undefined {
-	const range = extractBetween(input, '[]');
-	return range ? `[${range}]` : undefined;
-}
-
-/**
  * Extracts the type arguments (e.g. range, min/max, step) from a CSS data type string.
  * @param input - The CSS data type string (e.g., '<length [0,10]>', 'fit-content(<length> <percentage>)').
  *
  */
-export function getTokenParam(input: string, registeredTokenTypes: TokenTypeDefinitionRecord): TokenParam | undefined {
-	const tokenType = getTokenType(input, registeredTokenTypes);
+export function getTokenParam(tokenRaw: TokenRaw, tokenTypeDefinitions: TokenTypeDefinitionRecord): TokenParam | undefined {
+	const tokenType = getTokenType(tokenRaw, tokenTypeDefinitions);
 	if (!tokenType) return undefined;
 
-	const getParamFn = registeredTokenTypes[tokenType].getTokenParam;
+	const getParamFn = tokenTypeDefinitions[tokenType]?.getTokenParam;
 	if (!getParamFn) return undefined;
 
-	return getParamFn(input);
+	return getParamFn(tokenRaw);
 }
 
 /**
  * Determines the group of a CSS data token based on its format.
  * @param input - The CSS data token string (e.g., 'auto', '<length>', 'fit-content(10px)', '10').
  */
-export function getTokenType(input: string, registeredTokenTypes: TokenTypeDefinitionRecord): TokenType | undefined {
+export function getTokenType(tokenRaw: TokenRaw, tokenTypeDefinitions: TokenTypeDefinitionRecord): TokenTypeKey | undefined {
 	// Extract the canonical form of the token
-	const canonical = getTokenCanonical(input);
-	if (!canonical) return undefined;
+	const canonical = getTokenCanonical(tokenRaw, tokenTypeDefinitions);
+	if (!canonical) return devLog.warn('No canonical form found for token:', tokenRaw), undefined;
 
 	// Check each registered token type to see if it matches
-	for (const typeDef of Object.values(registeredTokenTypes)) {
+	for (const typeDef of Object.values(tokenTypeDefinitions)) {
 		// Use the type definition's getTokenType function to check for a match
 		if (typeDef.getTokenType(canonical)) return typeDef.key;
 	}
 
+	return tokenRaw;
+
 	// No matching token type found
-	return undefined;
+	return devLog.warn('No matching token type found for canonical:', canonical), undefined;
 }
 
 /**
  * Converts a single token (e.g., <length>, <color>) to its default value.
  * @param token - The token string (without brackets or with brackets)
  */
-export function getTokenValue(token: string, registeredTokens: TokenDefinitionRecord): string | undefined {
-	const tokenCanonical = getTokenCanonical(token);
-	if (!tokenCanonical) return undefined;
+export function getTokenValue(tokenRaw: TokenRaw, tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord): string | undefined {
+	const tokenCanonical = getTokenCanonical(tokenRaw, tokenTypeDefinitions);
+	if (!tokenCanonical) return devLog.warn('No canonical form found for token:', tokenRaw), undefined;
 
-	const tokenDefinition = registeredTokens[tokenCanonical];
+	const tokenDefinition = tokenDefinitions[tokenCanonical];
 	return tokenDefinition ? tokenDefinition.default : tokenCanonical;
 }
 
@@ -99,8 +92,8 @@ export function getTokenValue(token: string, registeredTokens: TokenDefinitionRe
  * Converts an array of tokens to their default values.
  * @param tokens - An array of token strings (e.g., ['<length>', '<color>', '<angle>'])
  */
-export function getTokenValues(tokens: string[], registeredTokens: TokenDefinitionRecord): string[] {
-	return tokens.map((token) => getTokenValue(token, registeredTokens)).filter((token): token is string => token !== undefined);
+export function getTokenValues(tokens: string[], tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord): string[] {
+	return tokens.map((token) => getTokenValue(token, tokenDefinitions, tokenTypeDefinitions)).filter((token): token is string => token !== undefined);
 }
 
 /**
@@ -109,7 +102,7 @@ export function getTokenValues(tokens: string[], registeredTokens: TokenDefiniti
  * @param syntax - The CSS property syntax string (e.g. 'auto || <ratio>')
  * @param seen - (internal) Set of already expanded tokens to prevent infinite recursion
  */
-export function expandTokens(syntax: string, registeredTokens: TokenDefinitionRecord, seen = new Set<string>()): string {
+export function expandTokens(syntax: string, tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord, seen = new Set<string>()): string {
 	// Start with the input syntax string
 	let result = syntax;
 	// Find all <...> tokens in the string (e.g., <length>, <color>, etc.)
@@ -117,35 +110,37 @@ export function expandTokens(syntax: string, registeredTokens: TokenDefinitionRe
 
 	// Iterate over each matched token
 	for (const token of tokens || []) {
+		// console.log(token);
+
 		// Extract the base type from the token (e.g., 'length' from '<length>')
-		const tokenBase = getTokenBase(token);
+		const tokenBase = getTokenBase(token, tokenTypeDefinitions);
 		if (!tokenBase) continue; // Skip if no base type
 
 		// Get the canonical form of the token (e.g., '<length>')
-		const tokenCanonical = getTokenCanonical(token);
+		const tokenCanonical = getTokenCanonical(token, tokenTypeDefinitions);
 		if (!tokenCanonical) continue; // Skip if no canonical form
 		if (seen.has(tokenCanonical)) continue; // Prevent infinite recursion (circular references)
 
-		// Extract range/constraint (e.g., [0,100]) if present
-		const range = getTokenRange(token);
+		// Extract any range parameter from the token (e.g., '[0,10]')
+		const tokenParam = getTokenParam(token, tokenTypeDefinitions);
+		const range = tokenParam?.range;
 
 		// Look up the token definition in the registered tokens
-		const def = registeredTokens[tokenCanonical];
+		const def = tokenDefinitions[tokenCanonical];
+		if (!def) continue;
 
-		if (def?.syntax) {
-			// Mark this token as seen to prevent recursion
-			seen.add(tokenCanonical);
-			// Recursively expand the definition's syntax
-			let expanded = expandTokens(def.syntax, registeredTokens, seen);
+		// Mark this token as seen to prevent recursion
+		seen.add(tokenCanonical);
+		// Recursively expand the definition's syntax
+		let expanded = expandTokens(def.syntax, tokenDefinitions, tokenTypeDefinitions, seen);
 
-			// If the original token had a range, propagate it to all <...> tokens in the expanded string
-			if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
-			// Replace the token in the result string with its expanded form
-			result = result.replace(token, expanded);
+		// If the original token had a range, propagate it to all <...> tokens in the expanded string
+		if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
+		// Replace the token in the result string with its expanded form
+		result = result.replace(token, expanded);
 
-			// Remove from seen set after expansion
-			seen.delete(tokenCanonical);
-		}
+		// Remove from seen set after expansion
+		seen.delete(tokenCanonical);
 	}
 	// Return the fully expanded syntax string
 	return result;

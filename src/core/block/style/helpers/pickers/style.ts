@@ -34,8 +34,8 @@ export function pickStyleLonghand(styleDefinition: StyleDefinition): PickResult<
  * @param styleKey - the style key to look up
  * @param styleDefinitions - the record of all style definitions
  */
-export function pickStyleDefinition(styleKey: StyleKey, registeredStyles: StyleDefinitionRecord): PickResult<StyleDefinition> {
-	const styleDefinition = registeredStyles[styleKey];
+export function pickStyleDefinition(styleKey: StyleKey, styleDefinitions: StyleDefinitionRecord): PickResult<StyleDefinition> {
+	const styleDefinition = styleDefinitions[styleKey];
 	if (!styleDefinition) return { success: false, error: `Style definition not found for key: '${styleKey}'` };
 
 	return { success: true, data: styleDefinition };

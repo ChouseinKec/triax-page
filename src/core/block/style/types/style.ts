@@ -29,11 +29,16 @@ export type StyleTokenIconMap = Record<StyleKey, StyleIcon>;
  * It may contain data-type references like `<length>`, `<color>`, etc.
  * Taken from official CSS specifications.
  */
-export type StyleSyntax = string;
+export type StyleSyntaxRaw = string;
 
-
+/**
+ * Parsed representation of a CSS property syntax.
+ */
 export type StyleSyntaxParsed = string[];
 
+/**
+ * Set of valid CSS property syntaxes.
+ */
 export type StyleSyntaxSet = Set<string>[];
 
 /**
@@ -46,6 +51,7 @@ export type StyleSyntaxSeparators = string[][];
  * Represents a shorthand CSS property composed of multiple individual properties.
  */
 export type StyleLonghand = StyleKey[];
+
 
 /**
  * Represents a single CSS property definition, including its name, description, category,
@@ -69,7 +75,27 @@ export interface StyleDefinition {
 	 * It may contain data-type references like `<length>`, `<color>`, etc.
 	 * Taken from official CSS specifications.
 	 */
-	syntax: StyleSyntax;
+	syntax: StyleSyntaxRaw;
+
+	/**
+	 * Gets the parsed representation of the CSS property syntax.
+	 */
+	getSyntaxParsed(): StyleSyntaxParsed;
+
+	/**
+	 * Gets the normalized syntax for the CSS property.
+	 */
+	getSyntaxNormalized(): StyleSyntaxParsed;
+
+	/**
+	 * Gets the syntax set for the CSS property.
+	 */
+	getSyntaxSet(): StyleSyntaxSet;
+
+	/**
+	 * Gets the syntax separators for the CSS property.
+	 */
+	getSyntaxSeparators(): StyleSyntaxSeparators;
 
 	/**
 	 * Optional shorthand properties that this property is part of.
@@ -81,6 +107,7 @@ export interface StyleDefinition {
 	 */
 	icons?: StyleTokenIconMap;
 }
+
 
 export type StyleDefinitionRecord = Record<StyleKey, StyleDefinition>;
 

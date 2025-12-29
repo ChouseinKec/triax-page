@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
 
 // Utilities
 import { MAX_MULTIPLIER_DEPTH } from './parse';
@@ -10,7 +10,7 @@ import { MAX_MULTIPLIER_DEPTH } from './parse';
  * @param syntax - The syntax string to duplicate.
  * @param maxDepth - The maximum depth to duplicate the token.
  */
-export function duplicateToken(syntax: StyleSyntax, maxDepth: number): StyleSyntaxParsed {
+export function duplicateToken(syntax: StyleSyntaxRaw, maxDepth: number): StyleSyntaxParsed {
 	const arr: string[] = [];
 	for (let i = 1; i <= maxDepth; i++) {
 		arr.push(Array(i).fill(syntax).join(' '));
@@ -23,7 +23,7 @@ export function duplicateToken(syntax: StyleSyntax, maxDepth: number): StyleSynt
  * This is used to determine if the syntax has a multiplier that affects how many times the preceding token can occur.
  * @param syntax - The syntax string to check for a multiplier.
  */
-export function hasMultiplier(syntax: StyleSyntax): boolean {
+export function hasMultiplier(syntax: StyleSyntaxRaw): boolean {
 	return /[?+*]|\{\d+(,\d+)?\}$/.test(syntax);
 }
 
@@ -32,7 +32,7 @@ export function hasMultiplier(syntax: StyleSyntax): boolean {
  * This is used to handle cases where the preceding token can occur zero or one time.
  * @param syntax - The syntax string to parse.
  */
-export function parseMultiplierQuestion(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseMultiplierQuestion(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	return ['', syntax];
 }
 
@@ -42,7 +42,7 @@ export function parseMultiplierQuestion(syntax: StyleSyntax): StyleSyntaxParsed 
  * @param syntax - The syntax string to parse.
  * @param maxDepth - The maximum depth to duplicate the token.
  */
-export function parseMultiplierPlus(syntax: StyleSyntax, maxDepth: number = MAX_MULTIPLIER_DEPTH): StyleSyntaxParsed {
+export function parseMultiplierPlus(syntax: StyleSyntaxRaw, maxDepth: number = MAX_MULTIPLIER_DEPTH): StyleSyntaxParsed {
 	return duplicateToken(syntax, maxDepth);
 }
 
@@ -52,7 +52,7 @@ export function parseMultiplierPlus(syntax: StyleSyntax, maxDepth: number = MAX_
  * @param syntax - The syntax string to parse.
  * @param maxDepth - The maximum depth to duplicate the token.
  */
-export function parseMultiplierStar(syntax: StyleSyntax, maxDepth: number = MAX_MULTIPLIER_DEPTH): StyleSyntaxParsed {
+export function parseMultiplierStar(syntax: StyleSyntaxRaw, maxDepth: number = MAX_MULTIPLIER_DEPTH): StyleSyntaxParsed {
 	return ['', ...duplicateToken(syntax, maxDepth)];
 }
 
@@ -61,7 +61,7 @@ export function parseMultiplierStar(syntax: StyleSyntax, maxDepth: number = MAX_
  * Handles different multiplier types and returns an array of strings.
  * @param syntax - The syntax string to parse.
  */
-export function parseMultiplier(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseMultiplier(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	if (syntax.endsWith('?')) {
 		const base = syntax.slice(0, -1).trim();
 		return parseMultiplierQuestion(base);

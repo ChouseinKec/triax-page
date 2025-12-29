@@ -5,7 +5,7 @@ import type { StyleContext } from '@/src/core/block/style/types';
 import type { PageContext, DeviceInstance, OrientationInstance, PseudoInstance } from '@/src/core/layout/page/types';
 import type { BarInstance, BarActionInstance } from '@/src/core/layout/bar/types';
 import type { PanelInstance } from '@/src/core/layout/panel/types';
-import type { WorkbenchInstance } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
 
 /**
  * Helper to create a mock React element for testing.
@@ -291,11 +291,11 @@ export const mockPanelInstance = (overrides?: Partial<PanelInstance>): PanelInst
 });
 
 /**
- * Helper to create minimal WorkbenchInstance for testing.
+ * Helper to create minimal WorkbenchDefinition for testing.
  * Provides all required properties with sensible defaults.
  * Use this to avoid boilerplate when creating test workbench instances.
  */
-export const mockWorkbenchInstance = (overrides?: Partial<WorkbenchInstance>): WorkbenchInstance => ({
+export const mockWorkbenchInstance = (overrides?: Partial<WorkbenchDefinition>): WorkbenchDefinition => ({
 	id: 'test-workbench',
 	title: 'Test Workbench',
 	icon: mockReactElement(),

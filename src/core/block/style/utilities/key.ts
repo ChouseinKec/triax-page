@@ -2,6 +2,9 @@
 import type { StyleKey } from '@/src/core/block/style/types';
 import type { Side, Corner } from '@/src/shared/components/select/position/types';
 
+// Utilities
+import { devLog } from '@/src/shared/utilities/dev';
+
 /**
  * Generates a CSS property name based on the provided property, position, and optional suffix.
  * Handles multiple CSS property naming patterns:
@@ -37,5 +40,5 @@ export function generateStyleKey(styleKey: string, position?: Side | Corner, suf
 	}
 
 	// Fallback (should never reach here)
-	return undefined;
+	return devLog.error('Failed to generate style key with inputs:', { styleKey, position, suffix }), undefined;
 }

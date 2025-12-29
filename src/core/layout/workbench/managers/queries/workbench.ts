@@ -1,5 +1,5 @@
 // Types
-import type { WorkbenchInstance, WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition, WorkbenchID } from '@/src/core/layout/workbench/types';
 
 // Registry
 import { getRegisteredWorkbenchs } from '@/src/core/layout/workbench/registries';
@@ -20,7 +20,7 @@ export function getWorkbenchSelectedID(): WorkbenchID {
 /**
  * Gets all available device definitions for page queries.
  */
-export function getWorkbenchInstances(): WorkbenchInstance[] {
+export function getWorkbenchInstances(): WorkbenchDefinition[] {
 	return Object.values(getRegisteredWorkbenchs());
 }
 
@@ -29,7 +29,7 @@ export function getWorkbenchInstances(): WorkbenchInstance[] {
  *
  * @param workbenchID - The ID of the workbench to retrieve.
  */
-export function getWorkbenchInstance(workbenchID: WorkbenchID): WorkbenchInstance | null {
+export function getWorkbenchInstance(workbenchID: WorkbenchID): WorkbenchDefinition | null {
 	const workbenchs = getRegisteredWorkbenchs();
 	return workbenchs[workbenchID] || null;
 }

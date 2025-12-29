@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntax, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators, TokenDefinitionRecord } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/src/core/block/style/types/';
 
 // Utilities
 import { expandTokens, parseSyntax, getTokenCanonical, extractSeparators } from '@/src/core/block/style/utilities';
@@ -13,15 +13,16 @@ export function getSyntaxSet(syntaxParsed: StyleSyntaxParsed): StyleSyntaxSet {
 	return columnArrays.map((col) => new Set(col));
 }
 
-export function getSyntaxParsed(syntaxRaw: StyleSyntax, registeredTokens: TokenDefinitionRecord): StyleSyntaxParsed {
-	const expanded = expandTokens(syntaxRaw, registeredTokens);
+export function getSyntaxParsed(syntaxRaw: StyleSyntaxRaw, tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord): StyleSyntaxParsed {
+	const expanded = expandTokens(syntaxRaw, tokenDefinitions, tokenTypeDefinitions);
+	// console.log(syntaxRaw,' ------------------- ',expanded);
 	return parseSyntax(expanded);
 }
 
-export function getSyntaxNormalized(syntaxParsed: StyleSyntaxParsed): StyleSyntaxParsed {
+export function getSyntaxNormalized(syntaxParsed: StyleSyntaxParsed, tokenTypeDefinitions: TokenTypeDefinitionRecord): StyleSyntaxParsed {
 	return syntaxParsed.map((variation) =>
 		splitAdvanced(variation)
-			.map((token) => getTokenCanonical(token))
+			.map((token) => getTokenCanonical(token, tokenTypeDefinitions))
 			.join(' ')
 	);
 }

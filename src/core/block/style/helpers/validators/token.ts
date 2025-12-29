@@ -1,15 +1,15 @@
 // Types
-import type { TokenDefinition, TokenKey, TokenDefault, TokenType, TokenTypeDefinition, TokenPriority, TokenRenderFn, ValueTypeFn, TokenTypeFn, ValueTokenFn, TokenOptionFn } from '@/src/core/block/style/types/';
+import type { TokenDefinition, TokenKey, TokenDefault, TokenTypeKey, TokenTypeDefinition, TokenPriority, TokenGetTokenComponent, TokenGetValueTypeFn, TokenGetTokenCanonicalFn, TokenGetTokenTypeFn, TokenGetValueTokenFn, TokenCreateOptionFn } from '@/src/core/block/style/types/';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
 import { validateObject, validateString, validateFunction, validateInteger, validateElement } from '@/src/shared/helpers';
 
-export function validateTokenType(tokenType: unknown): ValidateResult<TokenType> {
+export function validateTokenType(tokenType: unknown): ValidateResult<TokenTypeKey> {
 	const validation = validateString(tokenType);
 	if (!validation.valid) return validation;
 
-	return { valid: true, value: validation.value as TokenType };
+	return { valid: true, value: validation.value as TokenTypeKey };
 }
 
 /**
@@ -45,11 +45,11 @@ export function validateTokenDefault(tokenDefault: unknown): ValidateResult<Toke
 	return { valid: true, value: stringResult.value as TokenDefault };
 }
 
-export function validateTokenRenderFn(tokenComponent: unknown): ValidateResult<TokenRenderFn> {
-	const elementResult = validateElement(tokenComponent);
-	if (!elementResult.valid) return elementResult;
+export function validateTokenComponentFn(tokenComponent: unknown): ValidateResult<TokenGetTokenComponent> {
+	const functionResult = validateFunction(tokenComponent);
+	if (!functionResult.valid) return functionResult;
 
-	return { valid: true, value: elementResult.value as TokenRenderFn };
+	return { valid: true, value: functionResult.value as TokenGetTokenComponent };
 }
 
 /**
@@ -64,47 +64,58 @@ export function validateTokenPriority(tokenPriority: unknown): ValidateResult<To
 }
 
 /**
+ * Validates a CSS data type token canonical function.
+ * @param tokenCanonicalFn - The token canonical function to validate
+ */
+export function validateTokenCanonicalFn(tokenCanonicalFn: unknown): ValidateResult<TokenGetTokenCanonicalFn> {
+	const functionResult = validateFunction(tokenCanonicalFn);
+	if (!functionResult.valid) return functionResult;
+
+	return { valid: true, value: functionResult.value as TokenGetTokenCanonicalFn };
+}
+
+/**
  * Validates a CSS data type token match function.
  * @param tokenMatchFn - The token match function to validate
  */
-export function validateTokenTypeFn(tokenTypeFn: unknown): ValidateResult<TokenTypeFn> {
+export function validateTokenTypeFn(tokenTypeFn: unknown): ValidateResult<TokenGetTokenTypeFn> {
 	const functionResult = validateFunction(tokenTypeFn);
 	if (!functionResult.valid) return functionResult;
 
-	return { valid: true, value: functionResult.value as TokenTypeFn };
+	return { valid: true, value: functionResult.value as TokenGetTokenTypeFn };
 }
 
 /**
  * Validates a CSS data type token validate function.
  * @param tokenValidateFn - The token validate function to validate
  */
-export function validateValueTypeFn(valueTypeFn: unknown): ValidateResult<ValueTypeFn> {
+export function validateValueTypeFn(valueTypeFn: unknown): ValidateResult<TokenGetValueTypeFn> {
 	const functionResult = validateFunction(valueTypeFn);
 	if (!functionResult.valid) return functionResult;
 
-	return { valid: true, value: functionResult.value as ValueTypeFn };
+	return { valid: true, value: functionResult.value as TokenGetValueTypeFn };
 }
 
 /**
  * Validates a CSS data type token option function.
  * @param tokenOptionFn - The token option function to validate
  */
-export function validateValueTokenFn(valueTokenFn: unknown): ValidateResult<ValueTokenFn> {
+export function validateValueTokenFn(valueTokenFn: unknown): ValidateResult<TokenGetValueTokenFn> {
 	const functionResult = validateFunction(valueTokenFn);
 	if (!functionResult.valid) return functionResult;
 
-	return { valid: true, value: functionResult.value as ValueTokenFn };
+	return { valid: true, value: functionResult.value as TokenGetValueTokenFn };
 }
 
 /**
  * Validates a CSS data type token option creation function.
  * @param tokenOptionFn - The token option creation function to validate
  */
-export function validateTokenOptionFn(tokenOptionFn: unknown): ValidateResult<TokenOptionFn> {
+export function validateTokenOptionFn(tokenOptionFn: unknown): ValidateResult<TokenCreateOptionFn> {
 	const functionResult = validateFunction(tokenOptionFn);
 	if (!functionResult.valid) return functionResult;
 
-	return { valid: true, value: functionResult.value as TokenOptionFn };
+	return { valid: true, value: functionResult.value as TokenCreateOptionFn };
 }
 
 /**
@@ -133,7 +144,7 @@ export function validateTokenDefinition(tokenDefinition: unknown): ValidateResul
 }
 
 export function validateTokenTypeDefinition(tokenTypeDefinition: unknown): ValidateResult<TokenTypeDefinition> {
-	const objectResult = validateObject(tokenTypeDefinition, ['key', 'priority', 'renderComponent', 'getValueType', 'getTokenType', 'getValueToken', 'createOption']);
+	const objectResult = validateObject(tokenTypeDefinition, ['key', 'priority', 'getTokenComponent', 'getValueType', 'getTokenType', 'getValueToken', 'createOption']);
 	if (!objectResult.valid) return objectResult;
 
 	const keyResult = validateTokenType(objectResult.value.key);
@@ -142,11 +153,14 @@ export function validateTokenTypeDefinition(tokenTypeDefinition: unknown): Valid
 	const priorityResult = validateTokenPriority(objectResult.value.priority);
 	if (!priorityResult.valid) return { valid: false, message: `Token type definition "priority" is invalid: ${priorityResult.message}` };
 
-	const componentResult = validateTokenRenderFn(objectResult.value.component);
-	if (!componentResult.valid) return { valid: false, message: `Token type definition "component" is invalid: ${componentResult.message}` };
+	const componentResult = validateTokenComponentFn(objectResult.value.getTokenComponent);
+	if (!componentResult.valid) return { valid: false, message: `Token type definition "getTokenComponent" is invalid: ${componentResult.message}` };
 
 	const getValueTypeResult = validateValueTypeFn(objectResult.value.getValueType);
 	if (!getValueTypeResult.valid) return { valid: false, message: `Token type definition "getValueType" is invalid: ${getValueTypeResult.message}` };
+
+	const getTokenCanonicalResult = validateTokenCanonicalFn(objectResult.value.getTokenCanonical);
+	if (!getTokenCanonicalResult.valid) return { valid: false, message: `Token type definition "getTokenCanonical" is invalid: ${getTokenCanonicalResult.message}` };
 
 	const getTokenTypeResult = validateTokenTypeFn(objectResult.value.getTokenType);
 	if (!getTokenTypeResult.valid) return { valid: false, message: `Token type definition "getTokenType" is invalid: ${getTokenTypeResult.message}` };

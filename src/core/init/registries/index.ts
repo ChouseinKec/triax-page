@@ -21,7 +21,10 @@ export function InitRegistry<T>(config: RegistryDefinition<T>) {
 	const { category, items, registerFn, getIdFn, validateFn } = config;
 
 	// Resolve items (supports lazy getter) and filter valid items if validator provided
-	const validItems = items.filter(validateFn);
+	const validItems = items.filter(item =>{
+		if(validateFn(item).valid) return item;
+	});
+	
 
 	if (validItems.length === 0) {
 		devLog.warn(`[Init → Registry]		      ❌ No valid core ${category.toLowerCase()}s found to register`);
@@ -34,6 +37,7 @@ export function InitRegistry<T>(config: RegistryDefinition<T>) {
 	for (const item of validItems) {
 		const id = getIdFn(item);
 		const result = registerFn(item);
+
 		if (result.valid) {
 			success++;
 		} else {

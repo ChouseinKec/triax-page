@@ -1,23 +1,23 @@
 // Types
-import type { WorkbenchInstance, WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchDefinition, WorkbenchID } from '@/src/core/layout/workbench/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validateWorkbench } from '@/src/core/layout/workbench/helpers/validators';
+import { validateWorkbenchDefinition } from '@/src/core/layout/workbench/helpers/validators';
 
 /**
  * Class-based workbench registry for managing workbench definitions
  */
 class WorkbenchRegistryClass {
-	private workbenches: Record<string, WorkbenchInstance> = {};
+	private workbenches: Record<string, WorkbenchDefinition> = {};
 
 	/**
 	 * Registers a workbench definition in the workbench registry.
 	 * @param workbench - The workbench definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerWorkbench(workbench: WorkbenchInstance): ValidateResult<WorkbenchInstance> {
-		const validation = validateWorkbench(workbench);
+	registerWorkbench(workbench: WorkbenchDefinition): ValidateResult<WorkbenchDefinition> {
+		const validation = validateWorkbenchDefinition(workbench);
 		if (!validation.valid) return { valid: false, message: validation.message };
 
 		// Check for duplicates
@@ -34,7 +34,7 @@ class WorkbenchRegistryClass {
 	 * Retrieves all registered workbench definitions.
 	 * @returns Readonly record of all registered workbenches keyed by their IDs.
 	 */
-	getRegisteredWorkbenchs(): Readonly<Record<string, WorkbenchInstance>> {
+	getRegisteredWorkbenchs(): Readonly<Record<string, WorkbenchDefinition>> {
 		return { ...this.workbenches };
 	}
 
@@ -43,7 +43,7 @@ class WorkbenchRegistryClass {
 	 * @param id - The workbench ID to retrieve.
 	 * @returns The workbench definition if found, undefined otherwise.
 	 */
-	getRegisteredWorkbench(id: WorkbenchID): WorkbenchInstance | undefined {
+	getRegisteredWorkbench(id: WorkbenchID): WorkbenchDefinition | undefined {
 		return this.workbenches[id];
 	}
 
@@ -53,6 +53,6 @@ class WorkbenchRegistryClass {
 const workbenchRegistry = new WorkbenchRegistryClass();
 
 // Export the registry instance methods
-export const registerWorkbench = (workbench: WorkbenchInstance) => workbenchRegistry.registerWorkbench(workbench);
+export const registerWorkbench = (workbench: WorkbenchDefinition) => workbenchRegistry.registerWorkbench(workbench);
 export const getRegisteredWorkbenchs = () => workbenchRegistry.getRegisteredWorkbenchs();
 export const getRegisteredWorkbench = (id: WorkbenchID) => workbenchRegistry.getRegisteredWorkbench(id);

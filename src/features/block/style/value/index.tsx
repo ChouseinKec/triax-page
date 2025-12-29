@@ -10,13 +10,13 @@ import type { BlockStyleValue } from "./types";
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
 import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/utilities";
 import { mergeArrays } from "@/src/shared/utilities/array";
-import { getSyntaxSet, getSyntaxNormalized, getSyntaxParsed, getSyntaxSeparators } from "@/src/core/block/style/utilities/syntax";
+import { devLog } from "@/src/shared/utilities/dev";
 
 // Components
 import BlockStyleSlots from "@/src/features/block/style/slots/component";
 
 // Registry
-import { getRegisteredTokenTypes, getRegisteredTokens } from "@/src/core/block/style/registries";
+import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/src/core/block/style/registries";
 
 /**
  * BlockStyleValue Component
@@ -35,16 +35,16 @@ import { getRegisteredTokenTypes, getRegisteredTokens } from "@/src/core/block/s
  */
 const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefinition }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the styleDefinition definition
-    const syntaxParsed = getSyntaxParsed(styleDefinition.syntax, getRegisteredTokens());
-    const syntaxSet = getSyntaxSet(syntaxParsed);
-    const syntaxNormalized = getSyntaxNormalized(syntaxParsed);
-    const syntaxSeparators = getSyntaxSeparators(syntaxParsed);
+    const syntaxParsed = styleDefinition.getSyntaxParsed();
+    const syntaxSet = styleDefinition.getSyntaxSet();
+    const syntaxNormalized = styleDefinition.getSyntaxNormalized();
+    const syntaxSeparators = styleDefinition.getSyntaxSeparators();
 
     // Split the value string into slots (e.g., ["10px", "auto"])
     const values = splitAdvanced(value);
 
     // Compute the possible slot options for each slot, based on current values and styleDefinition syntax
-    const slotsOptions = createOptionTable(syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes());
+    const slotsOptions = createOptionTable(styleDefinition.key, syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes(), getRegisteredTokens(), getRegisteredStyles(), getRegisteredUnits());
 
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = (input: string[]) => {
@@ -52,26 +52,28 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefi
 
         // Normalize updated values to canonical tokens
         const valueTokens = getValueTokens(input, getRegisteredTokenTypes()).join(" ");
-
         // Find the index of the matching variation with strict matching
         // This will return the index of the variation that matches the updated value tokens
         let variationIndex = syntaxNormalized.findIndex((value) => value === valueTokens)
+
 
         // If no matching variation is found,
         // Find the index of the matching variation with non-strict matching
         // This will return the index of the variation that starts with the updated value tokens
         // Needed for variations with tuple values
         if (variationIndex === -1) {
-            variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
+            // variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
+            variationIndex = 7;
 
             // If still no match, return early
             // This will prevent assignment of invalid syntax when the slot is set to "" or empty
-            if (variationIndex === -1) return;
+            if (variationIndex === -1) return devLog.warn("No matching syntax variation found for value tokens:", { valueTokens, syntaxParsed }), undefined;
+            
             const syntax = syntaxNormalized[variationIndex];
-            input = mergeArrays(input, getTokenValues(syntax.split(" "), getRegisteredTokens()));
+            input = mergeArrays(input, getTokenValues(syntax.split(" "), getRegisteredTokens(), getRegisteredTokenTypes()));
         }
 
-        // Get separators for this variation, or fallback to spaces
+        // Get separators for this variation
         const separators = syntaxSeparators[variationIndex]
 
         // Join values with the determined separators

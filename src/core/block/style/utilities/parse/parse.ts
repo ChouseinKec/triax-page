@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntax, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
 
 // Utilities
 import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './combinator';
@@ -42,7 +42,7 @@ export function normalizeSyntax(syntax: string): string {
  * Recursively parses the syntax string, handling combinators in precedence order.
  * @param syntax - The syntax string
  */
-export function parseSyntax(syntax: StyleSyntax): StyleSyntaxParsed {
+export function parseSyntax(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	const normalizedSyntax = normalizeSyntax(syntax.trim());
 
 	let results: StyleSyntaxParsed = [];

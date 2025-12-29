@@ -1,16 +1,23 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 import type { StyleValue } from '@/src/core/block/style/types';
+import type { TokenOptionParams, TokenRaw, TokenCanonical } from '@/src/core/block/style/types';
 
 // Utilities
 import { isValueColor } from '@/src/shared/utilities/value';
+
+export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
+	if (tokenRaw.startsWith('<color') && tokenRaw.endsWith('>')) return '<color>';
+
+	return undefined;
+}
 
 /**
  * Checks if the input string is a valid CSS data color (e.g., '<color>').
  * @param input - The string to check.
  */
-export function getTokenType(input: StyleValue): 'color' | undefined {
-	return input === '<color>' ? 'color' : undefined;
+export function getTokenType(tokenRaw: TokenRaw): 'color' | undefined {
+	return tokenRaw === '<color>' ? 'color' : undefined;
 }
 
 /**
@@ -36,10 +43,15 @@ export function getValueToken(styleValue: StyleValue): '<color>' | undefined {
  *
  * @param token - The color token string (e.g., 'color')
  */
-export function createOption(token: string): OptionDefinition {
+export function createOption(params: TokenOptionParams): OptionDefinition | undefined {
+	const tokenDefinitions = params.tokenDefinitions;
+
+	const defaultValue = tokenDefinitions['<color>']?.default;
+	if (!defaultValue) return undefined;
+
 	return {
 		name: 'color',
-		value: '#000000',
+		value: defaultValue,
 		category: 'other',
 		type: 'color',
 	};

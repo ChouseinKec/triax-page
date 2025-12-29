@@ -4,6 +4,7 @@ import type { TokenTypeDefinitionRecord } from '@/src/core/block/style/types/';
 
 // Utilities
 import { getValueToken } from './value';
+import { devLog } from '@/src/shared/utilities/dev';
 
 /**
  * Extracts the function name from a CSS function string.
@@ -11,7 +12,7 @@ import { getValueToken } from './value';
  */
 export function extractFunctionName(input: string): string | undefined {
 	const match = input.match(/^([a-zA-Z0-9\-]+)\s*\(/);
-	return match ? match[1] : undefined;
+	return match ? match[1] : devLog.warn('No function name found in input:', input), undefined;
 }
 
 /**
@@ -20,7 +21,7 @@ export function extractFunctionName(input: string): string | undefined {
  */
 export function extractFunctionArgs(input: string): string | undefined {
 	const match = input.match(/^([a-zA-Z0-9\-]+)\s*\((.*)\)$/);
-	return match ? match[2] : undefined;
+	return match ? match[2] : devLog.warn('No function arguments found in input:', input), undefined;
 }
 
 /**
@@ -47,9 +48,9 @@ export function filterFunctionOptions(options: OptionDefinition[]): OptionDefini
  * @param options - Array of function options to search in.
  * @param value - The value to match against.
  */
-export function matchFunctionOption(options: OptionDefinition[], value: string, registeredTokenTypes: TokenTypeDefinitionRecord): OptionDefinition | undefined {
-	if (options.length === 0) return undefined;
+export function matchFunctionOption(options: OptionDefinition[], value: string, tokenTypeDefinitions: TokenTypeDefinitionRecord): OptionDefinition | undefined {
+	if (options.length === 0) return devLog.warn('No function options provided to match against.'), undefined;
 
-	const match = options.find((opt) => getValueToken(value, registeredTokenTypes) === getValueToken(opt.value, registeredTokenTypes));
+	const match = options.find((opt) => getValueToken(value, tokenTypeDefinitions) === getValueToken(opt.value, tokenTypeDefinitions));
 	return match || options[0];
 }

@@ -1,6 +1,6 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { StyleValue } from '@/src/core/block/style/types';
+import type { StyleValue, StyleDefinitionRecord, StyleKey, UnitDefinitionRecord } from '@/src/core/block/style/types';
 
 /**
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').
@@ -12,7 +12,7 @@ export type TokenKey = string | '<number>' | '<integer>' | '<percentage>' | '<le
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').
  * These correspond to the official CSS value definition data types from the CSS spec.
  */
-export type TokenType = string | 'composed' | 'keyword' | 'function' | 'length' | 'number' | 'integer' | 'color' | 'link';
+export type TokenTypeKey = string | 'composed' | 'keyword' | 'function' | 'length' | 'number' | 'integer' | 'color' | 'link';
 
 /**
  * Represents the parameters for a CSS data type token.
@@ -30,7 +30,7 @@ export type TokenDefault = string;
 /**
  * Represents the syntax definition for a CSS data type token. (e.g. '<number [0,25]>')
  */
-export type TokenSyntax = string;
+export type TokenRaw = string;
 
 /**
  * Represents the canonical form of a CSS data type token.
@@ -52,32 +52,49 @@ export type TokenPriority = number;
 /**
  * Function type for matching a value against a CSS data type token.
  */
-export type ValueTypeFn = (styleValue: StyleValue) => string | undefined;
+export type TokenGetValueTypeFn = (styleValue: StyleValue) => string | undefined;
 
 /**
  * Function type for matching a value against a CSS data type token key.
  */
-export type TokenTypeFn = (tokenCanonical: TokenCanonical) => string | undefined;
+export type TokenGetTokenTypeFn = (tokenCanonical: TokenCanonical) => string | undefined;
 
 /**
  * Function type for converting a CSS data type token to its value tokens.
  */
-export type ValueTokenFn = (styleValue: StyleValue) => string | undefined;
+export type TokenGetValueTokenFn = (styleValue: StyleValue) => string | undefined;
+
+/**
+ * Function type for converting a CSS data type token to its canonical form.
+ */
+export type TokenGetTokenCanonicalFn = (tokenRaw: TokenRaw) => TokenCanonical | undefined;
+
+export type TokenOptionParams = {
+	tokenDefinitions: TokenDefinitionRecord;
+	tokenTypeDefinitions: TokenTypeDefinitionRecord;
+	styleDefinitions: StyleDefinitionRecord;
+	unitDefinitions: UnitDefinitionRecord;
+
+	tokenRaw: TokenRaw;
+	tokenCanonical: TokenCanonical;
+	tokenBase: TokenBase;
+	styleKey: StyleKey;
+};
 
 /**
  * Function type for creating an OptionDefinition for a CSS data type token.
  */
-export type TokenOptionFn = (tokenSyntax: TokenSyntax) => OptionDefinition | OptionDefinition[] | undefined;
+export type TokenCreateOptionFn = (params: TokenOptionParams) => OptionDefinition | OptionDefinition[] | undefined;
 
 /**
  * Function type for extracting parameters from a CSS data type token syntax.
  */
-export type TokenGetTokenParamFn = (tokenSyntax: TokenSyntax) => TokenParam | undefined;
+export type TokenGetTokenParamFn = (tokenSyntax: TokenRaw) => TokenParam | undefined;
 
 /**
  * Function type for rendering a CSS data type token value.
  */
-export type TokenRenderFn = React.ReactElement;
+export type TokenGetTokenComponent =  (value: StyleValue, onChange: (value: StyleValue) => void, options: OptionDefinition[]) => React.ReactElement;
 
 /**
  * Represents a single CSS data type definition, including its name and syntax.
@@ -87,10 +104,10 @@ export interface TokenDefinition {
 	key: TokenKey;
 
 	/** The value definition syntax for this data type (may reference other data types). */
-	syntax: TokenSyntax;
+	syntax: TokenRaw;
 
 	/** The type of this token (e.g., 'number', 'color'). */
-	type: TokenType;
+	type: TokenTypeKey;
 
 	/** The default value for this data type, if any. */
 	default?: TokenDefault;
@@ -98,28 +115,31 @@ export interface TokenDefinition {
 
 export interface TokenTypeDefinition {
 	/** The canonical name of the CSS data type (e.g. '<number>', '<length>'). */
-	key: TokenType;
+	key: TokenTypeKey;
 
 	/** The priority of this token type when determining defaults. Lower numbers indicate higher priority. */
 	priority: TokenPriority;
 
 	/** Function to render a value of this token type. */
-	renderComponent: (value: StyleValue, onChange: (value: StyleValue) => void, options: OptionDefinition[]) => TokenRenderFn;
+	getTokenComponent: TokenGetTokenComponent;
+
+	/** Function to convert a token syntax to its canonical form. */
+	getTokenCanonical: TokenGetTokenCanonicalFn;
 
 	/** Function to match a value against this token type. */
-	getValueType: ValueTypeFn;
+	getValueType: TokenGetValueTypeFn;
 
 	/** Function to match a token key against this token type. */
-	getTokenType: TokenTypeFn;
+	getTokenType: TokenGetTokenTypeFn;
 
 	/** Function to convert a token to its default value. */
-	getValueToken: ValueTokenFn;
+	getValueToken: TokenGetValueTokenFn;
 
 	/** Function to extract parameters from the token syntax. */
 	getTokenParam?: TokenGetTokenParamFn;
 
 	/** Function to create an option for this token type. */
-	createOption: TokenOptionFn;
+	createOption: TokenCreateOptionFn;
 }
 
 /**
@@ -128,6 +148,6 @@ export interface TokenTypeDefinition {
 export type TokenDefinitionRecord = Record<TokenKey, TokenDefinition>;
 
 /**
- * Record mapping TokenType to TokenTypeDefinition
+ * Record mapping TokenTypeKey to TokenTypeDefinition
  */
-export type TokenTypeDefinitionRecord = Record<TokenType, TokenTypeDefinition>;
+export type TokenTypeDefinitionRecord = Record<TokenTypeKey, TokenTypeDefinition>;

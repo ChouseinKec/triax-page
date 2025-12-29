@@ -1,5 +1,5 @@
 // Utilities
-import { validateWorkbenchID, validateWorkbenchTitle, validateWorkbenchOrder, validateWorkbenchRender, validateWorkbenchIcon, validateWorkbench } from '../workbench';
+import { validateWorkbenchID, validateWorkbenchTitle, validateWorkbenchOrder, validateWorkbenchRender, validateWorkbenchIcon, validateWorkbenchDefinition } from '../workbench';
 import { mockWorkbenchInstance, mockReactElement } from '@/src/shared/helpers/mock';
 
 describe('validateWorkbenchID', () => {
@@ -215,10 +215,10 @@ describe('validateWorkbenchIcon', () => {
 	});
 });
 
-describe('validateWorkbench', () => {
+describe('validateWorkbenchDefinition', () => {
 	it('returns valid result for complete workbench instance', () => {
 		const workbench = mockWorkbenchInstance();
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -231,7 +231,7 @@ describe('validateWorkbench', () => {
 	});
 
 	it('rejects non-object values', () => {
-		const result = validateWorkbench('not-an-object');
+		const result = validateWorkbenchDefinition('not-an-object');
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -240,13 +240,13 @@ describe('validateWorkbench', () => {
 	});
 
 	it('rejects object missing required properties', () => {
-		const result = validateWorkbench({ id: 'test', title: 'Test' });
+		const result = validateWorkbenchDefinition({ id: 'test', title: 'Test' });
 		expect(result.valid).toBe(false);
 	});
 
 	it('rejects invalid id in otherwise valid object', () => {
 		const workbench = mockWorkbenchInstance({ id: '' });
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -256,7 +256,7 @@ describe('validateWorkbench', () => {
 
 	it('rejects invalid title in otherwise valid object', () => {
 		const workbench = mockWorkbenchInstance({ title: '' });
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -266,7 +266,7 @@ describe('validateWorkbench', () => {
 
 	it('rejects invalid order in otherwise valid object', () => {
 		const workbench = mockWorkbenchInstance({ order: NaN });
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -276,7 +276,7 @@ describe('validateWorkbench', () => {
 
 	it('rejects invalid render in otherwise valid object', () => {
 		const workbench = mockWorkbenchInstance({ render: 'not-a-function' as any });
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -286,7 +286,7 @@ describe('validateWorkbench', () => {
 
 	it('rejects invalid icon in otherwise valid object', () => {
 		const workbench = mockWorkbenchInstance({ icon: null as any });
-		const result = validateWorkbench(workbench);
+		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;

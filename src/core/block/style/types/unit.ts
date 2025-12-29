@@ -24,8 +24,6 @@ export type UnitDefault = `${number}${UnitKey}`; // e.g. '0px', '100%', '1fr'
 export interface UnitDefinition {
 	/** The canonical name of the CSS unit (e.g. 'px', 'em', 'vh'). */
 	key: UnitKey;
-	/** The value of the CSS unit (usually same as name). */
-	default: UnitDefault;
 	/** The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex'). */
 	type: UnitType;
 }

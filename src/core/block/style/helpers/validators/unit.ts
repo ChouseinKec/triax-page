@@ -27,23 +27,13 @@ export function validateUnitType(unitType: unknown): ValidateResult<UnitType> {
 	return { valid: true, value: validation.value as UnitType };
 }
 
-/**
- * Validates a CSS data type token default value.
- * @param unitDefault - The token default value to validate
- */
-export function validateUnitDefault(unitDefault: unknown): ValidateResult<UnitDefault> {
-	const validation = validateString(unitDefault);
-	if (!validation.valid) return validation;
-
-	return { valid: true, value: validation.value as UnitDefault };
-}
 
 /**
  * Validates a CSS data type token definition.
  * @param unitDefinition - The unit definition to validate
  */
 export function validateUnitDefinition(unitDefinition: unknown): ValidateResult<UnitDefinition> {
-	const validation = validateObject(unitDefinition, ['key', 'default', 'type']);
+	const validation = validateObject(unitDefinition, ['key', 'type']);
 	if (!validation.valid) return validation;
 
 	const keyValidation = validateString(validation.value.key);
@@ -51,9 +41,6 @@ export function validateUnitDefinition(unitDefinition: unknown): ValidateResult<
 
 	const typeValidation = validateUnitType(validation.value.type);
 	if (!typeValidation.valid) return { valid: false, message: `Unit definition "type" is invalid: ${typeValidation.message}` };
-
-	const defaultValidation = validateUnitDefault(validation.value.default);
-	if (!defaultValidation.valid) return { valid: false, message: `Unit definition "default" is invalid: ${defaultValidation.message}` };
 
 	return { valid: true, value: validation.value as unknown as UnitDefinition };
 }

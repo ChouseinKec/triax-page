@@ -1,7 +1,7 @@
 import type { DeviceDefinition, DeviceInstance, DeviceID, DeviceRecord } from '@/src/core/layout/page/types';
 import type { OrientationDefinition, OrientationInstance, OrientationID, OrientationRecord } from '@/src/core/layout/page/types';
 import type { PseudoDefinition, PseudoInstance, PseudoID, PseudoRecord } from '@/src/core/layout/page/types';
-import type { PageActionInstance, PageActionID, PageActionRecord } from '@/src/core/layout/page/types/action';
+import type { ActionDefinition, ActionID, ActionRecord } from '@/src/core/layout/page/types/action';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
@@ -139,14 +139,14 @@ class PseudoRegistry {
  * Class-based action registry for managing action definitions
  */
 class ActionRegistry {
-	private actions: PageActionRecord = {};
+	private actions: ActionRecord = {};
 
 	/**
 	 * Registers an action definition in the action registry.
 	 * @param action - The action definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerAction(action: PageActionInstance): ValidateResult<PageActionInstance> {
+	registerAction(action: ActionDefinition): ValidateResult<ActionDefinition> {
 		// Check for duplicates
 		if (this.actions[action.id]) {
 			return { valid: false, message: `Action with id "${action.id}" already registered` };
@@ -160,7 +160,7 @@ class ActionRegistry {
 	 * Retrieves all registered action definitions.
 	 * @returns Readonly record of all registered actions keyed by their id
 	 */
-	getRegisteredPageActions(): Readonly<PageActionRecord> {
+	getRegisteredPageActions(): Readonly<ActionRecord> {
 		return { ...this.actions };
 	}
 
@@ -169,7 +169,7 @@ class ActionRegistry {
 	 * @param id - The action id to retrieve
 	 * @returns The action definition if found, undefined otherwise
 	 */
-	getRegisteredAction(id: PageActionID): PageActionInstance | undefined {
+	getRegisteredAction(id: ActionID): ActionDefinition | undefined {
 		return this.actions[id];
 	}
 }
@@ -199,6 +199,6 @@ export const getRegisteredPseudo = (value: PseudoID) => pseudoRegistry.getRegist
 const actionRegistry = new ActionRegistry();
 
 // Export the registry instance methods
-export const registerAction = (action: PageActionInstance) => actionRegistry.registerAction(action);
+export const registerAction = (action: ActionDefinition) => actionRegistry.registerAction(action);
 export const getRegisteredPageActions = () => actionRegistry.getRegisteredPageActions();
-export const getRegisteredAction = (id: PageActionID) => actionRegistry.getRegisteredAction(id);
+export const getRegisteredAction = (id: ActionID) => actionRegistry.getRegisteredAction(id);
