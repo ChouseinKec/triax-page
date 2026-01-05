@@ -3,107 +3,7 @@ import type { AttributeKey } from '@/src/core/block/attribute/types';
 /**
  * All supported HTML element tags.
  */
-export type ElementTag =
-	| 'body' //
-	| 'main'
-	| 'header'
-	| 'footer'
-	| 'address'
-	| 'hgroup'
-	| 'a'
-	| 'button'
-	| 'input'
-	| 'select'
-	| 'textarea'
-	| 'label'
-	| 'form'
-	| 'fieldset'
-	| 'legend'
-	| 'option'
-	| 'optgroup'
-	| 'datalist'
-	| 'output'
-	| 'progress'
-	| 'meter'
-	| 'h1'
-	| 'h2'
-	| 'h3'
-	| 'h4'
-	| 'h5'
-	| 'h6'
-	| 'pre'
-	| 'blockquote'
-	| 'figure'
-	| 'figcaption'
-	| 'ul'
-	| 'ol'
-	| 'li'
-	| 'dl'
-	| 'dt'
-	| 'dd'
-	| 'table'
-	| 'thead'
-	| 'tbody'
-	| 'tfoot'
-	| 'tr'
-	| 'th'
-	| 'td'
-	| 'caption'
-	| 'colgroup'
-	| 'col'
-	| 'img'
-	| 'video'
-	| 'audio'
-	| 'iframe'
-	| 'canvas'
-	| 'source'
-	| 'track'
-	| 'picture'
-	| 'object'
-	| 'embed'
-	| 'map'
-	| 'area'
-	| 'svg'
-	| 'details'
-	| 'summary'
-	| 'dialog'
-	| 'hr'
-	| 'br'
-	| 'div'
-	| 'section'
-	| 'article'
-	| 'aside'
-	| 'nav'
-	| 'p'
-	| 'span'
-	| 'b'
-	| 'strong'
-	| 'i'
-	| 'em'
-	| 'u'
-	| 'small'
-	| 'mark'
-	| 'sub'
-	| 'sup'
-	| 'code'
-	| 'abbr'
-	| 's'
-	| 'del'
-	| 'ins'
-	| 'q'
-	| 'cite'
-	| 'dfn'
-	| 'var'
-	| 'samp'
-	| 'kbd'
-	| 'time'
-	| 'data'
-	| 'wbr'
-	| 'bdi'
-	| 'bdo'
-	| 'ruby'
-	| 'rt'
-	| 'rp';
+export type ElementKey = string;
 
 /**
  * Description of an HTML element.
@@ -111,9 +11,24 @@ export type ElementTag =
 export type ElementDescription = string;
 
 /**
- * Record mapping element tags to their definitions.
+ * Record of element tags that can only appear a limited number of times as children.
  */
-export type ElementRecord = Record<ElementTag, ElementDefinition>;
+export type ElementUniqueChildren = Partial<Record<ElementKey, number>>;
+
+/**
+ * Array of element tag groups that must appear in a specific order.
+ */
+export type ElementOrderedChildren = ElementKey[][];
+
+/**
+ * Array of element tags that cannot appear as ancestors.
+ */
+export type ElementForbiddenAncestors = ElementKey[];
+
+/**
+ * Array of allowed attribute keys for an element.
+ */
+export type ElementAllowedAttributes = AttributeKey[];
 
 /**
  * Definition of an HTML element, including its attributes and allowed content.
@@ -121,17 +36,22 @@ export type ElementRecord = Record<ElementTag, ElementDefinition>;
  */
 export interface ElementDefinition {
 	/** The HTML tag for this element */
-	tag: ElementTag;
-	/** Array of supported attributes for this element */
-	allowedAttributes: AttributeKey[];
-	/** Array of allowed child element tags, null for any content */
-	allowedChildren: ElementTag[] | null;
-	/** Array of element tags that cannot appear as ancestors, null if no restrictions */
-	forbiddenAncestors: ElementTag[] | null;
-	/** Record of element tags that can only appear a limited number of times as children, null if no restrictions */
-	uniqueElements: Partial<Record<ElementTag, number>> | null;
-	/** Array of element tag groups that must appear in a specific order, null if no ordering required */
-	orderedElements: ElementTag[][] | null;
+	key: ElementKey;
 	/** Human-readable description of the element */
 	description: ElementDescription;
+	/** Array of supported attributes for this element */
+	allowedAttributes: ElementAllowedAttributes;
+	/** Array of allowed child element tags, null for any content */
+	allowedChildren: ElementKey[] | null;
+	/** Record of element tags that can only appear a limited number of times as children, null if no restrictions */
+	uniqueChildren: ElementUniqueChildren | null;
+	/** Array of element tag groups that must appear in a specific order, null if no ordering required */
+	orderedChildren: ElementOrderedChildren | null;
+	/** Array of element tags that cannot appear as ancestors, null if no restrictions */
+	forbiddenAncestors: ElementForbiddenAncestors | null;
 }
+
+/**
+ * Record mapping element tags to their definitions.
+ */
+export type ElementDefinitionRecord = Record<ElementKey, ElementDefinition>;

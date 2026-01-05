@@ -8,7 +8,7 @@ type StyleDefinitionInput = Omit<StyleDefinition, 'syntaxParsed' | 'syntaxNormal
  * Class-based style registry for managing CSS property definitions
  */
 class StyleRegistry {
-	private styles: Record<StyleKey, StyleDefinition> = {};
+	private styles: Readonly<StyleDefinitionRecord> = {};
 	private units: Readonly<UnitDefinitionRecord> = {};
 	private tokens: Readonly<TokenDefinitionRecord> = {};
 	private tokenTypes: Readonly<TokenTypeDefinitionRecord> = {};
@@ -22,7 +22,6 @@ class StyleRegistry {
 	registerStyle(styleDefinition: StyleDefinitionInput): ValidateResult<StyleDefinition> {
 		// Check for duplicates
 		if (this.styles[styleDefinition.key]) return { valid: false, message: `Style with key "${styleDefinition.key}" already registered` };
-
 
 		// Register the full style
 		this.styles = { ...this.styles, [styleDefinition.key]: styleDefinition };
@@ -44,7 +43,6 @@ class StyleRegistry {
 	getRegisteredStyle(styleKey: StyleKey): StyleDefinition | undefined {
 		return this.styles[styleKey];
 	}
-
 
 	// ? --------------------------------------------------------- TOKEN METHODS --------------------------------------------------------- //
 	/**

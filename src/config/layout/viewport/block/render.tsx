@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockEditor from "@/src/features/block/instance";
+import Block from "@/src/config/layout/viewport/block/instance";
 
 // Managers
 import { useBlock } from "@/src/core/block/instance/managers";
@@ -35,7 +35,7 @@ const ViewportBlockRender: React.FC = () => {
                 {deviceInfo}
             </div>
 
-            {rootBlock && <BlockEditor key={rootBlock.id} blockID={rootBlock.id} />}
+            {rootBlock && <Block key={rootBlock.id} blockID={rootBlock.id} />}
 
         </div>
     );

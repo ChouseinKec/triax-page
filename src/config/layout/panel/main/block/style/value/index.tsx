@@ -14,7 +14,7 @@ import { devLog } from "@/src/shared/utilities/dev";
 import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/src/core/block/style/utilities/syntax';
 
 // Components
-import BlockStyleSlots from "@/src/config/layout/panel/main/block/style/slots/component";
+import BlockStyleSlots from "@/src/config/layout/panel/main/block/style/slots";
 import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Registry

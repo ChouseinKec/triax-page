@@ -1,10 +1,8 @@
 // Types
 import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockAllowedChildren, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementKey } from '@/src/core/block/element/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
-// Constants
-import { getElementDefinitions } from '@/src/core/block/element/constants';
 
 // Helpers
 import { validateString, validateArray, validateFunction, validateObject, validateElement } from '@/src/shared/helpers';
@@ -41,20 +39,20 @@ export function validateBlockType(blockType: unknown): ValidateResult<BlockType>
  * @param blockTag - The block tag to validate
  * @param availableTags - Optional array of available tags to check against
  */
-export function validateBlockTag(blockTag: unknown, availableTags?: ElementTag[]): ValidateResult<ElementTag> {
+export function validateBlockTag(blockTag: unknown, availableTags?: ElementKey[]): ValidateResult<ElementKey> {
 	const validation = validateString(blockTag);
 	if (!validation.valid) return validation;
 
-	if (!Object.keys(getElementDefinitions()).includes(validation.value as ElementTag)) {
-		return { valid: false, message: `Invalid block tag: expected a valid HTML element tag, got "${validation.value}"` };
-	}
+	// if (!Object.keys(getElementDefinitions()).includes(validation.value as ElementKey)) {
+	// 	return { valid: false, message: `Invalid block tag: expected a valid HTML element tag, got "${validation.value}"` };
+	// }
 
 	// If availableTags is provided, check that blockTag is included
-	if (availableTags && !availableTags.includes(validation.value as ElementTag)) {
+	if (availableTags && !availableTags.includes(validation.value as ElementKey)) {
 		return { valid: false, message: `Invalid block tag: '${validation.value}' is not in availableTags [${availableTags.join(', ')}]` };
 	}
 
-	return { valid: true, value: validation.value as ElementTag };
+	return { valid: true, value: validation.value as ElementKey };
 }
 
 /**
@@ -62,7 +60,7 @@ export function validateBlockTag(blockTag: unknown, availableTags?: ElementTag[]
  *
  * @param blockAllowedTags - The array of block availableTags to validate
  */
-export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<ElementTag[]> {
+export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<ElementKey[]> {
 	const validation = validateArray(blockTags);
 	if (!validation.valid) return validation;
 
@@ -71,7 +69,7 @@ export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<E
 		if (!tagValidation.valid) return { valid: false, message: `Invalid block availableTags: '${tag}' is not a valid HTML element tag` };
 	}
 
-	return { valid: true, value: validation.value as ElementTag[] };
+	return { valid: true, value: validation.value as ElementKey[] };
 }
 
 /**

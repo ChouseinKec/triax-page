@@ -1,6 +1,6 @@
 // Types
 import type { BlockType, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementKey } from '@/src/core/block/element/types';
 import type { ReactNode } from 'react';
 
 // Helpers
@@ -53,7 +53,7 @@ export function getBlockRender(blockType: BlockType) {
  * Gets the available HTML element availableTags for a specific block type.
  * @param blockType - The block type to get availableTags for
  */
-export function getBlockAvailableTags(blockType: BlockType): ElementTag[] | undefined {
+export function getBlockAvailableTags(blockType: BlockType): ElementKey[] | undefined {
 	const results = new ResultPipeline('[BlockQueries → getBlockAvailableTags]')
 		.validate({
 			blockType: validateBlockType(blockType),

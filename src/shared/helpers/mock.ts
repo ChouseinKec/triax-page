@@ -98,8 +98,8 @@ export const mockElementDefinition = (overrides?: Partial<ElementDefinition>): E
 	allowedAttributes: [],
 	allowedChildren: null,
 	forbiddenAncestors: null,
-	uniqueElements: null,
-	orderedElements: null,
+	uniqueChildren: null,
+	orderedChildren: null,
 	...overrides,
 });
 
@@ -120,8 +120,8 @@ export const mockBlockDefinition = (overrides?: Partial<BlockDefinition>): Block
 	allowedAttributes: null,
 	allowedChildren: null,
 	forbiddenAncestors: null,
-	uniqueElements: null,
-	orderedElements: null,
+	uniqueChildren: null,
+	orderedChildren: null,
 	defaultStyles: { all: { all: { all: {} } } },
 	defaultAttributes: {},
 	defaultContent: {},

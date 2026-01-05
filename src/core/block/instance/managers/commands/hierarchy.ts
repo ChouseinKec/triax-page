@@ -16,11 +16,9 @@ import type { BlockID } from '@/src/core/block/instance/types';
 import { devLog } from '@/src/shared/utilities/dev';
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
-// Constants
-import { getElementDefinitions } from '@/src/core/block/element/constants';
-
 // Registry
 import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredElements } from '@/src/core/block/element/registries';
 
 /**
  * Moves a block to be positioned after a target block in block CRUD operations.
@@ -47,7 +45,7 @@ export function moveBlockAfter(sourceBlockID: BlockID, targetBlockID: BlockID): 
 		}))
 		.pick((data) => ({
 			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
-			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
+			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;
@@ -92,7 +90,7 @@ export function moveBlockBefore(sourceBlockID: BlockID, targetBlockID: BlockID):
 		}))
 		.pick((data) => ({
 			parentBlockDefinition: pickBlockDefinition(data.targetParentBlock.type, getRegisteredBlocks()),
-			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
+			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;
@@ -134,7 +132,7 @@ export function moveBlockInto(sourceBlockID: BlockID, targetBlockID: BlockID): v
 		}))
 		.pick((data) => ({
 			parentBlockDefinition: pickBlockDefinition(data.targetBlock.type, getRegisteredBlocks()),
-			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getElementDefinitions()),
+			sourceBlockDefinition: fetchElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;

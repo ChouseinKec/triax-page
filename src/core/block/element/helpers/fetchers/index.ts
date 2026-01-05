@@ -1,5 +1,5 @@
 // Types
-import type { ElementDefinition, ElementTag, ElementRecord } from '@/src/core/block/element/types';
+import type { ElementDefinition, ElementKey, ElementDefinitionRecord } from '@/src/core/block/element/types';
 import type { PickResult } from '@/src/shared/types/result';
 
 /**
@@ -9,7 +9,7 @@ import type { PickResult } from '@/src/shared/types/result';
  * @param elementDefinitions - The element definitions record
  * @returns PickResult containing the element definition or error message
  */
-export function fetchElementDefinition(elementTag: ElementTag, elementDefinitions: Partial<ElementRecord>): PickResult<ElementDefinition> {
+export function fetchElementDefinition(elementTag: ElementKey, elementDefinitions: Partial<ElementDefinitionRecord>): PickResult<ElementDefinition> {
 	const definition = elementDefinitions[elementTag];
 	if (!definition) return { success: false, error: `Element tag not found: '${elementTag}' is not a recognized element tag` };
 

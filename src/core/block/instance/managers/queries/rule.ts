@@ -3,7 +3,7 @@ import { useBlockStore } from '@/src/state/block/block';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementKey } from '@/src/core/block/element/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 
 // Helpers
@@ -13,21 +13,19 @@ import { validateAttributeKey } from '@/src/core/block/attribute/helpers';
 import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/src/core/block/instance/helpers/checkers';
 import { fetchElementDefinition } from '@/src/core/block/element/helpers/fetchers';
 
-// Constants
-import { getElementDefinitions } from '@/src/core/block/element/constants';
-
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Registry
 import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredElements } from '@/src/core/block/element/registries';
 
 /**
  * Checks if a child block type is permitted within a parent block type.
  * @param parentTag - The parent block tag
  * @param childTag - The child block tag to check
  */
-export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: ElementTag): boolean {
+export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: ElementKey): boolean {
 	const blockStore = useBlockStore.getState();
 	const results = new ResultPipeline('[BlockQueries → canBlockAcceptChild]')
 		.validate({
@@ -39,7 +37,7 @@ export function canBlockAcceptChild(parentBlockID: BlockID, childBlockTag: Eleme
 		}))
 		.pick((data) => ({
 			parentBlockDefinition: pickBlockDefinition(data.parentBlockInstance.type, getRegisteredBlocks()),
-			childBlockDefinition: fetchElementDefinition(data.childBlockTag, getElementDefinitions()),
+			childBlockDefinition: fetchElementDefinition(data.childBlockTag, getRegisteredElements()),
 		}))
 		.check((data) => ({
 			isChildAllowed: isBlockChildAllowed(

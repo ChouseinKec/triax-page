@@ -11,8 +11,7 @@ import PropertyActions from '@/src/config/layout/panel/main/block/style/action';
 
 // Types
 import type { StyleKey } from '@/src/core/block/style/types';
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { CSSProperties } from 'react';
+import type { RenderStyleRowOptions } from './types';
 
 // Utilties
 import { devRender } from '@/src/shared/utilities/dev';
@@ -43,18 +42,6 @@ StyleValueRenderer.displayName = 'StyleValueRenderer';
 
 export { StyleValueRenderer };
 
-// --------------------------------------
-// Shared renderer for a single style property row
-// --------------------------------------
-
-export type RenderStyleRowOptions = {
-    blockID: BlockID;
-    propertyName: StyleKey;
-    label?: string | null;
-    styles?: CSSProperties;
-    disabled?: boolean;
-    hidden?: boolean;
-};
 
 /**
  * Renders a shared Property row for a given style key with name/description/actions wired.

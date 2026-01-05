@@ -1,5 +1,5 @@
 // Utilities
-import { validateAttributeKey, validateAttributeValue, validateBlockAttributes } from '../attribute';
+import { validateAttributeKey, validateAttributeValue, validateBlockAttributes } from '../definition';
 import { mockBlockAttributes } from '@/src/shared/helpers/mock';
 
 describe('validateAttributeKey', () => {

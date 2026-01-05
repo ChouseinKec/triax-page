@@ -3,7 +3,7 @@ import { useBlockStore } from '@/src/state/block/block';
 
 // Types
 import type { BlockID } from '@/src/core/block/instance/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementKey } from '@/src/core/block/element/types';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
@@ -18,7 +18,7 @@ import { validateBlockTag, validateBlockID, pickBlockInstance } from '@/src/core
  * @param blockID - The block identifier
  * @param tag - The new HTML tag to set
  */
-export function setBlockTag(blockID: BlockID, blockTag: ElementTag): void {
+export function setBlockTag(blockID: BlockID, blockTag: ElementKey): void {
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockCommands → setBlockTag]')
 		.validate({

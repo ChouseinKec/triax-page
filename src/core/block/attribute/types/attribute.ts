@@ -60,13 +60,14 @@ export type AttributeStringSyntax = {
 /**
  * Union type for all HTML attribute syntax definitions.
  */
-export type AttributeSyntaxes = AttributeListSyntax | AttributeNumberSyntax | AttributeRadioSyntax | AttributeStringSyntax;
+export type AttributeSyntax = AttributeListSyntax | AttributeNumberSyntax | AttributeRadioSyntax | AttributeStringSyntax;
 
 /**
  * All supported HTML attribute keys.
  * Includes global, ARIA, and element-specific attributes.
  */
 export type AttributeKey =
+	| string
 	// Global attributes
 	| 'id'
 	| 'class'
@@ -220,7 +221,7 @@ export type AttributeKey =
 /**
  * Categories for organizing HTML attributes.
  */
-export type AttributeCategories = 'global' | 'accessibility' | 'schema' | 'element' | 'custom';
+export type AttributeCategory = 'global' | 'accessibility' | 'schema' | 'element' | 'custom';
 
 /**
  * The description of an HTML attribute.
@@ -234,25 +235,24 @@ export type AttributeValue = string;
 
 /**
  * Complete definition of an HTML attribute.
- * Includes name, syntax, description, and category information.
+ * Includes key, syntax, description, and category information.
  */
 export interface AttributeDefinition {
 	/** The attribute name/key */
-	name: AttributeKey;
+	key: AttributeKey;
 	/** Syntax definition for the attribute's values */
-	syntax: AttributeSyntaxes;
+	syntax: AttributeSyntax;
 	/** Human-readable description of the attribute */
 	description: AttributeDescription;
 	/** Category for organizing the attribute */
-	category: AttributeCategories;
+	category: AttributeCategory;
 }
 
-export type AttributeRecord = Record<AttributeKey, AttributeDefinition>;
+export type AttributeDefinitionRecord = Record<AttributeKey, AttributeDefinition>;
 
 /**
  * Represents the attribute context including registered and default attribute info.
  */
 export type AttributeContext = {
-	constant: {
-	};
+	constant: {};
 };

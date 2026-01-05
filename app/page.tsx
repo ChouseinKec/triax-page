@@ -15,7 +15,7 @@ import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 import { devLog } from "@/src/shared/utilities/dev";
 
 // Lazy load PageEditor to prevent import cascade
-const PageEditor = lazy(() => import("@/src/features/layout/page"));
+const PageEditor = lazy(() => import("@/src/core/layout/page/components"));
 
 export default function Home() {
   const [isReady, setIsReady] = useState(false);

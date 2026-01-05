@@ -2,8 +2,7 @@
 import React, { memo } from "react";
 
 // Types
-import type { StyleKey } from "@/src/core/block/style/types";
-import type { BlockID } from "@/src/core/block/instance/types";
+import type { PropertyActionsProps } from "./types";
 
 // Commands
 import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/managers';
@@ -21,10 +20,7 @@ import { canBlockHaveStyle } from '@/src/core/block/style/managers';
  * @param property - The CSS property key
  * @returns Action buttons or null if block cannot have this style
  */
-interface PropertyActionsProps {
-    blockID: BlockID;
-    property: StyleKey;
-}
+
 
 const PropertyActions: React.FC<PropertyActionsProps> = ({ blockID, property }) => {
     // Check if block can have this style (respects allowedStyles from BlockDefinition)

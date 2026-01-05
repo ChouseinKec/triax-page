@@ -1,6 +1,10 @@
 // Registry functions
 import { registerStyle, registerUnit, registerToken, registerTokenType } from '@/src/core/block/style/registries';
 
+import { registerAttribute } from '@/src/core/block/attribute/registries';
+
+import { registerElement } from '@/src/core/block/element/registries';
+
 import { registerBlock } from '@/src/core/block/instance/registries';
 
 import { registerPanel, registerPanelTab } from '@/src/core/layout/panel/registries';
@@ -16,7 +20,11 @@ import { CoreStyles } from '@/src/config/block/style/definition';
 import { CoreTokens } from '@/src/config/block/style/token';
 import { CoreTokenTypes } from '@/src/config/block/style/token';
 
-import { CoreBlocks } from '@/src/config/block/block';
+import { CoreAttributes } from '@/src/config/block/attribute/';
+
+import { CoreElements } from '@/src/config/block/element';
+
+import { CoreBlocks } from '@/src/config/block/instance';
 import { CoreUnits } from '@/src/config/block/style/unit';
 
 import { CorePanels, CoreTabs } from '@/src/config/layout/panel';
@@ -33,7 +41,9 @@ import { CoreViewports } from '@/src/config/layout/viewport';
 
 // Validators
 import { validateStyleDefinition, validateUnitDefinition, validateTokenDefinition, validateTokenTypeDefinition } from '@/src/core/block/style/helpers';
-import { validateBlockDefinition } from '@/src/core/block/instance/helpers';
+import { validateAttributeDefinition } from '@/src/core/block/attribute/helpers/validators';
+import { validateElementDefinition } from '@/src/core/block/element/helpers/validators';
+import { validateBlockDefinition } from '@/src/core/block/instance/helpers/validators';
 import { validatePanelDefinition, validatePanelTabDefinition } from '@/src/core/layout/panel/helpers';
 import { validateBarDefinition } from '@/src/core/layout/bar/helpers';
 import { validateWorkbenchDefinition } from '@/src/core/layout/workbench/helpers';
@@ -74,6 +84,24 @@ export const REGISTRY_DEFINITIONS: RegistryDefinition<any>[] = [
 		registerFn: registerStyle,
 		getIdFn: (style: any) => style.key,
 		validateFn: validateStyleDefinition,
+	},
+
+	// Attribute Registries
+	{
+		category: 'Core/Block/Attribute',
+		items: CoreAttributes,
+		registerFn: registerAttribute,
+		getIdFn: (attribute: any) => attribute.key,
+		validateFn: validateAttributeDefinition,
+	},
+
+	// Element Registries
+	{
+		category: 'Core/Block/Element',
+		items: CoreElements,
+		registerFn: registerElement,
+		getIdFn: (element: any) => element.key,
+		validateFn: validateElementDefinition,
 	},
 
 	// Block Registries

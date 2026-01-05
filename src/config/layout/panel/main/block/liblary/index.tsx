@@ -2,7 +2,7 @@
 import type { PanelTabDefinition } from '@/src/core/layout/panel/types';
 
 // Components
-import BlockLibraryRender from '@/src/config/layout/panel/main/block/liblary/render';
+import BlockLibraryRender from '@/src/config/layout/panel/main/block/liblary/component';
 
 export const BlockLibraryTab: PanelTabDefinition = {
 	id: 'block-library',

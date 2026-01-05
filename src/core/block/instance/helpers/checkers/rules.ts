@@ -1,6 +1,6 @@
 // Types
 import type { BlockDefinition, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { ElementTag, ElementDefinition } from '@/src/core/block/element/types';
+import type { ElementKey, ElementDefinition } from '@/src/core/block/element/types';
 import type { CheckResult } from '@/src/shared/types/result';
 
 // Helpers
@@ -12,7 +12,7 @@ import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
  * @param parentBlockDefinition - definition of the parent block to consult
  * @param childElementTag - the element tag of the candidate child
  */
-export function isBlockChildAllowed(parentBlockDefinition: BlockDefinition, childElementTag: ElementTag): CheckResult {
+export function isBlockChildAllowed(parentBlockDefinition: BlockDefinition, childElementTag: ElementKey): CheckResult {
 	// If the parent does not restrict allowed children, the child is permitted
 	const allowedChildren = parentBlockDefinition.allowedChildren;
 	if (!allowedChildren) return { success: true, passed: true };
@@ -61,19 +61,19 @@ export function hasBlockForbiddenAncestor(childElementDefinition: ElementDefinit
  * Check whether placing a child of a given tag would exceed any declared "unique" limit
  * on the parent.
  *
- * @param parentBlockDefinition - definition containing uniqueElements limits
+ * @param parentBlockDefinition - definition containing uniqueChildren limits
  * @param parentBlockInstance - the parent instance whose children we will scan
  * @param childElementTag - the tag of the prospective child being checked
  * @param storedBlocks - record used to fetch sibling instances
  * @param excludeBlockID - optional block id to exclude from the counting (useful for moves)
  */
-export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementTag, storedBlocks: BlockInstanceRecord, excludeBlockID?: string): CheckResult {
+export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementKey, storedBlocks: BlockInstanceRecord, excludeBlockID?: string): CheckResult {
 	// If the parent has no unique element limits, the child can't exceed them
-	const uniqueElements = parentBlockDefinition.uniqueElements;
-	if (!uniqueElements) return { success: true, passed: false };
+	const uniqueChildren = parentBlockDefinition.uniqueChildren;
+	if (!uniqueChildren) return { success: true, passed: false };
 
 	// Find the configured limit for this element tag — if none is set, it can't exceed
-	const limit = uniqueElements[childElementTag];
+	const limit = uniqueChildren[childElementTag];
 	if (!limit) return { success: true, passed: false };
 
 	// Count existing matching child elements, skipping the excludeBlockID if provided
@@ -91,21 +91,21 @@ export function doesBlockElementExceeds(parentBlockDefinition: BlockDefinition, 
 
 /**
  * Validate whether inserting a child with a given tag at a target index would violate
- * the parent's `orderedElements` policy.
+ * the parent's `orderedChildren` policy.
  *
- * @param parentBlockDefinition - definition containing orderedElements groups
+ * @param parentBlockDefinition - definition containing orderedChildren groups
  * @param parentBlockInstance - the parent instance whose children will be scanned
  * @param childElementTag - the tag of the prospective child being added
  * @param storedBlocks - record used to fetch sibling instances
  * @param targetIndex - the index where the child would be inserted
  */
-export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementTag, storedBlocks: BlockInstanceRecord, targetIndex: number): CheckResult {
+export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefinition, parentBlockInstance: BlockInstance, childElementTag: ElementKey, storedBlocks: BlockInstanceRecord, targetIndex: number): CheckResult {
 	// If there are no ordered rules, insertion can't violate ordering
-	const orderedElements = parentBlockDefinition.orderedElements;
-	if (!orderedElements) return { success: true, passed: false };
+	const orderedChildren = parentBlockDefinition.orderedChildren;
+	if (!orderedChildren) return { success: true, passed: false };
 
 	// Collect current sibling tags in order
-	const currentChildTags: ElementTag[] = [];
+	const currentChildTags: ElementKey[] = [];
 	for (const contentID of parentBlockInstance.contentIDs) {
 		const siblingBlockInstance = pickBlockInstance(contentID, storedBlocks);
 		if (!siblingBlockInstance.success) return { success: false, error: siblingBlockInstance.error };
@@ -120,8 +120,8 @@ export function doesBlockElementViolatesOrder(parentBlockDefinition: BlockDefini
 	let currentGroupIndex = 0;
 	for (const tag of projectedTags) {
 		let foundInGroup = false;
-		for (let i = currentGroupIndex; i < orderedElements.length; i++) {
-			if (orderedElements[i].includes(tag)) {
+		for (let i = currentGroupIndex; i < orderedChildren.length; i++) {
+			if (orderedChildren[i].includes(tag)) {
 				// Found in the same or a later group — advance the scanning index to this group
 				currentGroupIndex = i;
 				foundInGroup = true;

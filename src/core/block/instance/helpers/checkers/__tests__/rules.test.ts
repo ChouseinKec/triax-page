@@ -94,7 +94,7 @@ describe('doesBlockElementExceeds', () => {
 	});
 
 	it('returns false when element count is below limit', () => {
-		const blockDef = mockBlockDefinition({ uniqueElements: { h1: 1, h2: 2 } });
+		const blockDef = mockBlockDefinition({ uniqueChildren: { h1: 1, h2: 2 } });
 		const parent = mockBlockInstance({ id: 'parent', contentIDs: [] });
 		const blocks = { parent };
 		const result = doesBlockElementExceeds(blockDef, parent, 'h2', blocks);
@@ -106,7 +106,7 @@ describe('doesBlockElementExceeds', () => {
 	});
 
 	it('returns true when element count meets limit', () => {
-		const blockDef = mockBlockDefinition({ uniqueElements: { h1: 1, h2: 2 } });
+		const blockDef = mockBlockDefinition({ uniqueChildren: { h1: 1, h2: 2 } });
 		const child1 = mockBlockInstance({ id: 'child1', tag: 'h1' });
 		const parent = mockBlockInstance({ id: 'parent', contentIDs: ['child1'] });
 		const blocks = { parent, child1 };
@@ -119,7 +119,7 @@ describe('doesBlockElementExceeds', () => {
 	});
 
 	it('excludes specified block ID from count', () => {
-		const blockDef = mockBlockDefinition({ uniqueElements: { h1: 1, h2: 2 } });
+		const blockDef = mockBlockDefinition({ uniqueChildren: { h1: 1, h2: 2 } });
 		const child1 = mockBlockInstance({ id: 'child1', tag: 'h1' });
 		const parent = mockBlockInstance({ id: 'parent', contentIDs: ['child1'] });
 		const blocks = { parent, child1 };
@@ -146,7 +146,7 @@ describe('doesBlockElementViolatesOrder', () => {
 	});
 
 	it('returns false when insertion respects order', () => {
-		const blockDef = mockBlockDefinition({ orderedElements: [['h1'], ['p', 'span'], ['footer']] });
+		const blockDef = mockBlockDefinition({ orderedChildren: [['h1'], ['p', 'span'], ['footer']] });
 		const child1 = mockBlockInstance({ id: 'child1', tag: 'h1' });
 		const child2 = mockBlockInstance({ id: 'child2', tag: 'span' });
 		const parent = mockBlockInstance({ contentIDs: ['child1', 'child2'] });
@@ -160,7 +160,7 @@ describe('doesBlockElementViolatesOrder', () => {
 	});
 
 	it('returns true when insertion violates order', () => {
-		const blockDef = mockBlockDefinition({ orderedElements: [['h1'], ['p', 'span'], ['footer']] });
+		const blockDef = mockBlockDefinition({ orderedChildren: [['h1'], ['p', 'span'], ['footer']] });
 		const child1 = mockBlockInstance({ id: 'child1', tag: 'p' });
 		const parent = mockBlockInstance({ contentIDs: ['child1'] });
 		const blocks = { parent, child1 };

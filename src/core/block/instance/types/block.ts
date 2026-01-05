@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 // Types
 import type { StyleKey, StyleValue } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
-import type { ElementTag } from '@/src/core/block/element/types';
+import type { ElementKey } from '@/src/core/block/element/types';
 import type { DeviceName } from '@/src/core/layout/page/types';
 import type { OrientationName } from '@/src/core/layout/page/types';
 import type { PseudoName } from '@/src/core/layout/page/types';
@@ -85,22 +85,22 @@ export type BlockAllowedAttributes = AttributeKey[] | null;
 /**
  * Permitted content types that can be contained within this block
  */
-export type BlockAllowedChildren = ElementTag[] | null;
+export type BlockAllowedChildren = ElementKey[] | null;
 
 /**
  * Tags that cannot appear anywhere in the ancestor chain above this block
  */
-export type BlockForbiddenAncestors = ElementTag[] | null;
+export type BlockForbiddenAncestors = ElementKey[] | null;
 
 /**
  * Elements that can appear only once as direct children (e.g., figcaption in figure)
  */
-export type BlockUniqueElements = Partial<Record<ElementTag, number>> | null;
+export type BlockUniqueElements = Partial<Record<ElementKey, number>> | null;
 
 /**
  * Ordered groups of elements that must appear in sequence (e.g., table structure)
  */
-export type BlockOrderedElements = ElementTag[][] | null;
+export type BlockOrderedElements = ElementKey[][] | null;
 
 /**
  * Record of all block instances by their ID.
@@ -129,9 +129,9 @@ export interface BlockDefinition {
 	icon: BlockIcon;
 
 	/** The primary HTML tag for this block */
-	defaultTag: ElementTag;
+	defaultTag: ElementKey;
 	/** All allowed HTML tags for this block type */
-	availableTags: ElementTag[];
+	availableTags: ElementKey[];
 
 	/** Indicates if this block type can have styles */
 	allowedStyles: BlockAllowedStyles;
@@ -143,9 +143,9 @@ export interface BlockDefinition {
 	/** Tags that cannot appear anywhere in the ancestor chain */
 	forbiddenAncestors: BlockForbiddenAncestors;
 	/** Elements that can appear only once as direct children */
-	uniqueElements: BlockUniqueElements;
+	uniqueChildren: BlockUniqueElements;
 	/** Ordered groups of elements enforcing sequence */
-	orderedElements: BlockOrderedElements;
+	orderedChildren: BlockOrderedElements;
 
 	/** Default styles for the block */
 	defaultStyles: BlockStyles;
@@ -171,7 +171,7 @@ export interface BlockInstance {
 	/** The kind of block (text, container, media) */
 	type: BlockType;
 	/** The primary HTML tag for this block */
-	tag: ElementTag;
+	tag: ElementKey;
 	/** IDs of child blocks in order */
 	contentIDs: BlockID[];
 	/** Instance-specific attributes that override defaults */

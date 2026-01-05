@@ -20,22 +20,18 @@ export function validateString(input: unknown): ValidateResult<string> {
 }
 
 /**
- * Validates if a value is a non-empty array with valid string items.
- * Checks if the value is an array with at least one element, and all elements are valid strings.
+ * Validates if a value is a non-empty array of strings.
+ * Checks if the value is an array, is not empty, and all items are strings.
  * @param input - The value to validate
- * @returns ValidateResult with valid status and value or error message
+ * @returns ValidateResult with valid status and array of strings or error message
  * @example
- * validateArray(['item1', 'item2']) → { valid: true, value: [...] }
- * validateArray([]) → { valid: false, message: 'Invalid array: array cannot be empty' }
+ * validateArray(['a', 'b']) → { valid: true, value: ['a', 'b'] }
+ * validateArray([]) → { valid: false, message: '...' }
  */
 export function validateArray(input: unknown): ValidateResult<unknown[]> {
-	if (!Array.isArray(input)) {
-		return { valid: false, message: `Invalid array: expected an array, got ${typeof input}` };
-	}
+	if (!Array.isArray(input)) return { valid: false, message: `Invalid array: expected an array, got ${typeof input}` };
 
-	if (input.length === 0) {
-		return { valid: false, message: 'Invalid array: array cannot be empty' };
-	}
+	if (input.length === 0) return { valid: false, message: 'Invalid array: array cannot be empty' };
 
 	for (const item of input) {
 		const itemValidation = validateString(item);

@@ -2,7 +2,7 @@
 import type { PanelTabDefinition } from '@/src/core/layout/panel/types';
 
 // Component
-import BlockAttributeTabRender from '@/src/config/layout/panel/main/block/attribute/render';
+import BlockAttributeTabRender from '@/src/config/layout/panel/main/block/attribute/component';
 
 export const BlockAttributeTab: PanelTabDefinition = {
 	id: 'block-attribute',
