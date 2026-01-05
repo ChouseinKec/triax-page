@@ -1,5 +1,5 @@
 // Types
-import type { TokenOptionParams, TokenParam, TokenRaw,TokenCanonical, StyleValue } from '@/src/core/block/style/types';
+import type { TokenOptionParams, TokenParam, TokenRaw, TokenCanonical, StyleValue } from '@/src/core/block/style/types';
 import type { OptionDefinition } from '@/src/shared/components/types/option';
 
 // Utilities
@@ -7,16 +7,16 @@ import { extractBetween } from '@/src/shared/utilities/string';
 import { isValueInteger } from '@/src/shared/utilities/value';
 
 /**
- * Checks if the input string is a valid CSS data integer (e.g., '<integer>').
+ * Checks if the input string is a valid CSS data integer (e.g., '<integer>' or '<integer [0,∞]>').
  * @param input - The string to check.
  */
 export function getTokenType(tokenRaw: TokenRaw): 'integer' | undefined {
-	if (tokenRaw === '<integer>') return 'integer';
+	if (tokenRaw.startsWith('<integer') && tokenRaw.endsWith('>')) return 'integer';
 	return undefined;
 }
 
 export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
-	if( tokenRaw.startsWith('<integer') && tokenRaw.endsWith('>')) return '<integer>';
+	if (tokenRaw.startsWith('<integer') && tokenRaw.endsWith('>')) return '<integer>';
 	return undefined;
 }
 

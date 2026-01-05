@@ -1,0 +1,12 @@
+.fallback {
+	box-shadow: var(--theme-shadow-border-warning);
+
+	&:hover {
+		box-shadow: var(--theme-shadow-border-warning);
+		color: var(--color-warning);
+	}
+
+	&:focus {
+		box-shadow: var(--theme-shadow-border-warning);
+	}
+}

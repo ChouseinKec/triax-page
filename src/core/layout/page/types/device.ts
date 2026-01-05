@@ -1,3 +1,6 @@
+// Types
+import type { OptionDefinition } from 'src/shared/components/types/option';
+
 /**
  * Represents the unique identifier for a device.
  */
@@ -47,17 +50,11 @@ export type DeviceViewport = {
  * Defines the structure for device configurations in the page builder.
  * Devices represent different viewport sizes and categories for responsive design.
  */
-export interface DeviceDefinition {
-	/** Human-readable name of the device */
-	name: DeviceName;
-	/** Unique value identifier for the device */
-	value: DeviceValue;
+export interface DeviceDefinition extends OptionDefinition {
 	/** Media query breakpoints for this device */
 	media: DeviceMedia;
 	/** Template dimensions for the device viewport */
 	template: DeviceViewport;
-	/** Category of the device (e.g., 'phone', 'tablet', 'desktop') */
-	category: DeviceCategory;
 	/** Whether the device should be hidden from UI selectors */
 	hidden?: boolean;
 }

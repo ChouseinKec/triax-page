@@ -102,7 +102,7 @@ export const FONT_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'text-combine-upright',
 		description: 'Combines multiple characters into a single upright character, useful for vertical text layout.',
-		syntax: 'none|all|[digits <integer [2,4]>?]',
+		syntax: 'none|all',
 		icons: {
 			'digits': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M128,72c-14.23,0-26,6.44-34,18.61-6.47,9.86-10,23.14-10,37.39s3.56,27.53,10,37.39c8,12.17,19.74,18.61,34,18.61s26-6.44,34-18.61c6.47-9.86,10-23.14,10-37.39s-3.56-27.53-10-37.39C154,78.44,142.23,72,128,72Zm0,96c-22.1,0-28-25.14-28-40s5.9-40,28-40,28,25.14,28,40S150.1,168,128,168ZM208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Z" /></svg>
@@ -147,7 +147,7 @@ export const FONT_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'text-decoration',
 		description: 'Specifies decoration added to text, such as underline, overline, or line-through.',
-		syntax: '<text-decoration-line> <text-decoration-style> <text-decoration-thickness> <text-decoration-color> ',
+		syntax: '<text-decoration-line> || <text-decoration-style> || <text-decoration-thickness> || <text-decoration-color> ',
 		icons: {
 			'blink': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M215.79,118.17a8,8,0,0,0-5-5.66L153.18,90.9l14.66-73.33a8,8,0,0,0-13.69-7l-112,120a8,8,0,0,0,3,13l57.63,21.61L88.16,238.43a8,8,0,0,0,13.69,7l112-120A8,8,0,0,0,215.79,118.17ZM109.37,214l10.47-52.38a8,8,0,0,0-5-9.06L62,132.71l84.62-90.66L136.16,94.43a8,8,0,0,0,5,9.06l52.8,19.8Z" /></svg>

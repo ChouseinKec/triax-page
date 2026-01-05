@@ -71,9 +71,6 @@ export function getTokenType(tokenRaw: TokenRaw, tokenTypeDefinitions: TokenType
 	}
 
 	return tokenRaw;
-
-	// No matching token type found
-	return devLog.warn('No matching token type found for canonical:', canonical), undefined;
 }
 
 /**
@@ -131,6 +128,7 @@ export function expandTokens(syntax: string, tokenDefinitions: TokenDefinitionRe
 
 		// Mark this token as seen to prevent recursion
 		seen.add(tokenCanonical);
+		
 		// Recursively expand the definition's syntax
 		let expanded = expandTokens(def.syntax, tokenDefinitions, tokenTypeDefinitions, seen);
 

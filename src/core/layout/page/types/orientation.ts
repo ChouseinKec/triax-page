@@ -1,3 +1,6 @@
+// Types
+import type { OptionDefinition } from 'src/shared/components/types/option';
+
 /**
  * Human-readable name of the orientation
  */
@@ -22,12 +25,7 @@ export type OrientationRecord = Record<string, OrientationInstance>;
  * Defines the structure for orientation configurations in the page builder.
  * Orientations represent viewport rotation states for responsive design.
  */
-export interface OrientationDefinition {
-	/** Human-readable name of the orientation */
-	name: OrientationName;
-	/** Unique value identifier for the orientation */
-	value: OrientationValue;
-	/** Whether the orientation should be hidden from UI selectors */
+export interface OrientationDefinition extends OptionDefinition {
 	hidden?: boolean;
 }
 

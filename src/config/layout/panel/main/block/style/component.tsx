@@ -12,12 +12,12 @@ import { canBlockHaveStyles } from "@/src/core/block/style/managers/";
 import TabGroup from "@/src/shared/components/group/tab/component";
 
 // Renderers
-import { renderDisplayTab } from "./display";
-import { renderSizeTab } from "./size";
-import { renderFontTab } from "./font";
-import { renderBackgroundTab } from "./background";
-import { renderBorderTab } from "./border";
-import { renderEffectTab } from "./effect";
+import { renderDisplayTab } from "./tabs/display";
+import { renderSizeTab } from "./tabs/size";
+import { renderFontTab } from "./tabs/font";
+import { renderBackgroundTab } from "./tabs/background";
+import { renderBorderTab } from "./tabs/border";
+import { renderEffectTab } from "./tabs/effect";
 
 // Tab icons object
 const TAB_ICONS = {
@@ -54,7 +54,7 @@ const TAB_ICONS = {
 } as const;
 
 /**
- * BlockStyleTabRender Component
+ * BlockStyleTabComponent Component
  *
  * The main style inspector panel that displays CSS property controls for the currently selected block in the page builder.
  * Conditionally renders comprehensive style editing interface or informative fallback when no block is selected.
@@ -64,7 +64,7 @@ const TAB_ICONS = {
  *
  * @note Relies on block selection state to determine which style controls to display
  */
-const BlockStyleTabRender: React.FC = () => {
+const BlockStyleTabComponent: React.FC = () => {
     const selectedBlockID = useSelectedBlockID();
     const canHaveStyles = selectedBlockID ? canBlockHaveStyles(selectedBlockID) : false;
 
@@ -101,7 +101,7 @@ const BlockStyleTabRender: React.FC = () => {
             </div>
         )
     };
-    return <div className={CSS.BlockStyleTabRender}>{renderContent()}</div>;
+    return <div className={CSS.BlockStyleTabComponent}>{renderContent()}</div>;
 };
 
-export default BlockStyleTabRender;
+export default BlockStyleTabComponent;

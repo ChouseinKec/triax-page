@@ -1,5 +1,5 @@
 // // Utilities
-// import { createKeywordOption, createFunctionOption, createDimensionOptions, createNumberOption, createIntegerOption, isSlotOptionValid, createOptionTable } from '@/src/core/block/style/utilities/option';
+// import { createKeywordOption, createFunctionOption, createDimensionOptions, createNumberOption, createIntegerOption, validateSlotOption, createOptionTable } from '@/src/core/block/style/utilities/option';
 // import { getTokenCanonical } from '@/src/core/block/style/utilities';
 
 
@@ -98,23 +98,23 @@
 // 	});
 // });
 
-// describe('isSlotOptionValid', () => {
+// describe('validateSlotOption', () => {
 // 	it('accepts replacement that yields valid prefix', () => {
 // 		const validSet = ['auto block', 'block block', 'auto auto'];
 // 		const current = ['auto', 'block'].map(getTokenCanonical) as string[];
-// 		expect(isSlotOptionValid('auto', 1, validSet, current)).toBe(true);
+// 		expect(validateSlotOption('auto', 1, validSet, current)).toBe(true);
 // 	});
 
 // 	it('rejects replacement with no matching combination', () => {
 // 		const validSet = ['auto 10px'];
 // 		const current = ['block', '5px'].map(getTokenCanonical) as string[];
-// 		expect(isSlotOptionValid('20px', 1, validSet, current)).toBe(false);
+// 		expect(validateSlotOption('20px', 1, validSet, current)).toBe(false);
 // 	});
 
 // 	it('accepts canonicalized match case-insensitively', () => {
 // 		const validSet = ['AUTO BLOCK'];
 // 		const current = ['auto', 'block'].map(getTokenCanonical) as string[];
-// 		expect(isSlotOptionValid('auto', 0, validSet, current)).toBe(true);
+// 		expect(validateSlotOption('auto', 0, validSet, current)).toBe(true);
 // 	});
 // });
 

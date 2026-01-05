@@ -5,7 +5,7 @@ import React, { Fragment, memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockStyleSlot from "@/src/features/block/style/slot/component";
+import BlockStyleSlot from "@/src/config/layout/panel/main/block/style/slot/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
 
 // Types
@@ -31,6 +31,7 @@ const BlockStyleSlots: React.FC<BlockStyleSlotsProps> = ({ values, options, onCh
     const nextOptions = options[valuesLength];
     const slotsLength = options.length;
     const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
+
 
     // Handle changes to individual slot values
     const handleSlotChange = (newValue: string, slotIndex: number) => {

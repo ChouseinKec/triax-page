@@ -1,3 +1,6 @@
+// Types
+import type { OptionDefinition } from 'src/shared/components/types/option';
+
 /**
  * Human-readable name of the pseudo state
  */
@@ -22,11 +25,7 @@ export type PseudoRecord = Record<PseudoID, PseudoInstance>;
  * Defines the structure for pseudo state configurations in the page builder.
  * Pseudo states represent interactive states like hover, active, focus, etc.
  */
-export interface PseudoDefinition {
-	/** Human-readable name of the pseudo state */
-	name: PseudoName;
-	/** Unique value identifier for the pseudo state */
-	value: PseudoValue;
+export interface PseudoDefinition extends OptionDefinition {
 	/** Whether the pseudo state should be hidden from UI selectors */
 	hidden?: boolean;
 }

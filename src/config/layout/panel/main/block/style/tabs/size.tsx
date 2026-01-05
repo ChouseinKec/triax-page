@@ -10,7 +10,7 @@ import type { Side } from "@/src/shared/components/select/position/types";
 import GroupLayout from "@/src/shared/components/layout/group/component";
 import PositionSelect from "@/src/shared/components/select/position/component";
 import Property from "@/src/shared/components/layout/property/component";
-import { renderStyleRow } from "./factory";
+import { renderStyleRow } from "../factory";
 
 // Utilities
 import { generateStyleKey } from "@/src/core/block/style/utilities";
@@ -47,6 +47,12 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                         {renderStyleRow({ blockID, label: "Max Height", propertyName: "max-height" })}
                         {renderStyleRow({ blockID, label: "Aspect Ratio", propertyName: "aspect-ratio", styles: { gridColumn: "1 / -1" } })}
                         {renderStyleRow({ blockID, label: "Overflow", propertyName: "overflow", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({
+                            blockID,
+                            label: "Z-Index",
+                            propertyName: "z-index",
+                            styles: { gridColumn: "1/-1" }
+                        })}
                     </>
                 )}
             />
@@ -57,13 +63,13 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                 styles={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ blockID, label: "Position", propertyName: "position", styles: { gridColumn: "1/-1", gridRow: "2" } })}
+                        {renderStyleRow({ blockID, label: "Position", propertyName: "position", styles: { gridColumn: "1/-1", gridRow: "1" } })}
 
                         <Property
                             label={null}
                             name="Position Selector"
                             description="Select a side to edit its padding, margin, or position value"
-                            styles={{ gridColumn: "1/2", gridRow: "3/5" }}
+                            styles={{ gridColumn: "1/2", gridRow: "2/5" }}
                             content={() => (
                                 <PositionSelect
                                     onChangeSide={setCurrentSide}
@@ -75,15 +81,27 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                             actions={() => null}
                         />
 
-                        {renderStyleRow({ blockID, label: "Padding", propertyName: padding as StyleKey })}
-                        {renderStyleRow({ blockID, label: "Margin", propertyName: margin as StyleKey })}
+                        {renderStyleRow({
+                            blockID,
+                            label: "Padding",
+                            propertyName: padding,
+                            styles: { gridColumn: "2/-1", gridRow: "2", flexDirection: "row" }
+                        })}
+
+                        {renderStyleRow({
+                            blockID,
+                            label: "Margin",
+                            propertyName: margin,
+                            styles: { gridColumn: "2/-1", gridRow: "3", flexDirection: "row" }
+                        })}
                         {renderStyleRow({
                             blockID,
                             label: currentSide || "...",
-                            propertyName: (currentSide?.toLowerCase() as StyleKey) || "top",
+                            propertyName: (currentSide?.toLowerCase()) || "top",
                             disabled: !["absolute", "fixed", "sticky"].includes(positionValue) || !currentSide,
+                            styles: { gridColumn: "2/-1", gridRow: "4", flexDirection: "row" }
                         })}
-                        {renderStyleRow({ blockID, label: "Z-Index", propertyName: "z-index" })}
+
                     </>
                 )}
             />

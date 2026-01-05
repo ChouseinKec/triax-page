@@ -1,19 +1,21 @@
 "use client";
-
 import { memo } from "react";
+// Styles
+import CSS from "./styles.module.scss";
 
 // Types
 import type { BlockStyleValue } from "./types";
-
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
 import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/utilities";
 import { mergeArrays } from "@/src/shared/utilities/array";
 import { devLog } from "@/src/shared/utilities/dev";
+import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/src/core/block/style/utilities/syntax';
 
 // Components
-import BlockStyleSlots from "@/src/features/block/style/slots/component";
+import BlockStyleSlots from "@/src/config/layout/panel/main/block/style/slots/component";
+import GenericInput from "@/src/shared/components/input/generic/component";
 
 // Registry
 import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/src/core/block/style/registries";
@@ -35,16 +37,16 @@ import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getR
  */
 const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefinition }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the styleDefinition definition
-    const syntaxParsed = styleDefinition.getSyntaxParsed();
-    const syntaxSet = styleDefinition.getSyntaxSet();
-    const syntaxNormalized = styleDefinition.getSyntaxNormalized();
-    const syntaxSeparators = styleDefinition.getSyntaxSeparators();
-
-    // Split the value string into slots (e.g., ["10px", "auto"])
+    const syntaxParsed = getSyntaxParsed(styleDefinition.key, styleDefinition.syntax, getRegisteredTokens(), getRegisteredTokenTypes());
+    const syntaxSet = getSyntaxSet(styleDefinition.key, syntaxParsed);
+    const syntaxNormalized = getSyntaxNormalized(styleDefinition.key, syntaxParsed, getRegisteredTokenTypes());
+    const syntaxSeparators = getSyntaxSeparators(styleDefinition.key, syntaxParsed);
     const values = splitAdvanced(value);
-
-    // Compute the possible slot options for each slot, based on current values and styleDefinition syntax
     const slotsOptions = createOptionTable(styleDefinition.key, syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes(), getRegisteredTokens(), getRegisteredStyles(), getRegisteredUnits());
+
+
+    if (!slotsOptions) return <GenericInput className={CSS.fallback} value={value} onChange={onChange} placeholder={`Enter ${styleDefinition.key} value`} />;
+
 
     // Handler to update slot values and join with correct separators
     const handleSlotsChange = (input: string[]) => {
@@ -52,6 +54,7 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefi
 
         // Normalize updated values to canonical tokens
         const valueTokens = getValueTokens(input, getRegisteredTokenTypes()).join(" ");
+
         // Find the index of the matching variation with strict matching
         // This will return the index of the variation that matches the updated value tokens
         let variationIndex = syntaxNormalized.findIndex((value) => value === valueTokens)
@@ -62,15 +65,18 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefi
         // This will return the index of the variation that starts with the updated value tokens
         // Needed for variations with tuple values
         if (variationIndex === -1) {
-            // variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
-            variationIndex = 7;
+            variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
 
             // If still no match, return early
             // This will prevent assignment of invalid syntax when the slot is set to "" or empty
             if (variationIndex === -1) return devLog.warn("No matching syntax variation found for value tokens:", { valueTokens, syntaxParsed }), undefined;
-            
+
+            // Rebuild the input array based on the matched variation's full syntax
+            // This ensures all required tokens are included
+            // For example, if the variation is "<length> <length> <color>" and input is ["10px"],
+            // this will expand input to ["10px", "0px", "#ffffff"] using default token values
             const syntax = syntaxNormalized[variationIndex];
-            input = mergeArrays(input, getTokenValues(syntax.split(" "), getRegisteredTokens(), getRegisteredTokenTypes()));
+            input = mergeArrays(input, getTokenValues(splitAdvanced(syntax), getRegisteredTokens(), getRegisteredTokenTypes()));
         }
 
         // Get separators for this variation

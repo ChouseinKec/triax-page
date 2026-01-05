@@ -74,8 +74,10 @@ export function parseMultiplier(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 		const base = syntax.slice(0, -1).trim();
 		return parseMultiplierStar(base, MAX_MULTIPLIER_DEPTH);
 	}
+
 	// {m,n} multiplier
 	const match = syntax.match(/^(.*)\{(\d+),(\d+)\}$/);
+	
 	if (match) {
 		const base = match[1].trim();
 		const n = parseInt(match[2], 10);

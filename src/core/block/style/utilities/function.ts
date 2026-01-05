@@ -12,7 +12,9 @@ import { devLog } from '@/src/shared/utilities/dev';
  */
 export function extractFunctionName(input: string): string | undefined {
 	const match = input.match(/^([a-zA-Z0-9\-]+)\s*\(/);
-	return match ? match[1] : devLog.warn('No function name found in input:', input), undefined;
+	if (match) return match[1];
+
+	return devLog.warn('No function name found in input:', input), undefined;
 }
 
 /**
@@ -21,7 +23,9 @@ export function extractFunctionName(input: string): string | undefined {
  */
 export function extractFunctionArgs(input: string): string | undefined {
 	const match = input.match(/^([a-zA-Z0-9\-]+)\s*\((.*)\)$/);
-	return match ? match[2] : devLog.warn('No function arguments found in input:', input), undefined;
+	if (match) return match[2];
+
+	return devLog.warn('No function arguments found in input:', input), undefined;
 }
 
 /**
@@ -31,6 +35,7 @@ export function extractFunctionArgs(input: string): string | undefined {
 export function extractFunctionValue(input: string): { name: string | undefined; value: string | undefined } {
 	const name = extractFunctionName(input);
 	const value = extractFunctionArgs(input);
+
 	return { name, value };
 }
 

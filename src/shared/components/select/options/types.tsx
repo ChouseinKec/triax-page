@@ -1,15 +1,5 @@
-import { ReactNode } from "react";
-
-export interface OptionDefinition {
-    /** The display name of the option */
-    name: string;
-    /** The value of the option*/
-    value: string;
-    /** Optional category to group the option under */
-    category?: string;
-    /** Optional icon for the option (SVG element) */
-    icon?: ReactNode;
-}
+// Types
+import type { OptionDefinition } from 'src/shared/components/types/option';
 
 /**
  * Props for the OptionsSelect component.

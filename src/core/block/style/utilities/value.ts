@@ -33,9 +33,11 @@ export function getValueToken(styleValue: StyleValue, tokenTypeDefinitions: Toke
 	// Sort token types by priority
 	const sortedTypes = Object.values(tokenTypeDefinitions).sort((a, b) => a.priority - b.priority);
 
+
 	// Try to get the value token from each type definition
 	for (const typeDef of sortedTypes) {
 		const valueToken = typeDef.getValueToken(styleValue);
+
 		if (valueToken) return valueToken;
 	}
 

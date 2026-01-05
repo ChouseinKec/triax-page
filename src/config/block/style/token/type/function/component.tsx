@@ -11,18 +11,15 @@ import type { StyleKey } from "@/src/core/block/style/types";
 // Components
 import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
 import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import BlockStyleValue from "@/src/features/block/style/value/";
-
-// Constants
-// import { createProperty } from "@/src/core/block/style/constants";
+import BlockStyleValue from "@/src/config/layout/panel/main/block/style/value";
 
 // Utilities
 import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from "@/src/core/block/style/utilities";
+import { createDefinition } from "@/src/config/block/style/token/type/function/utilities";
 import { devRender } from "@/src/shared/utilities/dev";
 
 // Registry
 import { getRegisteredTokenTypes } from "@/src/core/block/style/registries";
-import { get } from "node:http";
 
 /**
  * FunctionValue Component
@@ -40,9 +37,7 @@ import { get } from "node:http";
 const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange }) => {
     const functionOptions = filterFunctionOptions(options);
     const currentOption = matchFunctionOption(functionOptions, value, getRegisteredTokenTypes());
-    // const createdProperty = currentOption ? createProperty(currentOption.name as StyleKey, currentOption.syntax) : undefined;
-    const createdProperty = undefined;
-
+    const createdDefinition = currentOption ? createDefinition(currentOption.name as StyleKey, currentOption.syntax as string) : undefined;
     const extractedValue = extractFunctionValue(value);
 
     // Handle changes to CSS function value arguments
@@ -75,7 +70,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
 
     if (!extractedValue.name || !extractedValue.value) return devRender.error("[FunctionValue] Malformed function value - missing name or arguments.", { value, extractedValue });
     if (!currentOption) return devRender.error("[FunctionValue] No valid function option available.", { options, functionOptions });
-    if (!createdProperty) return devRender.error("[FunctionValue] No valid styleDefinition available for the current function option.", { currentOption });
+    if (!createdDefinition) return devRender.error("[FunctionValue] No valid styleDefinition available for the current function option.", { currentOption });
 
     return (
         <DropdownReveal
@@ -103,7 +98,7 @@ const FunctionValue: React.FC<FunctionValueProps> = ({ value, options, onChange 
                 {/* Function arguments editor */}
                 <BlockStyleValue
                     value={extractedValue.value}
-                    styleDefinition={createdProperty}
+                    styleDefinition={createdDefinition}
                     onChange={handleValueChange}
                 />
 

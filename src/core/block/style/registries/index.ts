@@ -2,9 +2,6 @@
 import type { StyleDefinition, StyleKey, StyleDefinitionRecord, UnitKey, UnitDefinition, UnitDefinitionRecord, TokenDefinition, TokenDefinitionRecord, TokenKey, TokenTypeKey, TokenTypeDefinition, TokenTypeDefinitionRecord, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators } from '@/src/core/block/style/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
-// Utilities
-import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/src/core/block/style/utilities/syntax';
-
 type StyleDefinitionInput = Omit<StyleDefinition, 'syntaxParsed' | 'syntaxNormalized' | 'syntaxSet' | 'syntaxSeparators'>;
 
 /**
@@ -16,12 +13,6 @@ class StyleRegistry {
 	private tokens: Readonly<TokenDefinitionRecord> = {};
 	private tokenTypes: Readonly<TokenTypeDefinitionRecord> = {};
 
-	// Caches for lazy-computed style syntax properties
-	private syntaxParsedCache: Map<StyleKey, StyleSyntaxParsed> = new Map();
-	private syntaxNormalizedCache: Map<StyleKey, StyleSyntaxParsed> = new Map();
-	private syntaxSetCache: Map<StyleKey, StyleSyntaxSet> = new Map();
-	private syntaxSeparatorsCache: Map<StyleKey, StyleSyntaxSeparators> = new Map();
-
 	// ? --------------------------------------------------------- STYLE METHODS --------------------------------------------------------- //
 
 	/**
@@ -32,19 +23,11 @@ class StyleRegistry {
 		// Check for duplicates
 		if (this.styles[styleDefinition.key]) return { valid: false, message: `Style with key "${styleDefinition.key}" already registered` };
 
-		// Return the full style definition with injected methods
-		const fullStyleDefinition: StyleDefinition = {
-			...styleDefinition,
-			getSyntaxParsed: () => this.getSyntaxParsed(styleDefinition.key)!,
-			getSyntaxNormalized: () => this.getSyntaxNormalized(styleDefinition.key)!,
-			getSyntaxSet: () => this.getSyntaxSet(styleDefinition.key)!,
-			getSyntaxSeparators: () => this.getSyntaxSeparators(styleDefinition.key)!,
-		};
 
 		// Register the full style
-		this.styles = { ...this.styles, [styleDefinition.key]: fullStyleDefinition };
+		this.styles = { ...this.styles, [styleDefinition.key]: styleDefinition };
 
-		return { valid: true, value: fullStyleDefinition };
+		return { valid: true, value: styleDefinition };
 	}
 
 	/**
@@ -62,69 +45,6 @@ class StyleRegistry {
 		return this.styles[styleKey];
 	}
 
-	/**
-	 * Retrieves the parsed syntax for a style, computing it lazily if not cached.
-	 * @param styleKey - The style key
-	 */
-	getSyntaxParsed(styleKey: StyleKey): StyleSyntaxParsed | undefined {
-		if (this.syntaxParsedCache.has(styleKey)) return this.syntaxParsedCache.get(styleKey);
-
-		const style = this.styles[styleKey];
-		if (!style) return undefined;
-
-		const parsed = getSyntaxParsed(style.syntax, this.tokens, this.tokenTypes);
-		this.syntaxParsedCache.set(styleKey, parsed);
-
-		return parsed;
-	}
-
-	/**
-	 * Retrieves the normalized syntax for a style, computing it lazily if not cached.
-	 * @param styleKey - The style key
-	 */
-	getSyntaxNormalized(styleKey: StyleKey): StyleSyntaxParsed | undefined {
-		if (this.syntaxNormalizedCache.has(styleKey)) return this.syntaxNormalizedCache.get(styleKey);
-
-		const parsed = this.getSyntaxParsed(styleKey);
-		if (!parsed) return undefined;
-
-		const normalized = getSyntaxNormalized(parsed, this.tokenTypes);
-		this.syntaxNormalizedCache.set(styleKey, normalized);
-
-		return normalized;
-	}
-
-	/**
-	 * Retrieves the syntax set for a style, computing it lazily if not cached.
-	 * @param styleKey - The style key
-	 */
-	getSyntaxSet(styleKey: StyleKey): StyleSyntaxSet | undefined {
-		if (this.syntaxSetCache.has(styleKey)) return this.syntaxSetCache.get(styleKey);
-
-		const parsed = this.getSyntaxParsed(styleKey);
-		if (!parsed) return undefined;
-
-		const syntaxSet = getSyntaxSet(parsed);
-		this.syntaxSetCache.set(styleKey, syntaxSet);
-
-		return syntaxSet;
-	}
-
-	/**
-	 * Retrieves the syntax separators for a style, computing it lazily if not cached.
-	 * @param styleKey - The style key
-	 */
-	getSyntaxSeparators(styleKey: StyleKey): StyleSyntaxSeparators | undefined {
-		if (this.syntaxSeparatorsCache.has(styleKey)) return this.syntaxSeparatorsCache.get(styleKey);
-
-		const parsed = this.getSyntaxParsed(styleKey);
-		if (!parsed) return undefined;
-
-		const separators = getSyntaxSeparators(parsed);
-		this.syntaxSeparatorsCache.set(styleKey, separators);
-
-		return separators;
-	}
 
 	// ? --------------------------------------------------------- TOKEN METHODS --------------------------------------------------------- //
 	/**

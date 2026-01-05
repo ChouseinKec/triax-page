@@ -6,7 +6,7 @@ import type { BlockID } from "@/src/core/block/instance/types";
 
 // Components
 import GroupLayout from "@/src/shared/components/layout/group/component";
-import { renderStyleRow } from "./factory";
+import { renderStyleRow } from "../factory";
 
 /**
  * Renders the Effects tab content

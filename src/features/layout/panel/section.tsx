@@ -10,7 +10,7 @@ import type { PanelSectionProps } from "./types";
 // Managers
 import { useOpenPanels, togglePanel } from "@/src/core/layout/panel/managers";
 
-const InfoSection: React.FC<PanelSectionProps> = ({ selectedWorkbenchID }) => {
+const PanelSection: React.FC<PanelSectionProps> = ({ selectedWorkbenchID }) => {
     const openPanels = useOpenPanels(selectedWorkbenchID);
 
     return (
@@ -32,4 +32,4 @@ const InfoSection: React.FC<PanelSectionProps> = ({ selectedWorkbenchID }) => {
 
 };
 
-export default memo(InfoSection);
+export default memo(PanelSection);

@@ -1,9 +1,13 @@
 // Types
 import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical } from '@/src/core/block/style/types';
+import type { StyleKey, StyleSyntaxRaw, StyleDefinition, TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/src/core/block/style/types';
 
 // Utilities
-import { extractBetween } from '@/src/shared/utilities/string';
+import { extractBetween, splitAdvanced, joinAdvanced } from '@/src/shared/utilities/string';
+import { parseSyntax } from '@/src/core/block/style/utilities';
+import { getTokenValues } from '@/src/core/block/style/utilities/';
+import { extractSeparator } from '@/src/core/block/style/utilities';
+import { devLog } from '@/src/shared/utilities/dev';
 
 /**
  * Checks if the input string is a valid CSS data function (e.g., 'fit-content(10px)', 'calc(100% - 20px)').
@@ -41,6 +45,23 @@ export function getTokenParam(tokenRaw: TokenRaw): TokenParam | undefined {
 	return extractBetween(tokenRaw, '()') ? { syntax: extractBetween(tokenRaw, '()')! } : undefined;
 }
 
+export function getDefaultValue(tokenParam: TokenParam, tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord): string {
+	const parsedSyntax = parseSyntax(tokenParam.syntax.toString());
+	const firstVariation = parsedSyntax[0];
+	const separators = extractSeparator(firstVariation);
+	const splitTokens = splitAdvanced(firstVariation);
+	const tokenValues = getTokenValues(splitTokens, tokenDefinitions, tokenTypeDefinitions);
+	return joinAdvanced(tokenValues, separators);
+}
+
+// Helper function to create a styleDefinition for function arguments
+export function createDefinition(name: StyleKey, styleSyntaxRaw: StyleSyntaxRaw): StyleDefinition {
+	return {
+		key: name,
+		description: `Arguments for ${name} function`,
+		syntax: styleSyntaxRaw,
+	};
+}
 /**
  * Creates a OptionFunctionDefinition object for a given function token.
  *
@@ -48,22 +69,19 @@ export function getTokenParam(tokenRaw: TokenRaw): TokenParam | undefined {
  */
 export function createOption(params: TokenOptionParams): OptionDefinition | undefined {
 	const tokenCanonical = params.tokenCanonical;
-	const tokenBase = params.tokenBase;
 	const tokenRaw = params.tokenRaw;
+	const tokenBase = params.tokenBase;
+
 	const tokenParam = getTokenParam(tokenRaw);
+	if (!tokenParam) return devLog.warn(`Unable to extract parameters from token "${tokenRaw}"`), undefined;
 
-	// If any of these are undefined or empty, return undefined
-	if (!tokenCanonical || !tokenBase || !tokenParam) return undefined;
-
-	// Get default value from registered tokens
-	const tokenDefinitions = params.tokenDefinitions;
-	const defaultValue = tokenDefinitions[`<${tokenBase}>`]?.default;
-	if (!defaultValue) return undefined;
+	const defaultValue = getDefaultValue(tokenParam, params.tokenDefinitions, params.tokenTypeDefinitions);
+	if (!defaultValue) return devLog.warn(`Unable to determine default value for token "${tokenRaw}"`), undefined;
 
 	// Create and return the OptionFunctionDefinition object
 	return {
 		name: tokenCanonical,
-		value: defaultValue,
+		value: `${tokenBase}(${defaultValue})`,
 		syntax: tokenParam.syntax,
 		category: 'function',
 		type: 'function',

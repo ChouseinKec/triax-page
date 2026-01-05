@@ -28,7 +28,7 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	{
 		key: '<length>',
 		syntax: '<length>',
-		default: '0',
+		default: '0px',
 		type: 'length',
 	},
 	{
@@ -56,122 +56,6 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 		type: 'color',
 	},
 
-	// Functional tokens
-	{
-		key: '<minmax>',
-		syntax: 'minmax(<length-percentage [0,∞]>,<length-percentage [0,∞]>)',
-		default: 'minmax(0px,0px)',
-		type: 'function',
-	},
-	{
-		key: '<fit-content>',
-		syntax: 'fit-content(<length-percentage [0,∞]>)',
-		default: 'fit-content(0px)',
-		type: 'function',
-	},
-	{
-		key: '<repeat>',
-		syntax: 'repeat(<integer [1,∞]>,<track-size>+)',
-		default: 'repeat(1,1fr)',
-		type: 'function',
-	},
-	{
-		key: '<translate3d>',
-		syntax: 'translate3d(<length-percentage>,<length-percentage>,<length>)',
-		default: 'translate3d(0px,0px,0px)',
-		type: 'function',
-	},
-	{
-		key: '<rotate3d>',
-		syntax: 'rotate3d(<number>,<number>,<number>,<angle>)',
-		default: 'rotate3d(0,0,0,0deg)',
-		type: 'function',
-	},
-	{
-		key: '<scale3d>',
-		syntax: 'scale3d(<number>,<number>,<number>)',
-		default: 'scale3d(1.0,1.0,1.0)',
-		type: 'function',
-	},
-	{
-		key: '<skew>',
-		syntax: 'skew(<angle>,<angle>)',
-		default: 'skew(0deg,0deg)',
-		type: 'function',
-	},
-	{
-		key: '<perspective>',
-		syntax: 'perspective(<length [0,∞]>)',
-		default: 'perspective(0px)',
-		type: 'function',
-	},
-	{
-		key: '<blur>',
-		syntax: 'blur(<length [0,∞]>)',
-		default: 'blur(0px)',
-		type: 'function',
-	},
-	{
-		key: '<brightness>',
-		syntax: 'brightness(<number [0,∞]>)',
-		default: 'brightness(1.0)',
-		type: 'function',
-	},
-	{
-		key: '<contrast>',
-		syntax: 'contrast(<number [0,∞]>)',
-		default: 'contrast(1.0)',
-		type: 'function',
-	},
-	{
-		key: '<drop-shadow>',
-		syntax: 'drop-shadow(<length-percentage> <length-percentage> <length-percentage> <color>)',
-		default: 'drop-shadow(0px 0px 0px #ffffff)',
-		type: 'function',
-	},
-	{
-		key: '<grayscale>',
-		syntax: 'grayscale(<number [0,∞]>)',
-		default: 'grayscale(0.0)',
-		type: 'function',
-	},
-	{
-		key: '<hue-rotate>',
-		syntax: 'hue-rotate(<angle>)',
-		default: 'hue-rotate(0deg)',
-		type: 'function',
-	},
-	{
-		key: '<invert>',
-		syntax: 'invert(<number [0,∞]>)',
-		default: 'invert(0.0)',
-		type: 'function',
-	},
-	{
-		key: '<opacity>',
-		syntax: 'opacity(<number [0,∞]>)',
-		default: 'opacity(1.0)',
-		type: 'function',
-	},
-	{
-		key: '<saturate>',
-		syntax: 'saturate(<number [0,∞]>)',
-		default: 'saturate(1.0)',
-		type: 'function',
-	},
-	{
-		key: '<sepia>',
-		syntax: 'sepia(<number [0,∞]>)',
-		default: 'sepia(0.0)',
-		type: 'function',
-	},
-	{
-		key: '<url>',
-		syntax: 'url(<link>)',
-		default: 'url("https://example.com")',
-		type: 'function',
-	},
-
 	// Composed tokens
 	{
 		key: '<length-percentage>',
@@ -180,27 +64,27 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	},
 	{
 		key: '<track-list>',
-		syntax: '[<track-size>|<track-repeat>]+',
+		syntax: '[<track-size> | <track-repeat>]+',
 		type: 'composed',
 	},
 	{
 		key: '<track-size>',
-		syntax: '[<track-breadth>|minmax(<inflexible-breadth>,<track-breadth>)|<fit-content>]',
+		syntax: '<track-breadth> | minmax(<inflexible-breadth>,<track-breadth>) | fit-content(<length-percentage [0,∞]>)',
 		type: 'composed',
 	},
 	{
 		key: '<track-breadth>',
-		syntax: '<length-percentage [0,∞]>|<flex [0,∞]>|min-content|max-content|auto',
+		syntax: '<length-percentage [0,∞]> | <flex [0,∞]> | min-content | max-content | auto',
 		type: 'composed',
 	},
 	{
 		key: '<inflexible-breadth>',
-		syntax: '<length-percentage [0,∞]>|min-content|max-content|auto',
+		syntax: '<length-percentage [0,∞]> | min-content | max-content | auto',
 		type: 'composed',
 	},
 	{
 		key: '<track-repeat>',
-		syntax: 'repeat(<integer [1,∞]>,<track-size>+)',
+		syntax: 'repeat(<integer [1,∞]> , [<track-size>]+)',
 		type: 'composed',
 	},
 	{
@@ -211,7 +95,6 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	{
 		key: '<ratio>',
 		syntax: '<number [0,∞]> [ / <number [0,∞]> ]',
-		default: '1/1',
 		type: 'composed',
 	},
 	{
@@ -221,7 +104,7 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	},
 	{
 		key: '<transform-function>',
-		syntax: '<translate3d>|<rotate3d>|<scale3d>|<skew>|<perspective>',
+		syntax: 'translate3d(<length-percentage>,<length-percentage>,<length>) | rotate3d(<number>,<number>,<number>,<angle>) | scale3d(<number>,<number>,<number>) | skew(<angle>,<angle>) | perspective(<length [0,∞]>)',
 		type: 'composed',
 	},
 	{
@@ -311,27 +194,13 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	},
 	{
 		key: '<filter-function>',
-		syntax: '<blur>|brightness(<number [0,∞]>)|contrast(<number [0,∞]>)|drop-shadow(<length-percentage> <length-percentage> <length-percentage> <color>)|grayscale(<number [0,∞]>)|hue-rotate(<angle>)|invert(<number [0,∞]>)|opacity(<number [0,∞]>)|saturate(<number [0,∞]>)|sepia(<number [0,∞]>)',
+		syntax: 'blur(<length [0,∞]>) | brightness(<number [0,∞]>) | contrast(<number [0,∞]>) | drop-shadow(<length-percentage> <length-percentage> <length-percentage> <color>) | grayscale(<number [0,∞]>) | hue-rotate(<angle>) | invert(<number [0,∞]>) | opacity(<number [0,∞]>) | saturate(<number [0,∞]>) | sepia(<number [0,∞]>)',
 		type: 'composed',
 	},
+
 	{
 		key: '<spread-shadow>',
-		syntax: '<box-shadow-offset> <box-shadow-blur> <box-shadow-spread> <box-shadow-color> <box-shadow-position>?',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-position>',
-		syntax: 'inset',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-color>',
-		syntax: '<color>',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-offset>',
-		syntax: '<length> <length>',
+		syntax: '<box-shadow-position> <length> <length>   <box-shadow-blur> <box-shadow-spread>  <box-shadow-color> ',
 		type: 'composed',
 	},
 	{
@@ -342,6 +211,16 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	{
 		key: '<box-shadow-spread>',
 		syntax: '<length>',
+		type: 'composed',
+	},
+	{
+		key: '<box-shadow-color>',
+		syntax: '<color>',
+		type: 'composed',
+	},
+	{
+		key: '<box-shadow-position>',
+		syntax: 'outset | inset',
 		type: 'composed',
 	},
 ];

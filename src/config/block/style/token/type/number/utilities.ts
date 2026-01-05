@@ -19,11 +19,12 @@ export function getValueToken(styleValue: StyleValue): '<number>' | undefined {
 }
 
 /**
- * Checks if the input string is a valid CSS data number (e.g., '<number>').
+ * Checks if the input string is a valid CSS data number (e.g., '<number>' or '<number [0,25]>').
  * @param input - The string to check.
  */
 export function getTokenType(tokenRaw: TokenRaw): 'number' | undefined {
-	return tokenRaw === '<number>' ? 'number' : undefined;
+	if (tokenRaw.startsWith('<number') && tokenRaw.endsWith('>')) return 'number';
+	return undefined;
 }
 
 export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {

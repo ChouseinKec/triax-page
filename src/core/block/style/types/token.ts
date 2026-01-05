@@ -12,14 +12,14 @@ export type TokenKey = string | '<number>' | '<integer>' | '<percentage>' | '<le
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').
  * These correspond to the official CSS value definition data types from the CSS spec.
  */
-export type TokenTypeKey = string | 'composed' | 'keyword' | 'function' | 'length' | 'number' | 'integer' | 'color' | 'link';
+export type TokenTypeKey = string | 'composed' | 'keyword' | 'length' | 'number' | 'integer' | 'color' | 'link';
 
 /**
  * Represents the parameters for a CSS data type token.
  */
 export type TokenParam = {
 	/** Allows any additional properties to be added dynamically */
-	[key: string]: unknown;
+	[key: string]: string | number;
 };
 
 /**
@@ -94,7 +94,7 @@ export type TokenGetTokenParamFn = (tokenSyntax: TokenRaw) => TokenParam | undef
 /**
  * Function type for rendering a CSS data type token value.
  */
-export type TokenGetTokenComponent =  (value: StyleValue, onChange: (value: StyleValue) => void, options: OptionDefinition[]) => React.ReactElement;
+export type TokenGetTokenComponent = (value: StyleValue, onChange: (value: StyleValue) => void, options: OptionDefinition[]) => React.ReactElement;
 
 /**
  * Represents a single CSS data type definition, including its name and syntax.

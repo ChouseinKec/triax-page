@@ -15,7 +15,7 @@ import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/he
 import { fetchPageContext } from '@/src/core/layout/page/helpers';
 
 // Registry
-import { getRegisteredStyles, getRegisteredTokenTypes } from '@/src/core/block/style/registries';
+import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } from '@/src/core/block/style/registries';
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -46,7 +46,7 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 			pageContext: fetchPageContext(),
 		}))
 		.validate((data) => ({
-			value: validateStyleValue(data.styleKey, data.styleDefinition, value, getRegisteredTokenTypes()),
+			value: validateStyleValue(data.styleKey, data.styleDefinition, value, getRegisteredTokenTypes(), getRegisteredTokens()),
 		}))
 		.operate((data) => ({
 			updatedStyles: updateBlockStyle(
@@ -134,7 +134,7 @@ export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 	navigator.clipboard
 		.readText()
 		.then((text) => {
-			const safeValue = validateStyleValue(results.styleKey, results.styleDefinition, text, getRegisteredTokenTypes());
+			const safeValue = validateStyleValue(results.styleKey, results.styleDefinition, text, getRegisteredTokenTypes(), getRegisteredTokens());
 			if (!safeValue.valid) return devLog.error(`[BlockManager → pasteBlockStyle] ${safeValue.message}`);
 
 			setBlockStyle(results.blockID, results.styleKey, safeValue.value);

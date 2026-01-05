@@ -5,9 +5,9 @@ import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/src/core/bloc
 
 
 // Components
-import BlockStyleValue from '@/src/features/block/style/value';
+import BlockStyleValue from '@/src/config/layout/panel/main/block/style/value';
 import Property from '@/src/shared/components/layout/property/component';
-import PropertyActions from '@/src/config/layout/panel/main/block/style/actions';
+import PropertyActions from '@/src/config/layout/panel/main/block/style/action';
 
 // Types
 import type { StyleKey } from '@/src/core/block/style/types';

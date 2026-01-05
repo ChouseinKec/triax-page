@@ -66,9 +66,9 @@ const TokenInteger: React.FC<TokenIntegerProps> = ({ value, onChange, options })
         // Allow empty values
         if (inputValue === "" || inputValue === null || inputValue === undefined) return onChange("");
 
-        // Convert to float with one decimal (0.0), fallback to empty if invalid
+        // Convert to integer, fallback to empty if invalid
         const intValue = parseInt(inputValue);
-        const safeValue = isNaN(intValue) ? "" : intValue.toFixed(1);
+        const safeValue = isNaN(intValue) ? "" : intValue.toString();
 
         // Trigger onChange with formatted value
         onChange(safeValue);
@@ -93,12 +93,11 @@ const TokenInteger: React.FC<TokenIntegerProps> = ({ value, onChange, options })
     return (
         <div className={CSS.TokenInteger} role="presentation" data-has-dropdown={showDropdown} >
 
-            {/* Main numeric input field */}
             <GenericInput
                 value={value}
                 min={valueRange.min}
                 max={valueRange.max}
-                placeholder="0.0"
+                placeholder="0"
                 type="number"
                 onValidate={validateNumber}
                 onChange={handleNumberChange}

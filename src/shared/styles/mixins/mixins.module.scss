@@ -53,6 +53,10 @@
 		box-shadow: 0px 0px 0px 1px var(--color-error--light) inset;
 	}
 
+	&[data-is-warning='true'] {
+		box-shadow: 0px 0px 0px 1px var(--color-warning--light) inset;
+	}
+
 	&[data-is-disabled='true'] {
 		pointer-events: none;
 		opacity: 0.5;

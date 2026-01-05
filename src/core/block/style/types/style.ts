@@ -78,26 +78,6 @@ export interface StyleDefinition {
 	syntax: StyleSyntaxRaw;
 
 	/**
-	 * Gets the parsed representation of the CSS property syntax.
-	 */
-	getSyntaxParsed(): StyleSyntaxParsed;
-
-	/**
-	 * Gets the normalized syntax for the CSS property.
-	 */
-	getSyntaxNormalized(): StyleSyntaxParsed;
-
-	/**
-	 * Gets the syntax set for the CSS property.
-	 */
-	getSyntaxSet(): StyleSyntaxSet;
-
-	/**
-	 * Gets the syntax separators for the CSS property.
-	 */
-	getSyntaxSeparators(): StyleSyntaxSeparators;
-
-	/**
 	 * Optional shorthand properties that this property is part of.
 	 */
 	longhand?: StyleLonghand;

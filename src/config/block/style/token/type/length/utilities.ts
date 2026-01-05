@@ -171,15 +171,14 @@ export function createOption(params: TokenOptionParams): OptionDefinition[] | un
 	const tokenRaw = params.tokenRaw;
 	const unitDefinitions = params.unitDefinitions;
 
-	const typeDefault = params.tokenDefinitions['<length>']?.default;
-	if (!typeDefault) return undefined;
+
 
 	// Get registered units and filter by type
 	const unitOptions = Object.values(unitDefinitions)
 		.filter((unit) => unit.type === tokenBase)
 		.map((unit) => ({
 			name: unit.key,
-			value: `${typeDefault}${unit.key}`,
+			value: `0${unit.key}`,
 			category: 'length',
 			type: 'length',
 		}));

@@ -194,7 +194,7 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'grid-auto-flow',
 		description: 'Controls the placement algorithm for auto-placed grid items.',
-		syntax: 'row|column|[row dense]|[column dense]',
+		syntax: '[row|column] || dense',
 		icons: {
 			'column': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" /></svg>
@@ -211,17 +211,17 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'grid-auto-rows',
 		description: 'Specifies the size of rows created automatically in the grid.',
-		syntax: '<track-size>+',
+		syntax: '[<track-size>]+',
 	},
 	{
 		key: 'grid-auto-columns',
 		description: 'Specifies the size of columns created automatically in the grid.',
-		syntax: '<track-size>+',
+		syntax: '[<track-size>]+',
 	},
 	{
 		key: 'grid-template-rows',
 		description: 'Defines the row structure of the grid.',
-		syntax: 'none | <track-list> | <auto-track-list>',
+		syntax: 'none | <track-list>',
 	},
 	{
 		key: 'grid-template-columns',

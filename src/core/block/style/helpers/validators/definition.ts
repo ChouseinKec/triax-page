@@ -1,10 +1,11 @@
 // Types
-import type { TokenTypeDefinitionRecord, StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, StyleValue } from '@/src/core/block/style/types/';
+import type { TokenTypeDefinitionRecord, StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, StyleValue, TokenDefinitionRecord } from '@/src/core/block/style/types/';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
 import { splitAdvanced } from '@/src/shared/utilities/string';
 import { getValueTokens } from '@/src/core/block/style/utilities';
+import { getSyntaxNormalized, getSyntaxParsed } from '@/src/core/block/style/utilities';
 
 // Helpers
 import { validateString, validateObject, validateArray } from '@/src/shared/helpers';
@@ -113,7 +114,7 @@ export function validateStyleDefinition(styleDefinition: unknown): ValidateResul
  * @param styleKey - The CSS property key this value is for
  * @param styleValue - The CSS style value to validate
  */
-export function validateStyleValue(styleKey: StyleKey, styleDefinition: StyleDefinition, styleValue: unknown, tokenTypeDefinitions: TokenTypeDefinitionRecord): ValidateResult<StyleValue> {
+export function validateStyleValue(styleKey: StyleKey, styleDefinition: StyleDefinition, styleValue: unknown, tokenTypeDefinitions: TokenTypeDefinitionRecord, tokenDefinitions: TokenDefinitionRecord): ValidateResult<StyleValue> {
 	// Empty strings are valid CSS values (used to clear/reset properties)
 	if (styleValue === '') return { valid: true, value: '' };
 
@@ -122,7 +123,8 @@ export function validateStyleValue(styleKey: StyleKey, styleDefinition: StyleDef
 	if (!valueValidation.valid) return { valid: false, message: valueValidation.message };
 
 	// Fetch the normalized syntax variations for the property
-	const syntaxNormalized = styleDefinition.getSyntaxNormalized();
+	const syntaxParsed = getSyntaxParsed(styleDefinition.key, styleDefinition.syntax, tokenDefinitions, tokenTypeDefinitions);
+	const syntaxNormalized = getSyntaxNormalized(styleDefinition.key, syntaxParsed, tokenTypeDefinitions);
 	if (!syntaxNormalized) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
 
 	// Split the value into its components

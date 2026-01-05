@@ -5,7 +5,9 @@
   --font-size-xl: 13.5px;
   --font-size-2xl: 15px;
 
+  --color-warning--light: rgb(255, 179, 102);
   --color-warning: rgb(255, 141, 2);
+  --color-warning--dark: rgb(204, 112, 0);
 
   --color-error--light: rgb(190, 0, 0);
   --color-error: rgb(144, 0, 0);
@@ -32,6 +34,7 @@
   --theme-color-secondary: #1875fe;
   
   --theme-shadow-border: 0px 0px 0px 1px #323232 inset;
+  --theme-shadow-border-warning: 0px 0px 0px 1px var(--color-warning) inset;
 }
 
 body {
