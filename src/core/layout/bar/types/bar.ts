@@ -1,5 +1,5 @@
 // Types
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 import type { BarActionRecord } from '@/src/core/layout/bar/types';
 
 export type BarSizeFixed = {
@@ -58,7 +58,7 @@ export interface BarDefinition {
 	/** Background color of the LayoutBar */
 	isTransparent?: boolean;
 	/** Workbench identifier for the LayoutBar */
-	workbenchID: WorkbenchID;
+	workbenchKey: WorkbenchKey;
 }
 
 /**

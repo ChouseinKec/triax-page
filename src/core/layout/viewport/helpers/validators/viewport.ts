@@ -1,9 +1,9 @@
 // Types
-import type { ViewportDefinition, ViewportID, ViewportTitle, ViewportRender } from '@/src/core/layout/viewport/types';
+import type { ViewportDefinition, ViewportID, ViewportTitle, ViewportComponent } from '@/src/core/layout/viewport/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
-import { validateString, validateFunction, validateObject } from '@/src/shared/helpers/validators';
+import { validateString, validateObject } from '@/src/shared/helpers/validators';
 
 /**
  * Validates a viewport ID for viewport operations.
@@ -11,8 +11,8 @@ import { validateString, validateFunction, validateObject } from '@/src/shared/h
  *
  * @param id - The viewport ID to validate
  */
-export function validateViewportID(id: unknown): ValidateResult<ViewportID> {
-	const stringValidation = validateString(id);
+export function validateViewportID(viewportID: unknown): ValidateResult<ViewportID> {
+	const stringValidation = validateString(viewportID);
 	if (!stringValidation.valid) return stringValidation;
 
 	return { valid: true, value: stringValidation.value as ViewportID };
@@ -24,8 +24,8 @@ export function validateViewportID(id: unknown): ValidateResult<ViewportID> {
  *
  * @param title - The viewport title to validate
  */
-export function validateViewportTitle(title: unknown): ValidateResult<ViewportTitle> {
-	const stringValidation = validateString(title);
+export function validateViewportTitle(viewportTitle: unknown): ValidateResult<ViewportTitle> {
+	const stringValidation = validateString(viewportTitle);
 	if (!stringValidation.valid) return stringValidation;
 
 	return { valid: true, value: stringValidation.value as ViewportTitle };
@@ -37,11 +37,11 @@ export function validateViewportTitle(title: unknown): ValidateResult<ViewportTi
  *
  * @param render - The viewport render to validate
  */
-export function validateViewportRender(render: unknown): ValidateResult<ViewportRender> {
-	const functionValidation = validateFunction(render);
-	if (!functionValidation.valid) return functionValidation;
+export function validateViewportComponent(viewportComponent: unknown): ValidateResult<ViewportComponent> {
+	const objectValidation = validateObject(viewportComponent);
+	if (!objectValidation.valid) return objectValidation;
 
-	return { valid: true, value: functionValidation.value as ViewportRender };
+	return { valid: true, value: viewportComponent as ViewportComponent };
 }
 
 /**
@@ -49,9 +49,9 @@ export function validateViewportRender(render: unknown): ValidateResult<Viewport
  * Checks if the definition is a valid object with required properties.
  *
  * @param viewport - The viewport definition to validate
-*/
-export function validateViewportDefinition(viewport: unknown): ValidateResult<ViewportDefinition> {
-	const objectValidation = validateObject(viewport, ['id', 'title', 'workbenchID', 'render']);
+ */
+export function validateViewportDefinition(viewportDefinition: unknown): ValidateResult<ViewportDefinition> {
+	const objectValidation = validateObject(viewportDefinition, ['id', 'title', 'workbenchKey', 'component']);
 	if (!objectValidation.valid) return objectValidation;
 
 	const idResult = validateViewportID(objectValidation.value.id);
@@ -60,11 +60,11 @@ export function validateViewportDefinition(viewport: unknown): ValidateResult<Vi
 	const titleResult = validateViewportTitle(objectValidation.value.title);
 	if (!titleResult.valid) return titleResult;
 
-	const workbenchIDResult = validateString(objectValidation.value.workbenchID);
+	const workbenchIDResult = validateString(objectValidation.value.workbenchKey);
 	if (!workbenchIDResult.valid) return workbenchIDResult;
 
-	const renderResult = validateViewportRender(objectValidation.value.render);
-	if (!renderResult.valid) return renderResult;
+	const componentResult = validateViewportComponent(objectValidation.value.component);
+	if (!componentResult.valid) return componentResult;
 
 	return { valid: true, value: objectValidation.value as unknown as ViewportDefinition };
 }

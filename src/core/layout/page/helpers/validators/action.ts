@@ -1,5 +1,5 @@
 // Types
-import type { ActionDefinition, ActionID, ActionOrder, ActionRender } from '@/src/core/layout/page/types/action';
+import type { ActionDefinition, ActionID, ActionOrder, ActionComponent } from '@/src/core/layout/page/types/action';
 
 // Utilities
 import { validateString, validateInteger, validateFunction, validateObject } from '@/src/shared/helpers/validators';
@@ -9,10 +9,10 @@ import type { ValidateResult } from '@/src/shared/types/result';
  * Validates a PageAction ID for action operations.
  * Checks if the ID is a valid string identifier.
  *
- * @param id - The PageAction ID to validate
+ * @param actionID - The PageAction ID to validate
  */
-export function validateActionID(id: unknown): ValidateResult<ActionID> {
-	const stringValidation = validateString(id);
+export function validateActionID(actionID: unknown): ValidateResult<ActionID> {
+	const stringValidation = validateString(actionID);
 	if (!stringValidation.valid) return stringValidation;
 
 	return { valid: true, value: stringValidation.value as ActionID };
@@ -22,10 +22,10 @@ export function validateActionID(id: unknown): ValidateResult<ActionID> {
  * Validates a PageAction order for action operations.
  * Checks if the order is a valid number.
  *
- * @param order - The PageAction order to validate
+ * @param actionOrder - The PageAction order to validate
  */
-export function validateActionOrder(order: unknown): ValidateResult<ActionOrder> {
-	const integerValidation = validateInteger(order);
+export function validateActionOrder(actionOrder: unknown): ValidateResult<ActionOrder> {
+	const integerValidation = validateInteger(actionOrder);
 	if (!integerValidation.valid) return integerValidation;
 
 	return { valid: true, value: integerValidation.value as ActionOrder };
@@ -35,23 +35,23 @@ export function validateActionOrder(order: unknown): ValidateResult<ActionOrder>
  * Validates a PageAction render for action operations.
  * Checks if the render is a valid function.
  *
- * @param render - The PageAction render to validate
+ * @param component - The PageAction component to validate
  */
-export function validateActionRender(render: unknown): ValidateResult<ActionRender> {
-	const functionValidation = validateFunction(render);
+export function validateActionComponent(actionComponent: unknown): ValidateResult<ActionComponent> {
+	const functionValidation = validateFunction(actionComponent);
 	if (!functionValidation.valid) return functionValidation;
 
-	return { valid: true, value: functionValidation.value as ActionRender };
+	return { valid: true, value: functionValidation.value as ActionComponent };
 }
 
 /**
  * Validates a PageAction instance for action operations.
  * Checks if the instance has valid ID, order, and render properties.
  *
- * @param action - The PageAction instance to validate
+ * @param actionDefinition - The PageAction instance to validate
  */
-export function validateActionDefinition(action: unknown): ValidateResult<ActionDefinition> {
-	const objectValidation = validateObject(action, ['id', 'order', 'render']);
+export function validateActionDefinition(actionDefinition: unknown): ValidateResult<ActionDefinition> {
+	const objectValidation = validateObject(actionDefinition, ['id', 'order', 'component']);
 	if (!objectValidation.valid) return objectValidation;
 
 	const idValidation = validateActionID(objectValidation.value.id);
@@ -60,8 +60,8 @@ export function validateActionDefinition(action: unknown): ValidateResult<Action
 	const orderValidation = validateActionOrder(objectValidation.value.order);
 	if (!orderValidation.valid) return orderValidation;
 
-	const renderValidation = validateActionRender(objectValidation.value.render);
-	if (!renderValidation.valid) return renderValidation;
+	const componentValidation = validateActionComponent(objectValidation.value.component);
+	if (!componentValidation.valid) return componentValidation;
 
 	return { valid: true, value: objectValidation.value as unknown as ActionDefinition };
 }

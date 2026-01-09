@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 // Types
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 import type { PanelTabRecord } from '@/src/core/layout/panel/types';
 
 /**
@@ -68,7 +68,7 @@ export interface PanelDefinition {
 	/** Icon of the LayoutPanel, displayed in the left bar */
 	icon: PanelIcon;
 	/** Optional Workbench identifier for the LayoutPanel */
-	workbenchID: WorkbenchID;
+	workbenchKey: WorkbenchKey;
 	/** Initial position of the LayoutPanel	 */
 	initialPosition: PanelPosition;
 	/**	Initial size and constraints of the LayoutPanel	 */
@@ -96,4 +96,4 @@ export interface PanelInstance extends PanelDefinition {
 /**
  * Record of all LayoutPanels by their ID.
  */
-export type PanelRecord = Record<PanelID, PanelInstance>;
+export type PanelInstanceRecord = Record<PanelID, PanelInstance>;

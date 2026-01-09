@@ -98,7 +98,7 @@ export function isPanelDefinitionValid(panelDefinition: unknown): panelDefinitio
 		'title' in panelDefinition &&
 		'order' in panelDefinition &&
 		'icon' in panelDefinition &&
-		'workbenchID' in panelDefinition &&
+		'workbenchKey' in panelDefinition &&
 		'initialPosition' in panelDefinition &&
 		'initialSize' in panelDefinition &&
 		'initialLocked' in panelDefinition &&

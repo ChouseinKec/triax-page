@@ -65,11 +65,11 @@ export function getBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
  *
  * @param blockID - The block identifier
  */
-export function getBlockRenderedStyles(blockID: BlockID): string | undefined {
+export function getBlockComponentedStyles(blockID: BlockID): string | undefined {
 	const blockStore = useBlockStore.getState();
 
 	// Validate, pick, and operate on necessary data
-	const returns = new ResultPipeline('[BlockQueries → getBlockRenderedStyles]')
+	const returns = new ResultPipeline('[BlockQueries → getBlockComponentedStyles]')
 		.validate({
 			blockID: validateBlockID(blockID),
 		})

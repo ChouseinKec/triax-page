@@ -33,11 +33,6 @@ export function validateArray(input: unknown): ValidateResult<unknown[]> {
 
 	if (input.length === 0) return { valid: false, message: 'Invalid array: array cannot be empty' };
 
-	for (const item of input) {
-		const itemValidation = validateString(item);
-		if (!itemValidation.valid) return { valid: false, message: `Invalid array item (${item}): ${itemValidation.message}` };
-	}
-
 	return { valid: true, value: input };
 }
 
@@ -51,9 +46,7 @@ export function validateArray(input: unknown): ValidateResult<unknown[]> {
  * validateFunction('not-a-function') → { valid: false, message: '...' }
  */
 export function validateFunction<T extends (...args: unknown[]) => unknown>(input: unknown): ValidateResult<T> {
-	if (typeof input !== 'function') {
-		return { valid: false, message: `Invalid function: expected a function, got ${typeof input}` };
-	}
+	if (typeof input !== 'function') return { valid: false, message: `Invalid function: expected a function, got ${typeof input}` };
 
 	return { valid: true, value: input as T };
 }

@@ -41,14 +41,9 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
     } = props;
 
     // Handle option selection changes
-    const handleChange = useCallback((value: string): void => {
-
-        // Deselect the option if it"s already selected
-        if (isSelected) return onChange('');
-
-        // Select the option if it"s not already selected
+    const handleChange = useCallback((): void => {
         onChange(value);
-    }, [isSelected, onChange]
+    }, [onChange, value]
     );
 
     return (

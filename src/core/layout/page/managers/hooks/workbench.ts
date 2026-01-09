@@ -2,7 +2,10 @@
 import { usePageStore } from '@/src/state/layout/page';
 
 // Types
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey, WorkbenchDefinition } from '@/src/core/layout/workbench/types';
+
+// Registry
+import { getRegisteredWorkbench } from '@/src/core/layout/workbench/registries';
 
 /**
  * Reactive hook to get the currently selected workbench ID for page queries.
@@ -11,8 +14,13 @@ import type { WorkbenchID } from '@/src/core/layout/workbench/types';
  * @returns The current workbench ID
  *
  * @example
- * const workbenchID = useSelectedWorkbenchID() // Returns 'workbench-123'
+ * const workbenchKey = useSelectedWorkbenchKey() // Returns 'workbench-123'
  */
-export function useSelectedWorkbenchID(): WorkbenchID {
-	return usePageStore((state) => state.selected.workbenchID);
+export function useSelectedWorkbenchKey(): WorkbenchKey {
+	return usePageStore((state) => state.selected.workbenchKey);
+}
+
+export function useSelectedWorkbench(): WorkbenchDefinition | undefined {
+	const selectedWorkbenchKey = usePageStore((state) => state.selected.workbenchKey);
+	return getRegisteredWorkbench(selectedWorkbenchKey);
 }

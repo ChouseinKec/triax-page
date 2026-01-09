@@ -79,6 +79,6 @@ export function isBarDefinitionValid(barDefinition: unknown): barDefinition is B
         'title' in barDefinition &&
         'position' in barDefinition &&
         'size' in barDefinition &&
-        'workbenchID' in barDefinition
+        'workbenchKey' in barDefinition
     );
 }

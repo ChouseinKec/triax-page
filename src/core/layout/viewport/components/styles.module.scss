@@ -1,6 +1,6 @@
 $offset: 40px;
 
-.ViewportEditor {
+.Viewport {
 	width: calc(100% - $offset);
 	height: calc(100% - $offset);
 
@@ -8,7 +8,6 @@ $offset: 40px;
 	top: $offset;
 	left: $offset;
 
-	// Grid dot pattern
 	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
 	background-size: 30px 30px;
 
@@ -16,12 +15,36 @@ $offset: 40px;
 	z-index: 10;
 }
 
-.Content {
-	padding: var(--size-lg);
+.Scene {
 	overflow: hidden;
+	width: max-content;
+	height: max-content;
+}
+
+.Toolbar {
+	width: max-content;
+	padding: var(--size-xs) var(--size-xs);
+
+	position: absolute;
+	top: 5%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	border-radius: var(--size-sm);
+	background: var(--theme-color-primary);
+	color: var(--color-white);
+	box-shadow: var(--theme-shadow-border);
 }
 
 .Empty {
 	color: var(--color-white);
 	text-align: center;
+}
+
+.View {
+	width: 100%;
+	height: 100%;
+
+	padding: var(--size-2xl);
+	border: 1px solid rgb(255, 255, 255);
 }

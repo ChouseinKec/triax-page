@@ -1,7 +1,7 @@
 // Types
 import type { BarID, BarInstance, BarRecord } from '@/src/core/layout/bar/types';
 import type { PickResult } from '@/src/shared/types/result';
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 
 /**
  * Fetches a bar instance from the layout store by its ID.
@@ -19,12 +19,12 @@ export function pickBar(barID: BarID, allBars: BarRecord): PickResult<BarInstanc
 /**
  * Fetches all bar instances filtered by workbench ID from the layout store.
  * Returns a result object indicating success with the filtered bars or failure with an error message.
- * @param workbenchID - The workbench identifier to filter bars
+ * @param workbenchKey - The workbench identifier to filter bars
  * @param layoutStore - The layout store instance
  */
-export function pickBarsByWorkbench(workbenchID: WorkbenchID, allBars: BarRecord): PickResult<BarInstance[]> {
-	const workbenchBars = Object.values(allBars).filter((bar: BarInstance) => bar.workbenchID === workbenchID);
-	if (!workbenchBars) return { success: false, error: `No bars found for workbench: '${workbenchID}'` };
+export function pickBarsByWorkbench(workbenchKey: WorkbenchKey, allBars: BarRecord): PickResult<BarInstance[]> {
+	const workbenchBars = Object.values(allBars).filter((bar: BarInstance) => bar.workbenchKey === workbenchKey);
+	if (!workbenchBars) return { success: false, error: `No bars found for workbench: '${workbenchKey}'` };
 
 	return { success: true, data: workbenchBars };
 }

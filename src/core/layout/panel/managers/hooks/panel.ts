@@ -6,68 +6,49 @@ import { useMemo } from 'react';
 
 // Types
 import type { PanelInstance } from '@/src/core/layout/panel/types';
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/core/layout/workbench/helpers';
+import { validateWorkbenchKey } from '@/src/core/layout/workbench/helpers';
 
 /**
- * Reactive hook to get all panel instances filtered by workbench for layout queries.
- * Returns a memoized array of panels associated with the specified workbench.
+ * Reactive hook to get panel instances with optional workbench and open filters.
+ * Returns a memoized array of panels based on options.
  *
- * @param workbenchID - The workbench identifier to filter panels
+ * @param workbenchKey - The workbench identifier to filter panels (used if options.workbench is true)
+ * @param options - Optional configuration for filtering
  * @returns Reactive array of panel instances or undefined if validation fails
  *
  * @example
- * const panels = usePanelsByWorkbench('workbench-123') // Returns all panels for workbench
+ * const allPanels = usePanels('workbench-123') // Returns all panels
+ * const workbenchPanels = usePanels('workbench-123', { workbench: true }) // Returns panels for workbench
+ * const openPanels = usePanels('workbench-123', { open: true }) // Returns all open panels
+ * const openWorkbenchPanels = usePanels('workbench-123', { workbench: true, open: true }) // Returns open panels for workbench
  */
-export function usePanelsByWorkbench(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-    const safeParams = useMemo(
-        () =>
-            new ResultPipeline('[LayoutQueries → usePanelsByWorkbench]')
-                .validate({
-                    workbenchID: validateWorkbenchID(workbenchID),
-                })
-                .execute(),
-        [workbenchID]
-    );
-    if (!safeParams) return undefined;
+export function usePanels(workbenchKey: WorkbenchKey, options?: { workbench?: boolean; open?: boolean }): PanelInstance[] | undefined {
+	const safeParams = useMemo(
+		() =>
+			new ResultPipeline('[LayoutQueries → usePanels]')
+				.validate({
+					workbenchKey: validateWorkbenchKey(workbenchKey),
+				})
+				.execute(),
+		[workbenchKey]
+	);
+	if (!safeParams) return undefined;
 
-    const allPanels = useLayoutStore((state) => state.allPanels);
+	const allPanels = useLayoutStore((state) => state.allPanels);
 
-    return useMemo(() => {
-        return Object.values(allPanels).filter((panel) => panel.workbenchID === safeParams.workbenchID);
-    }, [allPanels, safeParams.workbenchID]);
-}
+	return useMemo(() => {
+		let panels = Object.values(allPanels);
 
-/**
- * Reactive hook to get all open panel instances filtered by workbench for layout queries.
- * Returns a memoized array of panels that are currently open and associated with the specified workbench.
- *
- * @param workbenchID - The workbench identifier to filter panels
- * @returns Reactive array of open panel instances or undefined if validation fails
- *
- * @example
- * const openPanels = useOpenPanels('workbench-123') // Returns open panels for workbench
- */
-export function useOpenPanels(workbenchID: WorkbenchID): PanelInstance[] | undefined {
-    const safeParams = useMemo(
-        () =>
-            new ResultPipeline('[LayoutQueries → useOpenPanels]')
-                .validate({
-                    workbenchID: validateWorkbenchID(workbenchID),
-                })
-                .execute(),
-        [workbenchID]
-    );
-    if (!safeParams) return undefined;
+		if (options?.workbench) panels = panels.filter((panel) => panel.workbenchKey === safeParams.workbenchKey);
 
-    const panels = useLayoutStore((state) => state.allPanels);
+		if (options?.open) panels = panels.filter((panel) => panel.isOpen);
 
-    return useMemo(() => {
-        return Object.values(panels).filter((panel: PanelInstance) => panel.isOpen && panel.workbenchID === safeParams.workbenchID);
-    }, [panels, safeParams.workbenchID]);
+		return panels;
+	}, [allPanels, safeParams.workbenchKey, options]);
 }

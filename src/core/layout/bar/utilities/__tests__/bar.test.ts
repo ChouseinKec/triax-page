@@ -124,22 +124,22 @@ describe('isBarDefinitionValid', () => {
 			title: 'Top Bar',
 			position: { top: '0', left: '0' },
 			size: { width: '100%' },
-			workbenchID: 'main',
+			workbenchKey: 'main',
 		};
 		expect(isBarDefinitionValid(bar)).toBe(true);
 	});
 
 	it('rejects missing required properties', () => {
-		const barNoId = { title: 'Top Bar', position: {}, size: {}, workbenchID: 'main' };
+		const barNoId = { title: 'Top Bar', position: {}, size: {}, workbenchKey: 'main' };
 		expect(isBarDefinitionValid(barNoId)).toBe(false);
 
-		const barNoTitle = { id: 'bar1', position: {}, size: {}, workbenchID: 'main' };
+		const barNoTitle = { id: 'bar1', position: {}, size: {}, workbenchKey: 'main' };
 		expect(isBarDefinitionValid(barNoTitle)).toBe(false);
 
-		const barNoPosition = { id: 'bar1', title: 'Top Bar', size: {}, workbenchID: 'main' };
+		const barNoPosition = { id: 'bar1', title: 'Top Bar', size: {}, workbenchKey: 'main' };
 		expect(isBarDefinitionValid(barNoPosition)).toBe(false);
 
-		const barNoSize = { id: 'bar1', title: 'Top Bar', position: {}, workbenchID: 'main' };
+		const barNoSize = { id: 'bar1', title: 'Top Bar', position: {}, workbenchKey: 'main' };
 		expect(isBarDefinitionValid(barNoSize)).toBe(false);
 
 		const barNoWorkbench = { id: 'bar1', title: 'Top Bar', position: {}, size: {} };
@@ -159,7 +159,7 @@ describe('isBarDefinitionValid', () => {
 			title: 'Top Bar',
 			position: { top: '0', left: '0' },
 			size: { width: '100%' },
-			workbenchID: 'main',
+			workbenchKey: 'main',
 			extra: 'property',
 		};
 		expect(isBarDefinitionValid(bar)).toBe(true);

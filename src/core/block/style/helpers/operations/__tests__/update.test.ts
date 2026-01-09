@@ -97,7 +97,7 @@
 
 // 	it('updates styles in correct device context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, mobile: { all: { all: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValues(['margin-top', 'margin-bottom'], '10px', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -110,7 +110,7 @@
 
 // 	it('updates styles in correct orientation context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: {} }, portrait: { all: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValues(['padding-left', 'padding-right'], '5px', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -122,7 +122,7 @@
 
 // 	it('updates styles in correct pseudo context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'blue' }, hover: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'hover', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'hover', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValues(['border-top-width'], '3px', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -134,7 +134,7 @@
 
 // 	it('preserves other context levels during update', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' }, focus: { color: 'green' } }, portrait: { all: { color: 'blue' } } }, mobile: { all: { all: { color: 'yellow' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValues(['opacity'], '0.5', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -225,7 +225,7 @@
 
 // 	it('updates in correct device/orientation/pseudo context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, tablet: { landscape: { hover: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'hover', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'hover', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValue('opacity', '0.8', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -237,7 +237,7 @@
 
 // 	it('preserves other device styles during update', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, mobile: { all: { all: { color: 'blue' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyleValue('opacity', '0.5', styles, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -346,7 +346,7 @@
 
 // 	it('preserves other devices when updating specific device', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, mobile: { all: { all: { color: 'blue' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { 'font-size': '16px' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -359,7 +359,7 @@
 
 // 	it('preserves other orientations when updating specific orientation', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } }, portrait: { all: { color: 'green' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { opacity: '0.5' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -372,7 +372,7 @@
 
 // 	it('preserves other pseudos when updating specific pseudo', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' }, hover: { color: 'blue' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'hover', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'hover', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { 'font-weight': 'bold' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -396,7 +396,7 @@
 
 // 	it('handles creating device when not existing', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'desktop', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'desktop', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { 'font-size': '16px' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -408,7 +408,7 @@
 
 // 	it('handles creating orientation when not existing', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'landscape', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'landscape', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { opacity: '0.7' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -420,7 +420,7 @@
 
 // 	it('handles creating pseudo when not existing', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'focus', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'all', selectedOrientationID: 'all', selectedPseudoID: 'focus', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { 'outline-width': '2px' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -432,7 +432,7 @@
 
 // 	it('handles updating multiple cascade levels simultaneously', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, tablet: { portrait: { hover: { color: 'blue' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'portrait', selectedPseudoID: 'hover', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'portrait', selectedPseudoID: 'hover', selectedWorkbenchKey: 'default' } });
 // 		const result = updateBlockStyles(styles, { 'font-size': '16px', 'font-weight': 'bold' }, pageContext);
 
 // 		expect(result.success).toBe(true);
@@ -543,7 +543,7 @@
 
 // 	it('handles shorthand expansion in device/orientation/pseudo context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, mobile: { portrait: { hover: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'portrait', selectedPseudoID: 'hover', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'portrait', selectedPseudoID: 'hover', selectedWorkbenchKey: 'default' } });
 // 		const styleContext = mockStyleContext();
 // 		const result = updateBlockStyle('margin', '10px', styles, styleContext, pageContext);
 
@@ -557,7 +557,7 @@
 
 // 	it('handles longhand update in device/orientation/pseudo context', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, tablet: { landscape: { focus: {} } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'focus', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'focus', selectedWorkbenchKey: 'default' } });
 // 		const styleContext = mockStyleContext();
 // 		const result = updateBlockStyle('opacity', '0.7', styles, styleContext, pageContext);
 
@@ -613,7 +613,7 @@
 
 // 	it('preserves other device contexts during update', () => {
 // 		const styles = mockBlockStyles({ all: { all: { all: { color: 'red' } } }, mobile: { all: { all: { color: 'blue' } } } });
-// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 		const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'all', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 		const styleContext = mockStyleContext();
 // 		const result = updateBlockStyle('padding', '15px', styles, styleContext, pageContext);
 

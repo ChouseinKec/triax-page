@@ -1,11 +1,11 @@
-import { ReactNode, ReactElement } from 'react';
+import { ReactNode, ReactElement, ComponentType } from 'react';
 
 /**
  * Unique identifier for the Workbench
  * Must be unique across all registered Workbenchs.
  * Used to reference the Workbench in the application.
  */
-export type WorkbenchID = string;
+export type WorkbenchKey = string;
 
 /**
  * Title of the Workbench
@@ -25,33 +25,31 @@ export type WorkbenchOrder = number;
 /**
  * Registry of all Workbenchs by their ID.
  */
-export type WorkbenchRegistry = Record<WorkbenchID, WorkbenchDefinition>;
+export type WorkbenchRegistry = Record<WorkbenchKey, WorkbenchDefinition>;
 
 /**
- * Children blocks to render inside the Workbench
+ * Props for the main component to render for the Workbench
  */
-export type WorkbenchChildren = ReactNode;
+export type WorkbenchComponentProps = { children: ReactNode };
 
 /**
- * The main function to render for the Workbench
+ * The main component to render for the Workbench
  */
-export type WorkbenchRender = () => ReactNode;
-
+export type WorkbenchComponent = ComponentType<WorkbenchComponentProps>;
 
 /**
  * Defines the structure for workbench configurations in the page builder.
  * Workbenches provide different editing contexts and toolsets.
  */
 export interface WorkbenchDefinition {
-    /** Unique identifier for the Workbench	 */
-    id: WorkbenchID;
-    /** Title of the Workbench */
-    title: WorkbenchTitle;
-    /** Icon of the Workbench, displayed in the UI */
-    icon: WorkbenchIcon;
-    /** Order of the Workbench in the selection list */
-    order: WorkbenchOrder;
-    /** The main component to render for the Workbench */
-    render: WorkbenchRender;
+	/** Unique identifier for the Workbench	 */
+	key: WorkbenchKey;
+	/** Title of the Workbench */
+	title: WorkbenchTitle;
+	/** Icon of the Workbench, displayed in the UI */
+	icon: WorkbenchIcon;
+	/** Order of the Workbench in the selection list */
+	order: WorkbenchOrder;
+	/** The main component to render for the Workbench */
+	component: WorkbenchComponent;
 }
-

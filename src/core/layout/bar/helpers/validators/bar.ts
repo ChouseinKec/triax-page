@@ -6,7 +6,7 @@ import type { ValidateResult } from '@/src/shared/types/result';
 import { isBarDefinitionValid, isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid } from '@/src/core/layout/bar/utilities';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/core/layout/workbench/helpers';
+import { validateWorkbenchKey } from '@/src/core/layout/workbench/helpers';
 
 /**
  * Validates a bar ID for bar operations.
@@ -73,7 +73,7 @@ export function validateBarDefinition(barDefinition: unknown): ValidateResult<Ba
 	const sizeValidation = validateBarSize(barDefinition.size);
 	if (!sizeValidation.valid) return { valid: false, message: sizeValidation.message };
 
-	const workbenchIDValidation = validateWorkbenchID(barDefinition.workbenchID);
+	const workbenchIDValidation = validateWorkbenchKey(barDefinition.workbenchKey);
 	if (!workbenchIDValidation.valid) return { valid: false, message: workbenchIDValidation.message };
 
 	return { valid: true, value: barDefinition as BarDefinition };

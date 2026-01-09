@@ -14,8 +14,8 @@ import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 // Utilities
 import { devLog } from "@/src/shared/utilities/dev";
 
-// Lazy load PageEditor to prevent import cascade
-const PageEditor = lazy(() => import("@/src/core/layout/page/components"));
+// Lazy load Page to prevent import cascade
+const Page = lazy(() => import("@/src/core/layout/page/components/editor"));
 
 export default function Home() {
   const [isReady, setIsReady] = useState(false);
@@ -45,7 +45,7 @@ export default function Home() {
 
   return (
     <main className={CSS.main} onContextMenu={handleRightClick}>
-      <PageEditor />
+      <Page />
     </main>
   );
 }

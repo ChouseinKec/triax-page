@@ -2,7 +2,7 @@ import { pickPanel } from '../panel';
 import { mockPanelInstance } from '@/src/shared/helpers/mock';
 
 // Types
-import type { PanelRecord } from '@/src/core/layout/panel/types';
+import type { PanelInstanceRecord } from '@/src/core/layout/panel/types';
 
 describe('pickPanel', () => {
 	const mockPanel1 = mockPanelInstance({
@@ -17,7 +17,7 @@ describe('pickPanel', () => {
 		order: 1,
 	});
 
-	const mockPanels: PanelRecord = {
+	const mockPanels: PanelInstanceRecord = {
 		'panel-1': mockPanel1,
 		'panel-2': mockPanel2,
 	};

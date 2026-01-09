@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ComponentType } from 'react';
 
 /**
  * Record of all PageActions by their ID.
@@ -18,7 +18,7 @@ export type ActionOrder = number;
 /**
  * The main component to render for the PageAction
  */
-export type ActionRender = () => ReactNode;
+export type ActionComponent = ComponentType;
 
 /**
  * Interface for a PageAction instance.
@@ -28,6 +28,6 @@ export interface ActionDefinition {
 	id: ActionID;
 	/** Priority of the action, used for sorting */
 	order: ActionOrder;
-	/** Content of the action */
-	render: ActionRender;
+	/** Component of the action */
+	component: ActionComponent;
 }

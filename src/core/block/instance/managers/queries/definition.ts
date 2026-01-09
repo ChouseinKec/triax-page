@@ -1,5 +1,5 @@
 // Types
-import type { BlockType, BlockAllowedStyles, BlockAllowedAttributes } from '@/src/core/block/instance/types';
+import type { BlockType, BlockAllowedStyles, BlockAllowedAttributes, BlockComponent } from '@/src/core/block/instance/types';
 import type { ElementKey } from '@/src/core/block/element/types';
 import type { ReactNode } from 'react';
 
@@ -35,8 +35,8 @@ export function getBlockIcon(blockType: BlockType): ReactNode | undefined {
  * Get a block type's render function from the registry.
  * @param blockType - The block type to get the render function for
  */
-export function getBlockRender(blockType: BlockType) {
-	const results = new ResultPipeline('[BlockQueries → getBlockRender]')
+export function getBlockComponent(blockType: BlockType): BlockComponent | undefined {
+	const results = new ResultPipeline('[BlockQueries → getBlockComponent]')
 		.validate({
 			blockType: validateBlockType(blockType),
 		})
@@ -46,7 +46,7 @@ export function getBlockRender(blockType: BlockType) {
 		.execute();
 	if (!results) return;
 
-	return results.blockDefinition.render;
+	return results.blockDefinition.component;
 }
 
 /**

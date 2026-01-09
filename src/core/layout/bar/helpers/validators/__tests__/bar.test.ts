@@ -174,7 +174,7 @@ describe('validateBarDefinition', () => {
 			validateBarDefinition({ ...bar, title: undefined }),
 			validateBarDefinition({ ...bar, position: undefined }),
 			validateBarDefinition({ ...bar, size: undefined }),
-			validateBarDefinition({ ...bar, workbenchID: undefined }),
+			validateBarDefinition({ ...bar, workbenchKey: undefined }),
 		];
 
 		results.forEach((result) => {
@@ -190,7 +190,7 @@ describe('validateBarDefinition', () => {
 			validateBarDefinition({ ...bar, title: null }),
 			validateBarDefinition({ ...bar, position: 'invalid' }),
 			validateBarDefinition({ ...bar, size: {} }),
-			validateBarDefinition({ ...bar, workbenchID: [] }),
+			validateBarDefinition({ ...bar, workbenchKey: [] }),
 		];
 
 		results.forEach((result) => {

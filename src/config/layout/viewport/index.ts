@@ -1,3 +1,3 @@
-import { ViewportBlockDefinition } from './block';
+import { ViewportMainDefinition } from './main';
 
-export const CoreViewports = [ViewportBlockDefinition];
+export const CoreViewports = [ViewportMainDefinition];

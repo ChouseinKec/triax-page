@@ -60,28 +60,28 @@
 			top: 0;
 			transform: translateX(-50%);
 			cursor: ns-resize;
-			width: 50%;
+			width: 75%;
 		}
 		&[data-position='right'] {
 			right: 0;
 			top: 50%;
 			transform: translateY(-50%);
 			cursor: ew-resize;
-			height: 50%;
+			height: 95%;
 		}
 		&[data-position='bottom'] {
 			left: 50%;
 			bottom: 0;
 			transform: translateX(-50%);
 			cursor: ns-resize;
-			width: 50%;
+			width: 75%;
 		}
 		&[data-position='left'] {
 			left: 0;
 			top: 50%;
 			transform: translateY(-50%);
 			cursor: ew-resize;
-			height: 50%;
+			height: 95%;
 		}
 	}
 }

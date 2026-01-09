@@ -6,11 +6,11 @@ import type { OptionDefinition } from 'src/shared/components/types/option';
  */
 export interface OptionsSelectProps {
     /** The currently selected value */
-    value: string;
+    value: string | string[];
     /** List of available options */
     options: OptionDefinition[];
     /** Event handler triggered when the selected option changes */
-    onChange: (value: string) => void;
+    onChange: (value: string | string[]) => void;
     /** Enables search functionality within the dropdown (default: false) */
     searchable?: boolean;
     /** Whether to display options in groupable sections (default: false) */
@@ -19,5 +19,7 @@ export interface OptionsSelectProps {
     clearable?: boolean;
     /** Whether to prioritize icons over text in the dropdown options (default: false) */
     prioritizeIcons?: boolean;
+    /** Whether the dropdown allows multiple selections */
+    multiselectable?: boolean;
 
 }

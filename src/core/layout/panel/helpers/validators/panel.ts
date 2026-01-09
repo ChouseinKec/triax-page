@@ -6,7 +6,7 @@ import type { ValidateResult } from '@/src/shared/types/result';
 import { isPanelDefinitionValid, isPanelLockedValid, isPanelOpenValid, isPanelIDValid, isPanelTitleValid, isPanelPositionValid, isPanelSizeValid, isPanelIconValid, isPanelOrderValid } from '@/src/core/layout/panel/utilities';
 
 // Helpers
-import { validateWorkbenchID } from '@/src/core/layout/workbench/helpers';
+import { validateWorkbenchKey } from '@/src/core/layout/workbench/helpers';
 
 /**
  * Validates a panel ID for panel operations.
@@ -117,7 +117,7 @@ export function validatePanelDefinition(panelDefinition: unknown): ValidateResul
 	const sizeValidation = validatePanelSize(panelDefinition.initialSize);
 	if (!sizeValidation.valid) return { valid: false, message: sizeValidation.message };
 
-	const workbenchIDValidation = validateWorkbenchID(panelDefinition.workbenchID);
+	const workbenchIDValidation = validateWorkbenchKey(panelDefinition.workbenchKey);
 	if (!workbenchIDValidation.valid) return { valid: false, message: workbenchIDValidation.message };
 
 	const orderValidation = validatePanelOrder(panelDefinition.order);

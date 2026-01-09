@@ -10,7 +10,7 @@ const MainSelectedActions: BarDefinition = {
     position: { top: '93.5%', left: '46%' },
     size: { minWidth: '5%', maxWidth: '25%' },
     title: 'Main Selected Actions',
-    workbenchID: 'main',
+    workbenchKey: 'main',
 };
 
 export default MainSelectedActions;

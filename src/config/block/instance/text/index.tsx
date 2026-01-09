@@ -1,5 +1,5 @@
 // Components
-import BlockTextRender from "@/src/config/block/instance/text/render";
+import BlockTextComponent from "@/src/config/block/instance/text/component";
 
 // Types
 import { BlockDefinition } from '@/src/core/block/instance/types';
@@ -29,7 +29,7 @@ const BlockTextDefinition: BlockDefinition = {
     defaultAttributes: {},
     defaultContent: {},
 
-    render: (instance) => <BlockTextRender instance={instance} />,
+    component: BlockTextComponent,
 };
 
 export default BlockTextDefinition;

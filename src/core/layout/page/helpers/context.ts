@@ -6,9 +6,11 @@ import type { ContextResult } from '@/src/shared/types/result';
 import { usePageStore } from '@/src/state/layout/page';
 
 // Managers
-import { useSelectedOrientationID, useSelectedDeviceID, useSelectedPseudoID, useSelectedWorkbenchID } from '@/src/core/layout/page/managers/';
+import { useSelectedOrientationID, useSelectedDeviceID, useSelectedPseudoID, useSelectedWorkbenchKey } from '@/src/core/layout/page/managers/';
 import { getDeviceDefinitions, getAllOrientations, getAllPseudos, getDeviceDefaultID, getDefaultOrientationID, getDefaultPseudoID } from '@/src/core/layout/page/managers/queries';
-import { getWorkbenchInstances, getWorkbenchDefaultID } from '@/src/core/layout/workbench/managers/queries';
+
+// Registry
+import { getRegisteredWorkbenchs, getWorkbenchDefaultKey } from '@/src/core/layout/workbench/registries';
 
 /**
  * Fetches the registries and constants for page context.
@@ -27,7 +29,7 @@ function getRegistriesAndConstants(): ContextResult<Pick<PageContext, 'registry'
 	if (!registeredPseudos) return { success: false, error: 'Failed to fetch registered pseudos.' };
 
 	// Fetch registered workbenchs from the registry
-	const registeredWorkbenchs = getWorkbenchInstances();
+	const registeredWorkbenchs = getRegisteredWorkbenchs();
 	if (!registeredWorkbenchs) return { success: false, error: 'Failed to fetch registered workbenchs.' };
 
 	// Fetch default device ID
@@ -42,8 +44,8 @@ function getRegistriesAndConstants(): ContextResult<Pick<PageContext, 'registry'
 	const defaultPseudoID = getDefaultPseudoID();
 	if (!defaultPseudoID) return { success: false, error: 'Failed to fetch default pseudo ID.' };
 	// Fetch default workbench ID
-	const defaultWorkbenchID = getWorkbenchDefaultID();
-	if (!defaultWorkbenchID) return { success: false, error: 'Failed to fetch default workbench ID.' };
+	const defaultWorkbenchKey = getWorkbenchDefaultKey();
+	if (!defaultWorkbenchKey) return { success: false, error: 'Failed to fetch default workbench ID.' };
 
 	return {
 		success: true,
@@ -52,13 +54,13 @@ function getRegistriesAndConstants(): ContextResult<Pick<PageContext, 'registry'
 				devices: registeredDevices,
 				orientations: registeredOrientations,
 				pseudos: registeredPseudos,
-				workbenches: registeredWorkbenchs,
+				workbenches: Object.values(registeredWorkbenchs),
 			},
 			constant: {
 				defaultDeviceID,
 				defaultOrientationID,
 				defaultPseudoID,
-				defaultWorkbenchID,
+				defaultWorkbenchKey,
 			},
 		},
 	};
@@ -89,8 +91,8 @@ export function fetchPageContext(): ContextResult<PageContext> {
 	if (!selectedPseudoID) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
 
 	// Fetch selected workbench ID
-	const selectedWorkbenchID = selectedState.workbenchID;
-	if (!selectedWorkbenchID) return { success: false, error: 'Failed to fetch selected workbench ID.' };
+	const selectedWorkbenchKey = selectedState.workbenchKey;
+	if (!selectedWorkbenchKey) return { success: false, error: 'Failed to fetch selected workbench ID.' };
 
 	return {
 		success: true,
@@ -99,7 +101,7 @@ export function fetchPageContext(): ContextResult<PageContext> {
 				selectedDeviceID,
 				selectedOrientationID,
 				selectedPseudoID,
-				selectedWorkbenchID,
+				selectedWorkbenchKey,
 			},
 			...registriesAndConstants.data,
 		},
@@ -127,8 +129,8 @@ export function usePageContext(): ContextResult<PageContext> {
 	if (!selectedPseudoID) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
 
 	// Fetch selected workbench ID reactively
-	const selectedWorkbenchID = useSelectedWorkbenchID();
-	if (!selectedWorkbenchID) return { success: false, error: 'Failed to fetch selected workbench ID.' };
+	const selectedWorkbenchKey = useSelectedWorkbenchKey();
+	if (!selectedWorkbenchKey) return { success: false, error: 'Failed to fetch selected workbench ID.' };
 
 	return {
 		success: true,
@@ -137,7 +139,7 @@ export function usePageContext(): ContextResult<PageContext> {
 				selectedDeviceID,
 				selectedOrientationID,
 				selectedPseudoID,
-				selectedWorkbenchID,
+				selectedWorkbenchKey,
 			},
 			...registriesAndConstants.data,
 		},

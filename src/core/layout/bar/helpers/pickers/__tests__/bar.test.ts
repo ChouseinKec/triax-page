@@ -6,9 +6,9 @@ import { mockBarInstance } from '@/src/shared/helpers/mock';
 import type { BarRecord } from '@/src/core/layout/bar/types';
 
 describe('pickBar', () => {
-	const mockBar1 = mockBarInstance({ id: 'bar-1', workbenchID: 'workbench-1', position: { top: '0', left: '0' } });
-	const mockBar2 = mockBarInstance({ id: 'bar-2', workbenchID: 'workbench-1', position: { top: '0', left: '100px' } });
-	const mockBar3 = mockBarInstance({ id: 'bar-3', workbenchID: 'workbench-2', position: { top: '0', left: '200px' } });
+	const mockBar1 = mockBarInstance({ id: 'bar-1', workbenchKey: 'workbench-1', position: { top: '0', left: '0' } });
+	const mockBar2 = mockBarInstance({ id: 'bar-2', workbenchKey: 'workbench-1', position: { top: '0', left: '100px' } });
+	const mockBar3 = mockBarInstance({ id: 'bar-3', workbenchKey: 'workbench-2', position: { top: '0', left: '200px' } });
 
 	const mockAllBars: BarRecord = {
 		'bar-1': mockBar1,
@@ -51,10 +51,10 @@ describe('pickBar', () => {
 });
 
 describe('pickBarsByWorkbench', () => {
-	const mockBar1 = mockBarInstance({ id: 'bar-1', workbenchID: 'workbench-1', position: { top: '0', left: '0' } });
-	const mockBar2 = mockBarInstance({ id: 'bar-2', workbenchID: 'workbench-1', position: { top: '0', left: '100px' } });
-	const mockBar3 = mockBarInstance({ id: 'bar-3', workbenchID: 'workbench-2', position: { top: '0', left: '200px' } });
-	const mockBar4 = mockBarInstance({ id: 'bar-4', workbenchID: 'workbench-2', position: { top: '0', left: '300px' } });
+	const mockBar1 = mockBarInstance({ id: 'bar-1', workbenchKey: 'workbench-1', position: { top: '0', left: '0' } });
+	const mockBar2 = mockBarInstance({ id: 'bar-2', workbenchKey: 'workbench-1', position: { top: '0', left: '100px' } });
+	const mockBar3 = mockBarInstance({ id: 'bar-3', workbenchKey: 'workbench-2', position: { top: '0', left: '200px' } });
+	const mockBar4 = mockBarInstance({ id: 'bar-4', workbenchKey: 'workbench-2', position: { top: '0', left: '300px' } });
 
 	const mockAllBars: BarRecord = {
 		'bar-1': mockBar1,
@@ -88,11 +88,11 @@ describe('pickBarsByWorkbench', () => {
 		if (emptyMap.success) expect(emptyMap.data).toEqual([]);
 	});
 
-	it('filters bars strictly by workbenchID', () => {
+	it('filters bars strictly by workbenchKey', () => {
 		const result = pickBarsByWorkbench('workbench-2', mockAllBars);
 		expect(result.success).toBe(true);
 		if (!result.success) return;
-		expect(result.data.every((bar) => bar.workbenchID === 'workbench-2')).toBe(true);
+		expect(result.data.every((bar) => bar.workbenchKey === 'workbench-2')).toBe(true);
 		expect(result.data.map((bar) => bar.id).sort()).toEqual(['bar-3', 'bar-4']);
 	});
 

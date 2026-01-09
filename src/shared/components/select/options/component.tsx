@@ -39,20 +39,35 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
     groupable = false,
     clearable = true,
     prioritizeIcons = false,
+    multiselectable = false
 }) => {
     const [search, setSearch] = useState<string>("");
 
     // Handle option selection changes
     const handleChange = useCallback((option: string): void => {
-        // Clear selection if the same option is clicked and clearable is enabled
-        if (clearable && value === option) return onChange("");
+        if (multiselectable) {
+            const currentValues = Array.isArray(value) ? value : [];
+            const isSelected = currentValues.includes(option);
+            if (isSelected) {
+                // Remove the option
+                const newValues = currentValues.filter(v => v !== option);
+                onChange(newValues);
+            } else {
+                // Add the option
+                const newValues = [...currentValues, option];
+                onChange(newValues);
+            }
+        } else {
+            // Clear selection if the same option is clicked and clearable is enabled
+            if (clearable && value === option) return onChange("");
 
-        // Prevent clearing selection if clearable is disabled and empty option is selected
-        if (!clearable && (!option || option === '')) return;
+            // Prevent clearing selection if clearable is disabled and empty option is selected
+            if (!clearable && (!option || option === '')) return;
 
-        // Otherwise, select the new option
-        onChange(option);
-    }, [onChange, value, clearable]);
+            // Otherwise, select the new option
+            onChange(option);
+        }
+    }, [onChange, value, clearable, multiselectable]);
 
     // Handle search input changes
     const handleSearch = useCallback((input: string): void => {
@@ -118,12 +133,15 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
 
                             <div className={`${CSS.Items} Items`}>
                                 {categoryOptions?.map((option, index) => {
+                                    const isSelected = multiselectable
+                                        ? (Array.isArray(value) && value.includes(option.value))
+                                        : (value === option.value);
                                     return (
                                         <Option
                                             key={index}
                                             name={option.name}
                                             value={option.value}
-                                            isSelected={value.length > 0 && option.name === value}
+                                            isSelected={isSelected}
                                             onChange={handleChange}
                                             icon={option.icon}
                                             prioritizeIcons={prioritizeIcons}
@@ -141,6 +159,9 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
         // If options are basic
         // E.g for a simple list of options without grouping like radio buttons
         return (filteredOptions.map((option, index) => {
+            const isSelected = multiselectable
+                ? (Array.isArray(value) && value.includes(option.value))
+                : (value === option.value);
             return (
                 <Option
                     key={index}
@@ -148,7 +169,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
                     value={option.value}
                     icon={option.icon}
                     prioritizeIcons={prioritizeIcons}
-                    isSelected={value === option.name || value === option.value}
+                    isSelected={isSelected}
                     onChange={handleChange}
                 />
             )

@@ -1,5 +1,5 @@
 // Types
-import type { ViewportDefinition, ViewportID } from '@/src/core/layout/viewport/types';
+import type { ViewportDefinition, ViewportDefinitionRecord, ActionDefinition, ActionDefinitionRecord } from '@/src/core/layout/viewport/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
@@ -8,8 +8,8 @@ import { validateViewportDefinition } from '@/src/core/layout/viewport/helpers/v
 /**
  * Class-based viewport registry for managing viewport definitions
  */
-class ViewportRegistryClass {
-	private viewports: Record<string, ViewportDefinition> = {};
+class ViewportRegistry {
+	private viewports: ViewportDefinitionRecord = {};
 
 	/**
 	 * Registers a viewport definition in the viewport registry.
@@ -38,31 +38,66 @@ class ViewportRegistryClass {
 	}
 
 	/**
-	 * Retrieves a specific viewport definition by its ID.
-	 * @param id - The viewport ID to retrieve.
+	 * Retrieves a specific viewport definition by its ID or workbench key.
+	 * @param id - The viewport ID or workbench key to retrieve.
+	 * @param by - Whether to search by 'viewport' ID or 'workbench' key. Defaults to 'viewport'.
 	 * @returns The viewport definition if found, undefined otherwise.
 	 */
-	getRegisteredViewport(viewportID: ViewportID): ViewportDefinition | undefined {
-		return this.viewports[viewportID];
+	getRegisteredViewport(id: string, by: 'viewport' | 'workbench' = 'viewport'): ViewportDefinition | undefined {
+		switch (by) {
+			case 'viewport':
+				return this.viewports[id];
+			case 'workbench':
+				return Object.values(this.viewports).find((viewport) => viewport.workbenchKey === id);
+			default:
+				return undefined;
+		}
 	}
+}
 
-
+class ActionReigstry {
+	private actions: ActionDefinitionRecord = {};
 
 	/**
-	 * Retrieves the viewport definition associated with a specific workbench ID.
-	 * @param workbenchID - The workbench ID to find the viewport for
-	 * @returns The viewport definition if found, undefined otherwise
+	 * Registers an action definition in the action registry.
+	 * @param action - The action definition to register
+	 * @returns Success status with optional error message
 	 */
-	getRegisteredViewportByWorkbenchID(workbenchID: string): ViewportDefinition | undefined {
-		return Object.values(this.viewports).find((viewport) => viewport.workbenchID === workbenchID);
+	registerAction(action: ActionDefinition): ValidateResult<ActionDefinition> {
+		// Check for duplicates
+		if (this.actions[action.id]) return { valid: false, message: `Action with id "${action.id}" already registered` };
+
+		this.actions = { ...this.actions, [action.id]: action };
+		return { valid: true, value: action };
+	}
+
+	/**
+	 * Retrieves all registered action definitions.
+	 * @returns Readonly record of all registered actions keyed by their id
+	 */
+	getRegisteredActions(): Readonly<ActionDefinitionRecord> {
+		return { ...this.actions };
+	}
+
+	/**
+	 * Retrieves a specific action definition by its id.
+	 * @param id - The action id to retrieve
+	 * @returns The action definition if found, undefined otherwise
+	 */
+	getRegisteredAction(id: string): ActionDefinition | undefined {
+		return this.actions[id];
 	}
 }
 
 // Create singleton instance
-const viewportRegistry = new ViewportRegistryClass();
+const viewportRegistry = new ViewportRegistry();
 
 // Export the registry instance methods
-export const registerViewport = (viewport: ViewportDefinition) => viewportRegistry.registerViewport(viewport);
+export const registerViewport = (viewportDefinition: ViewportDefinition) => viewportRegistry.registerViewport(viewportDefinition);
 export const getRegisteredViewports = () => viewportRegistry.getRegisteredViewports();
-export const getRegisteredViewport = (id: ViewportID) => viewportRegistry.getRegisteredViewport(id);
-export const getRegisteredViewportByWorkbenchID = (workbenchID: string) => viewportRegistry.getRegisteredViewportByWorkbenchID(workbenchID);
+export const getRegisteredViewport = (viewportID: string, by: 'viewport' | 'workbench' = 'viewport') => viewportRegistry.getRegisteredViewport(viewportID, by);
+
+const actionRegistry = new ActionReigstry();
+export const registerAction = (actionDefinition: ActionDefinition) => actionRegistry.registerAction(actionDefinition);
+export const getRegisteredActions = () => actionRegistry.getRegisteredActions();
+export const getRegisteredAction = (actionID: string) => actionRegistry.getRegisteredAction(actionID);

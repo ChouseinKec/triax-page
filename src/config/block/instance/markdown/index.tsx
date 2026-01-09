@@ -1,5 +1,5 @@
 // Components
-import BlockMarkdownRender from "@/src/config/block/instance/markdown/render";
+import BlockMarkdownComponent from "@/src/config/block/instance/markdown/component";
 
 // Types
 import { BlockDefinition } from '@/src/core/block/instance/types';
@@ -49,7 +49,7 @@ const BlockMarkdownDefinition: BlockDefinition = {
 	defaultAttributes: {},
 	defaultContent: {},
 
-	render: (instance) => <BlockMarkdownRender instance={instance} />,
+	component: BlockMarkdownComponent,
 };
 
 export default BlockMarkdownDefinition;

@@ -17,11 +17,11 @@ import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
  *
  * @param blockID - The block identifier
  */
-export function getBlockRenderedAttributes(blockID: BlockID): Record<string, string | boolean> | undefined {
+export function getBlockComponentedAttributes(blockID: BlockID): Record<string, string | boolean> | undefined {
 	const blockStore = useBlockStore.getState();
 
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockQueries → getBlockRenderedAttributes]')
+	const results = new ResultPipeline('[BlockQueries → getBlockComponentedAttributes]')
 		.validate({ blockID: validateBlockID(blockID) })
 		.pick((data) => ({
 			attributes: pickBlockAttributes(data.blockID, blockStore.allBlocks),

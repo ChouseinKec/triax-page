@@ -2,11 +2,11 @@
 import type { BarPosition, BarTitle, BarSize, BarID } from '@/src/core/layout/bar/types';
 
 /**
- * Props for the BarSection component.
+ * Props for the BarEditor component.
  */
-export interface BarSectionProps {
+export interface BarEditorProps {
 	/** ID of the workbench to get bars for */
-	selectedWorkbenchID: string;
+	selectedWorkbenchKey: string;
 }
 
 /**

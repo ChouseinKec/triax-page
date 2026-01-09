@@ -2,10 +2,10 @@
 import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
 
 // Components
-import WorkbenchMainRender from "@/src/config/layout/workbench/main/render"
+import WorkbenchMainComponent from "@/src/config/layout/workbench/main/component"
 
 export const WorkbenchMainDefinition: WorkbenchDefinition = {
-    id: 'main',
+    key: 'main',
     title: 'Main',
     order: 0,
     icon: (
@@ -13,5 +13,5 @@ export const WorkbenchMainDefinition: WorkbenchDefinition = {
             <path d="M240,208H224V136l2.34,2.34A8,8,0,0,0,240,130.34Zm-32-72V208H168V152a8,8,0,0,0-8-8H96a8,8,0,0,0-8,8v56H48V136l2.34-2.34A8,8,0,0,0,56,125.66L128,53.66l72,72A8,8,0,0,0,208,136Z" />
         </svg>
     ),
-    render: () => <WorkbenchMainRender />,
+    component: WorkbenchMainComponent,
 };

@@ -246,7 +246,7 @@ describe('validatePanelDefinition', () => {
 	it('rejects missing required properties', () => {
 		const panel = mockPanelInstance();
 
-		const results = [validatePanelDefinition({ ...panel, id: undefined }), validatePanelDefinition({ ...panel, title: undefined }), validatePanelDefinition({ ...panel, initialPosition: undefined }), validatePanelDefinition({ ...panel, initialSize: undefined }), validatePanelDefinition({ ...panel, workbenchID: undefined }), validatePanelDefinition({ ...panel, order: undefined }), validatePanelDefinition({ ...panel, initialLocked: undefined }), validatePanelDefinition({ ...panel, initialOpen: undefined }), validatePanelDefinition({ ...panel, icon: undefined })];
+		const results = [validatePanelDefinition({ ...panel, id: undefined }), validatePanelDefinition({ ...panel, title: undefined }), validatePanelDefinition({ ...panel, initialPosition: undefined }), validatePanelDefinition({ ...panel, initialSize: undefined }), validatePanelDefinition({ ...panel, workbenchKey: undefined }), validatePanelDefinition({ ...panel, order: undefined }), validatePanelDefinition({ ...panel, initialLocked: undefined }), validatePanelDefinition({ ...panel, initialOpen: undefined }), validatePanelDefinition({ ...panel, icon: undefined })];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);

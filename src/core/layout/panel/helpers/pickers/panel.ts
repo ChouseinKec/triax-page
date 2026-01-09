@@ -1,5 +1,5 @@
 // Types
-import type { PanelRecord, PanelID, PanelInstance } from '@/src/core/layout/panel/types';
+import type { PanelInstanceRecord, PanelID, PanelInstance } from '@/src/core/layout/panel/types';
 import type { PickResult } from '@/src/shared/types/result';
 
 /**
@@ -8,7 +8,7 @@ import type { PickResult } from '@/src/shared/types/result';
  * @param panelID - The unique identifier of the panel to fetch
  * @param layoutStore - The layout store instance
  */
-export function pickPanel(panelID: PanelID, allPanels: PanelRecord): PickResult<PanelInstance> {
+export function pickPanel(panelID: PanelID, allPanels: PanelInstanceRecord): PickResult<PanelInstance> {
     const panel = allPanels[panelID];
     if (!panel) return { success: false, error: `Panel not found: '${panelID}' does not exist in the layout store` };
 

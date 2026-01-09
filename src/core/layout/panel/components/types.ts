@@ -2,11 +2,11 @@ import type { PanelTabRecord, PanelPosition, PanelSize, PanelTitle } from '@/src
 
 
 /**
- * Props for the PanelSection component.
+ * Props for the PanelEditor component.
  */
-export interface PanelSectionProps {
+export interface PanelEditorProps {
 	/** ID of the workbench to get bars for */
-	selectedWorkbenchID: string;
+	selectedWorkbenchKey: string;
 }
 
 

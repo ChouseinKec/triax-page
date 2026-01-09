@@ -160,7 +160,7 @@ class ActionRegistry {
 	 * Retrieves all registered action definitions.
 	 * @returns Readonly record of all registered actions keyed by their id
 	 */
-	getRegisteredPageActions(): Readonly<ActionRecord> {
+	getRegisteredActions(): Readonly<ActionRecord> {
 		return { ...this.actions };
 	}
 
@@ -200,5 +200,5 @@ const actionRegistry = new ActionRegistry();
 
 // Export the registry instance methods
 export const registerAction = (action: ActionDefinition) => actionRegistry.registerAction(action);
-export const getRegisteredPageActions = () => actionRegistry.getRegisteredPageActions();
+export const getRegisteredActions = () => actionRegistry.getRegisteredActions();
 export const getRegisteredAction = (id: ActionID) => actionRegistry.getRegisteredAction(id);

@@ -1,10 +1,10 @@
 // Utilities
-import { validateWorkbenchID, validateWorkbenchTitle, validateWorkbenchOrder, validateWorkbenchRender, validateWorkbenchIcon, validateWorkbenchDefinition } from '../workbench';
+import { validateWorkbenchKey, validateWorkbenchTitle, validateWorkbenchOrder, validateWorkbenchComponent, validateWorkbenchIcon, validateWorkbenchDefinition } from '../workbench';
 import { mockWorkbenchInstance, mockReactElement } from '@/src/shared/helpers/mock';
 
-describe('validateWorkbenchID', () => {
+describe('validateWorkbenchKey', () => {
 	it('returns valid result for non-empty string', () => {
-		const result = validateWorkbenchID('workbench-1');
+		const result = validateWorkbenchKey('workbench-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -13,7 +13,7 @@ describe('validateWorkbenchID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validateWorkbenchID('');
+		const result = validateWorkbenchKey('');
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -22,7 +22,7 @@ describe('validateWorkbenchID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const result = validateWorkbenchID(123);
+		const result = validateWorkbenchKey(123);
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -31,8 +31,8 @@ describe('validateWorkbenchID', () => {
 	});
 
 	it('rejects null or undefined', () => {
-		const resultNull = validateWorkbenchID(null);
-		const resultUndefined = validateWorkbenchID(undefined);
+		const resultNull = validateWorkbenchKey(null);
+		const resultUndefined = validateWorkbenchKey(undefined);
 		expect(resultNull.valid).toBe(false);
 		expect(resultUndefined.valid).toBe(false);
 	});
@@ -128,10 +128,10 @@ describe('validateWorkbenchTitle', () => {
 	});
 });
 
-describe('validateWorkbenchRender', () => {
+describe('validateWorkbenchComponent', () => {
 	it('returns valid result for function', () => {
 		const renderFn = () => null;
-		const result = validateWorkbenchRender(renderFn);
+		const result = validateWorkbenchComponent(renderFn);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -141,7 +141,7 @@ describe('validateWorkbenchRender', () => {
 
 	it('returns valid result for React component function', () => {
 		const Component = () => null as any;
-		const result = validateWorkbenchRender(Component);
+		const result = validateWorkbenchComponent(Component);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -150,7 +150,7 @@ describe('validateWorkbenchRender', () => {
 	});
 
 	it('rejects non-function values', () => {
-		const result = validateWorkbenchRender('function');
+		const result = validateWorkbenchComponent('function');
 
 		expect(result.valid).toBe(false);
 		if (result.valid) return;
@@ -159,8 +159,8 @@ describe('validateWorkbenchRender', () => {
 	});
 
 	it('rejects null or undefined', () => {
-		const resultNull = validateWorkbenchRender(null);
-		const resultUndefined = validateWorkbenchRender(undefined);
+		const resultNull = validateWorkbenchComponent(null);
+		const resultUndefined = validateWorkbenchComponent(undefined);
 		expect(resultNull.valid).toBe(false);
 		expect(resultUndefined.valid).toBe(false);
 	});
@@ -245,7 +245,7 @@ describe('validateWorkbenchDefinition', () => {
 	});
 
 	it('rejects invalid id in otherwise valid object', () => {
-		const workbench = mockWorkbenchInstance({ id: '' });
+		const workbench = mockWorkbenchInstance({ key: '' });
 		const result = validateWorkbenchDefinition(workbench);
 
 		expect(result.valid).toBe(false);

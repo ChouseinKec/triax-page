@@ -11,7 +11,7 @@
 // 	describe('single pseudo rendering', () => {
 // 		it('returns CSS for specific pseudo-class', () => {
 // 			const styles = mockBlockStyles({ 'font-size': '16px', color: 'blue' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, '123', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -24,7 +24,7 @@
 
 // 		it('returns CSS for base pseudo without pseudo-class', () => {
 // 			const styles = mockBlockStyles({ 'background-color': 'red', padding: '10px' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, '456', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -37,7 +37,7 @@
 
 // 		it('returns CSS with cascaded styles from device/orientation hierarchy', () => {
 // 			const styles = mockBlockStyles({ all: { all: { base: { 'font-size': '14px', color: 'black' } }, portrait: { base: { 'font-size': '16px' } } }, mobile: { portrait: { base: { color: 'blue' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'portrait', selectedPseudoID: 'base', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'mobile', selectedOrientationID: 'portrait', selectedPseudoID: 'base', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, '789', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -50,7 +50,7 @@
 
 // 		it('returns empty CSS rule when no styles exist for context', () => {
 // 			const styles = mockBlockStyles({});
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'empty', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -62,7 +62,7 @@
 
 // 		it('returns success status for valid render', () => {
 // 			const styles = mockBlockStyles({ color: 'red' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'test', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -71,7 +71,7 @@
 
 // 		it('handles multiple style properties in single pseudo', () => {
 // 			const styles = mockBlockStyles({ 'font-size': '18px', 'font-weight': 'bold', 'line-height': '1.5', color: 'green', 'background-color': 'yellow', 'margin-top': '20px', 'padding-left': '15px' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'focus', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'focus', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'multi', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -154,7 +154,7 @@
 
 // 		it('preserves cascade hierarchy when rendering all pseudos', () => {
 // 			const styles = mockBlockStyles({ all: { all: { all: { 'font-size': '12px', color: 'gray' } }, portrait: { all: { 'font-size': '14px' } } }, tablet: { portrait: { all: { color: 'darkgray' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'portrait', selectedPseudoID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'blockID', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -186,7 +186,7 @@
 // 	describe('edge cases', () => {
 // 		it('handles block IDs with special characters', () => {
 // 			const styles = mockBlockStyles({ color: 'red' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, '123-test_special', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -197,7 +197,7 @@
 
 // 		it('handles nested style hierarchy correctly', () => {
 // 			const styles = mockBlockStyles({ all: { all: { base: { color: 'base-color' } }, landscape: { base: { color: 'landscape-color' } } }, desktop: { landscape: { base: { color: 'desktop-landscape-color' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'desktop', selectedOrientationID: 'landscape', selectedPseudoID: 'base', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'desktop', selectedOrientationID: 'landscape', selectedPseudoID: 'base', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'nested', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -208,7 +208,7 @@
 
 // 		it('returns valid CSS with shorthand properties', () => {
 // 			const styles = mockBlockStyles({ margin: '10px 20px', padding: '5px' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'shorthand', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -221,7 +221,7 @@
 
 // 		it('handles numeric style values correctly', () => {
 // 			const styles = mockBlockStyles({ opacity: '0.5', 'z-index': '100', 'flex-grow': '1' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'active', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'active', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'numeric', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -234,7 +234,7 @@
 
 // 		it('formats CSS with proper indentation and structure', () => {
 // 			const styles = mockBlockStyles({ color: 'red', 'font-size': '16px' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'format', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -248,7 +248,7 @@
 
 // 		it('handles color values with various formats', () => {
 // 			const styles = mockBlockStyles({ color: '#ff0000', 'background-color': 'rgb(255, 0, 0)', 'border-color': 'hsl(0, 100%, 50%)' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'colors', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -261,7 +261,7 @@
 // 		it('handles long block IDs', () => {
 // 			const longId = 'very-long-block-id-with-many-segments-and-characters';
 // 			const styles = mockBlockStyles({ color: 'red' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, longId, pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -272,7 +272,7 @@
 
 // 		it('returns consistent output for repeated calls', () => {
 // 			const styles = mockBlockStyles({ color: 'red', 'font-size': '16px' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'hover', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result1 = renderBlockStyles(styles, 'consistent', pageContext);
 // 			const result2 = renderBlockStyles(styles, 'consistent', pageContext);
 
@@ -285,7 +285,7 @@
 // 	describe('integration with cascade and generate functions', () => {
 // 		it('integrates cascading logic for complex hierarchy', () => {
 // 			const styles = mockBlockStyles({ all: { all: { base: { color: 'black', 'font-size': '14px', 'line-height': '1.2' }, hover: { color: 'blue' } }, landscape: { base: { 'font-size': '16px' } } }, tablet: { all: { base: { 'line-height': '1.4' } }, landscape: { base: { color: 'green' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'base', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedDeviceID: 'tablet', selectedOrientationID: 'landscape', selectedPseudoID: 'base', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'integrate', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -307,7 +307,7 @@
 // 			];
 
 // 			testCases.forEach(({ pseudo, expected }) => {
-// 				const pageContext = mockPageContext({ store: { selectedPseudoID: pseudo, selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 				const pageContext = mockPageContext({ store: { selectedPseudoID: pseudo, selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 				const result = renderBlockStyles(styles, 'selector', pageContext);
 
 // 				expect(result.success).toBe(true);
@@ -319,7 +319,7 @@
 
 // 		it('handles default workbench context', () => {
 // 			const styles = mockBlockStyles({ color: 'red' });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'workbench', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -330,7 +330,7 @@
 
 // 		it('handles device-specific style overrides', () => {
 // 			const styles = mockBlockStyles({ all: { all: { all: { 'font-size': '14px' } } }, desktop: { all: { all: { 'font-size': '18px' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'desktop', selectedOrientationID: 'all', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'desktop', selectedOrientationID: 'all', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'device-override', pageContext);
 
 // 			expect(result.success).toBe(true);
@@ -341,7 +341,7 @@
 
 // 		it('handles orientation-specific style overrides', () => {
 // 			const styles = mockBlockStyles({ all: { all: { all: { 'font-size': '14px' } }, landscape: { all: { 'font-size': '16px' } } } });
-// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'landscape', selectedWorkbenchID: 'default' } });
+// 			const pageContext = mockPageContext({ store: { selectedPseudoID: 'base', selectedDeviceID: 'all', selectedOrientationID: 'landscape', selectedWorkbenchKey: 'default' } });
 // 			const result = renderBlockStyles(styles, 'orientation-override', pageContext);
 
 // 			expect(result.success).toBe(true);

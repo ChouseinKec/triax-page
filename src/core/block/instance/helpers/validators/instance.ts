@@ -1,8 +1,7 @@
 // Types
-import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockRender, BlockAllowedChildren, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockComponent, BlockAllowedChildren, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
 import type { ElementKey } from '@/src/core/block/element/types';
 import type { ValidateResult } from '@/src/shared/types/result';
-
 
 // Helpers
 import { validateString, validateArray, validateFunction, validateObject, validateElement } from '@/src/shared/helpers';
@@ -73,14 +72,15 @@ export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<E
 }
 
 /**
- * Checks if the render configuration is a valid function that can render the block.
- * @param blockRender - The block render configuration to validate
- * @returns ValidateResult containing validity and the validated BlockRender function if valid
+ * Checks if the component configuration is a valid function that can component the block.
+ * @param blockRender - The block component configuration to validate
+ * @returns ValidateResult containing validity and the validated BlockComponent function if valid
  */
-export function validateBlockRender(blockRender: unknown): ValidateResult<BlockRender> {
-	const validation = validateFunction(blockRender);
-	if (!validation.valid) return { valid: false, message: `Invalid block render: expected a function, received ${typeof blockRender}` };
-	return { valid: true, value: blockRender as BlockRender };
+export function validateBlockComponent(blockComponent: unknown): ValidateResult<BlockComponent> {
+	const validation = validateFunction(blockComponent);
+	if (!validation.valid) return { valid: false, message: `Invalid block component: expected a function, received ${typeof blockComponent}` };
+
+	return { valid: true, value: blockComponent as BlockComponent };
 }
 
 /**
@@ -152,13 +152,13 @@ export function validateBlockInstance(blockInstance: unknown): ValidateResult<Bl
 }
 
 /**
- * Checks if the definition has all required properties (type, availableTags, render, allowedChildren, icon, category)
+ * Checks if the definition has all required properties (type, availableTags, component, allowedChildren, icon, category)
  * and that each property is valid according to its respective validation rules.
  *
  * @param blockDefinition - The block definition object to validate
  */
 export function validateBlockDefinition(blockDefinition: unknown): ValidateResult<BlockDefinition> {
-	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'render', 'availableTags', 'allowedChildren']);
+	const validation = validateObject(blockDefinition, ['type', 'defaultTag', 'icon', 'category', 'component', 'availableTags', 'allowedChildren']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const typeValidation = validateBlockType(validation.value.type);
@@ -170,7 +170,7 @@ export function validateBlockDefinition(blockDefinition: unknown): ValidateResul
 	const tagValidation = validateBlockTag(validation.value.defaultTag, allowedTagsValidation.value);
 	if (!tagValidation.valid) return { valid: false, message: tagValidation.message };
 
-	const renderValidation = validateBlockRender(validation.value.render);
+	const renderValidation = validateBlockComponent(validation.value.component);
 	if (!renderValidation.valid) return { valid: false, message: renderValidation.message };
 
 	const permittedContentValidation = validateBlockAllowedChildren(validation.value.allowedChildren);

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // Types
-import type { PanelID, PanelInstance, PanelTabInstance, PanelRecord } from '@/src/core/layout/panel/types';
+import type { PanelID, PanelInstance, PanelTabInstance, PanelInstanceRecord } from '@/src/core/layout/panel/types';
 import type { BarDefinition, BarID } from '@/src/core/layout/bar/types';
 import type { BarRecord, BarActionInstance, BarActionID } from '@/src/core/layout/bar/types';
 
@@ -10,7 +10,7 @@ import { getRegisteredPanels, getRegisteredPanelTabs } from '@/src/core/layout/p
 import { getRegisteredBars } from '@/src/core/layout/bar/registries';
 
 interface LayoutStore {
-	allPanels: PanelRecord;
+	allPanels: PanelInstanceRecord;
 	allBars: BarRecord;
 
 	updatePanel: (panelID: PanelID, updates: Partial<PanelInstance>) => void;
@@ -25,7 +25,7 @@ interface LayoutStore {
 export function createLayoutStore() {
 	return create<LayoutStore>((set, get) => {
 		// Build initial panels
-		const initialPanels: PanelRecord = (() => {
+		const initialPanels: PanelInstanceRecord = (() => {
 			const panels = getRegisteredPanels();
 			const tabs = getRegisteredPanelTabs();
 

@@ -3,11 +3,11 @@ import { OptionDefinition } from "@/src/shared/components/types/option";
 /** Props definition for the DropdownSelect component. */
 export type DropdownSelectProps = {
   /** The currently selected value */
-  value: string;
+  value: string | string[];
   /** The list of options to display in the dropdown */
   options: OptionDefinition[];
   /** Callback function triggered when an option is selected */
-  onChange: (value: string) => void;
+  onChange: (value: string | string[]) => void;
   /** Placeholder text to display when no value is selected */
   placeholder?: string | React.ReactNode;
   /** Whether to force the placeholder to be shown even when a value is selected */
@@ -24,4 +24,6 @@ export type DropdownSelectProps = {
   isDisabled?: boolean;
   /** Optional class name for the dropdown */
   className?: string;
+  /** Whether the dropdown allows multiple selections */
+  multiselectable?: boolean;
 };

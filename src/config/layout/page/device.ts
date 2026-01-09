@@ -7,7 +7,6 @@ export const CoreDevices: DeviceDefinition[] = [
 		value: 'all',
 		media: { min: 0, max: Infinity },
 		template: { width: 1200, height: 800 },
-		category: 'custom',
 		hidden: true,
 	},
 

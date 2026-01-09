@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // Types
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 import type { DeviceID } from '@/src/core/layout/page/types';
 import type { OrientationID } from '@/src/core/layout/page/types';
 import type { PseudoID } from '@/src/core/layout/page/types';
@@ -14,7 +14,7 @@ export type Selected = {
 	deviceID: DeviceID;
 	orientationID: OrientationID;
 	pseudoID: PseudoID;
-	workbenchID: WorkbenchID;
+	workbenchKey: WorkbenchKey;
 };
 
 export type PageStore = {
@@ -32,7 +32,7 @@ export function createPageStore() {
 			deviceID: DEFAULT_DEVICE_ID,
 			orientationID: DEFAULT_ORIENTATION_ID,
 			pseudoID: DEFAULT_PSEUDO_ID,
-			workbenchID: DEFAULT_WORKBENCH_ID,
+			workbenchKey: DEFAULT_WORKBENCH_ID,
 		},
 		/**
 		 * Updates selected values. Accepts a partial Selected object.

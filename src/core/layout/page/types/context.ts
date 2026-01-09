@@ -1,6 +1,6 @@
 // Types
 import type { DeviceID, DeviceDefinition, OrientationID, OrientationInstance, PseudoID, PseudoInstance } from '@/src/core/layout/page/types';
-import type { WorkbenchID, WorkbenchDefinition } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey, WorkbenchDefinition } from '@/src/core/layout/workbench/types';
 
 /**
  * Represents the page context including selected, registered, and default device, orientation, pseudo and shorthand info.
@@ -10,7 +10,7 @@ export type PageContext = {
 		selectedDeviceID: DeviceID;
 		selectedOrientationID: OrientationID;
 		selectedPseudoID: PseudoID;
-		selectedWorkbenchID: WorkbenchID;
+		selectedWorkbenchKey: WorkbenchKey;
 	};
 	registry: {
 		devices: DeviceDefinition[];
@@ -22,6 +22,6 @@ export type PageContext = {
 		defaultDeviceID: DeviceID;
 		defaultOrientationID: OrientationID;
 		defaultPseudoID: PseudoID;
-		defaultWorkbenchID: WorkbenchID;
+		defaultWorkbenchKey: WorkbenchKey;
 	};
 };

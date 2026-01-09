@@ -10,7 +10,7 @@ const WorkbenchActions: BarDefinition = {
 	position: { top: '7%', left: '46%' },
 	size: { minWidth: 'auto', maxWidth: '25%' },
 	title: 'Workbench Actions',
-	workbenchID: 'main',
+	workbenchKey: 'main',
 	isTransparent: true,
 };
 

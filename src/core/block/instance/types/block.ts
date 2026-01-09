@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ComponentType, ReactElement } from 'react';
 
 // Types
 import type { StyleKey, StyleValue } from '@/src/core/block/style/types';
@@ -68,9 +68,17 @@ export type BlockContent = Record<string, any>;
 export type BlockChildren = ReactElement | ReactElement[];
 
 /**
+ * Props for block render components
+ */
+export interface BlockComponentProps {
+	instance: BlockInstance;
+	children?: BlockChildren;
+}
+
+/**
  * Function to render a block instance with optional children
  */
-export type BlockRender = (instance: BlockInstance, children?: BlockChildren) => ReactElement;
+export type BlockComponent = ComponentType<BlockComponentProps>;
 
 /**
  * Indicates if a block can have styles
@@ -156,7 +164,7 @@ export interface BlockDefinition {
 	defaultContent: BlockContent;
 
 	/** Render function that returns JSX for the block */
-	render: BlockRender;
+	component: BlockComponent;
 }
 
 /**

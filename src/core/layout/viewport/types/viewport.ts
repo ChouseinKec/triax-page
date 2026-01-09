@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { ComponentType } from 'react';
 
 // Types
-import type { WorkbenchID } from '@/src/core/layout/workbench/types';
+import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
 
 /**
  * Unique identifier for the Viewport
@@ -18,24 +18,29 @@ export type ViewportTitle = string;
 /**
  * Registry mapping workbench IDs to their viewport definitions
  */
-export type ViewportRegistry = Record<WorkbenchID, ViewportDefinition>;
+export type ViewportDefinitionRecord = Record<WorkbenchKey, ViewportDefinition>;
 
 /**
- * Function that renders the viewport component
+ * Props for the main component to render for the Workbench
  */
-export type ViewportRender = () => ReactNode;
+export type ViewportComponentProps = {};
+
+/**
+ * The main component to render for the Workbench
+ */
+export type ViewportComponent = ComponentType<ViewportComponentProps>;
 
 /**
  * Defines the structure for viewport configurations in the page builder.
  * Viewports provide different editing contexts and toolsets.
  */
 export interface ViewportDefinition {
-    /** Unique identifier for the Viewport */
-    id: ViewportID;
-    /** Title of the Viewport */
-    title: ViewportTitle;
-    /** ID of the Workbench the Viewport belongs to */
-    workbenchID: WorkbenchID;
-    /** Main React component for the Viewport (optional) */
-    render: ViewportRender;
+	/** Unique identifier for the Viewport */
+	id: ViewportID;
+	/** Title of the Viewport */
+	title: ViewportTitle;
+	/** ID of the Workbench the Viewport belongs to */
+	workbenchKey: WorkbenchKey;
+	/** Main React component for the Viewport (optional) */
+	component: ViewportComponent;
 }

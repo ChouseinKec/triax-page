@@ -1,5 +1,5 @@
 // Types
-import type { WorkbenchID } from 'src/core/layout/workbench/types';
+import type { WorkbenchKey } from 'src/core/layout/workbench/types';
 
 // Stores
 import { usePageStore } from '@/src/state/layout/page';
@@ -7,6 +7,6 @@ import { usePageStore } from '@/src/state/layout/page';
 /**
  * Gets the currently selected workbench ID for page queries.
  */
-export function getSelectedWorkbenchID(): WorkbenchID {
-	return usePageStore.getState().selected.workbenchID;
+export function getSelectedWorkbenchID(): WorkbenchKey {
+	return usePageStore.getState().selected.workbenchKey;
 }

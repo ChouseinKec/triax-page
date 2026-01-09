@@ -1,5 +1,5 @@
 // Components
-import BlockContainerRender from '@/src/config/block/instance/container/render';
+import BlockContainerComponent from '@/src/config/block/instance/container/component';
 
 // Types
 import { BlockDefinition } from '@/src/core/block/instance/types';
@@ -33,7 +33,7 @@ const BlockContainerDefinition: BlockDefinition = {
 	defaultAttributes: {},
 	defaultContent: {},
 
-	render: (instance, children) => <BlockContainerRender instance={instance}>{children}</BlockContainerRender>,
+	component: BlockContainerComponent,
 };
 
 export default BlockContainerDefinition;

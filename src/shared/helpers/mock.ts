@@ -93,7 +93,7 @@ export const mockBlockStyles = (overrides?: Partial<BlockStyles> | Record<string
  * Use this to avoid boilerplate when creating test element definitions.
  */
 export const mockElementDefinition = (overrides?: Partial<ElementDefinition>): ElementDefinition => ({
-	tag: 'span',
+	key: 'span',
 	description: 'Test element definition',
 	allowedAttributes: [],
 	allowedChildren: null,
@@ -139,7 +139,7 @@ export const mockPageContext = (overrides?: Partial<PageContext>): PageContext =
 		selectedDeviceID: 'all',
 		selectedOrientationID: 'all',
 		selectedPseudoID: 'all',
-		selectedWorkbenchID: 'default',
+		selectedWorkbenchKey: 'default',
 	},
 	registry: {
 		devices: [
@@ -197,7 +197,7 @@ export const mockPageContext = (overrides?: Partial<PageContext>): PageContext =
 		defaultDeviceID: 'all',
 		defaultOrientationID: 'all',
 		defaultPseudoID: 'all',
-		defaultWorkbenchID: 'default',
+		defaultWorkbenchKey: 'default',
 	},
 	...overrides,
 });
@@ -226,7 +226,7 @@ export const mockBarInstance = (overrides?: Partial<BarInstance>): BarInstance =
 	title: 'Test Bar',
 	position: { top: '0', left: '0' },
 	size: { width: '100%' },
-	workbenchID: 'test-workbench',
+	workbenchKey: 'test-workbench',
 	actions: {},
 	...overrides,
 });
@@ -279,7 +279,7 @@ export const mockPanelInstance = (overrides?: Partial<PanelInstance>): PanelInst
 	title: 'Test Panel',
 	order: 0,
 	icon: mockReactElement(),
-	workbenchID: 'test-workbench',
+	workbenchKey: 'test-workbench',
 	initialPosition: { top: '0', left: '0' },
 	initialSize: { width: '300px', height: '400px', minWidth: 200, minHeight: 200 },
 	initialLocked: false,
@@ -296,7 +296,7 @@ export const mockPanelInstance = (overrides?: Partial<PanelInstance>): PanelInst
  * Use this to avoid boilerplate when creating test workbench instances.
  */
 export const mockWorkbenchInstance = (overrides?: Partial<WorkbenchDefinition>): WorkbenchDefinition => ({
-	id: 'test-workbench',
+	key: 'test-workbench',
 	title: 'Test Workbench',
 	icon: mockReactElement(),
 	order: 0,
