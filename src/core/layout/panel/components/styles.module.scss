@@ -117,3 +117,10 @@
 	color: var(--color-white);
 	padding-left: var(--size-md);
 }
+
+.Toolbar {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 100000;
+}

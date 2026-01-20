@@ -1,10 +1,10 @@
 // Utilities
-import { validateDeviceID, validateDeviceName, validateDeviceValue, validateDeviceMedia, validateDeviceTemplate, validateDeviceCategory, validateDeviceDefinition } from '../device';
+import { validateDeviceKey, validateDeviceName, validateDeviceValue, validateDeviceMedia, validateDeviceTemplate, validateDeviceCategory, validateDeviceDefinition } from '../device';
 import { mockDeviceInstance } from '@/src/shared/helpers/mock';
 
-describe('validateDeviceID', () => {
+describe('validateDeviceKey', () => {
 	it('accepts valid device ID', () => {
-		const result = validateDeviceID('device-1');
+		const result = validateDeviceKey('device-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -13,7 +13,7 @@ describe('validateDeviceID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validateDeviceID(123), validateDeviceID(null), validateDeviceID(undefined), validateDeviceID({})];
+		const results = [validateDeviceKey(123), validateDeviceKey(null), validateDeviceKey(undefined), validateDeviceKey({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -24,7 +24,7 @@ describe('validateDeviceID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validateDeviceID('');
+		const result = validateDeviceKey('');
 		expect(result.valid).toBe(false);
 	});
 });

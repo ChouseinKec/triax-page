@@ -57,46 +57,55 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
                 const newValues = [...currentValues, option];
                 onChange(newValues);
             }
-        } else {
-            // Clear selection if the same option is clicked and clearable is enabled
-            if (clearable && value === option) return onChange("");
-
-            // Prevent clearing selection if clearable is disabled and empty option is selected
-            if (!clearable && (!option || option === '')) return;
-
-            // Otherwise, select the new option
-            onChange(option);
+            return;
         }
-    }, [onChange, value, clearable, multiselectable]);
+
+        // Clear selection if the same option is clicked and clearable is enabled
+        if (clearable && value === option) return onChange("");
+
+        // Prevent clearing selection if clearable is disabled and empty option is selected
+        if (!clearable && (!option || option === '')) return;
+
+        // Otherwise, select the new option
+        onChange(option);
+    }, [onChange, value, clearable, multiselectable]
+    );
 
     // Handle search input changes
     const handleSearch = useCallback((input: string): void => {
         setSearch(input);
-    }, []);
+    }, []
+    );
+
+    // Filter out hidden options
+    const filteredOptions = useMemo(() => {
+        return options.filter(option => !option.hidden);
+    }, [options]
+    );
 
     // Filter options based on search input
-    const filteredOptions = useMemo(() => {
-        if (!searchable) return options;
+    const searchedOptions = useMemo(() => {
+        if (!searchable) return filteredOptions;
 
-        return options.filter((option) =>
+        return filteredOptions.filter((option) =>
             option.name && option.name.toLowerCase().includes(search.toLowerCase())
         );
 
     },
-        [search, searchable, options]
+        [search, searchable, filteredOptions]
     );
 
     // Group options by category if enabled
     const groupedOptions = useMemo(() => {
         return groupable
-            ? Object.groupBy(filteredOptions, ({ category }) => category || "uncategorized")
+            ? Object.groupBy(searchedOptions, ({ category }) => category || "uncategorized")
             : null;
-    }, [filteredOptions, groupable]
+    }, [searchedOptions, groupable]
     );
 
     // Render the search input element if searchable and enough options
-    const searchElement = useMemo((): ReactElement | null => {
-        if (!searchable || options.length < 10) return null;
+    const searchInstance = useMemo((): ReactElement | null => {
+        if (!searchable || filteredOptions.length < 10) return null;
         return (
             <div className={`${CSS.Search} Search`}>
                 <GenericInput
@@ -107,15 +116,13 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
                 />
             </div>
         );
-    }, [handleSearch, searchable, options.length, search]
+    }, [handleSearch, searchable, filteredOptions.length, search]
     );
 
     // Render the list of options, grouped or ungrouped
-    const optionsElement = useMemo(() => {
+    const optionInstances = useMemo(() => {
         // If the search result is null
-        if (filteredOptions.length === 0) {
-            return <div className={CSS.Empty}>No options found.</div>;
-        }
+        if (searchedOptions.length === 0) return <div className={CSS.Empty}>No options found.</div>;
 
         // If options are groupable
         if (groupedOptions) {
@@ -158,7 +165,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
 
         // If options are basic
         // E.g for a simple list of options without grouping like radio buttons
-        return (filteredOptions.map((option, index) => {
+        return (searchedOptions.map((option, index) => {
             const isSelected = multiselectable
                 ? (Array.isArray(value) && value.includes(option.value))
                 : (value === option.value);
@@ -175,13 +182,13 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({
             )
         }));
 
-    }, [filteredOptions, groupedOptions, value, handleChange, prioritizeIcons]
+    }, [searchedOptions, groupedOptions, value, handleChange, prioritizeIcons]
     );
 
     return (
         <>
-            {searchElement}
-            {optionsElement}
+            {searchInstance}
+            {optionInstances}
         </>
     )
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, ReactElement, useRef } from "react";
+import React, { memo, ReactElement, useRef, useMemo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -28,9 +28,13 @@ import useSize from "@/src/shared/hooks/interface/useSize";
  * @param  props.onChange - Callback function triggered when selection changes
  * @param  props.className="" - Additional CSS classes for custom styling
  * @param  props.prioritizeIcons=true - Prioritizes icon display over text in options
+ * @param  props.clearable=true - Allows clearing the selection
+ * @param  props.direction="horizontal" - Layout direction of options
+ * @param  props.multiselectable=false - Enables multiple selection
  * @returns Rendered radio select with overflow tooltip when needed
  *
  * @note Automatically collapses and shows tooltip when container overflows
+ * @note Optimized to prevent unnecessary re-renders of child components
  */
 const RadioSelect: React.FC<RadioSelectProps> = ({
     value,
@@ -39,23 +43,29 @@ const RadioSelect: React.FC<RadioSelectProps> = ({
     className = "",
     prioritizeIcons = true,
     clearable = true,
+    direction = "horizontal",
+    multiselectable = false,
 }): ReactElement => {
+
     const containerRef = useRef<HTMLDivElement>(null);
     const { isOverflowing } = useSize(containerRef);
 
-    // Render options list
-    const renderOptions = (): ReactElement => (
+    // Memoize the options component to prevent unnecessary re-renders
+    const optionInstances = useMemo(() => (
         <Options
             prioritizeIcons={prioritizeIcons}
             value={value}
             options={options}
             onChange={onChange}
             clearable={clearable}
+            multiselectable={multiselectable}
         />
+    ),
+        [prioritizeIcons, value, options, onChange, clearable, multiselectable]
     );
 
-    // Render tooltip only when overflowing
-    const renderTooltip = (): ReactElement | null => {
+    // Memoize the tooltip content to prevent unnecessary re-renders
+    const tooltipInstance = useMemo((): ReactElement | null => {
         if (!isOverflowing) return null;
 
         return (
@@ -64,23 +74,25 @@ const RadioSelect: React.FC<RadioSelectProps> = ({
                 anchor="top"
                 hoverDelay={600}
             >
-                {renderOptions()}
+                {optionInstances}
             </TooltipReveal>
         );
-    };
+    },
+        [isOverflowing, optionInstances]
+    );
 
     return (
         <div
             className={`${CSS.RadioSelect} RadioSelect ${className}`}
             ref={containerRef}
             data-is-collapsed={isOverflowing}
+            data-direction={direction}
         >
             {/* Render options */}
-            {renderOptions()}
+            {optionInstances}
 
             {/* Render tooltip for overflowing content */}
-            {renderTooltip()}
-
+            {tooltipInstance}
         </div>
     );
 };

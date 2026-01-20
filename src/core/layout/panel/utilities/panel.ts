@@ -1,107 +1,82 @@
 // Types
-import { PanelPosition, PanelSize, PanelID, PanelTitle, PanelIcon, PanelOrder, PanelDefinition } from '@/src/core/layout/panel/types';
+import type { PanelPosition, PanelSize } from '../types';
+import type { CSSProperties } from 'react';
+
+// Utility types
+type PxPosition = { top: number; left: number };
+type PxSize = { width: number; height: number };
 
 /**
- * Validates if a value is a valid panel identifier.
- * Checks if the value is a non-empty string.
- * @param panelID - The value to validate
+ * Converts percentage-based position and size to pixel position.
+ * @param position - The panel position in %.
+ * @param size - The panel size in %.
+ * @param vh - Viewport height.
+ * @param vw - Viewport width.
+ * @returns The pixel position.
  */
-export function isPanelIDValid(panelID: unknown): panelID is PanelID {
-	return typeof panelID === 'string' && panelID.length > 0;
+export function convertPositionToPx(position: PanelPosition, size: PanelSize, vh: number, vw: number): PxPosition {
+	let top = 0;
+	let left = 0;
+	if ('top' in position) top = (position.top / 100) * vh;
+	if ('left' in position) left = (position.left / 100) * vw;
+	if ('right' in position) left = vw - (position.right / 100) * vw - (size.width / 100) * vw;
+	if ('bottom' in position) top = vh - (position.bottom / 100) * vh - (size.height / 100) * vh;
+	return { top, left };
 }
 
 /**
- * Validates if a value is a valid panel title.
- * Checks if the value is a non-empty string.
- * @param panelTitle - The value to validate
+ * Converts percentage-based size to pixel size.
+ * @param size - The panel size in %.
+ * @param vh - Viewport height.
+ * @param vw - Viewport width.
+ * @returns The pixel size.
  */
-export function isPanelTitleValid(panelTitle: unknown): panelTitle is PanelTitle {
-	return typeof panelTitle === 'string' && panelTitle.length > 0;
+export function convertSizeToPx(size: PanelSize, vh: number, vw: number): PxSize {
+	return { width: (size.width / 100) * vw, height: (size.height / 100) * vh };
 }
 
 /**
- * Validates if a value is a valid panel position.
- * Checks if the value is an object with top and left string properties.
- * @param panelPosition - The value to validate
+ * Converts pixel position to percentage-based position.
+ * @param newPos - The new pixel position.
+ * @param currentSize - The current pixel size.
+ * @param vh - Viewport height.
+ * @param vw - Viewport width.
+ * @param anchorType - The anchor type of the position.
+ * @returns The percentage-based position.
  */
-export function isPanelPositionValid(panelPosition: unknown): panelPosition is PanelPosition {
-	return (
-		typeof panelPosition === 'object' &&
-		panelPosition !== null && //
-		typeof (panelPosition as Record<string, unknown>).top === 'string' &&
-		typeof (panelPosition as Record<string, unknown>).left === 'string'
-	);
+export function convertPxToPosition(newPos: PxPosition, currentSize: PxSize, vh: number, vw: number, anchorType: PanelPosition): PanelPosition {
+	const newPosition: any = {};
+	if ('top' in anchorType) newPosition.top = (newPos.top / vh) * 100;
+	if ('left' in anchorType) newPosition.left = (newPos.left / vw) * 100;
+	if ('right' in anchorType) newPosition.right = ((vw - newPos.left - currentSize.width) / vw) * 100;
+	if ('bottom' in anchorType) newPosition.bottom = ((vh - newPos.top - currentSize.height) / vh) * 100;
+	return newPosition as PanelPosition;
 }
 
 /**
- * Validates if a value is a valid panel size configuration.
- * Checks if the value has width, height (strings) and minWidth, minHeight (numbers).
- * @param panelSize - The value to validate
+ * Converts pixel size to percentage-based size.
+ * @param newSize - The new pixel size.
+ * @param vh - Viewport height.
+ * @param vw - Viewport width.
+ * @returns The percentage-based size.
  */
-export function isPanelSizeValid(panelSize: unknown): panelSize is PanelSize {
-	return (
-		typeof panelSize === 'object' &&
-		panelSize !== null && //
-		typeof (panelSize as PanelSize).width === 'string' &&
-		typeof (panelSize as PanelSize).height === 'string' &&
-		typeof (panelSize as PanelSize).minWidth === 'number' &&
-		typeof (panelSize as PanelSize).minHeight === 'number'
-	);
+export function convertPxToSize(newSize: PxSize, vh: number, vw: number): PxSize {
+	return { width: (newSize.width / vw) * 100, height: (newSize.height / vh) * 100 };
 }
 
 /**
- * Validates if a value is a valid panel order.
- * Checks if the value is a valid number (not NaN).
- * @param panelOrder - The value to validate
+ * Calculates the CSS styles for the panel based on position and size.
+ * @param localPosition - The local position in %.
+ * @param localSize - The local size in %.
+ * @returns The CSS properties object.
  */
-export function isPanelOrderValid(panelOrder: unknown): panelOrder is PanelOrder {
-	return typeof panelOrder === 'number' && !isNaN(panelOrder);
-}
-
-/**
- * Validates if a value is a valid panel icon.
- * Checks if the value is not null or undefined.
- * @param panelIcon - The value to validate
- */
-export function isPanelIconValid(panelIcon: unknown): panelIcon is PanelIcon {
-	return panelIcon != null;
-}
-
-/**
- * Validates if a value is a valid panel locked state.
- * Checks if the value is a boolean.
- * @param panelLocked - The value to validate
- */
-export function isPanelLockedValid(panelLocked: unknown): panelLocked is boolean {
-	return typeof panelLocked === 'boolean';
-}
-
-/**
- * Validates if a value is a valid panel open state.
- * Checks if the value is a boolean.
- * @param panelOpen - The value to validate
- */
-export function isPanelOpenValid(panelOpen: unknown): panelOpen is boolean {
-	return typeof panelOpen === 'boolean';
-}
-
-/**
- * Validates if a value is a valid panel definition.
- * Checks if the value is an object with all required panel properties.
- * @param panelDefinition - The value to validate
- */
-export function isPanelDefinitionValid(panelDefinition: unknown): panelDefinition is PanelDefinition {
-	return (
-		typeof panelDefinition === 'object' && //
-		panelDefinition !== null &&
-		'id' in panelDefinition &&
-		'title' in panelDefinition &&
-		'order' in panelDefinition &&
-		'icon' in panelDefinition &&
-		'workbenchKey' in panelDefinition &&
-		'initialPosition' in panelDefinition &&
-		'initialSize' in panelDefinition &&
-		'initialLocked' in panelDefinition &&
-		'initialOpen' in panelDefinition
-	);
+export function calculatePanelStyles(localPosition: PanelPosition, localSize: PanelSize): CSSProperties {
+	const styleObj: any = {};
+	if ('top' in localPosition) styleObj.top = `${localPosition.top}%`;
+	if ('left' in localPosition) styleObj.left = `${localPosition.left}%`;
+	if ('right' in localPosition) styleObj.right = `${localPosition.right}%`;
+	if ('bottom' in localPosition) styleObj.bottom = `${localPosition.bottom}%`;
+	styleObj.width = `${localSize.width}%`;
+	styleObj.height = `${localSize.height}%`;
+	return styleObj;
 }

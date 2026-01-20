@@ -1,1 +1,2 @@
-export * from './workbench';
+export * from './bench';
+export * from './action';

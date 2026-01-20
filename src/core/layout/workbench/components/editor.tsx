@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useMemo } from "react";
+import React, { memo } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -8,13 +8,12 @@ import CSS from "./styles.module.scss";
 import type { WorkbenchProps } from "./types";
 
 // Managers
-import { usePanels, togglePanel } from "@/src/core/layout/panel/managers";
+import { useSelectedBench, getActionDefinitions } from "@/src/core/layout/workbench/managers/";
 
 // Components
-import Viewport from "@/src/core/layout/viewport/components/editor";
-import PanelEditor from "@/src/core/layout/panel/components/editor";
-import BarEditor from "@/src/core/layout/bar/components/editor";
 import ActionGroup from "@/src/shared/components/group/action/component";
+import Panels from "@/src/core/layout/panel/components/editor";
+import BenchSelect from "./select";
 
 /**
  * Workbench Component
@@ -22,60 +21,42 @@ import ActionGroup from "@/src/shared/components/group/action/component";
  *
  * @returns The rendered workbench editor with selection controls
  */
-const Workbench: React.FC<WorkbenchProps> = ({ selectedWorkbench }) => {
-    const allPanels = usePanels(selectedWorkbench?.key, { workbench: true });
-
-    /**
-     * Renders action buttons for toggling LayoutPanel visibility.
-     */
-    const panelToggleInstances = useMemo(() => (
-        allPanels && allPanels.length > 0
-            ? (
-                <ActionGroup direction="vertical" className="LayoutEditorActionBar">
-                    {allPanels
-                        .map(panel => (
-                            <button
-                                key={panel.id}
-                                onClick={() => togglePanel(panel.id)}
-                                data-is-active={panel.isOpen}
-                            >
-                                {panel.icon}
-                            </button>
-                        ))}
-                </ActionGroup>
-            )
-            : null
-    ), [allPanels]
-    );
-
+const Workbench: React.FC<WorkbenchProps> = () => {
+    const selectedBench = useSelectedBench();
+    const actions = getActionDefinitions("main");
 
     return (
         <div className={CSS.Workbench}>
 
-            {selectedWorkbench
-                ?
-                <>
-                    <div className={CSS.Toolbar}>
-                        {panelToggleInstances}
-                    </div>
-                    <div className={CSS.Bench}>
-                        <selectedWorkbench.component>
+            <div className={CSS.Toolbar}>
+                <BenchSelect />
+                <span className={CSS.Divider} />
 
-                            <div className={CSS.Layout}>
-                                <PanelEditor selectedWorkbenchKey={selectedWorkbench.key} />
-                                <BarEditor selectedWorkbenchKey={selectedWorkbench.key} />
-                            </div>
+                <ActionGroup direction="vertical">
+                    {actions.map((action, index) => (
+                        <React.Fragment key={action.key}>
+                            <action.component key={action.key} />
+                            {index < actions.length - 1 && <span key={`${action.key}-divider`} className={CSS.Divider} />}
+                        </React.Fragment>
 
-                            <Viewport selectedWorkbench={selectedWorkbench} />
+                    ))}
 
-                        </selectedWorkbench.component>
-                    </div>
-                </>
-                : <p className={CSS.Fallback}>No workbench is currently selected. Please ensure a workbench has been registered and selected.</p>
-            }
+                </ActionGroup>
+
+            </div>
+
+            <Panels benchKey="main" />
+
+            <div className={CSS.Bench}>
+                {selectedBench
+                    ? (<selectedBench.component />)
+                    : (<div className={CSS.EmptyState}>No workbench selected.</div>)
+                }
+            </div>
         </div>
 
     );
 };
+
 
 export default memo(Workbench);

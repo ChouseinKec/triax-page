@@ -2,19 +2,16 @@
 import { usePageStore } from '@/src/state/layout/page';
 
 // Types
-import type { DeviceDefinition, DeviceID } from '@/src/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey } from '@/src/core/layout/page/types';
 
 // Registry
-import { getRegisteredDevices } from '@/src/core/layout/page/registries';
-
-// Constants
-import { DEFAULT_DEVICE_ID } from '@/src/core/layout/page/constants';
+import { getRegisteredDevices, getRegisteredDevice, getDefaultDeviceKey } from '@/src/core/layout/page/registries';
 
 /**
  * Gets the currently selected device ID from the page store for page queries.
  */
-export function getSelectedDeviceID(): DeviceID {
-	return usePageStore.getState().selected.deviceID;
+export function getSelectedDeviceKey(): DeviceKey {
+	return usePageStore.getState().selected.deviceKey;
 }
 
 /**
@@ -25,8 +22,10 @@ export function getDeviceDefinitions(): DeviceDefinition[] {
 }
 
 /**
- * Gets the default device ID used for page layout and style fallbacks.
- */
-export function getDeviceDefaultID(): DeviceID {
-	return DEFAULT_DEVICE_ID;
+ * Gets a specific device definition by its key for page queries.
+*/
+export function getDeviceDefinition(key: DeviceKey): DeviceDefinition | undefined {
+	return getRegisteredDevice(key);
 }
+
+export { getDefaultDeviceKey };

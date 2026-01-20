@@ -3,7 +3,7 @@ import { pickOrientation } from '../orientation';
 import { mockOrientationInstance } from '@/src/shared/helpers/mock';
 
 // Types
-import type { OrientationRecord } from '@/src/core/layout/page/types';
+import type { OrientationDefinitionRecord } from '@/src/core/layout/page/types';
 
 describe('pickOrientation', () => {
 	const mockOrientation1 = mockOrientationInstance({
@@ -18,7 +18,7 @@ describe('pickOrientation', () => {
 		value: 'landscape',
 	});
 
-	const mockOrientations: OrientationRecord = {
+	const mockOrientations: OrientationDefinitionRecord = {
 		'orientation-1': mockOrientation1,
 		'orientation-2': mockOrientation2,
 	};

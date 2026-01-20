@@ -77,8 +77,8 @@ export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<E
  * @returns ValidateResult containing validity and the validated BlockComponent function if valid
  */
 export function validateBlockComponent(blockComponent: unknown): ValidateResult<BlockComponent> {
-	const validation = validateFunction(blockComponent);
-	if (!validation.valid) return { valid: false, message: `Invalid block component: expected a function, received ${typeof blockComponent}` };
+	const objectValidation = validateObject(blockComponent);
+	if (!objectValidation.valid) return { valid: false, message: `Invalid block component: expected a function, received ${typeof blockComponent}` };
 
 	return { valid: true, value: blockComponent as BlockComponent };
 }

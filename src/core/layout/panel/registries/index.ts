@@ -1,33 +1,32 @@
 // Types
-import type { PanelDefinition, PanelTabDefinition } from '@/src/core/layout/panel/types';
+import type { PanelKey, TabKey, PanelDefinition, TabDefinition, PanelDefinitionRecord, TabDefinitionRecord } from '@/src/core/layout/panel/types';
+import type { BenchKey } from '@/src/core/layout/workbench/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Helpers
-import { validatePanelDefinition, validatePanelTabDefinition } from '@/src/core/layout/panel/helpers/validators';
+import { validatePanelDefinition, validateTabDefinition } from '@/src/core/layout/panel/helpers/validators';
 
 /**
  * Class-based layout registry for managing panels, bars, and infos
  */
 class PanelRegistry {
-	private panels: Record<string, PanelDefinition> = {};
-	private tabs: Record<string, PanelTabDefinition> = {};
+	private panels: PanelDefinitionRecord = {};
+	private tabs: TabDefinitionRecord = {};
 
 	/**
 	 * Registers a LayoutPanel definition in the layout context.
 	 * @param panel - The LayoutPanel definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerPanel(panel: PanelDefinition): ValidateResult<PanelDefinition> {
-		const validation = validatePanelDefinition(panel);
+	registerPanel(panelDefinition: PanelDefinition): ValidateResult<PanelDefinition> {
+		const validation = validatePanelDefinition(panelDefinition);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates
-		if (this.panels[panel.id]) {
-			return { valid: false, message: `Panel with id "${panel.id}" already registered` };
-		}
+		if (this.panels[panelDefinition.key]) return { valid: false, message: `Panel with key "${panelDefinition.key}" already registered` };
 
-		this.panels = { ...this.panels, [panel.id]: panel };
-		return { valid: true, value: panel };
+		this.panels = { ...this.panels, [panelDefinition.key]: panelDefinition };
+		return { valid: true, value: panelDefinition };
 	}
 
 	/**
@@ -35,45 +34,41 @@ class PanelRegistry {
 	 * @param tab - The Tab definition to register.
 	 * @returns Success status with optional error message
 	 */
-	registerPanelTab(tab: PanelTabDefinition): ValidateResult<PanelTabDefinition> {
-		const validation = validatePanelTabDefinition(tab);
+	registerTab(tabDefinition: TabDefinition): ValidateResult<TabDefinition> {
+		const validation = validateTabDefinition(tabDefinition);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates
-		if (this.tabs[tab.id]) {
-			return { valid: false, message: `Tab with id "${tab.id}" already registered` };
-		}
+		if (this.tabs[tabDefinition.key]) return { valid: false, message: `Tab with key "${tabDefinition.key}" already registered` };
 
-		this.tabs = { ...this.tabs, [tab.id]: tab };
-		return { valid: true, value: tab };
+		this.tabs = { ...this.tabs, [tabDefinition.key]: tabDefinition };
+		return { valid: true, value: tabDefinition };
 	}
 
 	/**
 	 * Retrieves all registered LayoutPanels.
 	 */
-	getRegisteredPanels(): Readonly<Record<string, PanelDefinition>> {
-		return { ...this.panels };
+	getRegisteredPanels(benchKey?: BenchKey): Readonly<PanelDefinitionRecord> {
+		if (!benchKey) return { ...this.panels };
+
+		return Object.fromEntries(Object.entries(this.panels).filter(([_, panel]) => panel.benchKey === benchKey));
+	}
+
+	getRegisteredPanel(panelKey: PanelKey): PanelDefinition | undefined {
+		return this.panels[panelKey];
 	}
 
 	/**
 	 * Retrieves all registered Tabs.
 	 */
-	getRegisteredPanelTabs(): Readonly<Record<string, PanelTabDefinition>> {
-		return { ...this.tabs };
+	getRegisteredTabs(panelKey?: PanelKey): Readonly<TabDefinitionRecord> {
+		if (!panelKey) return { ...this.tabs };
+
+		return Object.fromEntries(Object.entries(this.tabs).filter(([_, tab]) => tab.panelKey === panelKey));
 	}
 
-	/**
-	 * Retrieves a specific panel by ID.
-	 */
-	getPanelById(id: string): PanelDefinition | undefined {
-		return this.panels[id];
-	}
-
-	/**
-	 * Retrieves a specific tab by ID.
-	 */
-	getPanelTabById(id: string): PanelTabDefinition | undefined {
-		return this.tabs[id];
+	getRegisteredTab(tabKey: TabKey): TabDefinition | undefined {
+		return this.tabs[tabKey];
 	}
 }
 
@@ -81,9 +76,11 @@ class PanelRegistry {
 const panelRegistry = new PanelRegistry();
 
 // Export the registry instance methods
-export const registerPanel = (panel: PanelDefinition) => panelRegistry.registerPanel(panel);
-export const registerPanelTab = (tab: PanelTabDefinition) => panelRegistry.registerPanelTab(tab);
-export const getRegisteredPanels = () => panelRegistry.getRegisteredPanels();
-export const getRegisteredPanelTabs = () => panelRegistry.getRegisteredPanelTabs();
-export const getPanelById = (id: string) => panelRegistry.getPanelById(id);
-export const getPanelTabById = (id: string) => panelRegistry.getPanelTabById(id);
+export const registerPanel = (panelDefinition: PanelDefinition) => panelRegistry.registerPanel(panelDefinition);
+export const registerTab = (tabDefinition: TabDefinition) => panelRegistry.registerTab(tabDefinition);
+
+export const getRegisteredPanels = (benchKey?: BenchKey) => panelRegistry.getRegisteredPanels(benchKey);
+export const getRegisteredPanel = (panelKey: PanelKey) => panelRegistry.getRegisteredPanel(panelKey);
+
+export const getRegisteredTabs = (panelKey?: PanelKey) => panelRegistry.getRegisteredTabs(panelKey);
+export const getRegisteredTab = (tabKey: TabKey) => panelRegistry.getRegisteredTab(tabKey);

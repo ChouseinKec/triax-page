@@ -1,20 +1,17 @@
 import { create } from 'zustand';
 
 // Types
-import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
-import type { DeviceID } from '@/src/core/layout/page/types';
-import type { OrientationID } from '@/src/core/layout/page/types';
-import type { PseudoID } from '@/src/core/layout/page/types';
+import type { DeviceKey } from '@/src/core/layout/page/types';
+import type { OrientationKey } from '@/src/core/layout/page/types';
+import type { PseudoKey } from '@/src/core/layout/page/types';
 
-// Constants
-import { DEFAULT_DEVICE_ID, DEFAULT_ORIENTATION_ID, DEFAULT_PSEUDO_ID } from '@/src/core/layout/page/constants';
-import { DEFAULT_WORKBENCH_ID } from '@/src/core/layout/workbench/constants';
+// Registry
+import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey } from '@/src/core/layout/page/registries';
 
 export type Selected = {
-	deviceID: DeviceID;
-	orientationID: OrientationID;
-	pseudoID: PseudoID;
-	workbenchKey: WorkbenchKey;
+	deviceKey: DeviceKey;
+	orientationKey: OrientationKey;
+	pseudoKey: PseudoKey;
 };
 
 export type PageStore = {
@@ -29,10 +26,9 @@ export type PageStore = {
 export function createPageStore() {
 	return create<PageStore>()((set, get) => ({
 		selected: {
-			deviceID: DEFAULT_DEVICE_ID,
-			orientationID: DEFAULT_ORIENTATION_ID,
-			pseudoID: DEFAULT_PSEUDO_ID,
-			workbenchKey: DEFAULT_WORKBENCH_ID,
+			deviceKey: getDefaultDeviceKey(),
+			orientationKey: getDefaultOrientationKey(),
+			pseudoKey: getDefaultPseudoKey(),
 		},
 		/**
 		 * Updates selected values. Accepts a partial Selected object.
@@ -45,7 +41,6 @@ export function createPageStore() {
 				},
 			}));
 		},
-
 	}));
 }
 

@@ -1,99 +1,140 @@
-import { ReactNode } from 'react';
-
 // Types
-import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
-import type { PanelTabRecord } from '@/src/core/layout/panel/types';
+import type { ReactNode } from 'react';
+import type { BenchKey } from '@/src/core/layout/workbench/types';
 
 /**
- * Represents the position of the LayoutPanel on the screen.
+ * Represents the position of the Panel on the screen.
  */
-export type PanelPosition = {
-	/** Distance from the top of the viewport (in any CSS unit) */
-	top: string;
-	/** Distance from the left of the viewport (in any CSS unit) */
-	left: string;
+type PanelPositionA = {
+	/** Distance from the left of the viewport (in %) */
+	top: number;
+	/** Distance from the left of the viewport (in %) */
+	right: number;
 };
 
 /**
- * Represents the size and minimum constraints of the LayoutPanel.
+ * Represents the position of the Panel on the screen.
+ */
+type PanelPositionB = {
+	/** Distance from the top of the viewport (in %) */
+	top: number;
+	/** Distance from the left of the viewport (in %) */
+	left: number;
+};
+
+/**
+ * Represents the position of the Panel on the screen.
+ */
+type PanelPositionC = {
+	/** Distance from the bottom of the viewport (in %) */
+	bottom: number;
+	/** Distance from the left of the viewport (in %) */
+	left: number;
+};
+
+/**
+ * Represents the position of the Panel on the screen.
+ */
+type PanelPositionD = {
+	/** Distance from the bottom of the viewport (in %) */
+	bottom: number;
+	/** Distance from the right of the viewport (in %) */
+	right: number;
+};
+
+/**
+ * Represents the position of the Panel on the screen.
+ */
+export type PanelPosition = PanelPositionA | PanelPositionB | PanelPositionC | PanelPositionD;
+
+/**
+ * Represents the size and minimum constraints of the Panel.
  */
 export type PanelSize = {
-	/** Current width of the LayoutPanel (in any CSS unit) */
-	width: string;
-	/** Current height of the LayoutPanel (in any CSS unit) */
-	height: string;
-	/** Minimum allowed width of the LayoutPanel (in pixels) */
+	/** Current width of the Panel (in px) */
+	width: number;
+	/** Current height of the Panel (in px) */
+	height: number;
+	/** Minimum allowed width of the Panel (in px) */
 	minWidth: number;
-	/** Minimum allowed height of the LayoutPanel (in pixels) */
+	/** Minimum allowed height of the Panel (in px) */
 	minHeight: number;
 };
 
 /**
- * Represents the possible sides or corners for resizing the LayoutPanel.
+ * Represents the possible sides or corners for resizing the Panel.
  */
 export type PanelSide = 'top' | 'right' | 'bottom' | 'left' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 /**
- * Unique identifier for the LayoutPanel
+ * Unique identifier for the Panel
  */
-export type PanelID = string;
+export type PanelKey = string;
 
 /**
- * Title of the LayoutPanel
+ * Title of the Panel
  */
 export type PanelTitle = string;
 
 /**
- * Icon of the LayoutPanel
+ * Icon of the Panel
  */
 export type PanelIcon = ReactNode;
 
 /**
- * Order of the LayoutPanel in the layout, used for sorting
+ * Order of the Panel in the layout, used for sorting
  */
 export type PanelOrder = number;
 
 /**
- * Interface for LayoutPanel definition used in the layout system.
- * Defines the structure and properties of a LayoutPanel.
+ * Interface for Panel definition used in the layout system.
+ * Defines the structure and properties of a Panel.
  * This is used to register LayoutPanels in the layout context.
  */
 export interface PanelDefinition {
-	/** Unique identifier for the LayoutPanel */
-	id: PanelID;
-	/** Title of the LayoutPanel, displayed in the header */
+	/** Unique identifier for the Panel */
+	key: PanelKey;
+	/** Key of the Workbench this Panel belongs to */
+	benchKey: BenchKey;
+	/** Title of the Panel, displayed in the header */
 	title: PanelTitle;
-	/** Order of the LayoutPanel in the layout, used for sorting */
+	/** Order of the Panel in the layout, used for sorting */
 	order: PanelOrder;
-	/** Icon of the LayoutPanel, displayed in the left bar */
+	/** Icon of the Panel, displayed in the left bar */
 	icon: PanelIcon;
-	/** Optional Workbench identifier for the LayoutPanel */
-	workbenchKey: WorkbenchKey;
-	/** Initial position of the LayoutPanel	 */
+	/** Initial position of the Panel	 */
 	initialPosition: PanelPosition;
-	/**	Initial size and constraints of the LayoutPanel	 */
+	/**	Initial size and constraints of the Panel	 */
 	initialSize: PanelSize;
-	/** Optional initial locked state of the LayoutPanel */
-	initialLocked: boolean;
-	/** Optional initial open state of the LayoutPanel	 */
-	initialOpen: boolean;
+	/** Optional initial locked state of the Panel */
+	initialLocked?: boolean;
+	/** Optional initial open state of the Panel	 */
+	initialOpen?: boolean;
 }
 
 /**
- * Interface for a LayoutPanel instance, which includes the content (tabs) to render.
- * This extends the PanelDefinition with the actual tabs to be displayed.
- * This is used to render the LayoutPanel in the layout.
+ * Record of all Panel definitions by their key.
  */
-export interface PanelInstance extends PanelDefinition {
-	/** The content (LayoutPanel items) to render inside the group */
-	tabs: PanelTabRecord;
-	/**	Whether the LayoutPanel is currently locked	 */
-	isLocked: boolean;
-	/** Whether the LayoutPanel group is open or closed */
+export type PanelDefinitionRecord = Record<PanelKey, PanelDefinition>;
+
+/**
+ * Represents the runtime state of a Panel instance.
+ * This includes mutable properties that can change during the session.
+ */
+export interface PanelInstance {
+	/** Unique identifier for the Panel */
+	key: PanelKey;
+	/** Whether the Panel is currently open */
 	isOpen: boolean;
+	/** Current position of the Panel */
+	position: PanelPosition;
+	/** Current size of the Panel */
+	size: PanelSize;
+	/** Whether the Panel is locked (cannot be moved/resized) */
+	isLocked: boolean;
 }
 
 /**
- * Record of all LayoutPanels by their ID.
+ * Record of all Panel instances by their key.
  */
-export type PanelInstanceRecord = Record<PanelID, PanelInstance>;
+export type PanelInstanceRecord = Record<PanelKey, PanelInstance>;

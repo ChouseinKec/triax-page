@@ -2,118 +2,106 @@
 import type { BlockID } from '@/src/core/block/instance/types';
 import type { OperateResult } from '@/src/shared/types/result';
 import type { StyleRecord } from '@/src/core/block/style/types';
-import type { DeviceID, PseudoID, OrientationID, PageContext } from '@/src/core/layout/page/types';
+import type { DeviceKey, PseudoKey, OrientationKey } from '@/src/core/layout/page/types';
 
 // Utilities
 import { toKebabCase } from '@/src/shared/utilities/string';
 
 /**
- * Generate a CSS property block from a styles object.
- *
- * This converts a JS style object into a formatted CSS string, using kebab-case for property names and proper indentation.
- * @see {@link generateCSSRule}
- *
- * @param styles - the style properties and values to convert
- * @param indentLevel - the indentation level for formatting
- */
-export function generateCSSProperties(styles: StyleRecord, indentLevel = 1): OperateResult<string> {
-	// Calculate indentation based on the given level
-	const indent = '  '.repeat(indentLevel);
-	let css = '';
-
-	// Iterate over each style property
-	for (const [key, value] of Object.entries(styles)) {
-		// Skip empty values or keys
-		if (!value) continue;
-		if (!key) continue;
-
-		// Convert property name to kebab-case
-		const formattedKey = toKebabCase(key);
-		if (!formattedKey) continue;
-
-		// Append formatted property to CSS string
-		css += `${indent}${formattedKey}: ${value};\n`;
-	}
-
-	// Return the final CSS string
-	return { success: true, data: css };
-}
-
-/**
  * Generate a CSS selector string for a block and pseudo-class.
+ * Creates a scoped selector targeting a specific block within a device context,
+ * optionally including a pseudo-class for states like :hover or :active.
  *
- * This creates a selector in the form `#block-{id}:pseudo` or just `#block-{id}` if pseudo is 'all'.
- * @see {@link generateCSSRule}
+ * The selector follows the pattern: `#device-{deviceKey} .block-{blockID}[:pseudoKey]`
+ * This ensures styles are applied only to the specified block on the specified device.
  *
- * @param blockID - the block identifier
- * @param pseudoName - the pseudo-class name (e.g., 'hover', 'active', 'all')
+ * @param blockID - The unique identifier of the block (e.g., 'hero', '123')
+ * @param pseudoKey - The pseudo-class key (e.g., 'hover', 'active') or default for base styles
+ * @param deviceKey - The device context key (e.g., 'default', 'tablet-sm')
+ * @param defaultPseudoKey - The default pseudo key to determine if pseudo-selector should be omitted
  */
-export function generateCSSSelector(blockID: BlockID, pseudoName: string, pageContext: PageContext): OperateResult<string> {
-	const defaultPseudoID = pageContext.constant.defaultPseudoID;
+export function generateCSSSelector(
+	blockID: BlockID,
+	pseudoKey: PseudoKey,
+	deviceKey: DeviceKey,
+	defaultPseudoKey: PseudoKey,
+): OperateResult<string> {
+	// Determine if we need to append a pseudo-selector (omit for base/default pseudo)
+	const pseudoSelector = pseudoKey === defaultPseudoKey ? '' : `:${pseudoKey}`;
 
-	// If pseudo is 'all', omit the pseudo selector
-	const pseudoSelector = pseudoName === defaultPseudoID ? '' : `:${pseudoName}`;
-
-	// Build the selector string
-	return { success: true, data: `#block-${blockID}${pseudoSelector}` };
+	// Construct the full selector with device specificity and block targeting
+	return { success: true, data: `.device-${deviceKey} .block-${blockID}${pseudoSelector}` };
 }
 
 /**
  * Generate a complete CSS rule string for a selector and styles.
+ * Produces a properly formatted CSS rule block with indentation,
+ * converting camelCase properties to kebab-case and handling empty values.
  *
- * This creates a CSS rule block with the given selector and style properties, properly formatted and indented.
- * @see {@link generateCSSProperties}, {@link generateCSSSelector}
- *
- * @param selector - the CSS selector string
- * @param styles - the style properties and values to include in the rule
- * @param indentLevel - the indentation level for formatting
+ * @param selector - The CSS selector string (e.g., from generateCSSSelector)
+ * @param styles - Object containing style properties and their values
+ * @param indentLevel - Base indentation level for the rule (default 0)
  */
 export function generateCSSRule(selector: string, styles: StyleRecord, indentLevel = 0): OperateResult<string> {
-	// Calculate indentation for the rule
+	// Create indentation string based on the specified level
 	const indent = '  '.repeat(indentLevel);
 
-	// Start the rule block
+	// Start building the CSS rule with the selector and opening brace
 	let css = `${indent}${selector} {\n`;
 
-	// Inline property formatting to avoid circular imports
+	// Iterate through each style property to format and append
 	for (const [key, value] of Object.entries(styles)) {
-		// Skip empty values or keys
-		if (!value) continue;
-		if (!key) continue;
-		// Convert property name to kebab-case
+		// Skip properties with empty keys, null, or undefined values
+		if (!value || !key) continue;
+
+		// Convert camelCase property names to kebab-case (e.g., backgroundColor -> background-color)
 		const formattedKey = toKebabCase(key);
 		if (!formattedKey) continue;
-		// Append formatted property to CSS string
+
+		// Append the formatted property with proper indentation
 		css += `${indent}  ${formattedKey}: ${value};\n`;
 	}
 
-	// Close the rule block
+	// Close the CSS rule block
 	css += `${indent}}\n`;
 
-	// Return the final CSS rule string
 	return { success: true, data: css };
 }
 
 /**
  * Generates all cascade paths for style resolution, ordered by specificity.
- * @param device - Selected device ID
- * @param orientation - Selected orientation ID
- * @param pseudo - Selected pseudo ID
- * @returns Array of [device, orientation, pseudo] tuples
+ * Returns an array of [device, orientation, pseudo] tuples representing the order
+ * in which style values should be searched for cascading inheritance.
+ *
+ * The paths prioritize more specific contexts first:
+ * 1. Current device + current orientation + pseudo
+ * 2. Current device + default orientation + pseudo
+ * 3. Default device + current orientation + pseudo
+ * 4. Default device + default orientation + pseudo
+ *
+ * This ensures that device-specific styles override defaults, and pseudo-specific
+ * styles are resolved before falling back to base styles.
+ *
+ * @param deviceKey - The currently selected device key
+ * @param orientationKey - The currently selected orientation key
+ * @param pseudoKey - The currently selected pseudo key
+ * @param defaultDeviceKey - The fallback device key (usually 'default')
+ * @param defaultOrientationKey - The fallback orientation key (usually 'portrait')
+ * @param defaultPseudoKey - The fallback pseudo key (usually 'base')
  */
-export function generateCascadePaths(deviceID: DeviceID, orientationID: OrientationID, pseudoID: PseudoID, pageContext: PageContext): Array<[DeviceID, OrientationID, PseudoID]> {
-	const defaultDeviceID = pageContext.constant.defaultDeviceID;
-	const defaultOrientationID = pageContext.constant.defaultOrientationID;
-	const defaultPseudoID = pageContext.constant.defaultPseudoID;
+export function generateCascadePaths(
+	deviceKey: DeviceKey,
+	orientationKey: OrientationKey,
+	pseudoKey: PseudoKey,
 
+	defaultDeviceKey: DeviceKey,
+	defaultOrientationKey: OrientationKey,
+	defaultPseudoKey: PseudoKey,
+): Array<[DeviceKey, OrientationKey, PseudoKey]> {
 	return [
-		[deviceID, orientationID, pseudoID],
-		[deviceID, orientationID, defaultPseudoID],
-		[deviceID, defaultOrientationID, pseudoID],
-		[deviceID, defaultOrientationID, defaultPseudoID],
-		[defaultDeviceID, orientationID, pseudoID],
-		[defaultDeviceID, orientationID, defaultPseudoID],
-		[defaultDeviceID, defaultOrientationID, pseudoID],
-		[defaultDeviceID, defaultOrientationID, defaultPseudoID],
+		[deviceKey, orientationKey, pseudoKey],
+		[deviceKey, defaultOrientationKey, pseudoKey],
+		[defaultDeviceKey, orientationKey, pseudoKey],
+		[defaultDeviceKey, defaultOrientationKey, pseudoKey],
 	];
 }

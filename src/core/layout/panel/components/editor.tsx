@@ -1,35 +1,31 @@
 "use client";
-import React, { memo } from "react";
+import React from "react";
+
+// Types
+import type { PanelsProps } from "./types";
 
 // Components
 import Panel from "./panel";
 
-// Types
-import type { PanelEditorProps } from "./types";
-
 // Managers
-import { usePanels, togglePanel } from "@/src/core/layout/panel/managers";
+import { getPanelDefinitions, usePanelOpenState } from "@/src/core/layout/panel/managers";
 
-const PanelEditor: React.FC<PanelEditorProps> = ({ selectedWorkbenchKey }) => {
-    const openPanels = usePanels(selectedWorkbenchKey, { workbench: true, open: true });
+const Panels: React.FC<PanelsProps> = ({ benchKey }) => {
+    const panelDefinitions = getPanelDefinitions(benchKey);
 
     return (
-        openPanels && openPanels.length > 0
-            ? openPanels.map(panel => (
-                <Panel
-                    key={panel.id}
-                    initialPosition={panel.initialPosition}
-                    initialSize={panel.initialSize}
-                    initialLocked={panel.initialLocked}
-                    title={panel.title}
-                    onClose={() => togglePanel(panel.id)}
-                    tabs={panel.tabs}
-                />
-            ))
-            : null
+        <>
+            {panelDefinitions.map(panelDef => {
+                const isOpen = usePanelOpenState(panelDef.key);
+                return isOpen ? (
+                    <Panel
+                        key={panelDef.key}
+                        panelKey={panelDef.key}
+                    />
+                ) : null;
+            })}
+        </>
     );
-
-
 };
 
-export default memo(PanelEditor);
+export default Panels;

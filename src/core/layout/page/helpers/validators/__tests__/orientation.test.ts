@@ -1,10 +1,10 @@
 // Utilities
-import { validateOrientationID, validateOrientationName, validateOrientationValue, validateOrientationDefinition } from '../orientation';
+import { validateOrientationKey, validateOrientationName, validateOrientationValue, validateOrientationDefinition } from '../orientation';
 import { mockOrientationInstance } from '@/src/shared/helpers/mock';
 
-describe('validateOrientationID', () => {
+describe('validateOrientationKey', () => {
 	it('accepts valid orientation ID', () => {
-		const result = validateOrientationID('orientation-1');
+		const result = validateOrientationKey('orientation-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -13,7 +13,7 @@ describe('validateOrientationID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validateOrientationID(123), validateOrientationID(null), validateOrientationID(undefined), validateOrientationID({})];
+		const results = [validateOrientationKey(123), validateOrientationKey(null), validateOrientationKey(undefined), validateOrientationKey({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -24,7 +24,7 @@ describe('validateOrientationID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validateOrientationID('');
+		const result = validateOrientationKey('');
 		expect(result.valid).toBe(false);
 	});
 });

@@ -2,36 +2,32 @@
 import { usePageStore } from '@/src/state/layout/page';
 
 // Types
-import type { DeviceID } from '@/src/core/layout/page/types';
+import type { DeviceKey } from '@/src/core/layout/page/types';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateDeviceID } from '@/src/core/layout/page/helpers/validators';
+import { validateDeviceKey } from '@/src/core/layout/page/helpers/validators';
 
 // Managers
-import { getDeviceDefaultID } from '@/src/core/layout/page/managers/queries';
+import { getDefaultDeviceKey } from '@/src/core/layout/page/managers/queries';
 
 /**
  * Sets the currently selected device by ID for page commands.
  * Updates the page store with the new device selection.
  *
- * @param deviceID - The device ID to set as current
- * @returns void
- *
- * @example
- * setSelectedDeviceID('mobile') // Sets current device to mobile
+ * @param deviceKey - The device ID to set as current
  */
-export function setSelectedDeviceID(deviceID: DeviceID): void {
-	if (!deviceID) deviceID = getDeviceDefaultID();
+export function setSelectedDeviceKey(deviceKey: DeviceKey): void {
+	if (!deviceKey) deviceKey = getDefaultDeviceKey();
 
-	const safeData = new ResultPipeline('[PageCommands → setSelectedDeviceID]')
+	const safeData = new ResultPipeline('[PageCommands → setSelectedDeviceKey]')
 		.validate({
-			deviceID: validateDeviceID(deviceID),
+			deviceKey: validateDeviceKey(deviceKey),
 		})
 		.execute();
 	if (!safeData) return;
 
-	usePageStore.getState().setSelected({ deviceID: safeData.deviceID });
+	usePageStore.getState().setSelected({ deviceKey: safeData.deviceKey });
 }

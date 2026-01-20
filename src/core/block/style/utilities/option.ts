@@ -109,10 +109,6 @@ export function createSlotOptions(tokenSet: Set<string>, setIndex: number, synta
 			continue;
 		}
 
-		if(styleKey === 'box-shadow') {
-			console.log(syntaxNormalized);
-		}
-
 		// Validate if this token is allowed for the slot
 		if (!validateSlotOption(tokenCanonical, setIndex, syntaxNormalized, valueTokens)) continue;
 

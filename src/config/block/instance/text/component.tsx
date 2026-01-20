@@ -1,16 +1,15 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, memo } from "react";
 
 // Types
 import type { BlockComponentProps } from '@/src/core/block/instance/types';
 
 // Managers
-import { useIsBlockSelected, selectBlock } from '@/src/core/block/instance/managers';
+import { selectBlock } from '@/src/core/block/instance/managers';
 import { getBlockContent, setBlockContent } from '@/src/core/block/instance/managers';
 
-const BlockTextComponent: React.FC<BlockComponentProps> = ({ instance }) => {
+const BlockTextComponent: React.FC<BlockComponentProps> = ({ isSelected, instance }) => {
     const blockID = instance.id;
     const BlockTag = instance.tag as React.ElementType;
-    const isSelected = useIsBlockSelected(blockID);
 
     // Get the current text value from content
     const content = getBlockContent(blockID);
@@ -38,7 +37,7 @@ const BlockTextComponent: React.FC<BlockComponentProps> = ({ instance }) => {
     return (
         <BlockTag
             ref={textRef as React.RefObject<any>}
-            id={`block-${blockID}`}
+            className={`block-${blockID}`}
             onClick={handleSelectBlock}
             onBlur={handleBlur}
             data-block-type="plain-text"
@@ -51,4 +50,4 @@ const BlockTextComponent: React.FC<BlockComponentProps> = ({ instance }) => {
     );
 }
 
-export default BlockTextComponent;
+export default memo(BlockTextComponent);

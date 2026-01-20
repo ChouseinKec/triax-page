@@ -4,13 +4,15 @@ import type { ContextResult } from '@/src/shared/types/result';
 
 // Stores
 import { usePageStore } from '@/src/state/layout/page';
+import { useWorkbenchStore } from '@/src/core/layout/workbench/state/store';
 
 // Managers
-import { useSelectedOrientationID, useSelectedDeviceID, useSelectedPseudoID, useSelectedWorkbenchKey } from '@/src/core/layout/page/managers/';
-import { getDeviceDefinitions, getAllOrientations, getAllPseudos, getDeviceDefaultID, getDefaultOrientationID, getDefaultPseudoID } from '@/src/core/layout/page/managers/queries';
+import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/src/core/layout/page/managers/';
+import { getDeviceDefinitions, getOrientationDefinitions, getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/src/core/layout/page/managers/queries';
+import { useSelectedBenchKey } from '@/src/core/layout/workbench/managers/';
 
 // Registry
-import { getRegisteredWorkbenchs, getWorkbenchDefaultKey } from '@/src/core/layout/workbench/registries';
+import { getRegisteredBenches, getDefaultBenchKey } from '@/src/core/layout/workbench/state/registry';
 
 /**
  * Fetches the registries and constants for page context.
@@ -21,30 +23,30 @@ function getRegistriesAndConstants(): ContextResult<Pick<PageContext, 'registry'
 	if (!registeredDevices) return { success: false, error: 'Failed to fetch registered devices.' };
 
 	// Fetch registered orientations from the registry
-	const registeredOrientations = getAllOrientations();
+	const registeredOrientations = getOrientationDefinitions();
 	if (!registeredOrientations) return { success: false, error: 'Failed to fetch registered orientations.' };
 
 	// Fetch registered pseudos from the registry
-	const registeredPseudos = getAllPseudos();
+	const registeredPseudos = getPseudoDefinitions();
 	if (!registeredPseudos) return { success: false, error: 'Failed to fetch registered pseudos.' };
 
 	// Fetch registered workbenchs from the registry
-	const registeredWorkbenchs = getRegisteredWorkbenchs();
+	const registeredWorkbenchs = getRegisteredBenches();
 	if (!registeredWorkbenchs) return { success: false, error: 'Failed to fetch registered workbenchs.' };
 
 	// Fetch default device ID
-	const defaultDeviceID = getDeviceDefaultID();
-	if (!defaultDeviceID) return { success: false, error: 'Failed to fetch default device ID.' };
+	const defaultDeviceKey = getDefaultDeviceKey();
+	if (!defaultDeviceKey) return { success: false, error: 'Failed to fetch default device ID.' };
 
 	// Fetch default orientation ID
-	const defaultOrientationID = getDefaultOrientationID();
-	if (!defaultOrientationID) return { success: false, error: 'Failed to fetch default orientation ID.' };
+	const defaultOrientationKey = getDefaultOrientationKey();
+	if (!defaultOrientationKey) return { success: false, error: 'Failed to fetch default orientation ID.' };
 
 	// Fetch default pseudo ID
-	const defaultPseudoID = getDefaultPseudoID();
-	if (!defaultPseudoID) return { success: false, error: 'Failed to fetch default pseudo ID.' };
+	const defaultPseudoKey = getDefaultPseudoKey();
+	if (!defaultPseudoKey) return { success: false, error: 'Failed to fetch default pseudo ID.' };
 	// Fetch default workbench ID
-	const defaultWorkbenchKey = getWorkbenchDefaultKey();
+	const defaultWorkbenchKey = getDefaultBenchKey();
 	if (!defaultWorkbenchKey) return { success: false, error: 'Failed to fetch default workbench ID.' };
 
 	return {
@@ -57,9 +59,9 @@ function getRegistriesAndConstants(): ContextResult<Pick<PageContext, 'registry'
 				workbenches: Object.values(registeredWorkbenchs),
 			},
 			constant: {
-				defaultDeviceID,
-				defaultOrientationID,
-				defaultPseudoID,
+				defaultDeviceKey,
+				defaultOrientationKey,
+				defaultPseudoKey,
 				defaultWorkbenchKey,
 			},
 		},
@@ -75,32 +77,32 @@ export function fetchPageContext(): ContextResult<PageContext> {
 	if (!registriesAndConstants.success) return registriesAndConstants;
 
 	// Fetch selected state from the store
-	const selectedState = usePageStore.getState().selected;
-	if (!selectedState) return { success: false, error: 'Failed to fetch selected page state.' };
+	const pageState = usePageStore.getState().selected;
+	if (!pageState) return { success: false, error: 'Failed to fetch selected page state.' };
 
 	// Fetch selected IDs
-	const selectedDeviceID = selectedState.deviceID;
-	if (!selectedDeviceID) return { success: false, error: 'Failed to fetch selected device ID.' };
+	const selectedDeviceKey = pageState.deviceKey;
+	if (!selectedDeviceKey) return { success: false, error: 'Failed to fetch selected device ID.' };
 
 	// Fetch selected orientation ID
-	const selectedOrientationID = selectedState.orientationID;
-	if (!selectedOrientationID) return { success: false, error: 'Failed to fetch selected orientation ID.' };
+	const selectedOrientationKey = pageState.orientationKey;
+	if (!selectedOrientationKey) return { success: false, error: 'Failed to fetch selected orientation ID.' };
 
 	// Fetch selected pseudo ID
-	const selectedPseudoID = selectedState.pseudoID;
-	if (!selectedPseudoID) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
+	const selectedPseudoKey = pageState.pseudoKey;
+	if (!selectedPseudoKey) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
 
 	// Fetch selected workbench ID
-	const selectedWorkbenchKey = selectedState.workbenchKey;
+	const selectedWorkbenchKey = useWorkbenchStore.getState().selectedKey;
 	if (!selectedWorkbenchKey) return { success: false, error: 'Failed to fetch selected workbench ID.' };
 
 	return {
 		success: true,
 		data: {
 			store: {
-				selectedDeviceID,
-				selectedOrientationID,
-				selectedPseudoID,
+				selectedDeviceKey,
+				selectedOrientationKey,
+				selectedPseudoKey,
 				selectedWorkbenchKey,
 			},
 			...registriesAndConstants.data,
@@ -117,28 +119,28 @@ export function usePageContext(): ContextResult<PageContext> {
 	if (!registriesAndConstants.success) return registriesAndConstants;
 
 	// Fetch selected IDs reactively
-	const selectedDeviceID = useSelectedDeviceID();
-	if (!selectedDeviceID) return { success: false, error: 'Failed to fetch selected device ID.' };
+	const selectedDeviceKey = useSelectedDeviceKey();
+	if (!selectedDeviceKey) return { success: false, error: 'Failed to fetch selected device ID.' };
 
 	// Fetch selected orientation ID reactively
-	const selectedOrientationID = useSelectedOrientationID();
-	if (!selectedOrientationID) return { success: false, error: 'Failed to fetch selected orientation ID.' };
+	const selectedOrientationKey = useSelectedOrientationKey();
+	if (!selectedOrientationKey) return { success: false, error: 'Failed to fetch selected orientation ID.' };
 
 	// Fetch selected pseudo ID reactively
-	const selectedPseudoID = useSelectedPseudoID();
-	if (!selectedPseudoID) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
+	const selectedPseudoKey = useSelectedPseudoKey();
+	if (!selectedPseudoKey) return { success: false, error: 'Failed to fetch selected pseudo ID.' };
 
 	// Fetch selected workbench ID reactively
-	const selectedWorkbenchKey = useSelectedWorkbenchKey();
+	const selectedWorkbenchKey = useSelectedBenchKey();
 	if (!selectedWorkbenchKey) return { success: false, error: 'Failed to fetch selected workbench ID.' };
 
 	return {
 		success: true,
 		data: {
 			store: {
-				selectedDeviceID,
-				selectedOrientationID,
-				selectedPseudoID,
+				selectedDeviceKey,
+				selectedOrientationKey,
+				selectedPseudoKey,
 				selectedWorkbenchKey,
 			},
 			...registriesAndConstants.data,

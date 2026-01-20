@@ -80,6 +80,12 @@ export function validateObject(input: unknown, keys?: string[]): ValidateResult<
 	return { valid: true, value: obj };
 }
 
+export function validateBoolean(input: unknown): ValidateResult<boolean> {
+	if (typeof input !== 'boolean') return { valid: false, message: `Invalid boolean: expected a boolean, got ${typeof input}` };
+
+	return { valid: true, value: input };
+}
+
 /**
  * Validates if a value is a React element.
  * Checks if the value has the React element structure ($$typeof property).

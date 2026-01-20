@@ -54,11 +54,12 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 				data.value,
 				data.styleDefinition,
 				data.blockStyles,
-				data.pageContext
+				data.pageContext,
 			),
 		}))
 		.execute();
 	if (!results) return;
+
 
 	// Update the block styles in the store
 	blockStore.updateBlocks({

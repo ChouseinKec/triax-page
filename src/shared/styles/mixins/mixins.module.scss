@@ -63,9 +63,9 @@
 	}
 }
 
-@mixin components--container($background: var(--theme-color-primary-tint), $radius: var(--size-md), $shadow: var(--theme-shadow-border)) {
+@mixin components--container($position:relative,$background: var(--theme-color-primary-tint), $radius: var(--size-md), $shadow: var(--theme-shadow-border)) {
 	font-size: var(--font-size-sm);
-	position: relative;
+	position: $position;
 	padding: var(--size-xs);
 
 	@if $background {
@@ -83,14 +83,14 @@
 
 // This mixin is used for float components
 // E.g DropdownReveal,DropdownSelect in Style Editor
-@mixin components--float {
+@mixin components--float($z-index: 9999) {
 	border-radius: var(--size-sm);
 	box-shadow: var(--theme-shadow-border);
 	font-size: var(--font-size-md);
 	background: var(--theme-color-primary);
 	position: fixed;
 	padding: var(--size-md);
-	z-index: 9999;
+	z-index: $z-index;
 }
 
 // This mixin is used for the view component

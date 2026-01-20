@@ -1,9 +1,9 @@
-import { validatePanelID, validatePanelTitle, validatePanelPosition, validatePanelSize, validatePanelOrder, validatePanelIcon, validatePanelLocked, validatePanelOpen, validatePanelDefinition } from '../panel';
-import { mockPanelInstance, mockReactElement } from '@/src/shared/helpers/mock';
+import { validatePanelKey, validatePanelTitle, validatePanelPosition, validatePanelSize, validatePanelOrder, validatePanelIcon, validatePanelLocked, validatePanelOpen, validatePanelDefinition } from '../panel';
+import { mockPanel, mockReactElement } from '@/src/shared/helpers/mock';
 
-describe('validatePanelID', () => {
+describe('validatePanelKey', () => {
 	it('accepts valid panel ID', () => {
-		const result = validatePanelID('panel-1');
+		const result = validatePanelKey('panel-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -12,7 +12,7 @@ describe('validatePanelID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validatePanelID(123), validatePanelID(null), validatePanelID(undefined), validatePanelID({})];
+		const results = [validatePanelKey(123), validatePanelKey(null), validatePanelKey(undefined), validatePanelKey({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -23,7 +23,7 @@ describe('validatePanelID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validatePanelID('');
+		const result = validatePanelKey('');
 		expect(result.valid).toBe(false);
 	});
 });
@@ -223,7 +223,7 @@ describe('validatePanelOpen', () => {
 
 describe('validatePanelDefinition', () => {
 	it('accepts valid panel definition', () => {
-		const panel = mockPanelInstance();
+		const panel = mockPanel();
 		const result = validatePanelDefinition(panel);
 
 		expect(result.valid).toBe(true);
@@ -244,9 +244,9 @@ describe('validatePanelDefinition', () => {
 	});
 
 	it('rejects missing required properties', () => {
-		const panel = mockPanelInstance();
+		const panel = mockPanel();
 
-		const results = [validatePanelDefinition({ ...panel, id: undefined }), validatePanelDefinition({ ...panel, title: undefined }), validatePanelDefinition({ ...panel, initialPosition: undefined }), validatePanelDefinition({ ...panel, initialSize: undefined }), validatePanelDefinition({ ...panel, workbenchKey: undefined }), validatePanelDefinition({ ...panel, order: undefined }), validatePanelDefinition({ ...panel, initialLocked: undefined }), validatePanelDefinition({ ...panel, initialOpen: undefined }), validatePanelDefinition({ ...panel, icon: undefined })];
+		const results = [validatePanelDefinition({ ...panel, key: undefined }), validatePanelDefinition({ ...panel, title: undefined }), validatePanelDefinition({ ...panel, initialPosition: undefined }), validatePanelDefinition({ ...panel, initialSize: undefined }), validatePanelDefinition({ ...panel, order: undefined }), validatePanelDefinition({ ...panel, initialLocked: undefined }), validatePanelDefinition({ ...panel, initialOpen: undefined }), validatePanelDefinition({ ...panel, icon: undefined })];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -254,9 +254,9 @@ describe('validatePanelDefinition', () => {
 	});
 
 	it('rejects invalid property values', () => {
-		const panel = mockPanelInstance();
+		const panel = mockPanel();
 
-		const results = [validatePanelDefinition({ ...panel, id: 123 }), validatePanelDefinition({ ...panel, title: null }), validatePanelDefinition({ ...panel, initialPosition: 'invalid' }), validatePanelDefinition({ ...panel, initialSize: {} }), validatePanelDefinition({ ...panel, order: 'zero' }), validatePanelDefinition({ ...panel, initialLocked: 'true' }), validatePanelDefinition({ ...panel, initialOpen: 1 })];
+		const results = [validatePanelDefinition({ ...panel, key: 123 }), validatePanelDefinition({ ...panel, title: null }), validatePanelDefinition({ ...panel, initialPosition: 'invalid' }), validatePanelDefinition({ ...panel, initialSize: {} }), validatePanelDefinition({ ...panel, order: 'zero' }), validatePanelDefinition({ ...panel, initialLocked: 'true' }), validatePanelDefinition({ ...panel, initialOpen: 1 })];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);

@@ -1,18 +1,27 @@
-$offset: 40px;
+@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
 .Viewport {
-	width: calc(100% - $offset);
-	height: calc(100% - $offset);
+	width: 100%;
+	height: 100%;
 
-	position: fixed;
-	top: $offset;
-	left: $offset;
-
-	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
-	background-size: 30px 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
 
 	overflow: hidden;
 	z-index: 10;
+
+	position: relative;
+}
+
+.View {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+
+	background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+	background-size: 30px 30px;
 }
 
 .Scene {
@@ -23,28 +32,42 @@ $offset: 40px;
 
 .Toolbar {
 	width: max-content;
-	padding: var(--size-xs) var(--size-xs);
+	height: 35px;
 
-	position: absolute;
-	top: 5%;
+	top: 0;
 	left: 50%;
-	transform: translate(-50%, -50%);
 
-	border-radius: var(--size-sm);
-	background: var(--theme-color-primary);
-	color: var(--color-white);
-	box-shadow: var(--theme-shadow-border);
+	margin-top: 10px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: var(--size-md);
+	z-index: 1;
+
+	@include inputMixins.components--container($position: absolute, $radius: 0, $background: var(--theme-color-primary), $shadow: none);
+
+	border-top: 1px solid var(--theme-color-primary-tint);
+
+	:global(.RadioSelect) {
+		background: transparent !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+
+	:global(.DropdownSelect .Toggle) {
+		background: transparent;
+	}
+
+	.Divider {
+		height: 80%;
+		border-left: 1px solid var(--color-white);
+		opacity: 0.2;
+	}
 }
 
 .Empty {
 	color: var(--color-white);
 	text-align: center;
-}
-
-.View {
-	width: 100%;
-	height: 100%;
-
-	padding: var(--size-2xl);
-	border: 1px solid rgb(255, 255, 255);
 }

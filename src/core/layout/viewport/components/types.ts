@@ -1,6 +1,8 @@
 // Types
-import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types/';
+import type { ViewDefinition } from '@/src/core/layout/viewport/types';
 
-export interface ViewportProps {
-	selectedWorkbench: WorkbenchDefinition;
+export interface ViewportProps {}
+
+export interface ViewProps {
+	viewDefinition: ViewDefinition;
 }

@@ -1,5 +1,5 @@
 // Stores
-import { useLayoutStore } from '@/src/state/layout/layout';
+import { useBarStore } from '@/src/core/layout/bar/state/store';
 
 // Types
 import type { BarID } from '@/src/core/layout/bar/types';
@@ -17,19 +17,15 @@ import { pickBarActions } from '@/src/core/layout/bar/helpers/pickers';
  *
  * @param barID - The bar identifier
  * @param actionID - The action identifier to check
- * @returns True if the action is registered, false otherwise
- *
- * @example
- * const isRegistered = isBarActionRegistered('bar-123', 'action-456') // Returns true/false
  */
 export function isBarActionRegistered(barID: BarID, actionID: string): boolean {
-	const layoutStore = useLayoutStore.getState();
+	const barStore = useBarStore.getState();
 	const safeParams = new ResultPipeline('[LayoutQueries → isBarActionRegistered]')
 		.validate({
 			barID: validateBarID(barID),
 		})
 		.pick((data) => ({
-			barActions: pickBarActions(data.barID, layoutStore.allBars),
+			barActions: pickBarActions(data.barID, barStore.allBars),
 		}))
 		.execute();
 	if (!safeParams) return false;

@@ -74,7 +74,7 @@ const TabGroup: React.FC<TabGroupProps> = ({ items, className = '' }) => {
             <RadioSelect
                 options={tabOptions}
                 value={selectedIndex}
-                onChange={handleTabChange}
+                onChange={(value) => handleTabChange(value as string)}
             />
         </div>
     );

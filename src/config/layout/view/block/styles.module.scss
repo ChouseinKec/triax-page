@@ -1,0 +1,69 @@
+.Devices {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-2xl);
+}
+
+.Category {
+	display: flex;
+	flex-direction: row;
+	gap: var(--size-2xl);
+	flex: 1;
+}
+
+.Device {
+	display: flex;
+	flex-direction: column;
+	padding: var(--size-sm);
+	&[data-is-selected='true'] {
+		outline: 3px solid var(--theme-color-secondary) !important;
+		outline-offset: -3px;
+	}
+
+	&[data-is-selected='false'] {
+		filter: brightness(0.8);
+	}
+
+	// &[data-is-selected='true'] {
+	*[class*='block'] {
+		&[data-is-selected='true'] {
+			outline: 2px solid var(--theme-color-secondary) !important;
+			outline-offset: -2px;
+		}
+	}
+	// }
+
+	.Header {
+		width: 100%;
+		padding: var(--size-sm);
+
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		font-size: var(--font-size-sm);
+		color: var(--color-white);
+		text-transform: capitalize;
+
+		background: var(--theme-color-primary);
+
+		.Title {
+			font-weight: bold;
+		}
+
+		:global(.ActionGroup .DropdownReveal) {
+			background: transparent;
+		}
+	}
+}
+
+.Divider {
+	color: var(--color-white);
+	opacity: 0.2;
+}
+
+.Test {
+	color: var(--color-white);
+	margin-bottom: var(--size-md);
+}

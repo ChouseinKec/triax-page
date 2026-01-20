@@ -1,94 +1,105 @@
 // Types
-import type {  PanelTabDefinition, PanelTabID, PanelTabTitle, PanelTabComponent, PanelTabIcon, PanelTabOrder } from '@/src/core/layout/panel/types';
+import type { TabDefinition, TabKey, TabTitle, TabComponent, TabIcon, TabOrder } from '@/src/core/layout/panel/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isPanelTabDefinitionValid, isPanelTabIDValid, isPanelTabTitleValid, isPanelTabComponentValid, isPanelTabIconValid, isPanelTabOrderValid } from '@/src/core/layout/panel/utilities';
+import { validateString, validateObject, validateElement, validateInteger, validateFunction } from '@/src/shared/helpers/validators';
 
 // Helpers
-import { validatePanelID } from '@/src/core/layout/panel/helpers/validators/panel';
+import { validatePanelKey } from '@/src/core/layout/panel/helpers/validators/panel';
 
 /**
  * Validates a tab ID for tab operations.
  * Checks if the ID is a valid string identifier.
  *
- * @param PanelTabID - The tab ID to validate
+ * @param tabKey - The tab ID to validate
  */
-export function validatePanelTabID(PanelTabID: unknown): ValidateResult<PanelTabID> {
-    if (!isPanelTabIDValid(PanelTabID)) return { valid: false, message: `Tab ID must be a valid string, got: ${PanelTabID}` };
-    return { valid: true, value: PanelTabID as PanelTabID };
+export function validateTabKey(tabKey: unknown): ValidateResult<TabKey> {
+	const stringValidation = validateString(tabKey);
+	if (!stringValidation.valid) return stringValidation;
+
+	return { valid: true, value: tabKey as TabKey };
 }
 
 /**
  * Validates a tab title for tab operations.
  * Checks if the title is a valid string.
  *
- * @param PanelTabTitle - The tab title to validate
+ * @param tabTitle - The tab title to validate
  */
-export function validatePanelTabTitle(PanelTabTitle: unknown): ValidateResult<PanelTabTitle> {
-    if (!isPanelTabTitleValid(PanelTabTitle)) return { valid: false, message: `Tab title must be a valid string, got: ${PanelTabTitle}` };
-    return { valid: true, value: PanelTabTitle as PanelTabTitle };
+export function validateTabTitle(tabTitle: unknown): ValidateResult<TabTitle> {
+	const stringValidation = validateString(tabTitle);
+	if (!stringValidation.valid) return stringValidation;
+
+	return { valid: true, value: tabTitle as TabTitle };
 }
 
 /**
  * Validates a tab component for tab operations.
  * Checks if the component is a valid React component.
  *
- * @param PanelTabComponent - The tab component to validate
+ * @param tabComponent - The tab component to validate
  */
-export function validatePanelTabComponent(PanelTabComponent: unknown): ValidateResult<PanelTabComponent> {
-    if (!isPanelTabComponentValid(PanelTabComponent)) return { valid: false, message: `Tab component must be a valid React component, got: ${PanelTabComponent}` };
-    return { valid: true, value: PanelTabComponent as PanelTabComponent };
+export function validateTabComponent(tabComponent: unknown): ValidateResult<TabComponent> {
+	const functionValidation = validateFunction(tabComponent);
+	if (!functionValidation.valid) return functionValidation;
+
+	return { valid: true, value: tabComponent as TabComponent };
 }
 
 /**
  * Validates a tab icon for tab operations.
  * Checks if the icon is a valid React icon.
  *
- * @param PanelTabIcon - The tab icon to validate
+ * @param tabIcon - The tab icon to validate
  */
-export function validatePanelTabIcon(PanelTabIcon: unknown): ValidateResult<PanelTabIcon> {
-    if (!isPanelTabIconValid(PanelTabIcon)) return { valid: false, message: `Tab icon must be a valid React icon, got: ${PanelTabIcon}` };
-    return { valid: true, value: PanelTabIcon as PanelTabIcon };
+export function validateTabIcon(tabIcon: unknown): ValidateResult<TabIcon> {
+	const elementValidation = validateElement(tabIcon);
+	if (!elementValidation.valid) return elementValidation;
+
+	return { valid: true, value: tabIcon as TabIcon };
 }
 
 /**
  * Validates a tab order for tab operations.
  * Checks if the order is a valid number.
  *
- * @param PanelTabOrder - The tab order to validate
+ * @param tabOrder - The tab order to validate
  */
-export function validatePanelTabOrder(PanelTabOrder: unknown): ValidateResult<PanelTabOrder> {
-    if (!isPanelTabOrderValid(PanelTabOrder)) return { valid: false, message: `Tab order must be a valid number, got: ${PanelTabOrder}` };
-    return { valid: true, value: PanelTabOrder as PanelTabOrder };
+export function validateTabOrder(tabOrder: unknown): ValidateResult<TabOrder> {
+	const integerValidation = validateInteger(tabOrder);
+	if (!integerValidation.valid) return integerValidation;
+
+	return { valid: true, value: tabOrder as TabOrder };
 }
 
 /**
  * Validates a complete tab definition for tab operations.
  * Checks if the definition has all required valid properties including ID, title, component, icon, order, and panel ID.
  *
- * @param PanelTabDefinition - The tab definition to validate
+ * @param TabDefinition - The tab definition to validate
  */
-export function validatePanelTabDefinition(PanelTabDefinition: unknown): ValidateResult<PanelTabDefinition> {
-    if (!isPanelTabDefinitionValid(PanelTabDefinition)) return { valid: false, message: `Invalid tab definition shape: ${JSON.stringify(PanelTabDefinition)}` };
+export function validateTabDefinition(TabDefinition: unknown): ValidateResult<TabDefinition> {
+	const objectValidation = validateObject(TabDefinition, ['key', 'title', 'component', 'icon', 'order', 'panelKey']);
+	if (!objectValidation.valid) return objectValidation;
 
-    const idValidation = validatePanelTabID(PanelTabDefinition.id);
-    if (!idValidation.valid) return { valid: false, message: idValidation.message };
+	const keyValidation = validateTabKey(objectValidation.value.key);
+	if (!keyValidation.valid) return keyValidation;
 
-    const titleValidation = validatePanelTabTitle(PanelTabDefinition.title);
-    if (!titleValidation.valid) return { valid: false, message: titleValidation.message };
+	const titleValidation = validateTabTitle(objectValidation.value.title);
+	if (!titleValidation.valid) return titleValidation;
 
-    const componentValidation = validatePanelTabComponent(PanelTabDefinition.component);
-    if (!componentValidation.valid) return { valid: false, message: componentValidation.message };
+	const componentValidation = validateTabComponent(objectValidation.value.component);
+	if (!componentValidation.valid) return componentValidation;
 
-    const iconValidation = validatePanelTabIcon(PanelTabDefinition.icon);
-    if (!iconValidation.valid) return { valid: false, message: iconValidation.message };
+	const iconValidation = validateTabIcon(objectValidation.value.icon);
+	if (!iconValidation.valid) return iconValidation;
 
-    const orderValidation = validatePanelTabOrder(PanelTabDefinition.order);
-    if (!orderValidation.valid) return { valid: false, message: orderValidation.message };
+	const orderValidation = validateTabOrder(objectValidation.value.order);
+	if (!orderValidation.valid) return orderValidation;
 
-    const panelIDValidation = validatePanelID(PanelTabDefinition.panelID);
-    if (!panelIDValidation.valid) return { valid: false, message: panelIDValidation.message };
+	const panelKeyValidation = validatePanelKey(objectValidation.value.panelKey);
+	if (!panelKeyValidation.valid) return panelKeyValidation;
 
-    return { valid: true, value: PanelTabDefinition as PanelTabDefinition };
+	return { valid: true, value: TabDefinition as TabDefinition };
 }

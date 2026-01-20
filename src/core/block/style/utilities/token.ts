@@ -107,8 +107,6 @@ export function expandTokens(syntax: string, tokenDefinitions: TokenDefinitionRe
 
 	// Iterate over each matched token
 	for (const token of tokens || []) {
-		// console.log(token);
-
 		// Extract the base type from the token (e.g., 'length' from '<length>')
 		const tokenBase = getTokenBase(token, tokenTypeDefinitions);
 		if (!tokenBase) continue; // Skip if no base type

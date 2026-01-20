@@ -5,9 +5,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	body: {
 		id: 'body',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						width: '100%',
 						height: '100%',
 						overflow: 'auto',
@@ -28,8 +28,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			mobile: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'background-color': '#f0f9ff',
 						'padding-top': '20px',
 						'padding-right': '16px',
@@ -39,8 +39,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			tablet: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'background-color': '#fef3c7',
 						'padding-top': '30px',
 						'padding-right': '20px',
@@ -61,9 +61,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	hero: {
 		id: 'hero',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						width: '100%',
 						'max-width': '1000px',
 						'margin-top': '0px',
@@ -90,8 +90,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			mobile: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'max-width': '100%',
 						'padding-top': '40px',
 						'padding-right': '20px',
@@ -103,8 +103,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			tablet: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'max-width': '90%',
 						'padding-top': '60px',
 						'padding-right': '40px',
@@ -125,9 +125,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'hero-title': {
 		id: 'hero-title',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '3.5rem',
 						'font-weight': '800',
 						'margin-bottom': '20px',
@@ -139,16 +139,16 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			mobile: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'font-size': '2.5rem',
 						'margin-bottom': '16px',
 					},
 				},
 			},
 			tablet: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'font-size': '3rem',
 						'margin-bottom': '18px',
 					},
@@ -167,9 +167,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'hero-desc': {
 		id: 'hero-desc',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1.375rem',
 						'margin-bottom': '0px',
 						'text-align': 'center',
@@ -194,9 +194,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'features-grid': {
 		id: 'features-grid',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						display: 'grid',
 						'grid-template-columns': 'repeat(auto-fit, minmax(150px, 1fr))',
 						gap: '40px',
@@ -210,8 +210,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			mobile: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'grid-template-columns': '1fr',
 						gap: '20px',
 						'padding-top': '10px',
@@ -222,8 +222,8 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 				},
 			},
 			tablet: {
-				all: {
-					all: {
+				default: {
+					default: {
 						'grid-template-columns': 'repeat(2, 1fr)',
 						gap: '30px',
 						'padding-top': '15px',
@@ -243,9 +243,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-1': {
 		id: 'feature-1',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'text-align': 'center',
 						padding: '20px',
 						background: '#ffffff',
@@ -270,9 +270,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-1-label': {
 		id: 'feature-1-label',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'font-weight': '500',
 						'text-align': 'center',
@@ -293,9 +293,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-2': {
 		id: 'feature-2',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'text-align': 'center',
 						padding: '20px',
 						background: '#ffffff',
@@ -320,9 +320,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-2-label': {
 		id: 'feature-2-label',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'font-weight': '500',
 						'text-align': 'center',
@@ -343,9 +343,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-3': {
 		id: 'feature-3',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'text-align': 'center',
 						padding: '20px',
 						background: '#ffffff',
@@ -370,9 +370,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-3-label': {
 		id: 'feature-3-label',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'font-weight': '500',
 						'text-align': 'center',
@@ -393,9 +393,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-4': {
 		id: 'feature-4',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'text-align': 'center',
 						padding: '20px',
 						background: '#ffffff',
@@ -420,9 +420,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'feature-4-label': {
 		id: 'feature-4-label',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'font-weight': '500',
 						'text-align': 'center',
@@ -445,9 +445,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	timeline: {
 		id: 'timeline',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						width: '100%',
 						'max-width': '1000px',
 						'margin-top': '0px',
@@ -484,9 +484,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-title': {
 		id: 'timeline-title',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '2.5rem',
 						'font-weight': '800',
 						'margin-bottom': '16px',
@@ -508,9 +508,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-container': {
 		id: 'timeline-container',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						display: 'flex',
 						'flex-direction': 'column',
 						'align-items': 'flex-start',
@@ -531,9 +531,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-line': {
 		id: 'timeline-line',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						position: 'absolute',
 						left: '15px',
 						top: '30px',
@@ -554,9 +554,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-item-1': {
 		id: 'timeline-item-1',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						display: 'flex',
 						'align-items': 'flex-start',
 						'margin-bottom': '40px',
@@ -575,9 +575,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-dot-1': {
 		id: 'timeline-dot-1',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						position: 'absolute',
 						left: '7px',
 						top: '8px',
@@ -603,9 +603,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-content-1': {
 		id: 'timeline-content-1',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'line-height': '1.5',
 						color: '#111827',
@@ -625,9 +625,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-item-2': {
 		id: 'timeline-item-2',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						display: 'flex',
 						'align-items': 'flex-start',
 						'margin-bottom': '40px',
@@ -646,9 +646,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-dot-2': {
 		id: 'timeline-dot-2',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						position: 'absolute',
 						left: '7px',
 						top: '8px',
@@ -674,9 +674,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-content-2': {
 		id: 'timeline-content-2',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'line-height': '1.5',
 						color: '#111827',
@@ -696,9 +696,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-item-3': {
 		id: 'timeline-item-3',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						display: 'flex',
 						'align-items': 'flex-start',
 						'margin-bottom': '20px',
@@ -717,9 +717,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-dot-3': {
 		id: 'timeline-dot-3',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						position: 'absolute',
 						left: '7px',
 						top: '8px',
@@ -745,9 +745,9 @@ export const DefaultBlocks: Record<BlockID, BlockInstance> = {
 	'timeline-content-3': {
 		id: 'timeline-content-3',
 		styles: {
-			all: {
-				all: {
-					all: {
+			default: {
+				default: {
+					default: {
 						'font-size': '1rem',
 						'line-height': '1.5',
 						color: '#111827',

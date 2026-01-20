@@ -1,15 +1,15 @@
 // Stores
-import { useLayoutStore } from '@/src/state/layout/layout';
+import { useBarStore } from '@/src/core/layout/bar/state/store';
 
 // Types
 import type { BarInstance } from '@/src/core/layout/bar/types';
-import type { WorkbenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/src/core/layout/workbench/types';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateWorkbenchKey } from '@/src/core/layout/workbench/helpers';
+import { validateBenchKey } from '@/src/core/layout/workbench/helpers';
 import { pickBarsByWorkbench } from '@/src/core/layout/bar/helpers/pickers';
 
 /**
@@ -22,14 +22,14 @@ import { pickBarsByWorkbench } from '@/src/core/layout/bar/helpers/pickers';
  * @example
  * const bars = getBarsByWorkbench('workbench-123') // Returns bars for specific workbench
  */
-export function getBarsByWorkbench(workbenchKey: WorkbenchKey): BarInstance[] | undefined {
-	const layoutStore = useLayoutStore.getState();
+export function getBarsByWorkbench(workbenchKey: BenchKey): BarInstance[] | undefined {
+	const barStore = useBarStore.getState();
 	const safeParams = new ResultPipeline('[LayoutQueries → getBarsByWorkbench]')
 		.validate({
-			workbenchKey: validateWorkbenchKey(workbenchKey),
+			workbenchKey: validateBenchKey(workbenchKey),
 		})
 		.pick((data) => ({
-			barsByWorkbench: pickBarsByWorkbench(data.workbenchKey, layoutStore.allBars),
+			barsByWorkbench: pickBarsByWorkbench(data.workbenchKey, barStore.allBars),
 		}))
 		.execute();
 	if (!safeParams) return undefined;

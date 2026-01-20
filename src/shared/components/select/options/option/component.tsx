@@ -41,10 +41,11 @@ const Option: React.FC<OptionProps> = (props: OptionProps): ReactElement => {
     } = props;
 
     // Handle option selection changes
-    const handleChange = useCallback((): void => {
+    const handleChange = useCallback((value:string): void => {
         onChange(value);
     }, [onChange, value]
     );
+
 
     return (
         <button

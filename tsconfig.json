@@ -40,7 +40,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "src/core/layout/panel/store"  ],
   "exclude": [
     "node_modules"
   ]

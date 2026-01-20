@@ -4,9 +4,10 @@ import type { ComponentType, ReactElement } from 'react';
 import type { StyleKey, StyleValue } from '@/src/core/block/style/types';
 import type { AttributeKey } from '@/src/core/block/attribute/types';
 import type { ElementKey } from '@/src/core/block/element/types';
-import type { DeviceName } from '@/src/core/layout/page/types';
-import type { OrientationName } from '@/src/core/layout/page/types';
-import type { PseudoName } from '@/src/core/layout/page/types';
+import type { DeviceKey } from '@/src/core/layout/page/types';
+import type { OrientationKey } from '@/src/core/layout/page/types';
+import type { PseudoKey } from '@/src/core/layout/page/types';
+
 /**
  * Unique identifier for a block instance
  */
@@ -42,9 +43,9 @@ export type BlockDescription = string;
  * device -> orientation -> pseudo -> styles
  */
 export type BlockStyles = {
-	[deviceName: DeviceName]: {
-		[orientationName: OrientationName]: {
-			[pseudoName: PseudoName]: {
+	[deviceKey: DeviceKey]: {
+		[orientationKey: OrientationKey]: {
+			[pseudoKey: PseudoKey]: {
 				[key in StyleKey]?: StyleValue;
 			};
 		};
@@ -72,6 +73,10 @@ export type BlockChildren = ReactElement | ReactElement[];
  */
 export interface BlockComponentProps {
 	instance: BlockInstance;
+	deviceKey: DeviceKey;
+	orientationKey: OrientationKey;
+	pseudoKey: PseudoKey;
+	isSelected: boolean;
 	children?: BlockChildren;
 }
 

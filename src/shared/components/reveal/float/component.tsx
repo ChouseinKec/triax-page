@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useEffect, memo, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -97,7 +98,7 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
     // Early return if not visible - prevents unnecessary DOM rendering
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div
             ref={floatRef}
             className={`${CSS.FloatReveal} FloatReveal ${className}`}
@@ -108,7 +109,8 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
             onPointerDown={e => e.stopPropagation()}
         >
             {children}
-        </div>
+        </div>,
+        document.body
     );
 };
 

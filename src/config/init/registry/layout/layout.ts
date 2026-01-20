@@ -1,5 +1,5 @@
 // Registry functions
-import { registerPanel, registerPanelTab } from '@/src/core/layout/panel/registries';
+import { registerPanel, registerTab } from '@/src/core/layout/panel/registries';
 import { registerBar } from '@/src/core/layout/bar/registries';
 
 // Config sources
@@ -7,7 +7,7 @@ import { CorePanels, CoreTabs } from '@/src/config/layout/panel';
 import { CoreBars } from '@/src/config/layout/bar';
 
 // Validators
-import { validatePanelDefinition, validatePanelTabDefinition } from '@/src/core/layout/panel/helpers';
+import { validatePanelDefinition, validateTabDefinition } from '@/src/core/layout/panel/helpers';
 import { validateBarDefinition } from '@/src/core/layout/bar/helpers';
 
 // Types
@@ -25,9 +25,9 @@ export const LAYOUT_DEFINITIONS: RegistryDefinition<any>[] = [
 	{
 		category: 'Core/Panel/Tab',
 		items: CoreTabs,
-		registerFn: registerPanelTab,
+		registerFn: registerTab,
 		getIdFn: (tab: any) => tab.id,
-		validateFn: validatePanelTabDefinition,
+		validateFn: validateTabDefinition,
 	},
 	{
 		category: 'Core/Bar',

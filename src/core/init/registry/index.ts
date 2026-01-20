@@ -26,7 +26,7 @@ export function InitRegistry<T>(config: RegistryDefinition<T>) {
 	});
 
 	if (validItems.length === 0) {
-		devLog.warn(`[Init → Registry]		      ❌ No valid core ${category.toLowerCase()}s found to register`);
+		devLog.info(`[Init → Registry]		      ❌ No valid core ${category.toLowerCase()}s found to register`);
 		return { category, total: 0, success: 0, failed: 0, failedIds: [] };
 	}
 

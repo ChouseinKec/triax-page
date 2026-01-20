@@ -46,14 +46,20 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     isDisabled = false,
     title = "Toggle Dropdown",
     className = "DropdownSelect",
-    multiselectable = false
+    multiselectable = false,
+    closeOnSelect = true,
 }) => {
 
     // Handle option selection changes
     const handleOptionChange = useCallback((selectedValue: string | string[]): void => {
-        onChange(selectedValue);
-    }, [onChange]
+        if (multiselectable) {
+            (onChange as (value: string[]) => void)(selectedValue as string[]);
+        } else {
+            (onChange as (value: string) => void)(selectedValue as string);
+        }
+    }, [onChange, multiselectable]
     );
+
 
     return (
         <DropdownReveal
@@ -61,6 +67,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
             placeholder={forcePlaceholder ? placeholder : (Array.isArray(value) ? value.join(', ') : value) || "N/A"}
             title={title}
             isDisabled={isDisabled}
+            closeOnChange={closeOnSelect}
         >
             {
                 options && options.length > 0

@@ -3,7 +3,7 @@ import { pickPseudo } from '../pseudo';
 import { mockPseudoInstance } from '@/src/shared/helpers/mock';
 
 // Types
-import type { PseudoRecord } from '@/src/core/layout/page/types';
+import type { PseudoDefinitionRecord } from '@/src/core/layout/page/types';
 
 describe('pickPseudo', () => {
 	const mockPseudo1 = mockPseudoInstance({
@@ -18,7 +18,7 @@ describe('pickPseudo', () => {
 		value: 'active',
 	});
 
-	const mockPseudos: PseudoRecord = {
+	const mockPseudos: PseudoDefinitionRecord = {
 		'pseudo-1': mockPseudo1,
 		'pseudo-2': mockPseudo2,
 	};

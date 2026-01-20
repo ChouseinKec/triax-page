@@ -1,11 +1,11 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, memo } from 'react';
 
 
 // Types
 import type { BlockComponentProps } from '@/src/core/block/instance/types';
 
 // Manager
-import { useIsBlockSelected, selectBlock, getBlockComponentedAttributes } from '@/src/core/block/instance/managers';
+import { selectBlock, getBlockComponentedAttributes } from '@/src/core/block/instance/managers';
 import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
 
 
@@ -16,11 +16,10 @@ import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
  * @param children - Child blocks to render inside this container
  * @returns JSX element representing the container block
  */
-const BlockContainerComponent: React.FC<BlockComponentProps> = ({ instance, children }) => {
+const BlockContainerComponent: React.FC<BlockComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const blockID = instance.id;
-    const isSelected = useIsBlockSelected(blockID);
     const blockAttributes = getBlockComponentedAttributes(blockID);
-    const blockStyles = useBlockRenderedStyles(blockID);
+    const blockStyles = useBlockRenderedStyles(blockID, deviceKey, orientationKey, pseudoKey);
     const containerRef = useRef<HTMLDivElement>(null);
 
     /**
@@ -35,7 +34,7 @@ const BlockContainerComponent: React.FC<BlockComponentProps> = ({ instance, chil
 
     return (
         <div
-            id={`block-${blockID}`}
+            className={`block-${blockID}`}
             ref={containerRef}
             onClick={handleSelectBlock}
 
@@ -56,4 +55,4 @@ const BlockContainerComponent: React.FC<BlockComponentProps> = ({ instance, chil
 }
 
 
-export default BlockContainerComponent;
+export default memo(BlockContainerComponent);

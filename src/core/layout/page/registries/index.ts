@@ -1,6 +1,6 @@
-import type { DeviceDefinition, DeviceInstance, DeviceID, DeviceRecord } from '@/src/core/layout/page/types';
-import type { OrientationDefinition, OrientationInstance, OrientationID, OrientationRecord } from '@/src/core/layout/page/types';
-import type { PseudoDefinition, PseudoInstance, PseudoID, PseudoRecord } from '@/src/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey, DeviceRecord } from '@/src/core/layout/page/types';
+import type { OrientationDefinition, OrientationKey, OrientationDefinitionRecord } from '@/src/core/layout/page/types';
+import type { PseudoDefinition, PseudoKey, PseudoDefinitionRecord } from '@/src/core/layout/page/types';
 import type { ActionDefinition, ActionID, ActionRecord } from '@/src/core/layout/page/types/action';
 import type { ValidateResult } from '@/src/shared/types/result';
 
@@ -18,17 +18,15 @@ class DeviceRegistry {
 	 * @param device - The device definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerDevice(device: DeviceDefinition): ValidateResult<DeviceDefinition> {
-		const validation = validateDeviceDefinition(device);
+	registerDevice(deviceDefinition: DeviceDefinition): ValidateResult<DeviceDefinition> {
+		const validation = validateDeviceDefinition(deviceDefinition);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates
-		if (this.devices[device.value]) {
-			return { valid: false, message: `Device with value "${device.value}" already registered` };
-		}
+		if (this.devices[deviceDefinition.key]) return { valid: false, message: `Device with value "${deviceDefinition.key}" already registered` };
 
-		this.devices = { ...this.devices, [device.value]: { ...device, id: device.value } };
-		return { valid: true, value: device };
+		this.devices = { ...this.devices, [deviceDefinition.key]: { ...deviceDefinition, key: deviceDefinition.key } };
+		return { valid: true, value: deviceDefinition };
 	}
 
 	/**
@@ -44,8 +42,16 @@ class DeviceRegistry {
 	 * @param value - The device value to retrieve
 	 * @returns The device definition if found, undefined otherwise
 	 */
-	getRegisteredDevice(value: DeviceID): DeviceInstance | undefined {
-		return this.devices[value];
+	getRegisteredDevice(deviceKey: DeviceKey): DeviceDefinition | undefined {
+		return this.devices[deviceKey];
+	}
+
+	/**
+	 * Retrieves the default device definition.
+	 * @returns The first registered device definition or undefined if none exist
+	 */
+	getDefaultDeviceKey(): DeviceKey {
+		return 'default';
 	}
 }
 
@@ -53,42 +59,48 @@ class DeviceRegistry {
  * Class-based orientation registry for managing orientation definitions
  */
 class OrientationRegistry {
-	private orientations: OrientationRecord = {};
+	private orientations: OrientationDefinitionRecord = {};
 
 	/**
 	 * Registers an orientation definition in the orientation registry.
-	 * @param orientation - The orientation definition to register
+	 * @param orientationDefinition - The orientation definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerOrientation(orientation: OrientationDefinition): ValidateResult<OrientationDefinition> {
-		const validation = validateOrientationDefinition(orientation);
+	registerOrientation(orientationDefinition: OrientationDefinition): ValidateResult<OrientationDefinition> {
+		const validation = validateOrientationDefinition(orientationDefinition);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates
-		if (this.orientations[orientation.value]) {
-			return { valid: false, message: `Orientation with value "${orientation.value}" already registered` };
-		}
+		if (this.orientations[orientationDefinition.key]) return { valid: false, message: `Orientation with value "${orientationDefinition.key}" already registered` };
 
 		// Store orientation keyed by its value, ensuring id matches value for consistency
-		this.orientations = { ...this.orientations, [orientation.value]: { ...orientation, id: orientation.value } };
-		return { valid: true, value: orientation };
+		this.orientations = { ...this.orientations, [orientationDefinition.key]: { ...orientationDefinition, key: orientationDefinition.key } };
+		return { valid: true, value: orientationDefinition };
 	}
 
 	/**
 	 * Retrieves all registered orientation definitions.
 	 * @returns Readonly record of all registered orientations keyed by their value
 	 */
-	getRegisteredOrientations(): Readonly<OrientationRecord> {
+	getRegisteredOrientations(): Readonly<OrientationDefinitionRecord> {
 		return { ...this.orientations };
 	}
 
 	/**
 	 * Retrieves a specific orientation definition by its value.
-	 * @param value - The orientation value to retrieve
+	 * @param orientationKey - The orientation key to retrieve
 	 * @returns The orientation definition if found, undefined otherwise
 	 */
-	getRegisteredOrientation(value: OrientationID): OrientationInstance | undefined {
-		return this.orientations[value];
+	getRegisteredOrientation(orientationKey: OrientationKey): OrientationDefinition | undefined {
+		return this.orientations[orientationKey];
+	}
+
+	/**
+	 * Retrieves the default orientation key.
+	 * @returns The default orientation key
+	 */
+	getDefaultOrientationKey(): OrientationKey {
+		return 'default';
 	}
 }
 
@@ -96,42 +108,50 @@ class OrientationRegistry {
  * Class-based pseudo registry for managing pseudo definitions
  */
 class PseudoRegistry {
-	private pseudos: PseudoRecord = {};
+	private pseudos: PseudoDefinitionRecord = {};
 
 	/**
 	 * Registers a pseudo definition in the pseudo registry.
-	 * @param pseudo - The pseudo definition to register
+	 * @param pseudoDefinition - The pseudo definition to register
 	 * @returns Success status with optional error message
 	 */
-	registerPseudo(pseudo: PseudoDefinition): ValidateResult<PseudoDefinition> {
-		const validation = validatePseudoDefinition(pseudo);
+	registerPseudo(pseudoDefinition: PseudoDefinition): ValidateResult<PseudoDefinition> {
+		const validation = validatePseudoDefinition(pseudoDefinition);
 		if (!validation.valid) return validation;
 
 		// Check for duplicates
-		if (this.pseudos[pseudo.value]) {
-			return { valid: false, message: `Pseudo with value "${pseudo.value}" already registered` };
+		if (this.pseudos[pseudoDefinition.key]) {
+			return { valid: false, message: `Pseudo with value "${pseudoDefinition.key}" already registered` };
 		}
 
 		// Store pseudo keyed by its value, ensuring id matches value for consistency
-		this.pseudos = { ...this.pseudos, [pseudo.value]: { ...pseudo, id: pseudo.value } };
-		return { valid: true, value: pseudo };
+		this.pseudos = { ...this.pseudos, [pseudoDefinition.key]: { ...pseudoDefinition, key: pseudoDefinition.key } };
+		return { valid: true, value: pseudoDefinition };
 	}
 
 	/**
 	 * Retrieves all registered pseudo definitions.
 	 * @returns Readonly record of all registered pseudos keyed by their value
 	 */
-	getRegisteredPseudos(): Readonly<PseudoRecord> {
+	getRegisteredPseudos(): Readonly<PseudoDefinitionRecord> {
 		return { ...this.pseudos };
 	}
 
 	/**
 	 * Retrieves a specific pseudo definition by its value.
-	 * @param value - The pseudo value to retrieve
+	 * @param pseudoKey - The pseudo key to retrieve
 	 * @returns The pseudo definition if found, undefined otherwise
 	 */
-	getRegisteredPseudo(value: PseudoID): PseudoInstance | undefined {
-		return this.pseudos[value];
+	getRegisteredPseudo(pseudoKey: PseudoKey): PseudoDefinition | undefined {
+		return this.pseudos[pseudoKey];
+	}
+
+	/**
+	 * Retrieves the default pseudo key.
+	 * @returns The default pseudo key
+	 */
+	getDefaultPseudoKey(): PseudoKey {
+		return 'default';
 	}
 }
 
@@ -176,29 +196,24 @@ class ActionRegistry {
 
 // Create singleton instance
 const deviceRegistry = new DeviceRegistry();
-
-// Export the registry instance methods
-export const registerDevice = (device: DeviceDefinition) => deviceRegistry.registerDevice(device);
+export const registerDevice = (deviceDefinition: DeviceDefinition) => deviceRegistry.registerDevice(deviceDefinition);
 export const getRegisteredDevices = () => deviceRegistry.getRegisteredDevices();
-export const getRegisteredDevice = (value: DeviceID) => deviceRegistry.getRegisteredDevice(value);
+export const getRegisteredDevice = (deviceKey: DeviceKey) => deviceRegistry.getRegisteredDevice(deviceKey);
+export const getDefaultDeviceKey = () => deviceRegistry.getDefaultDeviceKey();
 
-// Create singleton instances
 const orientationRegistry = new OrientationRegistry();
-const pseudoRegistry = new PseudoRegistry();
-
-// Export the registry instance methods
-export const registerOrientation = (orientation: OrientationDefinition) => orientationRegistry.registerOrientation(orientation);
+export const registerOrientation = (orientationDefinition: OrientationDefinition) => orientationRegistry.registerOrientation(orientationDefinition);
 export const getRegisteredOrientations = () => orientationRegistry.getRegisteredOrientations();
-export const getRegisteredOrientation = (value: OrientationID) => orientationRegistry.getRegisteredOrientation(value);
+export const getRegisteredOrientation = (orientationKey: OrientationKey) => orientationRegistry.getRegisteredOrientation(orientationKey);
+export const getDefaultOrientationKey = () => orientationRegistry.getDefaultOrientationKey();
 
-export const registerPseudo = (pseudo: PseudoDefinition) => pseudoRegistry.registerPseudo(pseudo);
+const pseudoRegistry = new PseudoRegistry();
+export const registerPseudo = (pseudoDefinition: PseudoDefinition) => pseudoRegistry.registerPseudo(pseudoDefinition);
 export const getRegisteredPseudos = () => pseudoRegistry.getRegisteredPseudos();
-export const getRegisteredPseudo = (value: PseudoID) => pseudoRegistry.getRegisteredPseudo(value);
+export const getRegisteredPseudo = (pseudoKey: PseudoKey) => pseudoRegistry.getRegisteredPseudo(pseudoKey);
+export const getDefaultPseudoKey = () => pseudoRegistry.getDefaultPseudoKey();
 
-// Create singleton instance
 const actionRegistry = new ActionRegistry();
-
-// Export the registry instance methods
-export const registerAction = (action: ActionDefinition) => actionRegistry.registerAction(action);
+export const registerAction = (actionDefinition: ActionDefinition) => actionRegistry.registerAction(actionDefinition);
 export const getRegisteredActions = () => actionRegistry.getRegisteredActions();
 export const getRegisteredAction = (id: ActionID) => actionRegistry.getRegisteredAction(id);

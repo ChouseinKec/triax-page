@@ -90,25 +90,25 @@ describe('isPanelTabDefinitionValid', () => {
 			component: () => {},
 			icon: {},
 			order: 1,
-			panelID: 'panel1',
+			panelKey: 'panel1',
 		};
 		expect(isPanelTabDefinitionValid(tab)).toBe(true);
 	});
 
 	it('rejects objects missing required properties', () => {
-		const tabNoId = { title: 'Settings', component: () => {}, icon: {}, order: 1, panelID: 'panel1' };
+		const tabNoId = { title: 'Settings', component: () => {}, icon: {}, order: 1, panelKey: 'panel1' };
 		expect(isPanelTabDefinitionValid(tabNoId)).toBe(false);
 
-		const tabNoTitle = { id: 'tab1', component: () => {}, icon: {}, order: 1, panelID: 'panel1' };
+		const tabNoTitle = { id: 'tab1', component: () => {}, icon: {}, order: 1, panelKey: 'panel1' };
 		expect(isPanelTabDefinitionValid(tabNoTitle)).toBe(false);
 
-		const tabNoComponent = { id: 'tab1', title: 'Settings', icon: {}, order: 1, panelID: 'panel1' };
+		const tabNoComponent = { id: 'tab1', title: 'Settings', icon: {}, order: 1, panelKey: 'panel1' };
 		expect(isPanelTabDefinitionValid(tabNoComponent)).toBe(false);
 
-		const tabNoIcon = { id: 'tab1', title: 'Settings', component: () => {}, order: 1, panelID: 'panel1' };
+		const tabNoIcon = { id: 'tab1', title: 'Settings', component: () => {}, order: 1, panelKey: 'panel1' };
 		expect(isPanelTabDefinitionValid(tabNoIcon)).toBe(false);
 
-		const tabNoOrder = { id: 'tab1', title: 'Settings', component: () => {}, icon: {}, panelID: 'panel1' };
+		const tabNoOrder = { id: 'tab1', title: 'Settings', component: () => {}, icon: {}, panelKey: 'panel1' };
 		expect(isPanelTabDefinitionValid(tabNoOrder)).toBe(false);
 
 		const tabNoPanelID = { id: 'tab1', title: 'Settings', component: () => {}, icon: {}, order: 1 };
@@ -128,7 +128,7 @@ describe('isPanelTabDefinitionValid', () => {
 			component: () => {},
 			icon: {},
 			order: 1,
-			panelID: 'panel1',
+			panelKey: 'panel1',
 			extra: 'property',
 		};
 		expect(isPanelTabDefinitionValid(tab)).toBe(true);

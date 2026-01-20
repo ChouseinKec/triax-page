@@ -1,10 +1,10 @@
 // Utilities
-import { validatePseudoID, validatePseudoName, validatePseudoValue, validatePseudoDefinition } from '../pseudo';
+import { validatePseudoKey, validatePseudoName, validatePseudoValue, validatePseudoDefinition } from '../pseudo';
 import { mockPseudoInstance } from '@/src/shared/helpers/mock';
 
-describe('validatePseudoID', () => {
+describe('validatePseudoKey', () => {
 	it('accepts valid pseudo ID', () => {
-		const result = validatePseudoID('pseudo-1');
+		const result = validatePseudoKey('pseudo-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -13,7 +13,7 @@ describe('validatePseudoID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validatePseudoID(123), validatePseudoID(null), validatePseudoID(undefined), validatePseudoID({})];
+		const results = [validatePseudoKey(123), validatePseudoKey(null), validatePseudoKey(undefined), validatePseudoKey({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -24,7 +24,7 @@ describe('validatePseudoID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validatePseudoID('');
+		const result = validatePseudoKey('');
 		expect(result.valid).toBe(false);
 	});
 });

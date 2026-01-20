@@ -1,12 +1,12 @@
-import { validatePanelTabID, validatePanelTabTitle, validatePanelTabComponent, validatePanelTabIcon, validatePanelTabOrder, validatePanelTabDefinition } from '../tab';
+import { validateTabKey, validateTabTitle, validateTabComponent, validateTabIcon, validateTabOrder, validateTabDefinition } from '../tab';
 import { mockReactElement } from '@/src/shared/helpers/mock';
 
 // Mock React component for testing
 const mockComponent = () => null;
 
-describe('validatePanelTabID', () => {
+describe('validateTabKey', () => {
 	it('accepts valid tab ID', () => {
-		const result = validatePanelTabID('tab-1');
+		const result = validateTabKey('tab-1');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -15,7 +15,7 @@ describe('validatePanelTabID', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validatePanelTabID(123), validatePanelTabID(null), validatePanelTabID(undefined), validatePanelTabID({})];
+		const results = [validateTabKey(123), validateTabKey(null), validateTabKey(undefined), validateTabKey({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -26,14 +26,14 @@ describe('validatePanelTabID', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validatePanelTabID('');
+		const result = validateTabKey('');
 		expect(result.valid).toBe(false);
 	});
 });
 
-describe('validatePanelTabTitle', () => {
+describe('validateTabTitle', () => {
 	it('accepts valid tab title', () => {
-		const result = validatePanelTabTitle('Properties');
+		const result = validateTabTitle('Properties');
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -42,7 +42,7 @@ describe('validatePanelTabTitle', () => {
 	});
 
 	it('rejects non-string values', () => {
-		const results = [validatePanelTabTitle(123), validatePanelTabTitle(null), validatePanelTabTitle(undefined), validatePanelTabTitle({})];
+		const results = [validateTabTitle(123), validateTabTitle(null), validateTabTitle(undefined), validateTabTitle({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -53,14 +53,14 @@ describe('validatePanelTabTitle', () => {
 	});
 
 	it('rejects empty string', () => {
-		const result = validatePanelTabTitle('');
+		const result = validateTabTitle('');
 		expect(result.valid).toBe(false);
 	});
 });
 
-describe('validatePanelTabComponent', () => {
+describe('validateTabComponent', () => {
 	it('accepts valid React component', () => {
-		const result = validatePanelTabComponent(mockComponent);
+		const result = validateTabComponent(mockComponent);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -70,13 +70,13 @@ describe('validatePanelTabComponent', () => {
 
 	it('accepts component function', () => {
 		const component = () => null;
-		const result = validatePanelTabComponent(component);
+		const result = validateTabComponent(component);
 
 		expect(result.valid).toBe(true);
 	});
 
 	it('rejects non-function values', () => {
-		const results = [validatePanelTabComponent('component'), validatePanelTabComponent(123), validatePanelTabComponent(null), validatePanelTabComponent(undefined)];
+		const results = [validateTabComponent('component'), validateTabComponent(123), validateTabComponent(null), validateTabComponent(undefined)];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -87,10 +87,10 @@ describe('validatePanelTabComponent', () => {
 	});
 });
 
-describe('validatePanelTabIcon', () => {
+describe('validateTabIcon', () => {
 	it('accepts valid React element', () => {
 		const icon = mockReactElement();
-		const result = validatePanelTabIcon(icon);
+		const result = validateTabIcon(icon);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -99,9 +99,9 @@ describe('validatePanelTabIcon', () => {
 	});
 });
 
-describe('validatePanelTabOrder', () => {
+describe('validateTabOrder', () => {
 	it('accepts valid tab order', () => {
-		const result = validatePanelTabOrder(0);
+		const result = validateTabOrder(0);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -110,14 +110,14 @@ describe('validatePanelTabOrder', () => {
 	});
 
 	it('accepts negative and positive numbers', () => {
-		const results = [validatePanelTabOrder(-1), validatePanelTabOrder(100)];
+		const results = [validateTabOrder(-1), validateTabOrder(100)];
 		results.forEach((result) => {
 			expect(result.valid).toBe(true);
 		});
 	});
 
 	it('rejects non-number values', () => {
-		const results = [validatePanelTabOrder('0'), validatePanelTabOrder(null), validatePanelTabOrder(undefined), validatePanelTabOrder({})];
+		const results = [validateTabOrder('0'), validateTabOrder(null), validateTabOrder(undefined), validateTabOrder({})];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -128,23 +128,23 @@ describe('validatePanelTabOrder', () => {
 	});
 
 	it('rejects NaN', () => {
-		const result = validatePanelTabOrder(NaN);
+		const result = validateTabOrder(NaN);
 		expect(result.valid).toBe(false);
 	});
 });
 
-describe('validatePanelTabDefinition', () => {
+describe('validateTabDefinition', () => {
 	it('accepts valid tab definition', () => {
 		const tab = {
 			id: 'tab-1',
-			panelID: 'panel-1',
+			panelKey: 'panel-1',
 			title: 'Properties',
 			icon: mockReactElement(),
 			component: mockComponent,
 			order: 0,
 		};
 
-		const result = validatePanelTabDefinition(tab);
+		const result = validateTabDefinition(tab);
 
 		expect(result.valid).toBe(true);
 		if (!result.valid) return;
@@ -153,7 +153,7 @@ describe('validatePanelTabDefinition', () => {
 	});
 
 	it('rejects non-object values', () => {
-		const results = [validatePanelTabDefinition('invalid'), validatePanelTabDefinition(123), validatePanelTabDefinition(null), validatePanelTabDefinition(undefined)];
+		const results = [validateTabDefinition('invalid'), validateTabDefinition(123), validateTabDefinition(null), validateTabDefinition(undefined)];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -166,14 +166,14 @@ describe('validatePanelTabDefinition', () => {
 	it('rejects missing required properties', () => {
 		const base = {
 			id: 'tab-1',
-			panelID: 'panel-1',
+			panelKey: 'panel-1',
 			title: 'Properties',
 			icon: mockReactElement(),
 			component: mockComponent,
 			order: 0,
 		};
 
-		const results = [validatePanelTabDefinition({ ...base, id: undefined }), validatePanelTabDefinition({ ...base, panelID: undefined }), validatePanelTabDefinition({ ...base, title: undefined }), validatePanelTabDefinition({ ...base, icon: undefined }), validatePanelTabDefinition({ ...base, component: undefined }), validatePanelTabDefinition({ ...base, order: undefined })];
+		const results = [validateTabDefinition({ ...base, id: undefined }), validateTabDefinition({ ...base, panelKey: undefined }), validateTabDefinition({ ...base, title: undefined }), validateTabDefinition({ ...base, icon: undefined }), validateTabDefinition({ ...base, component: undefined }), validateTabDefinition({ ...base, order: undefined })];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);
@@ -183,14 +183,14 @@ describe('validatePanelTabDefinition', () => {
 	it('rejects invalid property values', () => {
 		const base = {
 			id: 'tab-1',
-			panelID: 'panel-1',
+			panelKey: 'panel-1',
 			title: 'Properties',
 			icon: mockReactElement(),
 			component: mockComponent,
 			order: 0,
 		};
 
-		const results = [validatePanelTabDefinition({ ...base, id: 123 }), validatePanelTabDefinition({ ...base, panelID: null }), validatePanelTabDefinition({ ...base, title: '' }), validatePanelTabDefinition({ ...base, component: 'string' }), validatePanelTabDefinition({ ...base, order: 'zero' })];
+		const results = [validateTabDefinition({ ...base, id: 123 }), validateTabDefinition({ ...base, panelKey: null }), validateTabDefinition({ ...base, title: '' }), validateTabDefinition({ ...base, component: 'string' }), validateTabDefinition({ ...base, order: 'zero' })];
 
 		results.forEach((result) => {
 			expect(result.valid).toBe(false);

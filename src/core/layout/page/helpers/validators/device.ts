@@ -1,19 +1,21 @@
 // Types
-import type { DeviceDefinition, DeviceID, DeviceName, DeviceValue, DeviceMedia, DeviceViewport, DeviceCategory } from '@/src/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey, DeviceName, DeviceMedia, DeviceViewport, DeviceCategory } from '@/src/core/layout/page/types';
 import type { ValidateResult } from '@/src/shared/types/result';
 
 // Utilities
-import { isDeviceDefinitionValid, isDeviceNameValid, isDeviceValueValid, isDeviceMediaValid, isDeviceTemplateValid, isDeviceCategoryValid, isDeviceIDValid } from '@/src/core/layout/page/utilities';
+import { validateString, validateObject } from '@/src/shared/helpers/validators';
 
 /**
- * Validates a device ID for device operations.
- * Checks if the ID is a valid string identifier.
+ * Validates a device key for device operations.
+ * Checks if the key is a valid string identifier.
  *
- * @param deviceID - The device ID to validate
+ * @param deviceKey - The device key to validate
  */
-export function validateDeviceID(deviceID: unknown): ValidateResult<DeviceID> {
-    if (!isDeviceIDValid(deviceID)) return { valid: false, message: `Device ID must be a valid string, got: ${deviceID}` };
-    return { valid: true, value: deviceID as DeviceID };
+export function validateDeviceKey(deviceKey: unknown): ValidateResult<DeviceKey> {
+	const stringValidation = validateString(deviceKey);
+	if (!stringValidation.valid) return { valid: false, message: `Device key must be a valid string, got: ${deviceKey}` };
+
+	return { valid: true, value: deviceKey as DeviceKey };
 }
 
 /**
@@ -23,19 +25,10 @@ export function validateDeviceID(deviceID: unknown): ValidateResult<DeviceID> {
  * @param deviceName - The device name to validate
  */
 export function validateDeviceName(deviceName: unknown): ValidateResult<DeviceName> {
-    if (!isDeviceNameValid(deviceName)) return { valid: false, message: `Device name must be a valid string, got: ${deviceName}` };
-    return { valid: true, value: deviceName as DeviceName };
-}
+	const stringValidation = validateString(deviceName);
+	if (!stringValidation.valid) return { valid: false, message: `Device name must be a valid string, got: ${deviceName}` };
 
-/**
- * Validates a device value for device operations.
- * Checks if the value is a valid string.
- *
- * @param deviceValue - The device value to validate
- */
-export function validateDeviceValue(deviceValue: unknown): ValidateResult<DeviceValue> {
-    if (!isDeviceValueValid(deviceValue)) return { valid: false, message: `Device value must be a valid string, got: ${deviceValue}` };
-    return { valid: true, value: deviceValue as DeviceValue };
+	return { valid: true, value: deviceName as DeviceName };
 }
 
 /**
@@ -45,8 +38,22 @@ export function validateDeviceValue(deviceValue: unknown): ValidateResult<Device
  * @param deviceMedia - The device media to validate
  */
 export function validateDeviceMedia(deviceMedia: unknown): ValidateResult<DeviceMedia> {
-    if (!isDeviceMediaValid(deviceMedia)) return { valid: false, message: `Device media must be valid, got: ${JSON.stringify(deviceMedia)}` };
-    return { valid: true, value: deviceMedia as DeviceMedia };
+	const objectValidation = validateObject(deviceMedia);
+	if (!objectValidation.valid) return { valid: false, message: `Device media must be a valid object, got: ${JSON.stringify(deviceMedia)}` };
+
+	const media = deviceMedia as Record<string, unknown>;
+	const min = media.min;
+	const max = media.max;
+
+	if (typeof min !== 'number' || min < 0) {
+		return { valid: false, message: `Device media.min must be a non-negative number, got: ${min}` };
+	}
+
+	if (typeof max !== 'number' || max <= 0 || max < min) {
+		return { valid: false, message: `Device media.max must be a positive number greater than or equal to min, got: ${max}` };
+	}
+
+	return { valid: true, value: deviceMedia as DeviceMedia };
 }
 
 /**
@@ -56,8 +63,22 @@ export function validateDeviceMedia(deviceMedia: unknown): ValidateResult<Device
  * @param deviceViewport - The device template to validate
  */
 export function validateDeviceTemplate(deviceViewport: unknown): ValidateResult<DeviceViewport> {
-    if (!isDeviceTemplateValid(deviceViewport)) return { valid: false, message: `Device template must be valid, got: ${JSON.stringify(deviceViewport)}` };
-    return { valid: true, value: deviceViewport as DeviceViewport };
+	const objectValidation = validateObject(deviceViewport);
+	if (!objectValidation.valid) return { valid: false, message: `Device template must be a valid object, got: ${JSON.stringify(deviceViewport)}` };
+
+	const viewport = deviceViewport as Record<string, unknown>;
+	const width = viewport.width;
+	const height = viewport.height;
+
+	if (typeof width !== 'number' || width <= 0) {
+		return { valid: false, message: `Device template.width must be a positive number, got: ${width}` };
+	}
+
+	if (typeof height !== 'number' || height <= 0) {
+		return { valid: false, message: `Device template.height must be a positive number, got: ${height}` };
+	}
+
+	return { valid: true, value: deviceViewport as DeviceViewport };
 }
 
 /**
@@ -67,8 +88,10 @@ export function validateDeviceTemplate(deviceViewport: unknown): ValidateResult<
  * @param deviceCategory - The device category to validate
  */
 export function validateDeviceCategory(deviceCategory: unknown): ValidateResult<DeviceCategory> {
-    if (!isDeviceCategoryValid(deviceCategory)) return { valid: false, message: `Device category must be a valid string, got: ${deviceCategory}` };
-    return { valid: true, value: deviceCategory as DeviceCategory };
+	const stringValidation = validateString(deviceCategory);
+	if (!stringValidation.valid) return { valid: false, message: `Device category must be a valid string, got: ${deviceCategory}` };
+
+	return { valid: true, value: deviceCategory as DeviceCategory };
 }
 
 /**
@@ -78,23 +101,23 @@ export function validateDeviceCategory(deviceCategory: unknown): ValidateResult<
  * @param deviceDefinition - The device definition to validate
  */
 export function validateDeviceDefinition(deviceDefinition: unknown): ValidateResult<DeviceDefinition> {
-    if (!isDeviceDefinitionValid(deviceDefinition)) return { valid: false, message: `Device definition must be an object with required properties, got: ${typeof deviceDefinition}` };
+	const objectValidation = validateObject(deviceDefinition, ['name', 'key', 'media', 'template', 'category']);
+	if (!objectValidation.valid) return objectValidation;
 
-    const nameValidation = validateDeviceName(deviceDefinition.name);
-    if (!nameValidation.valid) return nameValidation;
+	const keyValidation = validateDeviceKey(objectValidation.value.key);
+	if (!keyValidation.valid) return keyValidation;
 
-    const valueValidation = validateDeviceValue(deviceDefinition.value);
-    if (!valueValidation.valid) return valueValidation;
+	const nameValidation = validateDeviceName(objectValidation.value.name);
+	if (!nameValidation.valid) return nameValidation;
 
-    const mediaValidation = validateDeviceMedia(deviceDefinition.media);
-    if (!mediaValidation.valid) return mediaValidation;
+	const mediaValidation = validateDeviceMedia(objectValidation.value.media);
+	if (!mediaValidation.valid) return mediaValidation;
 
-    const templateValidation = validateDeviceTemplate(deviceDefinition.template);
-    if (!templateValidation.valid) return templateValidation;
+	const templateValidation = validateDeviceTemplate(objectValidation.value.template);
+	if (!templateValidation.valid) return templateValidation;
 
-    const categoryValidation = validateDeviceCategory(deviceDefinition.category);
-    if (!categoryValidation.valid) return categoryValidation;
+	const categoryValidation = validateDeviceCategory(objectValidation.value.category);
+	if (!categoryValidation.valid) return categoryValidation;
 
-    return { valid: true, value: deviceDefinition as DeviceDefinition };
+	return { valid: true, value: deviceDefinition as DeviceDefinition };
 }
-

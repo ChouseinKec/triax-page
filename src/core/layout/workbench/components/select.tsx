@@ -2,43 +2,45 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedWorkbenchKey, setSelectedWorkbenchID } from "@/src/core/layout/page/managers/";
+import { useSelectedBenchKey, setSelectedWorkbenchKey } from "@/src/core/layout/workbench/managers";
 
 // Components
 import RadioSelect from "@/src/shared/components/select/radio/component";
 
 // Registry
-import { getRegisteredWorkbenchs } from "@/src/core/layout/workbench/registries";
+import { getRegisteredBenches } from "@/src/core/layout/workbench/state/registry";
 
 /**
- * WorkbenchSelect Component
+ * BenchSelect Component
  * Renders a radio select component for choosing the active workbench.
  *
  * @returns The rendered workbench selector component
  */
-const WorkbenchSelect: React.FC = () => {
-    const workbenchDefinitions = getRegisteredWorkbenchs();
-    const selectedWorkbenchKey = useSelectedWorkbenchKey();
+const BenchSelect: React.FC = () => {
+    const benchDefinitions = getRegisteredBenches();
+    const selectedBenchKey = useSelectedBenchKey();
 
     // Prepare options for the workbench selector
-    const workbenchOptions = useMemo(() => {
-        return Object.values(workbenchDefinitions).map((workbench) => ({
-            name: workbench.title,
-            value: workbench.key,
-            icon: workbench.icon,
-            order: workbench.order,
+    const benchOptions = useMemo(() => {
+        return Object.values(benchDefinitions).map((bench) => ({
+            name: bench.name,
+            value: bench.key,
+            icon: bench.icon,
+            order: bench.order,
         })).sort((a, b) => a.order - b.order);
-    }, [workbenchDefinitions]);
+    }, [benchDefinitions]
+    );
 
     return (
         <RadioSelect
-            value={selectedWorkbenchKey}
-            options={workbenchOptions}
-            onChange={setSelectedWorkbenchID}
+            value={selectedBenchKey}
+            options={benchOptions}
+            onChange={(value) => setSelectedWorkbenchKey(value as string)}
             prioritizeIcons
             clearable={false}
+            direction="vertical"
         />
     );
 };
 
-export default WorkbenchSelect;
+export default BenchSelect;

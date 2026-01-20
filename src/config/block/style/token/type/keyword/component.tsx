@@ -42,7 +42,7 @@ const TokenKeyword: React.FC<TokenKeywordProps> = ({ value, options, onChange })
                 ? <RadioSelect
                     value={value}
                     options={options}
-                    onChange={onChange}
+                    onChange={(newValue) => onChange(newValue as string)}
                 />
                 : <DropdownSelect
                     value={value}

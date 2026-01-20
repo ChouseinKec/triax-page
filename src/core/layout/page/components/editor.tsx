@@ -7,9 +7,6 @@ import CSS from "./styles.module.scss";
 // Editors
 import Workbench from "@/src/core/layout/workbench/components/editor";
 
-//Managers
-import { useSelectedWorkbench } from "@/src/core/layout/page/managers";
-
 // Registry
 import { getRegisteredActions } from "@/src/core/layout/page/registries"
 
@@ -20,7 +17,6 @@ import { getRegisteredActions } from "@/src/core/layout/page/registries"
  * @returns ReactElement
  */
 const Page: React.FC = () => {
-    const selectedWorkbench = useSelectedWorkbench();
     const allActions = Object.values(getRegisteredActions());
 
     const actionInstances = useMemo(() => (
@@ -32,9 +28,6 @@ const Page: React.FC = () => {
             ))
     ), [allActions]);
 
-
-    if (!selectedWorkbench) return <p>No workbench selected.</p>;
-
     return (
         <div className={CSS.Page}>
 
@@ -42,7 +35,7 @@ const Page: React.FC = () => {
                 {actionInstances}
             </div>
 
-            <Workbench selectedWorkbench={selectedWorkbench} />
+            <Workbench />
         </div>
     );
 };

@@ -13,7 +13,6 @@ import { getBarsByWorkbench } from "@/src/core/layout/bar/managers";
 /**
  * LayoutEditor Component
  * Renders the layout editor UI, including LayoutPanel actions and open LayoutPanels.
- * @param props - LayoutEditorProps
  * @returns ReactElement
  */
 const BarEditor: React.FC<BarEditorProps> = ({ selectedWorkbenchKey }) => {

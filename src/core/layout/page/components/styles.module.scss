@@ -9,12 +9,8 @@
 	height: 40px;
 	width: 100%;
 
-	top: 0;
-	left: 0;
-
 	z-index: 1;
 
 	@include inputMixins.components--container($radius: 0, $background: var(--theme-color-primary), $shadow: none);
 	@include inputMixins.components--flex-horizontal($align: center);
-	position: fixed;
 }

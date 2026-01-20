@@ -59,20 +59,20 @@ export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue
  * @param pageContext - the current page state including selected device, orientation, and pseudo info
  */
 export function updateBlockStyles(blockStyles: BlockStyles, newStyles: StyleRecord, pageContext: PageContext): OperateResult<BlockStyles> {
-	const selectedDeviceID = pageContext.store.selectedDeviceID;
-	const selectedOrientationID = pageContext.store.selectedOrientationID;
-	const selectedPseudoID = pageContext.store.selectedPseudoID;
+	const selectedDeviceKey = pageContext.store.selectedDeviceKey;
+	const selectedOrientationKey = pageContext.store.selectedOrientationKey;
+	const selectedPseudoKey = pageContext.store.selectedPseudoKey;
 
 	return {
 		success: true,
 		data: {
 			...blockStyles,
-			[selectedDeviceID]: {
-				...(blockStyles?.[selectedDeviceID] ?? {}),
-				[selectedOrientationID]: {
-					...(blockStyles?.[selectedDeviceID]?.[selectedOrientationID] ?? {}),
-					[selectedPseudoID]: {
-						...(blockStyles?.[selectedDeviceID]?.[selectedOrientationID]?.[selectedPseudoID] ?? {}),
+			[selectedDeviceKey]: {
+				...(blockStyles?.[selectedDeviceKey] ?? {}),
+				[selectedOrientationKey]: {
+					...(blockStyles?.[selectedDeviceKey]?.[selectedOrientationKey] ?? {}),
+					[selectedPseudoKey]: {
+						...(blockStyles?.[selectedDeviceKey]?.[selectedOrientationKey]?.[selectedPseudoKey] ?? {}),
 						...newStyles,
 					},
 				},

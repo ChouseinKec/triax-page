@@ -10,4 +10,5 @@ export interface OptionProps extends OptionDefinition {
     prioritizeIcons?: boolean;
     /** Optional class name for custom styling */
     className?: string;
+    
 }

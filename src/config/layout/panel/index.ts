@@ -1,13 +1,13 @@
 // Panels
-import MainLibrary from './main/library';
-import MainInspector from './main/inspector';
-import MainHierarchy from './main/hierarchy';
+import Liblary from './library';
+import Inspector from './inspector';
+import Hierarchy from './hierarchy';
 
 // Tabs
-import BlockLibraryTab from './main/block/liblary';
-import BlockHierarchyTab from './main/block/hierarchy';
-import BlockStyleTab from './main/block/style';
-import BlockAttributeTab from './main/block/attribute';
+import TabDefinitionLiblary from './tabs/liblary';
+import TabDefinitionHierarchy from './tabs/hierarchy';
+import TabDefinitionStyle from './tabs/style';
+import TabDefinitionAttribute from './tabs/attribute';
 
-export const CorePanels = [MainLibrary, MainInspector, MainHierarchy];
-export const CoreTabs = [BlockLibraryTab, BlockHierarchyTab, BlockStyleTab, BlockAttributeTab];
+export const CorePanels = [Liblary, Inspector, Hierarchy];
+export const CoreTabs = [TabDefinitionLiblary, TabDefinitionHierarchy, TabDefinitionStyle, TabDefinitionAttribute];

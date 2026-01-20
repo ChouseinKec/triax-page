@@ -2,36 +2,32 @@
 import { usePageStore } from '@/src/state/layout/page';
 
 // Types
-import type { OrientationID } from '@/src/core/layout/page/types';
+import type { OrientationKey } from '@/src/core/layout/page/types';
 
 // Utilities
 import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateOrientationID } from '@/src/core/layout/page/helpers/validators';
+import { validateOrientationKey } from '@/src/core/layout/page/helpers/validators';
 
 // Managers
-import { getDefaultOrientationID } from '@/src/core/layout/page/managers/queries';
+import { getDefaultOrientationKey } from '@/src/core/layout/page/managers/queries';
 
 /**
  * Sets the currently selected orientation by ID for page commands.
  * Updates the page store with the new orientation selection.
  *
- * @param orientationID - The orientation ID to set as current
- * @returns void
- *
- * @example
- * setSelectedOrientationID('portrait') // Sets current orientation to portrait
+ * @param orientationKey - The orientation ID to set as current
  */
-export function setSelectedOrientationID(orientationID: OrientationID): void {
-	if (!orientationID) orientationID = getDefaultOrientationID();
+export function setSelectedOrientationKey(orientationKey: OrientationKey): void {
+	if (!orientationKey) orientationKey = getDefaultOrientationKey();
 
-	const safeData = new ResultPipeline('[PageCommands → setSelectedOrientationID]')
+	const safeData = new ResultPipeline('[PageCommands → setSelectedOrientationKey]')
 		.validate({
-			orientationID: validateOrientationID(orientationID),
+			orientationKey: validateOrientationKey(orientationKey),
 		})
 		.execute();
 	if (!safeData) return;
 
-	usePageStore.getState().setSelected({ orientationID: safeData.orientationID });
+	usePageStore.getState().setSelected({ orientationKey: safeData.orientationKey });
 }

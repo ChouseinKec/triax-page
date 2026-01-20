@@ -1,14 +1,21 @@
 "use client";
-import React, { useRef, memo, useCallback, useMemo, useState, useLayoutEffect, } from "react";
+import React, { useRef, useCallback, useMemo, useState, memo, useEffect } from "react";
 
 // Components
-import ActionGroup from "@/src/shared/components/group/action/component";
+import Action from "./action";
+import Tab from "./tab";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
 import type { PanelProps } from "./types";
+
+// Managers
+import { usePanelInstance, getPanelDefinition, setPanelPosition, setPanelSize } from "@/src/core/layout/panel/managers";
+
+// Utilities
+import { convertPositionToPx, convertSizeToPx, convertPxToPosition, convertPxToSize, calculatePanelStyles, } from "@/src/core/layout/panel/utilities";
 
 // Hooks
 import { useDrag } from "@/src/shared/hooks/interface/useDrag";
@@ -17,142 +24,94 @@ import { useResize } from "@/src/shared/hooks/interface/useResize";
 /**
  * Panel Component
  * A draggable and resizable Panel with tab support.
- * - Uses CSS for initial layout, then takes control after measuring the DOM node.
+ * - Positioned based on anchor points in %.
+ * - Sizes in % with min constraints in px.
  * - Supports resizing from all sides/corners and dragging the Panel.
  * - Renders tab buttons and tab content.
  *
  * @param props - PanelProps
- * @returns The rendered Panel group or null if no tabs
  */
-const Panel: React.FC<PanelProps> = ({
-    initialPosition = { top: "0px", left: "0px" },
-    initialSize = { width: "250px", height: "250px", minWidth: 250, minHeight: 250 },
-    initialLocked = true,
-    title = "Panel",
-    onClose = () => { },
-    tabs = {} }) => {
+const Panel: React.FC<PanelProps> = ({ panelKey }) => {
+    const panelInstance = usePanelInstance(panelKey);
+    const panelDefinition = getPanelDefinition(panelKey);
 
-    // Ref for the Panel DOM element
+    // Stored position and size from the panel panelInstance (in %)
+    const { position: storedPosition, size: storedSize, isLocked } = panelInstance || { position: { top: 0, left: 0 }, size: { width: 0, height: 0, minWidth: 0, minHeight: 0 }, isLocked: false };
+
+    // Viewport dimensions for conversions
+    const vh = typeof window === 'undefined' ? 1000 : window.innerHeight;
+    const vw = typeof window === 'undefined' ? 1920 : window.innerWidth;
+
+    // Refs for DOM and interaction tracking
     const layoutPanelRef = useRef<HTMLDivElement>(null);
+    const isDraggingRef = useRef(false);
+    const isResizingRef = useRef(false);
 
-    // Hydration flag: false until measured, then true
-    const [hydrated, setHydrated] = useState(false);
+    // Local working position and size (in %) - updated during drag/resize for visual feedback
+    const [currentPosition, setCurrentPosition] = useState(storedPosition);
+    const [currentSize, setCurrentSize] = useState(storedSize);
 
-    // State for Panel position and size (controlled after hydration)
-    const [position, setPosition] = useState({ left: 0, top: 0 });
-    const [size, setSize] = useState({ width: 250, height: 250 });
-    const [locked, setLocked] = useState(initialLocked);
+    // Pixel equivalents for drag/resize hooks (in px) - kept in sync with current position/size
+    const [currentPixelPosition, setCurrentPixelPosition] = useState(() => convertPositionToPx(storedPosition, storedSize, vh, vw));
+    const [currentPixelSize, setCurrentPixelSize] = useState(() => convertSizeToPx(storedSize, vh, vw));
 
-    // Determine the initial tab ID 
-    const [currentPanelTabID, setCurrentPanelTabID] = useState<string>(Object.keys(tabs)[0]);
+    // Update local state when position/size changes from store
+    useEffect(() => {
+        setCurrentPosition(storedPosition);
+        setCurrentSize(storedSize);
+        const newPxPosition = convertPositionToPx(storedPosition, storedSize, vh, vw);
+        const newPxSize = convertSizeToPx(storedSize, vh, vw);
+        setCurrentPixelPosition(newPxPosition);
+        setCurrentPixelSize(newPxSize);
+    }, [storedPosition, storedSize, vh, vw]
+    );
+
+    // Update store on mouse up
+    useEffect(() => {
+        const handleMouseUp = () => {
+            if (isDraggingRef.current) {
+                setPanelPosition(panelKey, currentPosition);
+                isDraggingRef.current = false;
+            }
+            if (isResizingRef.current) {
+                setPanelSize(panelKey, currentSize);
+                isResizingRef.current = false;
+            }
+        };
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => window.removeEventListener('mouseup', handleMouseUp);
+    }, [currentPosition, currentSize, panelKey, setPanelPosition, setPanelSize]
+    );
+
+    // Handlers for updating local state during drag/resize
+    const handlePositionChange = useCallback((newPos: { top: number; left: number }) => {
+        setCurrentPixelPosition(newPos);
+        const newPosition = convertPxToPosition(newPos, currentPixelSize, vh, vw, currentPosition);
+        setCurrentPosition(newPosition);
+        isDraggingRef.current = true;
+    }, [currentPixelSize, vh, vw, currentPosition]
+    );
+
+    const handleSizeChange = useCallback((newSize: { width: number; height: number }) => {
+        setCurrentPixelSize(newSize);
+        const newSizePercent = convertPxToSize(newSize, vh, vw);
+        setCurrentSize({ ...currentSize, ...newSizePercent });
+        isResizingRef.current = true;
+    }, [vh, vw, currentSize]
+    );
 
     // Resize hook
-    const { handles } = useResize(layoutPanelRef, initialSize.minWidth, initialSize.minHeight, size, position, setSize, setPosition, locked);
+    const { handles } = useResize(layoutPanelRef, storedSize.minWidth, storedSize.minHeight, currentPixelSize, currentPixelPosition, handleSizeChange, handlePositionChange, isLocked);
 
     // Drag hook
-    useDrag(layoutPanelRef, setPosition, (e) => !(e.target as Element)?.closest('[data-position]'), locked);
-
+    useDrag(layoutPanelRef, handlePositionChange, (e) => !(e.target as Element)?.closest('[data-position]'), isLocked);
 
     /**
      * Memoized inline styles for the Panel.
-     * Uses hydrated state to determine if we should use measured values or initial props.
      */
-    const styles = useMemo(
-        () =>
-            hydrated
-                ? {
-                    top: `${position.top}px`,
-                    left: `${position.left}px`,
-                    width: `${size.width}px`,
-                    height: `${size.height}px`,
-                }
-                : {
-                    top: initialPosition.top,
-                    left: initialPosition.left,
-                    width: initialSize.width,
-                    height: initialSize.height,
-                },
-        [hydrated, position, size, initialPosition, initialSize]
-    );
+    const styles = useMemo(() => calculatePanelStyles(currentPosition, currentSize), [currentPosition, currentSize]);
 
-    /**
-     * Toggles the locked state of the Panel.
-     */
-    const handleLock = useCallback(() => {
-        setLocked((prev) => !prev);
-    }, []
-    );
-
-    /**
-     * Handles Panel close action.
-     */
-    const handleClose = useCallback(() => {
-        onClose();
-    }, [onClose]
-    );
-
-    /**
-     * On mount, measure the element and set initial position/size.
-     * This allows CSS to control layout before React takes over.
-     */
-    useLayoutEffect(() => {
-        if (!layoutPanelRef.current) return;
-
-        const rect = layoutPanelRef.current.getBoundingClientRect();
-        setPosition({ left: rect.left, top: rect.top });
-        setSize({ width: rect.width, height: rect.height });
-        setHydrated(true);
-    }, []
-    );
-
-    /**
-     * Memoized tab button elements.
-     */
-    const tabActions = useMemo(() => {
-        return Object.values(tabs).map((tab) => (
-            <button
-                key={tab.id}
-                className={CSS.Tab}
-                data-is-active={tab.id === currentPanelTabID}
-                onClick={() => setCurrentPanelTabID(tab.id)}
-                title={tab.title}
-            >
-                {tab.icon()}
-            </button>
-        ));
-    }, [tabs, currentPanelTabID, setCurrentPanelTabID]
-    );
-
-    /**
-     * Memoized current tab content.
-     * If no tab is selected, defaults to the first tab.
-     */
-    const currentTabContent = useMemo(() => {
-        const Content = tabs[currentPanelTabID]?.render();
-
-        if (!Content) return <p>Tab content not available</p>;
-
-        return <Content />;
-    }, [currentPanelTabID, tabs]
-    );
-
-    const headerActions = useMemo(() => {
-        return (
-            <>
-                <button title="Lock" data-is-active={locked} onClick={handleLock}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
-                        <path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Zm-68-56a12,12,0,1,1-12-12A12,12,0,0,1,140,152Z" />
-                    </svg>
-                </button>
-                <button onClick={handleClose} title="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffffff" viewBox="0 0 256 256">
-                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
-                    </svg>
-                </button>
-            </>
-        )
-    }, [locked, handleLock, handleClose]
-    )
+    if (!panelInstance || !panelInstance.isOpen || !panelDefinition) return null;
 
     return (
         <div
@@ -162,10 +121,8 @@ const Panel: React.FC<PanelProps> = ({
         >
             {/* Top bar with title and actions */}
             <div className={CSS.Header}>
-                <span className={CSS.Title}>{title}</span>
-                <ActionGroup>
-                    {headerActions}
-                </ActionGroup>
+                <span className={CSS.Title}>{panelDefinition.title}</span>
+                <Action panelKey={panelKey} isLocked={isLocked} />
             </div>
 
             {/* Render resize handles */}
@@ -173,15 +130,8 @@ const Panel: React.FC<PanelProps> = ({
                 {handles}
             </div>
 
-            {/* Render tab elements if there are multiple tabs */}
-            {tabActions.length > 1 && (
-                <ActionGroup direction="vertical">
-                    {tabActions}
-                </ActionGroup>
-            )}
-
-            {/* Render current tab content */}
-            {currentTabContent}
+            {/* Render tabs and tab content */}
+            <Tab panelKey={panelKey} />
         </div>
     );
 };

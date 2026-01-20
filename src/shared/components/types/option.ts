@@ -10,6 +10,8 @@ export type OptionDefinition = {
 	category?: string;
 	/** Optional icon for the option (SVG element) */
 	icon?: ReactNode;
+	/** Whether the option should be hidden from the UI */
+	hidden?: boolean;
 } & {
 	/** Allows any additional properties to be added dynamically */
 	[key: string]: unknown;

@@ -4,8 +4,8 @@ import type { ElementDefinition } from '@/src/core/block/element/types';
 import type { StyleContext } from '@/src/core/block/style/types';
 import type { PageContext, DeviceInstance, OrientationInstance, PseudoInstance } from '@/src/core/layout/page/types';
 import type { BarInstance, BarActionInstance } from '@/src/core/layout/bar/types';
-import type { PanelInstance } from '@/src/core/layout/panel/types';
-import type { WorkbenchDefinition } from '@/src/core/layout/workbench/types';
+import type { PanelDefinition } from '@/src/core/layout/panel/types';
+import type { BenchDefinition } from '@/src/core/layout/workbench/types';
 
 /**
  * Helper to create a mock React element for testing.
@@ -125,7 +125,7 @@ export const mockBlockDefinition = (overrides?: Partial<BlockDefinition>): Block
 	defaultStyles: { all: { all: { all: {} } } },
 	defaultAttributes: {},
 	defaultContent: {},
-	render: () => null as any,
+	component: () => null as any,
 	...overrides,
 });
 
@@ -136,9 +136,9 @@ export const mockBlockDefinition = (overrides?: Partial<BlockDefinition>): Block
  */
 export const mockPageContext = (overrides?: Partial<PageContext>): PageContext => ({
 	store: {
-		selectedDeviceID: 'all',
-		selectedOrientationID: 'all',
-		selectedPseudoID: 'all',
+		selectedDeviceKey: 'all',
+		selectedOrientationKey: 'all',
+		selectedPseudoKey: 'all',
 		selectedWorkbenchKey: 'default',
 	},
 	registry: {
@@ -195,8 +195,8 @@ export const mockPageContext = (overrides?: Partial<PageContext>): PageContext =
 	},
 	constant: {
 		defaultDeviceID: 'all',
-		defaultOrientationID: 'all',
-		defaultPseudoID: 'all',
+		defaultOrientationKey: 'all',
+		defaultPseudoKey: 'all',
 		defaultWorkbenchKey: 'default',
 	},
 	...overrides,
@@ -270,37 +270,34 @@ export const mockPseudoInstance = (overrides?: Partial<PseudoInstance>): PseudoI
 });
 
 /**
- * Helper to create minimal PanelInstance for testing.
+ * Helper to create minimal Panel for testing.
  * Provides all required properties with sensible defaults.
- * Use this to avoid boilerplate when creating test panel instances.
+ * Use this to avoid boilerplate when creating test panels.
  */
-export const mockPanelInstance = (overrides?: Partial<PanelInstance>): PanelInstance => ({
-	id: 'panel-1',
+export const mockPanel = (overrides?: Partial<PanelDefinition>): PanelDefinition => ({
+	key: 'panel-1',
+	benchKey: 'test-workbench',
 	title: 'Test Panel',
 	order: 0,
 	icon: mockReactElement(),
-	workbenchKey: 'test-workbench',
 	initialPosition: { top: '0', left: '0' },
 	initialSize: { width: '300px', height: '400px', minWidth: 200, minHeight: 200 },
 	initialLocked: false,
 	initialOpen: true,
-	tabs: {},
-	isLocked: false,
-	isOpen: true,
 	...overrides,
 });
 
 /**
- * Helper to create minimal WorkbenchDefinition for testing.
+ * Helper to create minimal BenchDefinition for testing.
  * Provides all required properties with sensible defaults.
  * Use this to avoid boilerplate when creating test workbench instances.
  */
-export const mockWorkbenchInstance = (overrides?: Partial<WorkbenchDefinition>): WorkbenchDefinition => ({
+export const mockWorkbenchInstance = (overrides?: Partial<BenchDefinition>): BenchDefinition => ({
 	key: 'test-workbench',
 	title: 'Test Workbench',
 	icon: mockReactElement(),
 	order: 0,
-	render: () => null as any,
+	component: () => null as any,
 	...overrides,
 });
 

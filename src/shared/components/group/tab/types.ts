@@ -6,4 +6,8 @@ export type TabGroupProps = {
 	items: TabProps[];
 	/** Optional class name for custom styling */
 	className?: string;
+	/** Controlled value for selected tab index */
+	value?: string;
+	/** Callback when tab changes */
+	onChange?: (value: string) => void;
 };
