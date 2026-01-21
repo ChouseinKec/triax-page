@@ -1,5 +1,5 @@
 // Types
-import { BarDefinition } from '@/src/core/layout/bar/types';
+import { BarDefinition } from '@/core/layout/bar/types';
 
 /**
  * Container block definition.

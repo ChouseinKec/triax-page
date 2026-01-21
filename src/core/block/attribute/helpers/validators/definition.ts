@@ -1,9 +1,9 @@
 // Types
-import type { AttributeKey, AttributeSyntax, AttributeDescription, AttributeCategory, AttributeDefinition, AttributeValue } from '@/src/core/block/attribute/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { AttributeKey, AttributeSyntax, AttributeDescription, AttributeCategory, AttributeDefinition, AttributeValue } from '@/core/block/attribute/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateString, validateObject } from '@/src/shared/helpers';
+import { validateString, validateObject } from '@/shared/helpers';
 
 /**
  * Validates if the provided value is a valid AttributeKey.

@@ -1,21 +1,21 @@
 import React from "react";
 
 // Managers
-import { canBlockHaveAttribute } from "@/src/core/block/instance/managers/queries";
+import { canBlockHaveAttribute } from "@/core/block/instance/managers/queries";
 
 // Components
-import BlockAttributeValue from "@/src/config/layout/panel/tabs/attribute/value";
-import Property from "@/src/shared/components/layout/property/component";
-import PropertyActions from "@/src/config/layout/panel/tabs/attribute/action";
+import BlockAttributeValue from "@/config/layout/panel/tabs/attribute/value";
+import Property from "@/shared/components/layout/property/component";
+import PropertyActions from "@/config/layout/panel/tabs/attribute/action";
 
 // Types
-import type { RenderAttributeRowProps } from "@/src/config/layout/panel/tabs/attribute/factory/types";
+import type { RenderAttributeRowProps } from "@/config/layout/panel/tabs/attribute/factory/types";
 
 // Registry
-import { getRegisteredAttribute } from "@/src/core/block/attribute/registries";
+import { getRegisteredAttribute } from "@/core/block/attribute/registries";
 
 // Utilties
-import { devRender } from "@/src/shared/utilities/dev";
+import { devRender } from "@/shared/utilities/dev";
 
 /**
  * Renders a shared Property row for a given attribute key with name/description/actions wired.

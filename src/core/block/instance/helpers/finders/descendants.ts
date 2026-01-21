@@ -1,10 +1,10 @@
 // Types
-import type { BlockInstance, BlockID, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { FindResult } from '@/src/shared/types/result';
+import type { BlockInstance, BlockID, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { FindResult } from '@/shared/types/result';
 
 // Helpers
-import { pickBlockInstances } from '@/src/core/block/instance/helpers/pickers';
-import { findBlockLastChild } from '@/src/core/block/instance/helpers/finders/child';
+import { pickBlockInstances } from '@/core/block/instance/helpers/pickers';
+import { findBlockLastChild } from '@/core/block/instance/helpers/finders/child';
 
 /**
  * Find the last descendant of a block following the last-child chain.

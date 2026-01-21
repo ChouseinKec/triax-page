@@ -1,5 +1,5 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
+import type { OptionDefinition } from '@/shared/components/types/option';
 
 /** Props for link style value editor components.*/
 export type TokenLinkProps = {

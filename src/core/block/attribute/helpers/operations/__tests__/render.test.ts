@@ -1,6 +1,6 @@
 // Utilities
 import { renderBlockAttributes } from '../render';
-import { mockBlockAttributes } from '@/src/shared/helpers/mock';
+import { mockBlockAttributes } from '@/shared/helpers/mock';
 
 describe('renderBlockAttributes', () => {
 	it('renders empty attributes object', () => {

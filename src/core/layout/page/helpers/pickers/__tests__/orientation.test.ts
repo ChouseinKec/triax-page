@@ -1,9 +1,9 @@
 // Utilities
 import { pickOrientation } from '../orientation';
-import { mockOrientationInstance } from '@/src/shared/helpers/mock';
+import { mockOrientationInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { OrientationDefinitionRecord } from '@/src/core/layout/page/types';
+import type { OrientationDefinitionRecord } from '@/core/layout/page/types';
 
 describe('pickOrientation', () => {
 	const mockOrientation1 = mockOrientationInstance({

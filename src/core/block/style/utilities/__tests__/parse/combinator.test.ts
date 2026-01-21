@@ -1,4 +1,4 @@
-import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseComma, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence } from '@/src/core/block/style/utilities/parse/combinator';
+import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseComma, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseSequence } from '@/core/block/style/utilities/parse/combinator';
 
 	describe('hasDoubleBar', () => {
 		it.each([

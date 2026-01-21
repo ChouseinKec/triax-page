@@ -1,8 +1,8 @@
 // Type
-import type { TokenRaw, TokenTypeKey, TokenParam, TokenBase, TokenCanonical, TokenTypeDefinitionRecord, TokenDefinitionRecord } from '@/src/core/block/style/types';
+import type { TokenRaw, TokenTypeKey, TokenParam, TokenBase, TokenCanonical, TokenTypeDefinitionRecord, TokenDefinitionRecord } from '@/core/block/style/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Extracts the canonical type string from a CSS data type string.

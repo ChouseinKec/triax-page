@@ -8,8 +8,8 @@ import { TokenNumberProps } from "./types";
 import CSS from "./styles.module.scss";
 
 // Components
-import GenericInput from "@/src/shared/components/input/generic/component";
-import SelectDropdown from "@/src/shared/components/select/dropdown/component";
+import GenericInput from "@/shared/components/input/generic/component";
+import SelectDropdown from "@/shared/components/select/dropdown/component";
 
 /**
  * TokenNumber Component

@@ -1,10 +1,10 @@
 // Types
-import type { ViewDefinition, ViewKey, ViewTitle, ViewComponent } from '@/src/core/layout/viewport/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ViewDefinition, ViewKey, ViewTitle, ViewComponent } from '@/core/layout/viewport/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject } from '@/src/shared/helpers/validators';
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators/bench';
+import { validateString, validateObject } from '@/shared/helpers/validators';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators/bench';
 
 /**
  * Validates a viewport ID for viewport operations.

@@ -1,8 +1,8 @@
 // Stores
-import { useViewportStore } from '@/src/core/layout/viewport/state/store';
+import { useViewportStore } from '@/core/layout/viewport/state/store';
 
 // Types
-import type { ViewKey, DataKey, DataValue } from '@/src/core/layout/viewport/types';
+import type { ViewKey, DataKey, DataValue } from '@/core/layout/viewport/types';
 
 /**
  * Hook to set a state value for a specific view and state key.

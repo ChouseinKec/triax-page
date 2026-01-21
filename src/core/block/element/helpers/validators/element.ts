@@ -1,9 +1,9 @@
 // Types
-import type { ElementKey, ElementDefinition, ElementDescription, ElementAllowedAttributes, ElementForbiddenAncestors, ElementOrderedChildren, ElementUniqueChildren } from '@/src/core/block/element/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ElementKey, ElementDefinition, ElementDescription, ElementAllowedAttributes, ElementForbiddenAncestors, ElementOrderedChildren, ElementUniqueChildren } from '@/core/block/element/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateArray, validateObject } from '@/src/shared/helpers';
+import { validateString, validateArray, validateObject } from '@/shared/helpers';
 
 /**
  * Validates an element key.

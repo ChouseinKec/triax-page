@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
+import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
 
 // Default
-import { DefaultBlocks } from '@/src/state/block/defaults';
+import { DefaultBlocks } from '@/state/block/defaults';
 
 export interface BlockStoreProps {
 	selectedBlockID: BlockID | null;

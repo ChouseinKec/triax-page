@@ -1,10 +1,10 @@
 // Types
-import type { StyleKey, StyleSyntaxRaw, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/src/core/block/style/types/';
+import type { StyleKey, StyleSyntaxRaw, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/core/block/style/types/';
 
 // Utilities
-import { expandTokens, parseSyntax, getTokenCanonical, extractSeparators } from '@/src/core/block/style/utilities';
-import { splitAdvanced } from '@/src/shared/utilities/string';
-import { getColumnSets } from '@/src/shared/utilities/array';
+import { expandTokens, parseSyntax, getTokenCanonical, extractSeparators } from '@/core/block/style/utilities';
+import { splitAdvanced } from '@/shared/utilities/string';
+import { getColumnSets } from '@/shared/utilities/array';
 
 // Caches
 const syntaxParsedCache = new Map<StyleKey, StyleSyntaxParsed>();

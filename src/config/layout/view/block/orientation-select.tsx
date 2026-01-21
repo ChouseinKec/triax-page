@@ -2,10 +2,10 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { getOrientationDefinitions, getDefaultOrientationKey } from "@/src/core/layout/page/managers";
+import { getOrientationDefinitions, getDefaultOrientationKey } from "@/core/layout/page/managers";
 
 // Components
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
 
 
 interface Props {

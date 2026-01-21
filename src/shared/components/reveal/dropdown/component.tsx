@@ -8,10 +8,10 @@ import CSS from "./styles.module.scss";
 import type { DropdownRevealProps } from "./types";
 
 // Components
-import FloatReveal from "@/src/shared/components/reveal/float/component"
+import FloatReveal from "@/shared/components/reveal/float/component"
 
 // Hooks
-import useSize from "@/src/shared/hooks/interface/useSize";
+import useSize from "@/shared/hooks/interface/useSize";
 
 /**
  * DropdownReveal Component

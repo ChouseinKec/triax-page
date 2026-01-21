@@ -1,4 +1,4 @@
-import type { OperateResult } from '@/src/shared/types/result';
+import type { OperateResult } from '@/shared/types/result';
 
 /**
  * Resolves multiple shorthand style values into a single value.

@@ -5,8 +5,8 @@ import React, { Fragment, memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import BlockStyleSlot from "@/src/config/layout/panel/tabs/style/slot";
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
+import BlockStyleSlot from "@/config/layout/panel/tabs/style/slot";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
 
 // Types
 import type { BlockStyleSlotsProps } from "./types";

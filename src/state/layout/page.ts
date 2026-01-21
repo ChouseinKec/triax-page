@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
 // Types
-import type { DeviceKey } from '@/src/core/layout/page/types';
-import type { OrientationKey } from '@/src/core/layout/page/types';
-import type { PseudoKey } from '@/src/core/layout/page/types';
+import type { DeviceKey } from '@/core/layout/page/types';
+import type { OrientationKey } from '@/core/layout/page/types';
+import type { PseudoKey } from '@/core/layout/page/types';
 
 // Registry
-import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey } from '@/src/core/layout/page/registries';
+import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey } from '@/core/layout/page/registries';
 
 export type Selected = {
 	deviceKey: DeviceKey;

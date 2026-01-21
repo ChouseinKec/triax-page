@@ -1,8 +1,8 @@
 // // Utilities
-// import { isTokenKeyword, isTokenLength, isTokenInteger, isTokenNumber, isTokenFunction, isTokenColor, isTokenLink, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam, getTokenValue, getTokenValues, expandTokens } from '@/src/core/block/style/utilities/token';
+// import { isTokenKeyword, isTokenLength, isTokenInteger, isTokenNumber, isTokenFunction, isTokenColor, isTokenLink, getTokenType, getTokenCanonical, getTokenBase, getTokenRange, getTokenParam, getTokenValue, getTokenValues, expandTokens } from '@/core/block/style/utilities/token';
 
 // // Mock icons to avoid JSX in tests
-// jest.mock('@/src/core/block/style/constants/icon', () => ({
+// jest.mock('@/core/block/style/constants/icon', () => ({
 // 	STYLE_ICON_DEFINITIONS: {},
 // }));
 

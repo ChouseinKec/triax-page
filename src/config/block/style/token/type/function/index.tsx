@@ -1,11 +1,11 @@
 // Types
-import type { TokenTypeDefinition } from '@/src/core/block/style/types/token';
+import type { TokenTypeDefinition } from '@/core/block/style/types/token';
 
 // Utilities
-import { getValueType, getTokenType, getValueToken,getTokenCanonical, createOption } from '@/src/config/block/style/token/type/function/utilities';
+import { getValueType, getTokenType, getValueToken,getTokenCanonical, createOption } from '@/config/block/style/token/type/function/utilities';
 
 // Component
-import TokenFunction from '@/src/config/block/style/token/type/function/component';
+import TokenFunction from '@/config/block/style/token/type/function/component';
 
 export const FUNCTION_DEFINITION: TokenTypeDefinition = {
 	key: 'function',

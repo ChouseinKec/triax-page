@@ -5,11 +5,11 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedBlockID } from "@/src/core/block/instance/managers";
-import { canBlockHaveStyles } from "@/src/core/block/style/managers/";
+import { useSelectedBlockID } from "@/core/block/instance/managers";
+import { canBlockHaveStyles } from "@/core/block/style/managers/";
 
 // Components
-import TabGroup from "@/src/shared/components/group/tab/component";
+import TabGroup from "@/shared/components/group/tab/component";
 
 // Renderers
 import { renderDisplayTab } from "./tabs/display";

@@ -7,18 +7,18 @@ import CSS from "./styles.module.scss";
 import type { BlockStyleValue } from "./types";
 
 // Utilities
-import { splitAdvanced, joinAdvanced } from "@/src/shared/utilities/string";
-import { createOptionTable, getValueTokens, getTokenValues } from "@/src/core/block/style/utilities";
-import { mergeArrays } from "@/src/shared/utilities/array";
-import { devLog } from "@/src/shared/utilities/dev";
-import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/src/core/block/style/utilities/syntax';
+import { splitAdvanced, joinAdvanced } from "@/shared/utilities/string";
+import { createOptionTable, getValueTokens, getTokenValues } from "@/core/block/style/utilities";
+import { mergeArrays } from "@/shared/utilities/array";
+import { devLog } from "@/shared/utilities/dev";
+import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/core/block/style/utilities/syntax';
 
 // Components
-import BlockStyleSlots from "@/src/config/layout/panel/tabs/style/slots";
-import GenericInput from "@/src/shared/components/input/generic/component";
+import BlockStyleSlots from "@/config/layout/panel/tabs/style/slots";
+import GenericInput from "@/shared/components/input/generic/component";
 
 // Registry
-import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/src/core/block/style/registries";
+import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/core/block/style/registries";
 
 /**
  * BlockStyleValue Component

@@ -1,6 +1,6 @@
 // Types
-import type { BlockID, BlockInstance, BlockInstanceRecord, BlockAttributes, BlockContent } from '@/src/core/block/instance/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { BlockID, BlockInstance, BlockInstanceRecord, BlockAttributes, BlockContent } from '@/core/block/instance/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetch a set of block instances for the provided ids in order.

@@ -1,9 +1,9 @@
 // Types
-import type { UnitDefinition, UnitKey, UnitType, UnitDefault } from '@/src/core/block/style/types/';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { UnitDefinition, UnitKey, UnitType, UnitDefault } from '@/core/block/style/types/';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateObject, validateString } from '@/src/shared/helpers';
+import { validateObject, validateString } from '@/shared/helpers';
 
 /**
  * Validates a CSS data type token key.

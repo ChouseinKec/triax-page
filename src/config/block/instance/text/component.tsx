@@ -1,11 +1,11 @@
 import React, { useCallback, useRef, memo } from "react";
 
 // Types
-import type { BlockComponentProps } from '@/src/core/block/instance/types';
+import type { BlockComponentProps } from '@/core/block/instance/types';
 
 // Managers
-import { selectBlock } from '@/src/core/block/instance/managers';
-import { getBlockContent, setBlockContent } from '@/src/core/block/instance/managers';
+import { selectBlock } from '@/core/block/instance/managers';
+import { getBlockContent, setBlockContent } from '@/core/block/instance/managers';
 
 const BlockTextComponent: React.FC<BlockComponentProps> = ({ isSelected, instance }) => {
     const blockID = instance.id;

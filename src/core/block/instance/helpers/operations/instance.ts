@@ -1,6 +1,6 @@
 // Types
-import type { BlockDefinition, BlockID, BlockInstance, BlockStyles, BlockAttributes } from '@/src/core/block/instance/types';
-import type { OperateResult } from '@/src/shared/types/result';
+import type { BlockDefinition, BlockID, BlockInstance, BlockStyles, BlockAttributes } from '@/core/block/instance/types';
+import type { OperateResult } from '@/shared/types/result';
 
 /**
  * Compose the final styles for a block instance.

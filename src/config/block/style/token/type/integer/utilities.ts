@@ -1,10 +1,10 @@
 // Types
-import type { TokenOptionParams, TokenParam, TokenRaw, TokenCanonical, StyleValue } from '@/src/core/block/style/types';
-import type { OptionDefinition } from '@/src/shared/components/types/option';
+import type { TokenOptionParams, TokenParam, TokenRaw, TokenCanonical, StyleValue } from '@/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
 
 // Utilities
-import { extractBetween } from '@/src/shared/utilities/string';
-import { isValueInteger } from '@/src/shared/utilities/value';
+import { extractBetween } from '@/shared/utilities/string';
+import { isValueInteger } from '@/shared/utilities/value';
 
 /**
  * Checks if the input string is a valid CSS data integer (e.g., '<integer>' or '<integer [0,∞]>').

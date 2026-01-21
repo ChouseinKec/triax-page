@@ -1,6 +1,9 @@
+// Registry
+import { registerBenches, registerActions } from '@/core/layout/workbench/state/registry';
+
 import { BenchDefinitionLogic } from './logic';
 import { BenchDefinitionMain, ActionDefinitionMain } from './main';
 
-export const CoreBenches = [BenchDefinitionMain, BenchDefinitionLogic];
-
-export const CoreActions = [ActionDefinitionMain];
+// Register benches and actions directly
+registerBenches([BenchDefinitionMain, BenchDefinitionLogic]);
+registerActions([ActionDefinitionMain]);

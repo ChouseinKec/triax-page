@@ -1,6 +1,6 @@
 // Utilities
 import { validateOrientationKey, validateOrientationName, validateOrientationValue, validateOrientationDefinition } from '../orientation';
-import { mockOrientationInstance } from '@/src/shared/helpers/mock';
+import { mockOrientationInstance } from '@/shared/helpers/mock';
 
 describe('validateOrientationKey', () => {
 	it('accepts valid orientation ID', () => {

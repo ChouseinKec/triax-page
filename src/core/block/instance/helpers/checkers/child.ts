@@ -1,9 +1,9 @@
 // Types
-import type { BlockInstance } from '@/src/core/block/instance/types';
-import type { CheckResult } from '@/src/shared/types/result';
+import type { BlockInstance } from '@/core/block/instance/types';
+import type { CheckResult } from '@/shared/types/result';
 
 // Helpers
-import { findBlockChildIndex } from '@/src/core/block/instance/helpers/finders';
+import { findBlockChildIndex } from '@/core/block/instance/helpers/finders';
 
 /**
  * Check whether `sourceBlockInstance` is a direct child of

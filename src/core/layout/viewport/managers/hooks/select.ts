@@ -1,16 +1,16 @@
 // Stores
-import { useViewportStore } from '@/src/core/layout/viewport/state/store';
+import { useViewportStore } from '@/core/layout/viewport/state/store';
 
 // Types
-import type { ViewKey, ViewDefinition } from '@/src/core/layout/viewport/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { ViewKey, ViewDefinition } from '@/core/layout/viewport/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators';
 
 // Registry
-import { getRegisteredView } from '@/src/core/layout/viewport/state/registry';
+import { getRegisteredView } from '@/core/layout/viewport/state/registry';
 
 /**
  * Reactive hook to get the currently selected view key for a specific bench.

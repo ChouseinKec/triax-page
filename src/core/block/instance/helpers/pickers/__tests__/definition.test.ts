@@ -2,7 +2,7 @@
 import { pickBlockDefinition } from '../definition';
 
 // Mock data
-import { mockBlockDefinition } from '@/src/shared/helpers/mock';
+import { mockBlockDefinition } from '@/shared/helpers/mock';
 
 describe('pickBlockDefinition', () => {
 	it('returns definition when found', () => {

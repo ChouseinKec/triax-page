@@ -2,7 +2,7 @@
 import { findBlockMoveIntoIndex, findBlockMoveBeforeIndex, findBlockMoveAfterIndex } from '../move';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('findBlockMoveIntoIndex', () => {
 	it('returns not-found when source is already a child of target', () => {

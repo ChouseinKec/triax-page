@@ -1,12 +1,15 @@
 // Types
-import type { ViewDefinition, ViewDefinitionRecord, ViewKey } from '@/src/core/layout/viewport/types';
-import type { ActionDefinition, ActionDefinitionRecord, ActionKey } from '@/src/core/layout/viewport/types';
-import type { ValidateResult } from '@/src/shared/types/result';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { ViewDefinition, ViewDefinitionRecord, ViewKey } from '@/core/layout/viewport/types';
+import type { ActionDefinition, ActionDefinitionRecord, ActionKey } from '@/core/layout/viewport/types';
+import type { ValidateResult } from '@/shared/types/result';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Helpers
-import { validateViewDefinition } from '@/src/core/layout/viewport/helpers/validators';
-import { validateActionDefinition } from '@/src/core/layout/viewport/helpers/validators/action';
+import { validateViewDefinition } from '@/core/layout/viewport/helpers/validators';
+import { validateActionDefinition } from '@/core/layout/viewport/helpers/validators/action';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based viewport registry for managing viewport definitions
@@ -96,10 +99,18 @@ class ViewportRegistry {
 const viewportRegistry = new ViewportRegistry();
 
 // Export the registry instance methods
-export const registerView = (viewDefinition: ViewDefinition) => viewportRegistry.registerView(viewDefinition);
+export const registerView = (viewDefinition: ViewDefinition): void => {
+	const result = viewportRegistry.registerView(viewDefinition);
+	if (!result.valid) devLog.error(`[Registry → View]      ❌ Failed: ${viewDefinition.key} - ${result.message}`);
+};
+export const registerViews = (viewDefinitions: ViewDefinition[]) => viewDefinitions.forEach(registerView);
 export const getRegisteredViews = (benchKey?: BenchKey) => viewportRegistry.getRegisteredViews(benchKey);
 export const getRegisteredView = (viewKey: ViewKey) => viewportRegistry.getRegisteredView(viewKey);
 
-export const registerAction = (actionDefinition: ActionDefinition) => viewportRegistry.registerAction(actionDefinition);
+export const registerAction = (actionDefinition: ActionDefinition): void => {
+	const result = viewportRegistry.registerAction(actionDefinition);
+	if (!result.valid) devLog.error(`[Registry → Action]    ❌ Failed: ${actionDefinition.key} - ${result.message}`);
+};
+export const registerActions = (actionDefinitions: ActionDefinition[]) => actionDefinitions.forEach(registerAction);
 export const getRegisteredActions = (viewKey?: ViewKey) => viewportRegistry.getRegisteredActions(viewKey);
 export const getRegisteredAction = (actionKey: ActionKey) => viewportRegistry.getRegisteredAction(actionKey);

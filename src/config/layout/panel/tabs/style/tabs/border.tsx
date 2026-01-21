@@ -2,17 +2,17 @@
 import React, { useState } from "react";
 
 // Types
-import type { BlockID } from "@/src/core/block/instance/types";
-import type { Side, Corner } from "@/src/shared/components/select/position/types";
+import type { BlockID } from "@/core/block/instance/types";
+import type { Side, Corner } from "@/shared/components/select/position/types";
 
 // Components
-import GroupLayout from "@/src/shared/components/layout/group/component";
-import PositionSelect from "@/src/shared/components/select/position/component";
-import Property from "@/src/shared/components/layout/property/component";
+import GroupLayout from "@/shared/components/layout/group/component";
+import PositionSelect from "@/shared/components/select/position/component";
+import Property from "@/shared/components/layout/property/component";
 import { renderStyleRow } from "../factory";
 
 // Utilities
-import { generateStyleKey } from "@/src/core/block/style/utilities/key";
+import { generateStyleKey } from "@/core/block/style/utilities/key";
 //
 
 /**

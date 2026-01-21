@@ -9,7 +9,7 @@ import CSS from "./styles.module.scss";
 import type { FloatRevealProps } from "./types";
 
 // Hooks
-import usePosition from "@/src/shared/hooks/interface/usePosition";
+import usePosition from "@/shared/hooks/interface/usePosition";
 
 
 /**

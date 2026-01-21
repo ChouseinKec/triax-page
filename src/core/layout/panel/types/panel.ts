@@ -1,6 +1,6 @@
 // Types
 import type { ReactNode } from 'react';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 /**
  * Represents the position of the Panel on the screen.

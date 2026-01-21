@@ -1,14 +1,14 @@
 // Stores
-import { useWorkbenchStore } from '@/src/core/layout/workbench/state/store';
+import { useWorkbenchStore } from '@/core/layout/workbench/state/store';
 
 // Types
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators';
 
 /**
  * Sets the currently selected workbench by ID for page commands.

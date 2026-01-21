@@ -1,5 +1,5 @@
 // Types
-import type { StyleValueSeparator } from '@/src/core/block/style/types';
+import type { StyleValueSeparator } from '@/core/block/style/types';
 
 /**
  * Extracts separators from a single variation string.

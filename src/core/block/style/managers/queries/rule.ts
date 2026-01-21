@@ -1,20 +1,20 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { StyleKey } from '@/core/block/style/types';
 
 // Helpers
-import { pickBlockInstance, pickBlockDefinition } from '@/src/core/block/instance/helpers/pickers';
-import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { validateStyleKey } from '@/src/core/block/style/helpers';
+import { pickBlockInstance, pickBlockDefinition } from '@/core/block/instance/helpers/pickers';
+import { validateBlockID } from '@/core/block/instance/helpers/validators';
+import { validateStyleKey } from '@/core/block/style/helpers';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
 
 /**
  * Checks if a block type can have styles based on its allowedStyles property.

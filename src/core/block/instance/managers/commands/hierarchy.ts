@@ -1,24 +1,24 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { pickBlockInstance, pickBlockDefinition } from '@/src/core/block/instance/helpers/pickers';
-import { findBlockMoveBeforeIndex, findBlockMoveAfterIndex, findBlockMoveIntoIndex } from '@/src/core/block/instance/helpers/finders';
-import { moveBlock } from '@/src/core/block/instance/helpers/operations';
-import { canBlockMove } from '@/src/core/block/instance/helpers/checkers';
-import { fetchElementDefinition } from '@/src/core/block/element/helpers/fetchers';
+import { validateBlockID } from '@/core/block/instance/helpers/validators';
+import { pickBlockInstance, pickBlockDefinition } from '@/core/block/instance/helpers/pickers';
+import { findBlockMoveBeforeIndex, findBlockMoveAfterIndex, findBlockMoveIntoIndex } from '@/core/block/instance/helpers/finders';
+import { moveBlock } from '@/core/block/instance/helpers/operations';
+import { canBlockMove } from '@/core/block/instance/helpers/checkers';
+import { fetchElementDefinition } from '@/core/block/element/helpers/fetchers';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
+import type { BlockID } from '@/core/block/instance/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
-import { getRegisteredElements } from '@/src/core/block/element/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
+import { getRegisteredElements } from '@/core/block/element/registries';
 
 /**
  * Moves a block to be positioned after a target block in block CRUD operations.

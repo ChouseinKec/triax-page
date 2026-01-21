@@ -1,8 +1,8 @@
 // Types
-import type { TabDefinition } from '@/src/core/layout/panel/types';
+import type { TabDefinition } from '@/core/layout/panel/types';
 
 // Components
-import BlocksHierarchyRender from '@/src/config/layout/panel/tabs/hierarchy/render';
+import BlocksHierarchyRender from '@/config/layout/panel/tabs/hierarchy/render';
 
 export const TabDefinitionHierarchy: TabDefinition = {
 	key: 'hierarchy',

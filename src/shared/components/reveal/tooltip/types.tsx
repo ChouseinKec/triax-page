@@ -1,4 +1,4 @@
-import { Anchor } from "@/src/shared/components/reveal/float/types";
+import { Anchor } from "@/shared/components/reveal/float/types";
 
 /** Props for the TooltipReveal component */
 export interface TooltipRevealProps {

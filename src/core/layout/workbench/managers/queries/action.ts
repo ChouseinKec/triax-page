@@ -1,15 +1,15 @@
 // Types
-import type { BenchKey, ActionDefinition, ActionKey, BenchDefinition } from '@/src/core/layout/workbench/types/';
+import type { BenchKey, ActionDefinition, ActionKey, BenchDefinition } from '@/core/layout/workbench/types/';
 
 // Registry
-import { getRegisteredActions } from '@/src/core/layout/workbench/state/registry';
+import { getRegisteredActions } from '@/core/layout/workbench/state/registry';
 
 // Helpers
-import { pickActionDefinition } from '@/src/core/layout/workbench/helpers/pickers';
+import { pickActionDefinition } from '@/core/layout/workbench/helpers/pickers';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
-import { validateActionKey } from '@/src/core/layout/viewport/helpers/validators';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateActionKey } from '@/core/layout/viewport/helpers/validators';
 /**
  * Retrieves all registered action definitions for a specific bench.
  * @param benchKey - The key of the bench to retrieve actions for

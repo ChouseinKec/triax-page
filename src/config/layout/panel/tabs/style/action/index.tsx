@@ -5,10 +5,10 @@ import React, { memo } from "react";
 import type { PropertyActionsProps } from "./types";
 
 // Commands
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/src/core/block/style/managers';
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/style/managers';
 
 // Managers
-import { canBlockHaveStyle } from '@/src/core/block/style/managers';
+import { canBlockHaveStyle } from '@/core/block/style/managers';
 
 /**
  * PropertyActions Component

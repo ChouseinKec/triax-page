@@ -1,11 +1,11 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { DeviceDefinition, DeviceKey } from '@/src/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey } from '@/core/layout/page/types';
 
 // Registry
-import { getRegisteredDevice } from '@/src/core/layout/page/registries';
+import { getRegisteredDevice } from '@/core/layout/page/registries';
 
 /**
  * Reactive hook to get the currently selected device instance for page queries.

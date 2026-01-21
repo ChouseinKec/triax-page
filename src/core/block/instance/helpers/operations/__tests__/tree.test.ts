@@ -2,7 +2,7 @@
 import { detachBlockFromParent, attachBlockToParent, deleteBlockFromTree, addBlockToTree, cloneBlock, duplicateBlockInTree, overwriteBlockInTree } from '../tree';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('detachBlockFromParent', () => {
 	it('returns parent without detached child', () => {

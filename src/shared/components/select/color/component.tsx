@@ -9,7 +9,7 @@ import CSS from "./styles.module.scss";
 import type { ColorSelectProps } from "./types";
 
 // Hooks
-import { useDebouncedCallback } from "@/src/shared/hooks/utility/useCallback";
+import { useDebouncedCallback } from "@/shared/hooks/utility/useCallback";
 
 /**
  * ColorSelect Component

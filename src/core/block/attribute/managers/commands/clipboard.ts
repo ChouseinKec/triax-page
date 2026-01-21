@@ -1,16 +1,16 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
+import { validateBlockID } from '@/core/block/instance/helpers/validators';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
 
 // Types
-import type { BlockID, BlockAttributes } from '@/src/core/block/instance/types';
+import type { BlockID, BlockAttributes } from '@/core/block/instance/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Clipboard storage for copy/paste operations
 let attributesClipboard: BlockAttributes | null = null;

@@ -2,10 +2,10 @@
 import React from "react";
 
 // Types
-import type { BlockID } from "@/src/core/block/instance/types";
+import type { BlockID } from "@/core/block/instance/types";
 
 // Components
-import GroupLayout from "@/src/shared/components/layout/group/component";
+import GroupLayout from "@/shared/components/layout/group/component";
 import { renderStyleRow } from "../factory";
 
 /**

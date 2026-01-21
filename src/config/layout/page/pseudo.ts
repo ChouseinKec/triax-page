@@ -1,4 +1,5 @@
-import type { PseudoDefinition } from '@/src/core/layout/page/types';
+import type { PseudoDefinition } from '@/core/layout/page/types';
+import { registerPseudos } from '@/core/layout/page/registries';
 
 export const CorePseudos: PseudoDefinition[] = [
 	{ name: 'default', key: 'default', hidden: true },
@@ -12,3 +13,6 @@ export const CorePseudos: PseudoDefinition[] = [
 	{ name: 'link', key: 'link' },
 	{ name: 'target', key: 'target' },
 ] as const;
+
+// Register pseudos directly
+registerPseudos(CorePseudos);

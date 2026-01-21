@@ -1,6 +1,6 @@
 // Utilities
 import { validatePseudoKey, validatePseudoName, validatePseudoValue, validatePseudoDefinition } from '../pseudo';
-import { mockPseudoInstance } from '@/src/shared/helpers/mock';
+import { mockPseudoInstance } from '@/shared/helpers/mock';
 
 describe('validatePseudoKey', () => {
 	it('accepts valid pseudo ID', () => {

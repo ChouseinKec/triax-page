@@ -1,9 +1,9 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenOptionParams, StyleValue, TokenCanonical, TokenRaw } from '@/src/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { TokenOptionParams, StyleValue, TokenCanonical, TokenRaw } from '@/core/block/style/types';
 
 // Utilities
-import { isValueLink } from '@/src/shared/utilities/value';
+import { isValueLink } from '@/shared/utilities/value';
 
 /**
  * Matches if the input string is a link.

@@ -1,11 +1,11 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { DeviceDefinition, DeviceKey } from '@/src/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey } from '@/core/layout/page/types';
 
 // Registry
-import { getRegisteredDevices, getRegisteredDevice, getDefaultDeviceKey } from '@/src/core/layout/page/registries';
+import { getRegisteredDevices, getRegisteredDevice, getDefaultDeviceKey } from '@/core/layout/page/registries';
 
 /**
  * Gets the currently selected device ID from the page store for page queries.

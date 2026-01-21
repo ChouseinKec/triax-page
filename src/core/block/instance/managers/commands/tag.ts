@@ -1,15 +1,15 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { ElementKey } from '@/src/core/block/element/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { ElementKey } from '@/core/block/element/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockTag, validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers';
+import { validateBlockTag, validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers';
 
 /**
  * Sets the HTML tag for a specific block.

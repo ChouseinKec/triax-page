@@ -1,11 +1,11 @@
 // Types
-import type { TokenTypeDefinition } from '@/src/core/block/style/types/token';
+import type { TokenTypeDefinition } from '@/core/block/style/types/token';
 
 // Utilities
-import { getValueType, getTokenType, getValueToken, getTokenParam, createOption, getTokenCanonical } from '@/src/config/block/style/token/type/integer/utilities';
+import { getValueType, getTokenType, getValueToken, getTokenParam, createOption, getTokenCanonical } from '@/config/block/style/token/type/integer/utilities';
 
 // Component
-import TokenInteger from '@/src/config/block/style/token/type/integer/component';
+import TokenInteger from '@/config/block/style/token/type/integer/component';
 
 export const INTEGER_DEFINITION: TokenTypeDefinition = {
 	key: 'integer',

@@ -1,5 +1,5 @@
-import type { ActionDefinition, ActionDefinitionRecord, ActionKey } from '@/src/core/layout/workbench/types/action';
-import type { PickResult } from '@/src/shared/types/result';
+import type { ActionDefinition, ActionDefinitionRecord, ActionKey } from '@/core/layout/workbench/types/action';
+import type { PickResult } from '@/shared/types/result';
 
 export function pickActionDefinition(actionKey: ActionKey, registeredActions: ActionDefinitionRecord): PickResult<ActionDefinition> {
 	const definition = registeredActions[actionKey];

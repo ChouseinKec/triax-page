@@ -1,10 +1,10 @@
 // Types
-import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { OperateResult } from '@/src/shared/types/result';
+import type { BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { OperateResult } from '@/shared/types/result';
 
 // Helpers
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
-import { detachBlockFromParent, attachBlockToParent } from '@/src/core/block/instance/helpers/operations';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { detachBlockFromParent, attachBlockToParent } from '@/core/block/instance/helpers/operations';
 
 /**
  * Move a block instance to be a child of a new parent at the specified index.

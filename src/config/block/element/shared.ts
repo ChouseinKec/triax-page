@@ -1,5 +1,5 @@
-import type { AttributeKey } from '@/src/core/block/attribute/types';
-import type { ElementKey } from '@/src/core/block/element/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
+import type { ElementKey } from '@/core/block/element/types';
 
 // Core global attributes retained for basic elements
 export const BASE_GLOBAL_ATTRIBUTES: AttributeKey[] = [

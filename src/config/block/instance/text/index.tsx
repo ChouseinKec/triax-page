@@ -1,8 +1,8 @@
 // Components
-import BlockTextComponent from "@/src/config/block/instance/text/component";
+import BlockTextComponent from "@/config/block/instance/text/component";
 
 // Types
-import { BlockDefinition } from '@/src/core/block/instance/types';
+import { BlockDefinition } from '@/core/block/instance/types';
 
 const BlockTextDefinition: BlockDefinition = {
     type: "core-text",

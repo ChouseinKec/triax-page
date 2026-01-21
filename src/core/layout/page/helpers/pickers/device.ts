@@ -1,6 +1,6 @@
 // Types
-import type { DeviceKey, DeviceDefinition, DeviceRecord } from '@/src/core/layout/page/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { DeviceKey, DeviceDefinition, DeviceRecord } from '@/core/layout/page/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetches a device instance from the device registry by its ID.

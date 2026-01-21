@@ -1,3 +1,8 @@
+// Registry
+import { registerBars } from '@/core/layout/bar/registries';
+
 import WorkbenchActions from './workbench-actions';
 import MainSelectedActions from './block-actions';
-export const CoreBars = [WorkbenchActions, MainSelectedActions];
+
+// Register bars directly
+registerBars([WorkbenchActions, MainSelectedActions]);

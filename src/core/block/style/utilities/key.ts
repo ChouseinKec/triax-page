@@ -1,9 +1,9 @@
 // Types
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { Side, Corner } from '@/src/shared/components/select/position/types';
+import type { StyleKey } from '@/core/block/style/types';
+import type { Side, Corner } from '@/shared/components/select/position/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Generates a CSS property name based on the provided property, position, and optional suffix.

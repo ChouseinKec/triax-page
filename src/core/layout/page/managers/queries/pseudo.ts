@@ -1,11 +1,11 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { PseudoKey, PseudoDefinition } from '@/src/core/layout/page/types';
+import type { PseudoKey, PseudoDefinition } from '@/core/layout/page/types';
 
 // Registry
-import { getRegisteredPseudos, getRegisteredPseudo, getDefaultPseudoKey } from '@/src/core/layout/page/registries';
+import { getRegisteredPseudos, getRegisteredPseudo, getDefaultPseudoKey } from '@/core/layout/page/registries';
 
 /**
  * Gets the currently selected pseudo ID from the page store for page queries.

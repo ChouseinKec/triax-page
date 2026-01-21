@@ -1,24 +1,24 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { ElementKey } from '@/src/core/block/element/types';
-import type { AttributeKey } from '@/src/core/block/attribute/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { ElementKey } from '@/core/block/element/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Helpers
-import { pickBlockInstance, pickBlockDefinition } from '@/src/core/block/instance/helpers/pickers';
-import { validateBlockTag, validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { validateAttributeKey } from '@/src/core/block/attribute/helpers';
-import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/src/core/block/instance/helpers/checkers';
-import { fetchElementDefinition } from '@/src/core/block/element/helpers/fetchers';
+import { pickBlockInstance, pickBlockDefinition } from '@/core/block/instance/helpers/pickers';
+import { validateBlockTag, validateBlockID } from '@/core/block/instance/helpers/validators';
+import { validateAttributeKey } from '@/core/block/attribute/helpers';
+import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/core/block/instance/helpers/checkers';
+import { fetchElementDefinition } from '@/core/block/element/helpers/fetchers';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
-import { getRegisteredElements } from '@/src/core/block/element/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
+import { getRegisteredElements } from '@/core/block/element/registries';
 
 /**
  * Checks if a child block type is permitted within a parent block type.

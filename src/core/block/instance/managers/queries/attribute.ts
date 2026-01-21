@@ -1,15 +1,15 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
+import type { BlockID } from '@/core/block/instance/types';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helpers';
-import { pickBlockAttributes, renderBlockAttributes } from '@/src/core/block/attribute/helpers/';
+import { validateBlockID } from '@/core/block/instance/helpers';
+import { pickBlockAttributes, renderBlockAttributes } from '@/core/block/attribute/helpers/';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
  * Reactive hook to get rendered HTML attributes for a block in block rendering operations.

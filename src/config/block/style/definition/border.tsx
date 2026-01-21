@@ -1,4 +1,4 @@
-import type { StyleDefinition } from "@/src/core/block/style/types";
+import type { StyleDefinition } from "@/core/block/style/types";
 
 export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{

@@ -2,10 +2,10 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { getPseudoDefinitions, getDefaultPseudoKey } from "@/src/core/layout/page/managers";
+import { getPseudoDefinitions, getDefaultPseudoKey } from "@/core/layout/page/managers";
 
 // Components
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
 
 interface Props {
     value: string;

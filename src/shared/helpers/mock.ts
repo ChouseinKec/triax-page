@@ -1,11 +1,11 @@
 // Types
-import type { BlockInstance, BlockDefinition, BlockStyles, BlockAttributes } from '@/src/core/block/instance/types';
-import type { ElementDefinition } from '@/src/core/block/element/types';
-import type { StyleContext } from '@/src/core/block/style/types';
-import type { PageContext, DeviceInstance, OrientationInstance, PseudoInstance } from '@/src/core/layout/page/types';
-import type { BarInstance, BarActionInstance } from '@/src/core/layout/bar/types';
-import type { PanelDefinition } from '@/src/core/layout/panel/types';
-import type { BenchDefinition } from '@/src/core/layout/workbench/types';
+import type { BlockInstance, BlockDefinition, BlockStyles, BlockAttributes } from '@/core/block/instance/types';
+import type { ElementDefinition } from '@/core/block/element/types';
+import type { StyleContext } from '@/core/block/style/types';
+import type { PageContext, DeviceInstance, OrientationInstance, PseudoInstance } from '@/core/layout/page/types';
+import type { BarInstance, BarActionInstance } from '@/core/layout/bar/types';
+import type { PanelDefinition } from '@/core/layout/panel/types';
+import type { BenchDefinition } from '@/core/layout/workbench/types';
 
 /**
  * Helper to create a mock React element for testing.

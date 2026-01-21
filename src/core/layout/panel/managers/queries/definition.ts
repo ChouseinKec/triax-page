@@ -1,15 +1,15 @@
 // Types
-import type { PanelKey, PanelDefinition } from '@/src/core/layout/panel/types/';
-import type { BenchKey } from '@/src/core/layout/workbench/types/';
+import type { PanelKey, PanelDefinition } from '@/core/layout/panel/types/';
+import type { BenchKey } from '@/core/layout/workbench/types/';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validatePanelKey, pickPanelDefinition } from '@/src/core/layout/panel/helpers';
+import { validatePanelKey, pickPanelDefinition } from '@/core/layout/panel/helpers';
 
 // Registry
-import { getRegisteredPanels } from '@/src/core/layout/panel/registries';
+import { getRegisteredPanels } from '@/core/layout/panel/registries';
 
 export function getPanelDefinitions(benchKey?: BenchKey): PanelDefinition[] {
 	return Object.values(getRegisteredPanels(benchKey));

@@ -1,14 +1,14 @@
 // Types
-import type { PanelKey } from '@/src/core/layout/panel/types';
+import type { PanelKey } from '@/core/layout/panel/types';
 
 // Stores
-import { usePanelStore } from '@/src/core/layout/panel/store';
+import { usePanelStore } from '@/core/layout/panel/store';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validatePanelKey } from '@/src/core/layout/panel/helpers';
+import { validatePanelKey } from '@/core/layout/panel/helpers';
 
 /**
  * Gets the selected tab for a panel.

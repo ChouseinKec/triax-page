@@ -1,16 +1,16 @@
 // Stores
-import { useBarStore } from '@/src/core/layout/bar/state/store';
+import { useBarStore } from '@/core/layout/bar/state/store';
 
 // Types
-import type { BarInstance } from '@/src/core/layout/bar/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BarInstance } from '@/core/layout/bar/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers';
-import { pickBarsByWorkbench } from '@/src/core/layout/bar/helpers/pickers';
+import { validateBenchKey } from '@/core/layout/workbench/helpers';
+import { pickBarsByWorkbench } from '@/core/layout/bar/helpers/pickers';
 
 /**
  * Gets all bar instances filtered by workbench ID for layout queries.

@@ -2,13 +2,13 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedBenchKey, setSelectedWorkbenchKey } from "@/src/core/layout/workbench/managers";
+import { useSelectedBenchKey, setSelectedWorkbenchKey } from "@/core/layout/workbench/managers";
 
 // Components
-import RadioSelect from "@/src/shared/components/select/radio/component";
+import RadioSelect from "@/shared/components/select/radio/component";
 
 // Registry
-import { getRegisteredBenches } from "@/src/core/layout/workbench/state/registry";
+import { getRegisteredBenches } from "@/core/layout/workbench/state/registry";
 
 /**
  * BenchSelect Component

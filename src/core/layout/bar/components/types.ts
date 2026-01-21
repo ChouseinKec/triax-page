@@ -1,5 +1,5 @@
 // Types
-import type { BarPosition, BarTitle, BarSize, BarID } from '@/src/core/layout/bar/types';
+import type { BarPosition, BarTitle, BarSize, BarID } from '@/core/layout/bar/types';
 
 /**
  * Props for the BarEditor component.

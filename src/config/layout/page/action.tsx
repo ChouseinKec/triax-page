@@ -1,5 +1,6 @@
 // Types
-import { ActionDefinition } from "@/src/core/layout/page/types";
+import { ActionDefinition } from "@/core/layout/page/types";
+import { registerActions } from '@/core/layout/page/registries';
 
 
 /**
@@ -7,3 +8,6 @@ import { ActionDefinition } from "@/src/core/layout/page/types";
  * Defines the action for selecting workbenches in the page editor.
  */
 export const CoreActions: ActionDefinition[] = [];
+
+// Register actions directly
+registerActions(CoreActions);

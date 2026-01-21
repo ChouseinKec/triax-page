@@ -1,17 +1,17 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { OrientationKey } from '@/src/core/layout/page/types';
+import type { OrientationKey } from '@/core/layout/page/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateOrientationKey } from '@/src/core/layout/page/helpers/validators';
+import { validateOrientationKey } from '@/core/layout/page/helpers/validators';
 
 // Managers
-import { getDefaultOrientationKey } from '@/src/core/layout/page/managers/queries';
+import { getDefaultOrientationKey } from '@/core/layout/page/managers/queries';
 
 /**
  * Sets the currently selected orientation by ID for page commands.

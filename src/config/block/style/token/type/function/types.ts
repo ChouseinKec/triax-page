@@ -1,4 +1,4 @@
-import { OptionDefinition } from "@/src/shared/components/types/option";
+import { OptionDefinition } from "@/shared/components/types/option";
 
 /** Props for function style value editor components. */
 export type FunctionValueProps = {

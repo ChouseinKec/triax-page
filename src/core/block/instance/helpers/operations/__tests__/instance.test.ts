@@ -2,7 +2,7 @@
 import { createBlockStyles, createBlockAttributes, createBlock, detachBlockFromContentIDs, attachBlockToContentIDs, updateBlockParentID } from '../instance';
 
 // Mock data
-import { mockBlockDefinition, mockBlockInstance, mockBlockStyles } from '@/src/shared/helpers/mock';
+import { mockBlockDefinition, mockBlockInstance, mockBlockStyles } from '@/shared/helpers/mock';
 
 describe('createBlockStyles', () => {
 	it('returns defaults when no styles provided', () => {

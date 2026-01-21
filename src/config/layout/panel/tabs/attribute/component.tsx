@@ -5,10 +5,10 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedBlockID, canBlockHaveAttributes } from "@/src/core/block/instance/managers";
+import { useSelectedBlockID, canBlockHaveAttributes } from "@/core/block/instance/managers";
 
 // Components
-import TabGroup from "@/src/shared/components/group/tab/component";
+import TabGroup from "@/shared/components/group/tab/component";
 
 // Renderers
 import { renderGlobalTab } from "./tabs/global";

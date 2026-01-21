@@ -1,7 +1,7 @@
 // Types
-import type { BarID, BarInstance, BarRecord } from '@/src/core/layout/bar/types';
-import type { PickResult } from '@/src/shared/types/result';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BarID, BarInstance, BarRecord } from '@/core/layout/bar/types';
+import type { PickResult } from '@/shared/types/result';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 /**
  * Fetches a bar instance from the layout store by its ID.

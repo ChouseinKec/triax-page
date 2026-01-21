@@ -1,14 +1,14 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID, BlockContent } from '@/src/core/block/instance/types';
+import type { BlockID, BlockContent } from '@/core/block/instance/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { pickBlockInstance, validateBlockID } from '@/src/core/block/instance/helpers';
+import { pickBlockInstance, validateBlockID } from '@/core/block/instance/helpers';
 
 /**
  * Sets the content data for a specific block.

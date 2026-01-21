@@ -1,5 +1,5 @@
 import { validateTabKey, validateTabTitle, validateTabComponent, validateTabIcon, validateTabOrder, validateTabDefinition } from '../tab';
-import { mockReactElement } from '@/src/shared/helpers/mock';
+import { mockReactElement } from '@/shared/helpers/mock';
 
 // Mock React component for testing
 const mockComponent = () => null;

@@ -8,12 +8,12 @@ import type { TokenLengthProps } from "./types";
 import CSS from "./styles.module.scss";
 
 // Components
-import GenericInput from "@/src/shared/components/input/generic/component";
-import SelectDropdown from "@/src/shared/components/select/dropdown/component";
+import GenericInput from "@/shared/components/input/generic/component";
+import SelectDropdown from "@/shared/components/select/dropdown/component";
 
 // Utilities
-import { extractLengthUnit, extractLengthDefaults, extractLengthRange, extractTokenLengths } from "@/src/config/block/style/token/type/length/utilities";
-import { devLog } from "@/src/shared/utilities/dev";
+import { extractLengthUnit, extractLengthDefaults, extractLengthRange, extractTokenLengths } from "@/config/block/style/token/type/length/utilities";
+import { devLog } from "@/shared/utilities/dev";
 
 /**
  * TokenLength Component

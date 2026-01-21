@@ -3,7 +3,7 @@
 import { useState, useEffect, lazy } from "react";
 
 // Initialization
-import { init } from "@/src/core/init";
+import { initStores } from "@/init";
 
 // Styles
 import CSS from "./page.module.scss";
@@ -12,22 +12,18 @@ import CSS from "./page.module.scss";
 import { TriaxLoadingSpinner } from "./triax-loading-spinner";
 
 // Utilities
-import { devLog } from "@/src/shared/utilities/dev";
+import { devLog } from "@/shared/utilities/dev";
 
 // Lazy load Page to prevent import cascade
-const Page = lazy(() => import("@/src/core/layout/page/components/editor"));
+const Page = lazy(() => import("@/core/layout/page/components/editor"));
 
 export default function Home() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    init.run()
-      .then((result) => {
-        if (result.valid) {
-          setIsReady(true);
-        } else {
-          devLog.error('Initialization error:', result.message || 'Unknown initialization error');
-        }
+    initStores()
+      .then(() => {
+        setIsReady(true);
       })
       .catch((error) => {
         devLog.error('Initialization error:', error);

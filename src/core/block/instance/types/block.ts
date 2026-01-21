@@ -1,12 +1,12 @@
 import type { ComponentType, ReactElement } from 'react';
 
 // Types
-import type { StyleKey, StyleValue } from '@/src/core/block/style/types';
-import type { AttributeKey } from '@/src/core/block/attribute/types';
-import type { ElementKey } from '@/src/core/block/element/types';
-import type { DeviceKey } from '@/src/core/layout/page/types';
-import type { OrientationKey } from '@/src/core/layout/page/types';
-import type { PseudoKey } from '@/src/core/layout/page/types';
+import type { StyleKey, StyleValue } from '@/core/block/style/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
+import type { ElementKey } from '@/core/block/element/types';
+import type { DeviceKey } from '@/core/layout/page/types';
+import type { OrientationKey } from '@/core/layout/page/types';
+import type { PseudoKey } from '@/core/layout/page/types';
 
 /**
  * Unique identifier for a block instance

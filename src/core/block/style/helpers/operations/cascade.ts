@@ -1,12 +1,12 @@
 // Types
-import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleKey, StyleRecord, StyleValue, StyleDefinition, StyleDefinitionRecord } from '@/src/core/block/style/types';
-import type { DeviceKey, PseudoKey, OrientationKey } from '@/src/core/layout/page/types';
-import type { OperateResult } from '@/src/shared/types/result';
+import type { BlockStyles } from '@/core/block/instance/types';
+import type { StyleKey, StyleRecord, StyleValue, StyleDefinition, StyleDefinitionRecord } from '@/core/block/style/types';
+import type { DeviceKey, PseudoKey, OrientationKey } from '@/core/layout/page/types';
+import type { OperateResult } from '@/shared/types/result';
 
 // Helpers
-import { resolveStyleLonghand } from '@/src/core/block/style/helpers/';
-import { collectBlockStyleKeys, generateCascadePaths, pickStyleLonghand, pickStyleDefinition } from '@/src/core/block/style/helpers';
+import { resolveStyleLonghand } from '@/core/block/style/helpers/';
+import { collectBlockStyleKeys, generateCascadePaths, pickStyleLonghand, pickStyleDefinition } from '@/core/block/style/helpers';
 /**
  * Helper function to find a style value in a list of cascade paths.
  * Iterates through paths and returns the first non-empty value found.

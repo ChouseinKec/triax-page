@@ -1,5 +1,5 @@
 // Types
-import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/core/block/style/types/';
 
 // Utilities
 import { MAX_MULTIPLIER_DEPTH } from './parse';

@@ -1,8 +1,8 @@
 // Utilities
-import { extractSeparator, extractSeparators } from '@/src/core/block/style/utilities/separator';
+import { extractSeparator, extractSeparators } from '@/core/block/style/utilities/separator';
 
 // Mock icons to avoid JSX in tests
-jest.mock('@/src/core/block/style/constants/icon', () => ({
+jest.mock('@/core/block/style/constants/icon', () => ({
 	STYLE_ICON_DEFINITIONS: {},
 }));
 

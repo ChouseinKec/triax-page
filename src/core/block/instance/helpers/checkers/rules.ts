@@ -1,10 +1,10 @@
 // Types
-import type { BlockDefinition, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { ElementKey, ElementDefinition } from '@/src/core/block/element/types';
-import type { CheckResult } from '@/src/shared/types/result';
+import type { BlockDefinition, BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { ElementKey, ElementDefinition } from '@/core/block/element/types';
+import type { CheckResult } from '@/shared/types/result';
 
 // Helpers
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
 
 /**
  * Check whether the parent block definition allows a child with the specified element tag.

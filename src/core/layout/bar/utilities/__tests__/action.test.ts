@@ -1,5 +1,5 @@
 // Utilities
-import { isBarActionIDValid, isBarActionTitleValid, isBarActionOrderValid, isBarActionRenderValid, isBarActionInstanceValid } from '@/src/core/layout/bar/utilities/action';
+import { isBarActionIDValid, isBarActionTitleValid, isBarActionOrderValid, isBarActionRenderValid, isBarActionInstanceValid } from '@/core/layout/bar/utilities/action';
 
 // Action ID validation: non-empty string checks
 describe('isBarActionIDValid', () => {

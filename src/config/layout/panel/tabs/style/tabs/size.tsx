@@ -2,21 +2,21 @@
 import React, { useState } from "react";
 
 // Types
-import type { BlockID } from "@/src/core/block/instance/types";
-import type { StyleKey } from "@/src/core/block/style/types";
-import type { Side } from "@/src/shared/components/select/position/types";
+import type { BlockID } from "@/core/block/instance/types";
+import type { StyleKey } from "@/core/block/style/types";
+import type { Side } from "@/shared/components/select/position/types";
 
 // Components
-import GroupLayout from "@/src/shared/components/layout/group/component";
-import PositionSelect from "@/src/shared/components/select/position/component";
-import Property from "@/src/shared/components/layout/property/component";
+import GroupLayout from "@/shared/components/layout/group/component";
+import PositionSelect from "@/shared/components/select/position/component";
+import Property from "@/shared/components/layout/property/component";
 import { renderStyleRow } from "../factory";
 
 // Utilities
-import { generateStyleKey } from "@/src/core/block/style/utilities";
+import { generateStyleKey } from "@/core/block/style/utilities";
 
 // Managers
-import { useBlockStyle } from "@/src/core/block/style/managers";
+import { useBlockStyle } from "@/core/block/style/managers";
 
 /**
  * Renders the Size & Position tab content

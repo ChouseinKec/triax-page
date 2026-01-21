@@ -1,6 +1,6 @@
 // Types
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { BlockID } from '@/src/core/block/instance/types';
+import type { StyleKey } from '@/core/block/style/types';
+import type { BlockID } from '@/core/block/instance/types';
 import type { CSSProperties } from 'react';
 
 export type RenderStyleRowOptions = {

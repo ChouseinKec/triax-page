@@ -1,10 +1,10 @@
 // Types
-import type { ActionDefinition, BenchKey } from '@/src/core/layout/workbench/types';
+import type { ActionDefinition, BenchKey } from '@/core/layout/workbench/types';
 import type { ComponentType } from 'react';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject, validateInteger, validateFunction } from '@/src/shared/helpers/validators';
+import { validateString, validateObject, validateInteger, validateFunction } from '@/shared/helpers/validators';
 import { validateBenchKey } from './bench';
 
 /**

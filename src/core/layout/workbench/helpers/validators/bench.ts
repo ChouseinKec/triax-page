@@ -1,9 +1,9 @@
 // Types
-import type { BenchDefinition, BenchKey, BenchIcon, BenchOrder, BenchName, BenchComponent } from '@/src/core/layout/workbench/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BenchDefinition, BenchKey, BenchIcon, BenchOrder, BenchName, BenchComponent } from '@/core/layout/workbench/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateInteger, validateElement, validateObject } from '@/src/shared/helpers/validators';
+import { validateString, validateInteger, validateElement, validateObject } from '@/shared/helpers/validators';
 
 /**
  * Validates a workbench ID for workbench operations.

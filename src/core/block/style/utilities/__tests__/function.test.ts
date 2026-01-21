@@ -1,11 +1,11 @@
 // // Types
-// import type { OptionDefinition } from '@/src/shared/components/types/option';
+// import type { OptionDefinition } from '@/shared/components/types/option';
 
 // // Utilities
-// import { extractFunctionName, extractFunctionArgs, extractFunctionValue, filterFunctionOptions, matchFunctionOption } from '@/src/core/block/style/utilities/function';
+// import { extractFunctionName, extractFunctionArgs, extractFunctionValue, filterFunctionOptions, matchFunctionOption } from '@/core/block/style/utilities/function';
 
 // // Mock icons to avoid JSX in tests
-// jest.mock('@/src/core/block/style/constants/icon', () => ({
+// jest.mock('@/core/block/style/constants/icon', () => ({
 // 	STYLE_ICON_DEFINITIONS: {},
 // }));
 

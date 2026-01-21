@@ -1,5 +1,5 @@
 import { validateBarActionID, validateBarActionTitle, validateBarActionOrder, validateBarActionRender, validateBarActionInstance } from '../action';
-import { mockBarActionInstance } from '@/src/shared/helpers/mock';
+import { mockBarActionInstance } from '@/shared/helpers/mock';
 
 describe('validateBarActionID', () => {
 	it('accepts string id', () => {

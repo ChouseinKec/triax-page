@@ -1,25 +1,25 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { DeviceKey, OrientationKey, PseudoKey } from '@/src/core/layout/page/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { StyleKey } from '@/core/block/style/types';
+import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 // Helpers
-import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers/';
-import { validateStyleKey, cascadeBlockStyle, pickBlockStyles, renderBlockStyles, pickStyleDefinition } from '@/src/core/block/style/helpers';
-import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/src/core/layout/page/helpers';
+import { validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers/';
+import { validateStyleKey, cascadeBlockStyle, pickBlockStyles, renderBlockStyles, pickStyleDefinition } from '@/core/block/style/helpers';
+import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/core/layout/page/helpers';
 
 // Managers
-import { getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/src/core/layout/page/managers/queries';
-import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/src/core/layout/page/managers/';
+import { getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
+import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/core/layout/page/managers/';
 
 // Registry
-import { getRegisteredStyles } from '@/src/core/block/style/registries';
+import { getRegisteredStyles } from '@/core/block/style/registries';
 
 /**
  * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.

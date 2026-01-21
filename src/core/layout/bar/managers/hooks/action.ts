@@ -1,17 +1,17 @@
 // Stores
-import { useBarStore } from '@/src/core/layout/bar/state/store';
+import { useBarStore } from '@/core/layout/bar/state/store';
 
 // React
 import { useMemo } from 'react';
 
 // Types
-import type { BarID, BarActionInstance } from '@/src/core/layout/bar/types';
+import type { BarID, BarActionInstance } from '@/core/layout/bar/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBarID } from '@/src/core/layout/bar/helpers/validators';
+import { validateBarID } from '@/core/layout/bar/helpers/validators';
 
 /**
  * Reactive hook to get all action instances for a specific bar in layout queries.

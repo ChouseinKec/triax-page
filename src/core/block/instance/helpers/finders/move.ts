@@ -1,9 +1,9 @@
 // Types
-import type { BlockInstance } from '@/src/core/block/instance/types';
-import type { FindResult } from '@/src/shared/types/result';
+import type { BlockInstance } from '@/core/block/instance/types';
+import type { FindResult } from '@/shared/types/result';
 
 // Helpers
-import { findBlockChildIndex } from '@/src/core/block/instance/helpers/finders/child';
+import { findBlockChildIndex } from '@/core/block/instance/helpers/finders/child';
 
 /**
  * Compute the index to use when moving `sourceBlockInstance` *into* the

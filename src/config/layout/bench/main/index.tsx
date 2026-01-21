@@ -1,9 +1,9 @@
 // Types
-import type { BenchDefinition, ActionDefinition } from '@/src/core/layout/workbench/types';
+import type { BenchDefinition, ActionDefinition } from '@/core/layout/workbench/types';
 
 // Components
-import BenchComponentMain from "@/src/config/layout/bench/main/component"
-import PanelSelect from "@/src/config/layout/bench/main/action";
+import BenchComponentMain from "@/config/layout/bench/main/component"
+import PanelSelect from "@/config/layout/bench/main/action";
 
 export const BenchDefinitionMain: BenchDefinition = {
     key: 'main',

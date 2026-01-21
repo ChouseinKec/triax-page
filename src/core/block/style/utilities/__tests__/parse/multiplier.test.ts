@@ -1,5 +1,5 @@
-import { duplicateToken, hasMultiplier, parseMultiplierQuestion, parseMultiplierPlus, parseMultiplierStar, parseMultiplier } from '@/src/core/block/style/utilities/parse/multiplier';
-import { MAX_MULTIPLIER_DEPTH } from '@/src/core/block/style/utilities/parse/parse';
+import { duplicateToken, hasMultiplier, parseMultiplierQuestion, parseMultiplierPlus, parseMultiplierStar, parseMultiplier } from '@/core/block/style/utilities/parse/multiplier';
+import { MAX_MULTIPLIER_DEPTH } from '@/core/block/style/utilities/parse/parse';
 
 describe('duplicateToken', () => {
 	it('returns repetitions up to depth', () => {

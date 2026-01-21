@@ -2,7 +2,7 @@
 import { validate, pick, find, collect, check, operate, ResultPipeline } from '../result';
 
 // Types
-import type { ValidateResult, PickResult, FindResult, CollectResult, CheckResult, OperateResult } from '@/src/shared/types/result';
+import type { ValidateResult, PickResult, FindResult, CollectResult, CheckResult, OperateResult } from '@/shared/types/result';
 
 describe('validate', () => {
 	// Validates single successful result

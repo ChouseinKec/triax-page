@@ -8,10 +8,10 @@ import CSS from "./styles.module.scss";
 import type { TooltipRevealProps } from "./types";
 
 // Components
-import FloatReveal from "@/src/shared/components/reveal/float/component";
+import FloatReveal from "@/shared/components/reveal/float/component";
 
 // Hooks
-import useHover from "@/src/shared/hooks/interface/useHover";
+import useHover from "@/shared/hooks/interface/useHover";
 
 /**
  * TooltipReveal Component

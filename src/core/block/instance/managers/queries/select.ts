@@ -1,8 +1,8 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
+import type { BlockID } from '@/core/block/instance/types';
 
 /**
  * Gets the currently selected block ID from the store.

@@ -2,11 +2,11 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { getDeviceDefinitions } from "@/src/core/layout/page/managers";
-import { useData, setData } from "@/src/core/layout/viewport/managers";
+import { getDeviceDefinitions } from "@/core/layout/page/managers";
+import { useData, setData } from "@/core/layout/viewport/managers";
 
 // Components
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
 
 
 

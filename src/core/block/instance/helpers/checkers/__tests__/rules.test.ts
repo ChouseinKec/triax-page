@@ -2,7 +2,7 @@
 import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '../rules';
 
 // Mock data
-import { mockBlockDefinition, mockElementDefinition, mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockDefinition, mockElementDefinition, mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('isBlockChildAllowed', () => {
 	it('returns true with no restrictions', () => {

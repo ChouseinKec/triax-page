@@ -8,8 +8,8 @@ import CSS from "./styles.module.scss";
 import { TokenKeywordProps } from "./types";
 
 // Components
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import RadioSelect from "@/src/shared/components/select/radio/component";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
+import RadioSelect from "@/shared/components/select/radio/component";
 
 
 /**

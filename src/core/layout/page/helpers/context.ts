@@ -1,18 +1,18 @@
 // Types
 import type { PageContext } from 'src/core/layout/page/types';
-import type { ContextResult } from '@/src/shared/types/result';
+import type { ContextResult } from '@/shared/types/result';
 
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
-import { useWorkbenchStore } from '@/src/core/layout/workbench/state/store';
+import { usePageStore } from '@/state/layout/page';
+import { useWorkbenchStore } from '@/core/layout/workbench/state/store';
 
 // Managers
-import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/src/core/layout/page/managers/';
-import { getDeviceDefinitions, getOrientationDefinitions, getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/src/core/layout/page/managers/queries';
-import { useSelectedBenchKey } from '@/src/core/layout/workbench/managers/';
+import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/core/layout/page/managers/';
+import { getDeviceDefinitions, getOrientationDefinitions, getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
+import { useSelectedBenchKey } from '@/core/layout/workbench/managers/';
 
 // Registry
-import { getRegisteredBenches, getDefaultBenchKey } from '@/src/core/layout/workbench/state/registry';
+import { getRegisteredBenches, getDefaultBenchKey } from '@/core/layout/workbench/state/registry';
 
 /**
  * Fetches the registries and constants for page context.

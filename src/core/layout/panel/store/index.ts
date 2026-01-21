@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import type { PanelInstance, PanelInstanceRecord, PanelKey, TabKey } from '@/src/core/layout/panel/types';
+import type { PanelInstance, PanelInstanceRecord, PanelKey, TabKey } from '@/core/layout/panel/types';
 
 // Registry
-import { getRegisteredPanels, getRegisteredTabs } from '@/src/core/layout/panel/registries';
+import { getRegisteredPanels, getRegisteredTabs } from '@/core/layout/panel/registries';
 
 export type PanelStore = {
 	allPanels: PanelInstanceRecord;

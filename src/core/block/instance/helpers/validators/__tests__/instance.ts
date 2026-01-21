@@ -2,10 +2,10 @@
 import { validateBlockID, validateBlockType, validateBlockTag, validateBlockAvailableTags, validateBlockRender, validateBlockAllowedChildren, validateBlockCategory, validateBlockIcon, validateBlockInstance, validateBlockDefinition } from '..';
 
 // Mock data
-import { mockBlockInstance, mockBlockDefinition } from '@/src/shared/helpers/mock';
+import { mockBlockInstance, mockBlockDefinition } from '@/shared/helpers/mock';
 
 // Mock icons to avoid JSX in tests
-jest.mock('@/src/core/block/style/constants/icon', () => ({
+jest.mock('@/core/block/style/constants/icon', () => ({
 	STYLE_ICON_DEFINITIONS: {},
 }));
 

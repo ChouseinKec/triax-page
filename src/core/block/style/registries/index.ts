@@ -1,6 +1,9 @@
 // Types
-import type { StyleDefinition, StyleKey, StyleDefinitionRecord, UnitKey, UnitDefinition, UnitDefinitionRecord, TokenDefinition, TokenDefinitionRecord, TokenKey, TokenTypeKey, TokenTypeDefinition, TokenTypeDefinitionRecord, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators } from '@/src/core/block/style/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { StyleDefinition, StyleKey, StyleDefinitionRecord, UnitKey, UnitDefinition, UnitDefinitionRecord, TokenDefinition, TokenDefinitionRecord, TokenKey, TokenTypeKey, TokenTypeDefinition, TokenTypeDefinitionRecord, StyleSyntaxParsed, StyleSyntaxSet, StyleSyntaxSeparators } from '@/core/block/style/types';
+import type { ValidateResult } from '@/shared/types/result';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 type StyleDefinitionInput = Omit<StyleDefinition, 'syntaxParsed' | 'syntaxNormalized' | 'syntaxSet' | 'syntaxSeparators'>;
 
@@ -136,18 +139,42 @@ class StyleRegistry {
 const styleRegistry = new StyleRegistry();
 
 // Export the registry instance methods
-export const registerStyle = (styleDefinition: StyleDefinitionInput) => styleRegistry.registerStyle(styleDefinition);
+export const registerStyle = (styleDefinition: StyleDefinitionInput): void => {
+  const result = styleRegistry.registerStyle(styleDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Style]    ❌ Failed: ${styleDefinition.key} - ${result.message}`);
+  }
+};
+export const registerStyles = (styleDefinitions: StyleDefinitionInput[]) => styleDefinitions.forEach(registerStyle);
 export const getRegisteredStyles = () => styleRegistry.getRegisteredStyles();
 export const getRegisteredStyle = (styleKey: StyleKey) => styleRegistry.getRegisteredStyle(styleKey);
 
-export const registerUnit = (unitDefinition: UnitDefinition) => styleRegistry.registerUnit(unitDefinition);
+export const registerUnit = (unitDefinition: UnitDefinition): void => {
+  const result = styleRegistry.registerUnit(unitDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Unit]     ❌ Failed: ${unitDefinition.key} - ${result.message}`);
+  }
+};
+export const registerUnits = (unitDefinitions: UnitDefinition[]) => unitDefinitions.forEach(registerUnit);
 export const getRegisteredUnits = () => styleRegistry.getRegisteredUnits();
 export const getRegisteredUnit = (unitKey: UnitKey) => styleRegistry.getRegisteredUnit(unitKey);
 
-export const registerToken = (tokenDefinition: TokenDefinition) => styleRegistry.registerToken(tokenDefinition);
+export const registerToken = (tokenDefinition: TokenDefinition): void => {
+  const result = styleRegistry.registerToken(tokenDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Token]    ❌ Failed: ${tokenDefinition.key} - ${result.message}`);
+  }
+};
+export const registerTokens = (tokenDefinitions: TokenDefinition[]) => tokenDefinitions.forEach(registerToken);
 export const getRegisteredTokens = () => styleRegistry.getRegisteredTokens();
 export const getRegisteredToken = (tokenKey: TokenKey) => styleRegistry.getRegisteredToken(tokenKey);
 
-export const registerTokenType = (tokenTypeDefinition: TokenTypeDefinition) => styleRegistry.registerTokenType(tokenTypeDefinition);
+export const registerTokenType = (tokenTypeDefinition: TokenTypeDefinition): void => {
+  const result = styleRegistry.registerTokenType(tokenTypeDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → TokenType] ❌ Failed: ${tokenTypeDefinition.key} - ${result.message}`);
+  }
+};
+export const registerTokenTypes = (tokenTypeDefinitions: TokenTypeDefinition[]) => tokenTypeDefinitions.forEach(registerTokenType);
 export const getRegisteredTokenTypes = () => styleRegistry.getRegisteredTokenTypes();
 export const getRegisteredTokenType = (tokenType: TokenTypeKey) => styleRegistry.getRegisteredTokenType(tokenType);

@@ -1,6 +1,6 @@
 // Utilities
 import { validateBarID, validateBarTitle, validateBarPosition, validateBarSize, validateBarDefinition } from '../bar';
-import { mockBarInstance } from '@/src/shared/helpers/mock';
+import { mockBarInstance } from '@/shared/helpers/mock';
 
 describe('validateBarID', () => {
 	it('accepts valid bar ID', () => {

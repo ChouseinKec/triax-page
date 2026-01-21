@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 // Types
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Constants
-import { DEFAULT_WORKBENCH_ID } from '@/src/core/layout/workbench/constants';
+import { DEFAULT_WORKBENCH_ID } from '@/core/layout/workbench/constants';
 
 export type WorkbenchStore = {
 	selectedKey: BenchKey;

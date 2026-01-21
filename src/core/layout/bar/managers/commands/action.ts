@@ -1,16 +1,16 @@
 // Stores
-import { useBarStore } from '@/src/core/layout/bar/state/store';
+import { useBarStore } from '@/core/layout/bar/state/store';
 
 // Types
-import type { BarActionID, BarID, BarActionInstance } from '@/src/core/layout/bar/types';
+import type { BarActionID, BarID, BarActionInstance } from '@/core/layout/bar/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBarActionInstance, validateBarID, validateBarActionID } from '@/src/core/layout/bar/helpers/validators';
-import { pickBar } from '@/src/core/layout/bar/helpers/pickers';
+import { validateBarActionInstance, validateBarID, validateBarActionID } from '@/core/layout/bar/helpers/validators';
+import { pickBar } from '@/core/layout/bar/helpers/pickers';
 
 /**
  * Registers a new action instance to a bar for layout commands.

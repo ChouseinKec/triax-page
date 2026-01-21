@@ -1,5 +1,5 @@
 // Utilities
-import { isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid, isBarDefinitionValid } from '@/src/core/layout/bar/utilities/bar';
+import { isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid, isBarDefinitionValid } from '@/core/layout/bar/utilities/bar';
 
 // Bar ID validation: non-empty string checks
 describe('isBarIDValid', () => {

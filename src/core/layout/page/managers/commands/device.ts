@@ -1,17 +1,17 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { DeviceKey } from '@/src/core/layout/page/types';
+import type { DeviceKey } from '@/core/layout/page/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateDeviceKey } from '@/src/core/layout/page/helpers/validators';
+import { validateDeviceKey } from '@/core/layout/page/helpers/validators';
 
 // Managers
-import { getDefaultDeviceKey } from '@/src/core/layout/page/managers/queries';
+import { getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
 
 /**
  * Sets the currently selected device by ID for page commands.

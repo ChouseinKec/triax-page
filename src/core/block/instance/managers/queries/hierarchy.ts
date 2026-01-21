@@ -1,16 +1,16 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
-import { findBlockFirstChild, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextParentSibling } from '@/src/core/block/instance/helpers/finders';
+import { validateBlockID } from '@/core/block/instance/helpers/validators';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { findBlockFirstChild, findBlockNextSibling, findBlockPreviousSibling, findBlockLastDescendant, findBlockNextParentSibling } from '@/core/block/instance/helpers/finders';
 
 // Types
-import type { BlockInstance, BlockID } from '@/src/core/block/instance/types';
+import type { BlockInstance, BlockID } from '@/core/block/instance/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
  * Retrieves the next block in the hierarchy for block hierarchy operations.

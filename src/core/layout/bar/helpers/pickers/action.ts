@@ -1,9 +1,9 @@
 // Types
-import type { BarID, BarActionInstance, BarRecord } from '@/src/core/layout/bar/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { BarID, BarActionInstance, BarRecord } from '@/core/layout/bar/types';
+import type { PickResult } from '@/shared/types/result';
 
 // Helper
-import { pickBar } from '@/src/core/layout/bar/helpers/pickers/bar';
+import { pickBar } from '@/core/layout/bar/helpers/pickers/bar';
 
 /**
  * Fetches all action instances for a specific bar from the layout store.

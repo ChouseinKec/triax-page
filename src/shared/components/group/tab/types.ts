@@ -1,4 +1,4 @@
-import {TabProps} from '@/src/shared/components/types/tab'
+import {TabProps} from '@/shared/components/types/tab'
 
 /** Represents a group of tab items to be rendered together. */
 export type TabGroupProps = {

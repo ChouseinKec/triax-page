@@ -1,6 +1,6 @@
 // Utilities
 import { validateBenchKey, validateBenchTitle, validateBenchOrder, validateBenchComponent, validateBenchIcon, validateBenchDefinition } from '../bench';
-import { mockWorkbenchInstance, mockReactElement } from '@/src/shared/helpers/mock';
+import { mockWorkbenchInstance, mockReactElement } from '@/shared/helpers/mock';
 
 describe('validateBenchKey', () => {
 	it('returns valid result for non-empty string', () => {

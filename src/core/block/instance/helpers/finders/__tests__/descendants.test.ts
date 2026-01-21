@@ -2,7 +2,7 @@
 import { findBlockLastDescendant, findBlockDescendants } from '../descendants';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('findBlockLastDescendant', () => {
 	it('returns block itself when it has no children', () => {

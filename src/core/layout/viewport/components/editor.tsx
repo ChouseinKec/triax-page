@@ -10,11 +10,11 @@ import CSS from "./styles.module.scss";
 // Components
 import View from "./view";
 import Select from "./select";
-import ActionGroup from "@/src/shared/components/group/action/component";
+import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { useSelectedView, getActionDefinitions } from "@/src/core/layout/viewport/managers/";
-import { useSelectedBenchKey } from "@/src/core/layout/workbench/managers/";
+import { useSelectedView, getActionDefinitions } from "@/core/layout/viewport/managers/";
+import { useSelectedBenchKey } from "@/core/layout/workbench/managers/";
 
 
 

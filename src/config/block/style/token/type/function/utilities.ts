@@ -1,13 +1,13 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { StyleKey, StyleSyntaxRaw, StyleDefinition, TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/src/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { StyleKey, StyleSyntaxRaw, StyleDefinition, TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/core/block/style/types';
 
 // Utilities
-import { extractBetween, splitAdvanced, joinAdvanced } from '@/src/shared/utilities/string';
-import { parseSyntax } from '@/src/core/block/style/utilities';
-import { getTokenValues } from '@/src/core/block/style/utilities/';
-import { extractSeparator } from '@/src/core/block/style/utilities';
-import { devLog } from '@/src/shared/utilities/dev';
+import { extractBetween, splitAdvanced, joinAdvanced } from '@/shared/utilities/string';
+import { parseSyntax } from '@/core/block/style/utilities';
+import { getTokenValues } from '@/core/block/style/utilities/';
+import { extractSeparator } from '@/core/block/style/utilities';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Checks if the input string is a valid CSS data function (e.g., 'fit-content(10px)', 'calc(100% - 20px)').

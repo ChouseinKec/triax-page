@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 
 // Types
-import type { ViewKey } from '@/src/core/layout/viewport/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
-import type { DataDefinitionRecord, DataKey, DataValue } from '@/src/core/layout/viewport/types/data';
+import type { ViewKey } from '@/core/layout/viewport/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
+import type { DataDefinitionRecord, DataKey, DataValue } from '@/core/layout/viewport/types/data';
 
 /**
  * The structure of the viewport store.

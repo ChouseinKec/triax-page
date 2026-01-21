@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import { TokenLinkProps } from "./types";
 
 // Components
-import GenericInput from "@/src/shared/components/input/generic/component";
+import GenericInput from "@/shared/components/input/generic/component";
 
 
 /**

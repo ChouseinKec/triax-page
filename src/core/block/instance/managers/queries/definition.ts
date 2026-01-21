@@ -1,17 +1,17 @@
 // Types
-import type { BlockType, BlockAllowedStyles, BlockAllowedAttributes, BlockComponent } from '@/src/core/block/instance/types';
-import type { ElementKey } from '@/src/core/block/element/types';
+import type { BlockType, BlockAllowedStyles, BlockAllowedAttributes, BlockComponent } from '@/core/block/instance/types';
+import type { ElementKey } from '@/core/block/element/types';
 import type { ReactNode } from 'react';
 
 // Helpers
-import { pickBlockDefinition } from '@/src/core/block/instance/helpers/pickers';
-import { validateBlockType } from '@/src/core/block/instance/helpers/validators';
+import { pickBlockDefinition } from '@/core/block/instance/helpers/pickers';
+import { validateBlockType } from '@/core/block/instance/helpers/validators';
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
  * Get a block type's icon from the registry.

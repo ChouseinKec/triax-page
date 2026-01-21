@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { StyleValue } from '@/src/core/block/style/types/value';
+import { StyleValue } from '@/core/block/style/types/value';
 
 /**
  * All valid CSS property names supported by the style system.

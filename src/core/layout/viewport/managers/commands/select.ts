@@ -1,16 +1,16 @@
 // Stores
-import { useViewportStore } from '@/src/core/layout/viewport/state/store';
+import { useViewportStore } from '@/core/layout/viewport/state/store';
 
 // Types
-import type { ViewKey } from '@/src/core/layout/viewport/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { ViewKey } from '@/core/layout/viewport/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateViewKey } from '@/src/core/layout/viewport/helpers/validators';
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators';
+import { validateViewKey } from '@/core/layout/viewport/helpers/validators';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators';
 
 /**
  * Sets the currently selected view for a specific bench.

@@ -1,10 +1,10 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { StyleValue } from '@/src/core/block/style/types';
-import type { TokenOptionParams, TokenRaw, TokenCanonical } from '@/src/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { StyleValue } from '@/core/block/style/types';
+import type { TokenOptionParams, TokenRaw, TokenCanonical } from '@/core/block/style/types';
 
 // Utilities
-import { isValueColor } from '@/src/shared/utilities/value';
+import { isValueColor } from '@/shared/utilities/value';
 
 export function getTokenCanonical(tokenRaw: TokenRaw): TokenCanonical | undefined {
 	if (tokenRaw.startsWith('<color') && tokenRaw.endsWith('>')) return '<color>';

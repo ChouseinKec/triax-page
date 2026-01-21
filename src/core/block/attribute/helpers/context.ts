@@ -1,6 +1,6 @@
 // Types
-import type { AttributeContext } from '@/src/core/block/attribute/types';
-import type { ContextResult } from '@/src/shared/types/result';
+import type { AttributeContext } from '@/core/block/attribute/types';
+import type { ContextResult } from '@/shared/types/result';
 
 /**
  * Fetches the registries and constants for attribute context.

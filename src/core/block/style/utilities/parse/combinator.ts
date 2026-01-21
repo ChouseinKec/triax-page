@@ -1,9 +1,9 @@
 // Types
-import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/src/core/block/style/types/';
+import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/core/block/style/types/';
 
 // Utilities
-import { splitAdvanced } from '@/src/shared/utilities/string';
-import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/src/shared/utilities/array';
+import { splitAdvanced } from '@/shared/utilities/string';
+import { generateCrossProduct, generateAllSubsets, generatePermutations } from '@/shared/utilities/array';
 import { parseSyntax } from './parse';
 
 /**

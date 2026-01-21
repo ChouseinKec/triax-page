@@ -1,11 +1,11 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { OrientationKey, OrientationDefinition } from '@/src/core/layout/page/types';
+import type { OrientationKey, OrientationDefinition } from '@/core/layout/page/types';
 
 // Registry
-import { getRegisteredOrientations, getRegisteredOrientation, getDefaultOrientationKey } from '@/src/core/layout/page/registries';
+import { getRegisteredOrientations, getRegisteredOrientation, getDefaultOrientationKey } from '@/core/layout/page/registries';
 
 /**
  * Gets the currently selected orientation ID from the page store for page queries.

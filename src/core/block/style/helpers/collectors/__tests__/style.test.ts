@@ -1,9 +1,9 @@
 // Utilities
 import { collectBlockStyleKeys } from '../style';
-import { mockBlockStyles } from '@/src/shared/helpers/mock';
+import { mockBlockStyles } from '@/shared/helpers/mock';
 
 // Types
-import type { BlockStyles } from '@/src/core/block/instance/types';
+import type { BlockStyles } from '@/core/block/instance/types';
 
 describe('collectBlockStyleKeys', () => {
 	it('returns empty array for empty styles', () => {

@@ -1,10 +1,10 @@
 // Types
-import type { ActionTitle, ActionDefinition, ActionKey, ActionOrder, ActionRender } from '@/src/core/layout/viewport/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ActionTitle, ActionDefinition, ActionKey, ActionOrder, ActionRender } from '@/core/layout/viewport/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject, validateInteger, validateFunction } from '@/src/shared/helpers/validators';
-import { validateViewKey } from '@/src/core/layout/viewport/helpers/validators/';
+import { validateString, validateObject, validateInteger, validateFunction } from '@/shared/helpers/validators';
+import { validateViewKey } from '@/core/layout/viewport/helpers/validators/';
 
 /**
  * Validates an action ID for action operations.

@@ -1,11 +1,11 @@
 // Types
-import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleDefinition, StyleKey, StyleRecord, StyleValue, StyleContext } from '@/src/core/block/style/types';
-import type { OperateResult } from '@/src/shared/types/result';
-import type { PageContext } from '@/src/core/layout/page/types';
+import type { BlockStyles } from '@/core/block/instance/types';
+import type { StyleDefinition, StyleKey, StyleRecord, StyleValue, StyleContext } from '@/core/block/style/types';
+import type { OperateResult } from '@/shared/types/result';
+import type { PageContext } from '@/core/layout/page/types';
 
 // Helpers
-import { pickStyleLonghand } from '@/src/core/block/style/helpers/pickers/';
+import { pickStyleLonghand } from '@/core/block/style/helpers/pickers/';
 
 /**
  * Update all longhand style properties for a shorthand style key.

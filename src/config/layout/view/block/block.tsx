@@ -5,19 +5,19 @@ import React, { useMemo, memo, useEffect } from "react";
 import CSS from "./styles.module.scss";
 
 // Types
-import type { BlockID } from "@/src/core/block/instance/types";
-import type { DeviceKey, OrientationKey, PseudoKey } from "@/src/core/layout/page/types";
+import type { BlockID } from "@/core/block/instance/types";
+import type { DeviceKey, OrientationKey, PseudoKey } from "@/core/layout/page/types";
 
 // Manager
-import { useBlock, getBlockComponent, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockAvailableTags } from "@/src/core/block/instance/managers";
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/src/core/layout/bar/managers";
+import { useBlock, getBlockComponent, getBlockIcon, setBlockTag, useIsBlockSelected, getBlockAvailableTags } from "@/core/block/instance/managers";
+import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/core/layout/bar/managers";
 
 // Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import { devRender } from "@/shared/utilities/dev";
 
 // Components
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import { ElementKey } from "@/src/core/block/element/types";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
+import { ElementKey } from "@/core/block/element/types";
 
 
 interface BlockProps {

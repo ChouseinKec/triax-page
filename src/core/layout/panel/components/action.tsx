@@ -2,10 +2,10 @@
 import React, { useCallback, memo } from "react";
 
 // Components
-import ActionGroup from "@/src/shared/components/group/action/component";
+import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { setPanelLockedState, setPanelOpenState } from "@/src/core/layout/panel/managers";
+import { setPanelLockedState, setPanelOpenState } from "@/core/layout/panel/managers";
 
 // Types
 import type { ActionsProps } from "./types";

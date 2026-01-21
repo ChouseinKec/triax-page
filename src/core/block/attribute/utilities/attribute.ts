@@ -1,5 +1,5 @@
 // Types
-import type { AttributeKey } from '@/src/core/block/attribute/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
 
 /**
  * Normalizes HTML attribute values for React compatibility.

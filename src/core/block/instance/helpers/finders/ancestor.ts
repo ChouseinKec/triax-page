@@ -1,9 +1,9 @@
 // Types
-import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { FindResult } from '@/src/shared/types/result';
+import type { BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { FindResult } from '@/shared/types/result';
 
 // Helpers
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
 
 /**
  * Find ancestor BlockInstance objects for the given block instance.

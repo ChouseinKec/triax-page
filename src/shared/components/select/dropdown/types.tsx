@@ -1,4 +1,4 @@
-import { OptionDefinition } from "@/src/shared/components/types/option";
+import { OptionDefinition } from "@/shared/components/types/option";
 
 interface BaseProps {
   /** The list of options to display in the dropdown */

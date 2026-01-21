@@ -1,5 +1,5 @@
 import { pickBlockStyles } from '../style';
-import { mockBlockInstance, mockBlockStyles } from '@/src/shared/helpers/mock';
+import { mockBlockInstance, mockBlockStyles } from '@/shared/helpers/mock';
 
 describe('pickBlockStyles', () => {
 	it('returns block styles when they exist', () => {

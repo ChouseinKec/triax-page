@@ -1,5 +1,5 @@
 // Types
-import {  BarDefinition, BarID, BarTitle, BarPosition, BarSize,} from '@/src/core/layout/bar/types';
+import {  BarDefinition, BarID, BarTitle, BarPosition, BarSize,} from '@/core/layout/bar/types';
 
 /**
  * Validates if a value is a valid bar identifier.

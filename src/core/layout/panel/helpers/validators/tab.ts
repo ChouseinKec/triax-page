@@ -1,12 +1,12 @@
 // Types
-import type { TabDefinition, TabKey, TabTitle, TabComponent, TabIcon, TabOrder } from '@/src/core/layout/panel/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { TabDefinition, TabKey, TabTitle, TabComponent, TabIcon, TabOrder } from '@/core/layout/panel/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject, validateElement, validateInteger, validateFunction } from '@/src/shared/helpers/validators';
+import { validateString, validateObject, validateElement, validateInteger, validateFunction } from '@/shared/helpers/validators';
 
 // Helpers
-import { validatePanelKey } from '@/src/core/layout/panel/helpers/validators/panel';
+import { validatePanelKey } from '@/core/layout/panel/helpers/validators/panel';
 
 /**
  * Validates a tab ID for tab operations.

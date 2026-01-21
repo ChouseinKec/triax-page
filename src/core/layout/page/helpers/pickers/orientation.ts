@@ -1,6 +1,6 @@
 // Types
-import type { OrientationKey, OrientationDefinition, OrientationDefinitionRecord } from '@/src/core/layout/page/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { OrientationKey, OrientationDefinition, OrientationDefinitionRecord } from '@/core/layout/page/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetches an orientation instance from the orientation registry by its ID.

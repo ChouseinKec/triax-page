@@ -1,8 +1,8 @@
 // Types
-import type { TabDefinition } from '@/src/core/layout/panel/types';
+import type { TabDefinition } from '@/core/layout/panel/types';
 
 // Components
-import BlockStyleTabComponent from "@/src/config/layout/panel/tabs/style/component";
+import BlockStyleTabComponent from "@/config/layout/panel/tabs/style/component";
 
 export const TabDefinitionStyle: TabDefinition = {
     key: "style",

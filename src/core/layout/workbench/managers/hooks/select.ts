@@ -1,11 +1,11 @@
 // Stores
-import { useWorkbenchStore } from '@/src/core/layout/workbench/state/store';
+import { useWorkbenchStore } from '@/core/layout/workbench/state/store';
 
 // Types
-import type { BenchKey, BenchDefinition } from '@/src/core/layout/workbench/types';
+import type { BenchKey, BenchDefinition } from '@/core/layout/workbench/types';
 
 // Registry
-import { getRegisteredBench } from '@/src/core/layout/workbench/state/registry';
+import { getRegisteredBench } from '@/core/layout/workbench/state/registry';
 
 /**
  * Reactive hook to get the currently selected workbench ID for page queries.

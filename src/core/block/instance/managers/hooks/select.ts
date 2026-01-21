@@ -1,14 +1,14 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { BlockID, BlockType } from '@/src/core/block/instance/types';
+import type { BlockID, BlockType } from '@/core/block/instance/types';
 
 // Helpers
-import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers';
+import { validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers';
 
 /**
  * Reactive hook to check if a specific block is currently selected.

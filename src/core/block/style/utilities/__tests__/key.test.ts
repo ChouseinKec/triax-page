@@ -1,5 +1,5 @@
 // Utilities
-import { generateStyleKey } from '@/src/core/block/style/utilities/key';
+import { generateStyleKey } from '@/core/block/style/utilities/key';
 
 describe('generateStyleKey', () => {
 	it('returns base property', () => {

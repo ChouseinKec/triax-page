@@ -1,4 +1,4 @@
-import { normalizeSyntax, parseSyntax, MAX_MULTIPLIER_DEPTH } from '@/src/core/block/style/utilities/parse/parse';
+import { normalizeSyntax, parseSyntax, MAX_MULTIPLIER_DEPTH } from '@/core/block/style/utilities/parse/parse';
 
 describe('normalizeSyntax', () => {
 	it('returns spaced ||', () => {

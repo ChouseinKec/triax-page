@@ -1,4 +1,4 @@
-import type { StyleDefinitionRecord } from '@/src/core/block/style/types';
+import type { StyleDefinitionRecord } from '@/core/block/style/types';
 
 /**
  * Represents the style context including selected, registered, and default device, orientation, pseudo and shorthand info.

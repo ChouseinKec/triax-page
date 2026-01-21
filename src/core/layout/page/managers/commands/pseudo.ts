@@ -1,17 +1,17 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type { PseudoKey } from '@/src/core/layout/page/types';
+import type { PseudoKey } from '@/core/layout/page/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validatePseudoKey } from '@/src/core/layout/page/helpers/validators';
+import { validatePseudoKey } from '@/core/layout/page/helpers/validators';
 
 // Managers
-import { getDefaultPseudoKey } from '@/src/core/layout/page/managers/queries';
+import { getDefaultPseudoKey } from '@/core/layout/page/managers/queries';
 
 /**
  * Sets the currently selected pseudo by ID for page commands.

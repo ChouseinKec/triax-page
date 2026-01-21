@@ -1,5 +1,5 @@
 // Utilities
-import { isOrientationNameValid, isOrientationValueValid, isOrientationIDValid, isOrientationDefinitionValid } from '@/src/core/layout/page/utilities/orientation';
+import { isOrientationNameValid, isOrientationValueValid, isOrientationIDValid, isOrientationDefinitionValid } from '@/core/layout/page/utilities/orientation';
 
 // Orientation name validation: non-empty string
 describe('isOrientationNameValid', () => {

@@ -1,8 +1,8 @@
 // Types
-import type { TabDefinition } from '@/src/core/layout/panel/types';
+import type { TabDefinition } from '@/core/layout/panel/types';
 
 // Components
-import BlockLibraryRender from '@/src/config/layout/panel/tabs/liblary/component';
+import BlockLibraryRender from '@/config/layout/panel/tabs/liblary/component';
 
 export const TabDefinitionLiblary: TabDefinition = {
 	key: 'liblary',

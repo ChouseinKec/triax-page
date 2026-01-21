@@ -1,5 +1,8 @@
 // Types
-import type { ElementDefinition } from '@/src/core/block/element/types';
+import type { ElementDefinition } from '@/core/block/element/types';
+
+// Registry
+import { registerElements } from '@/core/block/element/registries';
 
 // Constants
 import { FLOW_DEFINITIONS } from './flow';
@@ -13,8 +16,5 @@ import { LIST_DEFINITIONS } from './list';
 import { TABLE_DEFINITIONS } from './table';
 import { FORM_DEFINITIONS } from './form';
 
-/**
- * Registry of element definitions mapped by their tags.
- * Frozen to prevent mutations.
- */
-export const CoreElements: ElementDefinition[] = [...FLOW_DEFINITIONS, ...SECTIONING_DEFINITIONS, ...HEADING_DEFINITIONS, ...PHRASING_DEFINITIONS, ...EMBEDDED_DEFINITIONS, ...INTERACTIVE_DEFINITIONS, ...PALPABLE_DEFINITIONS, ...LIST_DEFINITIONS, ...TABLE_DEFINITIONS, ...FORM_DEFINITIONS];
+// Register elements directly
+registerElements([...FLOW_DEFINITIONS, ...SECTIONING_DEFINITIONS, ...HEADING_DEFINITIONS, ...PHRASING_DEFINITIONS, ...EMBEDDED_DEFINITIONS, ...INTERACTIVE_DEFINITIONS, ...PALPABLE_DEFINITIONS, ...LIST_DEFINITIONS, ...TABLE_DEFINITIONS, ...FORM_DEFINITIONS]);

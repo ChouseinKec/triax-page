@@ -6,7 +6,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlockID } from "@/src/core/block/instance/managers";
+import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlockID } from "@/core/block/instance/managers";
 
 // Components
 import Entry from "./entry";

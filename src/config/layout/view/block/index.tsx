@@ -1,11 +1,14 @@
 // Types
-import type { ViewDefinition, ActionDefinition } from "@/src/core/layout/viewport/types";
+import type { ViewDefinition, ActionDefinition } from "@/core/layout/viewport/types";
 
 // Components
-import ViewComponentBlock from '@/src/config/layout/view/block/component';
+import ViewComponentBlock from '@/config/layout/view/block/component';
 import DeviceSelect from "./device-select";
 
-export const ViewDefinitionBlock: ViewDefinition = {
+// Registry
+import { registerViews, registerActions } from '@/core/layout/viewport/state/registry';
+
+const ViewDefinitionBlock: ViewDefinition = {
     key: 'block',
     benchKey: 'main',
     icon: (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M58.34,101.66l-32-32a8,8,0,0,1,0-11.32l32-32A8,8,0,0,1,69.66,37.66L43.31,64,69.66,90.34a8,8,0,0,1-11.32,11.32Zm40,0a8,8,0,0,0,11.32,0l32-32a8,8,0,0,0,0-11.32l-32-32A8,8,0,0,0,98.34,37.66L124.69,64,98.34,90.34A8,8,0,0,0,98.34,101.66ZM200,40H176a8,8,0,0,0,0,16h24V200H56V136a8,8,0,0,0-16,0v64a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Z" /></svg>),
@@ -14,10 +17,14 @@ export const ViewDefinitionBlock: ViewDefinition = {
 };
 
 
-export const ActionDefinitionDeviceSelect: ActionDefinition = {
+const ActionDefinitionDeviceSelect: ActionDefinition = {
     key: 'device-select',
     title: 'Select Device',
     viewKey: 'block',
     order: 10,
     component: DeviceSelect,
 };
+
+// Register directly
+registerViews([ViewDefinitionBlock]);
+registerActions([ActionDefinitionDeviceSelect]);

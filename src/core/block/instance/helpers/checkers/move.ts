@@ -1,9 +1,9 @@
 // Helpers
-import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/src/core/block/instance/helpers/checkers';
+import { isBlockChildAllowed, hasBlockForbiddenAncestor, doesBlockElementExceeds, doesBlockElementViolatesOrder } from '@/core/block/instance/helpers/checkers';
 
 // Types
-import type { BlockInstance, BlockInstanceRecord, BlockDefinition } from '@/src/core/block/instance/types';
-import type { CheckResult } from '@/src/shared/types/result';
+import type { BlockInstance, BlockInstanceRecord, BlockDefinition } from '@/core/block/instance/types';
+import type { CheckResult } from '@/shared/types/result';
 
 /**
  * Determine whether a block can be moved to a target location based on various checks.

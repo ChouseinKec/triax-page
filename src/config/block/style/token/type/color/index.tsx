@@ -1,11 +1,11 @@
 // Types
-import type { TokenTypeDefinition } from '@/src/core/block/style/types/token';
+import type { TokenTypeDefinition } from '@/core/block/style/types/token';
 
 // Utilities
-import { getValueType, getTokenType, getValueToken, createOption, getTokenCanonical } from '@/src/config/block/style/token/type/color/utilities';
+import { getValueType, getTokenType, getValueToken, createOption, getTokenCanonical } from '@/config/block/style/token/type/color/utilities';
 
 // Component
-import TokenColor from '@/src/config/block/style/token/type/color/component';
+import TokenColor from '@/config/block/style/token/type/color/component';
 
 export const COLOR_DEFINITION: TokenTypeDefinition = {
 	key: 'color',

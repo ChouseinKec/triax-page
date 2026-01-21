@@ -5,21 +5,21 @@ import { memo, useCallback } from "react";
 import type { BlockAttributesValueProps } from "./types";
 
 // Managers
-import { useBlockAttribute, setBlockAttribute } from "@/src/core/block/attribute/managers";
+import { useBlockAttribute, setBlockAttribute } from "@/core/block/attribute/managers";
 
 // Utilities
-import { devRender } from "@/src/shared/utilities/dev";
+import { devRender } from "@/shared/utilities/dev";
 
 // Registry
-import { getRegisteredAttribute } from "@/src/core/block/attribute/registries";
+import { getRegisteredAttribute } from "@/core/block/attribute/registries";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
-import GenericInput from "@/src/shared/components/input/generic/component";
-import DropdownSelect from "@/src/shared/components/select/dropdown/component";
-import RadioSelect from "@/src/shared/components/select/radio/component";
+import GenericInput from "@/shared/components/input/generic/component";
+import DropdownSelect from "@/shared/components/select/dropdown/component";
+import RadioSelect from "@/shared/components/select/radio/component";
 
 /**
  * BlockAttributeValue Component

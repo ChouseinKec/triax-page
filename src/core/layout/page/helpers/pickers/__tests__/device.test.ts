@@ -1,9 +1,9 @@
 // Utilities
 import { pickDevice } from '../device';
-import { mockDeviceInstance } from '@/src/shared/helpers/mock';
+import { mockDeviceInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { DeviceRecord } from '@/src/core/layout/page/types';
+import type { DeviceRecord } from '@/core/layout/page/types';
 
 describe('pickDevice', () => {
 	const mockDevice1 = mockDeviceInstance({

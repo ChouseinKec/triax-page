@@ -1,5 +1,5 @@
 // Utilities
-import { isDeviceMediaValid, isDeviceTemplateValid, isDeviceNameValid, isDeviceCategoryValid, isDeviceValueValid, isDeviceIDValid, isDeviceDefinitionValid } from '@/src/core/layout/page/utilities/device';
+import { isDeviceMediaValid, isDeviceTemplateValid, isDeviceNameValid, isDeviceCategoryValid, isDeviceValueValid, isDeviceIDValid, isDeviceDefinitionValid } from '@/core/layout/page/utilities/device';
 
 // Media query validation: min/max with proper range constraints
 describe('isDeviceMediaValid', () => {

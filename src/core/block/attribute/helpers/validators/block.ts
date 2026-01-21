@@ -1,9 +1,9 @@
 // Types
-import type { ValidateResult } from '@/src/shared/types/result';
-import type { BlockAttributes } from '@/src/core/block/instance/types';
+import type { ValidateResult } from '@/shared/types/result';
+import type { BlockAttributes } from '@/core/block/instance/types';
 
 // Helpers
-import {  validateObject } from '@/src/shared/helpers';
+import {  validateObject } from '@/shared/helpers';
 
 /**
  * Checks if the attributes is a valid object containing HTML attributes for the block.

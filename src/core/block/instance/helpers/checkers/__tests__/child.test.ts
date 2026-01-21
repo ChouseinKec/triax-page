@@ -2,7 +2,7 @@
 import { isBlockChild, isBlockLastChild, isBlockFirstChild } from '../child';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('isBlockChild', () => {
 	it('returns true when block is direct child', () => {

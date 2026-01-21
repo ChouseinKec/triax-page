@@ -12,14 +12,14 @@ import CSS from "./styles.module.scss";
 import type { PanelProps } from "./types";
 
 // Managers
-import { usePanelInstance, getPanelDefinition, setPanelPosition, setPanelSize } from "@/src/core/layout/panel/managers";
+import { usePanelInstance, getPanelDefinition, setPanelPosition, setPanelSize } from "@/core/layout/panel/managers";
 
 // Utilities
-import { convertPositionToPx, convertSizeToPx, convertPxToPosition, convertPxToSize, calculatePanelStyles, } from "@/src/core/layout/panel/utilities";
+import { convertPositionToPx, convertSizeToPx, convertPxToPosition, convertPxToSize, calculatePanelStyles, } from "@/core/layout/panel/utilities";
 
 // Hooks
-import { useDrag } from "@/src/shared/hooks/interface/useDrag";
-import { useResize } from "@/src/shared/hooks/interface/useResize";
+import { useDrag } from "@/shared/hooks/interface/useDrag";
+import { useResize } from "@/shared/hooks/interface/useResize";
 
 /**
  * Panel Component

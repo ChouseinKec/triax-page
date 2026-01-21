@@ -1,14 +1,14 @@
 // Types
-import type { TokenTypeDefinitionRecord, StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, StyleValue, TokenDefinitionRecord } from '@/src/core/block/style/types/';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { TokenTypeDefinitionRecord, StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, StyleValue, TokenDefinitionRecord } from '@/core/block/style/types/';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { splitAdvanced } from '@/src/shared/utilities/string';
-import { getValueTokens } from '@/src/core/block/style/utilities';
-import { getSyntaxNormalized, getSyntaxParsed } from '@/src/core/block/style/utilities';
+import { splitAdvanced } from '@/shared/utilities/string';
+import { getValueTokens } from '@/core/block/style/utilities';
+import { getSyntaxNormalized, getSyntaxParsed } from '@/core/block/style/utilities';
 
 // Helpers
-import { validateString, validateObject, validateArray } from '@/src/shared/helpers';
+import { validateString, validateObject, validateArray } from '@/shared/helpers';
 
 /**
  * Validates a CSS style key for block style operations.

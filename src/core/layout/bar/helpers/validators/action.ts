@@ -1,9 +1,9 @@
 // Types
-import type { BarActionInstance, BarActionID, BarActionOrder, BarActionRender, BarActionTitle,} from '@/src/core/layout/bar/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BarActionInstance, BarActionID, BarActionOrder, BarActionRender, BarActionTitle,} from '@/core/layout/bar/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { isBarActionInstanceValid, isBarActionIDValid, isBarActionOrderValid, isBarActionRenderValid, isBarActionTitleValid,} from '@/src/core/layout/bar/utilities';
+import { isBarActionInstanceValid, isBarActionIDValid, isBarActionOrderValid, isBarActionRenderValid, isBarActionTitleValid,} from '@/core/layout/bar/utilities';
 
 
 /**

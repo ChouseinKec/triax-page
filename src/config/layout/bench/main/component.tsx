@@ -2,10 +2,10 @@
 import React, { memo } from "react";
 
 // Types
-import type { BenchComponentProps } from "@/src/core/layout/workbench/types";
+import type { BenchComponentProps } from "@/core/layout/workbench/types";
 
 // Components
-import Viewport from "@/src/core/layout/viewport/components/editor";
+import Viewport from "@/core/layout/viewport/components/editor";
 
 /**
  * Renders the main workbench layout.

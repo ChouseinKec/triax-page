@@ -1,8 +1,8 @@
 // Components
-import BlockContainerComponent from '@/src/config/block/instance/container/component';
+import BlockContainerComponent from '@/config/block/instance/container/component';
 
 // Types
-import { BlockDefinition } from '@/src/core/block/instance/types';
+import { BlockDefinition } from '@/core/block/instance/types';
 
 /**
  * Container block definition.

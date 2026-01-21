@@ -1,5 +1,5 @@
 import { validatePanelKey, validatePanelTitle, validatePanelPosition, validatePanelSize, validatePanelOrder, validatePanelIcon, validatePanelLocked, validatePanelOpen, validatePanelDefinition } from '../panel';
-import { mockPanel, mockReactElement } from '@/src/shared/helpers/mock';
+import { mockPanel, mockReactElement } from '@/shared/helpers/mock';
 
 describe('validatePanelKey', () => {
 	it('accepts valid panel ID', () => {

@@ -1,9 +1,9 @@
 // Utilities
 import { pickBar, pickBarsByWorkbench } from '../bar';
-import { mockBarInstance } from '@/src/shared/helpers/mock';
+import { mockBarInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { BarRecord } from '@/src/core/layout/bar/types';
+import type { BarRecord } from '@/core/layout/bar/types';
 
 describe('pickBar', () => {
 	const mockBar1 = mockBarInstance({ id: 'bar-1', workbenchKey: 'workbench-1', position: { top: '0', left: '0' } });

@@ -5,16 +5,16 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addBlock, canBlockAcceptChild, useSelectedBlockType, useSelectedBlockID } from "@/src/core/block/instance/managers";
+import { addBlock, canBlockAcceptChild, useSelectedBlockType, useSelectedBlockID } from "@/core/block/instance/managers";
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
 
 // Types
-import type { BlockDefinition, BlockType } from "@/src/core/block/instance/types";
+import type { BlockDefinition, BlockType } from "@/core/block/instance/types";
 
 // Components
-import GenericInput from "@/src/shared/components/input/generic/component";
+import GenericInput from "@/shared/components/input/generic/component";
 
 /**
  * BlockLibrary Component

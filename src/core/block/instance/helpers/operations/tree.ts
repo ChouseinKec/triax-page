@@ -1,11 +1,11 @@
 // Types
-import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { OperateResult } from '@/src/shared/types/result';
+import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { OperateResult } from '@/shared/types/result';
 
 // Helpers
-import { findBlockDescendants, findBlockChildIndex } from '@/src/core/block/instance/helpers/finders';
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
-import { detachBlockFromContentIDs, attachBlockToContentIDs, updateBlockParentID } from '@/src/core/block/instance/helpers/operations/instance';
+import { findBlockDescendants, findBlockChildIndex } from '@/core/block/instance/helpers/finders';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { detachBlockFromContentIDs, attachBlockToContentIDs, updateBlockParentID } from '@/core/block/instance/helpers/operations/instance';
 
 // External
 import { v4 as uuidv4 } from 'uuid';

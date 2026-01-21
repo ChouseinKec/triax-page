@@ -1,21 +1,21 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockType, validateBlockID } from '@/src/core/block/instance/helpers';
-import { pickBlockDefinition, pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
-import { createBlock, detachBlockFromParent } from '@/src/core/block/instance/helpers/operations';
-import { duplicateBlockInTree, addBlockToTree, deleteBlockFromTree } from '@/src/core/block/instance/helpers/operations/tree';
+import { validateBlockType, validateBlockID } from '@/core/block/instance/helpers';
+import { pickBlockDefinition, pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { createBlock, detachBlockFromParent } from '@/core/block/instance/helpers/operations';
+import { duplicateBlockInTree, addBlockToTree, deleteBlockFromTree } from '@/core/block/instance/helpers/operations/tree';
 
 // Types
-import type { BlockType, BlockID } from '@/src/core/block/instance/types';
+import type { BlockType, BlockID } from '@/core/block/instance/types';
 
 // Utilities
-import { devLog } from '@/src/shared/utilities/dev';
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { devLog } from '@/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredBlocks } from '@/src/core/block/instance/registries';
+import { getRegisteredBlocks } from '@/core/block/instance/registries';
 
 /**
  * Adds a new block of the specified type to the page in block CRUD operations.

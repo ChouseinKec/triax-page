@@ -1,5 +1,5 @@
 // Utilities
-import { isPseudoNameValid, isPseudoValueValid, isPseudoIDValid, isPseudoDefinitionValid } from '@/src/core/layout/page/utilities/pseudo';
+import { isPseudoNameValid, isPseudoValueValid, isPseudoIDValid, isPseudoDefinitionValid } from '@/core/layout/page/utilities/pseudo';
 
 // Pseudo name validation: non-empty string
 describe('isPseudoNameValid', () => {

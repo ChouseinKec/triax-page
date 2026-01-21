@@ -1,5 +1,5 @@
 // Types
-import type { PanelDefinition } from '@/src/core/layout/panel/types';
+import type { PanelDefinition } from '@/core/layout/panel/types';
 
 /**
  * Block Hierarchy panel definition.

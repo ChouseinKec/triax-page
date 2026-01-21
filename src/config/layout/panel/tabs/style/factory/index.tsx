@@ -1,23 +1,23 @@
 import React from 'react';
 
 // Managers
-import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/src/core/block/style/managers/';
+import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/core/block/style/managers/';
 
 
 // Components
-import BlockStyleValue from '@/src/config/layout/panel/tabs/style/value';
-import Property from '@/src/shared/components/layout/property/component';
-import PropertyActions from '@/src/config/layout/panel/tabs/style/action';
+import BlockStyleValue from '@/config/layout/panel/tabs/style/value';
+import Property from '@/shared/components/layout/property/component';
+import PropertyActions from '@/config/layout/panel/tabs/style/action';
 
 // Types
-import type { StyleKey } from '@/src/core/block/style/types';
+import type { StyleKey } from '@/core/block/style/types';
 import type { RenderStyleRowOptions } from './types';
 
 // Utilties
-import { devRender } from '@/src/shared/utilities/dev';
+import { devRender } from '@/shared/utilities/dev';
 
 // Registry
-import { getRegisteredStyle } from '@/src/core/block/style/registries';
+import { getRegisteredStyle } from '@/core/block/style/registries';
 
 /**
  * Memoized component to render the appropriate value editor for a CSS property

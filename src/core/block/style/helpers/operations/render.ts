@@ -1,11 +1,11 @@
 // Types
-import type { BlockStyles, BlockID } from '@/src/core/block/instance/types';
-import type { OperateResult } from '@/src/shared/types/result';
-import type { StyleDefinitionRecord } from '@/src/core/block/style/types';
-import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition } from '@/src/core/layout/page/types';
+import type { BlockStyles, BlockID } from '@/core/block/instance/types';
+import type { OperateResult } from '@/shared/types/result';
+import type { StyleDefinitionRecord } from '@/core/block/style/types';
+import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition } from '@/core/layout/page/types';
 
 // Helpers
-import { cascadeBlockStyles, generateCSSSelector, generateCSSRule } from '@/src/core/block/style/helpers/';
+import { cascadeBlockStyles, generateCSSSelector, generateCSSRule } from '@/core/block/style/helpers/';
 
 /**
  * Renders CSS rules for all pseudo-classes for a block.

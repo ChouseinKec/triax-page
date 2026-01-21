@@ -1,9 +1,9 @@
 // Types
-import type { BlockAttributes } from '@/src/core/block/instance/types';
-import type { AttributeKey } from '@/src/core/block/attribute/types';
+import type { BlockAttributes } from '@/core/block/instance/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Utilities
-import { normalizeAttributeValue, normalizeAttributeKey } from '@/src/core/block/attribute/utilities';
+import { normalizeAttributeValue, normalizeAttributeKey } from '@/core/block/attribute/utilities';
 
 /**
  * Renders block attributes into a normalized React-compatible object.

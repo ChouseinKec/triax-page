@@ -1,5 +1,5 @@
 // Types
-import { AttributeKey } from '@/src/core/block/attribute/types';
+import { AttributeKey } from '@/core/block/attribute/types';
 
 // Utilities
 import { normalizeAttributeValue, normalizeAttributeKey } from '../attribute';

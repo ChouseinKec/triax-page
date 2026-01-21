@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
 // Types
-import type { BarDefinition, BarID } from '@/src/core/layout/bar/types';
-import type { BarRecord, BarActionInstance, BarActionID } from '@/src/core/layout/bar/types';
+import type { BarDefinition, BarID } from '@/core/layout/bar/types';
+import type { BarRecord, BarActionInstance, BarActionID } from '@/core/layout/bar/types';
 
 // Registry
-import { getRegisteredBars } from '@/src/core/layout/bar/registries';
+import { getRegisteredBars } from '@/core/layout/bar/registries';
 
 interface LayoutStore {
 	allBars: BarRecord;

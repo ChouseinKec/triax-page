@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 
 // Components
-import DividerReveal from '@/src/shared/components/reveal/divider/component';
-import HorizontalDivider from '@/src/shared/components/divider/horizontal/component';
+import DividerReveal from '@/shared/components/reveal/divider/component';
+import HorizontalDivider from '@/shared/components/divider/horizontal/component';
 
 // Types
 import type { GroupLayoutProps } from './types';

@@ -1,15 +1,15 @@
 // Types
-import type { BenchDefinition, BenchKey } from '@/src/core/layout/workbench/types/';
+import type { BenchDefinition, BenchKey } from '@/core/layout/workbench/types/';
 
 // Registry
-import { getRegisteredBenches } from '@/src/core/layout/workbench/state/registry';
+import { getRegisteredBenches } from '@/core/layout/workbench/state/registry';
 
 // Helpers
-import { pickBenchDefinition } from '@/src/core/layout/workbench/helpers/pickers/definition';
+import { pickBenchDefinition } from '@/core/layout/workbench/helpers/pickers/definition';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators';
 
 /**
  * Retrieves all registered bench definitions.

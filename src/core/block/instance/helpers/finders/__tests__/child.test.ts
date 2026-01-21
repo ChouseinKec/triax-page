@@ -2,7 +2,7 @@
 import { findBlockChildIndex, findBlockFirstChild, findBlockLastChild } from '../child';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('findBlockChildIndex', () => {
 	it('returns not-found when child not in parent contentIDs', () => {

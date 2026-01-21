@@ -1,6 +1,6 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { StyleValue, StyleDefinitionRecord, StyleKey, UnitDefinitionRecord } from '@/src/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { StyleValue, StyleDefinitionRecord, StyleKey, UnitDefinitionRecord } from '@/core/block/style/types';
 
 /**
  * All valid CSS data type tokens used in value definition syntax (e.g. '<number>', '<length>', '<color>').

@@ -1,9 +1,9 @@
 // Utilities
 import { pickBlockAttributes } from '../attribute';
-import { mockBlockAttributes, mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockAttributes, mockBlockInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { BlockInstanceRecord } from '@/src/core/block/instance/types';
+import type { BlockInstanceRecord } from '@/core/block/instance/types';
 
 // Mock data
 const mockBlockID = 'block-1';

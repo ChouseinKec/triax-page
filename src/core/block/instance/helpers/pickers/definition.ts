@@ -1,6 +1,6 @@
 // Types
-import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/src/core/block/instance/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/core/block/instance/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetch a single block definition by its type key from the registry.

@@ -1,12 +1,12 @@
 // Types
-import type { BlockInstance, BlockInstanceRecord } from '@/src/core/block/instance/types';
-import type { FindResult } from '@/src/shared/types/result';
+import type { BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { FindResult } from '@/shared/types/result';
 
 // Helpers
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
-import { findBlockAncestors } from '@/src/core/block/instance/helpers/finders/ancestor';
-import { findBlockChildIndex } from '@/src/core/block/instance/helpers/finders/child';
-import { isBlockLastChild, isBlockFirstChild } from '@/src/core/block/instance/helpers/checkers';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { findBlockAncestors } from '@/core/block/instance/helpers/finders/ancestor';
+import { findBlockChildIndex } from '@/core/block/instance/helpers/finders/child';
+import { isBlockLastChild, isBlockFirstChild } from '@/core/block/instance/helpers/checkers';
 
 /**
  * Find the next sibling block instance of the given block instance.

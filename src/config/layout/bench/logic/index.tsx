@@ -1,8 +1,8 @@
 // Components
-import BenchLogicComponent from '@/src/config/layout/bench/logic/component';
+import BenchLogicComponent from '@/config/layout/bench/logic/component';
 
 // Types
-import type { BenchDefinition } from '@/src/core/layout/workbench/types';
+import type { BenchDefinition } from '@/core/layout/workbench/types';
 
 export const BenchDefinitionLogic: BenchDefinition = {
     key: 'logic',

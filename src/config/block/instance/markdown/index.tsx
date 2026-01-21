@@ -1,8 +1,8 @@
 // Components
-import BlockMarkdownComponent from "@/src/config/block/instance/markdown/component";
+import BlockMarkdownComponent from "@/config/block/instance/markdown/component";
 
 // Types
-import { BlockDefinition } from '@/src/core/block/instance/types';
+import { BlockDefinition } from '@/core/block/instance/types';
 
 const BlockMarkdownDefinition: BlockDefinition = {
 	type: "core-markdown",

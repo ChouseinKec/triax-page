@@ -1,5 +1,5 @@
 // Types
-import type { ViewDefinition } from '@/src/core/layout/viewport/types';
+import type { ViewDefinition } from '@/core/layout/viewport/types';
 
 export interface ViewportProps {}
 

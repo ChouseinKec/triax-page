@@ -1,14 +1,14 @@
 import React, { useCallback, useRef, useEffect, memo } from "react";
 
 // Types
-import type { BlockComponentProps } from '@/src/core/block/instance/types';
+import type { BlockComponentProps } from '@/core/block/instance/types';
 
 // Managers
-import { selectBlock, } from '@/src/core/block/instance/managers';
-import { getBlockContent, setBlockContent } from '@/src/core/block/instance/managers';
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/src/core/layout/bar/managers';
-import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
-import device from "@/src/config/layout/view/block/device";
+import { selectBlock, } from '@/core/block/instance/managers';
+import { getBlockContent, setBlockContent } from '@/core/block/instance/managers';
+import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/core/layout/bar/managers';
+import { useBlockRenderedStyles } from '@/core/block/style/managers/';
+import device from "@/config/layout/view/block/device";
 
 const BlockMarkdownComponent: React.FC<BlockComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected }) => {
     const blockID = instance.id;

@@ -1,9 +1,9 @@
 // Types
-import type { DeviceDefinition, DeviceKey, DeviceName, DeviceMedia, DeviceViewport, DeviceCategory } from '@/src/core/layout/page/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { DeviceDefinition, DeviceKey, DeviceName, DeviceMedia, DeviceViewport, DeviceCategory } from '@/core/layout/page/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject } from '@/src/shared/helpers/validators';
+import { validateString, validateObject } from '@/shared/helpers/validators';
 
 /**
  * Validates a device key for device operations.

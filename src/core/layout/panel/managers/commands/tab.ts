@@ -1,15 +1,15 @@
 // Types
-import type { PanelKey, TabKey } from '@/src/core/layout/panel/types';
+import type { PanelKey, TabKey } from '@/core/layout/panel/types';
 
 // Stores
-import { usePanelStore } from '@/src/core/layout/panel/store';
+import { usePanelStore } from '@/core/layout/panel/store';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validatePanelKey } from '@/src/core/layout/panel/helpers';
-import { validateTabKey } from '@/src/core/layout/panel/helpers';
+import { validatePanelKey } from '@/core/layout/panel/helpers';
+import { validateTabKey } from '@/core/layout/panel/helpers';
 
 /**
  * Sets the selected tab for a panel.

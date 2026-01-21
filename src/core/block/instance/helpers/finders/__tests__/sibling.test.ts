@@ -2,7 +2,7 @@
 import { findBlockNextSibling, findBlockPreviousSibling, findBlockNextParentSibling } from '../sibling';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('findBlockNextSibling', () => {
 	it('returns not-found when block is last child', () => {

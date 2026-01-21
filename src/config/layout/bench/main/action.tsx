@@ -1,11 +1,11 @@
 import { memo, useMemo } from "react";
 
 // Managers
-import { getPanelDefinitions, usePanelInstances, setPanelOpenState } from "@/src/core/layout/panel/managers";
-import { useSelectedBenchKey } from "@/src/core/layout/workbench/managers";
+import { getPanelDefinitions, usePanelInstances, setPanelOpenState } from "@/core/layout/panel/managers";
+import { useSelectedBenchKey } from "@/core/layout/workbench/managers";
 
 // Components
-import RadioSelect from "@/src/shared/components/select/radio/component";
+import RadioSelect from "@/shared/components/select/radio/component";
 
 /**
  * Renders a test action component for the main bench.

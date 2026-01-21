@@ -1,9 +1,9 @@
 // Types
-import type { PseudoDefinition, PseudoKey, PseudoName } from '@/src/core/layout/page/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { PseudoDefinition, PseudoKey, PseudoName } from '@/core/layout/page/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject } from '@/src/shared/helpers';
+import { validateString, validateObject } from '@/shared/helpers';
 
 /**
  * Validates a pseudo ID for pseudo operations.

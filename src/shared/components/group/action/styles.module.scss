@@ -1,4 +1,4 @@
-@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
 .ActionGroup {
 	@include inputMixins.components--flex-horizontal($gap: var(--size-xs), $align: center, $justify: flex-start);

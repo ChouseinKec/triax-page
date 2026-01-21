@@ -5,7 +5,7 @@ import React, { memo, useCallback } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import ColorSelect from "@/src/shared/components/select/color/component";
+import ColorSelect from "@/shared/components/select/color/component";
 
 // Types
 import type { ColorValueProps } from "./types";

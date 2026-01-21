@@ -2,11 +2,11 @@ import React, { useCallback, useRef, memo } from 'react';
 
 
 // Types
-import type { BlockComponentProps } from '@/src/core/block/instance/types';
+import type { BlockComponentProps } from '@/core/block/instance/types';
 
 // Manager
-import { selectBlock, getBlockComponentedAttributes } from '@/src/core/block/instance/managers';
-import { useBlockRenderedStyles } from '@/src/core/block/style/managers/';
+import { selectBlock, getBlockComponentedAttributes } from '@/core/block/instance/managers';
+import { useBlockRenderedStyles } from '@/core/block/style/managers/';
 
 
 /**

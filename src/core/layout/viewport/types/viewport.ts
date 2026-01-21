@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 /**
  * Unique identifier for the Viewport

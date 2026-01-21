@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import type { PropertyActionsProps } from "./types";
 
 // Managers
-import { canBlockHaveAttribute } from "@/src/core/block/instance/managers/queries";
+import { canBlockHaveAttribute } from "@/core/block/instance/managers/queries";
 
 /**
  * PropertyActions Component

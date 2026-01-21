@@ -1,15 +1,15 @@
 // Types
-import type { ViewKey, ActionDefinition, ActionKey } from '@/src/core/layout/viewport/types';
+import type { ViewKey, ActionDefinition, ActionKey } from '@/core/layout/viewport/types';
 
 // Helpers
-import { pickActionDefinition } from '@/src/core/layout/viewport/helpers/pickers';
+import { pickActionDefinition } from '@/core/layout/viewport/helpers/pickers';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
-import { validateActionKey } from '@/src/core/layout/viewport/helpers/validators/action';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateActionKey } from '@/core/layout/viewport/helpers/validators/action';
 
 // Registry
-import { getRegisteredActions } from '@/src/core/layout/viewport/state/registry';
+import { getRegisteredActions } from '@/core/layout/viewport/state/registry';
 
 /**
  * Retrieves all registered action definitions for a specific view.

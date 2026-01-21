@@ -1,9 +1,9 @@
 // Types
-import type { TokenDefinition, TokenKey, TokenDefault, TokenTypeKey, TokenTypeDefinition, TokenPriority, TokenGetTokenComponent, TokenGetValueTypeFn, TokenGetTokenCanonicalFn, TokenGetTokenTypeFn, TokenGetValueTokenFn, TokenCreateOptionFn } from '@/src/core/block/style/types/';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { TokenDefinition, TokenKey, TokenDefault, TokenTypeKey, TokenTypeDefinition, TokenPriority, TokenGetTokenComponent, TokenGetValueTypeFn, TokenGetTokenCanonicalFn, TokenGetTokenTypeFn, TokenGetValueTokenFn, TokenCreateOptionFn } from '@/core/block/style/types/';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateObject, validateString, validateFunction, validateInteger, validateElement } from '@/src/shared/helpers';
+import { validateObject, validateString, validateFunction, validateInteger, validateElement } from '@/shared/helpers';
 
 export function validateTokenType(tokenType: unknown): ValidateResult<TokenTypeKey> {
 	const validation = validateString(tokenType);

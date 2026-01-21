@@ -1,9 +1,9 @@
 // Types
-import type { OrientationDefinition, OrientationKey, OrientationName } from '@/src/core/layout/page/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { OrientationDefinition, OrientationKey, OrientationName } from '@/core/layout/page/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject } from '@/src/shared/helpers';
+import { validateString, validateObject } from '@/shared/helpers';
 
 /**
  * Validates an orientation ID for orientation operations.

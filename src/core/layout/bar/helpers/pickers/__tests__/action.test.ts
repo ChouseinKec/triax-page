@@ -1,8 +1,8 @@
 import { pickBarActions } from '../action';
-import { mockBarInstance, mockBarActionInstance } from '@/src/shared/helpers/mock';
+import { mockBarInstance, mockBarActionInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { BarRecord } from '@/src/core/layout/bar/types';
+import type { BarRecord } from '@/core/layout/bar/types';
 
 describe('pickBarActions', () => {
 	const mockAction1 = mockBarActionInstance({

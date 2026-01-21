@@ -1,5 +1,5 @@
-import type { PseudoKey, PseudoDefinition, PseudoDefinitionRecord } from '@/src/core/layout/page/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { PseudoKey, PseudoDefinition, PseudoDefinitionRecord } from '@/core/layout/page/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetches a pseudo instance from the pseudo registry by its ID.

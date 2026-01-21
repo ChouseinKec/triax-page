@@ -1,9 +1,9 @@
 // Utilities
 import { pickPseudo } from '../pseudo';
-import { mockPseudoInstance } from '@/src/shared/helpers/mock';
+import { mockPseudoInstance } from '@/shared/helpers/mock';
 
 // Types
-import type { PseudoDefinitionRecord } from '@/src/core/layout/page/types';
+import type { PseudoDefinitionRecord } from '@/core/layout/page/types';
 
 describe('pickPseudo', () => {
 	const mockPseudo1 = mockPseudoInstance({

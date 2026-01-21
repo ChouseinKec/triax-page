@@ -1,5 +1,5 @@
 // Types
-import { OptionDefinition } from '@/src/shared/components/types/option';
+import { OptionDefinition } from '@/shared/components/types/option';
 
 /**
  * Separator characters used in HTML attribute values.

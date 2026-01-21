@@ -1,5 +1,5 @@
 // Utilities
-import { isPanelIDValid, isPanelTitleValid, isPanelPositionValid, isPanelSizeValid, isPanelOrderValid, isPanelIconValid, isPanelLockedValid, isPanelOpenValid, isPanelDefinitionValid } from '@/src/core/layout/panel/utilities/panel';
+import { isPanelIDValid, isPanelTitleValid, isPanelPositionValid, isPanelSizeValid, isPanelOrderValid, isPanelIconValid, isPanelLockedValid, isPanelOpenValid, isPanelDefinitionValid } from '@/core/layout/panel/utilities/panel';
 
 describe('isPanelIDValid', () => {
 	it('accepts valid non-empty strings', () => {

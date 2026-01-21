@@ -1,5 +1,5 @@
-import type { BenchDefinition, BenchDefinitionRecord, BenchKey } from '@/src/core/layout/workbench/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { BenchDefinition, BenchDefinitionRecord, BenchKey } from '@/core/layout/workbench/types';
+import type { PickResult } from '@/shared/types/result';
 
 export function pickBenchDefinition(benchKey: BenchKey, registeredBenchs: BenchDefinitionRecord): PickResult<BenchDefinition> {
 	const definition = registeredBenchs[benchKey];

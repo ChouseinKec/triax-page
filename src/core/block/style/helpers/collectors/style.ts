@@ -1,7 +1,7 @@
 // Types
-import type { BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/types';
-import type { CollectResult } from '@/src/shared/types/result';
+import type { BlockStyles } from '@/core/block/instance/types';
+import type { StyleKey } from '@/core/block/style/types';
+import type { CollectResult } from '@/shared/types/result';
 
 /**
  * Collects all unique style keys from all device/orientation/pseudo combinations in BlockStyles.

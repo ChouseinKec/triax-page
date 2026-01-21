@@ -1,9 +1,9 @@
 // Types
-import type { ActionDefinition, ActionID, ActionOrder, ActionComponent } from '@/src/core/layout/page/types/action';
+import type { ActionDefinition, ActionID, ActionOrder, ActionComponent } from '@/core/layout/page/types/action';
 
 // Utilities
-import { validateString, validateInteger, validateFunction, validateObject } from '@/src/shared/helpers/validators';
-import type { ValidateResult } from '@/src/shared/types/result';
+import { validateString, validateInteger, validateFunction, validateObject } from '@/shared/helpers/validators';
+import type { ValidateResult } from '@/shared/types/result';
 
 /**
  * Validates a PageAction ID for action operations.

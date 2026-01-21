@@ -2,7 +2,7 @@
 import { findBlockAncestors } from '../ancestor';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('findBlockAncestors', () => {
 	it('returns not-found when block has no parent', () => {

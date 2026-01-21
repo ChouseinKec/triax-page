@@ -1,6 +1,6 @@
 // Utilities
 import { validateDeviceKey, validateDeviceName, validateDeviceValue, validateDeviceMedia, validateDeviceTemplate, validateDeviceCategory, validateDeviceDefinition } from '../device';
-import { mockDeviceInstance } from '@/src/shared/helpers/mock';
+import { mockDeviceInstance } from '@/shared/helpers/mock';
 
 describe('validateDeviceKey', () => {
 	it('accepts valid device ID', () => {

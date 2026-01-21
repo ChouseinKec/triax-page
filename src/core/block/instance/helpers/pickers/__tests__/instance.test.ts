@@ -2,7 +2,7 @@
 import { pickBlockInstance, pickBlockInstances, pickBlockContent } from '../instance';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('pickBlockInstance', () => {
 	it('returns block instance when found', () => {

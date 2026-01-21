@@ -8,7 +8,7 @@ import Bar from "./bar";
 import type { BarEditorProps } from "./types";
 
 // Managers
-import { getBarsByWorkbench } from "@/src/core/layout/bar/managers";
+import { getBarsByWorkbench } from "@/core/layout/bar/managers";
 
 /**
  * LayoutEditor Component

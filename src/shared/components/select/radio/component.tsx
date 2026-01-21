@@ -6,14 +6,14 @@ import React, { memo, ReactElement, useRef, useMemo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import Options from "@/src/shared/components/select/options/component";
-import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
+import Options from "@/shared/components/select/options/component";
+import TooltipReveal from "@/shared/components/reveal/tooltip/component";
 
 // Types
 import type { RadioSelectProps } from "./types";
 
 // Hooks
-import useSize from "@/src/shared/hooks/interface/useSize";
+import useSize from "@/shared/hooks/interface/useSize";
 
 /**
  * RadioSelect Component

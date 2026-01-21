@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { devLog } from '@/src/shared/utilities/dev';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * A hook that wraps a function in a try...catch block to handle potential errors gracefully.

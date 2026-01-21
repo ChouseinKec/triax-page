@@ -1,6 +1,6 @@
 // // Utilities
-// import { createKeywordOption, createFunctionOption, createDimensionOptions, createNumberOption, createIntegerOption, validateSlotOption, createOptionTable } from '@/src/core/block/style/utilities/option';
-// import { getTokenCanonical } from '@/src/core/block/style/utilities';
+// import { createKeywordOption, createFunctionOption, createDimensionOptions, createNumberOption, createIntegerOption, validateSlotOption, createOptionTable } from '@/core/block/style/utilities/option';
+// import { getTokenCanonical } from '@/core/block/style/utilities';
 
 
 // const mockProperty = { name: 'display', icons: undefined } as any;

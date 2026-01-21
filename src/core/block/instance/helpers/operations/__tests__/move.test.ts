@@ -2,7 +2,7 @@
 import { moveBlock } from '../move';
 
 // Mock data
-import { mockBlockInstance } from '@/src/shared/helpers/mock';
+import { mockBlockInstance } from '@/shared/helpers/mock';
 
 describe('moveBlock', () => {
 	it('moves block into new parent', () => {

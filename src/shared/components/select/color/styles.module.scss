@@ -1,4 +1,4 @@
-@use '@/src/shared/styles/mixins/mixins.module.scss' as inputMixins;
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
 .ColorSelect {
 	@include inputMixins.components--input;

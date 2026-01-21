@@ -1,6 +1,6 @@
 // Types
-import type { BenchKey } from '@/src/core/layout/workbench/types';
-import type { BarActionRecord } from '@/src/core/layout/bar/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
+import type { BarActionRecord } from '@/core/layout/bar/types';
 
 export type BarSizeFixed = {
 	/** Current width of the LayoutBar (in any CSS unit) */

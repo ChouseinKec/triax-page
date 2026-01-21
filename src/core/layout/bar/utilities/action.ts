@@ -1,5 +1,5 @@
 // Types
-import { BarActionInstance, BarActionID, BarActionTitle, BarActionOrder, BarActionRender } from '@/src/core/layout/bar/types';
+import { BarActionInstance, BarActionID, BarActionTitle, BarActionOrder, BarActionRender } from '@/core/layout/bar/types';
 
 /**
  * Validates if a value is a valid bar action identifier.

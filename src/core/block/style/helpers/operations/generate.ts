@@ -1,11 +1,11 @@
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { OperateResult } from '@/src/shared/types/result';
-import type { StyleRecord } from '@/src/core/block/style/types';
-import type { DeviceKey, PseudoKey, OrientationKey } from '@/src/core/layout/page/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { OperateResult } from '@/shared/types/result';
+import type { StyleRecord } from '@/core/block/style/types';
+import type { DeviceKey, PseudoKey, OrientationKey } from '@/core/layout/page/types';
 
 // Utilities
-import { toKebabCase } from '@/src/shared/utilities/string';
+import { toKebabCase } from '@/shared/utilities/string';
 
 /**
  * Generate a CSS selector string for a block and pseudo-class.

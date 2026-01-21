@@ -1,10 +1,13 @@
 // Types
-import type { BenchDefinition, BenchDefinitionRecord, BenchKey, ActionDefinition, ActionDefinitionRecord } from '@/src/core/layout/workbench/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BenchDefinition, BenchDefinitionRecord, BenchKey, ActionDefinition, ActionDefinitionRecord } from '@/core/layout/workbench/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateBenchDefinition } from '@/src/core/layout/workbench/helpers/validators';
-import { validateActionDefinition } from '@/src/core/layout/workbench/helpers/validators/action';
+import { validateBenchDefinition } from '@/core/layout/workbench/helpers/validators';
+import { validateActionDefinition } from '@/core/layout/workbench/helpers/validators/action';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based workbench registry for managing workbench definitions
@@ -91,8 +94,16 @@ class WorkbenchRegistryClass {
 const workbenchRegistry = new WorkbenchRegistryClass();
 
 // Export the registry instance methods
-export const registerBench = (workbenchDefinition: BenchDefinition) => workbenchRegistry.registerBench(workbenchDefinition);
-export const registerAction = (actionDefinition: ActionDefinition) => workbenchRegistry.registerAction(actionDefinition);
+export const registerBench = (workbenchDefinition: BenchDefinition): void => {
+	const result = workbenchRegistry.registerBench(workbenchDefinition);
+	if (!result.valid) devLog.error(`[Registry → Bench]     ❌ Failed: ${workbenchDefinition.key} - ${result.message}`);
+};
+export const registerBenches = (workbenchDefinitions: BenchDefinition[]) => workbenchDefinitions.forEach(registerBench);
+export const registerAction = (actionDefinition: ActionDefinition): void => {
+	const result = workbenchRegistry.registerAction(actionDefinition);
+	if (!result.valid) devLog.error(`[Registry → Action]    ❌ Failed: ${actionDefinition.key} - ${result.message}`);
+};
+export const registerActions = (actionDefinitions: ActionDefinition[]) => actionDefinitions.forEach(registerAction);
 
 export const getRegisteredActions = (benchKey?: BenchKey) => workbenchRegistry.getRegisteredActions(benchKey);
 export const getRegisteredAction = (actionKey: string) => workbenchRegistry.getRegisteredAction(actionKey);

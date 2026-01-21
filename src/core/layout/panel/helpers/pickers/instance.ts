@@ -1,6 +1,6 @@
 // Types
-import type { PanelKey, PanelInstance, PanelInstanceRecord } from '@/src/core/layout/panel/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { PanelKey, PanelInstance, PanelInstanceRecord } from '@/core/layout/panel/types';
+import type { PickResult } from '@/shared/types/result';
 
 
 /**

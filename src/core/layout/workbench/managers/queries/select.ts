@@ -1,8 +1,8 @@
 // Types
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Stores
-import { useWorkbenchStore } from '@/src/core/layout/workbench/state/store';
+import { useWorkbenchStore } from '@/core/layout/workbench/state/store';
 
 /**
  * Gets the currently selected workbench ID from the page store for page queries.

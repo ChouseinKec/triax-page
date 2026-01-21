@@ -5,10 +5,10 @@ import React, { useMemo } from "react";
 import CSS from "./styles.module.scss";
 
 // Editors
-import Workbench from "@/src/core/layout/workbench/components/editor";
+import Workbench from "@/core/layout/workbench/components/editor";
 
 // Registry
-import { getRegisteredActions } from "@/src/core/layout/page/registries"
+import { getRegisteredActions } from "@/core/layout/page/registries"
 
 /**
  * Page Component

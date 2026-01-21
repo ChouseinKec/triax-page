@@ -1,4 +1,8 @@
-// Constants
-import { UNIT_DEFINITIONS } from '@/src/config/block/style/unit/unit';
+// Registry
+import { registerUnits } from '@/core/block/style/registries';
 
-export const CoreUnits = UNIT_DEFINITIONS;
+// Constants
+import { UNIT_DEFINITIONS } from '@/config/block/style/unit/unit';
+
+// Register units directly
+registerUnits(UNIT_DEFINITIONS);

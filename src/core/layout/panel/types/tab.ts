@@ -1,5 +1,5 @@
 // Types
-import type { PanelKey } from '@/src/core/layout/panel/types';
+import type { PanelKey } from '@/core/layout/panel/types';
 import type { ReactNode, ComponentType } from 'react';
 
 /**

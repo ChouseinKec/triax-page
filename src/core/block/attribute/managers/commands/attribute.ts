@@ -1,17 +1,17 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { AttributeKey, AttributeValue } from '@/src/core/block/attribute/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { AttributeKey, AttributeValue } from '@/core/block/attribute/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockID } from '@/src/core/block/instance/helpers/validators';
-import { validateAttributeKey, validateAttributeValue } from '@/src/core/block/attribute/helpers';
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers';
+import { validateBlockID } from '@/core/block/instance/helpers/validators';
+import { validateAttributeKey, validateAttributeValue } from '@/core/block/attribute/helpers';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
 
 /**
  * Sets the attribute value for a specific block in block attribute operations.

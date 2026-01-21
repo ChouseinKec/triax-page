@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Components
-import DropdownReveal from '@/src/shared/components/reveal/dropdown/component';
+import DropdownReveal from '@/shared/components/reveal/dropdown/component';
 
 
 export const isDevelopment = process.env.NODE_ENV === 'development';

@@ -1,10 +1,13 @@
 // Types
-import type { PanelKey, TabKey, PanelDefinition, TabDefinition, PanelDefinitionRecord, TabDefinitionRecord } from '@/src/core/layout/panel/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { PanelKey, TabKey, PanelDefinition, TabDefinition, PanelDefinitionRecord, TabDefinitionRecord } from '@/core/layout/panel/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validatePanelDefinition, validateTabDefinition } from '@/src/core/layout/panel/helpers/validators';
+import { validatePanelDefinition, validateTabDefinition } from '@/core/layout/panel/helpers/validators';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based layout registry for managing panels, bars, and infos
@@ -76,8 +79,16 @@ class PanelRegistry {
 const panelRegistry = new PanelRegistry();
 
 // Export the registry instance methods
-export const registerPanel = (panelDefinition: PanelDefinition) => panelRegistry.registerPanel(panelDefinition);
-export const registerTab = (tabDefinition: TabDefinition) => panelRegistry.registerTab(tabDefinition);
+export const registerPanel = (panelDefinition: PanelDefinition): void => {
+	const result = panelRegistry.registerPanel(panelDefinition);
+	if (!result.valid) devLog.error(`[Registry → Panel]    ❌ Failed: ${panelDefinition.key} - ${result.message}`);
+};
+export const registerPanels = (panelDefinitions: PanelDefinition[]) => panelDefinitions.forEach(registerPanel);
+export const registerTab = (tabDefinition: TabDefinition): void => {
+	const result = panelRegistry.registerTab(tabDefinition);
+	if (!result.valid) devLog.error(`[Registry → Tab]      ❌ Failed: ${tabDefinition.key} - ${result.message}`);
+};
+export const registerTabs = (tabDefinitions: TabDefinition[]) => tabDefinitions.forEach(registerTab);
 
 export const getRegisteredPanels = (benchKey?: BenchKey) => panelRegistry.getRegisteredPanels(benchKey);
 export const getRegisteredPanel = (panelKey: PanelKey) => panelRegistry.getRegisteredPanel(panelKey);

@@ -1,15 +1,15 @@
 // Stores
-import { useBarStore } from '@/src/core/layout/bar/state/store';
+import { useBarStore } from '@/core/layout/bar/state/store';
 
 // Types
-import type { BarID } from '@/src/core/layout/bar/types';
+import type { BarID } from '@/core/layout/bar/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBarID } from '@/src/core/layout/bar/helpers/validators';
-import { pickBarActions } from '@/src/core/layout/bar/helpers/pickers';
+import { validateBarID } from '@/core/layout/bar/helpers/validators';
+import { pickBarActions } from '@/core/layout/bar/helpers/pickers';
 
 /**
  * Checks if a specific action is registered in a bar for layout queries.

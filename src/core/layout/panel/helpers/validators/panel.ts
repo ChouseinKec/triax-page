@@ -1,10 +1,10 @@
 // Types
-import type { PanelDefinition, PanelKey, PanelTitle, PanelPosition, PanelSize, PanelOrder, PanelIcon } from '@/src/core/layout/panel/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { PanelDefinition, PanelKey, PanelTitle, PanelPosition, PanelSize, PanelOrder, PanelIcon } from '@/core/layout/panel/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject, validateElement, validateInteger, validateBoolean } from '@/src/shared/helpers/validators';
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers/validators/bench';
+import { validateString, validateObject, validateElement, validateInteger, validateBoolean } from '@/shared/helpers/validators';
+import { validateBenchKey } from '@/core/layout/workbench/helpers/validators/bench';
 
 /**
  * Validates a panel ID for panel operations.

@@ -1,9 +1,9 @@
 // Types
-import type { BlockID, BlockInstanceRecord, BlockAttributes } from '@/src/core/block/instance/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { BlockID, BlockInstanceRecord, BlockAttributes } from '@/core/block/instance/types';
+import type { PickResult } from '@/shared/types/result';
 
 // Helper
-import { pickBlockInstance } from '@/src/core/block/instance/helpers/pickers/instance';
+import { pickBlockInstance } from '@/core/block/instance/helpers/pickers/instance';
 
 /**
  * Fetch the attributes object for a block instance by id.

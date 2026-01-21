@@ -1,5 +1,5 @@
-import type { ViewDefinition, ViewDefinitionRecord, ViewKey } from '@/src/core/layout/viewport/types/viewport';
-import type { PickResult } from '@/src/shared/types/result';
+import type { ViewDefinition, ViewDefinitionRecord, ViewKey } from '@/core/layout/viewport/types/viewport';
+import type { PickResult } from '@/shared/types/result';
 
 export function pickViewDefinition(viewKey: ViewKey, registeredViews: ViewDefinitionRecord): PickResult<ViewDefinition> {
 	const definition = registeredViews[viewKey];

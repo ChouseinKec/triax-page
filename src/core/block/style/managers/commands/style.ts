@@ -1,21 +1,21 @@
 // Stores
-import { useBlockStore } from '@/src/state/block/block';
+import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/src/core/block/instance/types';
-import type { StyleKey } from '@/src/core/block/style/types';
+import type { BlockID } from '@/core/block/instance/types';
+import type { StyleKey } from '@/core/block/style/types';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline';
-import { devLog } from '@/src/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline';
+import { devLog } from '@/shared/utilities/dev';
 
 // Helpers
-import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickBlockStyles, pickStyleDefinition } from '@/src/core/block/style/helpers';
-import { validateBlockID, pickBlockInstance } from '@/src/core/block/instance/helpers';
-import { fetchPageContext } from '@/src/core/layout/page/helpers';
+import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickBlockStyles, pickStyleDefinition } from '@/core/block/style/helpers';
+import { validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers';
+import { fetchPageContext } from '@/core/layout/page/helpers';
 
 // Registry
-import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } from '@/src/core/block/style/registries';
+import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } from '@/core/block/style/registries';
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.

@@ -1,4 +1,4 @@
-import type { OptionDefinition } from '@/src/shared/components/types/option';
+import type { OptionDefinition } from '@/shared/components/types/option';
 
 /** Props for slot style value editor components. */
 export type BlockStyleSlotProps = {

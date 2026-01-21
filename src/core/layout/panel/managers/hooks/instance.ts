@@ -2,21 +2,21 @@
 import { useMemo } from 'react';
 
 // Types
-import type { PanelInstance, PanelKey } from '@/src/core/layout/panel/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { PanelInstance, PanelKey } from '@/core/layout/panel/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Stores
-import { usePanelStore } from '@/src/core/layout/panel/store';
+import { usePanelStore } from '@/core/layout/panel/store';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredPanel } from '@/src/core/layout/panel/registries';
+import { getRegisteredPanel } from '@/core/layout/panel/registries';
 
 // Helpers
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers';
-import { validatePanelKey } from '@/src/core/layout/panel/helpers';
+import { validateBenchKey } from '@/core/layout/workbench/helpers';
+import { validatePanelKey } from '@/core/layout/panel/helpers';
 
 /**
  * Reactive hook to get all panel instances for a bench.

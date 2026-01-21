@@ -1,6 +1,9 @@
 // Types
-import type { ElementDefinition, ElementKey, ElementDefinitionRecord } from '@/src/core/block/element/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ElementDefinition, ElementKey, ElementDefinitionRecord } from '@/core/block/element/types';
+import type { ValidateResult } from '@/shared/types/result';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based element registry for managing HTML element definitions
@@ -42,6 +45,12 @@ class ElementRegistry {
 const elementRegistry = new ElementRegistry();
 
 // Export the registry instance methods
-export const registerElement = (elementDefinition: ElementDefinition) => elementRegistry.registerElement(elementDefinition);
+export const registerElement = (elementDefinition: ElementDefinition): void => {
+  const result = elementRegistry.registerElement(elementDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Element]  ❌ Failed: ${elementDefinition.key} - ${result.message}`);
+  }
+};
+export const registerElements = (elementDefinitions: ElementDefinition[]) => elementDefinitions.forEach(registerElement);
 export const getRegisteredElements = () => elementRegistry.getRegisteredElements();
 export const getRegisteredElement = (elementTag: ElementKey) => elementRegistry.getRegisteredElement(elementTag);

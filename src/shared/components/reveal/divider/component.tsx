@@ -6,7 +6,7 @@ import React, { useState, memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import HorizontalDivider from "@/src/shared/components/divider/horizontal/component";
+import HorizontalDivider from "@/shared/components/divider/horizontal/component";
 
 // Types
 import type { ExpandRevealProps } from "./types";

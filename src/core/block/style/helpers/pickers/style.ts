@@ -1,8 +1,8 @@
 // Types
-import type { BlockInstance, BlockStyles } from '@/src/core/block/instance/types';
-import type { StyleLonghand, StyleDefinition, StyleDefinitionRecord, StyleKey } from '@/src/core/block/style/types';
+import type { BlockInstance, BlockStyles } from '@/core/block/instance/types';
+import type { StyleLonghand, StyleDefinition, StyleDefinitionRecord, StyleKey } from '@/core/block/style/types';
 
-import type { PickResult } from '@/src/shared/types/result';
+import type { PickResult } from '@/shared/types/result';
 /**
  * Pick the `styles` object for a block instance by id.
  *

@@ -21,20 +21,20 @@ import {
     moveBlockBefore,
     canBlockHaveChildren,
     moveBlockInto,
-} from "@/src/core/block/instance/managers";
-import { copyBlockStyles, pasteBlockStyles } from "@/src/core/block/style/managers";
-import { copyBlockAttributes, pasteBlockAttributes } from "@/src/core/block/attribute/managers";
+} from "@/core/block/instance/managers";
+import { copyBlockStyles, pasteBlockStyles } from "@/core/block/style/managers";
+import { copyBlockAttributes, pasteBlockAttributes } from "@/core/block/attribute/managers";
 
 // Types
 import type { EntryProps } from "./types";
-import type { BlockID } from "@/src/core/block/instance/types";
+import type { BlockID } from "@/core/block/instance/types";
 
 // Components
-import FloatReveal from "@/src/shared/components/reveal/float/component";
-import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
+import FloatReveal from "@/shared/components/reveal/float/component";
+import DropdownReveal from "@/shared/components/reveal/dropdown/component";
 
 // Hooks
-import { useDragDrop } from "@/src/shared/hooks/interface/useDragDrop";
+import { useDragDrop } from "@/shared/hooks/interface/useDragDrop";
 
 /**
  * Entry Component

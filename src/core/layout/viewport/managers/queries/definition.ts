@@ -1,16 +1,16 @@
 // Types
-import type { ViewDefinition, ViewKey } from '@/src/core/layout/viewport/types';
-import type { BenchKey } from '@/src/core/layout/workbench/types';
+import type { ViewDefinition, ViewKey } from '@/core/layout/viewport/types';
+import type { BenchKey } from '@/core/layout/workbench/types';
 
 // Registry
-import { getRegisteredViews } from '@/src/core/layout/viewport/state/registry';
+import { getRegisteredViews } from '@/core/layout/viewport/state/registry';
 
 // Helpers
-import { pickViewDefinition } from '@/src/core/layout/viewport/helpers/pickers';
+import { pickViewDefinition } from '@/core/layout/viewport/helpers/pickers';
 
 // Utilities
-import { ResultPipeline } from '@/src/shared/utilities/pipeline/result';
-import { validateViewKey } from '@/src/core/layout/viewport/helpers/validators';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateViewKey } from '@/core/layout/viewport/helpers/validators';
 
 /**
  * Retrieves all registered view definitions, optionally filtered by bench key.

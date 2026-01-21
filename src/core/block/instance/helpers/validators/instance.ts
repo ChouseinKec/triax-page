@@ -1,12 +1,12 @@
 // Types
-import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockComponent, BlockAllowedChildren, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/src/core/block/instance/types';
-import type { ElementKey } from '@/src/core/block/element/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BlockType, BlockID, BlockInstance, BlockDefinition, BlockComponent, BlockAllowedChildren, BlockCategory, BlockIcon, BlockAttributes, BlockStyles } from '@/core/block/instance/types';
+import type { ElementKey } from '@/core/block/element/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateString, validateArray, validateFunction, validateObject, validateElement } from '@/src/shared/helpers';
-import { validateBlockStyles } from '@/src/core/block/style/helpers/';
-import { validateBlockAttributes } from '@/src/core/block/attribute/helpers/';
+import { validateString, validateArray, validateFunction, validateObject, validateElement } from '@/shared/helpers';
+import { validateBlockStyles } from '@/core/block/style/helpers/';
+import { validateBlockAttributes } from '@/core/block/attribute/helpers/';
 
 /**
  * Checks if the ID is a valid non-empty string identifier.

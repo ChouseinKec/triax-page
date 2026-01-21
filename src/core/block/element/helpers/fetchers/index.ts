@@ -1,6 +1,6 @@
 // Types
-import type { ElementDefinition, ElementKey, ElementDefinitionRecord } from '@/src/core/block/element/types';
-import type { PickResult } from '@/src/shared/types/result';
+import type { ElementDefinition, ElementKey, ElementDefinitionRecord } from '@/core/block/element/types';
+import type { PickResult } from '@/shared/types/result';
 
 /**
  * Fetches an element definition from the element registry by its tag.

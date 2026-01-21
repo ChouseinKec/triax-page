@@ -1,6 +1,9 @@
 // Types
-import type { AttributeDefinition, AttributeKey, AttributeDefinitionRecord } from '@/src/core/block/attribute/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { AttributeDefinition, AttributeKey, AttributeDefinitionRecord } from '@/core/block/attribute/types';
+import type { ValidateResult } from '@/shared/types/result';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based attribute registry for managing HTML attribute definitions
@@ -42,6 +45,12 @@ class AttributeRegistry {
 const attributeRegistry = new AttributeRegistry();
 
 // Export the registry instance methods
-export const registerAttribute = (attributeDefinition: AttributeDefinition) => attributeRegistry.registerAttribute(attributeDefinition);
+export const registerAttribute = (attributeDefinition: AttributeDefinition): void => {
+  const result = attributeRegistry.registerAttribute(attributeDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Attribute] ❌ Failed: ${attributeDefinition.key} - ${result.message}`);
+  }
+};
+export const registerAttributes = (attributeDefinitions: AttributeDefinition[]) => attributeDefinitions.forEach(registerAttribute);
 export const getRegisteredAttributes = () => attributeRegistry.getRegisteredAttributes();
 export const getRegisteredAttribute = (attributeName: AttributeKey) => attributeRegistry.getRegisteredAttribute(attributeName);

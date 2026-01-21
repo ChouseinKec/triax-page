@@ -1,5 +1,5 @@
 // Types
-import type { UnitDefinition } from '@/src/core/block/style/types';
+import type { UnitDefinition } from '@/core/block/style/types';
 
 /**
  * A lookup table of all supported CSS units and their metadata.

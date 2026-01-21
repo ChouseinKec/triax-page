@@ -1,5 +1,5 @@
 // Utilities
-import { extractLengthNumber, extractLengthUnit, extractLengthRange, extractTokenLengths, extractLengthDefaults, getLengthType } from '@/src/config/block/style/token/type/length/utilities';
+import { extractLengthNumber, extractLengthUnit, extractLengthRange, extractTokenLengths, extractLengthDefaults, getLengthType } from '@/config/block/style/token/type/length/utilities';
 
 describe('extractLengthNumber', () => {
 	it.each([

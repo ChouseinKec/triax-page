@@ -1,10 +1,10 @@
 // Utilities
-import { getTokenCanonical } from '@/src/core/block/style/utilities';
-import { devLog } from '@/src/shared/utilities/dev';
+import { getTokenCanonical } from '@/core/block/style/utilities';
+import { devLog } from '@/shared/utilities/dev';
 
 // Types
-import type { TokenTypeKey, TokenTypeDefinitionRecord, StyleValue } from '@/src/core/block/style/types';
-import type { OptionDefinition } from '@/src/shared/components/types/option';
+import type { TokenTypeKey, TokenTypeDefinitionRecord, StyleValue } from '@/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
 
 /**
  * Determines the type of a CSS value based on its format.

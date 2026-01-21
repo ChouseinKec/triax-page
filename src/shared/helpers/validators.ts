@@ -1,5 +1,5 @@
 // Types
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { ValidateResult } from '@/shared/types/result';
 import type { ReactElement } from 'react';
 
 /**

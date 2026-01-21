@@ -8,11 +8,11 @@ import CSS from "./styles.module.scss";
 import type { WorkbenchProps } from "./types";
 
 // Managers
-import { useSelectedBench, getActionDefinitions } from "@/src/core/layout/workbench/managers/";
+import { useSelectedBench, getActionDefinitions } from "@/core/layout/workbench/managers/";
 
 // Components
-import ActionGroup from "@/src/shared/components/group/action/component";
-import Panels from "@/src/core/layout/panel/components/editor";
+import ActionGroup from "@/shared/components/group/action/component";
+import Panels from "@/core/layout/panel/components/editor";
 import BenchSelect from "./select";
 
 /**

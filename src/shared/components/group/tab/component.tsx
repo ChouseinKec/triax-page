@@ -6,11 +6,11 @@ import React, { memo, ReactNode, useCallback, useState, useMemo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import RadioSelect from "@/src/shared/components/select/radio/component";
+import RadioSelect from "@/shared/components/select/radio/component";
 
 // Types
 import type { TabGroupProps } from "./types";
-import type { OptionDefinition } from "@/src/shared/components/types/option";
+import type { OptionDefinition } from "@/shared/components/types/option";
 
 /**
  * TabGroup Component

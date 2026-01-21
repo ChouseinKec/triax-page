@@ -8,8 +8,8 @@ import CSS from "./styles.module.scss";
 import type { DropdownSelectProps } from "./types";
 
 // Components
-import DropdownReveal from "@/src/shared/components/reveal/dropdown/component";
-import Options from "@/src/shared/components/select/options/component";
+import DropdownReveal from "@/shared/components/reveal/dropdown/component";
+import Options from "@/shared/components/select/options/component";
 
 /**
  * DropdownSelect Component

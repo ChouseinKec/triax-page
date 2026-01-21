@@ -2,13 +2,13 @@
 import React, { useMemo } from "react";
 
 // Components
-import ActionGroup from "@/src/shared/components/group/action/component";
+import ActionGroup from "@/shared/components/group/action/component";
 
 // Registry
-import { getRegisteredTabs } from "@/src/core/layout/panel/registries";
+import { getRegisteredTabs } from "@/core/layout/panel/registries";
 
 // Managers
-import { setSelectedTab, useSelectedTab } from "@/src/core/layout/panel/managers";
+import { setSelectedTab, useSelectedTab } from "@/core/layout/panel/managers";
 
 // Styles
 import CSS from "./styles.module.scss";

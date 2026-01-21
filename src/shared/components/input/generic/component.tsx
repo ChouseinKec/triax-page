@@ -6,7 +6,7 @@ import React, { memo, useRef, useReducer, useEffect, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import FloatReveal from "@/src/shared/components/reveal/float/component";
+import FloatReveal from "@/shared/components/reveal/float/component";
 
 // Types
 import type { GenericInputProps } from "./types";

@@ -1,8 +1,8 @@
 // Types
-import type { PanelKey } from '@/src/core/layout/panel/types';
+import type { PanelKey } from '@/core/layout/panel/types';
 
 // Stores
-import { usePanelStore } from '@/src/core/layout/panel/store';
+import { usePanelStore } from '@/core/layout/panel/store';
 
 /**
  * Hook to get the selected tab for a panel.

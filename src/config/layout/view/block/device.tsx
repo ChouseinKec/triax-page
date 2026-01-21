@@ -5,18 +5,18 @@ import React, { useMemo, useState, useEffect, useCallback, memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import Block from "@/src/config/layout/view/block/block";
+import Block from "@/config/layout/view/block/block";
 import OrientationSelect from "./orientation-select";
 import PseudoSelect from "./pseudo-select";
-import ActionGroup from "@/src/shared/components/group/action/component";
+import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { useBlock } from "@/src/core/block/instance/managers";
-import { getDeviceDefinition, getOrientationDefinition, getDefaultOrientationKey, getDefaultPseudoKey, useIsDeviceSelected } from "@/src/core/layout/page/managers";
-import { setSelectedDeviceKey, setSelectedOrientationKey, setSelectedPseudoKey } from "@/src/core/layout/page/managers";
+import { useBlock } from "@/core/block/instance/managers";
+import { getDeviceDefinition, getOrientationDefinition, getDefaultOrientationKey, getDefaultPseudoKey, useIsDeviceSelected } from "@/core/layout/page/managers";
+import { setSelectedDeviceKey, setSelectedOrientationKey, setSelectedPseudoKey } from "@/core/layout/page/managers";
 
 // Types
-import type { DeviceDefinition } from '@/src/core/layout/page/types';
+import type { DeviceDefinition } from '@/core/layout/page/types';
 
 interface DeviceProps {
     deviceKey: string;

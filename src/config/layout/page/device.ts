@@ -1,4 +1,5 @@
-import type { DeviceDefinition } from '@/src/core/layout/page/types';
+import type { DeviceDefinition } from '@/core/layout/page/types';
+import { registerDevices } from '@/core/layout/page/registries';
 
 export const CoreDevices: DeviceDefinition[] = [
 	// All devices - catch-all
@@ -159,3 +160,6 @@ export const CoreDevices: DeviceDefinition[] = [
 		category: 'desktop',
 	},
 ] as const;
+
+// Register devices directly
+registerDevices(CoreDevices);

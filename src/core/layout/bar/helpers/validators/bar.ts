@@ -1,12 +1,12 @@
 // Types
-import type { BarDefinition, BarID, BarTitle, BarPosition, BarSize } from '@/src/core/layout/bar/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BarDefinition, BarID, BarTitle, BarPosition, BarSize } from '@/core/layout/bar/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { isBarDefinitionValid, isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid } from '@/src/core/layout/bar/utilities';
+import { isBarDefinitionValid, isBarIDValid, isBarTitleValid, isBarPositionValid, isBarSizeValid } from '@/core/layout/bar/utilities';
 
 // Helpers
-import { validateBenchKey } from '@/src/core/layout/workbench/helpers';
+import { validateBenchKey } from '@/core/layout/workbench/helpers';
 
 /**
  * Validates a bar ID for bar operations.

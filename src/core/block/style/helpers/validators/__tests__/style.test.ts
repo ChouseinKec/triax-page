@@ -2,7 +2,7 @@
 // import { validateStyleKey, validateStyleValue, validateBlockStyles } from '../block';
 
 // // Mock icons to avoid JSX in tests
-// jest.mock('@/src/core/block/style/constants/icon', () => ({
+// jest.mock('@/core/block/style/constants/icon', () => ({
 // 	STYLE_ICON_DEFINITIONS: {},
 // }));
 

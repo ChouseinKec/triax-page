@@ -1,11 +1,14 @@
-import type { DeviceDefinition, DeviceKey, DeviceRecord } from '@/src/core/layout/page/types';
-import type { OrientationDefinition, OrientationKey, OrientationDefinitionRecord } from '@/src/core/layout/page/types';
-import type { PseudoDefinition, PseudoKey, PseudoDefinitionRecord } from '@/src/core/layout/page/types';
-import type { ActionDefinition, ActionID, ActionRecord } from '@/src/core/layout/page/types/action';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { DeviceDefinition, DeviceKey, DeviceRecord } from '@/core/layout/page/types';
+import type { OrientationDefinition, OrientationKey, OrientationDefinitionRecord } from '@/core/layout/page/types';
+import type { PseudoDefinition, PseudoKey, PseudoDefinitionRecord } from '@/core/layout/page/types';
+import type { ActionDefinition, ActionID, ActionRecord } from '@/core/layout/page/types/action';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition } from '@/src/core/layout/page/helpers';
+import { validateDeviceDefinition, validateOrientationDefinition, validatePseudoDefinition } from '@/core/layout/page/helpers';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Class-based device registry for managing device definitions
@@ -196,24 +199,48 @@ class ActionRegistry {
 
 // Create singleton instance
 const deviceRegistry = new DeviceRegistry();
-export const registerDevice = (deviceDefinition: DeviceDefinition) => deviceRegistry.registerDevice(deviceDefinition);
+export const registerDevice = (deviceDefinition: DeviceDefinition): void => {
+  const result = deviceRegistry.registerDevice(deviceDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Device]   ❌ Failed: ${deviceDefinition.key} - ${result.message}`);
+  }
+};
+export const registerDevices = (deviceDefinitions: DeviceDefinition[]) => deviceDefinitions.forEach(registerDevice);
 export const getRegisteredDevices = () => deviceRegistry.getRegisteredDevices();
 export const getRegisteredDevice = (deviceKey: DeviceKey) => deviceRegistry.getRegisteredDevice(deviceKey);
 export const getDefaultDeviceKey = () => deviceRegistry.getDefaultDeviceKey();
 
 const orientationRegistry = new OrientationRegistry();
-export const registerOrientation = (orientationDefinition: OrientationDefinition) => orientationRegistry.registerOrientation(orientationDefinition);
+export const registerOrientation = (orientationDefinition: OrientationDefinition): void => {
+  const result = orientationRegistry.registerOrientation(orientationDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Orientation] ❌ Failed: ${orientationDefinition.key} - ${result.message}`);
+  }
+};
+export const registerOrientations = (orientationDefinitions: OrientationDefinition[]) => orientationDefinitions.forEach(registerOrientation);
 export const getRegisteredOrientations = () => orientationRegistry.getRegisteredOrientations();
 export const getRegisteredOrientation = (orientationKey: OrientationKey) => orientationRegistry.getRegisteredOrientation(orientationKey);
 export const getDefaultOrientationKey = () => orientationRegistry.getDefaultOrientationKey();
 
 const pseudoRegistry = new PseudoRegistry();
-export const registerPseudo = (pseudoDefinition: PseudoDefinition) => pseudoRegistry.registerPseudo(pseudoDefinition);
+export const registerPseudo = (pseudoDefinition: PseudoDefinition): void => {
+  const result = pseudoRegistry.registerPseudo(pseudoDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Pseudo]   ❌ Failed: ${pseudoDefinition.key} - ${result.message}`);
+  }
+};
+export const registerPseudos = (pseudoDefinitions: PseudoDefinition[]) => pseudoDefinitions.forEach(registerPseudo);
 export const getRegisteredPseudos = () => pseudoRegistry.getRegisteredPseudos();
 export const getRegisteredPseudo = (pseudoKey: PseudoKey) => pseudoRegistry.getRegisteredPseudo(pseudoKey);
 export const getDefaultPseudoKey = () => pseudoRegistry.getDefaultPseudoKey();
 
 const actionRegistry = new ActionRegistry();
-export const registerAction = (actionDefinition: ActionDefinition) => actionRegistry.registerAction(actionDefinition);
+export const registerAction = (actionDefinition: ActionDefinition): void => {
+  const result = actionRegistry.registerAction(actionDefinition);
+  if (!result.valid) {
+    devLog.error(`[Registry → Action]   ❌ Failed: ${actionDefinition.id} - ${result.message}`);
+  }
+};
+export const registerActions = (actionDefinitions: ActionDefinition[]) => actionDefinitions.forEach(registerAction);
 export const getRegisteredActions = () => actionRegistry.getRegisteredActions();
 export const getRegisteredAction = (id: ActionID) => actionRegistry.getRegisteredAction(id);

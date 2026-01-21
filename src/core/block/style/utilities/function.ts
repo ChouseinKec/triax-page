@@ -1,10 +1,10 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { TokenTypeDefinitionRecord } from '@/src/core/block/style/types/';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { TokenTypeDefinitionRecord } from '@/core/block/style/types/';
 
 // Utilities
 import { getValueToken } from './value';
-import { devLog } from '@/src/shared/utilities/dev';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Extracts the function name from a CSS function string.

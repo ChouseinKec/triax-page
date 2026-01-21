@@ -1,8 +1,8 @@
 // Types
-import type { TabDefinition } from '@/src/core/layout/panel/types';
+import type { TabDefinition } from '@/core/layout/panel/types';
 
 // Component
-import BlockAttributeTabRender from '@/src/config/layout/panel/tabs/attribute/component';
+import BlockAttributeTabRender from '@/config/layout/panel/tabs/attribute/component';
 
 export const TabDefinitionAttribute: TabDefinition = {
 	key: 'attribute',

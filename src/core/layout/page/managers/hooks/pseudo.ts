@@ -1,11 +1,11 @@
 // Stores
-import { usePageStore } from '@/src/state/layout/page';
+import { usePageStore } from '@/state/layout/page';
 
 // Types
-import type {  PseudoKey, PseudoDefinition } from '@/src/core/layout/page/types';
+import type {  PseudoKey, PseudoDefinition } from '@/core/layout/page/types';
 
 // Registry
-import { getRegisteredPseudo } from '@/src/core/layout/page/registries';
+import { getRegisteredPseudo } from '@/core/layout/page/registries';
 
 /**
  * Reactive hook to get the currently selected pseudo instance for page queries.

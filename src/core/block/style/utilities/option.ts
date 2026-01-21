@@ -1,10 +1,10 @@
 // Types
-import type { OptionDefinition } from '@/src/shared/components/types/option';
-import type { UnitDefinitionRecord, StyleDefinitionRecord, TokenDefinitionRecord, TokenTypeDefinitionRecord, TokenRaw, StyleKey, TokenCanonical } from '@/src/core/block/style/types';
+import type { OptionDefinition } from '@/shared/components/types/option';
+import type { UnitDefinitionRecord, StyleDefinitionRecord, TokenDefinitionRecord, TokenTypeDefinitionRecord, TokenRaw, StyleKey, TokenCanonical } from '@/core/block/style/types';
 
 // Utilities
-import { getTokenType, getTokenCanonical, getTokenBase, getValueTokens } from '@/src/core/block/style/utilities';
-import { devLog } from '@/src/shared/utilities/dev';
+import { getTokenType, getTokenCanonical, getTokenBase, getValueTokens } from '@/core/block/style/utilities';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Validates if a token is a valid option for a slot, considering current values and syntax.

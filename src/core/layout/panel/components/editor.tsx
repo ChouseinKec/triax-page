@@ -8,7 +8,7 @@ import type { PanelsProps } from "./types";
 import Panel from "./panel";
 
 // Managers
-import { getPanelDefinitions, usePanelOpenState } from "@/src/core/layout/panel/managers";
+import { getPanelDefinitions, usePanelOpenState } from "@/core/layout/panel/managers";
 
 const Panels: React.FC<PanelsProps> = ({ benchKey }) => {
     const panelDefinitions = getPanelDefinitions(benchKey);

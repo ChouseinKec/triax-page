@@ -1,5 +1,5 @@
-import { hasBrackets, hasBracketsMultiplier, parseBrackets, parseBracketsMultiplier } from '@/src/core/block/style/utilities/parse/bracket';
-import { MAX_MULTIPLIER_DEPTH } from '@/src/core/block/style/utilities/parse/parse';
+import { hasBrackets, hasBracketsMultiplier, parseBrackets, parseBracketsMultiplier } from '@/core/block/style/utilities/parse/bracket';
+import { MAX_MULTIPLIER_DEPTH } from '@/core/block/style/utilities/parse/parse';
 
 describe('hasBrackets', () => {
 	it.each([

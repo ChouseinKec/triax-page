@@ -1,8 +1,11 @@
-import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/src/core/block/instance/types';
-import type { ValidateResult } from '@/src/shared/types/result';
+import type { BlockDefinition, BlockType, BlockDefinitionRecord } from '@/core/block/instance/types';
+import type { ValidateResult } from '@/shared/types/result';
 
 // Helpers
-import { validateBlockDefinition } from '@/src/core/block/instance/helpers';
+import { validateBlockDefinition } from '@/core/block/instance/helpers';
+
+// Utilities
+import { devLog } from '@/shared/utilities/dev';
 
 
 /**
@@ -51,6 +54,12 @@ class BlockRegistry {
 const blockRegistry = new BlockRegistry();
 
 // Export the registry instance methods
-export const registerBlock = (block: BlockDefinition) => blockRegistry.registerBlock(block);
+export const registerBlock = (block: BlockDefinition): void => {
+  const result = blockRegistry.registerBlock(block);
+  if (!result.valid) {
+    devLog.error(`[Registry → Block]    ❌ Failed: ${block.type} - ${result.message}`);
+  }
+};
+export const registerBlocks = (blocks: BlockDefinition[]) => blocks.forEach(registerBlock);
 export const getRegisteredBlocks = () => blockRegistry.getRegisteredBlocks();
 export const getRegisteredBlock = (type: BlockType) => blockRegistry.getRegisteredBlock(type);

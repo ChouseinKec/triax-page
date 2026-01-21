@@ -6,7 +6,7 @@ import { memo, useRef } from "react";
 import CSS from "./styles.module.scss";
 
 // Components
-import TooltipReveal from "@/src/shared/components/reveal/tooltip/component";
+import TooltipReveal from "@/shared/components/reveal/tooltip/component";
 
 // Types
 import type { PropertyProps } from "./types";

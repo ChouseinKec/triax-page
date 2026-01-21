@@ -3,17 +3,17 @@
 import React, { memo, useMemo } from "react";
 
 // Components
-import ActionGroup from "@/src/shared/components/group/action/component";
+import ActionGroup from "@/shared/components/group/action/component";
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
 import type { BarProps } from "./types";
-import type { BarActionInstance } from "@/src/core/layout/bar/types";
+import type { BarActionInstance } from "@/core/layout/bar/types";
 
 // Managers
-import { useBarActions } from "@/src/core/layout/bar/managers";
+import { useBarActions } from "@/core/layout/bar/managers";
 
 /**
  * Bar Component

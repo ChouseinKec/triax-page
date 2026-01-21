@@ -1,5 +1,5 @@
 // Utilities
-import { isPanelTabIDValid, isPanelTabTitleValid, isPanelTabComponentValid, isPanelTabIconValid, isPanelTabOrderValid, isPanelTabDefinitionValid } from '@/src/core/layout/panel/utilities/tab';
+import { isPanelTabIDValid, isPanelTabTitleValid, isPanelTabComponentValid, isPanelTabIconValid, isPanelTabOrderValid, isPanelTabDefinitionValid } from '@/core/layout/panel/utilities/tab';
 
 describe('isPanelTabIDValid', () => {
 	it('accepts valid non-empty strings', () => {
