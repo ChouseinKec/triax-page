@@ -4,13 +4,13 @@ import { registerTokens, registerTokenTypes } from '@/core/block/style/registrie
 // Constants
 import { TOKEN_DEFINITIONS } from '@/config/block/style/token/token';
 
-import { COLOR_DEFINITION } from '@/config/block/style/token/type/color';
-import { FUNCTION_DEFINITION } from '@/config/block/style/token/type/function';
-import { INTEGER_DEFINITION } from '@/config/block/style/token/type/integer';
-import { KEYWORD_DEFINITION } from '@/config/block/style/token/type/keyword';
-import { LENGTH_DEFINITION } from '@/config/block/style/token/type/length';
-import { LINK_DEFINITION } from '@/config/block/style/token/type/link';
-import { NUMBER_DEFINITION } from '@/config/block/style/token/type/number';
+import { COLOR_DEFINITION } from '@/config/block/style/token/type/color/definition';
+import { FUNCTION_DEFINITION } from '@/config/block/style/token/type/function/definition';
+import { INTEGER_DEFINITION } from '@/config/block/style/token/type/integer/definition';
+import { KEYWORD_DEFINITION } from '@/config/block/style/token/type/keyword/definition';
+import { LENGTH_DEFINITION } from '@/config/block/style/token/type/length/definition';
+import { LINK_DEFINITION } from '@/config/block/style/token/type/link/definition';
+import { NUMBER_DEFINITION } from '@/config/block/style/token/type/number/definition';
 
 // Register tokens and token types directly
 registerTokens(TOKEN_DEFINITIONS);

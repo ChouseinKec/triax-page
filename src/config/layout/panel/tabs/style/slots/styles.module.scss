@@ -1,6 +1,6 @@
 @use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
-.BlockStyleSlots {
+.NodeStyleslots {
 	width: 100%;
 
 	display: flex;
@@ -10,7 +10,7 @@
 	overflow: hidden;
 	position: relative;
 
-	> :global(.BlockStylesNextSlot) {
+	> :global(.NodeStylesNextSlot) {
 		flex: unset;
 		:global(.Toggle) {
 			@include inputMixins.components--button-dropdown($isRound: true);

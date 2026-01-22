@@ -2,7 +2,7 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { BlockID } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
 import type { StyleKey } from '@/core/block/style/types';
 
 // Utilities
@@ -10,8 +10,8 @@ import { ResultPipeline } from '@/shared/utilities/pipeline';
 import { devLog } from '@/shared/utilities/dev';
 
 // Helpers
-import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickBlockStyles, pickStyleDefinition } from '@/core/block/style/helpers';
-import { validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers';
+import { cascadeBlockStyle, updateBlockStyle, validateStyleKey, validateStyleValue, pickNodeStyles, pickStyleDefinition } from '@/core/block/style/helpers';
+import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';
 import { fetchPageContext } from '@/core/layout/page/helpers';
 
 // Registry
@@ -21,23 +21,23 @@ import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } fro
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
  * Handles CSS shorthand expansion and updates the block's styles.
  *
- * @param blockID - The block identifier
+ * @param NodeID - The block identifier
  * @param styleKey - The CSS style key to set
  * @param value - The value to set
  */
-export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: string): void {
+export function setBlockStyle(NodeID: NodeID, styleKey: StyleKey, value: string): void {
 	const blockStore = useBlockStore.getState();
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockManager → setBlockStyle]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockStyles: pickBlockStyles(data.blockInstance),
+			NodeStyles: pickNodeStyles(data.blockInstance),
 		}))
 		.pick((data) => ({
 			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
@@ -53,7 +53,7 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 				data.styleKey, //
 				data.value,
 				data.styleDefinition,
-				data.blockStyles,
+				data.NodeStyles,
 				data.pageContext,
 			),
 		}))
@@ -63,7 +63,7 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
 
 	// Update the block styles in the store
 	blockStore.updateBlocks({
-		[blockID]: {
+		[NodeID]: {
 			...results.blockInstance,
 			styles: results.updatedStyles,
 		},
@@ -74,30 +74,30 @@ export function setBlockStyle(blockID: BlockID, styleKey: StyleKey, value: strin
  * Copies a style key value to clipboard for block style operations.
  * Retrieves the current style value and writes it to the system clipboard.
  *
- * @param blockID - The block identifier
+ * @param NodeID - The block identifier
  * @param styleKey - The CSS style key to copy
  */
-export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+export function copyBlockStyle(NodeID: NodeID, styleKey: StyleKey): void {
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick necessary data
 	const results = new ResultPipeline('[BlockManager → copyBlockStyle]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.pick((data) => ({
-			blockStyles: pickBlockStyles(data.blockInstance),
+			NodeStyles: pickNodeStyles(data.blockInstance),
 			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
 		}))
 		.pick(() => ({
 			pageContext: fetchPageContext(),
 		}))
 		.operate((data) => ({
-			styleValue: cascadeBlockStyle(data.styleKey, data.blockStyles, data.styleDefinition, data.pageContext),
+			styleValue: cascadeBlockStyle(data.styleKey, data.NodeStyles, data.styleDefinition, data.pageContext),
 		}))
 		.execute();
 	if (!results) return;
@@ -117,13 +117,13 @@ export function copyBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
  * Pastes a style key value from clipboard for block style operations.
  * Reads text from the system clipboard and sets it as the style value if valid.
  *
- * @param blockID - The block identifier
+ * @param NodeID - The block identifier
  * @param styleKey - The CSS style key to paste
  */
-export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+export function pasteBlockStyle(NodeID: NodeID, styleKey: StyleKey): void {
 	const results = new ResultPipeline('[BlockManager → pasteBlockStyle]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
@@ -138,7 +138,7 @@ export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
 			const safeValue = validateStyleValue(results.styleKey, results.styleDefinition, text, getRegisteredTokenTypes(), getRegisteredTokens());
 			if (!safeValue.valid) return devLog.error(`[BlockManager → pasteBlockStyle] ${safeValue.message}`);
 
-			setBlockStyle(results.blockID, results.styleKey, safeValue.value);
+			setBlockStyle(results.NodeID, results.styleKey, safeValue.value);
 			devLog.info(`Pasted style ${results.styleKey}: ${safeValue.value}`);
 		})
 		.catch((err) => {
@@ -150,19 +150,19 @@ export function pasteBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
  * Resets a style key value to empty string for block style operations.
  * Clears the current style value by setting it to an empty string.
  *
- * @param blockID - The block identifier
+ * @param NodeID - The block identifier
  * @param styleKey - The CSS style key to reset
  */
-export function resetBlockStyle(blockID: BlockID, styleKey: StyleKey): void {
+export function resetBlockStyle(NodeID: NodeID, styleKey: StyleKey): void {
 	// Validate necessary data
 	const results = new ResultPipeline('[BlockManager → resetBlockStyle]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.execute();
 	if (!results) return;
 
 	// Set the style to empty string
-	setBlockStyle(results.blockID, results.styleKey, '');
+	setBlockStyle(results.NodeID, results.styleKey, '');
 }

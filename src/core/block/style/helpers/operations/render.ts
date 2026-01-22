@@ -1,18 +1,19 @@
 // Types
-import type { BlockStyles, BlockID } from '@/core/block/instance/types';
+import type {  NodeID } from '@/core/block/node/instance/types';
+import type { NodeStyles } from '@/core/block/node/definition/types';
 import type { OperateResult } from '@/shared/types/result';
 import type { StyleDefinitionRecord } from '@/core/block/style/types';
 import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition } from '@/core/layout/page/types';
 
 // Helpers
-import { cascadeBlockStyles, generateCSSSelector, generateCSSRule } from '@/core/block/style/helpers/';
+import { cascadeNodeStyles, generateCSSSelector, generateCSSRule } from '@/core/block/style/helpers/';
 
 /**
  * Renders CSS rules for all pseudo-classes for a block.
  * Generates a complete set of CSS rules for each registered pseudo-class (e.g., :hover, :active).
  *
  * @param styles - The block's complete style definition object
- * @param blockID - The block's unique identifier for selector generation
+ * @param NodeID - The block's unique identifier for selector generation
  * @param styleDefinitions - Registry of all available style definitions
  * @param pseudoDefinitions - Array of all registered pseudo-class definitions
  * @param deviceKey - Current device context
@@ -23,9 +24,9 @@ import { cascadeBlockStyles, generateCSSSelector, generateCSSRule } from '@/core
  * @param defaultPseudoKey - Default pseudo key
  * @returns Operation result with the combined CSS string for all pseudos
  */
-function renderBlockStylesAllPseudos(
-	styles: BlockStyles,
-	blockID: BlockID,
+function renderNodeStylesAllPseudos(
+	styles: NodeStyles,
+	NodeID: NodeID,
 	styleDefinitions: StyleDefinitionRecord,
 	pseudoDefinitions: PseudoDefinition[],
 
@@ -42,9 +43,9 @@ function renderBlockStylesAllPseudos(
 	// Loop through each registered pseudo-class definition
 	for (const pseudo of pseudoDefinitions) {
 		// Render styles for the current pseudo and append to the CSS string
-		const result = renderBlockStylesSinglePseudo(
+		const result = renderNodeStylesSinglePseudo(
 			styles,
-			blockID,
+			NodeID,
 			styleDefinitions,
 			deviceKey,
 			orientationKey,
@@ -67,7 +68,7 @@ function renderBlockStylesAllPseudos(
  * Generates a CSS rule for either a specific pseudo-class or base styles.
  *
  * @param styles - The block's complete style definition object
- * @param blockID - The block's unique identifier for selector generation
+ * @param NodeID - The block's unique identifier for selector generation
  * @param styleDefinitions - Registry of all available style definitions
  * @param deviceKey - Current device context
  * @param orientationKey - Current orientation context
@@ -77,9 +78,9 @@ function renderBlockStylesAllPseudos(
  * @param defaultPseudoKey - Default pseudo key
  * @param includePseudoInSelector - Whether to include the pseudo-selector in the CSS selector
  */
-function renderBlockStylesSinglePseudo(
-	styles: BlockStyles,
-	blockID: BlockID,
+function renderNodeStylesSinglePseudo(
+	styles: NodeStyles,
+	NodeID: NodeID,
 	styleDefinitions: StyleDefinitionRecord,
 
 	deviceKey: DeviceKey,
@@ -93,7 +94,7 @@ function renderBlockStylesSinglePseudo(
 	includePseudoInSelector: boolean = true,
 ): OperateResult<string> {
 	// Cascade styles for the specified pseudo, resolving all properties
-	const cssStylesRes = cascadeBlockStyles(
+	const cssStylesRes = cascadeNodeStyles(
 		styles,
 		styleDefinitions,
 		deviceKey,
@@ -109,7 +110,7 @@ function renderBlockStylesSinglePseudo(
 	const selectorPseudoKey = includePseudoInSelector ? pseudoKey : defaultPseudoKey;
 
 	// Generate the CSS selector string
-	const cssSelectorRes = generateCSSSelector(blockID, selectorPseudoKey, deviceKey, defaultPseudoKey);
+	const cssSelectorRes = generateCSSSelector(NodeID, selectorPseudoKey, deviceKey, defaultPseudoKey);
 	if (!cssSelectorRes.success) return { success: false, error: cssSelectorRes.error };
 
 	// Generate the complete CSS rule
@@ -126,7 +127,7 @@ function renderBlockStylesSinglePseudo(
  * When pseudo is specific, generates preview styles applied to base selector.
  *
  * @param styles - The block's complete style definition object
- * @param blockID - The block's unique identifier for selector generation
+ * @param NodeID - The block's unique identifier for selector generation
  * @param styleDefinitions - Registry of all available style definitions
  * @param pseudoDefinitions - Array of all registered pseudo-class definitions
  * @param deviceKey - Current device context
@@ -136,9 +137,9 @@ function renderBlockStylesSinglePseudo(
  * @param defaultOrientationKey - Default orientation key
  * @param defaultPseudoKey - Default pseudo key
  */
-export function renderBlockStyles(
-	styles: BlockStyles,
-	blockID: BlockID,
+export function renderNodeStyles(
+	styles: NodeStyles,
+	NodeID: NodeID,
 	styleDefinitions: StyleDefinitionRecord,
 	pseudoDefinitions: PseudoDefinition[],
 
@@ -152,9 +153,9 @@ export function renderBlockStyles(
 ): OperateResult<string> {
 	// If pseudo is 'all', render styles for all registered pseudo-classes
 	if (pseudoKey === defaultPseudoKey) {
-		return renderBlockStylesAllPseudos(
+		return renderNodeStylesAllPseudos(
 			styles,
-			blockID,
+			NodeID,
 			styleDefinitions,
 			pseudoDefinitions,
 			deviceKey,
@@ -167,9 +168,9 @@ export function renderBlockStyles(
 	}
 
 	// Otherwise, render styles for the selected pseudo only (for preview)
-	return renderBlockStylesSinglePseudo(
+	return renderNodeStylesSinglePseudo(
 		styles,
-		blockID,
+		NodeID,
 		styleDefinitions,
 		deviceKey,
 		orientationKey,

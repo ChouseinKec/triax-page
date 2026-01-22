@@ -1,6 +1,6 @@
-import type { BlockInstance, BlockID } from '@/core/block/instance/types';
+import type { NodeInstance, NodeID } from '@/core/block/node/instance/types';
 
-export const DefaultBlocks: Record<BlockID, BlockInstance> = {
+export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 	// body container
 	body: {
 		id: 'body',

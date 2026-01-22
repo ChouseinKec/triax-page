@@ -5,13 +5,13 @@ import { useBlockStore } from '@/state/block/block';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { BlockID } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
 import type { StyleKey } from '@/core/block/style/types';
 import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 // Helpers
-import { validateBlockID, pickBlockInstance } from '@/core/block/instance/helpers/';
-import { validateStyleKey, cascadeBlockStyle, pickBlockStyles, renderBlockStyles, pickStyleDefinition } from '@/core/block/style/helpers';
+import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers/';
+import { validateStyleKey, cascadeBlockStyle, pickNodeStyles, renderNodeStyles, pickStyleDefinition } from '@/core/block/style/helpers';
 import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/core/layout/page/helpers';
 
 // Managers
@@ -28,14 +28,14 @@ import { getRegisteredStyles } from '@/core/block/style/registries';
  * This hook performs cascading resolution: for pseudo-classes, it first checks pseudo-specific styles,
  * then falls back to base styles. Across devices, it prioritizes current device over default device.
  *
- * @param blockID - The unique identifier of the block
+ * @param NodeID - The unique identifier of the block
  * @param styleKey - The CSS style property key to retrieve (e.g., 'backgroundColor', 'width')
  */
-export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | undefined {
+export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | undefined {
 	// Validate input parameters to ensure they are valid before proceeding
 	const safeParams = new ResultPipeline('[BlockQueries → useBlockStyle]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.execute();
@@ -52,11 +52,11 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 		const results = new ResultPipeline('[BlockQueries → useBlockStyle]')
 			.pick(() => ({
 				// Retrieve the block instance from the store
-				blockInstance: pickBlockInstance(safeParams.blockID, state.allBlocks),
+				blockInstance: pickNodeInstance(safeParams.NodeID, state.allBlocks),
 			}))
 			.pick((data) => ({
 				// Extract styles from the block instance
-				blockStyles: pickBlockStyles(data.blockInstance),
+				NodeStyles: pickNodeStyles(data.blockInstance),
 				// Get the style definition for validation and processing
 				styleDefinition: pickStyleDefinition(safeParams.styleKey, getRegisteredStyles()),
 			}))
@@ -64,7 +64,7 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
 				// Resolve the style value using cascading logic
 				styleValue: cascadeBlockStyle(
 					safeParams.styleKey,
-					data.blockStyles,
+					data.NodeStyles,
 					data.styleDefinition,
 					selectedDeviceKey,
 					selectedOrientationKey,
@@ -89,16 +89,16 @@ export function useBlockStyle(blockID: BlockID, styleKey: StyleKey): string | un
  * This hook generates CSS rules for the block, either for all pseudo-classes or a specific one,
  * considering the provided device, orientation, and pseudo contexts.
  *
- * @param blockID - The unique identifier of the block
+ * @param NodeID - The unique identifier of the block
  * @param deviceKey - The device context (e.g., 'default', 'tablet-sm')
  * @param orientationKey - The orientation context (e.g., 'portrait', 'landscape')
  * @param pseudoKey - The pseudo-class context ('all' for all pseudos, or specific like 'hover')
  */
-export function useBlockRenderedStyles(blockID: BlockID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
+export function useBlockRenderedStyles(NodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
 	// Validate input parameters
 	const safeParams = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 			deviceKey: validateDeviceKey(deviceKey),
 			orientationKey: validateOrientationKey(orientationKey),
 			pseudoKey: validatePseudoKey(pseudoKey),
@@ -112,17 +112,17 @@ export function useBlockRenderedStyles(blockID: BlockID, deviceKey: DeviceKey, o
 		const results = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
 			.pick(() => ({
 				// Retrieve the block instance
-				blockInstance: pickBlockInstance(safeParams.blockID, state.allBlocks),
+				blockInstance: pickNodeInstance(safeParams.NodeID, state.allBlocks),
 			}))
 			.pick((data) => ({
 				// Extract styles from the block instance
-				blockStyles: pickBlockStyles(data.blockInstance),
+				NodeStyles: pickNodeStyles(data.blockInstance),
 			}))
 			.operate((data) => ({
 				// Render the styles into CSS string
-				renderedStyles: renderBlockStyles(
-					data.blockStyles,
-					safeParams.blockID,
+				renderedStyles: renderNodeStyles(
+					data.NodeStyles,
+					safeParams.NodeID,
 					getRegisteredStyles(),
 					getPseudoDefinitions(),
 					safeParams.deviceKey,

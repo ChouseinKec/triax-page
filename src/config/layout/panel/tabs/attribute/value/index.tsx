@@ -2,7 +2,7 @@
 import { memo, useCallback } from "react";
 
 // Types
-import type { BlockAttributesValueProps } from "./types";
+import type { NodeAttributesValueProps } from "./types";
 
 // Managers
 import { useBlockAttribute, setBlockAttribute } from "@/core/block/attribute/managers";
@@ -25,16 +25,16 @@ import RadioSelect from "@/shared/components/select/radio/component";
  * BlockAttributeValue Component
  * Main entry for rendering a HTML property value editor.
  *
- * @param blockID - The ID of the block
+ * @param NodeID - The ID of the block
  * @param propertyName - The HTML property key
  * @returns ReactElement - The rendered value editor UI for the property.
  */
-const BlockAttributeValue: React.FC<BlockAttributesValueProps> = ({ blockID, attribute }) => {
-    const value = useBlockAttribute(blockID, attribute) || "";
+const BlockAttributeValue: React.FC<NodeAttributesValueProps> = ({ NodeID, attribute }) => {
+    const value = useBlockAttribute(NodeID, attribute) || "";
 
     const handleChange = useCallback((newValue: string) => {
-        setBlockAttribute(blockID, attribute, newValue);
-    }, [blockID, attribute]
+        setBlockAttribute(NodeID, attribute, newValue);
+    }, [NodeID, attribute]
     );
 
     const attributeDefinition = getRegisteredAttribute(attribute);

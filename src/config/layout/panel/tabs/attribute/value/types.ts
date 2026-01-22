@@ -1,16 +1,16 @@
 // Types
 import type { AttributeKey } from '@/core/block/attribute/types';
-import type { BlockID } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
 
 /**
  * Props for attribute value components.
  * Base interface for components that edit attribute values.
  *
- * Seventh level in hierarchy: BlockAttributes -> Layouts -> Layout -> Category -> Group -> Property -> Value.
+ * Seventh level in hierarchy: NodeAttributes -> Layouts -> Layout -> Category -> Group -> Property -> Value.
  */
-export interface BlockAttributesValueProps {
+export interface NodeAttributesValueProps {
 	/** ID of the block being edited */
-	blockID: BlockID;
+	NodeID: NodeID;
 	/** Name of the attribute being edited */
 	attribute: AttributeKey;
 }

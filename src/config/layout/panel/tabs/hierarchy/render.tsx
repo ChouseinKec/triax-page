@@ -6,7 +6,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useBlock, selectBlock, getPreviousBlock, getNextBlock, getSelectedBlockID } from "@/core/block/instance/managers";
+import { useNode, selectNode, getPreviousNode, getNextNode, getSelectedNodeID } from "@/core/block/node/instance/managers";
 
 // Components
 import Entry from "./entry";
@@ -23,32 +23,32 @@ import Entry from "./entry";
  * @note Supports Arrow Up/Down keys for block navigation when component is focused
  */
 const BlocksHierarchyRender: React.FC = () => {
-    const rootBlock = useBlock('body');
+    const rootBlock = useNode('body');
 
     // Select next block on ArrowDown
     const handleSelectNext = (e: React.KeyboardEvent) => {
         if (e.key !== "ArrowDown") return;
 
-        const currentBlockID = getSelectedBlockID();
-        if (!currentBlockID) return;
+        const currentNodeID = getSelectedNodeID();
+        if (!currentNodeID) return;
 
-        const nextBlock = getNextBlock(currentBlockID);
+        const nextBlock = getNextNode(currentNodeID);
         if (!nextBlock) return;
 
-        selectBlock(nextBlock.id);
+        selectNode(nextBlock.id);
     }
 
     // Select previous block on ArrowUp
     const handleSelectPrevious = (e: React.KeyboardEvent) => {
         if (e.key !== "ArrowUp") return;
 
-        const currentBlockID = getSelectedBlockID();
-        if (!currentBlockID) return;
+        const currentNodeID = getSelectedNodeID();
+        if (!currentNodeID) return;
 
-        const previousBlock = getPreviousBlock(currentBlockID);
+        const previousBlock = getPreviousNode(currentNodeID);
         if (!previousBlock) return;
 
-        selectBlock(previousBlock.id);
+        selectNode(previousBlock.id);
     };
 
     // Handle keyboard navigation
@@ -68,7 +68,7 @@ const BlocksHierarchyRender: React.FC = () => {
         >
             {
                 rootBlock
-                    ? <Entry key={rootBlock.id} blockID={rootBlock.id} />
+                    ? <Entry key={rootBlock.id} NodeID={rootBlock.id} />
                     : <div className={CSS.Empty}>No blocks available. Add a block to get started.</div>
             }
         </div>

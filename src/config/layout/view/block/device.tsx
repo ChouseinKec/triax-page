@@ -11,7 +11,7 @@ import PseudoSelect from "./pseudo-select";
 import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { useBlock } from "@/core/block/instance/managers";
+import { useNode } from "@/core/block/node/instance/managers";
 import { getDeviceDefinition, getOrientationDefinition, getDefaultOrientationKey, getDefaultPseudoKey, useIsDeviceSelected } from "@/core/layout/page/managers";
 import { setSelectedDeviceKey, setSelectedOrientationKey, setSelectedPseudoKey } from "@/core/layout/page/managers";
 
@@ -64,7 +64,7 @@ const Device: React.FC<DeviceProps> = ({ deviceKey }) => {
     const isDeviceSelected = useIsDeviceSelected(deviceKey);
 
     // Fetch the root block for this device
-    const rootBlock = useBlock('body');
+    const rootBlock = useNode('body');
 
     // Handle device selection on click
     const handleClick = useCallback((e: React.MouseEvent) => {
@@ -105,7 +105,7 @@ const Device: React.FC<DeviceProps> = ({ deviceKey }) => {
             {/* Render the root block if available */}
             {
                 rootBlock
-                    ? <Block key={rootBlock.id} blockID={rootBlock.id} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />
+                    ? <Block key={rootBlock.id} NodeID={rootBlock.id} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />
                     : null
             }
         </div>

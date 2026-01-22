@@ -1,24 +1,25 @@
 // Types
-import type { BlockID, BlockInstanceRecord, BlockAttributes } from '@/core/block/instance/types';
+import type { NodeAttributes } from '@/core/block/node/definition/types';
+import type { NodeID, StoredNodes } from '@/core/block/node/instance/types';
 import type { PickResult } from '@/shared/types/result';
 
 // Helper
-import { pickBlockInstance } from '@/core/block/instance/helpers/pickers/instance';
+import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers/instance';
 
 /**
  * Fetch the attributes object for a block instance by id.
  *
- * @param blockID - id of the block whose attributes should be fetched
- * @param storedBlocks - record containing all block instances keyed by id
+ * @param NodeID - id of the block whose attributes should be fetched
+ * @param storedNodes - record containing all block instances keyed by id
  */
-export function pickBlockAttributes(blockID: BlockID, storedBlocks: BlockInstanceRecord): PickResult<BlockAttributes> {
+export function pickNodeAttributes(NodeID: NodeID, storedNodes: StoredNodes): PickResult<NodeAttributes> {
 	// Resolve block instance
-	const blockResult = pickBlockInstance(blockID, storedBlocks);
+	const blockResult = pickNodeInstance(NodeID, storedNodes);
 	if (!blockResult.success) return blockResult;
 
 	// Return attributes if present — otherwise return a helpful error
-	const blockAttributes = blockResult.data.attributes;
-	if (!blockAttributes) return { success: false, error: `Block attributes not found for block: '${blockID}'` };
+	const NodeAttributes = blockResult.data.attributes;
+	if (!NodeAttributes) return { success: false, error: `Block attributes not found for block: '${NodeID}'` };
 
-	return { success: true, data: blockAttributes };
+	return { success: true, data: NodeAttributes };
 }

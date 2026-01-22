@@ -1,5 +1,5 @@
 // Types
-import type { BlockAttributes } from '@/core/block/instance/types';
+import type { NodeAttributes } from '@/core/block/node/definition/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Utilities
@@ -10,7 +10,7 @@ import { normalizeAttributeValue, normalizeAttributeKey } from '@/core/block/att
  * Converts HTML attribute names to React equivalents and normalizes boolean values.
  * @param attributes - The block's attribute definition object
  */
-export function renderBlockAttributes(attributes: BlockAttributes): Record<string, string | boolean> {
+export function renderNodeAttributes(attributes: NodeAttributes): Record<string, string | boolean> {
 	const normalizedAttributes: Record<string, string | boolean> = {};
 	for (const [property, value] of Object.entries(attributes)) {
 		if (!value) continue;

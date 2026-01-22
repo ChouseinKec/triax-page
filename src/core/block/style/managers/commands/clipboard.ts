@@ -2,34 +2,35 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockID } from '@/core/block/instance/helpers/validators';
-import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { validateNodeID } from '@/core/block/node/instance/helpers/validators';
+import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 
 // Types
-import type { BlockID, BlockStyles } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
+import type { NodeStyles } from '@/core/block/node/definition/types';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
-let stylesClipboard: BlockStyles | null = null;
+let stylesClipboard: NodeStyles | null = null;
 
 /**
  * Copies the styles of a blockInstance to the clipboard in blockInstance CRUD operations.
  * Stores the blockInstance styles for later pasting.
  *
- * @param blockID - The blockInstance identifier to copy styles from
+ * @param NodeID - The blockInstance identifier to copy styles from
  */
-export function copyBlockStyles(blockID: BlockID): void {
+export function copyNodeStyles(NodeID: NodeID): void {
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the blockInstance to copy styles from
-	const results = new ResultPipeline('[BlockManager → copyBlockStyles]')
+	const results = new ResultPipeline('[BlockManager → copyNodeStyles]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
@@ -42,26 +43,26 @@ export function copyBlockStyles(blockID: BlockID): void {
  * Pastes copied styles to a target blockInstance in blockInstance CRUD operations.
  * Applies the styles from clipboard to the specified blockInstance.
  *
- * @param blockID - The blockInstance identifier to paste styles to
+ * @param NodeID - The blockInstance identifier to paste styles to
  */
-export function pasteBlockStyles(blockID: BlockID): void {
-	if (!stylesClipboard) return devLog.error(`[BlockManager → pasteBlockStyles] No styles in clipboard`), undefined;
+export function pasteNodeStyles(NodeID: NodeID): void {
+	if (!stylesClipboard) return (devLog.error(`[BlockManager → pasteNodeStyles] No styles in clipboard`), undefined);
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste styles into
-	const results = new ResultPipeline('[BlockManager → pasteBlockStyles]')
+	const results = new ResultPipeline('[BlockManager → pasteNodeStyles]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with styles from clipboard
 	blockStore.updateBlocks({
-		[results.blockID]: {
+		[results.NodeID]: {
 			...results.targetBlock,
 			styles: JSON.parse(JSON.stringify(stylesClipboard)),
 		},

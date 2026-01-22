@@ -6,28 +6,14 @@ import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import {
-    useBlock,
-    selectBlock,
-    useIsBlockSelected,
-    getBlockIcon,
-    deleteBlock,
-    copyBlock,
-    pasteBlock,
-    duplicateBlock,
-
- 
-    moveBlockAfter,
-    moveBlockBefore,
-    canBlockHaveChildren,
-    moveBlockInto,
-} from "@/core/block/instance/managers";
-import { copyBlockStyles, pasteBlockStyles } from "@/core/block/style/managers";
-import { copyBlockAttributes, pasteBlockAttributes } from "@/core/block/attribute/managers";
+import { useNode, selectNode, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/instance/managers";
+import { getNodeIcon } from "@/core/block/node/definition/managers";
+import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/managers";
+import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/managers";
 
 // Types
 import type { EntryProps } from "./types";
-import type { BlockID } from "@/core/block/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types";
 
 // Components
 import FloatReveal from "@/shared/components/reveal/float/component";
@@ -44,26 +30,26 @@ import { useDragDrop } from "@/shared/hooks/interface/useDragDrop";
  * and visual feedback for selection and drag states. Supports nested block hierarchies with recursive rendering.
  *
  * @param  props - Component properties
- * @param  props.blockID - Unique identifier for the block this entry represents
+ * @param  props.NodeID - Unique identifier for the block this entry represents
  * @returns Rendered hierarchy entry with interactive controls and nested children
  *
  * @note Includes copy/paste/reset operations for blocks, styles, and attributes via context menu
  */
-const Entry: React.FC<EntryProps> = ({ blockID }) => {
+const Entry: React.FC<EntryProps> = ({ NodeID }) => {
     const revealButtonRef = useRef<HTMLButtonElement | null>(null);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
     const [isOpen, setIsOpen] = useState(true);
 
     // Get block instance
-    const block = useBlock(blockID);
-    const blockType = block?.type;
-    const blockContentIDs = block?.contentIDs || [];
+    const block = useNode(NodeID);
+    const NodeKey = block?.type;
+    const NodeContentIDs = block?.contentIDs || [];
     const blockTag = block?.tag;
 
-    const isBlockSelected = useIsBlockSelected(blockID);
-    const blockIcon = blockType ? getBlockIcon(blockType) : null;
-    const canHaveChildren = canBlockHaveChildren(blockID);
-    const hasChildren = blockContentIDs.length > 0;
+    const isBlockSelected = useIsNodeSelected(NodeID);
+    const NodeIcon = NodeKey ? getNodeIcon(NodeKey) : null;
+    const canHaveChildren = canNodeHaveChildren(NodeID);
+    const hasChildren = NodeContentIDs.length > 0;
 
     // Drag and drop hook
     const {
@@ -75,20 +61,20 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
         handleDrop,
         handleDragEnd,
     } = useDragDrop(
-        moveBlockBefore,
-        moveBlockAfter,
-        moveBlockInto,
-        selectBlock
+        moveNodeBefore,
+        moveNodeAfter,
+        moveNodeInto,
+        selectNode
     );
 
     // Handle block selection
     const handleLeftClick = useCallback(() => {
         if (isBlockSelected) {
-            selectBlock(null);
+            selectNode(null);
         } else {
-            selectBlock(blockID);
+            selectNode(NodeID);
         }
-    }, [isBlockSelected, blockID]
+    }, [isBlockSelected, NodeID]
     )
 
     // Handle context menu
@@ -117,7 +103,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             className={CSS.DropZone}
             onDragOver={(e) => handleDragOver(e, 'before')}
             onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, blockID, 'before')}
+            onDrop={(e) => handleDrop(e, NodeID, 'before')}
             data-drag-over={isDragOver === 'before'}
             data-drag-position="before"
         />
@@ -128,7 +114,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             className={CSS.DropZone}
             onDragOver={(e) => handleDragOver(e, 'after')}
             onDragLeave={handleDragLeave}
-            onDrop={(e) => handleDrop(e, blockID, 'after')}
+            onDrop={(e) => handleDrop(e, NodeID, 'after')}
             data-drag-over={isDragOver === 'after'}
             data-drag-position="after"
         />
@@ -140,8 +126,8 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
 
         const children =
             hasChildren
-                ? blockContentIDs.map((childID: BlockID) => (
-                    <Entry key={childID} blockID={childID} />
+                ? NodeContentIDs.map((childID: NodeID) => (
+                    <Entry key={childID} NodeID={childID} />
                 ))
                 : null;
 
@@ -151,7 +137,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
                 {children}
             </div>
         );
-    }, [blockContentIDs, canHaveChildren, hasChildren]
+    }, [NodeContentIDs, canHaveChildren, hasChildren]
     );
 
     const contextMenu = useMemo(() => {
@@ -176,45 +162,45 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             >
 
                 <DropdownReveal title="Copy" placeholder={copyIcon} className={CSS.Dropdown} anchor="right" offset={15}>
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyBlock(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyNode(NodeID))}>
                         Copy Block
                     </button>
 
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyBlockStyles(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyNodeStyles(NodeID))}>
                         Copy Styles
                     </button>
 
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyBlockAttributes(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => copyNodeAttributes(NodeID))}>
                         Copy Attributes
                     </button>
                 </DropdownReveal>
 
                 <DropdownReveal title="Paste" placeholder={pasteIcon} className={CSS.Dropdown} anchor="right" offset={15}>
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteBlock(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteNode(NodeID))}>
                         Paste Block
                     </button>
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteBlockStyles(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteNodeStyles(NodeID))}>
                         Paste Styles
                     </button>
 
-                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteBlockAttributes(blockID))}>
+                    <button className={CSS.Action} onClick={() => handleActionClick(() => pasteNodeAttributes(NodeID))}>
                         Paste Attributes
                     </button>
                 </DropdownReveal>
 
-                <button className={CSS.Action} onClick={() => handleActionClick(() => duplicateBlock(blockID))}>
+                <button className={CSS.Action} onClick={() => handleActionClick(() => duplicateNode(NodeID))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M184,64H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H184a8,8,0,0,0,8-8V72A8,8,0,0,0,184,64Zm-8,144H48V80H176ZM224,40V184a8,8,0,0,1-16,0V48H72a8,8,0,0,1,0-16H216A8,8,0,0,1,224,40Z" /></svg>
                     Duplicate Block
                 </button>
 
-                <button className={CSS.Action} onClick={() => handleActionClick(() => deleteBlock(blockID))}>
+                <button className={CSS.Action} onClick={() => handleActionClick(() => deleteNode(NodeID))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z" /></svg>
                     Delete Block
                 </button>
 
             </FloatReveal>
         )
-    }, [isContextMenuOpen, blockID]
+    }, [isContextMenuOpen, NodeID]
     );
 
     const revealButton = useMemo(() => {
@@ -229,7 +215,7 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
 
             draggable: true,
             onDragStart: (e: React.DragEvent) => {
-                handleDragStart(e, blockID);
+                handleDragStart(e, NodeID);
                 e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
             },
             onDragEnd: handleDragEnd,
@@ -238,15 +224,15 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             ...(canHaveChildren && !hasChildren && {
                 onDragOver: (e: React.DragEvent) => handleDragOver(e, 'over'),
                 onDragLeave: handleDragLeave,
-                onDrop: (e: React.DragEvent) => handleDrop(e, blockID, 'over')
+                onDrop: (e: React.DragEvent) => handleDrop(e, NodeID, 'over')
             })
         }
 
         return (
             <button {...attributes}>
                 <span>
-                    {blockIcon}
-                    <span>{`${blockID} (${blockTag})`}</span>
+                    {NodeIcon}
+                    <span>{`${NodeID} (${blockTag})`}</span>
                 </span>
 
                 {hasChildren && (
@@ -264,13 +250,13 @@ const Entry: React.FC<EntryProps> = ({ blockID }) => {
             </button>
         )
     },
-        [isBlockSelected, blockID, isOpen, blockIcon, handleDragEnd, handleDragStart, canHaveChildren, handleDragLeave, handleDragOver, handleDrop, handleLeftClick, handleRightClick, hasChildren]
+        [isBlockSelected, NodeID, isOpen, NodeIcon, handleDragEnd, handleDragStart, canHaveChildren, handleDragLeave, handleDragOver, handleDrop, handleLeftClick, handleRightClick, hasChildren]
     );
 
     return (
         <div
             className={CSS.Entry}
-            data-is-dragged={draggedItemID === blockID}
+            data-is-dragged={draggedItemID === NodeID}
             data-drag-over={isDragOver}
             data-children-allowed={canHaveChildren}
             data-has-children={hasChildren}

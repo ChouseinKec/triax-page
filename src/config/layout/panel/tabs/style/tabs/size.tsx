@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 // Types
-import type { BlockID } from "@/core/block/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types";
 import type { StyleKey } from "@/core/block/style/types";
 import type { Side } from "@/shared/components/select/position/types";
 
@@ -22,11 +22,11 @@ import { useBlockStyle } from "@/core/block/style/managers";
  * Renders the Size & Position tab content
  * Shows width/height controls, position controls, and scroll properties
  * 
- * @param blockID - The selected block identifier
+ * @param NodeID - The selected block identifier
  * @returns JSX for the size tab
  */
-export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
-    const positionValue = useBlockStyle(blockID, "position") || '';
+export const renderSizeTab = (NodeID: NodeID): React.ReactElement => {
+    const positionValue = useBlockStyle(NodeID, "position") || '';
     const [currentSide, setCurrentSide] = useState<Side>("top");
 
     const padding = generateStyleKey("padding", currentSide) || "padding";
@@ -39,16 +39,16 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                 styles={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ blockID, label: "Width", propertyName: "width" })}
-                        {renderStyleRow({ blockID, label: "Min Width", propertyName: "min-width" })}
-                        {renderStyleRow({ blockID, label: "Max Width", propertyName: "max-width" })}
-                        {renderStyleRow({ blockID, label: "Height", propertyName: "height" })}
-                        {renderStyleRow({ blockID, label: "Min Height", propertyName: "min-height" })}
-                        {renderStyleRow({ blockID, label: "Max Height", propertyName: "max-height" })}
-                        {renderStyleRow({ blockID, label: "Aspect Ratio", propertyName: "aspect-ratio", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Overflow", propertyName: "overflow", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Width", propertyName: "width" })}
+                        {renderStyleRow({ NodeID, label: "Min Width", propertyName: "min-width" })}
+                        {renderStyleRow({ NodeID, label: "Max Width", propertyName: "max-width" })}
+                        {renderStyleRow({ NodeID, label: "Height", propertyName: "height" })}
+                        {renderStyleRow({ NodeID, label: "Min Height", propertyName: "min-height" })}
+                        {renderStyleRow({ NodeID, label: "Max Height", propertyName: "max-height" })}
+                        {renderStyleRow({ NodeID, label: "Aspect Ratio", propertyName: "aspect-ratio", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Overflow", propertyName: "overflow", styles: { gridColumn: "1 / -1" } })}
                         {renderStyleRow({
-                            blockID,
+                            NodeID,
                             label: "Z-Index",
                             propertyName: "z-index",
                             styles: { gridColumn: "1/-1" }
@@ -63,7 +63,7 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                 styles={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ blockID, label: "Position", propertyName: "position", styles: { gridColumn: "1/-1", gridRow: "1" } })}
+                        {renderStyleRow({ NodeID, label: "Position", propertyName: "position", styles: { gridColumn: "1/-1", gridRow: "1" } })}
 
                         <Property
                             label={null}
@@ -82,20 +82,20 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                         />
 
                         {renderStyleRow({
-                            blockID,
+                            NodeID,
                             label: "Padding",
                             propertyName: padding,
                             styles: { gridColumn: "2/-1", gridRow: "2", flexDirection: "row" }
                         })}
 
                         {renderStyleRow({
-                            blockID,
+                            NodeID,
                             label: "Margin",
                             propertyName: margin,
                             styles: { gridColumn: "2/-1", gridRow: "3", flexDirection: "row" }
                         })}
                         {renderStyleRow({
-                            blockID,
+                            NodeID,
                             label: currentSide || "...",
                             propertyName: (currentSide?.toLowerCase()) || "top",
                             disabled: !["absolute", "fixed", "sticky"].includes(positionValue) || !currentSide,
@@ -113,17 +113,17 @@ export const renderSizeTab = (blockID: BlockID): React.ReactElement => {
                 styles={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ blockID, label: "Behavior", propertyName: "scroll-behavior", styles: { gridColumn: "1 / 3" } })}
-                        {renderStyleRow({ blockID, label: "Snap Stop", propertyName: "scroll-snap-stop", styles: { gridColumn: "3 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Overscroll", propertyName: "overscroll-behavior", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Snap Type", propertyName: "scroll-snap-type", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Snap Align", propertyName: "scroll-snap-align", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Margin", propertyName: "scroll-margin", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Margin Block", propertyName: "scroll-margin-block", styles: { gridColumn: "1 / 3" } })}
-                        {renderStyleRow({ blockID, label: "Margin Inline", propertyName: "scroll-margin-inline", styles: { gridColumn: "3 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Padding", propertyName: "scroll-padding", styles: { gridColumn: "1 / -1" } })}
-                        {renderStyleRow({ blockID, label: "Padding Block", propertyName: "scroll-padding-block", styles: { gridColumn: "1 / 3" } })}
-                        {renderStyleRow({ blockID, label: "Padding Inline", propertyName: "scroll-padding-inline", styles: { gridColumn: "3 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Behavior", propertyName: "scroll-behavior", styles: { gridColumn: "1 / 3" } })}
+                        {renderStyleRow({ NodeID, label: "Snap Stop", propertyName: "scroll-snap-stop", styles: { gridColumn: "3 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Overscroll", propertyName: "overscroll-behavior", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Snap Type", propertyName: "scroll-snap-type", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Snap Align", propertyName: "scroll-snap-align", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Margin", propertyName: "scroll-margin", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Margin Block", propertyName: "scroll-margin-block", styles: { gridColumn: "1 / 3" } })}
+                        {renderStyleRow({ NodeID, label: "Margin Inline", propertyName: "scroll-margin-inline", styles: { gridColumn: "3 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Padding", propertyName: "scroll-padding", styles: { gridColumn: "1 / -1" } })}
+                        {renderStyleRow({ NodeID, label: "Padding Block", propertyName: "scroll-padding-block", styles: { gridColumn: "1 / 3" } })}
+                        {renderStyleRow({ NodeID, label: "Padding Inline", propertyName: "scroll-padding-inline", styles: { gridColumn: "3 / -1" } })}
                     </>
                 )}
             />

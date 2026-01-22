@@ -1,8 +1,8 @@
 // Types
 import type { AttributeKey } from "@/core/block/attribute/types";
-import type { BlockID } from "@/core/block/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types";
 
 export interface PropertyActionsProps {
-	blockID: BlockID;
+	NodeID: NodeID;
 	property: AttributeKey;
 }

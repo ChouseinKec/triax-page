@@ -14,7 +14,7 @@ import { devLog } from "@/shared/utilities/dev";
 import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/core/block/style/utilities/syntax';
 
 // Components
-import BlockStyleSlots from "@/config/layout/panel/tabs/style/slots";
+import NodeStyleslots from "@/config/layout/panel/tabs/style/slots";
 import GenericInput from "@/shared/components/input/generic/component";
 
 // Registry
@@ -90,7 +90,7 @@ const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefi
     }
 
     // Render the slot-based value editor, passing separators and new onChange
-    return <BlockStyleSlots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return <NodeStyleslots values={values} options={slotsOptions} onChange={handleSlotsChange} />
 };
 
 BlockStyleValue.displayName = "BlockStyleValue";

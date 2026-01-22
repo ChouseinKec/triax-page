@@ -1,5 +1,5 @@
 // Types
-import type { BlockStyles } from '@/core/block/instance/types';
+import type { NodeStyles } from '@/core/block/node/definition/types';
 import type { StyleKey, StyleRecord, StyleValue, StyleDefinition, StyleDefinitionRecord } from '@/core/block/style/types';
 import type { DeviceKey, PseudoKey, OrientationKey } from '@/core/layout/page/types';
 import type { OperateResult } from '@/shared/types/result';
@@ -11,13 +11,13 @@ import { collectBlockStyleKeys, generateCascadePaths, pickStyleLonghand, pickSty
  * Helper function to find a style value in a list of cascade paths.
  * Iterates through paths and returns the first non-empty value found.
  *
- * @param blockStyles - The block's style definitions
+ * @param NodeStyles - The block's style definitions
  * @param styleKey - The style property to look for
  * @param paths - Array of [device, orientation, pseudo] paths to check
  */
-function findValueInPaths(blockStyles: BlockStyles, styleKey: StyleKey, paths: Array<[DeviceKey, OrientationKey, PseudoKey]>): string {
+function findValueInPaths(NodeStyles: NodeStyles, styleKey: StyleKey, paths: Array<[DeviceKey, OrientationKey, PseudoKey]>): string {
 	for (const [device, orientation, pseudo] of paths) {
-		const candidate = blockStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
+		const candidate = NodeStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
 		if (candidate != null && candidate !== '') {
 			return candidate;
 		}
@@ -30,7 +30,7 @@ function findValueInPaths(blockStyles: BlockStyles, styleKey: StyleKey, paths: A
  * Checks all combinations of device, orientation, and pseudo, falling back to defaults as needed.
  * For pseudo-classes, first checks pseudo-specific paths, then base paths.
  *
- * @param blockStyles - The block's complete style definition object
+ * @param NodeStyles - The block's complete style definition object
  * @param styleKey - The style property key to resolve
  * @param deviceKey - Current device context
  * @param orientationKey - Current orientation context
@@ -41,7 +41,7 @@ function findValueInPaths(blockStyles: BlockStyles, styleKey: StyleKey, paths: A
  */
 function cascadeStyleLonghandValue(
 	styleKey: StyleKey,
-	blockStyles: BlockStyles,
+	NodeStyles: NodeStyles,
 
 	deviceKey: DeviceKey,
 	orientationKey: OrientationKey,
@@ -56,13 +56,13 @@ function cascadeStyleLonghandValue(
 	// For pseudo-classes, prioritize pseudo-specific cascading before base
 	if (pseudoKey !== defaultPseudoKey) {
 		const pseudoPaths = generateCascadePaths(deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
-		value = findValueInPaths(blockStyles, styleKey, pseudoPaths);
+		value = findValueInPaths(NodeStyles, styleKey, pseudoPaths);
 		if (value !== '') return { success: true, data: value };
 	}
 
 	// Check base cascading (or only base for base pseudo)
 	const basePaths = generateCascadePaths(deviceKey, orientationKey, defaultPseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
-	value = findValueInPaths(blockStyles, styleKey, basePaths);
+	value = findValueInPaths(NodeStyles, styleKey, basePaths);
 
 	return { success: true, data: value };
 }
@@ -72,7 +72,7 @@ function cascadeStyleLonghandValue(
  * Handles shorthand properties by resolving each constituent longhand property.
  *
  * @param styleKeys - Array of longhand style keys that make up the shorthand
- * @param blockStyles - The block's style definitions
+ * @param NodeStyles - The block's style definitions
  * @param deviceKey - Current device context
  * @param orientationKey - Current orientation context
  * @param pseudoKey - Current pseudo context
@@ -82,7 +82,7 @@ function cascadeStyleLonghandValue(
  */
 function cascadeStyleShorthandValue(
 	styleKeys: StyleKey[],
-	blockStyles: BlockStyles,
+	NodeStyles: NodeStyles,
 
 	deviceKey: DeviceKey,
 	orientationKey: OrientationKey,
@@ -96,7 +96,7 @@ function cascadeStyleShorthandValue(
 
 	// Resolve each longhand property in the shorthand
 	for (const styleKey of styleKeys) {
-		const longhandResult = cascadeStyleLonghandValue(styleKey, blockStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+		const longhandResult = cascadeStyleLonghandValue(styleKey, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 		if (!longhandResult.success) return { success: false, error: longhandResult.error };
 		values.push(longhandResult.data);
 	}
@@ -106,10 +106,10 @@ function cascadeStyleShorthandValue(
 }
 
 /**
- * Collects all style keys and produces a cascaded map for the provided styleContext.
+ * Collects all style keys and produces a cascaded map.
  * Gathers all possible style keys from the block styles and resolves each one.
  *
- * @param blockStyles - The block's complete style definition object
+ * @param NodeStyles - The block's complete style definition object
  * @param styleDefinitions - Registry of style definitions
  * @param deviceKey - Current device context
  * @param orientationKey - Current orientation context
@@ -118,8 +118,8 @@ function cascadeStyleShorthandValue(
  * @param defaultOrientationKey - Default orientation key
  * @param defaultPseudoKey - Default pseudo key
  */
-export function cascadeBlockStyles(
-	blockStyles: BlockStyles,
+export function cascadeNodeStyles(
+	NodeStyles: NodeStyles,
 	styleDefinitions: StyleDefinitionRecord,
 
 	deviceKey: DeviceKey,
@@ -131,7 +131,7 @@ export function cascadeBlockStyles(
 	defaultPseudoKey: PseudoKey,
 ): OperateResult<StyleRecord> {
 	// Collect all unique style keys present in the block styles
-	const keyResult = collectBlockStyleKeys(blockStyles);
+	const keyResult = collectBlockStyleKeys(NodeStyles);
 	if (!keyResult.success) return { success: false, error: keyResult.error };
 
 	const resolved: StyleRecord = {};
@@ -143,7 +143,7 @@ export function cascadeBlockStyles(
 		if (!styleDefinition.success) return { success: false, error: `No style definition found for key '${styleKey}'.` };
 
 		// Cascade the style value
-		const cascadeResult = cascadeBlockStyle(styleKey, blockStyles, styleDefinition.data, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+		const cascadeResult = cascadeBlockStyle(styleKey, NodeStyles, styleDefinition.data, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 		if (!cascadeResult.success) return cascadeResult;
 		resolved[styleKey] = cascadeResult.data;
 	}
@@ -156,7 +156,7 @@ export function cascadeBlockStyles(
  * Determines if the style is shorthand and handles accordingly.
  *
  * @param styleKey - The style key to resolve (shorthand or longhand)
- * @param blockStyles - The block's style definitions
+ * @param NodeStyles - The block's style definitions
  * @param styleDefinition - The definition of the style property
  * @param deviceKey - Current device context
  * @param orientationKey - Current orientation context
@@ -167,7 +167,7 @@ export function cascadeBlockStyles(
  */
 export function cascadeBlockStyle(
 	styleKey: StyleKey,
-	blockStyles: BlockStyles,
+	NodeStyles: NodeStyles,
 	styleDefinition: StyleDefinition,
 
 	deviceKey: DeviceKey,
@@ -182,8 +182,8 @@ export function cascadeBlockStyle(
 	const longhandResult = pickStyleLonghand(styleDefinition);
 
 	// If shorthand, resolve and merge the longhand properties
-	if (longhandResult.success === true) return cascadeStyleShorthandValue(longhandResult.data, blockStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+	if (longhandResult.success === true) return cascadeStyleShorthandValue(longhandResult.data, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 
 	// Otherwise, resolve as a single longhand property
-	return cascadeStyleLonghandValue(styleKey, blockStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+	return cascadeStyleLonghandValue(styleKey, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 }

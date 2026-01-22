@@ -130,7 +130,7 @@ export const devRender = {
 	 * @returns React element in development, null in production
 	 * @example
 	 * devRender.error('Unknown attribute', { attribute: 'unknownProp' })
-	 * devRender.error('Block not found', { blockID: 'missing-123' })
+	 * devRender.error('Block not found', { NodeID: 'missing-123' })
 	 */
 	error: (message: string, context?: Record<string, unknown>): React.ReactElement | null => {
 		return devRender.indicator('🚨', message, context, 'red', '#ffeaea', 'red');

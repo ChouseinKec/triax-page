@@ -1,27 +1,27 @@
 import { create } from 'zustand';
 
 // Types
-import type { BlockID, BlockInstance, BlockInstanceRecord } from '@/core/block/instance/types';
+import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types';
 
 // Default
 import { DefaultBlocks } from '@/state/block/defaults';
 
 export interface BlockStoreProps {
-	selectedBlockID: BlockID | null;
-	allBlocks: BlockInstanceRecord;
+	selectedNodeID: NodeID | null;
+	allBlocks: StoredNodes;
 
 	/**
 	 * Sets the currently selected block by ID.
 	 * Accepts null to clear selection.
 	 * Pure data mutation without validation
 	 *
-	 * @param blockID - The block ID to select or null to clear
+	 * @param NodeID - The block ID to select or null to clear
 	 *
 	 * @example
-	 * selectBlock('block-123') // Select block
-	 * selectBlock(null) // Clear selection
+	 * selectNode('block-123') // Select block
+	 * selectNode(null) // Clear selection
 	 */
-	selectBlock: (blockID: BlockID | null) => void;
+	selectNode: (NodeID: NodeID | null) => void;
 
 	/**
 	 * Updates multiple blocks in the store.
@@ -33,7 +33,7 @@ export interface BlockStoreProps {
 	 * @example
 	 * updateBlocks({ 'block-123': blockInstance, 'block-456': anotherBlock })
 	 */
-	updateBlocks: (blocks: Record<BlockID, BlockInstance>) => void;
+	updateBlocks: (blocks: Record<NodeID, NodeInstance>) => void;
 
 	/**
 	 * Replaces the entire blocks collection in the store.
@@ -43,23 +43,23 @@ export interface BlockStoreProps {
 	 * @example
 	 * setBlocks({ 'block-123': blockInstance, 'block-456': anotherBlock })
 	 */
-	setBlocks: (blocks: Record<BlockID, BlockInstance>) => void;
+	setBlocks: (blocks: Record<NodeID, NodeInstance>) => void;
 }
 
 /**
  * Creates the block store after initialization.
  * @returns The initialized Zustand store
  */
-export function createBlockStore() {
+export function createNodeStore() {
 	return create<BlockStoreProps>((set, get) => ({
 		// Currently selected block ID
-		selectedBlockID: 'body',
+		selectedNodeID: 'body',
 
 		// Collection of all blocks in the store
 		allBlocks: DefaultBlocks,
 
 		// Sets the currently selected block by ID
-		selectBlock: (blockID) => set({ selectedBlockID: blockID }),
+		selectNode: (NodeID) => set({ selectedNodeID: NodeID }),
 
 		// Updates multiple blocks in the store
 		updateBlocks: (blocks) => {
@@ -77,14 +77,14 @@ export function createBlockStore() {
 }
 
 // Export a reference that will be set after initialization
-export let useBlockStore: ReturnType<typeof createBlockStore>;
+export let useBlockStore: ReturnType<typeof createNodeStore>;
 
 /**
  * Initialize the block store.
  */
 export function initializeBlockStore(): Promise<void> {
 	return new Promise((resolve) => {
-		useBlockStore = createBlockStore();
+		useBlockStore = createNodeStore();
 		resolve();
 	});
 }

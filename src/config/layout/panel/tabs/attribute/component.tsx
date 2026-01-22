@@ -5,7 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedBlockID, canBlockHaveAttributes } from "@/core/block/instance/managers";
+import { useSelectedNodeID, canNodeHaveAttributes } from "@/core/block/node/instance/managers";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -30,20 +30,20 @@ const TAB_ICONS = {
 } as const;
 
 const BlockAttributeTabRender: React.FC = () => {
-    const selectedBlockID = useSelectedBlockID();
-    const canHave = selectedBlockID ? canBlockHaveAttributes(selectedBlockID) : false;
+    const selectedNodeID = useSelectedNodeID();
+    const canHave = selectedNodeID ? canNodeHaveAttributes(selectedNodeID) : false;
 
 
-    const tabItems = selectedBlockID
+    const tabItems = selectedNodeID
         ? [
-            { label: TAB_ICONS.global, title: 'Global', content: renderGlobalTab(selectedBlockID) },
-            { label: TAB_ICONS.accessibility, title: 'Accessibility', content: renderAccessibilityTab(selectedBlockID) },
+            { label: TAB_ICONS.global, title: 'Global', content: renderGlobalTab(selectedNodeID) },
+            { label: TAB_ICONS.accessibility, title: 'Accessibility', content: renderAccessibilityTab(selectedNodeID) },
 
         ]
         : [];
 
     const renderContent = () => {
-        if (!selectedBlockID) {
+        if (!selectedNodeID) {
             return (
                 <p className={CSS.Empty}>
                     No block selected. Select a block to see attribute-specific settings.

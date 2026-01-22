@@ -1,10 +1,10 @@
 // Types
 import type { StyleKey } from '@/core/block/style/types';
-import type { BlockID } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
 import type { CSSProperties } from 'react';
 
 export type RenderStyleRowOptions = {
-    blockID: BlockID;
+    NodeID: NodeID;
     propertyName: StyleKey;
     label?: string | null;
     styles?: CSSProperties;

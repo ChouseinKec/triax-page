@@ -249,10 +249,3 @@ export interface AttributeDefinition {
 }
 
 export type AttributeDefinitionRecord = Record<AttributeKey, AttributeDefinition>;
-
-/**
- * Represents the attribute context including registered and default attribute info.
- */
-export type AttributeContext = {
-	constant: {};
-};

@@ -2,35 +2,36 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateBlockID } from '@/core/block/instance/helpers/validators';
-import { pickBlockInstance } from '@/core/block/instance/helpers/pickers';
+import { validateNodeID } from '@/core/block/node/instance/helpers/validators';
+import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 
 // Types
-import type { BlockID, BlockAttributes } from '@/core/block/instance/types';
+import type { NodeID} from '@/core/block/node/instance/types';
+import type { NodeAttributes } from '@/core/block/node/definition/types';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Clipboard storage for copy/paste operations
-let attributesClipboard: BlockAttributes | null = null;
+let attributesClipboard: NodeAttributes | null = null;
 
 /**
  * Copies the attributes of a blockInstance to the clipboard in blockInstance CRUD operations.
  * Stores the blockInstance attributes for later pasting.
  *
- * @param blockID - The blockInstance identifier to copy attributes from
+ * @param NodeID - The blockInstance identifier to copy attributes from
  */
-export function copyBlockAttributes(blockID: BlockID): void {
+export function copyNodeAttributes(NodeID: NodeID): void {
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the blockInstance to copy attributes from
-	const results = new ResultPipeline('[BlockManager → copyBlockAttributes]')
+	const results = new ResultPipeline('[BlockManager → copyNodeAttributes]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
@@ -43,26 +44,26 @@ export function copyBlockAttributes(blockID: BlockID): void {
  * Pastes copied attributes to a target blockInstance in blockInstance CRUD operations.
  * Applies the attributes from clipboard to the specified blockInstance.
  *
- * @param blockID - The blockInstance identifier to paste attributes to
+ * @param NodeID - The blockInstance identifier to paste attributes to
  */
-export function pasteBlockAttributes(blockID: BlockID): void {
-	if (!attributesClipboard) return devLog.error(`[BlockManager → pasteBlockAttributes] No attributes in clipboard`), undefined;
+export function pasteNodeAttributes(NodeID: NodeID): void {
+	if (!attributesClipboard) return devLog.error(`[BlockManager → pasteNodeAttributes] No attributes in clipboard`), undefined;
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste attributes into
-	const results = new ResultPipeline('[BlockManager → pasteBlockAttributes]')
+	const results = new ResultPipeline('[BlockManager → pasteNodeAttributes]')
 		.validate({
-			blockID: validateBlockID(blockID),
+			NodeID: validateNodeID(NodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickBlockInstance(data.blockID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.NodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with attributes from clipboard
 	blockStore.updateBlocks({
-		[results.blockID]: {
+		[results.NodeID]: {
 			...results.targetBlock,
 			attributes: JSON.parse(JSON.stringify(attributesClipboard)),
 		},

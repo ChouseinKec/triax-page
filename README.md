@@ -23,9 +23,9 @@ Triax is a modular, registry-based page builder for React that provides a comple
 - **Lazy Initialization:** Sequential initialization process with dependency management
 
 ### Advanced Block System
-- **Block Registry:** Centralized `BlockRegistry` for managing all block definitions and instances
+- **Block Registry:** Centralized `NodeRegistry` for managing all block definitions and instances
 - **Hierarchical Structure:** Nested block support with parent-child relationships
-- **Type-Safe Definitions:** Full TypeScript interfaces for `BlockDefinition` and `BlockInstance`
+- **Type-Safe Definitions:** Full TypeScript interfaces for `NodeDefinition` and `NodeInstance`
 - **Block CRUD Operations:** Comprehensive managers for create, read, update, delete, copy, paste operations
 - **Drag & Drop:** Visual block reordering with validation (in progress)
 - **Permitted Content Rules:** Define which blocks can contain others

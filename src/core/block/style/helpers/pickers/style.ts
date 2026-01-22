@@ -1,5 +1,6 @@
 // Types
-import type { BlockInstance, BlockStyles } from '@/core/block/instance/types';
+import type { NodeInstance } from '@/core/block/node/instance/types';
+import type { NodeStyles } from '@/core/block/node/definition/types';
 import type { StyleLonghand, StyleDefinition, StyleDefinitionRecord, StyleKey } from '@/core/block/style/types';
 
 import type { PickResult } from '@/shared/types/result';
@@ -7,13 +8,13 @@ import type { PickResult } from '@/shared/types/result';
  * Pick the `styles` object for a block instance by id.
  *
  * @param blockInstance - instance of the block whose styles should be picked
- * @param storedBlocks - record containing all block instances keyed by id
+ * @param storedNodes - record containing all block instances keyed by id
  */
-export function pickBlockStyles(blockInstance: BlockInstance): PickResult<BlockStyles> {
-	const blockStyles = blockInstance.styles;
-	if (!blockStyles) return { success: false, error: `Block styles not found for block: '${blockInstance.id}'` };
+export function pickNodeStyles(blockInstance: NodeInstance): PickResult<NodeStyles> {
+	const NodeStyles = blockInstance.styles;
+	if (!NodeStyles) return { success: false, error: `Block styles not found for block: '${blockInstance.id}'` };
 
-	return { success: true, data: blockStyles };
+	return { success: true, data: NodeStyles };
 }
 
 /**

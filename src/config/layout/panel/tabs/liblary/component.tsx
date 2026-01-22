@@ -5,13 +5,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addBlock, canBlockAcceptChild, useSelectedBlockType, useSelectedBlockID } from "@/core/block/instance/managers";
+import { addNode, canNodeAcceptChild, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/instance/managers";
 
 // Registry
-import { getRegisteredBlocks } from '@/core/block/instance/registries';
+import { getRegisteredNodes } from '@/core/block/node/definition/registries';
 
 // Types
-import type { BlockDefinition, BlockType } from "@/core/block/instance/types";
+import type { NodeDefinition, NodeKey } from "@/core/block/node/definition/types";
 
 // Components
 import GenericInput from "@/shared/components/input/generic/component";
@@ -22,33 +22,33 @@ import GenericInput from "@/shared/components/input/generic/component";
  *
  */
 const BlockLibraryRender: React.FC = () => {
-    const registeredBlocks = getRegisteredBlocks();
-    if (!registeredBlocks || Object.keys(registeredBlocks).length === 0) {
+    const registeredNodes = getRegisteredNodes();
+    if (!registeredNodes || Object.keys(registeredNodes).length === 0) {
         return <div className={CSS.Fallback}>No blocks available.</div>;
     }
 
-    const selectedBlockType = useSelectedBlockType();
-    const selectedBlockID = useSelectedBlockID();
+    const selectedNodeKey = useSelectedNodeKey();
+    const selectedNodeID = useSelectedNodeID();
     const [search, setSearch] = useState("");
 
     // Handle adding a new block, optionally nesting inside the selected block
-    const handleAddBlock = useCallback((blockType: BlockType) => {
-        if (!selectedBlockID) return;
+    const handleAddBlock = useCallback((NodeKey: NodeKey) => {
+        if (!selectedNodeID) return;
 
-        addBlock(blockType, selectedBlockID);
-    }, [selectedBlockID]
+        addNode(NodeKey, selectedNodeID);
+    }, [selectedNodeID]
     );
 
     // Filter blocks based on the selected block's permitted content
     const filteredBlocks = useMemo(() => {
-        if (!selectedBlockID) return registeredBlocks;
+        if (!selectedNodeID) return registeredNodes;
 
         return Object.fromEntries(
-            Object.entries(registeredBlocks).filter(([, block]) => {
-                return canBlockAcceptChild(selectedBlockID, block.defaultTag);
+            Object.entries(registeredNodes).filter(([, block]) => {
+                return canNodeAcceptChild(selectedNodeID, block.defaultTag);
             })
         );
-    }, [selectedBlockID, registeredBlocks]
+    }, [selectedNodeID, registeredNodes]
     );
 
     // Filter blocks based on the search term
@@ -58,8 +58,8 @@ const BlockLibraryRender: React.FC = () => {
 
         return Object.values(filteredBlocks).filter(
             (block) =>
-                block.type &&
-                block.type.toLowerCase().startsWith(term)
+                block.key &&
+                block.key.toLowerCase().startsWith(term)
         );
     }, [search, filteredBlocks]
     );
@@ -71,14 +71,14 @@ const BlockLibraryRender: React.FC = () => {
     );
 
     // Render a button for each block type
-    const createBlockButton = useCallback((block: BlockDefinition) => {
-        const blockType = block.type;
+    const createNodeButton = useCallback((block: NodeDefinition) => {
+        const NodeKey = block.key;
         return (
-            <div className={CSS.BlockContainer} key={blockType}>
-                <button className={CSS.BlockButton} onClick={() => handleAddBlock(blockType)}>
+            <div className={CSS.BlockContainer} key={NodeKey}>
+                <button className={CSS.BlockButton} onClick={() => handleAddBlock(NodeKey)}>
                     {block.icon}
                 </button>
-                <p className={CSS.BlockTitle}>{blockType}</p>
+                <p className={CSS.BlockTitle}>{NodeKey}</p>
             </div>
         );
     }, [handleAddBlock]
@@ -96,7 +96,7 @@ const BlockLibraryRender: React.FC = () => {
         if (categories.length <= 1) {
             return (
                 <div className={CSS.Blocks}>
-                    {searchedBlocks.map(createBlockButton)}
+                    {searchedBlocks.map(createNodeButton)}
                 </div>
             );
         }
@@ -111,16 +111,16 @@ const BlockLibraryRender: React.FC = () => {
                     </span>
                 </p>
                 <div className={CSS.Blocks}>
-                    {groupedBlocks[category]?.map(createBlockButton)}
+                    {groupedBlocks[category]?.map(createNodeButton)}
                 </div>
             </div>
         ));
-    }, [searchedBlocks, groupedBlocks, createBlockButton]
+    }, [searchedBlocks, groupedBlocks, createNodeButton]
     );
 
     // If selected block permitted content is Fallback, show an Fallback state
     if (Object.keys(filteredBlocks).length === 0) {
-        return <div className={CSS.Fallback}>The selected block <b>{'<'}{selectedBlockType}{'>'}</b> does not allow any child blocks.</div>;
+        return <div className={CSS.Fallback}>The selected block <b>{'<'}{selectedNodeKey}{'>'}</b> does not allow any child blocks.</div>;
     }
 
     return (

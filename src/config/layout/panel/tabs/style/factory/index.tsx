@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Managers
-import { setBlockStyle, useBlockStyle, canBlockHaveStyle } from '@/core/block/style/managers/';
+import { setBlockStyle, useBlockStyle, canNodeHaveStyle } from '@/core/block/style/managers/';
 
 
 // Components
@@ -23,8 +23,8 @@ import { getRegisteredStyle } from '@/core/block/style/registries';
  * Memoized component to render the appropriate value editor for a CSS property
  * Handles data fetching and component selection reactively
  */
-const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: string; propertyName: StyleKey }): React.ReactElement | null => {
-    const value = useBlockStyle(blockID, propertyName);
+const StyleValueRenderer = React.memo(({ NodeID, propertyName }: { NodeID: string; propertyName: StyleKey }): React.ReactElement | null => {
+    const value = useBlockStyle(NodeID, propertyName);
     const styleDefinition = getRegisteredStyle(propertyName);
 
     if (!styleDefinition) return devRender.error("[StyleValueRenderer] No property definition found", { propertyName });
@@ -32,7 +32,7 @@ const StyleValueRenderer = React.memo(({ blockID, propertyName }: { blockID: str
     return (
         <BlockStyleValue
             value={value || ''}
-            onChange={(newValue) => setBlockStyle(blockID, propertyName, newValue)}
+            onChange={(newValue) => setBlockStyle(NodeID, propertyName, newValue)}
             styleDefinition={styleDefinition}
         />
     );
@@ -45,14 +45,14 @@ export { StyleValueRenderer };
 
 /**
  * Renders a shared Property row for a given style key with name/description/actions wired.
- * Applies allowedStyles filtering via canBlockHaveStyle before rendering.
+ * Applies allowedStyles filtering via canNodeHaveStyle before rendering.
  */
 export function renderStyleRow(options: RenderStyleRowOptions): React.ReactElement | null {
     if (options?.hidden) return null;
-    const { blockID, propertyName } = options;
+    const { NodeID, propertyName } = options;
 
 
-    if (!canBlockHaveStyle(blockID, propertyName)) return null;
+    if (!canNodeHaveStyle(NodeID, propertyName)) return null;
 
     const styleDefinition = getRegisteredStyle(propertyName);
     if (!styleDefinition) return devRender.error("[renderStyleRow] No style definition found", { propertyName });
@@ -64,8 +64,8 @@ export function renderStyleRow(options: RenderStyleRowOptions): React.ReactEleme
             label={options.label ?? null}
             styles={options?.styles}
             disabled={options?.disabled}
-            content={() => (<StyleValueRenderer blockID={blockID} propertyName={propertyName} />)}
-            actions={() => <PropertyActions blockID={blockID} property={propertyName} />}
+            content={() => (<StyleValueRenderer NodeID={NodeID} propertyName={propertyName} />)}
+            actions={() => <PropertyActions NodeID={NodeID} property={propertyName} />}
         />
     );
 }

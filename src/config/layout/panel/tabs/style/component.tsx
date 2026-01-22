@@ -5,8 +5,8 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedBlockID } from "@/core/block/instance/managers";
-import { canBlockHaveStyles } from "@/core/block/style/managers/";
+import { useSelectedNodeID } from "@/core/block/node/instance/managers";
+import { canNodeHaveStyles } from "@/core/block/style/managers/";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -65,23 +65,23 @@ const TAB_ICONS = {
  * @note Relies on block selection state to determine which style controls to display
  */
 const BlockStyleTabComponent: React.FC = () => {
-    const selectedBlockID = useSelectedBlockID();
-    const canHaveStyles = selectedBlockID ? canBlockHaveStyles(selectedBlockID) : false;
+    const selectedNodeID = useSelectedNodeID();
+    const canHaveStyles = selectedNodeID ? canNodeHaveStyles(selectedNodeID) : false;
 
     // Define tabs with renderers
-    const tabItems = selectedBlockID
+    const tabItems = selectedNodeID
         ? [
-            { label: TAB_ICONS.display, title: "Display & Layout", content: renderDisplayTab(selectedBlockID) },
-            { label: TAB_ICONS.size, title: "Size & Position", content: renderSizeTab(selectedBlockID) },
-            { label: TAB_ICONS.font, title: "Font & Text", content: renderFontTab(selectedBlockID) },
-            { label: TAB_ICONS.background, title: "Background & Mask", content: renderBackgroundTab(selectedBlockID) },
-            { label: TAB_ICONS.border, title: "Border & Outline", content: renderBorderTab(selectedBlockID) },
-            { label: TAB_ICONS.effect, title: "Effects", content: renderEffectTab(selectedBlockID) },
+            { label: TAB_ICONS.display, title: "Display & Layout", content: renderDisplayTab(selectedNodeID) },
+            { label: TAB_ICONS.size, title: "Size & Position", content: renderSizeTab(selectedNodeID) },
+            { label: TAB_ICONS.font, title: "Font & Text", content: renderFontTab(selectedNodeID) },
+            { label: TAB_ICONS.background, title: "Background & Mask", content: renderBackgroundTab(selectedNodeID) },
+            { label: TAB_ICONS.border, title: "Border & Outline", content: renderBorderTab(selectedNodeID) },
+            { label: TAB_ICONS.effect, title: "Effects", content: renderEffectTab(selectedNodeID) },
         ]
         : [];
 
     const renderContent = () => {
-        if (!selectedBlockID) {
+        if (!selectedNodeID) {
             return (
                 <p className={CSS.Empty}>
                     No block selected. Select a block to see style-specific settings.

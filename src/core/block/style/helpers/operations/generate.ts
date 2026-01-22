@@ -1,5 +1,5 @@
 // Types
-import type { BlockID } from '@/core/block/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types';
 import type { OperateResult } from '@/shared/types/result';
 import type { StyleRecord } from '@/core/block/style/types';
 import type { DeviceKey, PseudoKey, OrientationKey } from '@/core/layout/page/types';
@@ -12,16 +12,16 @@ import { toKebabCase } from '@/shared/utilities/string';
  * Creates a scoped selector targeting a specific block within a device context,
  * optionally including a pseudo-class for states like :hover or :active.
  *
- * The selector follows the pattern: `#device-{deviceKey} .block-{blockID}[:pseudoKey]`
+ * The selector follows the pattern: `#device-{deviceKey} .block-{NodeID}[:pseudoKey]`
  * This ensures styles are applied only to the specified block on the specified device.
  *
- * @param blockID - The unique identifier of the block (e.g., 'hero', '123')
+ * @param NodeID - The unique identifier of the block (e.g., 'hero', '123')
  * @param pseudoKey - The pseudo-class key (e.g., 'hover', 'active') or default for base styles
  * @param deviceKey - The device context key (e.g., 'default', 'tablet-sm')
  * @param defaultPseudoKey - The default pseudo key to determine if pseudo-selector should be omitted
  */
 export function generateCSSSelector(
-	blockID: BlockID,
+	NodeID: NodeID,
 	pseudoKey: PseudoKey,
 	deviceKey: DeviceKey,
 	defaultPseudoKey: PseudoKey,
@@ -30,7 +30,7 @@ export function generateCSSSelector(
 	const pseudoSelector = pseudoKey === defaultPseudoKey ? '' : `:${pseudoKey}`;
 
 	// Construct the full selector with device specificity and block targeting
-	return { success: true, data: `.device-${deviceKey} .block-${blockID}${pseudoSelector}` };
+	return { success: true, data: `.device-${deviceKey} .block-${NodeID}${pseudoSelector}` };
 }
 
 /**

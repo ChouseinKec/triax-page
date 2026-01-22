@@ -3,8 +3,8 @@ import { create } from 'zustand';
 // Types
 import type { BenchKey } from '@/core/layout/workbench/types';
 
-// Constants
-import { DEFAULT_WORKBENCH_ID } from '@/core/layout/workbench/constants';
+// Registry
+import { getDefaultBenchKey } from '@/core/layout/workbench/state/registry';
 
 export type WorkbenchStore = {
 	selectedKey: BenchKey;
@@ -17,7 +17,7 @@ export type WorkbenchStore = {
  */
 export function createWorkbenchStore() {
 	return create<WorkbenchStore>()((set, get) => ({
-		selectedKey: DEFAULT_WORKBENCH_ID,
+		selectedKey: getDefaultBenchKey(),
 
 		/**
 		 * Updates the selected workbench key.

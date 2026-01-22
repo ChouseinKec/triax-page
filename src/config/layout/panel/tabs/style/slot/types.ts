@@ -1,7 +1,7 @@
 import type { OptionDefinition } from '@/shared/components/types/option';
 
 /** Props for slot style value editor components. */
-export type BlockStyleSlotProps = {
+export type NodeStyleslotProps = {
 	/** Current slot value */
 	value: string;
 	/** Available options for the slot */

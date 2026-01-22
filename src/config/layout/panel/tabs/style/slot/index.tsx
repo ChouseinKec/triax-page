@@ -2,7 +2,7 @@
 import React, { memo } from "react";
 
 // Types
-import type { BlockStyleSlotProps } from "./types";
+import type { NodeStyleslotProps } from "./types";
 
 // Utilities
 import { getValueType, getValueDefaultType } from "@/core/block/style/utilities";
@@ -14,7 +14,7 @@ import { getRegisteredTokenTypes } from "@/core/block/style/registries";
 import CSS from "./styles.module.scss";
 
 /**
- * BlockStyleSlot Component
+ * NodeStyleslot Component
  *
  * A dynamic value editor router that automatically selects and renders the appropriate input component based on CSS value type.
  * Intelligently handles function, keyword, length, number, integer, color, and link value types with type detection.
@@ -28,7 +28,7 @@ import CSS from "./styles.module.scss";
  *
  * @note Automatically detects value type and falls back to default type for empty values
  */
-const BlockStyleSlot: React.FC<BlockStyleSlotProps> = ({ value, options, onChange }) => {
+const NodeStyleslot: React.FC<NodeStyleslotProps> = ({ value, options, onChange }) => {
     const tokenTypeDefinitions = getRegisteredTokenTypes();
 
     // Determine default type when value is empty
@@ -56,4 +56,4 @@ const BlockStyleSlot: React.FC<BlockStyleSlotProps> = ({ value, options, onChang
     return renderValue();
 };
 
-export default memo(BlockStyleSlot);
+export default memo(NodeStyleslot);
