@@ -1,5 +1,5 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition } from '@/core/block/element/definition/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, FLOW_CONTENT, FLOW_NO_HEADER_FOOTER, PHRASING_CONTENT, HEADINGS_ONLY } from './shared';
@@ -65,7 +65,7 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		key: 'address',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
-		forbiddenAncestors: null,
+		forbiddenAncestors: ['address'],
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Contact information for the nearest article or body (names, addresses, links).',

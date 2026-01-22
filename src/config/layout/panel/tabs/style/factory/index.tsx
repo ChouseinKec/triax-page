@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Managers
-import { setBlockStyle, useBlockStyle, canNodeHaveStyle } from '@/core/block/style/managers/';
+import { setBlockStyle, useBlockStyle, } from '@/core/block/style/instance/managers/';
 
 
 // Components
@@ -10,14 +10,14 @@ import Property from '@/shared/components/layout/property/component';
 import PropertyActions from '@/config/layout/panel/tabs/style/action';
 
 // Types
-import type { StyleKey } from '@/core/block/style/types';
+import type { StyleKey } from '@/core/block/style/definition/types';
 import type { RenderStyleRowOptions } from './types';
 
 // Utilties
 import { devRender } from '@/shared/utilities/dev';
 
 // Registry
-import { getRegisteredStyle } from '@/core/block/style/registries';
+import { getRegisteredStyle } from '@/core/block/style/definition/state/registry';
 
 /**
  * Memoized component to render the appropriate value editor for a CSS property
@@ -45,14 +45,10 @@ export { StyleValueRenderer };
 
 /**
  * Renders a shared Property row for a given style key with name/description/actions wired.
- * Applies allowedStyles filtering via canNodeHaveStyle before rendering.
  */
 export function renderStyleRow(options: RenderStyleRowOptions): React.ReactElement | null {
     if (options?.hidden) return null;
     const { NodeID, propertyName } = options;
-
-
-    if (!canNodeHaveStyle(NodeID, propertyName)) return null;
 
     const styleDefinition = getRegisteredStyle(propertyName);
     if (!styleDefinition) return devRender.error("[renderStyleRow] No style definition found", { propertyName });

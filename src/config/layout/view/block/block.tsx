@@ -5,20 +5,19 @@ import React, { useMemo, memo, useEffect } from "react";
 import CSS from "./styles.module.scss";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types/instance";
 import type { DeviceKey, OrientationKey, PseudoKey } from "@/core/layout/page/types";
 
 // Manager
 import { useNode, setNodeTag, useIsNodeSelected } from "@/core/block/node/instance/managers";
 import { getNodeComponent, getNodeIcon, getNodeAvailableTags } from "@/core/block/node/definition/managers";
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from "@/core/layout/bar/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
 
 // Components
 import DropdownSelect from "@/shared/components/select/dropdown/component";
-import { ElementKey } from "@/core/block/element/types";
+import { ElementKey } from "@/core/block/element/definition/types";
 
 
 interface BlockProps {

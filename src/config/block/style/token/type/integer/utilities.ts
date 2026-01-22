@@ -1,5 +1,5 @@
 // Types
-import type { TokenOptionParams, TokenParam, TokenRaw, TokenCanonical, StyleValue } from '@/core/block/style/types';
+import type { TokenOptionParams, TokenParam, TokenRaw, TokenCanonical, StyleValue } from '@/core/block/style/definition/types';
 import type { OptionDefinition } from '@/shared/components/types/option';
 
 // Utilities

@@ -23,7 +23,9 @@ import BenchSelect from "./select";
  */
 const Workbench: React.FC<WorkbenchProps> = () => {
     const selectedBench = useSelectedBench();
-    const actions = getActionDefinitions("main");
+    if (!selectedBench) return null;
+
+    const actions = getActionDefinitions(selectedBench.key);
 
     return (
         <div className={CSS.Workbench}>
@@ -45,7 +47,7 @@ const Workbench: React.FC<WorkbenchProps> = () => {
 
             </div>
 
-            <Panels benchKey="main" />
+            <Panels benchKey={selectedBench.key} />
 
             <div className={CSS.Bench}>
                 {selectedBench

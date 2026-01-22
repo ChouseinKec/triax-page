@@ -8,10 +8,10 @@ import CSS from "./styles.module.scss";
 import { addNode, canNodeAcceptChild, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/instance/managers";
 
 // Registry
-import { getRegisteredNodes } from '@/core/block/node/definition/registries';
+import { getRegisteredNodes } from '@/core/block/node/definition/states/registry';
 
 // Types
-import type { NodeDefinition, NodeKey } from "@/core/block/node/definition/types";
+import type { NodeDefinition, NodeKey } from "@/core/block/node/definition/types/definition";
 
 // Components
 import GenericInput from "@/shared/components/input/generic/component";

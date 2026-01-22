@@ -3,4 +3,4 @@ export * from './select';
 export * from './tag';
 export * from './clipboard';
 export * from './crud';
-export * from './hierarchy';
+export * from './move';

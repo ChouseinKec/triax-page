@@ -6,7 +6,7 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 import { devLog } from '@/shared/utilities/dev';
 
 // Types
-import type { NodeID, NodeInstance } from '@/core/block/node/instance/types';
+import type { NodeID, NodeInstance } from '@/core/block/node/instance/types/instance';
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';

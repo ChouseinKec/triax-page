@@ -8,12 +8,12 @@ import CSS from "./styles.module.scss";
 // Managers
 import { useNode, selectNode, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/instance/managers";
 import { getNodeIcon } from "@/core/block/node/definition/managers";
-import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/managers";
-import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/managers";
+import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/instance/managers";
+import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/instance/managers";
 
 // Types
 import type { EntryProps } from "./types";
-import type { NodeID } from "@/core/block/node/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types/instance";
 
 // Components
 import FloatReveal from "@/shared/components/reveal/float/component";

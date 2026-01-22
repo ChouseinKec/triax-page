@@ -4,8 +4,6 @@ import React, { memo } from "react";
 // Types
 import type { PropertyActionsProps } from "./types";
 
-// Managers
-import { canNodeHaveAttribute } from "@/core/block/node/instance/managers/queries";
 
 /**
  * PropertyActions Component
@@ -20,8 +18,6 @@ import { canNodeHaveAttribute } from "@/core/block/node/instance/managers/querie
 
 
 const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) => {
-    // Check if block can have this style (respects allowedStyles from NodeDefinition)
-    if (!canNodeHaveAttribute(NodeID, property)) return null;
 
     return (
         <p>

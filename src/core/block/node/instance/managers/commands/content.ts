@@ -2,8 +2,8 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { NodeID} from '@/core/block/node/instance/types';
-import type { NodeContent } from '@/core/block/node/definition/types';
+import type { NodeID} from '@/core/block/node/instance/types/instance';
+import type { NodeContent } from '@/core/block/node/definition/types/definition';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';

@@ -2,14 +2,15 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { NodeID } from '@/core/block/node/instance/types';
-import type { ElementKey } from '@/core/block/element/types';
+import type { NodeID } from '@/core/block/node/instance/types/instance';
+import type { ElementKey } from '@/core/block/element/definition/types';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Helpers
-import { validateBlockTag, validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';
+import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';
+import { validateBlockTag } from '@/core/block/node/definition/helpers/validators';
 
 /**
  * Sets the HTML tag for a specific block.

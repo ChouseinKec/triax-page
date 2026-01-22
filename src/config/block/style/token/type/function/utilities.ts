@@ -1,12 +1,12 @@
 // Types
 import type { OptionDefinition } from '@/shared/components/types/option';
-import type { StyleKey, StyleSyntaxRaw, StyleDefinition, TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical, TokenDefinitionRecord, TokenTypeDefinitionRecord } from '@/core/block/style/types';
+import type { StyleKey, StyleSyntaxRaw, StyleDefinition, TokenParam, StyleValue, TokenRaw, TokenOptionParams, TokenCanonical, RegisteredTokens, RegisteredTokenTypes } from '@/core/block/style/definition/types';
 
 // Utilities
 import { extractBetween, splitAdvanced, joinAdvanced } from '@/shared/utilities/string';
-import { parseSyntax } from '@/core/block/style/utilities';
-import { getTokenValues } from '@/core/block/style/utilities/';
-import { extractSeparator } from '@/core/block/style/utilities';
+import { parseSyntax } from '@/core/block/style/instance/utilities';
+import { getTokenValues } from '@/core/block/style/instance/utilities/';
+import { extractSeparator } from '@/core/block/style/instance/utilities';
 import { devLog } from '@/shared/utilities/dev';
 
 /**
@@ -45,7 +45,7 @@ export function getTokenParam(tokenRaw: TokenRaw): TokenParam | undefined {
 	return extractBetween(tokenRaw, '()') ? { syntax: extractBetween(tokenRaw, '()')! } : undefined;
 }
 
-export function getDefaultValue(tokenParam: TokenParam, tokenDefinitions: TokenDefinitionRecord, tokenTypeDefinitions: TokenTypeDefinitionRecord): string {
+export function getDefaultValue(tokenParam: TokenParam, tokenDefinitions: RegisteredTokens, tokenTypeDefinitions: RegisteredTokenTypes): string {
 	const parsedSyntax = parseSyntax(tokenParam.syntax.toString());
 	const firstVariation = parsedSyntax[0];
 	const separators = extractSeparator(firstVariation);

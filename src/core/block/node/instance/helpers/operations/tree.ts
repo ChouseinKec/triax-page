@@ -1,5 +1,5 @@
 // Types
-import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types';
+import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types/instance';
 import type { OperateResult } from '@/shared/types/result';
 
 // Helpers

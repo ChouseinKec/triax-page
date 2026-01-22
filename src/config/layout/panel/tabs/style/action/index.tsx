@@ -5,10 +5,8 @@ import React, { memo } from "react";
 import type { PropertyActionsProps } from "./types";
 
 // Commands
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/style/managers';
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/style/instance/managers';
 
-// Managers
-import { canNodeHaveStyle } from '@/core/block/style/managers';
 
 /**
  * PropertyActions Component
@@ -23,8 +21,6 @@ import { canNodeHaveStyle } from '@/core/block/style/managers';
 
 
 const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) => {
-    // Check if block can have this style (respects allowedStyles from NodeDefinition)
-    if (!canNodeHaveStyle(NodeID, property)) return null;
 
     return (
         <>

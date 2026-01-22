@@ -4,7 +4,6 @@ import '@/auto-imports';
 // Store initialization functions
 import { initializeBlockStore } from '@/state/block/block';
 import { initializePageStore } from '@/state/layout/page';
-import { initializeBarStore } from '@/core/layout/bar/state/store';
 import { initializeWorkbenchStore } from '@/core/layout/workbench/state/store';
 import { initializePanelStore } from '@/core/layout/panel/store';
 import { initViewportStore } from '@/core/layout/viewport/state/store';
@@ -21,7 +20,6 @@ export async function initStores(): Promise<void> {
 		await initializeWorkbenchStore();
 		await initViewportStore();
 		await initializePanelStore();
-		await initializeBarStore();
 		await initializeBlockStore();
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : String(error);

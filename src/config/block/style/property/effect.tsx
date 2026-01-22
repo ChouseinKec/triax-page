@@ -1,4 +1,4 @@
-import type { StyleDefinition } from "@/core/block/style/types";
+import type { StyleDefinition } from "@/core/block/style/definition/types";
 
 export const EFFECT_DEFINITIONS: StyleDefinition[] = [
 	{

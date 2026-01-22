@@ -1,5 +1,5 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition } from '@/core/block/element/definition/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_RUBY, VOID_CONTENT } from './shared';
@@ -162,7 +162,7 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'dfn',
-		allowedAttributes: [...PHRASING_ATTRIBUTES, 'title'],
+		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueChildren: null,
@@ -234,7 +234,7 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'bdo',
-		allowedAttributes: [...PHRASING_ATTRIBUTES, 'dir'],
+		allowedAttributes: PHRASING_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		uniqueChildren: null,

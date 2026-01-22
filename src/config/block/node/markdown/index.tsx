@@ -2,7 +2,7 @@
 import BlockMarkdownComponent from "@/config/block/node/markdown/component";
 
 // Types
-import { NodeDefinition } from '@/core/block/node/definition/types';
+import { NodeDefinition } from '@/core/block/node/definition/types/definition';
 
 const BlockMarkdownDefinition: NodeDefinition = {
 	key: "core-markdown",
@@ -38,12 +38,6 @@ const BlockMarkdownDefinition: NodeDefinition = {
 		"dfn"
 	],
 
-	allowedChildren: [],
-	allowedStyles: null,
-	allowedAttributes: null,
-	forbiddenAncestors: null,
-	uniqueChildren: null,
-	orderedChildren: null,
 
 	defaultStyles: {},
 	defaultAttributes: {},

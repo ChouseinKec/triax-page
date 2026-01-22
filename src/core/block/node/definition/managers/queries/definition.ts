@@ -1,14 +1,18 @@
 // Types
-import type { NodeKey, NodeAllowedStyles, NodeAllowedAttributes, NodeComponent } from '@/core/block/node/definition/types';
-import type { ElementKey } from '@/core/block/element/types';
+import type { NodeKey, NodeComponent } from '@/core/block/node/definition/types/definition';
+import type { ElementKey } from '@/core/block/element/definition/types';
+import type { AttributeKey } from '@/core/block/attribute/definition/types';
 import type { ReactNode } from 'react';
 
 // Helpers
 import { pickNodeDefinition } from '@/core/block/node/definition/helpers';
-import { validateNodeKey } from '@/core/block/node/instance/helpers/validators';
+import { validateNodeKey } from '@/core/block/node/definition/helpers/validators';
+import { validateElementKey } from '@/core/block/element/definition/helpers/validators';
 
 // Registry
-import { getRegisteredNodes } from '@/core/block/node/definition/registries';
+import { getRegisteredNodes } from '@/core/block/node/definition/states/registry';
+import { getRegisteredElements } from '@/core/block/element/definition/states/registry';
+import { pickElementDefinition } from '@/core/block/element/definition/helpers';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -68,37 +72,19 @@ export function getNodeAvailableTags(nodeKey: NodeKey): ElementKey[] | undefined
 }
 
 /**
- * Gets the allowed styles for a specific block type.
- * @param nodeKey - The block type to get allowed styles for
+ * Gets the allowed attributes for a specific HTML element.
+ * @param elementKey - The HTML element tag to get allowed attributes for
  */
-export function getNodeAllowedStyles(nodeKey: NodeKey): NodeAllowedStyles | undefined {
-	const results = new ResultPipeline('[BlockQueries → getNodeAllowedStyles]')
-		.validate({
-			nodeKey: validateNodeKey(nodeKey),
-		})
-		.pick((data) => ({
-			NodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
-		}))
-		.execute();
-	if (!results) return;
-
-	return results.NodeDefinition.allowedStyles;
-}
-
-/**
- * Gets the allowed attributes for a specific block type.
- * @param nodeKey - The block type to get allowed attributes for
- */
-export function getNodeAllowedAttributes(nodeKey: NodeKey): NodeAllowedAttributes | undefined {
+export function getNodeAllowedAttributes(elementKey: ElementKey): AttributeKey[] | undefined {
 	const results = new ResultPipeline('[BlockQueries → getNodeAllowedAttributes]')
 		.validate({
-			nodeKey: validateNodeKey(nodeKey),
+			elementKey: validateElementKey(elementKey),
 		})
 		.pick((data) => ({
-			NodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
+			elementDefinition: pickElementDefinition(data.elementKey, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;
 
-	return results.NodeDefinition.allowedAttributes;
+	return results.elementDefinition.allowedAttributes;
 }

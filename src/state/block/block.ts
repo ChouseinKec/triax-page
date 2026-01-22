@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // Types
-import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types';
+import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types/instance';
 
 // Default
 import { DefaultBlocks } from '@/state/block/defaults';

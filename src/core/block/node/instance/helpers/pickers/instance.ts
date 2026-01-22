@@ -1,6 +1,6 @@
 // Types
-import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types';
-import type { NodeContent } from '@/core/block/node/definition/types';
+import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/instance/types/instance';
+import type { NodeContent } from '@/core/block/node/definition/types/definition';
 import type { PickResult } from '@/shared/types/result';
 
 /**

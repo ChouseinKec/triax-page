@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types";
+import type { NodeID } from "@/core/block/node/instance/types/instance";
 import type { Side, Corner } from "@/shared/components/select/position/types";
 
 // Components
@@ -12,7 +12,7 @@ import Property from "@/shared/components/layout/property/component";
 import { renderStyleRow } from "../factory";
 
 // Utilities
-import { generateStyleKey } from "@/core/block/style/utilities/key";
+import { generateStyleKey } from "@/core/block/style/instance/utilities/key";
 //
 
 /**

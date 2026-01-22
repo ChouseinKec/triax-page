@@ -1,6 +1,6 @@
 // Types
-import type { NodeID, NodeInstance } from '@/core/block/node/instance/types';
-import { NodeStyles, NodeAttributes, NodeDefinition } from '@/core/block/node/definition/types';
+import type { NodeID, NodeInstance } from '@/core/block/node/instance/types/instance';
+import { NodeStyles, NodeAttributes, NodeDefinition } from '@/core/block/node/definition/types/definition';
 import type { OperateResult } from '@/shared/types/result';
 
 /**

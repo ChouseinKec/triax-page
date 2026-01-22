@@ -2,11 +2,11 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { NodeID } from '@/core/block/node/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types/instance';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/instance/helpers';
-import { pickNodeAttributes, renderNodeAttributes } from '@/core/block/attribute/helpers/';
+import { pickNodeAttributes, renderNodeAttributes } from '@/core/block/attribute/instance/helpers/';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';

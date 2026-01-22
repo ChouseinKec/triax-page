@@ -5,8 +5,8 @@ import { useBlockStore } from '@/state/block/block';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { NodeID} from '@/core/block/node/instance/types';
-import type { NodeKey } from '@/core/block/node/definition/types';
+import type { NodeID} from '@/core/block/node/instance/types/instance';
+import type { NodeKey } from '@/core/block/node/definition/types/definition';
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';

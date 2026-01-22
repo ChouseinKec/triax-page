@@ -1,7 +1,6 @@
 // Types
-import type {  NodeInstance, StoredNodes } from '@/core/block/node/instance/types';
-import type { NodeDefinition } from '@/core/block/node/definition/types';
-import type { ElementKey, ElementDefinition } from '@/core/block/element/types';
+import type { NodeInstance, StoredNodes } from '@/core/block/node/instance/types/instance';
+import type { ElementKey, ElementDefinition } from '@/core/block/element/definition/types';
 import type { CheckResult } from '@/shared/types/result';
 
 // Helpers
@@ -10,12 +9,12 @@ import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 /**
  * Check whether the parent block definition allows a child with the specified element tag.
  *
- * @param parentNodeDefinition - definition of the parent block to consult
+ * @param parentElementDefinition - definition of the parent element to consult
  * @param childElementKey - the element tag of the candidate child
  */
-export function allowsChildElement(parentNodeDefinition: NodeDefinition, childElementKey: ElementKey): CheckResult {
+export function isChildElementAllowed(parentElementDefinition: ElementDefinition, childElementKey: ElementKey): CheckResult {
 	// If the parent does not restrict allowed children, the child is permitted
-	const allowedChildren = parentNodeDefinition.allowedChildren;
+	const allowedChildren = parentElementDefinition.allowedChildren;
 	if (!allowedChildren) return { success: true, passed: true };
 
 	// If the allowed list explicitly contains the child's tag it's permitted
@@ -26,35 +25,20 @@ export function allowsChildElement(parentNodeDefinition: NodeDefinition, childEl
 }
 
 /**
- * Determine whether placing a child would violate "forbidden ancestor" rules.
+ * Determine whether the child has a forbidden ancestor.
  *
  * @param childElementDefinition - the element definition for the prospective child (contains forbiddenAncestors)
  * @param parentNodeInstance - the immediate parent instance where the child would be placed
- * @param storedNodes - record of all block instances (used to walk up the tree)
  */
-export function violatesForbiddenAncestors(childElementDefinition: ElementDefinition, parentNodeInstance: NodeInstance, storedNodes: StoredNodes): CheckResult {
-	// If there are no forbidden ancestors declared, this rule can't be violated
+export function hasForbiddenAncestor(childElementDefinition: ElementDefinition, parentNodeInstance: NodeInstance): CheckResult {
+	// If there are no forbidden ancestors declared, no forbidden ancestor
 	const forbiddenAncestors = childElementDefinition.forbiddenAncestors;
 	if (!forbiddenAncestors) return { success: true, passed: false };
 
-	// Convert to a Set for efficient membership tests
-	const forbiddenSet = new Set(forbiddenAncestors);
+	// Check if the immediate parent is forbidden
+	if (forbiddenAncestors.includes(parentNodeInstance.tag)) return { success: true, passed: true };
 
-	// Walk up the parent chain from the immediate parent, looking for a forbidden tag
-	let currentNodeInstance: NodeInstance | undefined = parentNodeInstance;
-	while (currentNodeInstance) {
-		if (!currentNodeInstance.parentID) break; // reached the root
-
-		// If the current ancestor's tag is forbidden, we report passed:true
-		if (forbiddenSet.has(currentNodeInstance.tag)) return { success: true, passed: true };
-
-		// Fetch the next parent in the chain; propagate fetch errors as failures
-		const parentResult = pickNodeInstance(currentNodeInstance.parentID, storedNodes);
-		if (!parentResult.success) return { success: false, error: parentResult.error };
-		currentNodeInstance = parentResult.data;
-	}
-
-	// No forbidden ancestor found
+	// No forbidden ancestor
 	return { success: true, passed: false };
 }
 
@@ -62,15 +46,15 @@ export function violatesForbiddenAncestors(childElementDefinition: ElementDefini
  * Check whether placing a child of a given tag would exceed any declared "unique" limit
  * on the parent.
  *
- * @param parentNodeDefinition - definition containing uniqueChildren limits
+ * @param parentElementDefinition - definition containing uniqueChildren limits
  * @param parentNodeInstance - the parent instance whose children we will scan
  * @param childElementKey - the tag of the prospective child being checked
  * @param storedNodes - record used to fetch sibling instances
  * @param excludeNodeID - optional block id to exclude from the counting (useful for moves)
  */
-export function exceedsUniqueChildLimit(parentNodeDefinition: NodeDefinition, parentNodeInstance: NodeInstance, childElementKey: ElementKey, storedNodes: StoredNodes, excludeNodeID?: string): CheckResult {
+export function hasExceededUniqueChildLimit(parentElementDefinition: ElementDefinition, parentNodeInstance: NodeInstance, childElementKey: ElementKey, storedNodes: StoredNodes, excludeNodeID?: string): CheckResult {
 	// If the parent has no unique element limits, the child can't exceed them
-	const uniqueChildren = parentNodeDefinition.uniqueChildren;
+	const uniqueChildren = parentElementDefinition.uniqueChildren;
 	if (!uniqueChildren) return { success: true, passed: false };
 
 	// Find the configured limit for this element tag — if none is set, it can't exceed
@@ -94,15 +78,15 @@ export function exceedsUniqueChildLimit(parentNodeDefinition: NodeDefinition, pa
  * Validate whether inserting a child with a given tag at a target index would violate
  * the parent's `orderedChildren` policy.
  *
- * @param parentNodeDefinition - definition containing orderedChildren groups
+ * @param parentElementDefinition - definition containing orderedChildren groups
  * @param parentNodeInstance - the parent instance whose children will be scanned
  * @param childElementKey - the tag of the prospective child being added
  * @param storedNodes - record used to fetch sibling instances
  * @param targetIndex - the index where the child would be inserted
  */
-export function violatesOrderedChildren(parentNodeDefinition: NodeDefinition, parentNodeInstance: NodeInstance, childElementKey: ElementKey, storedNodes: StoredNodes, targetIndex: number): CheckResult {
+export function hasViolatedOrderedChildren(parentElementDefinition: ElementDefinition, parentNodeInstance: NodeInstance, childElementKey: ElementKey, storedNodes: StoredNodes, targetIndex: number): CheckResult {
 	// If there are no ordered rules, insertion can't violate ordering
-	const orderedChildren = parentNodeDefinition.orderedChildren;
+	const orderedChildren = parentElementDefinition.orderedChildren;
 	if (!orderedChildren) return { success: true, passed: false };
 
 	// Collect current sibling tags in order

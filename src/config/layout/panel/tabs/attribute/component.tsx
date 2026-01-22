@@ -5,7 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID, canNodeHaveAttributes } from "@/core/block/node/instance/managers";
+import { useSelectedNodeID, } from "@/core/block/node/instance/managers";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -31,14 +31,11 @@ const TAB_ICONS = {
 
 const BlockAttributeTabRender: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
-    const canHave = selectedNodeID ? canNodeHaveAttributes(selectedNodeID) : false;
-
 
     const tabItems = selectedNodeID
         ? [
             { label: TAB_ICONS.global, title: 'Global', content: renderGlobalTab(selectedNodeID) },
             { label: TAB_ICONS.accessibility, title: 'Accessibility', content: renderAccessibilityTab(selectedNodeID) },
-
         ]
         : [];
 
@@ -47,13 +44,6 @@ const BlockAttributeTabRender: React.FC = () => {
             return (
                 <p className={CSS.Empty}>
                     No block selected. Select a block to see attribute-specific settings.
-                </p>
-            );
-        }
-        if (!canHave) {
-            return (
-                <p className={CSS.Empty}>
-                    The selected block does not have configurable attributes.
                 </p>
             );
         }

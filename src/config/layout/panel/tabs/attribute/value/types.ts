@@ -1,6 +1,6 @@
 // Types
-import type { AttributeKey } from '@/core/block/attribute/types';
-import type { NodeID } from '@/core/block/node/instance/types';
+import type { AttributeKey } from '@/core/block/attribute/definition/types';
+import type { NodeID } from '@/core/block/node/instance/types/instance';
 
 /**
  * Props for attribute value components.

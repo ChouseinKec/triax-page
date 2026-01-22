@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types";
-import type { StyleKey } from "@/core/block/style/types";
+import type { NodeID } from "@/core/block/node/instance/types/instance";
+import type { StyleKey } from "@/core/block/style/definition/types";
 import type { Side } from "@/shared/components/select/position/types";
 
 // Components
@@ -13,10 +13,10 @@ import Property from "@/shared/components/layout/property/component";
 import { renderStyleRow } from "../factory";
 
 // Utilities
-import { generateStyleKey } from "@/core/block/style/utilities";
+import { generateStyleKey } from "@/core/block/style/instance/utilities";
 
 // Managers
-import { useBlockStyle } from "@/core/block/style/managers";
+import { useBlockStyle } from "@/core/block/style/instance/managers";
 
 /**
  * Renders the Size & Position tab content

@@ -2,21 +2,22 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Helpers
-import { validateNodeKey, validateNodeID } from '@/core/block/node/instance/helpers';
+import { validateNodeID } from '@/core/block/node/instance/helpers';
+import { validateNodeKey } from '@/core/block/node/definition/helpers/validators';
 import { pickNodeDefinition, pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 import { createNode, detachNodeFromParent } from '@/core/block/node/instance/helpers/operations';
 import { duplicateNodeInTree, addNodeToTree, deleteNodeFromTree } from '@/core/block/node/instance/helpers/operations/tree';
 
 // Types
-import type {  NodeID } from '@/core/block/node/instance/types';
-import type { NodeKey } from '@/core/block/node/definition/types';
+import type {  NodeID } from '@/core/block/node/instance/types/instance';
+import type { NodeKey } from '@/core/block/node/definition/types/definition';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredNodes } from '@/core/block/node/definition/registries';
+import { getRegisteredNodes } from '@/core/block/node/definition/states/registry';
 
 /**
  * Adds a new block of the specified type to the page in block CRUD operations.

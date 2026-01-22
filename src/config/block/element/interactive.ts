@@ -1,6 +1,6 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
-import type { AttributeKey } from '@/core/block/attribute/types';
+import type { ElementDefinition } from '@/core/block/element/definition/types';
+import type { AttributeKey } from '@/core/block/attribute/definition/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT, FLOW_WITH_SUMMARY, SELECT_CONTENT, VOID_CONTENT } from './shared';
@@ -101,7 +101,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		key: 'dialog',
 		allowedAttributes: DIALOG_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
-		forbiddenAncestors: null,
+		forbiddenAncestors: ['dialog'],
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Dialog box or modal window for interactive content.',

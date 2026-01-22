@@ -2,7 +2,7 @@
 import { useBlockStore } from '@/state/block/block';
 
 // Types
-import type { NodeID } from '@/core/block/node/instance/types';
+import type { NodeID } from '@/core/block/node/instance/types/instance';
 
 /**
  * Gets the currently selected block ID from the store.

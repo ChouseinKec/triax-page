@@ -7,7 +7,7 @@ import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 import { overwriteNodeInTree } from '@/core/block/node/instance/helpers/operations/tree';
 
 // Types
-import type { NodeInstance, NodeID } from '@/core/block/node/instance/types';
+import type { NodeInstance, NodeID } from '@/core/block/node/instance/types/instance';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';

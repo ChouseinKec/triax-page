@@ -1,6 +1,6 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
-import type { AttributeKey } from '@/core/block/attribute/types';
+import type { ElementDefinition } from '@/core/block/element/definition/types';
+import type { AttributeKey } from '@/core/block/attribute/definition/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, VOID_CONTENT, PHRASING_CONTENT, PHRASING_WITH_MEDIA, PICTURE_CONTENT, FLOW_CONTENT, PHRASING_WITH_AREA } from './shared';
@@ -46,7 +46,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
-		description: 'Inline frame embedding an external HTML page. No children.',
+		description: 'Inline frame embedding an external HTML page (void element). No children.',
 	},
 	{
 		key: 'canvas',

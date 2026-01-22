@@ -6,8 +6,8 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 import { devLog } from '@/shared/utilities/dev';
 
 // Types
-import type { NodeID} from '@/core/block/node/instance/types';
-import type { NodeContent } from '@/core/block/node/definition/types';
+import type { NodeID} from '@/core/block/node/instance/types/instance';
+import type { NodeContent } from '@/core/block/node/definition/types/definition';
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/instance/helpers';

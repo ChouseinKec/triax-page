@@ -1,6 +1,6 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
-import type { AttributeKey } from '@/core/block/attribute/types';
+import type { ElementDefinition } from '@/core/block/element/definition/types';
+import type { AttributeKey } from '@/core/block/attribute/definition/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT, FLOW_WITH_FIGCAPTION } from './shared';
@@ -24,7 +24,7 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		key: 'p',
 		allowedAttributes: TEXT_ATTRIBUTES,
 		allowedChildren: PHRASING_CONTENT,
-		forbiddenAncestors: null,
+		forbiddenAncestors: ['p'],
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Paragraph for grouping runs of phrasing text.',
@@ -33,7 +33,7 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		key: 'main',
 		allowedAttributes: FLOW_ATTRIBUTES,
 		allowedChildren: FLOW_CONTENT,
-		forbiddenAncestors: null,
+		forbiddenAncestors: ['main'],
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Main landmark for dominant page content. Must be unique and typically excludes repeated site-wide content.',

@@ -7,7 +7,7 @@ import { pickNodeInstance } from '@/core/block/node/instance/helpers/pickers';
 import { findNodeFirstChild, findNodeNextSibling, findNodePreviousSibling, findNodeLastDescendant, findNodeNextParentSibling } from '@/core/block/node/instance/helpers/finders';
 
 // Types
-import type { NodeInstance, NodeID } from '@/core/block/node/instance/types';
+import type { NodeInstance, NodeID } from '@/core/block/node/instance/types/instance';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';

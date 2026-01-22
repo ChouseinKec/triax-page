@@ -1,13 +1,13 @@
 // Types
-import type { UnitType, UnitKey } from '@/core/block/style/types';
+import type { UnitType, UnitKey } from '@/core/block/style/definition/types';
 import type { OptionDefinition } from '@/shared/components/types/option';
-import type { TokenRaw, StyleValue, TokenParam, TokenCanonical, TokenOptionParams } from '@/core/block/style/types';
+import type { TokenRaw, StyleValue, TokenParam, TokenCanonical, TokenOptionParams } from '@/core/block/style/definition/types';
 
 // Utilities
 import { extractBetween } from '@/shared/utilities/string';
 
 // Registry
-import { getRegisteredUnit } from '@/core/block/style/registries';
+import { getRegisteredUnit } from '@/core/block/style/definition/state/registry';
 
 /**
  * Extracts the numeric value from a CSS length string (e.g., '10px', '25%', '0.1rem').

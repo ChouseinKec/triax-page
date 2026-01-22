@@ -2,7 +2,7 @@
 import BlockContainerComponent from '@/config/block/node/container/component';
 
 // Types
-import { NodeDefinition } from '@/core/block/node/definition/types';
+import { NodeDefinition } from '@/core/block/node/definition/types/definition';
 
 /**
  * Container block definition.
@@ -21,13 +21,6 @@ const BlockContainerDefinition: NodeDefinition = {
 
 	defaultTag: 'div',
 	availableTags: ['div', 'section', 'article', 'aside', 'nav'],
-
-	allowedStyles: null,
-	allowedAttributes: null,
-	allowedChildren: null,
-	forbiddenAncestors: null,
-	uniqueChildren: null,
-	orderedChildren: null,
 
 	defaultStyles: {},
 	defaultAttributes: {},

@@ -6,7 +6,6 @@ import CSS from "./styles.module.scss";
 
 // Managers
 import { useSelectedNodeID } from "@/core/block/node/instance/managers";
-import { canNodeHaveStyles } from "@/core/block/style/managers/";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -66,7 +65,6 @@ const TAB_ICONS = {
  */
 const BlockStyleTabComponent: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
-    const canHaveStyles = selectedNodeID ? canNodeHaveStyles(selectedNodeID) : false;
 
     // Define tabs with renderers
     const tabItems = selectedNodeID
@@ -85,13 +83,6 @@ const BlockStyleTabComponent: React.FC = () => {
             return (
                 <p className={CSS.Empty}>
                     No block selected. Select a block to see style-specific settings.
-                </p>
-            );
-        }
-        if (!canHaveStyles) {
-            return (
-                <p className={CSS.Empty}>
-                    The selected block does not have configurable styles.
                 </p>
             );
         }

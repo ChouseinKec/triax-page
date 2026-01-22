@@ -6,7 +6,7 @@ import CSS from "./styles.module.scss";
 
 // Types
 import type { FunctionValueProps } from "./types";
-import type { StyleKey } from "@/core/block/style/types";
+import type { StyleKey } from "@/core/block/style/definition/types";
 
 // Components
 import DropdownReveal from "@/shared/components/reveal/dropdown/component";
@@ -14,12 +14,12 @@ import DropdownSelect from "@/shared/components/select/dropdown/component";
 import BlockStyleValue from "@/config/layout/panel/tabs/style/value";
 
 // Utilities
-import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from "@/core/block/style/utilities";
+import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from "@/core/block/style/instance/utilities";
 import { createDefinition } from "@/config/block/style/token/type/function/utilities";
 import { devRender } from "@/shared/utilities/dev";
 
 // Registry
-import { getRegisteredTokenTypes } from "@/core/block/style/registries";
+import { getRegisteredTokenTypes } from "@/core/block/style/definition/state/registry";
 
 /**
  * FunctionValue Component

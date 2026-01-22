@@ -1,13 +1,12 @@
 import React, { useCallback, useRef, useEffect, memo } from "react";
 
 // Types
-import type { NodeComponentProps } from '@/core/block/node/definition/types';
+import type { NodeComponentProps } from '@/core/block/node/definition/types/definition';
 
 // Managers
 import { selectNode, } from '@/core/block/node/instance/managers';
 import { getNodeContent, setNodeContent } from '@/core/block/node/instance/managers';
-import { registerBarAction, unregisterBarAction, isBarActionRegistered } from '@/core/layout/bar/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers/';
+import { useBlockRenderedStyles } from '@/core/block/style/instance/managers/';
 import device from "@/config/layout/view/block/device";
 
 const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected }) => {

@@ -1,5 +1,5 @@
 // Types
-import type { NodeInstance } from '@/core/block/node/instance/types';
+import type { NodeInstance } from '@/core/block/node/instance/types/instance';
 import type { FindResult } from '@/shared/types/result';
 
 // Helpers

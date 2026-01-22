@@ -2,7 +2,7 @@
 import BlockTextComponent from "@/config/block/node/text/component";
 
 // Types
-import { NodeDefinition } from '@/core/block/node/definition/types';
+import { NodeDefinition } from '@/core/block/node/definition/types/definition';
 
 const BlockTextDefinition: NodeDefinition = {
     key: "core-text",
@@ -17,13 +17,6 @@ const BlockTextDefinition: NodeDefinition = {
 
     defaultTag: "p",
     availableTags: ["p"],
-
-    allowedAttributes: [],
-    allowedStyles: [],
-    allowedChildren: [],
-    forbiddenAncestors: null,
-    uniqueChildren: null,
-    orderedChildren: null,
 
     defaultStyles: {},
     defaultAttributes: {},

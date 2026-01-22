@@ -1,5 +1,5 @@
 // Types
-import type { NodeDefinition, NodeKey, RegisteredNodes } from '@/core/block/node/definition/types';
+import type { NodeDefinition, NodeKey, RegisteredNodes } from '@/core/block/node/definition/types/definition';
 import type { PickResult } from '@/shared/types/result';
 
 /**

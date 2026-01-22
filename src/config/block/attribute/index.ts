@@ -1,5 +1,5 @@
 // Registry
-import { registerAttributes } from '@/core/block/attribute/registries';
+import { registerAttributes } from '@/core/block/attribute/definition/states/registry';
 
 // Definitions
 import { GLOBAL_DEFINITIONS } from './global';

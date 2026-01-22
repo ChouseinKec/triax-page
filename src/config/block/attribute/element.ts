@@ -1,4 +1,4 @@
-import type { AttributeDefinition } from '@/core/block/attribute/types';
+import type { AttributeDefinition } from '@/core/block/attribute/definition/types';
 
 export const ELEMENT_DEFINITIONS: AttributeDefinition[] = [
 	{
