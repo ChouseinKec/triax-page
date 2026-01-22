@@ -2,7 +2,7 @@
 import type { NodeStyles } from '@/core/block/node/definition/types/definition';
 import type { StyleDefinition, StyleKey, StyleRecord, StyleValue } from '@/core/block/style/definition/types';
 import type { OperateResult } from '@/shared/types/result';
-import type { PageContext } from '@/core/layout/page/types';
+import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 // Helpers
 import { pickStyleLonghand } from '@/core/block/style/instance/helpers/pickers/';
@@ -17,14 +17,16 @@ import { pickStyleLonghand } from '@/core/block/style/instance/helpers/pickers/'
  * @param styleLonghand - the list of longhand style keys for the shorthand
  * @param styleValue - the value to set for each longhand key
  * @param NodeStyles - the current NodeStyles map to update
- * @param pageContext - the current page state including selected device, orientation, and pseudo info
+ * @param selectedDeviceKey - the selected device key
+ * @param selectedOrientationKey - the selected orientation key
+ * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleValue, NodeStyles: NodeStyles, pageContext: PageContext): OperateResult<NodeStyles> {
+export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleValue, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Build the property updates map
 	const propertyUpdates: StyleRecord = Object.fromEntries(styleKeys.map((key) => [key, styleValue]));
 
 	// Return the updated styles
-	return updateNodeStyles(NodeStyles, propertyUpdates, pageContext);
+	return updateNodeStyles(NodeStyles, propertyUpdates, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 }
 
 /**
@@ -37,14 +39,16 @@ export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleV
  * @param styleKey - the longhand style key to update
  * @param styleValue - the value to set for the style key
  * @param NodeStyles - the current NodeStyles map to update
- * @param pageContext - the current page state including selected device, orientation, and pseudo info
+ * @param selectedDeviceKey - the selected device key
+ * @param selectedOrientationKey - the selected orientation key
+ * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue, NodeStyles: NodeStyles, pageContext: PageContext): OperateResult<NodeStyles> {
+export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Build the property updates map
 	const properties: StyleRecord = { [styleKey]: styleValue };
 
 	// Return the updated styles
-	return updateNodeStyles(NodeStyles, properties, pageContext);
+	return updateNodeStyles(NodeStyles, properties, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 }
 
 /**
@@ -56,12 +60,11 @@ export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue
  *
  * @param NodeStyles - the current NodeStyles map to update
  * @param newStyles - the style properties and values to update
- * @param pageContext - the current page state including selected device, orientation, and pseudo info
+ * @param selectedDeviceKey - the selected device key
+ * @param selectedOrientationKey - the selected orientation key
+ * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateNodeStyles(NodeStyles: NodeStyles, newStyles: StyleRecord, pageContext: PageContext): OperateResult<NodeStyles> {
-	const selectedDeviceKey = pageContext.store.selectedDeviceKey;
-	const selectedOrientationKey = pageContext.store.selectedOrientationKey;
-	const selectedPseudoKey = pageContext.store.selectedPseudoKey;
+export function updateNodeStyles(NodeStyles: NodeStyles, newStyles: StyleRecord, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 
 	return {
 		success: true,
@@ -91,15 +94,17 @@ export function updateNodeStyles(NodeStyles: NodeStyles, newStyles: StyleRecord,
  * @param styleDefinition - the definition of the style property
  * @param styleValue - the value to set for the style key(s)
  * @param NodeStyles - the current NodeStyles map to update
- * @param pageContext - the current page state including selected device, orientation, and pseudo info
+ * @param selectedDeviceKey - the selected device key
+ * @param selectedOrientationKey - the selected orientation key
+ * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyle(styleKey: StyleKey, styleValue: StyleValue, styleDefinition: StyleDefinition, NodeStyles: NodeStyles, pageContext: PageContext): OperateResult<NodeStyles> {
+export function updateBlockStyle(styleKey: StyleKey, styleValue: StyleValue, styleDefinition: StyleDefinition, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Pick longhand keys from the style definition
 	const longhandResult = pickStyleLonghand(styleDefinition);
 
 	// Apply longhand if found
-	if (longhandResult.success === true) return updateBlockStyleValues(longhandResult.data, styleValue, NodeStyles, pageContext);
+	if (longhandResult.success === true) return updateBlockStyleValues(longhandResult.data, styleValue, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 
 	// Otherwise, apply shorthand
-	return updateBlockStyleValue(styleKey, styleValue, NodeStyles, pageContext);
+	return updateBlockStyleValue(styleKey, styleValue, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 }

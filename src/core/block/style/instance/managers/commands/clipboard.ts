@@ -19,18 +19,18 @@ let stylesClipboard: NodeStyles | null = null;
  * Copies the styles of a blockInstance to the clipboard in blockInstance CRUD operations.
  * Stores the blockInstance styles for later pasting.
  *
- * @param NodeID - The blockInstance identifier to copy styles from
+ * @param nodeID - The blockInstance identifier to copy styles from
  */
-export function copyNodeStyles(NodeID: NodeID): void {
+export function copyNodeStyles(nodeID: NodeID): void {
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the blockInstance to copy styles from
 	const results = new ResultPipeline('[BlockManager → copyNodeStyles]')
 		.validate({
-			NodeID: validateNodeID(NodeID),
+			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.NodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
@@ -43,26 +43,26 @@ export function copyNodeStyles(NodeID: NodeID): void {
  * Pastes copied styles to a target blockInstance in blockInstance CRUD operations.
  * Applies the styles from clipboard to the specified blockInstance.
  *
- * @param NodeID - The blockInstance identifier to paste styles to
+ * @param nodeID - The blockInstance identifier to paste styles to
  */
-export function pasteNodeStyles(NodeID: NodeID): void {
+export function pasteNodeStyles(nodeID: NodeID): void {
 	if (!stylesClipboard) return (devLog.error(`[BlockManager → pasteNodeStyles] No styles in clipboard`), undefined);
 	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste styles into
 	const results = new ResultPipeline('[BlockManager → pasteNodeStyles]')
 		.validate({
-			NodeID: validateNodeID(NodeID),
+			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.NodeID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.nodeID, blockStore.allBlocks),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with styles from clipboard
 	blockStore.updateBlocks({
-		[results.NodeID]: {
+		[results.nodeID]: {
 			...results.targetBlock,
 			styles: JSON.parse(JSON.stringify(stylesClipboard)),
 		},
