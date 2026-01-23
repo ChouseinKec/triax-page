@@ -6,7 +6,7 @@ import type { NodeID } from "@/core/block/node/instance/types/instance";
 
 // Components
 import GroupLayout from "@/shared/components/layout/group/component";
-import { renderStyleRow } from "../factory";
+import { renderStyleRow } from "../factory/component";
 
 /**
  * Renders the Effects tab content

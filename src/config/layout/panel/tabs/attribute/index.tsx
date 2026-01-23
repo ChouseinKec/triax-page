@@ -1,10 +1,10 @@
-// Types
-import type { TabDefinition } from '@/core/layout/panel/types';
+// Registry
+import { registerTab } from '@/core/layout/panel/state/registry';
 
 // Component
-import BlockAttributeTabRender from '@/config/layout/panel/tabs/attribute/component';
+import BlockAttribute from '@/config/layout/panel/tabs/attribute/component';
 
-export const TabDefinitionAttribute: TabDefinition = {
+registerTab({
 	key: 'attribute',
 	panelKey: 'inspector',
 	title: 'Block Attributes',
@@ -14,8 +14,5 @@ export const TabDefinitionAttribute: TabDefinition = {
 		</svg>
 	),
 	order: 20,
-	component: BlockAttributeTabRender,
-};
-
-
-export default TabDefinitionAttribute;
+	component: BlockAttribute,
+});

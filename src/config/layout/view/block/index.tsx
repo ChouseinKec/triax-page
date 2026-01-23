@@ -1,12 +1,12 @@
 // Types
-import type { ViewDefinition, ActionDefinition } from "@/core/layout/viewport/types";
+import type { ViewDefinition, ActionDefinition } from "@/core/layout/view/types";
 
 // Components
 import ViewComponentBlock from '@/config/layout/view/block/component';
 import DeviceSelect from "./device-select";
 
 // Registry
-import { registerViews, registerActions } from '@/core/layout/viewport/state/registry';
+import { registerViews, registerActions } from '@/core/layout/view/state/registry';
 
 const ViewDefinitionBlock: ViewDefinition = {
     key: 'block',

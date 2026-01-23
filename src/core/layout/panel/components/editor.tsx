@@ -2,7 +2,7 @@
 import React from "react";
 
 // Types
-import type { PanelsProps } from "./types";
+import type { PanelEditorProps } from "./types";
 
 // Components
 import Panel from "./panel";
@@ -10,7 +10,7 @@ import Panel from "./panel";
 // Managers
 import { getPanelDefinitions, usePanelOpenState } from "@/core/layout/panel/managers";
 
-const Panels: React.FC<PanelsProps> = ({ benchKey }) => {
+const PanelEditor: React.FC<PanelEditorProps> = ({ benchKey }) => {
     const panelDefinitions = getPanelDefinitions(benchKey);
 
     return (
@@ -28,4 +28,4 @@ const Panels: React.FC<PanelsProps> = ({ benchKey }) => {
     );
 };
 
-export default Panels;
+export default PanelEditor;

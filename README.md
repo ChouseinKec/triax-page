@@ -51,12 +51,12 @@ Triax is a modular, registry-based page builder for React that provides a comple
 
 ### Flexible Layout System
 - **Panel Architecture:** Modular panel system for organizing editor UI
-- **Dynamic Panels:** Draggable, resizable panels with lock/unlock functionality
+- **Dynamic PanelEditor:** Draggable, resizable panels with lock/unlock functionality
 - **Bars & Tabs:** Organized navigation with action bars and tabbed interfaces
-- **Workbench System:** Multiple workspace modes (Design, Logic, Semantics, Main)
-- **Context-Aware UI:** Panels adapt to selected block and current workbench
+- **BenchEditor System:** Multiple workspace modes (Design, Logic, Semantics, Main)
+- **Context-Aware UI:** PanelEditor adapt to selected block and current workbench
 
-**Core Panels:**
+**Core PanelEditor:**
 - **Block Library:** Searchable, categorized list of available blocks
 - **Block Inspector:** Edit block attributes and styles for selected block
 - **Block Hierarchy:** Visual tree representation of page structure
@@ -85,8 +85,8 @@ src/core/
 ├── config/          # Configuration & definitions
 │   ├── blocks/      # Core block definitions (container, text)
 │   ├── layouts/     # Panel, bar, and tab definitions
-│   ├── viewports/   # Viewport configurations
-│   ├── workbenches/ # Workbench definitions (design, logic, etc.)
+│   ├── viewports/   # ViewEditor configurations
+│   ├── workbenches/ # BenchEditor definitions (design, logic, etc.)
 │   ├── page/        # Page-level configs (device, orientation, pseudo)
 │   └── init/        # Initialization steps and sequences
 │
@@ -110,7 +110,7 @@ src/core/
     ├── blocks/      # Block render components
     ├── views/       # View components (hierarchy, library)
     ├── actions/     # Action components
-    └── benches/     # Workbench implementations
+    └── benches/     # BenchEditor implementations
 ```
 
 ### Key Design Patterns

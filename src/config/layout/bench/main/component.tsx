@@ -2,10 +2,10 @@
 import React, { memo } from "react";
 
 // Types
-import type { BenchComponentProps } from "@/core/layout/workbench/types";
+import type { BenchComponentProps } from "@/core/layout/bench/types";
 
 // Components
-import Viewport from "@/core/layout/viewport/components/editor";
+import ViewEditor from "@/core/layout/view/components/editor";
 
 /**
  * Renders the main workbench layout.
@@ -15,7 +15,7 @@ import Viewport from "@/core/layout/viewport/components/editor";
  */
 const BenchComponentMain: React.FC<BenchComponentProps> = () => {
     return (
-        <Viewport />
+        <ViewEditor />
     );
 }
 BenchComponentMain.displayName = "BenchComponentMain";

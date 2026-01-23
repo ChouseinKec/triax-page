@@ -4,7 +4,7 @@ import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
 import { validateString, validateObject, validateElement, validateInteger, validateBoolean } from '@/shared/helpers/validators';
-import { validateBenchKey } from '@/core/layout/workbench/helpers/validators/bench';
+import { validateBenchKey } from '@/core/layout/bench/helpers/validators/bench';
 
 /**
  * Validates a panel ID for panel operations.
@@ -117,7 +117,7 @@ export function validatePanelOpen(panelOpen: unknown): ValidateResult<boolean> {
  * @param panelDefinition - The panel definition to validate
  */
 export function validatePanelDefinition(panelDefinition: unknown): ValidateResult<PanelDefinition> {
-	const objectValidation = validateObject(panelDefinition, ['key', 'benchKey', 'title', 'initialPosition', 'initialSize', 'order', 'initialLocked', 'initialOpen', 'icon']);
+	const objectValidation = validateObject(panelDefinition, ['key', 'benchKey', 'title', 'position', 'size', 'order', 'isLocked', 'isOpen', 'icon']);
 	if (!objectValidation.valid) return objectValidation;
 
 	const benchKeyValidation = validateBenchKey(objectValidation.value.benchKey);
@@ -129,19 +129,19 @@ export function validatePanelDefinition(panelDefinition: unknown): ValidateResul
 	const titleValidation = validatePanelTitle(objectValidation.value.title);
 	if (!titleValidation.valid) return titleValidation;
 
-	const positionValidation = validatePanelPosition(objectValidation.value.initialPosition);
+	const positionValidation = validatePanelPosition(objectValidation.value.position);
 	if (!positionValidation.valid) return positionValidation;
 
-	const sizeValidation = validatePanelSize(objectValidation.value.initialSize);
+	const sizeValidation = validatePanelSize(objectValidation.value.size);
 	if (!sizeValidation.valid) return sizeValidation;
 
 	const orderValidation = validatePanelOrder(objectValidation.value.order);
 	if (!orderValidation.valid) return orderValidation;
 
-	const lockedValidation = validatePanelLocked(objectValidation.value.initialLocked);
+	const lockedValidation = validatePanelLocked(objectValidation.value.isLocked);
 	if (!lockedValidation.valid) return lockedValidation;
 
-	const openValidation = validatePanelOpen(objectValidation.value.initialOpen);
+	const openValidation = validatePanelOpen(objectValidation.value.isOpen);
 	if (!openValidation.valid) return openValidation;
 
 	const iconValidation = validatePanelIcon(objectValidation.value.icon);

@@ -1,7 +1,7 @@
 // Stores
 import { useBlockStore } from '@/state/block/block';
 import { usePageStore } from '@/state/layout/page';
-import { useWorkbenchStore } from '@/core/layout/workbench/state/store';
+import { useBenchEditorStore } from '@/core/layout/bench/state/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/instance/types/instance';

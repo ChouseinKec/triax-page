@@ -1,3 +1,2 @@
-export * from './definition';
-export * from './instance';
+export * from './panel';
 export * from './tab';

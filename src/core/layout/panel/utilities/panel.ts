@@ -10,8 +10,8 @@ type PxSize = { width: number; height: number };
  * Converts percentage-based position and size to pixel position.
  * @param position - The panel position in %.
  * @param size - The panel size in %.
- * @param vh - Viewport height.
- * @param vw - Viewport width.
+ * @param vh - ViewEditor height.
+ * @param vw - ViewEditor width.
  * @returns The pixel position.
  */
 export function convertPositionToPx(position: PanelPosition, size: PanelSize, vh: number, vw: number): PxPosition {
@@ -27,8 +27,8 @@ export function convertPositionToPx(position: PanelPosition, size: PanelSize, vh
 /**
  * Converts percentage-based size to pixel size.
  * @param size - The panel size in %.
- * @param vh - Viewport height.
- * @param vw - Viewport width.
+ * @param vh - ViewEditor height.
+ * @param vw - ViewEditor width.
  * @returns The pixel size.
  */
 export function convertSizeToPx(size: PanelSize, vh: number, vw: number): PxSize {
@@ -39,8 +39,8 @@ export function convertSizeToPx(size: PanelSize, vh: number, vw: number): PxSize
  * Converts pixel position to percentage-based position.
  * @param newPos - The new pixel position.
  * @param currentSize - The current pixel size.
- * @param vh - Viewport height.
- * @param vw - Viewport width.
+ * @param vh - ViewEditor height.
+ * @param vw - ViewEditor width.
  * @param anchorType - The anchor type of the position.
  * @returns The percentage-based position.
  */
@@ -56,8 +56,8 @@ export function convertPxToPosition(newPos: PxPosition, currentSize: PxSize, vh:
 /**
  * Converts pixel size to percentage-based size.
  * @param newSize - The new pixel size.
- * @param vh - Viewport height.
- * @param vw - Viewport width.
+ * @param vh - ViewEditor height.
+ * @param vw - ViewEditor width.
  * @returns The percentage-based size.
  */
 export function convertPxToSize(newSize: PxSize, vh: number, vw: number): PxSize {

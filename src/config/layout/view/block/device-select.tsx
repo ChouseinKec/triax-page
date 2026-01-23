@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 
 // Managers
 import { getDeviceDefinitions } from "@/core/layout/page/managers";
-import { useData, setData } from "@/core/layout/viewport/managers";
+import { useData, setData } from "@/core/layout/view/managers";
 
 // Components
 import DropdownSelect from "@/shared/components/select/dropdown/component";

@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import Device from "./device";
 
 // Managers
-import { useData } from "@/core/layout/viewport/managers";
+import { useData } from "@/core/layout/view/managers";
 
 // Registries
 import { getRegisteredDevices } from "@/core/layout/page/registries";

@@ -1,9 +1,0 @@
-import type { ActionDefinition, ActionDefinitionRecord, ActionKey } from '@/core/layout/workbench/types/action';
-import type { PickResult } from '@/shared/types/result';
-
-export function pickActionDefinition(actionKey: ActionKey, registeredActions: ActionDefinitionRecord): PickResult<ActionDefinition> {
-	const definition = registeredActions[actionKey];
-	if (!definition) return { success: false, error: `Action definition not found: '${actionKey}' does not exist in the action registry` };
-
-	return { success: true, data: definition };
-}

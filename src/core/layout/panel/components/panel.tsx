@@ -12,7 +12,7 @@ import CSS from "./styles.module.scss";
 import type { PanelProps } from "./types";
 
 // Managers
-import { usePanelInstance, getPanelDefinition, setPanelPosition, setPanelSize } from "@/core/layout/panel/managers";
+import { usePanel, setPanelPosition, setPanelSize } from "@/core/layout/panel/managers";
 
 // Utilities
 import { convertPositionToPx, convertSizeToPx, convertPxToPosition, convertPxToSize, calculatePanelStyles, } from "@/core/layout/panel/utilities";
@@ -32,13 +32,12 @@ import { useResize } from "@/shared/hooks/interface/useResize";
  * @param props - PanelProps
  */
 const Panel: React.FC<PanelProps> = ({ panelKey }) => {
-    const panelInstance = usePanelInstance(panelKey);
-    const panelDefinition = getPanelDefinition(panelKey);
+    const panel = usePanel(panelKey);
 
-    // Stored position and size from the panel panelInstance (in %)
-    const { position: storedPosition, size: storedSize, isLocked } = panelInstance || { position: { top: 0, left: 0 }, size: { width: 0, height: 0, minWidth: 0, minHeight: 0 }, isLocked: false };
+    // Stored position and size from the panel (in %)
+    const { position: storedPosition, size: storedSize, isLocked, title, icon } = panel || { position: { top: 0, left: 0 }, size: { width: 0, height: 0, minWidth: 0, minHeight: 0 }, isLocked: false, title: '', icon: null };
 
-    // Viewport dimensions for conversions
+    // ViewEditor dimensions for conversions
     const vh = typeof window === 'undefined' ? 1000 : window.innerHeight;
     const vw = typeof window === 'undefined' ? 1920 : window.innerWidth;
 
@@ -111,7 +110,7 @@ const Panel: React.FC<PanelProps> = ({ panelKey }) => {
      */
     const styles = useMemo(() => calculatePanelStyles(currentPosition, currentSize), [currentPosition, currentSize]);
 
-    if (!panelInstance || !panelInstance.isOpen || !panelDefinition) return null;
+    if (!panel || !panel.isOpen) return null;
 
     return (
         <div
@@ -121,7 +120,7 @@ const Panel: React.FC<PanelProps> = ({ panelKey }) => {
         >
             {/* Top bar with title and actions */}
             <div className={CSS.Header}>
-                <span className={CSS.Title}>{panelDefinition.title}</span>
+                <span className={CSS.Title}>{panel.title}</span>
                 <Action panelKey={panelKey} isLocked={isLocked} />
             </div>
 

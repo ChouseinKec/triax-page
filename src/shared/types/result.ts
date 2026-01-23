@@ -44,10 +44,3 @@ export type FindResult<T> = { status: 'found'; data: T } | { status: 'not-found'
  */
 export type CheckResult = { success: true; passed: boolean } | { success: false; error: string };
 
-
-/**
- * Result type for fetch operations.
- * Indicates whether the fetch was successful or failed with details.
- * On success, includes the fetched data for type narrowing.
- */
-export type ContextResult<T> = { success: true; data: T } | { success: false; error: string };

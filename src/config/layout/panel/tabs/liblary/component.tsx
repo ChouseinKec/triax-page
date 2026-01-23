@@ -21,7 +21,7 @@ import GenericInput from "@/shared/components/input/generic/component";
  * Displays registered blocks as buttons to add them to the editor.
  *
  */
-const BlockLibraryRender: React.FC = () => {
+const BlockLibrary: React.FC = () => {
     const registeredNodes = getRegisteredNodes();
     if (!registeredNodes || Object.keys(registeredNodes).length === 0) {
         return <div className={CSS.Fallback}>No blocks available.</div>;
@@ -137,4 +137,4 @@ const BlockLibraryRender: React.FC = () => {
     );
 };
 
-export default BlockLibraryRender;
+export default BlockLibrary;

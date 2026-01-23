@@ -2,7 +2,7 @@
 import type { PanelKey, TabKey } from '@/core/layout/panel/types';
 
 // Stores
-import { usePanelStore } from '@/core/layout/panel/store';
+import { usePanelStore } from '@/core/layout/panel/state/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';

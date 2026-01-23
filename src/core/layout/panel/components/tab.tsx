@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import ActionGroup from "@/shared/components/group/action/component";
 
 // Registry
-import { getRegisteredTabs } from "@/core/layout/panel/registries";
+import { getRegisteredTabs } from "@/core/layout/panel/state/registry";
 
 // Managers
 import { setSelectedTab, useSelectedTab } from "@/core/layout/panel/managers";

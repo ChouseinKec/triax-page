@@ -1,5 +1,5 @@
 // Types
-import type { DeviceDefinition, DeviceKey, DeviceName, DeviceMedia, DeviceViewport, DeviceCategory } from '@/core/layout/page/types';
+import type { DeviceDefinition, DeviceKey, DeviceName, DeviceMedia, DeviceViewEditor, DeviceCategory } from '@/core/layout/page/types';
 import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
@@ -60,13 +60,13 @@ export function validateDeviceMedia(deviceMedia: unknown): ValidateResult<Device
  * Validates device template for device operations.
  * Checks if the template configuration is valid.
  *
- * @param deviceViewport - The device template to validate
+ * @param deviceViewEditor - The device template to validate
  */
-export function validateDeviceTemplate(deviceViewport: unknown): ValidateResult<DeviceViewport> {
-	const objectValidation = validateObject(deviceViewport);
-	if (!objectValidation.valid) return { valid: false, message: `Device template must be a valid object, got: ${JSON.stringify(deviceViewport)}` };
+export function validateDeviceTemplate(deviceViewEditor: unknown): ValidateResult<DeviceViewEditor> {
+	const objectValidation = validateObject(deviceViewEditor);
+	if (!objectValidation.valid) return { valid: false, message: `Device template must be a valid object, got: ${JSON.stringify(deviceViewEditor)}` };
 
-	const viewport = deviceViewport as Record<string, unknown>;
+	const viewport = deviceViewEditor as Record<string, unknown>;
 	const width = viewport.width;
 	const height = viewport.height;
 
@@ -78,7 +78,7 @@ export function validateDeviceTemplate(deviceViewport: unknown): ValidateResult<
 		return { valid: false, message: `Device template.height must be a positive number, got: ${height}` };
 	}
 
-	return { valid: true, value: deviceViewport as DeviceViewport };
+	return { valid: true, value: deviceViewEditor as DeviceViewEditor };
 }
 
 /**

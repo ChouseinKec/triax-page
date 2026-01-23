@@ -9,7 +9,7 @@ import type { Side, Corner } from "@/shared/components/select/position/types";
 import GroupLayout from "@/shared/components/layout/group/component";
 import PositionSelect from "@/shared/components/select/position/component";
 import Property from "@/shared/components/layout/property/component";
-import { renderStyleRow } from "../factory";
+import { renderStyleRow } from "../factory/component";
 
 // Utilities
 import { generateStyleKey } from "@/core/block/style/instance/utilities/key";

@@ -6,7 +6,7 @@ import CSS from "./styles.module.scss";
 
 const BenchLogicComponent: React.FC = () => {
     return (
-        <div className={CSS.WorkbenchLogic}>
+        <div className={CSS.BenchEditorLogic}>
             <p>Logic (JS)</p>
         </div>
     );

@@ -1,6 +1,6 @@
 // Types
 import type { ReactNode } from 'react';
-import type { BenchKey } from '@/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/bench/types';
 
 /**
  * Represents the position of the Panel on the screen.
@@ -94,7 +94,7 @@ export type PanelOrder = number;
 export interface PanelDefinition {
 	/** Unique identifier for the Panel */
 	key: PanelKey;
-	/** Key of the Workbench this Panel belongs to */
+	/** Key of the BenchEditor this Panel belongs to */
 	benchKey: BenchKey;
 	/** Title of the Panel, displayed in the header */
 	title: PanelTitle;
@@ -102,39 +102,19 @@ export interface PanelDefinition {
 	order: PanelOrder;
 	/** Icon of the Panel, displayed in the left bar */
 	icon: PanelIcon;
-	/** Initial position of the Panel	 */
-	initialPosition: PanelPosition;
-	/**	Initial size and constraints of the Panel	 */
-	initialSize: PanelSize;
-	/** Optional initial locked state of the Panel */
-	initialLocked?: boolean;
-	/** Optional initial open state of the Panel	 */
-	initialOpen?: boolean;
-}
-
-/**
- * Record of all Panel definitions by their key.
- */
-export type PanelDefinitionRecord = Record<PanelKey, PanelDefinition>;
-
-/**
- * Represents the runtime state of a Panel instance.
- * This includes mutable properties that can change during the session.
- */
-export interface PanelInstance {
-	/** Unique identifier for the Panel */
-	key: PanelKey;
-	/** Whether the Panel is currently open */
-	isOpen: boolean;
 	/** Current position of the Panel */
 	position: PanelPosition;
-	/** Current size of the Panel */
+	/** Current size and constraints of the Panel */
 	size: PanelSize;
+	/** Whether the Panel is currently open */
+	isOpen: boolean;
 	/** Whether the Panel is locked (cannot be moved/resized) */
 	isLocked: boolean;
 }
 
 /**
- * Record of all Panel instances by their key.
+ * Record of all Panel definitions by their key.
  */
-export type PanelInstanceRecord = Record<PanelKey, PanelInstance>;
+export type RegisteredPanels = Record<PanelKey, PanelDefinition>;
+
+

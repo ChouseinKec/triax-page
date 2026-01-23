@@ -4,9 +4,9 @@ import '@/auto-imports';
 // Store initialization functions
 import { initializeBlockStore } from '@/state/block/block';
 import { initializePageStore } from '@/state/layout/page';
-import { initializeWorkbenchStore } from '@/core/layout/workbench/state/store';
-import { initializePanelStore } from '@/core/layout/panel/store';
-import { initViewportStore } from '@/core/layout/viewport/state/store';
+import { initializeBenchEditorStore } from '@/core/layout/bench/state/store';
+import { initializePanelStore } from '@/core/layout/panel/state/store';
+import { initViewEditorStore } from '@/core/layout/view/state/store';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
@@ -17,8 +17,8 @@ import { devLog } from '@/shared/utilities/dev';
 export async function initStores(): Promise<void> {
 	try {
 		await initializePageStore();
-		await initializeWorkbenchStore();
-		await initViewportStore();
+		await initializeBenchEditorStore();
+		await initViewEditorStore();
 		await initializePanelStore();
 		await initializeBlockStore();
 	} catch (error) {

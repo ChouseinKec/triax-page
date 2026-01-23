@@ -1,8 +1,8 @@
 import { memo, useMemo } from "react";
 
 // Managers
-import { getPanelDefinitions, usePanelInstances, setPanelOpenState } from "@/core/layout/panel/managers";
-import { useSelectedBenchKey } from "@/core/layout/workbench/managers";
+import { getPanelDefinitions, usePanels, setPanelOpenState } from "@/core/layout/panel/managers";
+import { useSelectedBenchKey } from "@/core/layout/bench/managers";
 
 // Components
 import RadioSelect from "@/shared/components/select/radio/component";
@@ -15,11 +15,11 @@ import RadioSelect from "@/shared/components/select/radio/component";
 const PanelSelect: React.FC = () => {
     const selectedBenchKey = useSelectedBenchKey();
     const panelDefinitions = getPanelDefinitions(selectedBenchKey);
-    const openPanels = usePanelInstances(selectedBenchKey, { open: true }) || [];
+    const openPanelEditor = usePanels(selectedBenchKey, { open: true }) || [];
 
     const selectedKeys = useMemo(() => {
-        return panelDefinitions.filter(pd => openPanels.some(op => op.key === pd.key)).map(pd => pd.key);
-    }, [panelDefinitions, openPanels]
+        return panelDefinitions.filter(pd => openPanelEditor.some(op => op.key === pd.key)).map(pd => pd.key);
+    }, [panelDefinitions, openPanelEditor]
     );
 
     const options = useMemo(() => {

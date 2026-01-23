@@ -25,7 +25,7 @@ export type DeviceMedia = {
  * - width: The width in pixels of the device screen.
  * - height: The height in pixels of the device screen.
  */
-export type DeviceViewport = {
+export type DeviceViewEditor = {
 	/** Width in pixels of the device screen */
 	width: number;
 	/** Height in pixels of the device screen */
@@ -48,7 +48,7 @@ export interface DeviceDefinition {
 	/** Media query breakpoints for this device */
 	media: DeviceMedia;
 	/** Template dimensions for the device viewport */
-	template: DeviceViewport;
+	template: DeviceViewEditor;
 	/** Whether the device should be hidden from UI selectors */
 	hidden?: boolean;
 }

@@ -4,7 +4,7 @@ import { registerActions } from '@/core/layout/page/registries';
 
 
 /**
- * Workbench Select Action Instance
+ * BenchEditor Select Action Instance
  * Defines the action for selecting workbenches in the page editor.
  */
 export const CoreActions: ActionDefinition[] = [];

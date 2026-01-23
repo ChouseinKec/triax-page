@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import CSS from "./styles.module.scss";
 
 // Editors
-import Workbench from "@/core/layout/workbench/components/editor";
+import BenchEditor from "@/core/layout/bench/components/editor";
 
 // Registry
 import { getRegisteredActions } from "@/core/layout/page/registries"
@@ -35,7 +35,7 @@ const Page: React.FC = () => {
                 {actionInstances}
             </div>
 
-            <Workbench />
+            <BenchEditor />
         </div>
     );
 };

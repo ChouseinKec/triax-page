@@ -11,7 +11,7 @@ import type { StyleKey } from "@/core/block/style/definition/types";
 // Components
 import DropdownReveal from "@/shared/components/reveal/dropdown/component";
 import DropdownSelect from "@/shared/components/select/dropdown/component";
-import BlockStyleValue from "@/config/layout/panel/tabs/style/value";
+import BlockStyleValue from "@/config/layout/panel/tabs/style/value/component";
 
 // Utilities
 import { filterFunctionOptions, matchFunctionOption, extractFunctionValue } from "@/core/block/style/instance/utilities";

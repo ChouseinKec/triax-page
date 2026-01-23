@@ -1,5 +1,5 @@
 // Types
-import type { BenchDefinition, ActionDefinition } from '@/core/layout/workbench/types';
+import type { BenchDefinition, ActionDefinition } from '@/core/layout/bench/types';
 
 // Components
 import BenchComponentMain from "@/config/layout/bench/main/component"

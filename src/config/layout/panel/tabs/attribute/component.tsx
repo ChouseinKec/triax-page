@@ -27,9 +27,9 @@ const TAB_ICONS = {
             <path fill="black" d="M224,56V200a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V56A16,16,0,0,1,48,40H208A16,16,0,0,1,224,56ZM56,56V200H200V56Z" />
         </svg>
     ),
-} as const;
+};
 
-const BlockAttributeTabRender: React.FC = () => {
+const BlockAttribute: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
 
     const tabItems = selectedNodeID
@@ -54,7 +54,7 @@ const BlockAttributeTabRender: React.FC = () => {
         );
     };
 
-    return <div className={CSS.BlockAttributeTabRender}>{renderContent()}</div>;
+    return <div className={CSS.BlockAttribute}>{renderContent()}</div>;
 };
 
-export default BlockAttributeTabRender;
+export default BlockAttribute;

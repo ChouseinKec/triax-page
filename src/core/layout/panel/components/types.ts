@@ -1,9 +1,9 @@
 import type { PanelKey } from '@/core/layout/panel/types';
-import type { BenchKey } from '@/core/layout/workbench/types';
+import type { BenchKey } from '@/core/layout/bench/types';
 /**
  * Props for the PanelEditor component.
  */
-export interface PanelsProps {
+export interface PanelEditorProps {
 	benchKey: BenchKey;
 	
 }

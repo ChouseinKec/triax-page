@@ -6,7 +6,7 @@ import type { NodeID } from "@/core/block/node/instance/types/instance";
 
 // Components
 import GroupLayout from "@/shared/components/layout/group/component";
-import { renderAttributeRow } from "../factory";
+import { renderAttributeRow } from "../factory/component";
 
 // Registry
 import { getRegisteredAttributes } from "@/core/block/attribute/definition/states/registry";
