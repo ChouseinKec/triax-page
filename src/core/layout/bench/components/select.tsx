@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 
 // Managers
-import { useSelectedBenchKey, setSelectedBenchEditorKey } from "@/core/layout/bench/managers";
+import { useSelectedBenchKey, setSelectedBenchKey } from "@/core/layout/bench/managers";
 
 // Components
 import RadioSelect from "@/shared/components/select/radio/component";
@@ -35,7 +35,7 @@ const BenchSelect: React.FC = () => {
         <RadioSelect
             value={selectedBenchKey}
             options={benchOptions}
-            onChange={(value) => setSelectedBenchEditorKey(value as string)}
+            onChange={(value) => setSelectedBenchKey(value as string)}
             prioritizeIcons
             clearable={false}
             direction="vertical"

@@ -1,4 +1,4 @@
-import type { ViewDefinition, RegisteredViews, ViewKey } from '@/core/layout/view/types/viewport';
+import type { ViewDefinition, RegisteredViews, ViewKey } from '@/core/layout/view/types/view';
 import type { PickResult } from '@/shared/types/result';
 
 export function pickViewDefinition(viewKey: ViewKey, registeredViews: RegisteredViews): PickResult<ViewDefinition> {

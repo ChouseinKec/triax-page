@@ -1,0 +1,69 @@
+.BenchEditorLogic {
+    padding: 20px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    height: 75%;
+    width: 75%;
+    margin: auto;
+    overflow-y: auto;
+    opacity: 1;
+
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 16px;
+        font-size: 24px;
+    }
+
+    p {
+        color: #34495e;
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }
+
+    .Content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 4px;
+        border: 1px solid #bdc3c7;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        h2 {
+            color: #2c3e50;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-size: 18px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        ul {
+            margin: 12px 0;
+            padding-left: 20px;
+
+            li {
+                margin-bottom: 8px;
+                color: #555;
+
+                strong {
+                    color: #2c3e50;
+                }
+            }
+        }
+
+        .Note {
+            background-color: #e8f8f5;
+            border: 1px solid #a8dadc;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 16px;
+
+            strong {
+                color: #2c5f2d;
+            }
+        }
+    }
+}

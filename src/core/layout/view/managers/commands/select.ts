@@ -7,6 +7,7 @@ import type { BenchKey } from '@/core/layout/bench/types';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { validateObject } from '@/shared/helpers';
 
 // Helpers
 import { validateViewKey } from '@/core/layout/view/helpers/validators';
@@ -24,9 +25,21 @@ export function setSelectedViewKey(benchKey: BenchKey, viewKey: ViewKey): void {
 		.validate({
 			viewKey: validateViewKey(viewKey),
 			benchKey: validateBenchKey(benchKey),
+			currentKeys: validateObject<Record<BenchKey, ViewKey>>(useViewEditorStore.getState().data.global?.selectedKeys),
 		})
 		.execute();
 	if (!safeData) return;
 
-	useViewEditorStore.getState().setSelectedKey(safeData.benchKey, safeData.viewKey);
+	useViewEditorStore.setState((state) => ({
+		data: {
+			...state.data,
+			global: {
+				...state.data.global,
+				selectedKeys: {
+					...safeData.currentKeys,
+					[safeData.benchKey]: safeData.viewKey,
+				},
+			},
+		},
+	}));
 }

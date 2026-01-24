@@ -61,14 +61,14 @@ export function validateFunction<T extends (...args: unknown[]) => unknown>(inpu
  * validateObject({ a: 1 }) → { valid: true, value: { a: 1 } }
  * validateObject({ a: 1 }, ['a', 'b']) → { valid: false, message: 'missing required keys: b' }
  */
-export function validateObject(input: unknown): ValidateResult<Record<string, unknown>>;
-export function validateObject(input: unknown, keys: string[]): ValidateResult<Record<string, unknown>>;
-export function validateObject(input: unknown, keys?: string[]): ValidateResult<Record<string, unknown>> {
+export function validateObject<T extends object = Record<string, unknown>>(input: unknown): ValidateResult<T>;
+export function validateObject<T extends object = Record<string, unknown>>(input: unknown, keys: string[]): ValidateResult<T>;
+export function validateObject<T extends object = Record<string, unknown>>(input: unknown, keys?: string[]): ValidateResult<T> {
 	if (!input || typeof input !== 'object' || Array.isArray(input)) {
 		return { valid: false, message: `Invalid object: expected an object, got ${typeof input}` };
 	}
 
-	const obj = input as Record<string, unknown>;
+	const obj = input as T;
 
 	if (keys) {
 		const missingKeys = keys.filter((key) => !(key in obj));

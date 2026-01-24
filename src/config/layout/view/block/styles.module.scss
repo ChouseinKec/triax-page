@@ -1,3 +1,5 @@
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
 .Devices {
 	display: flex;
 	flex-direction: column;
@@ -61,6 +63,44 @@
 .Divider {
 	color: var(--color-white);
 	opacity: 0.2;
+}
+
+.Toolbar {
+	width: max-content;
+	height: 35px;
+
+	bottom: 1%;
+	left: 50%;
+	transform: translateX(-50%);
+
+	margin-top: 10px;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: var(--size-md);
+	z-index: 1;
+
+	@include inputMixins.components--container($position: absolute, $radius: 0, $background: var(--theme-color-primary), $shadow: none);
+
+	border-top: 1px solid var(--theme-color-primary-tint);
+
+	:global(.RadioSelect) {
+		background: transparent !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+
+	:global(.DropdownSelect .Toggle) {
+		background: transparent;
+	}
+
+	.Divider {
+		height: 80%;
+		border-left: 1px solid var(--color-white);
+		opacity: 0.2;
+	}
 }
 
 .Test {

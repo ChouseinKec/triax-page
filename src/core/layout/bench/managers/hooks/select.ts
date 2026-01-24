@@ -12,7 +12,7 @@ import { getRegisteredBench } from '@/core/layout/bench/state/registry';
  * Returns the workbench identifier from the page store state.
  */
 export function useSelectedBenchKey(): BenchKey {
-	return useBenchEditorStore((state) => state.selectedKey);
+	return useBenchEditorStore((state) => state.data.global.selectedKey as BenchKey);
 }
 
 /**
@@ -20,6 +20,6 @@ export function useSelectedBenchKey(): BenchKey {
  * Returns the workbench definition from the registry based on the selected workbench ID in the store.
  */
 export function useSelectedBench(): BenchDefinition | undefined {
-	const selectedKey = useBenchEditorStore((state) => state.selectedKey);
+	const selectedKey = useBenchEditorStore((state) => state.data.global.selectedKey as BenchKey);
 	return getRegisteredBench(selectedKey);
 }

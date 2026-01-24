@@ -1,29 +1,47 @@
 "use client";
 import React, { memo, useMemo } from "react";
+import { createPortal } from "react-dom";
+
+// Types
+import type { ViewComponentProps } from '@/core/layout/view/types';
 
 // Styles
 import CSS from "./styles.module.scss";
 
 // Components
 import Device from "./device";
+import ActionGroup from "@/shared/components/group/action/component";
+import TagSelect from "./tag-select";
 
 // Managers
 import { useData } from "@/core/layout/view/managers";
+import { useSelectedNodeKey } from "@/core/block/node/instance/managers";
+import { getDeviceDefinitions, getDeviceDefinition } from "@/core/layout/page/managers/queries/device";
 
-// Registries
-import { getRegisteredDevices } from "@/core/layout/page/registries";
+// Queries
+import { getActionDefinitions } from "@/core/block/node/definition/managers/queries/action";
 
 /**
- * ViewComponentBlock
+ * ViewBlockComponent
  * Renders the main viewport UI with devices grouped by category.
  * Displays multiple device previews, sorted by width and category priority.
  */
-const ViewComponentBlock: React.FC = () => {
+const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }) => {
     // Fetch active device IDs from viewport data
     const activeDeviceIDs = useData('block', 'activeDeviceIDs') as string[] || [];
 
+    // Get selected node for actions
+    const selectedNodeKey = useSelectedNodeKey();
+
+    // Get actions for the selected node
+    const nodeActions = selectedNodeKey ? getActionDefinitions(selectedNodeKey) : [];
+
     // Memoize the list of all registered devices for performance
-    const allDevices = useMemo(() => Object.values(getRegisteredDevices()), []);
+    const allDevices = useMemo(() => {
+        return getDeviceDefinitions()
+    },
+        []
+    );
 
     // Sort active device IDs by width (descending) for consistent ordering
     const sortedActiveDeviceIDs = useMemo(() => {
@@ -41,7 +59,7 @@ const ViewComponentBlock: React.FC = () => {
     const categorizedDevices = useMemo(() => {
         const result: Record<string, string[]> = {};
         sortedActiveDeviceIDs.forEach(deviceKey => {
-            const device = getRegisteredDevices()[deviceKey];
+            const device = getDeviceDefinition(deviceKey);
             const category = device?.category || 'unknown';
             if (!result[category]) result[category] = [];
 
@@ -65,29 +83,45 @@ const ViewComponentBlock: React.FC = () => {
     );
 
     return (
-        <div className={CSS.Devices}>
-            {
-                sortedDevices.map(([category, deviceIDs]) => (
+        <>
+            {actionContainerRef.current && createPortal(
+                <div className={CSS.Toolbar}>
+                    <TagSelect />
+                    <span className={CSS.Divider} />
 
-                    <div key={category} className={CSS.Category}>
+                    <ActionGroup>
+                        {nodeActions.map((action) => (
+                            <action.component key={action.key} />
+                        ))}
+                    </ActionGroup>
+                </div>,
+                actionContainerRef.current
+            )}
 
-                        {deviceIDs.map((deviceKey) => {
-                            return (
-                                <Device
-                                    key={deviceKey}
-                                    deviceKey={deviceKey}
-                                />
-                            );
-                        })}
+            <div className={CSS.Devices}>
+                {
+                    sortedDevices.map(([category, deviceIDs]) => (
 
-                    </div>
+                        <div key={category} className={CSS.Category}>
 
-                ))
-            }
+                            {deviceIDs.map((deviceKey) => {
+                                return (
+                                    <Device
+                                        key={deviceKey}
+                                        deviceKey={deviceKey}
+                                    />
+                                );
+                            })}
 
-        </div>
+                        </div>
+
+                    ))
+                }
+
+            </div>
+        </>
     );
 };
 
-ViewComponentBlock.displayName = "ViewComponentBlock";
-export default memo(ViewComponentBlock);
+ViewBlockComponent.displayName = "ViewBlockComponent";
+export default memo(ViewBlockComponent);

@@ -8,6 +8,7 @@ import type { BenchKey } from '@/core/layout/bench/types';
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 import { validateBenchKey } from '@/core/layout/bench/helpers/validators';
+import { validateViewKey } from '@/core/layout/view/helpers/validators';
 
 // Registry
 import { getRegisteredView } from '@/core/layout/view/state/registry';
@@ -24,12 +25,17 @@ export function useSelectedViewKey(benchKey: BenchKey): ViewKey | undefined {
 		.execute();
 	if (!safeData) return undefined;
 
-	return useViewEditorStore((state) => state.selectedKeys[safeData.benchKey]);
+	return useViewEditorStore((state) => (state.data.global?.selectedKeys as Record<BenchKey, ViewKey> | undefined)?.[safeData.benchKey]);
 }
 
 export function useSelectedView(benchKey: BenchKey): ViewDefinition | undefined {
-	const viewKey = useSelectedViewKey(benchKey);
-	if (!viewKey) return undefined;
+	const safeData = new ResultPipeline('[ViewEditorHooks → useSelectedViewKey]')
+		.validate({
+			benchKey: validateBenchKey(benchKey),
+			viewKey: validateViewKey(useSelectedViewKey(benchKey)),
+		})
+		.execute();
+	if (!safeData) return undefined;
 
-	return getRegisteredView(viewKey);
+	return getRegisteredView(safeData.viewKey);
 }

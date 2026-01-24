@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, Fragment } from "react";
+import React, { memo, Fragment, useRef } from "react";
 
 // Types
 import type { ViewEditorProps } from "./types";
@@ -22,7 +22,9 @@ const ViewEditor: React.FC<ViewEditorProps> = () => {
     const selectedBenchKey = useSelectedBenchKey();
     const viewDefinition = useSelectedView(selectedBenchKey);
     const actionDefinitions = Object.values(getActionDefinitions(viewDefinition?.key)).sort((a, b) => a.order - b.order);
-
+    
+    // Ref for view actions container
+    const viewActionContainerRef = useRef<HTMLDivElement>(null);
 
     return (
         <div className={CSS.ViewEditor}>
@@ -40,9 +42,12 @@ const ViewEditor: React.FC<ViewEditorProps> = () => {
                 </ActionGroup>
             </div>
 
+            {/* Container for view-specific actions */}
+            <div ref={viewActionContainerRef} className={CSS.ViewActions} />
+
             {
                 viewDefinition
-                    ? <View viewDefinition={viewDefinition} />
+                    ? <View viewDefinition={viewDefinition} actionContainerRef={viewActionContainerRef} />
                     : <div className={CSS.Empty}>No view selected.</div>
             }
         </div>

@@ -1,4 +1,4 @@
-import type { ViewKey } from './view';
+import type { BenchKey } from './bench';
 
 export type DataKey = string;
 
@@ -8,4 +8,4 @@ export interface DataDefinition {
 	[dataKey: DataKey]: DataValue;
 }
 
-export type StoredData = Record<ViewKey | 'global', DataDefinition>;
+export type StoredData = Record<BenchKey | 'global', DataDefinition>;

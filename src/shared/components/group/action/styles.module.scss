@@ -10,4 +10,10 @@
 	button {
 		@include inputMixins.components--button($background: var(--theme-color-primary));
 	}
+
+	:global(.Divider) {
+		height: 25px;
+		border-left: 1px solid var(--color-white);
+		opacity: 0.2;
+	}
 }

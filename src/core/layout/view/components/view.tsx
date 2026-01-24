@@ -8,7 +8,7 @@ import type { ViewProps } from "./types";
 import CSS from "./styles.module.scss";
 
 
-const View: React.FC<ViewProps> = ({ viewDefinition }) => {
+const View: React.FC<ViewProps> = ({ viewDefinition, actionContainerRef }) => {
     const [zoom, setZoom] = useState(0.8);
     const [pan, setPan] = useState({ x: 350, y: 50 });
     const [isPanning, setIsPanning] = useState(false);
@@ -122,7 +122,7 @@ const View: React.FC<ViewProps> = ({ viewDefinition }) => {
             >
 
                 {viewDefinition.component ? (
-                    <viewDefinition.component />
+                    <viewDefinition.component actionContainerRef={actionContainerRef} />
                 ) : (
                     <div className={CSS.Empty}>
                         No view available

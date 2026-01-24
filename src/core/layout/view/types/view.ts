@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactNode, RefObject } from 'react';
 import type { BenchKey } from '@/core/layout/bench/types';
 
 /**
@@ -16,7 +16,9 @@ export type ViewTitle = string;
 /**
  * Props for the main component to render for the BenchEditor
  */
-export type ViewComponentProps = {};
+export type ViewComponentProps = {
+	actionContainerRef: RefObject<HTMLDivElement | null>;
+};
 
 /**
  * The main component to render for the BenchEditor

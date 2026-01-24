@@ -1,36 +1,32 @@
 import { create } from 'zustand';
 
 // Types
-import type { BenchKey } from '@/core/layout/bench/types';
+import type { StoredData } from '@/core/layout/bench/types';
 
 // Registry
 import { getDefaultBenchKey } from '@/core/layout/bench/state/registry';
 
 export type BenchEditorStore = {
-	selectedKey: BenchKey;
-	setSelectedKey: (workbenchKey: BenchKey) => void;
+	data: StoredData;
 };
 
 /**
- * Creates the workbench store after initialization.
+ * Creates the bench store after initialization.
  * @returns The initialized Zustand store
  */
 export function createBenchEditorStore() {
-	return create<BenchEditorStore>()((set, get) => ({
-		selectedKey: getDefaultBenchKey(),
-
-		/**
-		 * Updates the selected workbench key.
-		 */
-		setSelectedKey: (workbenchKey: BenchKey) => {
-			set(() => ({
-				selectedKey: workbenchKey,
-			}));
-		},
-	}));
+	return create<BenchEditorStore>((set, get) => {
+		return {
+			// Initial state
+			data: {
+				global: {
+					selectedKey: getDefaultBenchKey(),
+				},
+			},
+		};
+	});
 }
 
-// Export a reference that will be set after initialization
 export let useBenchEditorStore: ReturnType<typeof createBenchEditorStore>;
 
 /**

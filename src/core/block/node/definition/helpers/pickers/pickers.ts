@@ -1,5 +1,6 @@
 // Types
 import type { NodeDefinition, NodeKey, RegisteredNodes } from '@/core/block/node/definition/types/definition';
+import type { ActionDefinition, RegisteredActions, ActionKey } from '@/core/block/node/definition/types/action';
 import type { PickResult } from '@/shared/types/result';
 
 /**
@@ -17,4 +18,17 @@ export function pickNodeDefinition(nodeKey: NodeKey, registeredNodes: Registered
 
 	// Return the found block definition
 	return { success: true, data: NodeDefinition };
+}
+
+/**
+ * Fetch a single action definition by its key from the registry.
+ *
+ * @param actionKey - action key to resolve
+ * @param registeredActions - registry containing available action definitions
+ */
+export function pickActionDefinition(actionKey: ActionKey, registeredActions: RegisteredActions): PickResult<ActionDefinition> {
+	const definition = registeredActions[actionKey];
+	if (!definition) return { success: false, error: `Action definition not found: '${actionKey}' does not exist in the action registry` };
+
+	return { success: true, data: definition };
 }
