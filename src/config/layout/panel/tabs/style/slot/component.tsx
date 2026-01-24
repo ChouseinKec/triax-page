@@ -5,10 +5,10 @@ import React, { memo } from "react";
 import type { NodeStyleslotProps } from "./types";
 
 // Utilities
-import { getValueType, getValueDefaultType } from "@/core/block/style/instance/utilities";
+import { getValueType, getValueDefaultType } from "@/core/block/style/utilities";
 
 // Registry
-import { getRegisteredTokenTypes } from "@/core/block/style/definition/state/registry";
+import { getRegisteredTokenTypes } from "@/core/block/style/state/registry";
 
 // CSS
 import CSS from "./styles.module.scss";

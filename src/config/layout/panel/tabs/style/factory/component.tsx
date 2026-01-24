@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Managers
-import { setBlockStyle, useBlockStyle, } from '@/core/block/style/instance/managers/';
+import { setBlockStyle, useBlockStyle, } from '@/core/block/style/managers';
 
 
 // Components
@@ -10,14 +10,14 @@ import Property from '@/shared/components/layout/property/component';
 import PropertyActions from '@/config/layout/panel/tabs/style/action/component';
 
 // Types
-import type { StyleKey } from '@/core/block/style/definition/types';
+import type { StyleKey } from '@/core/block/style/types';
 import type { RenderStyleRowOptions } from './types';
 
 // Utilties
 import { devRender } from '@/shared/utilities/dev';
 
 // Registry
-import { getRegisteredStyle } from '@/core/block/style/definition/state/registry';
+import { getRegisteredStyle } from '@/core/block/style/state/registry';
 
 /**
  * Memoized component to render the appropriate value editor for a CSS property

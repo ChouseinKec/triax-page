@@ -11,7 +11,7 @@ import PseudoSelect from "./pseudo-select";
 import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { useNode } from "@/core/block/node/instance/managers";
+import { useNode } from "@/core/block/node/managers";
 import { getDeviceDefinition, getOrientationDefinition, getDefaultOrientationKey, getDefaultPseudoKey, useIsDeviceSelected } from "@/core/layout/page/managers";
 import { setSelectedDeviceKey, setSelectedOrientationKey, setSelectedPseudoKey } from "@/core/layout/page/managers";
 

@@ -1,5 +1,5 @@
 // Registry
-import { registerTokens, registerTokenTypes } from '@/core/block/style/definition/state/registry';
+import { registerTokens, registerTokenTypes } from '@/core/block/style/state/registry';
 
 // Constants
 import { TOKEN_DEFINITIONS } from '@/config/block/style/token/token';

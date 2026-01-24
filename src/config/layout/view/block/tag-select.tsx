@@ -2,11 +2,11 @@
 import React, { useMemo, useCallback } from "react";
 
 // Managers
-import { useSelectedNodeID, useSelectedNodeKey } from "@/core/block/node/instance/managers";
-import { getNodeAvailableTags } from "@/core/block/node/definition/managers/queries/node";
-import { setNodeTag } from "@/core/block/node/instance/managers/commands/tag";
-import { useNode } from "@/core/block/node/instance/managers";
-import { getElementDefinitions } from "@/core/block/element/definition/managers/queries/element";
+import { useSelectedNodeID, useSelectedNodeKey } from "@/core/block/node/managers";
+import { getNodeAvailableTags } from "@/core/block/node/managers/queries/node";
+import { setNodeTag } from "@/core/block/node/managers/commands/tag";
+import { useNode } from "@/core/block/node/managers";
+import { getElementDefinitions } from "@/core/block/element/managers/queries/element";
 
 // Components
 import DropdownSelect from "@/shared/components/select/dropdown/component";

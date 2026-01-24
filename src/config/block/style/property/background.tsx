@@ -1,4 +1,4 @@
-import type { StyleDefinition } from "@/core/block/style/definition/types";
+import type { StyleDefinition } from "@/core/block/style/types";
 
 export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{

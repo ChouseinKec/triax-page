@@ -1,4 +1,4 @@
-import type { StyleDefinition } from '@/core/block/style/definition/types';
+import type { StyleDefinition } from '@/core/block/style/types';
 
 /** Props for style value components.*/
 export interface BlockStyleValue {

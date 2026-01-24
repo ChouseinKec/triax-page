@@ -1,6 +1,6 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/definition/types';
-import type { AttributeKey } from '@/core/block/attribute/definition/types';
+import type { ElementDefinition } from '@/core/block/element/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT, FLOW_WITH_FIGCAPTION } from './shared';

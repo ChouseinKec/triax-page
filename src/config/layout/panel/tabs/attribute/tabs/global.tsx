@@ -2,14 +2,14 @@
 import React from "react";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types/instance";
+import type { NodeID } from "@/core/block/node/types/instance";
 
 // Components
 import GroupLayout from "@/shared/components/layout/group/component";
 import { renderAttributeRow } from "../factory/component";
 
 // Registry
-import { getRegisteredAttributes } from "@/core/block/attribute/definition/states/registry";
+import { getRegisteredAttributes } from "@/core/block/attribute/states/registry";
 
 // Utilities
 import { toKebabCase } from "@/shared/utilities/string";

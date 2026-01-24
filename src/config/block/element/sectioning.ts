@@ -1,5 +1,5 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/definition/types';
+import type { ElementDefinition } from '@/core/block/element/types';
 
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, FLOW_CONTENT, FLOW_NO_HEADER_FOOTER, PHRASING_CONTENT, HEADINGS_ONLY } from './shared';

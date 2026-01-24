@@ -1,8 +1,8 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/definition/types';
+import type { ElementDefinition } from '@/core/block/element/types';
 
 // Registry
-import { registerElements } from '@/core/block/element/definition/states/registry';
+import { registerElements } from '@/core/block/element/states/registry';
 
 // Constants
 import { FLOW_DEFINITIONS } from './flow';

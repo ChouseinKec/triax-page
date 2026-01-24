@@ -1,6 +1,6 @@
 // Types
-import type { AttributeKey } from '@/core/block/attribute/definition/types';
-import type { NodeID } from '@/core/block/node/instance/types/instance';
+import type { AttributeKey } from '@/core/block/attribute/types';
+import type { NodeID } from '@/core/block/node/types/instance';
 import type { CSSProperties } from 'react';
 
 export type RenderAttributeRowProps = {

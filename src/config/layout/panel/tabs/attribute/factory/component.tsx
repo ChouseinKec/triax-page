@@ -9,7 +9,7 @@ import PropertyActions from "@/config/layout/panel/tabs/attribute/action/compone
 import type { RenderAttributeRowProps } from "@/config/layout/panel/tabs/attribute/factory/types";
 
 // Registry
-import { getRegisteredAttribute } from "@/core/block/attribute/definition/states/registry";
+import { getRegisteredAttribute } from "@/core/block/attribute/states/registry";
 
 // Utilties
 import { devRender } from "@/shared/utilities/dev";

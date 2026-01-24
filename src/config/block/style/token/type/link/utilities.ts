@@ -1,6 +1,6 @@
 // Types
 import type { OptionDefinition } from '@/shared/components/types/option';
-import type { TokenOptionParams, StyleValue, TokenCanonical, TokenRaw } from '@/core/block/style/definition/types';
+import type { TokenOptionParams, StyleValue, TokenCanonical, TokenRaw } from '@/core/block/style/types';
 
 // Utilities
 import { isValueLink } from '@/shared/utilities/value';

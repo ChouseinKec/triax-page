@@ -1,5 +1,5 @@
 // Registry
-import { registerStyles } from '@/core/block/style/definition/state/registry';
+import { registerStyles } from '@/core/block/style/state/registry';
 
 // Constants
 import { BACKGROUND_DEFINITIONS } from './background';

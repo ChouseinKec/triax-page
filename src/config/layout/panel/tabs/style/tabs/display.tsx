@@ -2,14 +2,14 @@
 import React, { useMemo } from "react";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types/instance";
+import type { NodeID } from "@/core/block/node/types/instance";
 
 // Components
 import GroupLayout from "@/shared/components/layout/group/component";
 import { renderStyleRow } from "../factory/component";
 
 // Managers
-import { useBlockStyle } from "@/core/block/style/instance/managers/";
+import { useBlockStyle } from "@/core/block/style/managers";
 
 /**
  * Renders the Display & Layout tab content

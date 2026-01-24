@@ -1,4 +1,4 @@
-import type { AttributeDefinition } from '@/core/block/attribute/definition/types';
+import type { AttributeDefinition } from '@/core/block/attribute/types';
 
 export const SCHEMA_DEFINITIONS: AttributeDefinition[] = [
 	{

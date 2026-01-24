@@ -1,5 +1,5 @@
 // Registry
-import { registerNode, registerAction } from '@/core/block/node/definition/states/registry';
+import { registerNode, registerAction } from '@/core/block/node/states/registry';
 
 // Components
 import BlockMarkdownComponent from "@/config/block/node/markdown/component";

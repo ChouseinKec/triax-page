@@ -2,7 +2,7 @@
 import React from "react";
 
 // Types
-import type { NodeID } from "@/core/block/node/instance/types/instance";
+import type { NodeID } from "@/core/block/node/types/instance";
 
 // Components
 import GroupLayout from "@/shared/components/layout/group/component";

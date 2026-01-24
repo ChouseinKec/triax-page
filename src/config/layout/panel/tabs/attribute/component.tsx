@@ -5,7 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID, } from "@/core/block/node/instance/managers";
+import { useSelectedNodeID, } from "@/core/block/node/managers";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";

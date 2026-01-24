@@ -5,13 +5,13 @@ import { memo, useCallback } from "react";
 import type { NodeAttributesValueProps } from "./types";
 
 // Managers
-import { useNodeAttribute, setNodeAttribute } from "@/core/block/attribute/instance/managers";
+import { useNodeAttribute, setNodeAttribute } from "@/core/block/attribute/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
 
 // Registry
-import { getRegisteredAttribute } from "@/core/block/attribute/definition/states/registry";
+import { getRegisteredAttribute } from "@/core/block/attribute/states/registry";
 
 // Styles
 import CSS from "./styles.module.scss";

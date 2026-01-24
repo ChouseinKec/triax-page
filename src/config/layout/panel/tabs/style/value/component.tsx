@@ -8,17 +8,17 @@ import type { BlockStyleValue } from "./types";
 
 // Utilities
 import { splitAdvanced, joinAdvanced } from "@/shared/utilities/string";
-import { createOptionTable, getValueTokens, getTokenValues } from "@/core/block/style/instance/utilities";
+import { createOptionTable, getValueTokens, getTokenValues } from "@/core/block/style/utilities";
 import { mergeArrays } from "@/shared/utilities/array";
 import { devLog } from "@/shared/utilities/dev";
-import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/core/block/style/instance/utilities/syntax';
+import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/core/block/style/utilities/syntax';
 
 // Components
 import NodeStyleslots from "@/config/layout/panel/tabs/style/slots/component";
 import GenericInput from "@/shared/components/input/generic/component";
 
 // Registry
-import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/core/block/style/definition/state/registry";
+import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/core/block/style/state/registry";
 
 /**
  * BlockStyleValue Component

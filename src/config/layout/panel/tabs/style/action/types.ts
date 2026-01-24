@@ -1,6 +1,6 @@
 // Types
-import type { StyleKey } from "@/core/block/style/definition/types";
-import type { NodeID } from "@/core/block/node/instance/types/instance";
+import type { StyleKey } from "@/core/block/style/types";
+import type { NodeID } from "@/core/block/node/types/instance";
 
 export interface PropertyActionsProps {
     NodeID: NodeID;

@@ -1,5 +1,5 @@
 // Types
-import type { TokenDefinition } from '@/core/block/style/definition/types/token';
+import type { TokenDefinition } from '@/core/block/style/types/token';
 
 /**
  * A lookup table of all supported CSS data key tokens and their definitions.

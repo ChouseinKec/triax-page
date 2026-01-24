@@ -15,11 +15,11 @@ import TagSelect from "./tag-select";
 
 // Managers
 import { useData } from "@/core/layout/view/managers";
-import { useSelectedNodeKey } from "@/core/block/node/instance/managers";
+import { useSelectedNodeKey } from "@/core/block/node/managers";
 import { getDeviceDefinitions, getDeviceDefinition } from "@/core/layout/page/managers/queries/device";
 
 // Queries
-import { getActionDefinitions } from "@/core/block/node/definition/managers/queries/action";
+import { getActionDefinitions } from "@/core/block/node/managers/queries/action";
 
 /**
  * ViewBlockComponent

@@ -1,5 +1,5 @@
 // Types
-import type { TokenTypeDefinition } from '@/core/block/style/definition/types/token';
+import type { TokenTypeDefinition } from '@/core/block/style/types/token';
 
 // Utilities
 import { getTokenType, getValueType, getValueToken, createOption,getTokenCanonical } from '@/config/block/style/token/type/keyword/utilities';

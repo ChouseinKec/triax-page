@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import type { PropertyActionsProps } from "./types";
 
 // Commands
-import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/style/instance/managers';
+import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/style/managers';
 
 
 /**

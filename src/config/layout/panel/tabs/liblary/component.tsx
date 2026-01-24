@@ -5,13 +5,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addNode, canNodeAcceptChild, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/instance/managers";
+import { addNode, canNodeAcceptChild, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/managers";
 
 // Registry
-import { getRegisteredNodes } from '@/core/block/node/definition/states/registry';
+import { getRegisteredNodes } from '@/core/block/node/states/registry';
 
 // Types
-import type { NodeDefinition, NodeKey } from "@/core/block/node/definition/types/definition";
+import type { NodeDefinition, NodeKey } from "@/core/block/node/types/definition";
 
 // Components
 import GenericInput from "@/shared/components/input/generic/component";
