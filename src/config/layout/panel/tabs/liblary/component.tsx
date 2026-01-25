@@ -23,13 +23,11 @@ import GenericInput from "@/shared/components/input/generic/component";
  */
 const BlockLibrary: React.FC = () => {
     const registeredNodes = getRegisteredNodes();
-    if (!registeredNodes || Object.keys(registeredNodes).length === 0) {
-        return <div className={CSS.Fallback}>No blocks available.</div>;
-    }
-
     const selectedNodeKey = useSelectedNodeKey();
     const selectedNodeID = useSelectedNodeID();
     const [search, setSearch] = useState("");
+
+
 
     // Handle adding a new block, optionally nesting inside the selected block
     const handleAddBlock = useCallback((NodeKey: NodeKey) => {
@@ -117,6 +115,11 @@ const BlockLibrary: React.FC = () => {
         ));
     }, [searchedBlocks, groupedBlocks, createNodeButton]
     );
+
+    // Early exit must come after hooks to keep hook order stable
+    if (!registeredNodes || Object.keys(registeredNodes).length === 0) {
+        return <div className={CSS.Fallback}>No blocks available.</div>;
+    }
 
     // If selected block permitted content is Fallback, show an Fallback state
     if (Object.keys(filteredBlocks).length === 0) {

@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID, validateNodeInstance } from '@/core/block/node/helpers/validators';
@@ -23,15 +23,13 @@ let blockClipboard: NodeInstance | null = null;
  * @param nodeID - The blockInstance identifier to copy
  */
 export function copyNode(nodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate and pick the blockInstance to copy
 	const results = new ResultPipeline('[BlockManager → copyNode]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -48,7 +46,6 @@ export function copyNode(nodeID: NodeID): void {
  */
 export function pasteNode(nodeID: NodeID): void {
 	if (!blockClipboard) return (devLog.error(`[BlockManager → pasteNode] No blockInstance in clipboard`), undefined);
-	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste into
 	const results = new ResultPipeline('[BlockManager → pasteNode]')
@@ -56,17 +53,20 @@ export function pasteNode(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.validate(() => ({
 			clipboardBlock: validateNodeInstance(blockClipboard),
 		}))
 		.operate((data) => ({
-			pastedBlocks: overwriteNodeInTree(data.clipboardBlock, data.targetBlock, blockStore.allBlocks),
+			pastedBlocks: overwriteNodeInTree(data.clipboardBlock, data.targetBlock, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the block store with the new blockInstance tree
-	blockStore.updateBlocks(results.pastedBlocks);
+	useBlockStore.setState((state) => {
+		const updatedNodes = { ...state.storedNodes, ...results.pastedBlocks };
+		return { storedNodes: updatedNodes };
+	});
 }

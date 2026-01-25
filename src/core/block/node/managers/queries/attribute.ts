@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -24,7 +24,7 @@ export function getNodeRenderedAttributes(nodeID: NodeID): Record<string, string
 	const results = new ResultPipeline('[BlockQueries → getNodeRenderedAttributes]')
 		.validate({ nodeID: validateNodeID(nodeID) })
 		.pick((data) => ({
-			attributes: pickNodeAttributes(data.nodeID, blockStore.allBlocks),
+			attributes: pickNodeAttributes(data.nodeID, blockStore.storedNodes),
 		}))
 		.execute();
 	if (!results) return undefined;

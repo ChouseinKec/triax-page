@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -53,7 +53,7 @@ export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | unde
 		const results = new ResultPipeline('[BlockQueries → useBlockStyle]')
 			.pick(() => ({
 				// Retrieve the block instance from the store
-				blockInstance: pickNodeInstance(safeParams.NodeID, state.allBlocks),
+				blockInstance: pickNodeInstance(safeParams.NodeID, state.storedNodes),
 			}))
 			.pick((data) => ({
 				// Extract styles from the block instance
@@ -113,7 +113,7 @@ export function useBlockRenderedStyles(NodeID: NodeID, deviceKey: DeviceKey, ori
 		const results = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
 			.pick(() => ({
 				// Retrieve the block instance
-				blockInstance: pickNodeInstance(safeParams.NodeID, state.allBlocks),
+				blockInstance: pickNodeInstance(safeParams.NodeID, state.storedNodes),
 			}))
 			.pick((data) => ({
 				// Extract styles from the block instance

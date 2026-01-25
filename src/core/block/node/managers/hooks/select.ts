@@ -1,5 +1,6 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
+import type { HighlightedNodeText } from '@/core/block/node/states/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -41,7 +42,7 @@ export function useSelectedNodeKey(): NodeKey | null {
 		if (!selectedNodeID) return null;
 
 		// Pick the block instance
-		const selectedBlock = pickNodeInstance(selectedNodeID, state.allBlocks);
+		const selectedBlock = pickNodeInstance(selectedNodeID, state.storedNodes);
 		if (!selectedBlock.success) return null;
 
 		// Return the block type
@@ -55,4 +56,12 @@ export function useSelectedNodeKey(): NodeKey | null {
  */
 export function useSelectedNodeID(): NodeID | null {
 	return useBlockStore((state) => state.selectedNodeID);
+}
+
+/**
+ * Reactive hook to get the highlighted text of the currently selected block.
+ * @returns The highlighted block text or null if no text is highlighted
+ */
+export function useHighlightedNodeText(): HighlightedNodeText {
+	return useBlockStore((state) => state.highlightedNodeText);
 }

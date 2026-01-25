@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/helpers/validators';
@@ -25,24 +25,24 @@ export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
 		}))
 		.pick((data) => ({
-			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.allBlocks),
+			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// If it has children, return the first child
-	const firstChild = findNodeFirstChild(results.blockInstance, blockStore.allBlocks);
+	const firstChild = findNodeFirstChild(results.blockInstance, blockStore.storedNodes);
 	if (firstChild.status === 'found') return firstChild.data;
 
 	// If no children, get the next sibling
-	const nextSibling = findNodeNextSibling(results.blockInstance, blockStore.allBlocks);
+	const nextSibling = findNodeNextSibling(results.blockInstance, blockStore.storedNodes);
 	if (nextSibling.status === 'found') return nextSibling.data;
 
 	// If no next sibling, recursively climb up to find the parent's next sibling
-	const nextParentSibling = findNodeNextParentSibling(results.blockInstance, blockStore.allBlocks);
+	const nextParentSibling = findNodeNextParentSibling(results.blockInstance, blockStore.storedNodes);
 	if (nextParentSibling.status === 'found') return nextParentSibling.data;
 
 	return null;
@@ -63,20 +63,20 @@ export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
 		}))
 		.pick((data) => ({
-			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.allBlocks),
+			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.storedNodes),
 		}))
 		.find((data) => ({
-			prevSiblingInstance: findNodePreviousSibling(data.blockInstance, blockStore.allBlocks),
+			prevSiblingInstance: findNodePreviousSibling(data.blockInstance, blockStore.storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// If there is a previous sibling, return its last descendant
 	if (results.prevSiblingInstance) {
-		const lastDescResult = findNodeLastDescendant(results.prevSiblingInstance, blockStore.allBlocks);
+		const lastDescResult = findNodeLastDescendant(results.prevSiblingInstance, blockStore.storedNodes);
 		if (lastDescResult.status === 'found') return lastDescResult.data;
 		return null;
 	}

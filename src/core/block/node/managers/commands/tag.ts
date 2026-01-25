@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -27,11 +27,15 @@ export function setNodeTag(nodeID: NodeID, blockTag: ElementKey): void {
 			blockTag: validateBlockTag(blockTag),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the block tag in the store
-	useBlockStore.getState().updateBlocks({ [nodeID]: { ...results.blockInstance, tag: results.blockTag } });
+	useBlockStore.setState((state) => {
+		const updatedNodes = { ...state.storedNodes };
+		updatedNodes[nodeID] = { ...results.blockInstance, tag: results.blockTag };
+		return { storedNodes: updatedNodes };
+	});
 }

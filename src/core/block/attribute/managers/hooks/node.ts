@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -33,7 +33,7 @@ export function useNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey): st
 	// Return a reactive attribute value
 	return useBlockStore((state) => {
 		// Pick and operate on necessary data
-		const blockResult = pickNodeInstance(results.nodeID, state.allBlocks);
+		const blockResult = pickNodeInstance(results.nodeID, state.storedNodes);
 		if (!blockResult.success) return devLog.error(`[BlockQueries → useNodeAttribute] Block not found: ${results.nodeID}`), undefined;
 
 		// Return the block attribute data

@@ -1,6 +1,3 @@
-// Types
-import type { ElementDefinition } from '@/core/block/element/types';
-
 // Registry
 import { registerElements } from '@/core/block/element/states/registry';
 

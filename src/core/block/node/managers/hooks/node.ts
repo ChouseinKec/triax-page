@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -29,7 +29,7 @@ export function useNode(nodeID: NodeID): NodeInstance | undefined {
 	// Return a reactive block instance
 	return useBlockStore((state) => {
 		// Pick and operate on necessary data
-		const blockResult = pickNodeInstance(results.nodeID, state.allBlocks);
+		const blockResult = pickNodeInstance(results.nodeID, state.storedNodes);
 		if (!blockResult.success) return devLog.error(`[BlockQueries → useNode] Block not found: ${results.nodeID}`), undefined;
 		// Return the block instance data
 		return blockResult.data;

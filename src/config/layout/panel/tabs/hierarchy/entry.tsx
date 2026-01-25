@@ -69,11 +69,8 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
 
     // Handle block selection
     const handleLeftClick = useCallback(() => {
-        if (isBlockSelected) {
-            selectNode(null);
-        } else {
-            selectNode(NodeID);
-        }
+        if (isBlockSelected) return;
+        selectNode(NodeID);
     }, [isBlockSelected, NodeID]
     )
 

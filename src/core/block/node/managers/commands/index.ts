@@ -4,3 +4,4 @@ export * from './tag';
 export * from './clipboard';
 export * from './crud';
 export * from './move';
+export * from './highlight';

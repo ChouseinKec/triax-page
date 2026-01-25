@@ -43,7 +43,7 @@ export function createNodeID(): NodeID {
 	return uuidv4();
 }
 
-export function createNode(nodeDefinition: NodeDefinition, parentNodeID: NodeID): NodeInstance {
+export function createNode(nodeDefinition: NodeDefinition, parentNodeID: NodeID): OperateResult<NodeInstance> {
 	// Pull defaults from definition — these will be used when creating the
 	// initial shape of the NodeInstance.
 	const nodeStyles = nodeDefinition.defaultStyles;
@@ -60,9 +60,10 @@ export function createNode(nodeDefinition: NodeDefinition, parentNodeID: NodeID)
 		styles: createNodeStyles({}, nodeStyles),
 		attributes: createNodeAttributes({}, nodeAttributes),
 		type: nodeDefinition.key,
+		content:{}
 	};
 
-	return block;
+	return { success: true, data: block };
 }
 
 /**

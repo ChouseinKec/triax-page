@@ -1,10 +1,10 @@
-import React, { useCallback, useRef, useEffect, memo } from "react";
+import React, { useCallback, useRef, memo } from "react";
 
 // Types
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Managers
-import { selectNode, } from '@/core/block/node/managers';
+import { selectNode, setHighlightedNodeText } from '@/core/block/node/managers';
 import { getNodeContent, setNodeContent } from '@/core/block/node/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
 
@@ -36,6 +36,30 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     }, [NodeID]
     );
 
+    // Handle text highlight
+    const handleHighlight = useCallback(() => {
+        if (!isSelected) return;
+
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+            setHighlightedNodeText(null);
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+        const selectedText = selection.toString();
+
+        if (selectedText.length > 0) {
+            setHighlightedNodeText({
+                text: selectedText,
+                startOffset: range.startOffset,
+                endOffset: range.endOffset,
+            });
+        } else {
+            setHighlightedNodeText(null);
+        }
+    }, [isSelected]);
+
     return (
         <>
             <BlockTag
@@ -43,6 +67,7 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
                 className={`block-${NodeID}`}
                 onClick={handleSelectBlock}
                 onBlur={handleBlur}
+                onSelect={handleHighlight}
                 data-block-type="container"
                 data-is-selected={isSelected}
                 contentEditable

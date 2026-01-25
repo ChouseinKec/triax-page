@@ -1,9 +1,9 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/helpers/validators';
-import { pickNodeInstance, pickNodeDefinition } from '@/core/block/node/helpers/pickers';
+import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
 import { findNodeMoveBeforeIndex, findNodeMoveAfterIndex, findNodeMoveIntoIndex } from '@/core/block/node/helpers/finders';
 import { moveNode } from '@/core/block/node/helpers/operations';
 import { canNodeMove } from '@/core/block/node/helpers/checkers';
@@ -17,7 +17,6 @@ import { devLog } from '@/shared/utilities/dev';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
-import { getRegisteredNodes } from '@/core/block/node/states/registry';
 import { getRegisteredElements } from '@/core/block/element/states/registry';
 
 /**
@@ -28,8 +27,6 @@ import { getRegisteredElements } from '@/core/block/element/states/registry';
  * @param targetNodeID - The target block ID to position after
  */
 export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockManager → moveNodeAfter]')
 		.validate({
@@ -37,11 +34,11 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
 			targetNodeID: validateNodeID(targetNodeID),
 		})
 		.pick((data) => ({
-			sourceBlock: pickNodeInstance(data.sourceNodeID, blockStore.allBlocks),
-			targetBlock: pickNodeInstance(data.targetNodeID, blockStore.allBlocks),
+			sourceBlock: pickNodeInstance(data.sourceNodeID, useBlockStore.getState().storedNodes),
+			targetBlock: pickNodeInstance(data.targetNodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, blockStore.allBlocks),
+			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			parentElementDefinition: pickElementDefinition(data.targetParentBlock.tag, getRegisteredElements()),
@@ -55,14 +52,18 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeAfter] Block is already positioned after target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, blockStore.allBlocks, targetIndexResult.data + 1);
+	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data + 1);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeAfter] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeAfter] Block type not allowed as sibling`);
 
 	// Use the target's parent as the attachment point — moveNode expects the
 	// destination parent instance rather than a sibling instance.
-	const moveResult = moveNode(results.sourceBlock, results.targetParentBlock, blockStore.allBlocks, targetIndexResult.data + 1);
-	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
+	const moveResult = moveNode(results.sourceBlock, results.targetParentBlock, useBlockStore.getState().storedNodes, targetIndexResult.data + 1);
+	if (moveResult.success)
+		useBlockStore.setState((state) => {
+			const updatedNodes = moveResult.data;
+			return { storedNodes: updatedNodes };
+		});
 }
 
 /**
@@ -73,8 +74,6 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
  * @param targetNodeID - The target block ID to position before
  */
 export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockManager → moveNodeBefore]')
 		.validate({
@@ -82,11 +81,11 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
 			targetNodeID: validateNodeID(targetNodeID),
 		})
 		.pick((data) => ({
-			sourceBlock: pickNodeInstance(data.sourceNodeID, blockStore.allBlocks),
-			targetBlock: pickNodeInstance(data.targetNodeID, blockStore.allBlocks),
+			sourceBlock: pickNodeInstance(data.sourceNodeID, useBlockStore.getState().storedNodes),
+			targetBlock: pickNodeInstance(data.targetNodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, blockStore.allBlocks),
+			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			parentElementDefinition: pickElementDefinition(data.targetParentBlock.tag, getRegisteredElements()),
@@ -100,14 +99,18 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeBefore] Block is already positioned before target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, blockStore.allBlocks, targetIndexResult.data);
+	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeBefore] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeBefore] Block element not allowed as sibling`);
 
 	// Use the target's parent as the attachment point — moveNode expects the
 	// destination parent instance rather than a sibling instance.
-	const moveResult = moveNode(results.sourceBlock, results.targetParentBlock, blockStore.allBlocks, targetIndexResult.data);
-	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
+	const moveResult = moveNode(results.sourceBlock, results.targetParentBlock, useBlockStore.getState().storedNodes, targetIndexResult.data);
+	if (moveResult.success)
+		useBlockStore.setState((state) => {
+			const updatedNodes = moveResult.data;
+			return { storedNodes: updatedNodes };
+		});
 }
 
 /**
@@ -118,8 +121,6 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
  * @param targetNodeID - The target block ID to move into as the last child
  */
 export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockManager → moveNodeInto]')
 		.validate({
@@ -127,8 +128,8 @@ export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 			targetNodeID: validateNodeID(targetNodeID),
 		})
 		.pick((data) => ({
-			sourceBlock: pickNodeInstance(data.sourceNodeID, blockStore.allBlocks),
-			targetBlock: pickNodeInstance(data.targetNodeID, blockStore.allBlocks),
+			sourceBlock: pickNodeInstance(data.sourceNodeID, useBlockStore.getState().storedNodes),
+			targetBlock: pickNodeInstance(data.targetNodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			parentElementDefinition: pickElementDefinition(data.targetBlock.tag, getRegisteredElements()),
@@ -142,12 +143,16 @@ export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeInto] Block cannot be moved into target or invalid operation`);
 
 	// If child is not compatible with parent (validate with target index)
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetBlock, results.parentElementDefinition, results.childElementDefinition, blockStore.allBlocks, targetIndexResult.data);
+	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeInto] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeInto] Block type not allowed as child`);
 
 	// For move-into the `targetBlock` *is* the destination parent and is
 	// already passed as the second argument.
-	const moveResult = moveNode(results.sourceBlock, results.targetBlock, blockStore.allBlocks, targetIndexResult.data);
-	if (moveResult.success) blockStore.updateBlocks(moveResult.data);
+	const moveResult = moveNode(results.sourceBlock, results.targetBlock, useBlockStore.getState().storedNodes, targetIndexResult.data);
+	if (moveResult.success)
+		useBlockStore.setState((state) => {
+			const updatedNodes = moveResult.data;
+			return { storedNodes: updatedNodes };
+		});
 }

@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID} from '@/core/block/node/types/instance';
@@ -25,7 +25,7 @@ export function getNodeContent(nodeID: NodeID): NodeContent | undefined {
 	const results = new ResultPipeline('[BlockQueries → getNodeContent]')
 		.validate({ nodeID: validateNodeID(nodeID) })
 		.pick((data) => ({
-			content: pickNodeContent(data.nodeID, blockStore.allBlocks),
+			content: pickNodeContent(data.nodeID, blockStore.storedNodes),
 		}))
 		.execute();
 	if (!results) return undefined;

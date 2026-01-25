@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -32,7 +32,7 @@ export function canNodeAcceptChild(parentNodeID: NodeID, childBlockTag: ElementK
 			childBlockTag: validateBlockTag(childBlockTag),
 		})
 		.pick((data) => ({
-			parentNodeInstance: pickNodeInstance(data.parentBlock, useBlockStore.getState().allBlocks),
+			parentNodeInstance: pickNodeInstance(data.parentBlock, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			parentNodeDefinition: pickNodeDefinition(data.parentNodeInstance.type, getRegisteredNodes()),
@@ -52,13 +52,13 @@ export function canNodeAcceptChild(parentNodeID: NodeID, childBlockTag: ElementK
 				data.parentElementDefinition, //
 				data.parentNodeInstance,
 				childBlockTag,
-				blockStore.allBlocks,
+				blockStore.storedNodes,
 			),
 			violatesOrderedElements: hasViolatedOrderedChildren(
 				data.parentElementDefinition, //
 				data.parentNodeInstance,
 				childBlockTag,
-				blockStore.allBlocks,
+				blockStore.storedNodes,
 				data.parentNodeInstance.contentIDs.length,
 			),
 		}))
@@ -84,7 +84,7 @@ export function canNodeHaveChildren(nodeID: NodeID): boolean {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
 		}))
 		.pick((data) => ({
 			elementDefinition: pickElementDefinition(data.blockInstance.tag, getRegisteredElements()),

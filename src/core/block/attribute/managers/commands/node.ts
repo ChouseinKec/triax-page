@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -27,8 +27,6 @@ let attributesClipboard: NodeAttributes | null = null;
  * @param attributeValue - The new value for the attribute
  */
 export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockManager → setNodeAttribute]')
 		.validate({
@@ -37,20 +35,24 @@ export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, att
 			attributeValue: validateAttributeValue(attributeValue),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the block attributes in the store
-	blockStore.updateBlocks({
-		[results.nodeID]: {
-			...results.blockInstance,
-			attributes: {
-				...results.blockInstance.attributes,
-				[results.attributeKey]: results.attributeValue,
+	useBlockStore.setState((state) => {
+		const updatedNodes = {
+			...state.storedNodes,
+			[results.nodeID]: {
+				...results.blockInstance,
+				attributes: {
+					...results.blockInstance.attributes,
+					[results.attributeKey]: results.attributeValue,
+				},
 			},
-		},
+		};
+		return { storedNodes: updatedNodes };
 	});
 }
 
@@ -61,15 +63,13 @@ export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, att
  * @param nodeID - The blockInstance identifier to copy attributes from
  */
 export function copyNodeAttributes(nodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate and pick the blockInstance to copy attributes from
 	const results = new ResultPipeline('[BlockManager → copyNodeAttributes]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -86,7 +86,6 @@ export function copyNodeAttributes(nodeID: NodeID): void {
  */
 export function pasteNodeAttributes(nodeID: NodeID): void {
 	if (!attributesClipboard) return (devLog.error(`[BlockManager → pasteNodeAttributes] No attributes in clipboard`), undefined);
-	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste attributes into
 	const results = new ResultPipeline('[BlockManager → pasteNodeAttributes]')
@@ -94,16 +93,20 @@ export function pasteNodeAttributes(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with attributes from clipboard
-	blockStore.updateBlocks({
-		[results.nodeID]: {
-			...results.targetBlock,
-			attributes: JSON.parse(JSON.stringify(attributesClipboard)),
-		},
+	useBlockStore.setState((state) => {
+		const updatedNodes = {
+			...state.storedNodes,
+			[results.nodeID]: {
+				...results.targetBlock,
+				attributes: JSON.parse(JSON.stringify(attributesClipboard)),
+			},
+		};
+		return { storedNodes: updatedNodes };
 	});
 }

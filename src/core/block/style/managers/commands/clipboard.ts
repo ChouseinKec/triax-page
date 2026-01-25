@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/helpers/validators';
@@ -22,15 +22,13 @@ let stylesClipboard: NodeStyles | null = null;
  * @param nodeID - The blockInstance identifier to copy styles from
  */
 export function copyNodeStyles(nodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate and pick the blockInstance to copy styles from
 	const results = new ResultPipeline('[BlockManager → copyNodeStyles]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -47,7 +45,6 @@ export function copyNodeStyles(nodeID: NodeID): void {
  */
 export function pasteNodeStyles(nodeID: NodeID): void {
 	if (!stylesClipboard) return (devLog.error(`[BlockManager → pasteNodeStyles] No styles in clipboard`), undefined);
-	const blockStore = useBlockStore.getState();
 
 	// Validate and pick the target blockInstance to paste styles into
 	const results = new ResultPipeline('[BlockManager → pasteNodeStyles]')
@@ -55,16 +52,20 @@ export function pasteNodeStyles(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			targetBlock: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with styles from clipboard
-	blockStore.updateBlocks({
-		[results.nodeID]: {
-			...results.targetBlock,
-			styles: JSON.parse(JSON.stringify(stylesClipboard)),
-		},
+	useBlockStore.setState((state) => {
+		const updatedNodes = {
+			...state.storedNodes,
+			[results.nodeID]: {
+				...results.targetBlock,
+				styles: JSON.parse(JSON.stringify(stylesClipboard)),
+			},
+		};
+		return { storedNodes: updatedNodes };
 	});
 }

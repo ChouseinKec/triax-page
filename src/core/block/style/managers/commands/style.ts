@@ -1,7 +1,6 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 import { usePageStore } from '@/state/layout/page';
-import { useBenchEditorStore } from '@/core/layout/bench/state/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -31,7 +30,6 @@ import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } fro
  * @param value - The value to set
  */
 export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string): void {
-	const blockStore = useBlockStore.getState();
 	const selectedDeviceKey = getSelectedDeviceKey();
 	const selectedOrientationKey = getSelectedOrientationKey();
 	const selectedPseudoKey = getSelectedPseudoKey();
@@ -43,7 +41,7 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			nodeStyles: pickNodeStyles(data.blockInstance),
@@ -69,11 +67,15 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
 	if (!results) return;
 
 	// Update the block styles in the store
-	blockStore.updateBlocks({
-		[nodeID]: {
-			...results.blockInstance,
-			styles: results.updatedStyles,
-		},
+	useBlockStore.setState((state) => {
+		const updatedNodes = {
+			...state.storedNodes,
+			[nodeID]: {
+				...results.blockInstance,
+				styles: results.updatedStyles,
+			},
+		};
+		return { storedNodes: updatedNodes };
 	});
 }
 
@@ -85,8 +87,6 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
  * @param styleKey - The CSS style key to copy
  */
 export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate and pick necessary data
 	const results = new ResultPipeline('[BlockManager → copyBlockStyle]')
 		.validate({
@@ -94,7 +94,7 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			nodeStyles: pickNodeStyles(data.blockInstance),

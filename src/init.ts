@@ -2,7 +2,7 @@
 import '@/auto-imports';
 
 // Store initialization functions
-import { initializeBlockStore } from '@/state/block/block';
+import { initializeBlockStore } from '@/core/block/node/states/store';
 import { initializePageStore } from '@/state/layout/page';
 import { initializeBenchEditorStore } from '@/core/layout/bench/state/store';
 import { initializePanelStore } from '@/core/layout/panel/state/store';

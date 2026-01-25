@@ -1,5 +1,6 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
+import type { HighlightedNodeText } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -17,14 +18,6 @@ import { validateNodeID } from '@/core/block/node/helpers';
  * @param nodeID - The block identifier to select, or null to clear selection
  */
 export function selectNode(nodeID: NodeID | null): void {
-	const blockStore = useBlockStore.getState();
-
-	// If null, clear selection
-	if (nodeID === null) return blockStore.selectNode(null);
-
-	// If already selected, do nothing
-	if (nodeID === blockStore.selectedNodeID) return;
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockCommands → selectNode]')
 		.validate({
@@ -34,5 +27,21 @@ export function selectNode(nodeID: NodeID | null): void {
 	if (!results) return;
 
 	// Select the block in the store
-	blockStore.selectNode(results.nodeID);
+	useBlockStore.setState((state) => ({
+		...state,
+		selectedNodeID: results.nodeID,
+	}));
+}
+
+/**
+ * Sets the highlighted text for the currently selected block.
+ *
+ * @param textHighlight - The text highlight object to set, or null to clear
+ */
+export function setHighlightedNodeText(textHighlight: HighlightedNodeText): void {
+	// Set the highlighted block text in the store
+	useBlockStore.setState((state) => ({
+		...state,
+		highlightedNodeText: textHighlight,
+	}));
 }

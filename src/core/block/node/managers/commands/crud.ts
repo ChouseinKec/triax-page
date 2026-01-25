@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/state/block/block';
+import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/helpers';
@@ -9,8 +9,7 @@ import { createNode, detachNodeFromParent } from '@/core/block/node/helpers/oper
 import { duplicateNodeInTree, addNodeToTree, deleteNodeFromTree } from '@/core/block/node/helpers/operations/tree';
 
 // Types
-import type {  NodeID } from '@/core/block/node/types/instance';
-import type { NodeKey } from '@/core/block/node/types/definition';
+import type { NodeID, NodeKey, NodeInstance } from '@/core/block/node/types';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
@@ -26,26 +25,31 @@ import { getRegisteredNodes } from '@/core/block/node/states/registry';
  * @param nodeKey - The block type to create
  * @param parentID - The parent block ID to add the new block under
  */
-export function addNode(nodeKey: NodeKey, parentID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
+export function addNode(nodeKey: NodeKey, parentID: NodeID): NodeInstance | undefined {
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockManager → addNode]')
+	const validData = new ResultPipeline('[BlockManager → addNode]')
 		.validate({
 			nodeKey: validateNodeKey(nodeKey),
 			parentID: validateNodeID(parentID),
 		})
 		.pick((data) => ({
-			NodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
+			nodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
 		}))
 		.operate((data) => ({
-			addedBlocks: addNodeToTree(createNode(data.NodeDefinition, data.parentID), blockStore.allBlocks),
+			createdBlock: createNode(data.nodeDefinition, data.parentID),
+		}))
+		.operate((data) => ({
+			addedBlocks: addNodeToTree(data.createdBlock, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
-	if (!results) return;
+	if (!validData) return;
 
 	// Add block to store
-	blockStore.updateBlocks(results.addedBlocks);
+	useBlockStore.setState((state) => {
+		return { storedNodes: { ...state.storedNodes, ...validData.addedBlocks } };
+	});
+
+	return validData.createdBlock;
 }
 
 /**
@@ -55,28 +59,30 @@ export function addNode(nodeKey: NodeKey, parentID: NodeID): void {
  * @param nodeID - The block identifier to delete
  */
 export function deleteNode(nodeID: NodeID): void {
-	if (nodeID === 'body') return devLog.error(`[BlockManager → deleteNode] Cannot delete root body block`), undefined;
-	const blockStore = useBlockStore.getState();
+	if (nodeID === 'body') return (devLog.error(`[BlockManager → deleteNode] Cannot delete root body block`), undefined);
 
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockManager → deleteNode]')
+	const validData = new ResultPipeline('[BlockManager → deleteNode]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			parentInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.allBlocks),
+			parentInstance: pickNodeInstance(data.blockInstance.parentID, useBlockStore.getState().storedNodes),
 		}))
 		.operate((data) => ({
-			deletedBlocks: detachNodeFromParent(data.blockInstance, data.parentInstance, blockStore.allBlocks),
+			deletedBlocks: detachNodeFromParent(data.blockInstance, data.parentInstance, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
-	if (!results) return;
+	if (!validData) return;
 
 	// Apply the deletion to the store
-	blockStore.updateBlocks(results.deletedBlocks);
+	useBlockStore.setState((state) => {
+		const updatedNodes = { ...state.storedNodes, ...validData.deletedBlocks };
+		return { storedNodes: updatedNodes };
+	});
 
 	// Queue deletion with timeout for React unmounting
 	setTimeout(() => {
@@ -85,19 +91,33 @@ export function deleteNode(nodeID: NodeID): void {
 		// Re-validate and pick necessary data
 		const currentResults = new ResultPipeline('[BlockManager → deleteNode → Timeout] ')
 			.pick(() => ({
-				blockInstance: pickNodeInstance(nodeID, currentStore.allBlocks),
+				blockInstance: pickNodeInstance(nodeID, currentStore.storedNodes),
 			}))
 			.operate((data) => ({
-				blocksAfterDeletion: deleteNodeFromTree(data.blockInstance, currentStore.allBlocks),
+				blocksAfterDeletion: deleteNodeFromTree(data.blockInstance, currentStore.storedNodes),
 			}))
 			.execute();
 		if (!currentResults) return;
 
 		// Calculate final selected ID
 		const finalSelectedID = currentStore.selectedNodeID === nodeID ? null : currentStore.selectedNodeID;
+
 		// Update store with final state
-		currentStore.setBlocks(currentResults.blocksAfterDeletion);
-		currentStore.selectNode(finalSelectedID);
+		useBlockStore.setState((state) => {
+			const updatedNodes = { ...state.storedNodes, ...currentResults.blocksAfterDeletion };
+			return { storedNodes: updatedNodes };
+		});
+
+		// Update selected node if needed
+		useBlockStore.setState((state) => ({
+			data: {
+				...state.data,
+				global: {
+					...state.data.global,
+					selectedNodeID: finalSelectedID,
+				},
+			},
+		}));
 	}, 100);
 }
 
@@ -108,22 +128,23 @@ export function deleteNode(nodeID: NodeID): void {
  * @param nodeID - The block identifier to duplicate
  */
 export function duplicateNode(nodeID: NodeID): void {
-	const blockStore = useBlockStore.getState();
-
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockManager → duplicateNode]')
+	const validData = new ResultPipeline('[BlockManager → duplicateNode]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.allBlocks),
+			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.operate((data) => ({
-			clonedBlocks: duplicateNodeInTree(data.blockInstance, blockStore.allBlocks),
+			clonedBlocks: duplicateNodeInTree(data.blockInstance, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
-	if (!results) return;
+	if (!validData) return;
 
 	// Apply the cloned tree returned by the helper
-	blockStore.updateBlocks(results.clonedBlocks);
+	useBlockStore.setState((state) => {
+		const updatedNodes = { ...state.storedNodes, ...validData.clonedBlocks };
+		return { storedNodes: updatedNodes };
+	});
 }

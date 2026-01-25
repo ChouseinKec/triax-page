@@ -244,3 +244,4 @@ export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstanc
 	// Return the final updated store
 	return { success: true, data: mutatedBlocks };
 }
+
