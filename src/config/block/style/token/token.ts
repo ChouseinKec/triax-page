@@ -199,6 +199,18 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	},
 
 	{
+		key: '<relative-size>',
+		syntax: 'larger|smaller',
+		type: 'composed',
+	},
+
+	{
+		key: '<absolute-size>',
+		syntax: 'xx-small | x-small | small | medium | large | x-large | xx-large | xxx-large',
+		type: 'composed',
+	},
+
+	{
 		key: '<spread-shadow>',
 		syntax: '<box-shadow-position> <length> <length>   <box-shadow-blur> <box-shadow-spread>  <box-shadow-color> ',
 		type: 'composed',

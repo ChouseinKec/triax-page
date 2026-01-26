@@ -1,33 +1,29 @@
 import { create } from 'zustand';
 
 // Types
-import type { NodeID, StoredNodes } from '@/core/block/node/types/instance';
+import type { NodeID, StoredNodes, HighlightedNode } from '@/core/block/node/types/instance';
 
 // Default
 import { DefaultBlocks } from '@/core/block/node/states/defaults';
 
-export type BlockStoreData = {
+type BlockStoreData = {
 	global: {};
 };
 
-export type HighlightedNodeText = {
-	text: string;
-	startOffset: number;
-	endOffset: number;
-} | null;
-
-export interface BlockStoreProps {
+interface BlockStoreProps {
 	data: BlockStoreData;
 	storedNodes: StoredNodes;
 	selectedNodeID: NodeID;
-	highlightedNodeText: HighlightedNodeText;
+	highlightedNode: HighlightedNode;
 }
+
+export interface BlockStoreState extends BlockStoreProps {}
 
 /**
  * Creates the block store after initialization.
  * @returns The initialized Zustand store
  */
-export function createNodeStore() {
+export function createBlockStore() {
 	return create<BlockStoreProps>((set, get) => ({
 		// Data structure
 		data: {
@@ -36,19 +32,19 @@ export function createNodeStore() {
 
 		storedNodes: DefaultBlocks,
 		selectedNodeID: 'body',
-		highlightedNodeText: null,
+		highlightedNode: null,
 	}));
 }
 
 // Export a reference that will be set after initialization
-export let useBlockStore: ReturnType<typeof createNodeStore>;
+export let useBlockStore: ReturnType<typeof createBlockStore>;
 
 /**
  * Initialize the block store.
  */
 export function initializeBlockStore(): Promise<void> {
 	return new Promise((resolve) => {
-		useBlockStore = createNodeStore();
+		useBlockStore = createBlockStore();
 		resolve();
 	});
 }

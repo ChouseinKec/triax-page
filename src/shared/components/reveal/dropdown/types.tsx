@@ -10,6 +10,8 @@ export interface DropdownRevealProps {
     placeholder?: string | React.ReactNode;
     /** If true, disables the dropdown interaction. */
     isDisabled?: boolean;
+    /** If true, marks the dropdown as selected. */
+    isActive?: boolean;
     /** Optional title for the dropdown button. */
     title?: string;
     /** Optional styles for the dropdown content. */

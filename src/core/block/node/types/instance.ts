@@ -27,10 +27,21 @@ export interface NodeInstance {
 	/** Instance-specific styles that override defaults */
 	styles: NodeStyles;
 	/** Generic content data - flexible structure for any block-specific data */
-	content?: NodeContent;
+	content: NodeContent;
 }
 
 /**
  * Record of all block instances by their ID.
  */
 export type StoredNodes = Record<NodeID, NodeInstance>;
+
+/**
+ * Represents highlighted text within a node, including the text and its position offsets.
+ */
+export type HighlightedNode = {
+	id: NodeID;
+	tag: ElementKey;
+	text: string;
+	startOffset: number;
+	endOffset: number;
+} | null;

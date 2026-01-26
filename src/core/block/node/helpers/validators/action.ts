@@ -3,7 +3,7 @@ import type { ActionTitle, ActionDefinition, ActionKey, ActionOrder, ActionRende
 import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
-import { validateString, validateObject, validateInteger, validateFunction } from '@/shared/helpers/validators';
+import { validateString, validateObject, validateInteger } from '@/shared/helpers/validators';
 import { validateNodeKey } from './definition';
 
 /**
@@ -26,8 +26,8 @@ export function validateActionKey(actionKey: unknown): ValidateResult<ActionKey>
  * @param actionComponent - The action component to validate
  */
 export function validateActionComponent(actionRender: unknown): ValidateResult<ActionRender> {
-	const functionValidation = validateFunction(actionRender);
-	if (!functionValidation.valid) return functionValidation;
+	const objectValidation = validateObject(actionRender);
+	if (!objectValidation.valid) return objectValidation;
 
 	return { valid: true, value: actionRender as ActionRender };
 }

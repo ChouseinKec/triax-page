@@ -1,6 +1,6 @@
 // Stores
 import { useBlockStore } from '@/core/block/node/states/store';
-import type { HighlightedNodeText } from '@/core/block/node/states/store';
+import type { HighlightedNode } from '@/core/block/node/types';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -38,10 +38,10 @@ export function selectNode(nodeID: NodeID | null): void {
  *
  * @param textHighlight - The text highlight object to set, or null to clear
  */
-export function setHighlightedNodeText(textHighlight: HighlightedNodeText): void {
+export function setHighlightNodeText(textHighlight: HighlightedNode | null): void {
 	// Set the highlighted block text in the store
 	useBlockStore.setState((state) => ({
 		...state,
-		highlightedNodeText: textHighlight,
+		highlightedNode: textHighlight,
 	}));
 }

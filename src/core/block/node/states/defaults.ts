@@ -55,6 +55,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'root',
 		contentIDs: ['hero', 'features-grid', 'timeline'],
 		type: 'core-container',
+		content: {},
 	},
 
 	// Hero section
@@ -121,6 +122,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'body',
 		contentIDs: ['hero-title', 'hero-desc'],
 		type: 'core-container',
+		content: {},
 	},
 	'hero-title': {
 		id: 'hero-title',
@@ -239,6 +241,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'body',
 		contentIDs: ['feature-1', 'feature-2', 'feature-3', 'feature-4'],
 		type: 'core-container',
+		content: {},
 	},
 	'feature-1': {
 		id: 'feature-1',
@@ -266,6 +269,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'features-grid',
 		contentIDs: ['feature-1-label'],
 		type: 'core-container',
+		content: {},
 	},
 	'feature-1-label': {
 		id: 'feature-1-label',
@@ -316,6 +320,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'features-grid',
 		contentIDs: ['feature-2-label'],
 		type: 'core-container',
+		content: {},
 	},
 	'feature-2-label': {
 		id: 'feature-2-label',
@@ -366,6 +371,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'features-grid',
 		contentIDs: ['feature-3-label'],
 		type: 'core-container',
+		content: {},
 	},
 	'feature-3-label': {
 		id: 'feature-3-label',
@@ -416,6 +422,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'features-grid',
 		contentIDs: ['feature-4-label'],
 		type: 'core-container',
+		content: {},
 	},
 	'feature-4-label': {
 		id: 'feature-4-label',
@@ -480,6 +487,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'body',
 		contentIDs: ['timeline-container'],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-title': {
 		id: 'timeline-title',
@@ -504,6 +512,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline',
 		contentIDs: [],
 		type: 'core-markdown',
+		content: {},
 	},
 	'timeline-container': {
 		id: 'timeline-container',
@@ -527,6 +536,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline',
 		contentIDs: ['timeline-line', 'timeline-item-1', 'timeline-item-2', 'timeline-item-3'],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-line': {
 		id: 'timeline-line',
@@ -550,6 +560,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-container',
 		contentIDs: [],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-item-1': {
 		id: 'timeline-item-1',
@@ -571,6 +582,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-1', 'timeline-content-1'],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-dot-1': {
 		id: 'timeline-dot-1',
@@ -598,6 +610,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-item-1',
 		contentIDs: [],
 		type: 'core-container',
+		content: {},
 	},
 
 	'timeline-content-1': {
@@ -642,6 +655,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-2', 'timeline-content-2'],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-dot-2': {
 		id: 'timeline-dot-2',
@@ -669,6 +683,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-item-2',
 		contentIDs: [],
 		type: 'core-container',
+		content: {},
 	},
 
 	'timeline-content-2': {
@@ -713,6 +728,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-container',
 		contentIDs: ['timeline-dot-3', 'timeline-content-3'],
 		type: 'core-container',
+		content: {},
 	},
 	'timeline-dot-3': {
 		id: 'timeline-dot-3',
@@ -740,6 +756,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'timeline-item-3',
 		contentIDs: [],
 		type: 'core-container',
+		content: {},
 	},
 
 	'timeline-content-3': {

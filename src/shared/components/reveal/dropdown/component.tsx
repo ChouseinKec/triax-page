@@ -37,6 +37,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = ({
     placeholder = "Toggle",
     closeOnChange,
     isDisabled,
+    isActive,
     title = "Toggle Dropdown",
     className = "",
     anchor = "bottom",
@@ -89,6 +90,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = ({
                 className={`${CSS.Toggle} Toggle`}
                 onClick={handleToggle}
                 data-is-selected={isOpen}
+                data-is-active={isActive}
                 data-is-disabled={isDisabled}
                 data-is-open={isOpen}
                 data-anchor={anchor}

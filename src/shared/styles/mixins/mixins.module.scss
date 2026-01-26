@@ -1,11 +1,4 @@
-@mixin states(
-	// Element states
-	$hover: true,
-	$focus: true,
-	$active: true,
-	$selected: true,
-	$disabled: false
-) {
+@mixin states {
 	&:hover {
 		box-shadow: 0px 0px 0px 1px var(--theme-color-secondary) inset;
 
@@ -63,7 +56,7 @@
 	}
 }
 
-@mixin components--container($position:relative,$background: var(--theme-color-primary-tint), $radius: var(--size-md), $shadow: var(--theme-shadow-border)) {
+@mixin components--container($position: relative, $background: var(--theme-color-primary-tint), $radius: var(--size-md), $shadow: var(--theme-shadow-border)) {
 	font-size: var(--font-size-sm);
 	position: $position;
 	padding: var(--size-xs);

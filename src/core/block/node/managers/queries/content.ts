@@ -2,7 +2,7 @@
 import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
-import type { NodeID} from '@/core/block/node/types/instance';
+import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeContent } from '@/core/block/node/types/definition';
 
 // Helpers
@@ -19,13 +19,13 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  * @param nodeID - The block identifier
  */
 export function getNodeContent(nodeID: NodeID): NodeContent | undefined {
-	const blockStore = useBlockStore.getState();
-
 	// Validate and pick the block content
 	const results = new ResultPipeline('[BlockQueries → getNodeContent]')
-		.validate({ nodeID: validateNodeID(nodeID) })
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
 		.pick((data) => ({
-			content: pickNodeContent(data.nodeID, blockStore.storedNodes),
+			content: pickNodeContent(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return undefined;

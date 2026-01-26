@@ -10,6 +10,7 @@ import { duplicateNodeInTree, addNodeToTree, deleteNodeFromTree } from '@/core/b
 
 // Types
 import type { NodeID, NodeKey, NodeInstance } from '@/core/block/node/types';
+import type { ElementKey } from '@/core/block/element/types';
 
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
@@ -25,7 +26,7 @@ import { getRegisteredNodes } from '@/core/block/node/states/registry';
  * @param nodeKey - The block type to create
  * @param parentID - The parent block ID to add the new block under
  */
-export function addNode(nodeKey: NodeKey, parentID: NodeID): NodeInstance | undefined {
+export function addNode(nodeKey: NodeKey, parentID: NodeID, options?: { nodeTag?: ElementKey; content?: {} }): NodeInstance | undefined {
 	// Validate, pick, and operate on necessary data
 	const validData = new ResultPipeline('[BlockManager → addNode]')
 		.validate({
@@ -36,7 +37,7 @@ export function addNode(nodeKey: NodeKey, parentID: NodeID): NodeInstance | unde
 			nodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
 		}))
 		.operate((data) => ({
-			createdBlock: createNode(data.nodeDefinition, data.parentID),
+			createdBlock: createNode(data.nodeDefinition, data.parentID, options),
 		}))
 		.operate((data) => ({
 			addedBlocks: addNodeToTree(data.createdBlock, useBlockStore.getState().storedNodes),
@@ -147,4 +148,19 @@ export function duplicateNode(nodeID: NodeID): void {
 		const updatedNodes = { ...state.storedNodes, ...validData.clonedBlocks };
 		return { storedNodes: updatedNodes };
 	});
+}
+
+/**
+ * Adds multiple new blocks of the specified types to the page in block CRUD operations.
+ * Creates and inserts block instances under the specified parents.
+ *
+ * @param nodeConfigs - Array of [nodeKey, parentID, options] tuples for each block
+ */
+export function addNodes(nodeConfigs: [NodeKey, NodeID, { nodeTag?: ElementKey; content?: {} }?][]): NodeInstance[] {
+	const createdBlocks: NodeInstance[] = [];
+	for (const [nodeKey, parentID, options] of nodeConfigs) {
+		const block = addNode(nodeKey, parentID, options);
+		if (block) createdBlocks.push(block);
+	}
+	return createdBlocks;
 }

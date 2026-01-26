@@ -1,5 +1,5 @@
 // Registry
-import { registerNode, registerAction } from '@/core/block/node/states/registry';
+import { registerNode } from '@/core/block/node/states/registry';
 
 // Components
 import BlockContainerComponent from '@/config/block/node/container/component';
@@ -25,17 +25,3 @@ registerNode({
 	component: BlockContainerComponent,
 });
 
-// Register actions for the container block
-registerAction({
-	key: "core-container-add-child",
-	title: "Add Child",
-	order: 10,
-	nodeKey: "core-container",
-	component: () => (
-		<button title="Add a child block">
-			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
-				<path d="M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z" />
-			</svg>
-		</button>
-	),
-});

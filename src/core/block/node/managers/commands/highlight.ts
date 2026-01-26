@@ -1,66 +1,56 @@
-// Stores
+// Store
 import { useBlockStore } from '@/core/block/node/states/store';
 
 // Managers
-import { addNode } from '@/core/block/node/managers/commands/crud';
-import { setNodeContent } from '@/core/block/node/managers/commands/content';
-import { getNodeContent } from '@/core/block/node/managers/queries/content';
-import { setHighlightedNodeText } from '@/core/block/node/managers/commands/select';
-
-// Helpers
-import { findNodeFirstChild,findNodeNextSibling,findNodePreviousSibling } from '@/core/block/node/helpers/finders';
+import { setHighlightNodeText, setNodeContent, addNodes } from '@/core/block/node/managers/';
 
 // Types
-import type { NodeKey } from '@/core/block/node/types/definition';
+import type { NodeKey } from '@/core/block/node/types';
+import type { ElementKey } from '@/core/block/element/types';
+
+// Helpers
+import { pickNodeContent, pickSelectedNodeID, pickHighlightedNode, splitHighlightText, segmentHighlightText, includesHighlightText } from '@/core/block/node/helpers';
 
 // Utilities
-import { devLog } from '@/shared/utilities/dev';
+import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
- * Replace the highlighted text in the selected block with a new child block.
+ * Replaces the highlighted text within the currently selected block with new elements.
  *
- * - Reads `selectedNodeID` and `highlightedNodeText` from the store
- * - Removes the highlighted substring from the original node's `content.text`
- * - Adds a new node of the requested `nodeKey` as a child of the original
- * - Sets the new node's `content.text` to the highlighted substring
- * - Clears the highlight state
- */
-export function replaceHighlightedText(nodeKey: NodeKey): void {
-	const store = useBlockStore.getState();
-	const selectedNodeID = store.selectedNodeID;
-	const highlighted = store.highlightedNodeText;
+ * @param nodeKey - The key for the new nodes to be created
+ * @param nodeTag - The tag to be applied to the new nodes
+*/
+export function replaceHighlightText(nodeKey: NodeKey, nodeTag: ElementKey): void {
+	// Get a snapshot of the current block store state
+	const blockStoreState = useBlockStore.getState();
 
-	if (!selectedNodeID || !highlighted || !highlighted.text) return (devLog.warn(`[BlockHighlightManager → replaceHighlightedText] No selected block or highlighted text to replace.`), undefined);
+	// Validate and gather necessary data from the store
+	const validData = new ResultPipeline('[BlockHighlightManager → replaceHighlightText]')
+		.pick({
+			selectedNodeID: pickSelectedNodeID(blockStoreState),
+		})
+		.pick((data) => ({
+			nodeContent: pickNodeContent(data.selectedNodeID, blockStoreState.storedNodes),
+			highlightedNode: pickHighlightedNode(blockStoreState),
+		}))
+		.check((data) => ({
+			includesSubText: includesHighlightText(data.nodeContent, data.highlightedNode),
+		}))
+		.operate((data) => ({
+			splitedText: splitHighlightText(data.nodeContent.text, data.highlightedNode),
+		}))
+		.operate((data) => ({
+			segmentedText: segmentHighlightText(data.splitedText, nodeTag),
+		}))
+		.execute();
+	if (!validData) return;
 
-	const content = getNodeContent(selectedNodeID) ?? {};
-	const originalText: string = content.text ?? '';
+	// Create new child blocks for each text segment under the selected node
+	addNodes(validData.segmentedText.map((segment) => [nodeKey, validData.selectedNodeID, { nodeTag: segment.tag, content: { text: segment.text } }]));
 
-	let newText = originalText;
-	const hText = highlighted.text;
-	const start = highlighted.startOffset ?? -1;
-	const end = highlighted.endOffset ?? -1;
+	// Clear the text content of the parent by setting it to an empty string
+	setNodeContent(validData.selectedNodeID, { ...validData.nodeContent, text: '' });
 
-	// Prefer range offsets when valid; fallback to first occurrence match
-	if (typeof start === 'number' && typeof end === 'number' && start >= 0 && end >= start && end <= originalText.length) {
-		newText = originalText.slice(0, start) + originalText.slice(end);
-	} else {
-		const idx = originalText.indexOf(hText);
-		if (idx >= 0) {
-			newText = originalText.slice(0, idx) + originalText.slice(idx + hText.length);
-		}
-	}
-
-	// Update original node text
-	setNodeContent(selectedNodeID, { ...content, text: newText });
-
-	// Add new node under the selected block and set its content
-	const addedNode = addNode(nodeKey, selectedNodeID);
-
-
-	if (addedNode) {
-		setNodeContent(addedNode.id, { text: hText });
-	}
-
-	// Clear highlight
-	setHighlightedNodeText(null);
+	// Clear the highlightedNode text state
+	setHighlightNodeText(null);
 }

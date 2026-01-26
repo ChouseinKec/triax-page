@@ -1,0 +1,5 @@
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.Action {
+	@include inputMixins.components--button($background: var(--theme-color-primary));
+}

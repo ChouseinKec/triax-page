@@ -1,6 +1,6 @@
 // Types
-import type { NodeID, NodeInstance } from '@/core/block/node/types/instance';
-import { NodeStyles, NodeAttributes, NodeDefinition } from '@/core/block/node/types/definition';
+import type { NodeID, NodeInstance, NodeStyles, NodeAttributes, NodeDefinition } from '@/core/block/node/types/';
+import type { ElementKey } from '@/core/block/element/types';
 import type { OperateResult } from '@/shared/types/result';
 
 /**
@@ -43,11 +43,22 @@ export function createNodeID(): NodeID {
 	return uuidv4();
 }
 
-export function createNode(nodeDefinition: NodeDefinition, parentNodeID: NodeID): OperateResult<NodeInstance> {
+export function createNode(
+	nodeDefinition: NodeDefinition, //
+	parentNodeID: NodeID,
+	options?: { nodeTag?: ElementKey; content?: {} },
+): OperateResult<NodeInstance> {
 	// Pull defaults from definition — these will be used when creating the
 	// initial shape of the NodeInstance.
 	const nodeStyles = nodeDefinition.defaultStyles;
 	const nodeAttributes = nodeDefinition.defaultAttributes;
+
+	// If a tag override is provided, ensure it's valid for this block type
+	const availableTags = nodeDefinition.availableTags;
+	if (options?.nodeTag && availableTags && !availableTags.includes(options.nodeTag)) return { success: false, error: `Tag '${options.nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
+
+	// Determine the tag to use: either the provided override or the default
+	const nodeTag = options?.nodeTag || nodeDefinition.defaultTag;
 
 	// Build an initial NodeInstance using the block definition defaults. The
 	// instance starts with an empty child list (`contentIDs`) and the provided
@@ -55,12 +66,12 @@ export function createNode(nodeDefinition: NodeDefinition, parentNodeID: NodeID)
 	const block: NodeInstance = {
 		id: createNodeID(),
 		parentID: parentNodeID,
-		tag: nodeDefinition.defaultTag,
+		tag: nodeTag,
 		contentIDs: [],
 		styles: createNodeStyles({}, nodeStyles),
 		attributes: createNodeAttributes({}, nodeAttributes),
 		type: nodeDefinition.key,
-		content:{}
+		content: options?.content || {},
 	};
 
 	return { success: true, data: block };

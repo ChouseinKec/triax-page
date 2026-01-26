@@ -29,7 +29,7 @@ export function detachNodeFromParent(sourceNodeInstance: NodeInstance, parentNod
 	// Update the child's parent reference to 'orphan' to reflect detachment.
 	const mutatedSourceResult = updateNodeParentID(sourceNodeInstance, 'orphan');
 	if (!mutatedSourceResult.success) return { success: false, error: `Failed to update child parentID: ${mutatedSourceResult.error}` };
-	
+
 	// Return the updated store reflecting the detached relationship.
 	return {
 		success: true,
@@ -120,6 +120,79 @@ export function addNodeToTree(nodeInstance: NodeInstance, storedNodes: StoredNod
 }
 
 /**
+ * Duplicate a block instance and its entire subtree within the store.
+ *
+ * The duplicated subtree will be inserted immediately after the original
+ * within its parent's contentIDs list.
+ *
+ * @param sourceNodeInstance - the block instance to duplicate
+ * @param storedNodes - record of all block instances used to resolve children
+ */
+export function duplicateNodeInTree(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
+	// Clone the subtree
+	const { clonedInstance, clonedNodes } = cloneNode(sourceNodeInstance, storedNodes);
+
+	// Create a working record with all cloned instances
+	const mutatedBlocks = { ...storedNodes, ...clonedNodes };
+
+	// Fetch the parent block instance
+	const parentInstanceResult = pickNodeInstance(sourceNodeInstance.parentID, mutatedBlocks);
+	if (!parentInstanceResult.success) return { success: false, error: parentInstanceResult.error };
+
+	// Find the index of the source block within its parent's contentIDs
+	const childIndexResult = findNodeChildIndex(sourceNodeInstance, parentInstanceResult.data);
+	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
+	if (childIndexResult.status === 'not-found') return { success: false, error: `Original block not found in parent's contentIDs` };
+
+	// Attach the cloned root immediately after the original
+	const attachedBlocksResult = attachNodeToParent(clonedInstance, parentInstanceResult.data, childIndexResult.data + 1, mutatedBlocks);
+	if (!attachedBlocksResult.success) return { success: false, error: `Failed to insert cloned subtree: ${attachedBlocksResult.error}` };
+
+	// Return the final updated store
+	return { success: true, data: attachedBlocksResult.data };
+}
+
+export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
+	// Clone the subtree
+	const { clonedInstance, clonedNodes } = cloneNode(sourceBlock, storedNodes, targetNodeInstance.parentID);
+
+	// Create a working record with all cloned instances
+	const mutatedBlocks = { ...storedNodes, ...clonedNodes };
+
+	// Fetch the parent block instance
+	const parentInstanceResult = pickNodeInstance(targetNodeInstance.parentID, mutatedBlocks);
+	if (!parentInstanceResult.success) return parentInstanceResult;
+
+	// Find the index of the source block within its parent's contentIDs
+	const childIndexResult = findNodeChildIndex(targetNodeInstance, parentInstanceResult.data);
+	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
+	if (childIndexResult.status === 'not-found') return { success: false, error: `Target block not found in parent's contentIDs` };
+
+	// Remove the cloned root from the record as it will be overwritten
+	delete mutatedBlocks[clonedInstance.id];
+
+	// Overwrite the target block with the cloned instance
+	mutatedBlocks[targetNodeInstance.id] = {
+		...clonedInstance,
+		id: targetNodeInstance.id,
+		parentID: targetNodeInstance.parentID,
+	};
+
+	// Update the parent's contentIDs to reflect the overwritten block
+	const newContentIDs = [...parentInstanceResult.data.contentIDs];
+	newContentIDs[childIndexResult.data] = targetNodeInstance.id;
+
+	// Update the mutatedBlocks with the updated parent instance
+	mutatedBlocks[parentInstanceResult.data.id] = {
+		...parentInstanceResult.data,
+		contentIDs: newContentIDs,
+	};
+
+	// Return the final updated store
+	return { success: true, data: mutatedBlocks };
+}
+
+/**
  * Deep-clone the given block subtree and return the cloned instances.
  *
  * This only creates the new instances and does NOT merge clones into a store
@@ -129,7 +202,7 @@ export function addNodeToTree(nodeInstance: NodeInstance, storedNodes: StoredNod
  * @param storedNodes - record of all block instances used to resolve children
  * @param parentNodeID - optional parent ID to assign to the cloned root
  */
-export function cloneBlock(rootNodeInstance: NodeInstance, storedNodes: StoredNodes, parentNodeID?: NodeID): { clonedInstance: NodeInstance; clonedNodes: StoredNodes } {
+export function cloneNode(rootNodeInstance: NodeInstance, storedNodes: StoredNodes, parentNodeID?: NodeID): { clonedInstance: NodeInstance; clonedNodes: StoredNodes } {
 	// Map to track all cloned instances
 	const clonedNodes: StoredNodes = {};
 
@@ -171,77 +244,3 @@ export function cloneBlock(rootNodeInstance: NodeInstance, storedNodes: StoredNo
 		clonedNodes,
 	};
 }
-
-/**
- * Duplicate a block instance and its entire subtree within the store.
- *
- * The duplicated subtree will be inserted immediately after the original
- * within its parent's contentIDs list.
- *
- * @param sourceNodeInstance - the block instance to duplicate
- * @param storedNodes - record of all block instances used to resolve children
- */
-export function duplicateNodeInTree(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
-	// Clone the subtree
-	const { clonedInstance, clonedNodes } = cloneBlock(sourceNodeInstance, storedNodes);
-
-	// Create a working record with all cloned instances
-	const mutatedBlocks = { ...storedNodes, ...clonedNodes };
-
-	// Fetch the parent block instance
-	const parentInstanceResult = pickNodeInstance(sourceNodeInstance.parentID, mutatedBlocks);
-	if (!parentInstanceResult.success) return { success: false, error: parentInstanceResult.error };
-
-	// Find the index of the source block within its parent's contentIDs
-	const childIndexResult = findNodeChildIndex(sourceNodeInstance, parentInstanceResult.data);
-	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
-	if (childIndexResult.status === 'not-found') return { success: false, error: `Original block not found in parent's contentIDs` };
-
-	// Attach the cloned root immediately after the original
-	const attachedBlocksResult = attachNodeToParent(clonedInstance, parentInstanceResult.data, childIndexResult.data + 1, mutatedBlocks);
-	if (!attachedBlocksResult.success) return { success: false, error: `Failed to insert cloned subtree: ${attachedBlocksResult.error}` };
-
-	// Return the final updated store
-	return { success: true, data: attachedBlocksResult.data };
-}
-
-export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
-	// Clone the subtree
-	const { clonedInstance, clonedNodes } = cloneBlock(sourceBlock, storedNodes, targetNodeInstance.parentID);
-
-	// Create a working record with all cloned instances
-	const mutatedBlocks = { ...storedNodes, ...clonedNodes };
-
-	// Fetch the parent block instance
-	const parentInstanceResult = pickNodeInstance(targetNodeInstance.parentID, mutatedBlocks);
-	if (!parentInstanceResult.success) return parentInstanceResult;
-
-	// Find the index of the source block within its parent's contentIDs
-	const childIndexResult = findNodeChildIndex(targetNodeInstance, parentInstanceResult.data);
-	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
-	if (childIndexResult.status === 'not-found') return { success: false, error: `Target block not found in parent's contentIDs` };
-
-	// Remove the cloned root from the record as it will be overwritten
-	delete mutatedBlocks[clonedInstance.id];
-
-	// Overwrite the target block with the cloned instance
-	mutatedBlocks[targetNodeInstance.id] = {
-		...clonedInstance,
-		id: targetNodeInstance.id,
-		parentID: targetNodeInstance.parentID,
-	};
-
-	// Update the parent's contentIDs to reflect the overwritten block
-	const newContentIDs = [...parentInstanceResult.data.contentIDs];
-	newContentIDs[childIndexResult.data] = targetNodeInstance.id;
-
-	// Update the mutatedBlocks with the updated parent instance
-	mutatedBlocks[parentInstanceResult.data.id] = {
-		...parentInstanceResult.data,
-		contentIDs: newContentIDs,
-	};
-
-	// Return the final updated store
-	return { success: true, data: mutatedBlocks };
-}
-
