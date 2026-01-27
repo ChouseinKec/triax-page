@@ -2,11 +2,16 @@ import React, { useCallback, useRef, memo } from "react";
 
 // Types
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
+import type { HighlightedNode } from '@/core/block/node/types/instance';
 
 // Managers
 import { selectNode, setHighlightNodeText } from '@/core/block/node/managers';
 import { getNodeContent, setNodeContent } from '@/core/block/node/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
+
+// Hooks
+import { useHighlight } from '@/shared/hooks/interface/useHighlight';
+
 
 const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected, children }) => {
     const nodeID = instance.id;
@@ -23,8 +28,33 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     // Ref to access the element
     const elementRef = useRef<HTMLElement>(null);
 
+    // Callbacks for select/deselect
+    const handleHighlight = useCallback((range: Range, selectedText: string) => {
+        if (!isSelected || hasChildren) return;
+
+        // Check if the selection is within this element
+        if (!elementRef.current?.contains(range.commonAncestorContainer)) return;
+
+        const newHighlight: HighlightedNode = {
+            id: nodeID,
+            tag: instance.tag,
+            text: selectedText,
+            startOffset: range.startOffset,
+            endOffset: range.endOffset,
+        };
+
+        setHighlightNodeText(newHighlight);
+    }, [isSelected, hasChildren, nodeID, instance.tag]
+    );
+
+    // Deselect callback
+    const handleDehighlight = useCallback(() => {
+        setHighlightNodeText(null);
+    }, []
+    );
+
     // Handle block selection
-    const handleSelect = useCallback(
+    const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
             selectNode(nodeID);
@@ -41,39 +71,16 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     }, [nodeID, hasChildren]
     );
 
-    // Handle text highlight - only if no children
-    const handleHighlight = useCallback(() => {
-        if (!isSelected || hasChildren) return;
-
-        // Get the current selection
-        const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0) return setHighlightNodeText(null);
-
-        // Get the first range of the selection
-        const range = selection.getRangeAt(0);
-        const selectedText = selection.toString();
-        if (selectedText.length <= 0) return setHighlightNodeText(null);
-
-        // Set the highlightedNode text in the store
-        setHighlightNodeText({
-            id: nodeID,
-            tag: instance.tag,
-            text: selectedText,
-            startOffset: range.startOffset,
-            endOffset: range.endOffset,
-        });
-
-    }, [isSelected, hasChildren, nodeID]
-    );
+    // Use highlight hook
+    useHighlight(handleHighlight, handleDehighlight);
 
     return (
         <>
             <BlockTag
                 ref={elementRef as React.RefObject<any>}
                 className={`block-${nodeID}`}
-                onClick={handleSelect}
+                onClick={handleClick}
                 onBlur={handleBlur}
-                onSelect={handleHighlight}
                 data-block-type="container"
                 data-is-selected={isSelected}
                 contentEditable={!hasChildren}
@@ -81,6 +88,7 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
             >
                 {hasChildren ? children : text}
             </BlockTag>
+
             <style>{renderedStyles}</style>
         </>
     );
