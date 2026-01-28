@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addNode, canNodeAcceptChild, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/managers";
+import { addNode, doesNodeSupportElement, findFirstSupportedElement, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/managers";
 
 // Registry
 import { getRegisteredNodes } from '@/core/block/node/states/registry';
@@ -27,23 +27,21 @@ const BlockLibrary: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
     const [search, setSearch] = useState("");
 
+    // Handle adding a new block,
+    const handleAddBlock = useCallback((nodeKey: NodeKey) => {
+        const acceptableTag = findFirstSupportedElement(selectedNodeID, nodeKey);
+        if (!acceptableTag) return;
 
+        addNode(nodeKey, selectedNodeID, acceptableTag);
 
-    // Handle adding a new block, optionally nesting inside the selected block
-    const handleAddBlock = useCallback((NodeKey: NodeKey) => {
-        if (!selectedNodeID) return;
-
-        addNode(NodeKey, selectedNodeID);
     }, [selectedNodeID]
     );
 
     // Filter blocks based on the selected block's permitted content
     const filteredBlocks = useMemo(() => {
-        if (!selectedNodeID) return registeredNodes;
-
         return Object.fromEntries(
             Object.entries(registeredNodes).filter(([, block]) => {
-                return canNodeAcceptChild(selectedNodeID, block.defaultTag);
+                return doesNodeSupportElement(selectedNodeID, block.key);
             })
         );
     }, [selectedNodeID, registeredNodes]
@@ -70,13 +68,12 @@ const BlockLibrary: React.FC = () => {
 
     // Render a button for each block type
     const createNodeButton = useCallback((block: NodeDefinition) => {
-        const NodeKey = block.key;
         return (
-            <div className={CSS.BlockContainer} key={NodeKey}>
-                <button className={CSS.BlockButton} onClick={() => handleAddBlock(NodeKey)}>
+            <div className={CSS.BlockContainer} key={block.key}>
+                <button className={CSS.BlockButton} onClick={() => handleAddBlock(block.key)}>
                     {block.icon}
                 </button>
-                <p className={CSS.BlockTitle}>{NodeKey}</p>
+                <p className={CSS.BlockTitle}>{block.key}</p>
             </div>
         );
     }, [handleAddBlock]
@@ -117,14 +114,11 @@ const BlockLibrary: React.FC = () => {
     );
 
     // Early exit must come after hooks to keep hook order stable
-    if (!registeredNodes || Object.keys(registeredNodes).length === 0) {
-        return <div className={CSS.Fallback}>No blocks available.</div>;
-    }
+    if (!registeredNodes || Object.keys(registeredNodes).length === 0) return <div className={CSS.Fallback}>No blocks available.</div>;
+
 
     // If selected block permitted content is Fallback, show an Fallback state
-    if (Object.keys(filteredBlocks).length === 0) {
-        return <div className={CSS.Fallback}>The selected block <b>{'<'}{selectedNodeKey}{'>'}</b> does not allow any child blocks.</div>;
-    }
+    if (Object.keys(filteredBlocks).length === 0) return <div className={CSS.Fallback}>The selected block <b>{'<'}{selectedNodeKey}{'>'}</b> does not allow any child blocks.</div>;
 
     return (
         <div className={CSS.BlockLibrary}>

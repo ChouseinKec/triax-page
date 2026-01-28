@@ -46,7 +46,8 @@ export function createNodeID(): NodeID {
 export function createNode(
 	nodeDefinition: NodeDefinition, //
 	parentNodeID: NodeID,
-	options?: { nodeTag?: ElementKey; content?: {} },
+	nodeTag: ElementKey,
+	options?: { content?: {} },
 ): OperateResult<NodeInstance> {
 	// Pull defaults from definition — these will be used when creating the
 	// initial shape of the NodeInstance.
@@ -55,10 +56,7 @@ export function createNode(
 
 	// If a tag override is provided, ensure it's valid for this block type
 	const availableTags = nodeDefinition.availableTags;
-	if (options?.nodeTag && availableTags && !availableTags.includes(options.nodeTag)) return { success: false, error: `Tag '${options.nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
-
-	// Determine the tag to use: either the provided override or the default
-	const nodeTag = options?.nodeTag || nodeDefinition.defaultTag;
+	if (nodeTag && availableTags && !availableTags.includes(nodeTag)) return { success: false, error: `Tag '${nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
 
 	// Build an initial NodeInstance using the block definition defaults. The
 	// instance starts with an empty child list (`contentIDs`) and the provided

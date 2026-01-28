@@ -15,7 +15,6 @@ registerNode({
 		</svg>
 	),
 
-	defaultTag: 'div',
 	availableTags: ['div', 'section', 'article', 'aside', 'nav'],
 
 	defaultStyles: {},

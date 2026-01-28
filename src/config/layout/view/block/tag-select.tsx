@@ -2,10 +2,9 @@
 import React, { useMemo, useCallback } from "react";
 
 // Managers
-import { useSelectedNodeID, useSelectedNodeKey } from "@/core/block/node/managers";
+import { useSelectedNodeID, useSelectedNodeKey, useSelectedNodeTag, useSelectedNodeParentID, canNodeAcceptElement } from "@/core/block/node/managers";
 import { getNodeAvailableTags } from "@/core/block/node/managers/queries/node";
 import { setNodeTag } from "@/core/block/node/managers/commands/tag";
-import { useNode } from "@/core/block/node/managers";
 import { getElementDefinitions } from "@/core/block/element/managers/queries/element";
 
 // Components
@@ -17,39 +16,64 @@ const icon = (
 )
 
 /**
- * TagSelect
- * Dropdown component for selecting HTML tags for the selected node.
-*/
+ * TagSelect Component
+ *
+ * A dropdown selector for changing the HTML tag of the currently selected block node.
+ * This allows users to customize the semantic HTML element for better SEO and accessibility.
+ * The available tags are filtered based on the selected node's type and its parent's acceptance rules.
+ *
+ * Features:
+ * - Dynamically generates options from the node's availableTags
+ * - Filters options to ensure only valid child tags for the parent node
+ * - Updates the node's tag via the setNodeTag command
+ * - Hides when no valid options or no selection exists
+ *
+ * @returns The dropdown component or null if no options available
+ */
 const TagSelect: React.FC = () => {
+    // Retrieve selected node data using selective hooks for granular re-rendering
     const selectedNodeID = useSelectedNodeID();
     const selectedNodeKey = useSelectedNodeKey();
-    const selectedNode = useNode(selectedNodeID || '');
+    const selectedNodeTag = useSelectedNodeTag();
+    const selectedNodeParentID = useSelectedNodeParentID();
 
+    // Compute available tags for the selected node, filtered by parent acceptance
     const availableTags = useMemo(() => {
-        if (!selectedNodeKey) return [];
-        return getNodeAvailableTags(selectedNodeKey) || [];
-    }, [selectedNodeKey]
+        // Early return if required data is missing
+        if (!selectedNodeKey || !selectedNodeParentID) return [];
+
+        // Get tags available for this node type
+        const availableTags = getNodeAvailableTags(selectedNodeKey);
+        if (!availableTags) return [];
+
+        // Filter to only include tags that the parent node can accept as children
+        return availableTags.filter(tag => canNodeAcceptElement(selectedNodeParentID, tag));
+    }, [selectedNodeKey, selectedNodeParentID]
     );
 
+    // Transform available tags into dropdown options, ensuring elements exist
     const options = useMemo(() => {
         const elements = getElementDefinitions();
-        return availableTags.map(tag => ({
-            name: tag,
-            value: tag,
-        })).filter(option => elements[option.value]); // Ensure the element exists
-    }, [availableTags]
-    );
+        return availableTags
+            .filter(tag => elements[tag]) // Filter out non-existent elements first
+            .map(tag => ({
+                name: tag,
+                value: tag,
+            }));
+    }, [availableTags]);
 
+    // Handle tag change by updating the node's tag in the store
     const handleChange = useCallback((value: string) => {
-        if (selectedNodeID) setNodeTag(selectedNodeID, value);
+        setNodeTag(selectedNodeID, value);
     }, [selectedNodeID]
     );
 
-    if (!selectedNodeID || !selectedNode || options.length === 0) return null;
+    // Render nothing if no selection, current tag, or options exist
+    if (!selectedNodeID || !selectedNodeTag || options.length === 0) return null;
 
     return (
         <DropdownSelect
-            value={selectedNode.tag}
+            value={selectedNodeTag}
             options={options}
             onChange={handleChange}
             placeholder={icon}

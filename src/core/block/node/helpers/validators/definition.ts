@@ -100,7 +100,7 @@ export function validateNodeIcon(nodeIcon: unknown): ValidateResult<NodeIcon> {
  * @param nodeDefinition - The block definition object to validate
  */
 export function validateNodeDefinition(nodeDefinition: unknown): ValidateResult<NodeDefinition> {
-	const validation = validateObject(nodeDefinition, ['key', 'defaultTag', 'icon', 'category', 'component', 'availableTags']);
+	const validation = validateObject(nodeDefinition, ['key', 'icon', 'category', 'component', 'availableTags']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const keyValidation = validateNodeKey(validation.value.key);
@@ -108,9 +108,6 @@ export function validateNodeDefinition(nodeDefinition: unknown): ValidateResult<
 
 	const allowedTagsValidation = validateBlockAvailableTags(validation.value.availableTags);
 	if (!allowedTagsValidation.valid) return { valid: false, message: allowedTagsValidation.message };
-
-	const tagValidation = validateBlockTag(validation.value.defaultTag, allowedTagsValidation.value);
-	if (!tagValidation.valid) return { valid: false, message: tagValidation.message };
 
 	const renderValidation = validateNodeComponent(validation.value.component);
 	if (!renderValidation.valid) return { valid: false, message: renderValidation.message };

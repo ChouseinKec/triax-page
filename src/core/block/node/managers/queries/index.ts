@@ -3,6 +3,7 @@ export * from './attribute';
 export * from './content';
 export * from './hierarchy';
 export * from './node';
-export * from './rule';
+export * from './element';
 export * from './select';
 export * from './highlight';
+export * from './child';

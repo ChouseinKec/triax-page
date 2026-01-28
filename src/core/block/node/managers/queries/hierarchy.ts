@@ -13,10 +13,11 @@ import type { NodeInstance, NodeID } from '@/core/block/node/types/instance';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
- * Retrieves the next block in the hierarchy for block hierarchy operations.
- * Checks for children first, then siblings, and finally parent's next sibling.
- *
- * @param nodeID - The block identifier to find the next block for
+ * Retrieves the next node in the document hierarchy for navigation and traversal operations.
+ * Implements depth-first traversal: checks for children first, then next siblings, and finally parent's next sibling.
+ * Used for keyboard navigation, selection operations, and hierarchical movement through the document structure.
+ * @param nodeID - The unique identifier of the node to find the next node after in the hierarchy
+ * @returns The next node instance in the hierarchy, null if at the end of the document, or undefined if the input node is invalid
  */
 export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 	const blockStore = useBlockStore.getState();
@@ -49,10 +50,11 @@ export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 }
 
 /**
- * Retrieves the previous block in the hierarchy for block hierarchy operations.
- * Checks for previous sibling's last descendant, then the sibling itself, or the parent.
- *
- * @param nodeID - The block identifier to find the previous block for
+ * Retrieves the previous node in the document hierarchy for navigation and traversal operations.
+ * Implements reverse depth-first traversal: checks for previous sibling's last descendant first, then the sibling itself, or finally the parent.
+ * Used for keyboard navigation, selection operations, and hierarchical movement through the document structure.
+ * @param nodeID - The unique identifier of the node to find the previous node before in the hierarchy
+ * @returns The previous node instance in the hierarchy, null if at the beginning of the document, or undefined if the input node is invalid
  */
 export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined {
 	const blockStore = useBlockStore.getState();

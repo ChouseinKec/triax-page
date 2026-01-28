@@ -18,6 +18,37 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Registry
 import { getRegisteredNodes } from '@/core/block/node/states/registry';
+import { getRegisteredElements } from '@/core/block/element/states/registry';
+import { pickElementDefinition } from '@/core/block/element/helpers';
+import { passesAllRules } from '@/core/block/node/helpers/checkers';
+
+/**
+ * Creates a ResultPipeline for adding a node, configured up to the rules check.
+ * This is a private helper to avoid code duplication between addNode and addNodes.
+ */
+function createAddNodePipeline(nodeKey: NodeKey, parentID: NodeID, nodeTag: ElementKey, options?: { content?: {} }) {
+	return new ResultPipeline('[BlockManager → addNode]')
+		.validate({
+			nodeKey: validateNodeKey(nodeKey),
+			parentID: validateNodeID(parentID),
+		})
+		.pick((data) => ({
+			nodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
+		}))
+		.pick((data) => ({
+			parentNodeInstance: pickNodeInstance(data.parentID, useBlockStore.getState().storedNodes),
+		}))
+		.pick((data) => ({
+			parentElementDefinition: pickElementDefinition(data.parentNodeInstance.tag, getRegisteredElements()),
+			sourceElementDefinition: pickElementDefinition(nodeTag, getRegisteredElements()),
+		}))
+		.operate((data) => ({
+			createdBlock: createNode(data.nodeDefinition, data.parentID, nodeTag, options),
+		}))
+		.condition((data) => ({
+			rulesPass: passesAllRules(data.createdBlock, data.parentNodeInstance, data.parentElementDefinition, data.sourceElementDefinition, useBlockStore.getState().storedNodes, data.parentNodeInstance.contentIDs.length),
+		}));
+}
 
 /**
  * Adds a new block of the specified type to the page in block CRUD operations.
@@ -26,19 +57,9 @@ import { getRegisteredNodes } from '@/core/block/node/states/registry';
  * @param nodeKey - The block type to create
  * @param parentID - The parent block ID to add the new block under
  */
-export function addNode(nodeKey: NodeKey, parentID: NodeID, options?: { nodeTag?: ElementKey; content?: {} }): NodeInstance | undefined {
+export function addNode(nodeKey: NodeKey, parentID: NodeID, nodeTag: ElementKey, options?: { content?: {} }): NodeInstance | undefined {
 	// Validate, pick, and operate on necessary data
-	const validData = new ResultPipeline('[BlockManager → addNode]')
-		.validate({
-			nodeKey: validateNodeKey(nodeKey),
-			parentID: validateNodeID(parentID),
-		})
-		.pick((data) => ({
-			nodeDefinition: pickNodeDefinition(data.nodeKey, getRegisteredNodes()),
-		}))
-		.operate((data) => ({
-			createdBlock: createNode(data.nodeDefinition, data.parentID, options),
-		}))
+	const validData = createAddNodePipeline(nodeKey, parentID, nodeTag, options)
 		.operate((data) => ({
 			addedBlocks: addNodeToTree(data.createdBlock, useBlockStore.getState().storedNodes),
 		}))
@@ -51,6 +72,37 @@ export function addNode(nodeKey: NodeKey, parentID: NodeID, options?: { nodeTag?
 	});
 
 	return validData.createdBlock;
+}
+
+/**
+ * Adds multiple new blocks of the specified types to the page in block CRUD operations.
+ * Creates and inserts block instances under the specified parents.
+ * All blocks must pass validation, or none are added (atomic operation).
+ *
+ * @param nodeConfigs - Array of [nodeKey, parentID, nodeTag, options] tuples for each block
+ */
+export function addNodes(nodeConfigs: [NodeKey, NodeID, ElementKey, { content?: {} }?][]): NodeInstance[] | undefined {
+	let allPass = true;
+
+	for (const [nodeKey, parentID, nodeTag, options] of nodeConfigs) {
+		const validData = createAddNodePipeline(nodeKey, parentID, nodeTag, options).execute();
+		if (!validData) {
+			allPass = false;
+			break;
+		}
+	}
+
+	// If any addition failed validation, abort the entire operation
+	if (!allPass) return undefined;
+
+	// All passed, now add them using addNode
+	const createdBlocks: NodeInstance[] = [];
+	for (const [nodeKey, parentID, nodeTag, options] of nodeConfigs) {
+		const block = addNode(nodeKey, parentID, nodeTag, options);
+		if (block) createdBlocks.push(block);
+	}
+
+	return createdBlocks;
 }
 
 /**
@@ -148,19 +200,4 @@ export function duplicateNode(nodeID: NodeID): void {
 		const updatedNodes = { ...state.storedNodes, ...validData.clonedBlocks };
 		return { storedNodes: updatedNodes };
 	});
-}
-
-/**
- * Adds multiple new blocks of the specified types to the page in block CRUD operations.
- * Creates and inserts block instances under the specified parents.
- *
- * @param nodeConfigs - Array of [nodeKey, parentID, options] tuples for each block
- */
-export function addNodes(nodeConfigs: [NodeKey, NodeID, { nodeTag?: ElementKey; content?: {} }?][]): NodeInstance[] {
-	const createdBlocks: NodeInstance[] = [];
-	for (const [nodeKey, parentID, options] of nodeConfigs) {
-		const block = addNode(nodeKey, parentID, options);
-		if (block) createdBlocks.push(block);
-	}
-	return createdBlocks;
 }

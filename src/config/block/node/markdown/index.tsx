@@ -17,7 +17,6 @@ registerNode({
 		</svg>
 	),
 
-	defaultTag: "p",
 	availableTags: [
 		"p",
 		"span",

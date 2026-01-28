@@ -201,8 +201,41 @@ export class ResultPipeline<TData extends Record<string, unknown> = Record<strin
 			return this as ResultPipeline<TData & { [K in keyof TChecks]: boolean }>;
 		}
 
+		// Check if all checks passed
+		for (const key in result.data) {
+			if (!result.data[key]) {
+				this.hasFailed = true;
+				return this as ResultPipeline<TData & { [K in keyof TChecks]: boolean }>;
+			}
+		}
+
 		Object.assign(this.validatedData, result.data);
 		return this as ResultPipeline<TData & { [K in keyof TChecks]: boolean }>;
+	}
+
+	condition<TConditions extends Record<string, CheckResult>>(conditions: TConditions | ((data: TData) => TConditions)): ResultPipeline<TData & { [K in keyof TConditions]: boolean }> {
+		if (this.hasFailed) return this as ResultPipeline<TData & { [K in keyof TConditions]: boolean }>; // Skip if already failed
+
+		const conditionObj = typeof conditions === 'function' ? conditions(this.validatedData as TData) : conditions;
+
+		const result = check(conditionObj);
+		if (!result.success) {
+			devLog.error(`${this.context} ${result.error}`);
+			this.hasFailed = true;
+			return this as ResultPipeline<TData & { [K in keyof TConditions]: boolean }>;
+		}
+
+		// Check if all conditions passed
+		for (const key in result.data) {
+			if (!result.data[key]) {
+				devLog.error(`${this.context} Condition failed: ${key}`);
+				this.hasFailed = true;
+				return this as ResultPipeline<TData & { [K in keyof TConditions]: boolean }>;
+			}
+		}
+
+		Object.assign(this.validatedData, result.data);
+		return this as ResultPipeline<TData & { [K in keyof TConditions]: boolean }>;
 	}
 
 	operate<TOperates extends Record<string, OperateResult<unknown>>>(operates: TOperates | ((data: TData) => TOperates)): ResultPipeline<TData & { [K in keyof TOperates]: TOperates[K] extends OperateResult<infer U> ? U : never }> {

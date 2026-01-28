@@ -98,8 +98,6 @@ export interface NodeDefinition {
 	/** Icon representation for the block */
 	icon: NodeIcon;
 
-	/** The primary HTML tag for this block */
-	defaultTag: ElementKey;
 	/** All allowed HTML tags for this block type */
 	availableTags: ElementKey[];
 

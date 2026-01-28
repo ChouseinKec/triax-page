@@ -1,17 +1,24 @@
 // Stores
 import { useBlockStore } from '@/core/block/node/states/store';
-import type { HighlightedNode } from '@/core/block/node/types';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { NodeID } from '@/core/block/node/types/instance';
+import type { NodeID, NodeInstance } from '@/core/block/node/types/instance';
 import type { NodeKey } from '@/core/block/node/types/definition';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
+
+/**
+ * Reactive hook to get the ID of the currently selected block.
+ * @returns The selected block ID or undefined if no block is selected
+ */
+export function useSelectedNodeID(): NodeID {
+	return useBlockStore((state) => state.selectedNodeID);
+}
 
 /**
  * Reactive hook to check if a specific block is currently selected.
@@ -35,16 +42,15 @@ export function useIsNodeSelected(nodeID: NodeID): boolean {
  * Reactive hook to get the type of the currently selected block.
  * @returns The selected block type or undefined if no block is selected
  */
-export function useSelectedNodeKey(): NodeKey | null {
+export function useSelectedNodeKey(): NodeKey | undefined {
 	// Return a reactive block type
 	return useBlockStore((state) => {
 		// Get the selected block ID
 		const selectedNodeID = state.selectedNodeID;
-		if (!selectedNodeID) return null;
 
 		// Pick the block instance
 		const selectedBlock = pickNodeInstance(selectedNodeID, state.storedNodes);
-		if (!selectedBlock.success) return null;
+		if (!selectedBlock.success) return undefined;
 
 		// Return the block type
 		return selectedBlock.data.type;
@@ -52,36 +58,35 @@ export function useSelectedNodeKey(): NodeKey | null {
 }
 
 /**
- * Reactive hook to get the ID of the currently selected block.
- * @returns The selected block ID or undefined if no block is selected
- */
-export function useSelectedNodeID(): NodeID | null {
-	return useBlockStore((state) => state.selectedNodeID);
-}
-
-/**
- * Reactive hook to get the highlighted text of the currently selected block.
- * @returns The highlighted block text or null if no text is highlighted
- */
-export function useHighlightText(): HighlightedNode {
-	return useBlockStore((state) => state.highlightedNode);
-}
-
-/**
  * Reactive hook to get the tag of the currently selected block.
- * @returns The selected block tag or null if no block is selected
+ * @returns The selected block tag or undefined if no block is selected
  */
-export function useSelectedNodeTag(): ElementKey | null {
+export function useSelectedNodeTag(): ElementKey | undefined {
 	return useBlockStore((state) => {
 		// Get the selected block ID
 		const selectedNodeID = state.selectedNodeID;
-		if (!selectedNodeID) return null;
+		if (!selectedNodeID) return undefined;
 
 		// Pick the block instance
 		const selectedBlock = pickNodeInstance(selectedNodeID, state.storedNodes);
-		if (!selectedBlock.success) return null;
+		if (!selectedBlock.success) return undefined;
 
 		// Return the block tag
 		return selectedBlock.data.tag;
+	});
+}
+
+export function useSelectedNodeParentID(): NodeID | undefined {
+	return useBlockStore((state) => {
+		// Get the selected block ID
+		const selectedNodeID = state.selectedNodeID;
+		if (!selectedNodeID) return undefined;
+
+		// Pick the block instance
+		const selectedBlock = pickNodeInstance(selectedNodeID, state.storedNodes);
+		if (!selectedBlock.success) return undefined;
+
+		// Return the parent block ID
+		return selectedBlock.data.parentID;
 	});
 }

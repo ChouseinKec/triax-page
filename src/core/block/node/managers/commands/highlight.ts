@@ -13,13 +13,14 @@ import { pickNodeContent, pickSelectedNodeID, pickHighlightedNode, splitHighligh
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+import { devLog } from '@/shared/utilities/dev';
 
 /**
  * Replaces the highlighted text within the currently selected block with new elements.
  *
  * @param nodeKey - The key for the new nodes to be created
  * @param nodeTag - The tag to be applied to the new nodes
-*/
+ */
 export function replaceHighlightText(nodeKey: NodeKey, nodeTag: ElementKey): void {
 	// Get a snapshot of the current block store state
 	const blockStoreState = useBlockStore.getState();
@@ -46,7 +47,9 @@ export function replaceHighlightText(nodeKey: NodeKey, nodeTag: ElementKey): voi
 	if (!validData) return;
 
 	// Create new child blocks for each text segment under the selected node
-	addNodes(validData.segmentedText.map((segment) => [nodeKey, validData.selectedNodeID, { nodeTag: segment.tag, content: { text: segment.text } }]));
+	const addedNodes = addNodes(validData.segmentedText.map((segment) => [nodeKey, validData.selectedNodeID, segment.tag, { content: { text: segment.text } }]));
+	if (!addedNodes || addedNodes.length === 0) return devLog.error('[BlockHighlightManager → replaceHighlightText] Failed to add new nodes for highlighted text replacement.');
+
 
 	// Clear the text content of the parent by setting it to an empty string
 	setNodeContent(validData.selectedNodeID, { ...validData.nodeContent, text: '' });

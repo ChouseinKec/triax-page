@@ -6,7 +6,7 @@ import { validateNodeID } from '@/core/block/node/helpers/validators';
 import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
 import { findNodeMoveBeforeIndex, findNodeMoveAfterIndex, findNodeMoveIntoIndex } from '@/core/block/node/helpers/finders';
 import { moveNode } from '@/core/block/node/helpers/operations';
-import { canNodeMove } from '@/core/block/node/helpers/checkers';
+import { passesAllRules } from '@/core/block/node/helpers/checkers';
 import { pickElementDefinition } from '@/core/block/element/helpers/';
 
 // Types
@@ -52,7 +52,7 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeAfter] Block is already positioned after target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data + 1);
+	const isChildBlockPermitted = passesAllRules(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data + 1);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeAfter] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeAfter] Block type not allowed as sibling`);
 
@@ -99,7 +99,7 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeBefore] Block is already positioned before target or invalid operation`);
 
 	// Check if move is valid
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
+	const isChildBlockPermitted = passesAllRules(results.sourceBlock, results.targetParentBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeBefore] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeBefore] Block element not allowed as sibling`);
 
@@ -143,7 +143,7 @@ export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 	if (targetIndexResult.status !== 'found') return devLog.warn(`[BlockManager → moveNodeInto] Block cannot be moved into target or invalid operation`);
 
 	// If child is not compatible with parent (validate with target index)
-	const isChildBlockPermitted = canNodeMove(results.sourceBlock, results.targetBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
+	const isChildBlockPermitted = passesAllRules(results.sourceBlock, results.targetBlock, results.parentElementDefinition, results.childElementDefinition, useBlockStore.getState().storedNodes, targetIndexResult.data);
 	if (!isChildBlockPermitted.success) return devLog.error(`[BlockManager → moveNodeInto] ${isChildBlockPermitted.error}`);
 	if (!isChildBlockPermitted.passed) return devLog.error(`[BlockManager → moveNodeInto] Block type not allowed as child`);
 
