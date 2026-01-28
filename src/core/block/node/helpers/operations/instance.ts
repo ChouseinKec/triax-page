@@ -3,6 +3,9 @@ import type { NodeID, NodeInstance, NodeStyles, NodeAttributes, NodeDefinition }
 import type { ElementKey } from '@/core/block/element/types';
 import type { OperateResult } from '@/shared/types/result';
 
+// External
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * Compose the final styles for a block instance.
  *
@@ -33,21 +36,38 @@ export function createNodeAttributes(nodeAttributes: NodeAttributes, defaultNode
 	return { ...defaultNodeAttributes, ...nodeAttributes };
 }
 
+/**
+ * Generate a unique identifier for a new node instance.
+ *
+ * This function creates a new UUID v4 string to serve as the unique identifier
+ * for a block instance. The ID is generated using the 'uuid' library and ensures
+ * uniqueness across all nodes in the system.
+ *
+ * @returns A unique string identifier for the node
+ */
 export function createNodeID(): NodeID {
-	// Lazy import to avoid adding uuid everywhere; original code used uuidv4
-	// but keeping the simple signature — createNode will call this helper
-	// The actual ID generation remains in the CRUD caller scope if needed.
-	// For now, keep a placeholder that will be replaced by original implementation.
-	// NOTE: The original implementation uses uuidv4 from 'uuid'. We'll re-use that via dynamic import.
-	const { v4: uuidv4 } = require('uuid');
 	return uuidv4();
 }
 
+/**
+ * Create a new node instance with default properties and validation.
+ *
+ * This function instantiates a new NodeInstance based on the provided definition,
+ * applying default styles and attributes while allowing for custom overrides.
+ * It validates that the specified element key is supported by the node definition
+ * and initializes the node with an empty child list and the provided parent relationship.
+ *
+ * @param nodeDefinition - The definition blueprint containing default properties and supported element keys
+ * @param targetNodeID - The ID of the parent node this instance will be attached to
+ * @param nodeTag - The HTML element key to use for this node (must be supported by the definition)
+ * @param options - Optional configuration including custom data to store with the node
+ * @returns An OperateResult containing the newly created node instance or an error if validation fails
+ */
 export function createNode(
 	nodeDefinition: NodeDefinition, //
-	parentNodeID: NodeID,
+	targetNodeID: NodeID,
 	nodeTag: ElementKey,
-	options?: { content?: {} },
+	options?: { data?: {} },
 ): OperateResult<NodeInstance> {
 	// Pull defaults from definition — these will be used when creating the
 	// initial shape of the NodeInstance.
@@ -55,81 +75,97 @@ export function createNode(
 	const nodeAttributes = nodeDefinition.defaultAttributes;
 
 	// If a tag override is provided, ensure it's valid for this block type
-	const availableTags = nodeDefinition.availableTags;
-	if (nodeTag && availableTags && !availableTags.includes(nodeTag)) return { success: false, error: `Tag '${nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
+	const supportedElementKeys = nodeDefinition.supportedElementKeys;
+	if (nodeTag && supportedElementKeys && !supportedElementKeys.includes(nodeTag)) return { success: false, error: `Tag '${nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
 
 	// Build an initial NodeInstance using the block definition defaults. The
-	// instance starts with an empty child list (`contentIDs`) and the provided
+	// instance starts with an empty child list (`childNodeIDs`) and the provided
 	// parent relationship.
 	const block: NodeInstance = {
 		id: createNodeID(),
-		parentID: parentNodeID,
-		tag: nodeTag,
-		contentIDs: [],
+		parentID: targetNodeID,
+		elementKey: nodeTag,
+		childNodeIDs: [],
 		styles: createNodeStyles({}, nodeStyles),
 		attributes: createNodeAttributes({}, nodeAttributes),
-		type: nodeDefinition.key,
-		content: options?.content || {},
+		definitionKey: nodeDefinition.key,
+		data: options?.data || {},
 	};
 
 	return { success: true, data: block };
 }
 
 /**
- * Detach a child id from a parent's contentIDs list.
+ * Detach a child node ID from a parent's child list.
  *
- * This only updates the contentIDs and does `not` update
- * the child block parentID neither removes the block instance from the store.
+ * This operation removes the specified child ID from the parent's childNodeIDs array,
+ * effectively breaking the parent-child relationship at the list level. The child
+ * node remains in the store but is no longer referenced as a child of this parent.
+ *
+ * This only updates the childNodeIDs and does not update the child's parentID
+ * or remove the node instance from the store.
  * @see {@link deleteNodeFromTree}, {@link detachNodeFromParent}
  *
- * @param parentNodeInstance - the parent block instance
- * @param childNodeID - the child block ID to remove
+ * @param targetNodeInstance - The parent node instance whose child list will be modified
+ * @param sourceNodeID - The ID of the child node to remove from the parent's child list
+ * @returns An OperateResult containing the updated parent node instance with the child removed
  */
-export function detachNodeFromContentIDs(parentNodeInstance: NodeInstance, childNodeID: NodeID): OperateResult<NodeInstance> {
+export function detachNodeIdFromParent(targetNodeInstance: NodeInstance, sourceNodeID: NodeID): OperateResult<NodeInstance> {
 	// If the child is not present, return the parent unchanged
-	if (!parentNodeInstance.contentIDs.includes(childNodeID)) return { success: true, data: parentNodeInstance };
+	if (!targetNodeInstance.childNodeIDs.includes(sourceNodeID)) return { success: true, data: targetNodeInstance };
 
 	// Filter out the child ID and return a new instance
-	const contentIDs = parentNodeInstance.contentIDs.filter((id) => id !== childNodeID);
+	const childNodeIDs = targetNodeInstance.childNodeIDs.filter((id) => id !== sourceNodeID);
 
-	// Return a new NodeInstance with updated contentIDs
-	return { success: true, data: { ...parentNodeInstance, contentIDs } };
+	// Return a new NodeInstance with updated childNodeIDs
+	return { success: true, data: { ...targetNodeInstance, childNodeIDs } };
 }
 
 /**
- * Attach a child id to a parent's contentIDs list at the provided index.
+ * Attach a child node ID to a parent's child list at the specified index.
  *
- * This only updates the contentIDs and does NOT update
- * the child block parentID neither adds the block instance to the store.
+ * This operation inserts the specified child ID into the parent's childNodeIDs array
+ * at the given index, establishing a parent-child relationship at the list level.
+ * If the child ID already exists in the list, it is first removed to prevent duplicates,
+ * then inserted at the new position.
+ *
+ * This only updates the childNodeIDs and does not update the child's parentID
+ * or add the node instance to the store.
  * @see {@link addNodeToTree}, {@link attachNodeToParent}
  *
- * @param parentNodeInstance - the parent block instance
- * @param childNodeID - the child block ID to add
- * @param targetIndex - the index at which to insert the child ID
+ * @param targetNodeInstance - The parent node instance whose child list will be modified
+ * @param sourceNodeID - The ID of the child node to add to the parent's child list
+ * @param targetIndex - The index at which to insert the child ID in the parent's child list
+ * @returns An OperateResult containing the updated parent node instance with the child added
  */
-export function attachNodeToContentIDs(parentNodeInstance: NodeInstance, childNodeID: NodeID, targetIndex: number): OperateResult<NodeInstance> {
+export function attachNodeIdIntoParent(targetNodeInstance: NodeInstance, sourceNodeID: NodeID, targetIndex: number): OperateResult<NodeInstance> {
 	// Remove any existing occurrence first so insertion will not create duplicates
-	const withoutChild = parentNodeInstance.contentIDs.filter((id) => id !== childNodeID);
+	const withoutChild = targetNodeInstance.childNodeIDs.filter((id) => id !== sourceNodeID);
 
 	// Clamp the target index to valid bounds and insert the child ID
 	const index = Math.max(0, Math.min(targetIndex, withoutChild.length));
 	const newContentIDs = [...withoutChild];
-	newContentIDs.splice(index, 0, childNodeID);
+	newContentIDs.splice(index, 0, sourceNodeID);
 
-	// Return a new NodeInstance with updated contentIDs
-	return { success: true, data: { ...parentNodeInstance, contentIDs: newContentIDs } };
+	// Return a new NodeInstance with updated childNodeIDs
+	return { success: true, data: { ...targetNodeInstance, childNodeIDs: newContentIDs } };
 }
 
 /**
- * Update the parentID of a block instance.
+ * Update the parent ID of a node instance.
  *
- * @param blockInstance - the block instance to update
- * @param parentNodeID - the new parent ID
+ * This operation changes the parentID property of the specified node instance
+ * to point to a new parent. If the new parent ID is the same as the current one,
+ * the operation returns the original instance unchanged.
+ *
+ * @param nodeInstance - The node instance whose parent ID will be updated
+ * @param targetNodeID - The new parent ID to assign to the node
+ * @returns An OperateResult containing the updated node instance with the new parent ID
  */
-export function updateNodeParentID(blockInstance: NodeInstance, parentNodeID: NodeID): OperateResult<NodeInstance> {
+export function updateNodeParentID(sourceInstance: NodeInstance, targetNodeID: NodeID): OperateResult<NodeInstance> {
 	// If the parentID is already the desired value, return success with the original instance
-	if (blockInstance.parentID === parentNodeID) return { success: true, data: blockInstance };
+	if (sourceInstance.parentID === targetNodeID) return { success: true, data: sourceInstance };
 
 	// Return a new instance with the updated parentID
-	return { success: true, data: { ...blockInstance, parentID: parentNodeID } };
+	return { success: true, data: { ...sourceInstance, parentID: targetNodeID } };
 }

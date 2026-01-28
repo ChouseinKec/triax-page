@@ -36,7 +36,7 @@ export function hasForbiddenAncestor(sourceElementDefinition: ElementDefinition,
 	if (!forbiddenAncestors) return { success: true, passed: false };
 
 	// Check if the immediate parent is forbidden
-	if (forbiddenAncestors.includes(targetNodeInstance.tag)) return { success: true, passed: true };
+	if (forbiddenAncestors.includes(targetNodeInstance.elementKey)) return { success: true, passed: true };
 
 	// No forbidden ancestor
 	return { success: true, passed: false };
@@ -63,11 +63,11 @@ export function isExceedingLimit(targetElementDefinition: ElementDefinition, tar
 
 	// Count existing matching child elements, skipping the excludeNodeID if provided
 	let existingCount = 0;
-	for (const contentID of targetNodeInstance.contentIDs) {
+	for (const contentID of targetNodeInstance.childNodeIDs) {
 		if (contentID === excludeNodeID) continue;
 		const siblingNodeInstance = pickNodeInstance(contentID, storedNodes);
 		if (!siblingNodeInstance.success) return { success: false, error: siblingNodeInstance.error };
-		if (siblingNodeInstance.data.tag === sourceElementKey) existingCount++;
+		if (siblingNodeInstance.data.elementKey === sourceElementKey) existingCount++;
 	}
 
 	// If the existing count is already >= limit then adding would exceed
@@ -91,10 +91,10 @@ export function hasUnorderedElement(targetElementDefinition: ElementDefinition, 
 
 	// Collect current sibling tags in order
 	const currentChildTags: ElementKey[] = [];
-	for (const contentID of targetNodeInstance.contentIDs) {
+	for (const contentID of targetNodeInstance.childNodeIDs) {
 		const siblingNodeInstance = pickNodeInstance(contentID, storedNodes);
 		if (!siblingNodeInstance.success) return { success: false, error: siblingNodeInstance.error };
-		currentChildTags.push(siblingNodeInstance.data.tag);
+		currentChildTags.push(siblingNodeInstance.data.elementKey);
 	}
 
 	// Create a projected tags list with the new child inserted at the requested index
@@ -132,10 +132,10 @@ export function hasUnorderedElement(targetElementDefinition: ElementDefinition, 
  * @param targetElementDefinition - The element definition of the target parent.
  * @param sourceElementDefinition - The element definition of the source node.
  * @param storedNodes - The complete record of all node instances in the store.
- * @param targetIndex - The position in the target's contentIDs where the source will be inserted.
+ * @param targetIndex - The position in the target's childNodeIDs where the source will be inserted.
  */
 export function passesAllRules(sourceNodeInstance: NodeInstance, targetNodeInstance: NodeInstance, targetElementDefinition: ElementDefinition, sourceElementDefinition: ElementDefinition, storedNodes: StoredNodes, targetIndex: number): CheckResult {
-	const isChildAllowed = isElementAllowed(targetElementDefinition, sourceNodeInstance.tag);
+	const isChildAllowed = isElementAllowed(targetElementDefinition, sourceNodeInstance.elementKey);
 	if (!isChildAllowed.success) return isChildAllowed;
 	if (!isChildAllowed.passed) return { success: true, passed: false };
 
@@ -143,11 +143,11 @@ export function passesAllRules(sourceNodeInstance: NodeInstance, targetNodeInsta
 	if (!forbiddenAncestor.success) return forbiddenAncestor;
 	if (forbiddenAncestor.passed) return { success: true, passed: false };
 
-	const exceeds = isExceedingLimit(targetElementDefinition, targetNodeInstance, sourceNodeInstance.tag, storedNodes, sourceNodeInstance.id);
+	const exceeds = isExceedingLimit(targetElementDefinition, targetNodeInstance, sourceNodeInstance.elementKey, storedNodes, sourceNodeInstance.id);
 	if (!exceeds.success) return exceeds;
 	if (exceeds.passed) return { success: true, passed: false };
 
-	const violates = hasUnorderedElement(targetElementDefinition, targetNodeInstance, sourceNodeInstance.tag, storedNodes, targetIndex);
+	const violates = hasUnorderedElement(targetElementDefinition, targetNodeInstance, sourceNodeInstance.elementKey, storedNodes, targetIndex);
 	if (!violates.success) return violates;
 	if (violates.passed) return { success: true, passed: false };
 

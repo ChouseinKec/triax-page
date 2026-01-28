@@ -7,10 +7,14 @@ import { validateString, validateObject, validateInteger } from '@/shared/helper
 import { validateNodeKey } from './definition';
 
 /**
- * Validates an action ID for action operations.
- * Checks if the ID is a valid string identifier.
+ * Validates that the provided value is a valid action key.
  *
- * @param actionKey - The action key to validate
+ * An action key must be a non-empty string that uniquely identifies an action
+ * within the system. This validation ensures that only properly formatted
+ * action identifiers are used.
+ *
+ * @param actionKey - The value to validate as an action key
+ * @returns A ValidateResult indicating whether the value is a valid action key
  */
 export function validateActionKey(actionKey: unknown): ValidateResult<ActionKey> {
 	const stringValidation = validateString(actionKey);
@@ -20,10 +24,14 @@ export function validateActionKey(actionKey: unknown): ValidateResult<ActionKey>
 }
 
 /**
- * Validates an action component for action operations.
- * Checks if the component is a valid React component.
+ * Validates that the provided value is a valid action render component.
  *
- * @param actionComponent - The action component to validate
+ * An action render component must be a valid object that can be used to render
+ * the action in the UI. This validation ensures that actions have proper
+ * rendering capabilities.
+ *
+ * @param actionRender - The value to validate as an action render component
+ * @returns A ValidateResult indicating whether the value is a valid action render component
  */
 export function validateActionComponent(actionRender: unknown): ValidateResult<ActionRender> {
 	const objectValidation = validateObject(actionRender);
@@ -33,10 +41,14 @@ export function validateActionComponent(actionRender: unknown): ValidateResult<A
 }
 
 /**
- * Validates an action order for action operations.
- * Checks if the order is a valid integer.
+ * Validates that the provided value is a valid action order.
  *
- * @param actionOrder - The action order to validate
+ * An action order must be an integer that determines the display sequence
+ * of actions in the UI. This validation ensures that ordering values are
+ * properly formatted.
+ *
+ * @param actionOrder - The value to validate as an action order
+ * @returns A ValidateResult indicating whether the value is a valid action order
  */
 export function validateActionOrder(actionOrder: unknown): ValidateResult<ActionOrder> {
 	const integerValidation = validateInteger(actionOrder);
@@ -46,10 +58,14 @@ export function validateActionOrder(actionOrder: unknown): ValidateResult<Action
 }
 
 /**
- * Validates an action title for action operations.
- * Checks if the title is a valid string.
+ * Validates that the provided value is a valid action title.
  *
- * @param actionTitle - The action title to validate
+ * An action title must be a non-empty string that describes the action
+ * for display in the UI. This validation ensures that user-facing text
+ * is properly formatted.
+ *
+ * @param actionTitle - The value to validate as an action title
+ * @returns A ValidateResult indicating whether the value is a valid action title
  */
 export function validateActionTitle(actionTitle: unknown): ValidateResult<ActionTitle> {
 	const stringValidation = validateString(actionTitle);
@@ -59,10 +75,15 @@ export function validateActionTitle(actionTitle: unknown): ValidateResult<Action
 }
 
 /**
- * Validates a complete action definition for action operations.
- * Checks if the definition has all required valid properties including key, title, nodeKey, and component.
+ * Validates that the provided value is a complete and valid action definition.
  *
- * @param action - The action definition to validate
+ * This comprehensive validation checks that the action definition has all required
+ * properties (key, title, nodeKey, component, order) and that each property conforms
+ * to its expected type and validation rules. It ensures that only properly configured
+ * action definitions can be registered in the system.
+ *
+ * @param action - The value to validate as an action definition
+ * @returns A ValidateResult indicating whether the value is a valid action definition
  */
 export function validateActionDefinition(action: unknown): ValidateResult<ActionDefinition> {
 	const objectValidation = validateObject(action, ['key', 'title', 'nodeKey', 'component', 'order']);

@@ -6,7 +6,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useNode, selectNode, getPreviousNode, getNextNode, getSelectedNodeID } from "@/core/block/node/managers";
+import { useNode, setSelectedNodeID, getPreviousNode, getNextNode, getSelectedNodeID } from "@/core/block/node/managers";
 
 // Components
 import Entry from "./entry";
@@ -35,7 +35,7 @@ const BlocksHierarchy: React.FC = () => {
         const nextBlock = getNextNode(currentNodeID);
         if (!nextBlock) return;
 
-        selectNode(nextBlock.id);
+        setSelectedNodeID(nextBlock.id);
     }
 
     // Select previous block on ArrowUp
@@ -48,7 +48,7 @@ const BlocksHierarchy: React.FC = () => {
         const previousBlock = getPreviousNode(currentNodeID);
         if (!previousBlock) return;
 
-        selectNode(previousBlock.id);
+        setSelectedNodeID(previousBlock.id);
     };
 
     // Handle keyboard navigation

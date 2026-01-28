@@ -9,8 +9,8 @@ import type { NodeID } from "@/core/block/node/types/instance";
 import type { DeviceKey, OrientationKey, PseudoKey } from "@/core/layout/page/types";
 
 // Manager
-import { useNode, setNodeTag, useIsNodeSelected } from "@/core/block/node/managers";
-import { getNodeComponent, getNodeIcon, getNodeAvailableTags } from "@/core/block/node/managers";
+import { useNode, setNodeElementKey, useIsNodeSelected } from "@/core/block/node/managers";
+import { getNodeComponent, getNodeIcon, getNodeSupportedElementKeys } from "@/core/block/node/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
@@ -38,18 +38,18 @@ interface BlockProps {
  */
 const Block: React.FC<BlockProps> = ({ NodeID, deviceKey, orientationKey, pseudoKey, isDeviceSelected }) => {
     const instance = useNode(NodeID);
-    const NodeComponent = getNodeComponent(instance?.type || '');
+    const NodeComponent = getNodeComponent(instance?.definitionKey || '');
     const isBlockSelected = useIsNodeSelected(NodeID);
-    const availableTags = getNodeAvailableTags(instance?.type || '');
+    const supportedElementKeys = getNodeSupportedElementKeys(instance?.definitionKey || '');
 
     // Render child blocks recursively
     const children = useMemo(() => {
         if (!instance) return [];
 
-        const contentIDs = instance.contentIDs || [];
-        if (contentIDs.length <= 0) return [];
+        const childNodeIDs = instance.childNodeIDs || [];
+        if (childNodeIDs.length <= 0) return [];
 
-        return contentIDs.map(childID => <Block key={childID} NodeID={childID} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />);
+        return childNodeIDs.map(childID => <Block key={childID} NodeID={childID} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />);
     }, [instance, deviceKey, orientationKey, pseudoKey]
     );
 
@@ -74,11 +74,11 @@ const Block: React.FC<BlockProps> = ({ NodeID, deviceKey, orientationKey, pseudo
     //                 searchable={false}
     //                 groupable={false}
     //                 clearable={false}
-    //                 placeholder={getNodeIcon(instance.type)}
+    //                 placeholder={getNodeIcon(instance.definitionKey)}
     //                 forcePlaceholder={true}
-    //                 options={availableTags ? availableTags.map(tag => ({ name: tag, value: tag })) : []}
+    //                 options={supportedElementKeys ? supportedElementKeys.map(tag => ({ name: tag, value: tag })) : []}
     //                 value={instance.tag}
-    //                 onChange={(value) => setNodeTag(instance.id, value as ElementKey)}
+    //                 onChange={(value) => setNodeElementKey(instance.id, value as ElementKey)}
     //             />
     //         )
     //     });
@@ -101,14 +101,14 @@ const Block: React.FC<BlockProps> = ({ NodeID, deviceKey, orientationKey, pseudo
     //         if (isBarActionRegistered(barID, blockActionDivider)) unregisterBarAction(barID, blockActionDivider);
     //     };
 
-    // }, [NodeID, instance, isBlockSelected, availableTags]
+    // }, [NodeID, instance, isBlockSelected, supportedElementKeys]
     // );
 
     // Early return if block doesn't exist
     if (!instance) return devRender.error(`[BlocksCanvasBlock] Block not found: ${NodeID}`);
 
     // Handle unknown block types gracefully
-    if (!NodeComponent) return devRender.error(`[BlocksCanvasBlock] Unknown block type: ${instance.type}`);
+    if (!NodeComponent) return devRender.error(`[BlocksCanvasBlock] Unknown block type: ${instance.definitionKey}`);
 
     // Render the block using its definition's component function, passing instance data and children
     return <NodeComponent isSelected={isBlockSelected} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} instance={instance}>{children}</NodeComponent>;

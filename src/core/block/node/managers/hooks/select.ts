@@ -5,7 +5,7 @@ import { useBlockStore } from '@/core/block/node/states/store';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { NodeID, NodeInstance } from '@/core/block/node/types/instance';
+import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeKey } from '@/core/block/node/types/definition';
 import type { ElementKey } from '@/core/block/element/types';
 
@@ -13,17 +13,10 @@ import type { ElementKey } from '@/core/block/element/types';
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
 
 /**
- * Reactive hook to get the ID of the currently selected block.
- * @returns The selected block ID or undefined if no block is selected
- */
-export function useSelectedNodeID(): NodeID {
-	return useBlockStore((state) => state.selectedNodeID);
-}
-
-/**
- * Reactive hook to check if a specific block is currently selected.
- * @param nodeID - The block identifier to check
- * @returns True if the block is selected, false otherwise
+ * Reactive hook to check if a specific node is currently selected in the editor.
+ * Provides real-time updates when the selection state changes.
+ * @param nodeID - The unique identifier of the node to check for selection status
+ * @returns True if the specified node is currently selected, false otherwise
  */
 export function useIsNodeSelected(nodeID: NodeID): boolean {
 	// Validate parameters first
@@ -39,10 +32,20 @@ export function useIsNodeSelected(nodeID: NodeID): boolean {
 }
 
 /**
- * Reactive hook to get the type of the currently selected block.
- * @returns The selected block type or undefined if no block is selected
+ * Reactive hook to get the ID of the currently selected node in the editor.
+ * Returns undefined when no node is selected, enabling conditional rendering.
+ * @returns The unique identifier of the currently selected node, or undefined if no selection exists
  */
-export function useSelectedNodeKey(): NodeKey | undefined {
+export function useSelectedNodeID(): NodeID {
+	return useBlockStore((state) => state.selectedNodeID);
+}
+
+/**
+ * Reactive hook to get the definition key (node type) of the currently selected node.
+ * Useful for determining the selected node's capabilities and behavior.
+ * @returns The definition key identifying the type of the selected node, or undefined if no selection exists
+ */
+export function useSelectedDefinitionKey(): NodeKey | undefined {
 	// Return a reactive block type
 	return useBlockStore((state) => {
 		// Get the selected block ID
@@ -53,15 +56,16 @@ export function useSelectedNodeKey(): NodeKey | undefined {
 		if (!selectedBlock.success) return undefined;
 
 		// Return the block type
-		return selectedBlock.data.type;
+		return selectedBlock.data.definitionKey;
 	});
 }
 
 /**
- * Reactive hook to get the tag of the currently selected block.
- * @returns The selected block tag or undefined if no block is selected
+ * Reactive hook to get the element key (HTML tag) of the currently selected node.
+ * Useful for styling and rendering logic based on the selected node's HTML representation.
+ * @returns The element key identifying the HTML tag of the selected node, or undefined if no selection exists
  */
-export function useSelectedNodeTag(): ElementKey | undefined {
+export function useSelectedElementKey(): ElementKey | undefined {
 	return useBlockStore((state) => {
 		// Get the selected block ID
 		const selectedNodeID = state.selectedNodeID;
@@ -72,11 +76,16 @@ export function useSelectedNodeTag(): ElementKey | undefined {
 		if (!selectedBlock.success) return undefined;
 
 		// Return the block tag
-		return selectedBlock.data.tag;
+		return selectedBlock.data.elementKey;
 	});
 }
 
-export function useSelectedNodeParentID(): NodeID | undefined {
+/**
+ * Reactive hook to get the parent node ID of the currently selected node.
+ * Useful for understanding the hierarchical context of the selection.
+ * @returns The unique identifier of the parent node, or undefined if no selection exists or the selected node is a root node
+ */
+export function useSelectedParentID(): NodeID | undefined {
 	return useBlockStore((state) => {
 		// Get the selected block ID
 		const selectedNodeID = state.selectedNodeID;

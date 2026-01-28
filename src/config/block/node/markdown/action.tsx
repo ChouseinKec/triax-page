@@ -7,7 +7,7 @@ import CSS from './styles.module.scss';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Managers
-import { replaceHighlightText, useHighlightText, useSelectedNodeTag } from '@/core/block/node/managers';
+import { convertHighlightToNodes, useHighlightText, useSelectedElementKey } from '@/core/block/node/managers';
 
 // Components
 import ActionGroup from '@/shared/components/group/action/component';
@@ -94,7 +94,7 @@ const createActionButton = (
  */
 const MarkdownActionToolbar: React.FC = () => {
     const highlightedText = useHighlightText();
-    const selectedTag = useSelectedNodeTag();
+    const selectedTag = useSelectedElementKey();
 
     if (!selectedTag) return null;
 
@@ -110,13 +110,13 @@ const MarkdownActionToolbar: React.FC = () => {
                     anchor="top"
                 >
                     {dropdown.actions.map(action =>
-                        createActionButton(action, selectedTag, highlightedText, tag => replaceHighlightText('core-markdown', tag), CSS.Action)
+                        createActionButton(action, selectedTag, highlightedText, tag => convertHighlightToNodes('core-markdown', tag), CSS.Action)
                     )}
                 </DropdownReveal>
             ))}
 
             {buttonActions.map(action =>
-                createActionButton(action, selectedTag, highlightedText, tag => replaceHighlightText('core-markdown', tag))
+                createActionButton(action, selectedTag, highlightedText, tag => convertHighlightToNodes('core-markdown', tag))
             )}
         </ActionGroup>
     );

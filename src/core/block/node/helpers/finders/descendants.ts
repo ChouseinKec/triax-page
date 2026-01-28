@@ -7,11 +7,11 @@ import { pickNodeInstances } from '@/core/block/node/helpers/pickers';
 import { findNodeLastChild } from '@/core/block/node/helpers/finders/child';
 
 /**
- * Find the last descendant of a block following the last-child chain.
- *
- * @param sourceNodeInstance - block instance to start from
- * @param storedNodes - record used to resolve child instances
- * @returns FindResult<NodeInstance> — the last descendant instance (always found)
+ * Finds the deepest last descendant by following the last-child chain from a starting node.
+ * Useful for finding terminal nodes, calculating tree depth, and hierarchical traversals.
+ * @param sourceNodeInstance - The node instance to start the descent from
+ * @param storedNodes - The complete record of all node instances for resolving descendant relationships
+ * @returns FindResult containing the last descendant node instance (always returns found unless error)
  */
 export function findNodeLastDescendant(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// Start at the source and walk the last-child links
@@ -36,14 +36,16 @@ export function findNodeLastDescendant(sourceNodeInstance: NodeInstance, storedN
 }
 
 /**
- * Collect all descendant block IDs of the given block in depth-first order.
- *
- * @param sourceNodeInstance - the root block instance whose descendants we want
- * @param storedNodes - record of all block instances used to resolve children
+ * Collects all descendant node instances of a given root node in depth-first order.
+ * Performs a complete tree traversal to gather all nodes in the subtree.
+ * Useful for bulk operations, tree analysis, and hierarchical data processing.
+ * @param sourceNodeInstance - The root node instance whose complete descendant tree should be collected
+ * @param storedNodes - The complete record of all node instances for resolving descendant relationships
+ * @returns FindResult containing an array of all descendant node instances in depth-first order
  */
 export function findNodeDescendants(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance[]> {
 	// Fetch initial children
-	const initialChildren = pickNodeInstances(sourceNodeInstance.contentIDs, storedNodes);
+	const initialChildren = pickNodeInstances(sourceNodeInstance.childNodeIDs, storedNodes);
 	if (!initialChildren.success) return { status: 'error', error: `Failed to find descendants: ${initialChildren.error}` };
 
 	// If there are no direct children, we don't have descendants
@@ -59,7 +61,7 @@ export function findNodeDescendants(sourceNodeInstance: NodeInstance, storedNode
 		descendants.push(current);
 
 		// Fetch children of the current node
-		const childrenResult = pickNodeInstances(current.contentIDs, storedNodes);
+		const childrenResult = pickNodeInstances(current.childNodeIDs, storedNodes);
 		if (!childrenResult.success) return { status: 'error', error: `Failed to find descendants: ${childrenResult.error}` };
 
 		// Add unvisited children to the stack for processing

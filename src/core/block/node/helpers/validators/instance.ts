@@ -9,9 +9,14 @@ import { validateNodeAttributes } from '@/core/block/attribute/helpers/';
 import { validateNodeKey } from '@/core/block/node/helpers/validators/definition';
 
 /**
- * Checks if the ID is a valid non-empty string identifier.
+ * Validates that the provided value is a valid node ID.
  *
- * @param nodeID - The block ID to validate
+ * A valid node ID must be a non-empty string that serves as a unique identifier
+ * for node instances within the system. This validation ensures type safety
+ * and prevents invalid identifiers from being used.
+ *
+ * @param nodeID - The value to validate as a node ID
+ * @returns A ValidateResult indicating whether the value is a valid node ID
  */
 export function validateNodeID(nodeID: unknown): ValidateResult<NodeID> {
 	const validation = validateString(nodeID);
@@ -21,16 +26,22 @@ export function validateNodeID(nodeID: unknown): ValidateResult<NodeID> {
 }
 
 /**
- * Checks if the instance has required properties (id, type, parentID, contentIDs, attributes, styles)
- * and that each property is valid.
+ * Validates that the provided value is a complete and valid node instance.
  *
- * @param nodeInstance - The block instance to validate
+ * This comprehensive validation checks that the node instance has all required
+ * properties (id, definitionKey, parentID, childNodeIDs, attributes, styles, data)
+ * and that each property conforms to its expected type and constraints. It also
+ * validates nested properties like attributes and styles using their respective
+ * validators.
+ *
+ * @param nodeInstance - The value to validate as a node instance
+ * @returns A ValidateResult indicating whether the value is a valid node instance
  */
 export function validateNodeInstance(nodeInstance: unknown): ValidateResult<NodeInstance> {
-	const validation = validateObject(nodeInstance, ['id', 'type', 'parentID', 'contentIDs', 'attributes', 'styles']);
+	const validation = validateObject(nodeInstance, ['id', 'type', 'parentID', 'childNodeIDs', 'attributes', 'styles']);
 	if (!validation.valid) return { valid: false, message: `Invalid block instance: ${validation.message}` };
 
-	const typeValidation = validateNodeKey(validation.value.type);
+	const typeValidation = validateNodeKey(validation.value.definitionKey);
 	if (!typeValidation.valid) return { valid: false, message: typeValidation.message };
 
 	const attributesValidation = validateNodeAttributes(validation.value.attributes);

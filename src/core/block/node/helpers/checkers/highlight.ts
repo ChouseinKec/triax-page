@@ -1,6 +1,6 @@
 // Types
 import type { CheckResult } from '@/shared/types/result';
-import type { NodeContent, HighlightedNode } from '@/core/block/node/types/';
+import type { NodeData, HighlightedNode } from '@/core/block/node/types/';
 
 /**
  * Checks whether the highlightedNode's text matches the substring in nodeContent.text defined by its startOffset and endOffset.
@@ -9,7 +9,7 @@ import type { NodeContent, HighlightedNode } from '@/core/block/node/types/';
  * @param highlightedNode - The highlighted node data with text and offsets.
  * @returns CheckResult indicating if the highlight is valid.
  */
-export function includesHighlightText(nodeContent: NodeContent, highlightedNode: HighlightedNode): CheckResult {
+export function includesHighlightText(nodeContent: NodeData, highlightedNode: HighlightedNode): CheckResult {
 	// Return false if no highlightedNode data is provided
 	if (!highlightedNode) return { success: false, error: 'No highlighted node data provided.' };
 

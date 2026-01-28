@@ -3,10 +3,10 @@ import { useBlockStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
-import type { NodeContent } from '@/core/block/node/types/definition';
+import type { NodeData } from '@/core/block/node/types/definition';
 
 // Helpers
-import { pickNodeContent } from '@/core/block/node/helpers/pickers';
+import { pickNodeData } from '@/core/block/node/helpers/pickers';
 import { validateNodeID } from '@/core/block/node/helpers/validators';
 
 // Utilities
@@ -18,18 +18,18 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  *
  * @param nodeID - The block identifier
  */
-export function getNodeContent(nodeID: NodeID): NodeContent | undefined {
+export function getNodeData(nodeID: NodeID): NodeData | undefined {
 	// Validate and pick the block content
-	const results = new ResultPipeline('[BlockQueries → getNodeContent]')
+	const validData = new ResultPipeline('[BlockQueries → getNodeData]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			content: pickNodeContent(data.nodeID, useBlockStore.getState().storedNodes),
+			data: pickNodeData(data.nodeID, useBlockStore.getState().storedNodes),
 		}))
 		.execute();
-	if (!results) return undefined;
+	if (!validData) return undefined;
 
 	// Return the block content
-	return results.content;
+	return validData.data;
 }

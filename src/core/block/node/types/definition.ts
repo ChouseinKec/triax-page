@@ -55,10 +55,10 @@ export type NodeStyles = {
 export type NodeAttributes = Partial<Record<AttributeKey, string>>;
 
 /**
- * Generic content data for blocks - flexible structure for plugin developers
+ * Generic data for blocks - flexible structure for plugin developers
  * Can contain any data structure needed by different block types
  */
-export type NodeContent = Record<string, any>;
+export type NodeData = Record<string, any>;
 
 /**
  * Children blocks (React nodes)
@@ -98,16 +98,16 @@ export interface NodeDefinition {
 	/** Icon representation for the block */
 	icon: NodeIcon;
 
-	/** All allowed HTML tags for this block type */
-	availableTags: ElementKey[];
+	/** All supported HTML element keys for this block type */
+	supportedElementKeys: ElementKey[];
 
 	/** Default styles for the block */
 	defaultStyles: NodeStyles;
 	/** Default attributes for the block */
 	defaultAttributes: NodeAttributes;
 
-	/** Default content data for the block */
-	defaultContent: NodeContent;
+	/** Default data for the block */
+	defaultData: NodeData;
 
 	/** Render function that returns JSX for the block */
 	component: NodeComponent;

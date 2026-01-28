@@ -2,9 +2,9 @@
 import React, { useMemo, useCallback } from "react";
 
 // Managers
-import { useSelectedNodeID, useSelectedNodeKey, useSelectedNodeTag, useSelectedNodeParentID, canNodeAcceptElement } from "@/core/block/node/managers";
-import { getNodeAvailableTags } from "@/core/block/node/managers/queries/node";
-import { setNodeTag } from "@/core/block/node/managers/commands/tag";
+import { useSelectedNodeID, useSelectedDefinitionKey, useSelectedElementKey, useSelectedParentID, canNodeAcceptElement } from "@/core/block/node/managers";
+import { getNodeSupportedElementKeys } from "@/core/block/node/managers/queries/node";
+import { setNodeElementKey } from "@/core/block/node/managers/commands/node";
 import { getElementDefinitions } from "@/core/block/element/managers/queries/element";
 
 // Components
@@ -23,9 +23,9 @@ const icon = (
  * The available tags are filtered based on the selected node's type and its parent's acceptance rules.
  *
  * Features:
- * - Dynamically generates options from the node's availableTags
+ * - Dynamically generates options from the node's supportedElementKeys
  * - Filters options to ensure only valid child tags for the parent node
- * - Updates the node's tag via the setNodeTag command
+ * - Updates the node's tag via the setNodeElementKey command
  * - Hides when no valid options or no selection exists
  *
  * @returns The dropdown component or null if no options available
@@ -33,38 +33,38 @@ const icon = (
 const TagSelect: React.FC = () => {
     // Retrieve selected node data using selective hooks for granular re-rendering
     const selectedNodeID = useSelectedNodeID();
-    const selectedNodeKey = useSelectedNodeKey();
-    const selectedNodeTag = useSelectedNodeTag();
-    const selectedNodeParentID = useSelectedNodeParentID();
+    const selectedNodeKey = useSelectedDefinitionKey();
+    const selectedNodeTag = useSelectedElementKey();
+    const selectedNodeParentID = useSelectedParentID();
 
     // Compute available tags for the selected node, filtered by parent acceptance
-    const availableTags = useMemo(() => {
+    const supportedElementKeys = useMemo(() => {
         // Early return if required data is missing
         if (!selectedNodeKey || !selectedNodeParentID) return [];
 
         // Get tags available for this node type
-        const availableTags = getNodeAvailableTags(selectedNodeKey);
-        if (!availableTags) return [];
+        const supportedElementKeys = getNodeSupportedElementKeys(selectedNodeKey);
+        if (!supportedElementKeys) return [];
 
         // Filter to only include tags that the parent node can accept as children
-        return availableTags.filter(tag => canNodeAcceptElement(selectedNodeParentID, tag));
+        return supportedElementKeys.filter(tag => canNodeAcceptElement(selectedNodeParentID, tag));
     }, [selectedNodeKey, selectedNodeParentID]
     );
 
     // Transform available tags into dropdown options, ensuring elements exist
     const options = useMemo(() => {
         const elements = getElementDefinitions();
-        return availableTags
+        return supportedElementKeys
             .filter(tag => elements[tag]) // Filter out non-existent elements first
             .map(tag => ({
                 name: tag,
                 value: tag,
             }));
-    }, [availableTags]);
+    }, [supportedElementKeys]);
 
     // Handle tag change by updating the node's tag in the store
     const handleChange = useCallback((value: string) => {
-        setNodeTag(selectedNodeID, value);
+        setNodeElementKey(selectedNodeID, value);
     }, [selectedNodeID]
     );
 

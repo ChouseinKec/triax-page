@@ -10,7 +10,7 @@ import type { NodeKey } from '@/core/block/node/types/definition';
 import { pickNodeInstance, pickNodeDefinition } from '@/core/block/node/helpers/pickers';
 import { validateNodeID } from '@/core/block/node/helpers/validators';
 import { validateNodeKey } from '@/core/block/node/helpers/validators';
-import { validateBlockTag } from '@/core/block/node/helpers/validators';
+import { validateNodeElementKey } from '@/core/block/node/helpers/validators';
 import { pickElementDefinition } from '@/core/block/element/helpers';
 import { passesAllRules } from '@/core/block/node/helpers/checkers';
 
@@ -33,15 +33,15 @@ export function canNodeAcceptElement(targetNodeID: NodeID, sourceElementKey: Ele
 	const results = new ResultPipeline('[BlockQueries → canNodeAcceptElement]')
 		.validate({
 			targetNodeID: validateNodeID(targetNodeID),
-			sourceElementKey: validateBlockTag(sourceElementKey),
+			sourceElementKey: validateNodeElementKey(sourceElementKey),
 		})
 		.pick((data) => ({
 			targetNodeInstance: pickNodeInstance(data.targetNodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			targetNodeDefinition: pickNodeDefinition(data.targetNodeInstance.type, getRegisteredNodes()),
+			targetNodeDefinition: pickNodeDefinition(data.targetNodeInstance.definitionKey, getRegisteredNodes()),
 			sourceElementDefinition: pickElementDefinition(data.sourceElementKey, getRegisteredElements()),
-			targetElementDefinition: pickElementDefinition(data.targetNodeInstance.tag, getRegisteredElements()),
+			targetElementDefinition: pickElementDefinition(data.targetNodeInstance.elementKey, getRegisteredElements()),
 		}))
 		.check((data) => {
 			return {
@@ -49,18 +49,18 @@ export function canNodeAcceptElement(targetNodeID: NodeID, sourceElementKey: Ele
 					{
 						id: 'test',
 						parentID: targetNodeID,
-						type: 'test',
-						tag: data.sourceElementKey,
-						contentIDs: [],
+						definitionKey: 'test',
+						elementKey: data.sourceElementKey,
+						childNodeIDs: [],
 						styles: {},
 						attributes: {},
-						content: {},
+						data: {},
 					}, //
 					data.targetNodeInstance,
 					data.targetElementDefinition,
 					data.sourceElementDefinition,
 					blockStore.storedNodes,
-					data.targetNodeInstance.contentIDs.length,
+					data.targetNodeInstance.childNodeIDs.length,
 				),
 			};
 		})
@@ -76,7 +76,7 @@ export function canNodeAcceptElement(targetNodeID: NodeID, sourceElementKey: Ele
  * Determines whether a target node can accept at least one of the available tag variants of a source node.
  * Checks all possible tags that a source node type can render as to find a compatible match.
  * @param targetNodeID - The ID of the target (parent) node that would contain the child
- * @param sourceNodeKey - The node type key of the source (child), which may have multiple possible tags (availableTags)
+ * @param sourceNodeKey - The node type key of the source (child), which may have multiple possible tags (supportedElementKeys)
  * @returns True if any of the source node's available tags are acceptable by the target, false otherwise
  */
 export function doesNodeSupportElement(targetNodeID: NodeID, sourceNodeKey: NodeKey): boolean {
@@ -92,15 +92,15 @@ export function doesNodeSupportElement(targetNodeID: NodeID, sourceNodeKey: Node
 	if (!results) return false;
 
 	// Check if any of the child's available tags can be accepted
-	return results.sourceElementDefinition.availableTags.some((tag) => canNodeAcceptElement(targetNodeID, tag));
+	return results.sourceElementDefinition.supportedElementKeys.some((tag) => canNodeAcceptElement(targetNodeID, tag));
 }
 
 /**
  * Finds the first compatible tag from a source node's available tag variants that the target node can accept.
  * Iterates through the source node's possible tags and returns the first one that passes target validation rules.
  * @param targetNodeID - The ID of the target (parent) node that would contain the child
- * @param sourceNodeKey - The node type key of the source (child), whose availableTags will be searched for compatibility
- * @returns The first acceptable element tag key from the source node's availableTags, or undefined if none are compatible
+ * @param sourceNodeKey - The node type key of the source (child), whose supportedElementKeys will be searched for compatibility
+ * @returns The first acceptable element tag key from the source node's supportedElementKeys, or undefined if none are compatible
  */
 export function findFirstSupportedElement(targetNodeID: NodeID, sourceNodeKey: NodeKey): ElementKey | undefined {
 	const results = new ResultPipeline('[BlockQueries → findFirstSupportedElement]')
@@ -115,5 +115,5 @@ export function findFirstSupportedElement(targetNodeID: NodeID, sourceNodeKey: N
 	if (!results) return undefined;
 
 	// Find the first tag that can be accepted
-	return results.sourceElementDefinition.availableTags.find((tag) => canNodeAcceptElement(targetNodeID, tag));
+	return results.sourceElementDefinition.supportedElementKeys.find((tag) => canNodeAcceptElement(targetNodeID, tag));
 }

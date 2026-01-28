@@ -6,10 +6,11 @@ import type { CheckResult } from '@/shared/types/result';
 import { findNodeChildIndex } from '@/core/block/node/helpers/finders';
 
 /**
- * Check whether `sourceNodeInstance` is a direct child of
- * `parentNodeInstance`.
- * @param sourceNodeInstance - block to check
- * @param parentNodeInstance - parent to check against
+ * Validates whether a source node is a direct child of a target parent node.
+ * Performs hierarchical relationship checking to determine parent-child connectivity.
+ * @param sourceNodeInstance - The node instance to check as a potential child
+ * @param parentNodeInstance - The node instance to check as a potential parent
+ * @returns CheckResult indicating success/failure and whether the relationship exists
  */
 export function isNodeChild(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): CheckResult {
 	// Find the child index to determine if it's a child
@@ -22,9 +23,11 @@ export function isNodeChild(sourceNodeInstance: NodeInstance, parentNodeInstance
 }
 
 /**
- * Determine whether a given block is the last child of a provided parent.
- * @param sourceNodeInstance - block to check
- * @param parentNodeInstance - parent to check against
+ * Determines whether a source node is the last child in its parent's child list.
+ * Useful for layout logic, styling decisions, and hierarchical operations.
+ * @param sourceNodeInstance - The node instance to check for last-child position
+ * @param parentNodeInstance - The parent node instance containing the child list to check against
+ * @returns CheckResult indicating success/failure and whether the node is the last child
  */
 export function isNodeLastChild(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): CheckResult {
 	// Find the child's index inside the parent
@@ -33,13 +36,15 @@ export function isNodeLastChild(sourceNodeInstance: NodeInstance, parentNodeInst
 	if (childIndex.status === 'not-found') return { success: true, passed: false };
 
 	// Compare index with parent's length to determine last-child status.
-	return { success: true, passed: childIndex.data === parentNodeInstance.contentIDs.length - 1 };
+	return { success: true, passed: childIndex.data === parentNodeInstance.childNodeIDs.length - 1 };
 }
 
 /**
- * Determine whether a given block is the first child of a provided parent.
- * @param sourceNodeInstance - block to check
- * @param parentNodeInstance - parent to check against
+ * Determines whether a source node is the first child in its parent's child list.
+ * Useful for layout logic, styling decisions, and hierarchical operations.
+ * @param sourceNodeInstance - The node instance to check for first-child position
+ * @param parentNodeInstance - The parent node instance containing the child list to check against
+ * @returns CheckResult indicating success/failure and whether the node is the first child
  */
 export function isNodeFirstChild(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): CheckResult {
 	// Find the child's index inside the parent

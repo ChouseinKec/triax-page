@@ -2,11 +2,7 @@
 import { useBlockStore } from '@/core/block/node/states/store';
 
 // Helpers
-import { validateNodeID } from '@/core/block/node/helpers/validators';
-import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
-import { findNodeMoveBeforeIndex, findNodeMoveAfterIndex, findNodeMoveIntoIndex } from '@/core/block/node/helpers/finders';
-import { moveNode } from '@/core/block/node/helpers/operations';
-import { passesAllRules } from '@/core/block/node/helpers/checkers';
+import { passesAllRules, moveNode, validateNodeID, pickNodeInstance, findNodeMoveBeforeIndex, findNodeMoveAfterIndex, findNodeMoveIntoIndex } from '@/core/block/node/helpers';
 import { pickElementDefinition } from '@/core/block/element/helpers/';
 
 // Types
@@ -20,11 +16,19 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 import { getRegisteredElements } from '@/core/block/element/states/registry';
 
 /**
- * Moves a block to be positioned after a target block in block CRUD operations.
- * Updates the parent's contentIDs array to reflect the new order.
+ * Moves a block to be positioned immediately after a target block as a sibling.
  *
- * @param sourceNodeID - The block ID to move
- * @param targetNodeID - The target block ID to position after
+ * This operation relocates the source block to appear directly after the target block
+ * within the same parent container. The source block and its entire subtree are moved
+ * as a unit, maintaining their hierarchical relationships. Element compatibility rules
+ * are enforced to ensure the move is valid within the content structure constraints.
+ *
+ * @param sourceNodeID - The unique identifier of the block instance to move
+ * @param targetNodeID - The unique identifier of the target block to position after
+ * @returns void - This function does not return a value but updates the block store state
+ * @see {@link moveNodeBefore} - For positioning before a target block
+ * @see {@link moveNodeInto} - For moving a block as a child of another block
+ * @see {@link passesAllRules} - The validation function that checks element compatibility
  */
 export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 	// Validate, pick, and operate on necessary data
@@ -41,8 +45,8 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
 			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			parentElementDefinition: pickElementDefinition(data.targetParentBlock.tag, getRegisteredElements()),
-			childElementDefinition: pickElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
+			parentElementDefinition: pickElementDefinition(data.targetParentBlock.elementKey, getRegisteredElements()),
+			childElementDefinition: pickElementDefinition(data.sourceBlock.elementKey, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;
@@ -67,11 +71,19 @@ export function moveNodeAfter(sourceNodeID: NodeID, targetNodeID: NodeID): void 
 }
 
 /**
- * Moves a block to be positioned before a target block in block CRUD operations.
- * Updates the parent's contentIDs array to reflect the new order.
+ * Moves a block to be positioned immediately before a target block as a sibling.
  *
- * @param sourceNodeID - The block ID to move
- * @param targetNodeID - The target block ID to position before
+ * This operation relocates the source block to appear directly before the target block
+ * within the same parent container. The source block and its entire subtree are moved
+ * as a unit, maintaining their hierarchical relationships. Element compatibility rules
+ * are enforced to ensure the move is valid within the content structure constraints.
+ *
+ * @param sourceNodeID - The unique identifier of the block instance to move
+ * @param targetNodeID - The unique identifier of the target block to position before
+ * @returns void - This function does not return a value but updates the block store state
+ * @see {@link moveNodeAfter} - For positioning after a target block
+ * @see {@link moveNodeInto} - For moving a block as a child of another block
+ * @see {@link passesAllRules} - The validation function that checks element compatibility
  */
 export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 	// Validate, pick, and operate on necessary data
@@ -88,8 +100,8 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
 			targetParentBlock: pickNodeInstance(data.targetBlock.parentID!, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			parentElementDefinition: pickElementDefinition(data.targetParentBlock.tag, getRegisteredElements()),
-			childElementDefinition: pickElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
+			parentElementDefinition: pickElementDefinition(data.targetParentBlock.elementKey, getRegisteredElements()),
+			childElementDefinition: pickElementDefinition(data.sourceBlock.elementKey, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;
@@ -114,11 +126,19 @@ export function moveNodeBefore(sourceNodeID: NodeID, targetNodeID: NodeID): void
 }
 
 /**
- * Moves a block to be positioned as the last child of a target block in block CRUD operations.
- * Updates the target's contentIDs array to include the moved block at the end.
+ * Moves a block to become the last child of a target block.
  *
- * @param sourceNodeID - The block ID to move
- * @param targetNodeID - The target block ID to move into as the last child
+ * This operation relocates the source block to be appended as the final child of the
+ * target block. The source block and its entire subtree are moved as a unit, becoming
+ * part of the target's hierarchy. Element compatibility rules are enforced to ensure
+ * the source block is permitted as a child of the target block type.
+ *
+ * @param sourceNodeID - The unique identifier of the block instance to move
+ * @param targetNodeID - The unique identifier of the target block to move into as a child
+ * @returns void - This function does not return a value but updates the block store state
+ * @see {@link moveNodeAfter} - For positioning as a sibling after another block
+ * @see {@link moveNodeBefore} - For positioning as a sibling before another block
+ * @see {@link passesAllRules} - The validation function that checks parent-child compatibility
  */
 export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 	// Validate, pick, and operate on necessary data
@@ -132,8 +152,8 @@ export function moveNodeInto(sourceNodeID: NodeID, targetNodeID: NodeID): void {
 			targetBlock: pickNodeInstance(data.targetNodeID, useBlockStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
-			parentElementDefinition: pickElementDefinition(data.targetBlock.tag, getRegisteredElements()),
-			childElementDefinition: pickElementDefinition(data.sourceBlock.tag, getRegisteredElements()),
+			parentElementDefinition: pickElementDefinition(data.targetBlock.elementKey, getRegisteredElements()),
+			childElementDefinition: pickElementDefinition(data.sourceBlock.elementKey, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return;

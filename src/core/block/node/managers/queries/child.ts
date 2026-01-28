@@ -30,7 +30,7 @@ export function canNodeHaveChildren(nodeID: NodeID): boolean {
 			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
 		}))
 		.pick((data) => ({
-			elementDefinition: pickElementDefinition(data.blockInstance.tag, getRegisteredElements()),
+			elementDefinition: pickElementDefinition(data.blockInstance.elementKey, getRegisteredElements()),
 		}))
 		.execute();
 	if (!results) return false;

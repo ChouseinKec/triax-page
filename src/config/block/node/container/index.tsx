@@ -15,11 +15,11 @@ registerNode({
 		</svg>
 	),
 
-	availableTags: ['div', 'section', 'article', 'aside', 'nav'],
+	supportedElementKeys: ['div', 'section', 'article', 'aside', 'nav'],
 
 	defaultStyles: {},
 	defaultAttributes: {},
-	defaultContent: {},
+	defaultData: {},
 
 	component: BlockContainerComponent,
 });

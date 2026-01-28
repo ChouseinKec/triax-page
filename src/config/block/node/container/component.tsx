@@ -5,7 +5,7 @@ import React, { useCallback, useRef, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { selectNode, getNodeRenderedAttributes } from '@/core/block/node/managers';
+import { setSelectedNodeID, getNodeRenderedAttributes } from '@/core/block/node/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
 
 
@@ -28,7 +28,7 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        selectNode(NodeID);
+        setSelectedNodeID(NodeID);
     }, [NodeID]
     );
 

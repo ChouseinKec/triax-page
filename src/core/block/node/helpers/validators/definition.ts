@@ -7,9 +7,14 @@ import type { ValidateResult } from '@/shared/types/result';
 import { validateString, validateArray, validateObject, validateElement } from '@/shared/helpers';
 
 /**
- * Checks if the type is a valid non-empty string representing a registered block type.
+ * Validates that the provided value is a valid node key.
  *
- * @param nodeKey - The block type to validate
+ * A node key must be a non-empty string that uniquely identifies a node type
+ * within the system. This validation ensures that only registered node types
+ * can be referenced.
+ *
+ * @param nodeKey - The value to validate as a node key
+ * @returns A ValidateResult indicating whether the value is a valid node key
  */
 export function validateNodeKey(nodeKey: unknown): ValidateResult<NodeKey> {
 	const validation = validateString(nodeKey);
@@ -19,12 +24,18 @@ export function validateNodeKey(nodeKey: unknown): ValidateResult<NodeKey> {
 }
 
 /**
- * Checks if the tag is a valid HTML element tag from the predefined element definitions.
+ * Validates that the provided value is a valid element key for a node.
  *
- * @param blockTag - The block tag to validate
- * @param availableTags - Optional array of available tags to check against
+ * This function checks that the element key is a valid HTML element identifier
+ * and optionally verifies that it is included in a list of supported element keys
+ * for a specific node type. This ensures that only appropriate HTML elements
+ * are used for rendering nodes.
+ *
+ * @param blockTag - The value to validate as an element key
+ * @param supportedElementKeys - Optional array of element keys that are allowed for this context
+ * @returns A ValidateResult indicating whether the value is a valid element key
  */
-export function validateBlockTag(blockTag: unknown, availableTags?: ElementKey[]): ValidateResult<ElementKey> {
+export function validateNodeElementKey(blockTag: unknown, supportedElementKeys?: ElementKey[]): ValidateResult<ElementKey> {
 	const validation = validateString(blockTag);
 	if (!validation.valid) return validation;
 
@@ -32,35 +43,45 @@ export function validateBlockTag(blockTag: unknown, availableTags?: ElementKey[]
 	// 	return { valid: false, message: `Invalid block tag: expected a valid HTML element tag, got "${validation.value}"` };
 	// }
 
-	// If availableTags is provided, check that blockTag is included
-	if (availableTags && !availableTags.includes(validation.value as ElementKey)) {
-		return { valid: false, message: `Invalid block tag: '${validation.value}' is not in availableTags [${availableTags.join(', ')}]` };
+	// If supportedElementKeys is provided, check that blockTag is included
+	if (supportedElementKeys && !supportedElementKeys.includes(validation.value as ElementKey)) {
+		return { valid: false, message: `Invalid block tag: '${validation.value}' is not in supportedElementKeys [${supportedElementKeys.join(', ')}]` };
 	}
 
 	return { valid: true, value: validation.value as ElementKey };
 }
 
 /**
- * Checks if all availableTags in the array are valid HTML element availableTags.
+ * Validates that the provided value is an array of valid element keys.
  *
- * @param blockAllowedTags - The array of block availableTags to validate
+ * This function ensures that all elements in the array are valid HTML element
+ * identifiers, which is used to define the set of supported element keys for
+ * a node definition.
+ *
+ * @param blockTags - The value to validate as an array of element keys
+ * @returns A ValidateResult indicating whether the value is a valid array of element keys
  */
 export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<ElementKey[]> {
 	const validation = validateArray(blockTags);
 	if (!validation.valid) return validation;
 
 	for (const tag of validation.value) {
-		const tagValidation = validateBlockTag(tag);
-		if (!tagValidation.valid) return { valid: false, message: `Invalid block availableTags: '${tag}' is not a valid HTML element tag` };
+		const tagValidation = validateNodeElementKey(tag);
+		if (!tagValidation.valid) return { valid: false, message: `Invalid block supportedElementKeys: '${tag}' is not a valid HTML element tag` };
 	}
 
 	return { valid: true, value: validation.value as ElementKey[] };
 }
 
 /**
- * Checks if the component configuration is a valid function that can component the block.
- * @param nodeComponent - The block component configuration to validate
- * @returns ValidateResult containing validity and the validated NodeComponent function if valid
+ * Validates that the provided value is a valid node component function.
+ *
+ * A node component must be a function that can render the node in the UI.
+ * This validation ensures that the component is properly defined and can be
+ * used for rendering purposes.
+ *
+ * @param nodeComponent - The value to validate as a node component
+ * @returns A ValidateResult indicating whether the value is a valid node component
  */
 export function validateNodeComponent(nodeComponent: unknown): ValidateResult<NodeComponent> {
 	const objectValidation = validateObject(nodeComponent);
@@ -70,9 +91,13 @@ export function validateNodeComponent(nodeComponent: unknown): ValidateResult<No
 }
 
 /**
- * Checks if the category is a valid non-empty string representing a block category.
+ * Validates that the provided value is a valid node category.
  *
- * @param nodeCategory - The block category to validate
+ * A node category must be a non-empty string that groups related node types
+ * together for organizational purposes in the UI.
+ *
+ * @param nodeCategory - The value to validate as a node category
+ * @returns A ValidateResult indicating whether the value is a valid node category
  */
 export function validateNodeCategory(nodeCategory: unknown): ValidateResult<NodeCategory> {
 	const validation = validateString(nodeCategory);
@@ -82,9 +107,13 @@ export function validateNodeCategory(nodeCategory: unknown): ValidateResult<Node
 }
 
 /**
- * Checks if the icon is a valid React component.
+ * Validates that the provided value is a valid node icon component.
  *
- * @param nodeIcon - The block icon React component to validate
+ * A node icon must be a valid React element that can be rendered as an icon
+ * in the UI, typically used to represent the node type visually.
+ *
+ * @param nodeIcon - The value to validate as a node icon
+ * @returns A ValidateResult indicating whether the value is a valid node icon
  */
 export function validateNodeIcon(nodeIcon: unknown): ValidateResult<NodeIcon> {
 	const componentValidation = validateElement(nodeIcon);
@@ -94,19 +123,24 @@ export function validateNodeIcon(nodeIcon: unknown): ValidateResult<NodeIcon> {
 }
 
 /**
- * Checks if the definition has all required properties (type, availableTags, component, allowedChildren, icon, category)
- * and that each property is valid according to its respective validation rules.
+ * Validates that the provided value is a complete and valid node definition.
  *
- * @param nodeDefinition - The block definition object to validate
+ * This comprehensive validation checks that the node definition has all required
+ * properties (key, icon, category, component, supportedElementKeys) and that each
+ * property conforms to its expected type and validation rules. It ensures that
+ * only properly configured node definitions can be registered in the system.
+ *
+ * @param nodeDefinition - The value to validate as a node definition
+ * @returns A ValidateResult indicating whether the value is a valid node definition
  */
 export function validateNodeDefinition(nodeDefinition: unknown): ValidateResult<NodeDefinition> {
-	const validation = validateObject(nodeDefinition, ['key', 'icon', 'category', 'component', 'availableTags']);
+	const validation = validateObject(nodeDefinition, ['key', 'icon', 'category', 'component', 'supportedElementKeys']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const keyValidation = validateNodeKey(validation.value.key);
 	if (!keyValidation.valid) return { valid: false, message: keyValidation.message };
 
-	const allowedTagsValidation = validateBlockAvailableTags(validation.value.availableTags);
+	const allowedTagsValidation = validateBlockAvailableTags(validation.value.supportedElementKeys);
 	if (!allowedTagsValidation.valid) return { valid: false, message: allowedTagsValidation.message };
 
 	const renderValidation = validateNodeComponent(validation.value.component);

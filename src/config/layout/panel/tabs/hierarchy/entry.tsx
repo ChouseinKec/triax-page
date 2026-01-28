@@ -6,7 +6,7 @@ import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useNode, selectNode, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/managers";
+import { useNode, setSelectedNodeID, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/managers";
 import { getNodeIcon } from "@/core/block/node/managers";
 import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/managers";
 import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/managers";
@@ -42,14 +42,14 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
 
     // Get block instance
     const block = useNode(NodeID);
-    const NodeKey = block?.type;
-    const NodeContentIDs = block?.contentIDs || [];
-    const blockTag = block?.tag;
+    const NodeKey = block?.definitionKey;
+    const NodeDataIDs = block?.childNodeIDs || [];
+    const blockTag = block?.elementKey;
 
     const isBlockSelected = useIsNodeSelected(NodeID);
     const NodeIcon = NodeKey ? getNodeIcon(NodeKey) : null;
     const canHaveChildren = canNodeHaveChildren(NodeID);
-    const hasChildren = NodeContentIDs.length > 0;
+    const hasChildren = NodeDataIDs.length > 0;
 
     // Drag and drop hook
     const {
@@ -64,13 +64,13 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
         moveNodeBefore,
         moveNodeAfter,
         moveNodeInto,
-        selectNode
+        setSelectedNodeID
     );
 
     // Handle block selection
     const handleLeftClick = useCallback(() => {
         if (isBlockSelected) return;
-        selectNode(NodeID);
+        setSelectedNodeID(NodeID);
     }, [isBlockSelected, NodeID]
     )
 
@@ -123,7 +123,7 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
 
         const children =
             hasChildren
-                ? NodeContentIDs.map((childID: NodeID) => (
+                ? NodeDataIDs.map((childID: NodeID) => (
                     <Entry key={childID} NodeID={childID} />
                 ))
                 : null;
@@ -134,7 +134,7 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
                 {children}
             </div>
         );
-    }, [NodeContentIDs, canHaveChildren, hasChildren]
+    }, [NodeDataIDs, canHaveChildren, hasChildren]
     );
 
     const contextMenu = useMemo(() => {

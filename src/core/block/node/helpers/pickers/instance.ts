@@ -3,10 +3,15 @@ import type { NodeID, NodeInstance, StoredNodes } from '@/core/block/node/types/
 import type { PickResult } from '@/shared/types/result';
 
 /**
- * Fetch a block instance from the in-memory store by ID.
+ * Fetch a node instance from the in-memory store by ID.
  *
- * @param nodeID - id of the block to fetch
- * @param storedNodes - record containing all block instances keyed by id
+ * This function looks up a specific node instance in the stored nodes collection
+ * using its unique identifier. It's a fundamental operation for accessing node
+ * properties, relationships, and state information.
+ *
+ * @param nodeID - The unique identifier of the node to fetch
+ * @param storedNodes - The record containing all node instances keyed by their IDs
+ * @returns A PickResult containing the node instance or an error if the node is not found
  */
 export function pickNodeInstance(nodeID: NodeID, storedNodes: StoredNodes): PickResult<NodeInstance> {
 	// Lookup the block in the provided record
@@ -18,10 +23,15 @@ export function pickNodeInstance(nodeID: NodeID, storedNodes: StoredNodes): Pick
 }
 
 /**
- * Fetch a set of block instances for the provided ids in order.
+ * Fetch multiple node instances for the provided IDs in order.
  *
- * @param nodeIDs - array of ids to resolve
- * @param storedNodes - record containing all instances
+ * This function resolves an array of node IDs to their corresponding instances,
+ * maintaining the order of the input array. It's useful for batch operations
+ * that need to work with multiple nodes simultaneously.
+ *
+ * @param nodeIDs - An array of unique node identifiers to resolve
+ * @param storedNodes - The record containing all node instances keyed by their IDs
+ * @returns A PickResult containing an array of node instances or an error if any node is not found
  */
 export function pickNodeInstances(nodeIDs: NodeID[], storedNodes: StoredNodes): PickResult<NodeInstance[]> {
 	const blockCollection: NodeInstance[] = [];

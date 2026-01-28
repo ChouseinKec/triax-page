@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addNode, doesNodeSupportElement, findFirstSupportedElement, useSelectedNodeKey, useSelectedNodeID } from "@/core/block/node/managers";
+import { addNode, doesNodeSupportElement, findFirstSupportedElement, useSelectedDefinitionKey, useSelectedNodeID } from "@/core/block/node/managers";
 
 // Registry
 import { getRegisteredNodes } from '@/core/block/node/states/registry';
@@ -23,7 +23,7 @@ import GenericInput from "@/shared/components/input/generic/component";
  */
 const BlockLibrary: React.FC = () => {
     const registeredNodes = getRegisteredNodes();
-    const selectedNodeKey = useSelectedNodeKey();
+    const selectedNodeKey = useSelectedDefinitionKey();
     const selectedNodeID = useSelectedNodeID();
     const [search, setSearch] = useState("");
 

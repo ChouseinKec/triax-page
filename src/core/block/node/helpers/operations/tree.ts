@@ -5,7 +5,7 @@ import type { OperateResult } from '@/shared/types/result';
 // Helpers
 import { findNodeDescendants, findNodeChildIndex } from '@/core/block/node/helpers/finders';
 import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
-import { detachNodeFromContentIDs, attachNodeToContentIDs, updateNodeParentID } from '@/core/block/node/helpers/operations/instance';
+import { detachNodeIdFromParent, attachNodeIdIntoParent, updateNodeParentID } from '@/core/block/node/helpers/operations/instance';
 
 // External
 import { v4 as uuidv4 } from 'uuid';
@@ -13,17 +13,23 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Detach a block instance from its parent.
  *
+ * This operation removes the parent-child relationship between the specified node
+ * and its parent, updating both the parent's childNodeIDs list and the child's
+ * parentID to 'orphan'. The nodes remain in the store but are no longer connected
+ * in the tree structure.
+ *
  * This only updates the parent/child relationship and does NOT remove nodes
  * from the store.
  * @see {@link deleteNodeFromTree}
  *
- * @param sourceNodeInstance - the block instance to detach
- * @param parentNodeInstance - the current parent block instance
- * @param storedNodes - the current block instance record
+ * @param sourceNodeInstance - The block instance to detach from its parent
+ * @param parentNodeInstance - The current parent block instance
+ * @param storedNodes - The current record of all block instances in the store
+ * @returns An OperateResult containing the updated store with modified relationships
  */
 export function detachNodeFromParent(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
-	// Remove the child ID from the parent's contentIDs cleanly using the
-	const mutatedParentResult = detachNodeFromContentIDs(parentNodeInstance, sourceNodeInstance.id);
+	// Remove the child ID from the parent's childNodeIDs cleanly using the
+	const mutatedParentResult = detachNodeIdFromParent(parentNodeInstance, sourceNodeInstance.id);
 	if (!mutatedParentResult.success) return { success: false, error: `Failed to detach child from parent: ${mutatedParentResult.error}` };
 
 	// Update the child's parent reference to 'orphan' to reflect detachment.
@@ -44,19 +50,24 @@ export function detachNodeFromParent(sourceNodeInstance: NodeInstance, parentNod
 /**
  * Attach a block instance to a new parent at the specified index.
  *
+ * This operation establishes a parent-child relationship between the source node
+ * and the target parent, inserting the child at the specified position in the
+ * parent's childNodeIDs list and updating the child's parentID accordingly.
+ *
  * This only updates the parent/child relationship and does NOT add a brand
  * new node into the canonical store by itself. When creating and inserting
  * a brand-new block into the store.
  * @see {@link addNodeToTree}
  *
- * @param sourceNodeInstance - the block instance to attach
- * @param parentNodeInstance - the new parent block instance
- * @param targetIndex - the index within the parent's contentIDs to insert at
- * @param storedNodes - the current record of all block instances
+ * @param sourceNodeInstance - The block instance to attach to the new parent
+ * @param parentNodeInstance - The new parent block instance to attach to
+ * @param targetIndex - The index within the parent's childNodeIDs to insert the child at
+ * @param storedNodes - The current record of all block instances in the store
+ * @returns An OperateResult containing the updated store with modified relationships
  */
 export function attachNodeToParent(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance, targetIndex: number, storedNodes: StoredNodes): OperateResult<StoredNodes> {
-	// Add the child ID into the parent's contentIDs cleanly using the
-	const mutatedParentResult = attachNodeToContentIDs(parentNodeInstance, sourceNodeInstance.id, targetIndex);
+	// Add the child ID into the parent's childNodeIDs cleanly using the
+	const mutatedParentResult = attachNodeIdIntoParent(parentNodeInstance, sourceNodeInstance.id, targetIndex);
 	if (!mutatedParentResult.success) return { success: false, error: `Failed to attach child to parent: ${mutatedParentResult.error}` };
 
 	// Update the child's parent reference to point to the new parent instance.
@@ -77,8 +88,13 @@ export function attachNodeToParent(sourceNodeInstance: NodeInstance, parentNodeI
 /**
  * Remove a block and all of its descendant blocks from the provided store.
  *
- * @param NodeID - id of the root block to delete
- * @param storedNodes - the current block instance record
+ * This operation performs a deep deletion, finding all descendants of the
+ * specified node and removing them all from the store. This completely
+ * eliminates the node and its entire subtree from the block hierarchy.
+ *
+ * @param sourceNodeInstance - The root block instance to delete along with all its descendants
+ * @param storedNodes - The current record of all block instances in the store
+ * @returns An OperateResult containing the updated store with the nodes removed
  */
 export function deleteNodeFromTree(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
 	// Set to track all block ids to delete
@@ -100,8 +116,13 @@ export function deleteNodeFromTree(sourceNodeInstance: NodeInstance, storedNodes
 /**
  * Add a block instance to the store and attach it as the last child of its parent.
  *
- * @param nodeInstance - the block instance to add
- * @param storedNodes - the current block instance record
+ * This operation adds a new node to the store and establishes its relationship
+ * with its parent by appending it to the end of the parent's childNodeIDs list.
+ * The node must already have a valid parentID set.
+ *
+ * @param nodeInstance - The block instance to add to the store and tree
+ * @param storedNodes - The current record of all block instances in the store
+ * @returns An OperateResult containing the updated store with the new node added and attached
  */
 export function addNodeToTree(nodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
 	// Add the instance into the store copy upfront so downstream operations
@@ -111,8 +132,8 @@ export function addNodeToTree(nodeInstance: NodeInstance, storedNodes: StoredNod
 	const parentInstanceResult = pickNodeInstance(nodeInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return parentInstanceResult;
 
-	// Add the block to its parent at the end of the contentIDs
-	const mutatedParentInstance = attachNodeToParent(nodeInstance, parentInstanceResult.data, parentInstanceResult.data.contentIDs.length, mutatedBlocks);
+	// Add the block to its parent at the end of the childNodeIDs
+	const mutatedParentInstance = attachNodeToParent(nodeInstance, parentInstanceResult.data, parentInstanceResult.data.childNodeIDs.length, mutatedBlocks);
 	if (!mutatedParentInstance.success) return mutatedParentInstance;
 
 	// Return the updated record with the new block added to its parent
@@ -122,11 +143,14 @@ export function addNodeToTree(nodeInstance: NodeInstance, storedNodes: StoredNod
 /**
  * Duplicate a block instance and its entire subtree within the store.
  *
- * The duplicated subtree will be inserted immediately after the original
- * within its parent's contentIDs list.
+ * This operation creates a deep copy of the specified node and all its descendants,
+ * generating new IDs for all cloned nodes. The duplicated subtree is inserted
+ * immediately after the original node within its parent's childNodeIDs list,
+ * maintaining the same parent relationship.
  *
- * @param sourceNodeInstance - the block instance to duplicate
- * @param storedNodes - record of all block instances used to resolve children
+ * @param sourceNodeInstance - The block instance to duplicate along with its subtree
+ * @param storedNodes - The record of all block instances used to resolve children during cloning
+ * @returns An OperateResult containing the updated store with the duplicated subtree added
  */
 export function duplicateNodeInTree(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
 	// Clone the subtree
@@ -139,10 +163,10 @@ export function duplicateNodeInTree(sourceNodeInstance: NodeInstance, storedNode
 	const parentInstanceResult = pickNodeInstance(sourceNodeInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return { success: false, error: parentInstanceResult.error };
 
-	// Find the index of the source block within its parent's contentIDs
+	// Find the index of the source block within its parent's childNodeIDs
 	const childIndexResult = findNodeChildIndex(sourceNodeInstance, parentInstanceResult.data);
 	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
-	if (childIndexResult.status === 'not-found') return { success: false, error: `Original block not found in parent's contentIDs` };
+	if (childIndexResult.status === 'not-found') return { success: false, error: `Original block not found in parent's childNodeIDs` };
 
 	// Attach the cloned root immediately after the original
 	const attachedBlocksResult = attachNodeToParent(clonedInstance, parentInstanceResult.data, childIndexResult.data + 1, mutatedBlocks);
@@ -152,6 +176,18 @@ export function duplicateNodeInTree(sourceNodeInstance: NodeInstance, storedNode
 	return { success: true, data: attachedBlocksResult.data };
 }
 
+/**
+ * Overwrite a target block instance with a cloned subtree from a source block.
+ *
+ * This operation replaces the target node with a deep clone of the source node
+ * and its entire subtree. The target node's ID and parent relationship are preserved,
+ * but its content, styles, and child structure are completely replaced by the source.
+ *
+ * @param sourceBlock - The block instance to clone and use as the replacement content
+ * @param targetNodeInstance - The block instance to be overwritten
+ * @param storedNodes - The record of all block instances used to resolve children during cloning
+ * @returns An OperateResult containing the updated store with the target node overwritten
+ */
 export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstance: NodeInstance, storedNodes: StoredNodes): OperateResult<StoredNodes> {
 	// Clone the subtree
 	const { clonedInstance, clonedNodes } = cloneNode(sourceBlock, storedNodes, targetNodeInstance.parentID);
@@ -163,10 +199,10 @@ export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstanc
 	const parentInstanceResult = pickNodeInstance(targetNodeInstance.parentID, mutatedBlocks);
 	if (!parentInstanceResult.success) return parentInstanceResult;
 
-	// Find the index of the source block within its parent's contentIDs
+	// Find the index of the source block within its parent's childNodeIDs
 	const childIndexResult = findNodeChildIndex(targetNodeInstance, parentInstanceResult.data);
 	if (childIndexResult.status === 'error') return { success: false, error: childIndexResult.error };
-	if (childIndexResult.status === 'not-found') return { success: false, error: `Target block not found in parent's contentIDs` };
+	if (childIndexResult.status === 'not-found') return { success: false, error: `Target block not found in parent's childNodeIDs` };
 
 	// Remove the cloned root from the record as it will be overwritten
 	delete mutatedBlocks[clonedInstance.id];
@@ -178,14 +214,14 @@ export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstanc
 		parentID: targetNodeInstance.parentID,
 	};
 
-	// Update the parent's contentIDs to reflect the overwritten block
-	const newContentIDs = [...parentInstanceResult.data.contentIDs];
+	// Update the parent's childNodeIDs to reflect the overwritten block
+	const newContentIDs = [...parentInstanceResult.data.childNodeIDs];
 	newContentIDs[childIndexResult.data] = targetNodeInstance.id;
 
 	// Update the mutatedBlocks with the updated parent instance
 	mutatedBlocks[parentInstanceResult.data.id] = {
 		...parentInstanceResult.data,
-		contentIDs: newContentIDs,
+		childNodeIDs: newContentIDs,
 	};
 
 	// Return the final updated store
@@ -195,12 +231,17 @@ export function overwriteNodeInTree(sourceBlock: NodeInstance, targetNodeInstanc
 /**
  * Deep-clone the given block subtree and return the cloned instances.
  *
- * This only creates the new instances and does NOT merge clones into a store
- * @see {@link duplicateNode} , {@link overwriteNodeInTree}
+ * This operation creates a complete copy of the specified node and all its descendants,
+ * generating new unique IDs for each cloned node while preserving the hierarchical
+ * structure and relationships. The cloned nodes are not automatically added to any store.
  *
- * @param rootNodeInstance - the root block instance to clone
- * @param storedNodes - record of all block instances used to resolve children
- * @param parentNodeID - optional parent ID to assign to the cloned root
+ * This only creates the new instances and does NOT merge clones into a store
+ * @see {@link duplicateNodeInTree}, {@link overwriteNodeInTree}
+ *
+ * @param rootNodeInstance - The root block instance to clone along with its subtree
+ * @param storedNodes - The record of all block instances used to resolve children during cloning
+ * @param parentNodeID - Optional parent ID to assign to the cloned root (defaults to original parent)
+ * @returns An object containing the cloned root instance and a map of all cloned instances
  */
 export function cloneNode(rootNodeInstance: NodeInstance, storedNodes: StoredNodes, parentNodeID?: NodeID): { clonedInstance: NodeInstance; clonedNodes: StoredNodes } {
 	// Map to track all cloned instances
@@ -215,20 +256,20 @@ export function cloneNode(rootNodeInstance: NodeInstance, storedNodes: StoredNod
 			...node,
 			id: newId,
 			parentID: parentNodeID ?? node.parentID,
-			contentIDs: [],
+			childNodeIDs: [],
 		};
 		clonedNodes[newId] = clonedNodeInstance;
 
 		// Clone children recursively preserving order
-		for (const childID of node.contentIDs) {
+		for (const childID of node.childNodeIDs) {
 			const child = storedNodes[childID];
 			if (!child) continue;
 
 			// Recursively clone the child node with the current cloned block as its new parent
 			const clonedChild = cloneRecursive(child, clonedNodeInstance.id);
 
-			// Add the cloned child's ID to the parent's contentIDs
-			clonedNodeInstance.contentIDs.push(clonedChild.id);
+			// Add the cloned child's ID to the parent's childNodeIDs
+			clonedNodeInstance.childNodeIDs.push(clonedChild.id);
 		}
 
 		// Return the cloned block instance

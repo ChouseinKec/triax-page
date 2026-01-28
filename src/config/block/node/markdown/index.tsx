@@ -17,7 +17,7 @@ registerNode({
 		</svg>
 	),
 
-	availableTags: [
+	supportedElementKeys: [
 		"p",
 		"span",
 		"b",
@@ -42,7 +42,7 @@ registerNode({
 
 	defaultStyles: {},
 	defaultAttributes: {},
-	defaultContent: {},
+	defaultData: {},
 
 	component: BlockMarkdownComponent,
 });

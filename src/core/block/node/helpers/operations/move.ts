@@ -9,10 +9,16 @@ import { detachNodeFromParent, attachNodeToParent } from '@/core/block/node/help
 /**
  * Move a block instance to be a child of a new parent at the specified index.
  *
- * @param sourceNodeInstance - the block instance to move
- * @param targetParentInstance - the new parent block instance
- * @param storedNodes - the current block instance record
- * @param targetIndex - the index in the target parent's contentIDs to insert at
+ * This operation relocates a node within the block hierarchy by first detaching
+ * it from its current parent and then attaching it to a new parent at the specified
+ * position. The node's subtree (all its descendants) moves with it, maintaining
+ * the hierarchical structure.
+ *
+ * @param sourceNodeInstance - The block instance to move to a new location
+ * @param targetParentInstance - The new parent block instance to attach the source to
+ * @param storedNodes - The current record of all block instances in the store
+ * @param targetIndex - The index within the target parent's childNodeIDs to insert the moved node at
+ * @returns An OperateResult containing the updated store with the node moved to its new position
  */
 export function moveNode(sourceNodeInstance: NodeInstance, targetParentInstance: NodeInstance, storedNodes: StoredNodes, targetIndex: number): OperateResult<StoredNodes> {
 	// Create a shallow copy of the stored blocks to avoid mutating the original.

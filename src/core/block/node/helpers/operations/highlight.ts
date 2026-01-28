@@ -6,8 +6,14 @@ import type { ElementKey } from '@/core/block/element/types';
 /**
  * Splits the original text into before, highlighted, and after segments based on highlight data.
  *
- * @param originalText - The full text content to split
- * @param highlightedNode - The highlight data containing start/end offsets and text
+ * This function takes a full text string and a highlight specification containing
+ * start and end offsets, then divides the text into three parts: the content
+ * before the highlight, the highlighted content itself, and the content after
+ * the highlight. This is useful for text manipulation and rendering operations.
+ *
+ * @param originalText - The full text content to split into segments
+ * @param highlightedNode - The highlight data containing start and end character offsets
+ * @returns An OperateResult containing the split text segments or an error if highlight data is invalid
  */
 export type SplitedHighlightText = { before: string; highlight: string; after: string };
 export function splitHighlightText(originalText: string, highlightedNode: HighlightedNode): OperateResult<SplitedHighlightText> {
@@ -32,12 +38,18 @@ export function splitHighlightText(originalText: string, highlightedNode: Highli
 
 /**
  * Creates segment configurations for highlighted text replacement.
- * Generates an array of text segments with their corresponding tags.
  *
- * @param splitText - The result of splitting the text (before, highlight, after)
- * @param nodeTag - The tag to apply to the highlighted segment
+ * This function takes the result of text splitting and generates an array of
+ * text segments with their corresponding HTML element keys. It creates segments
+ * for the before text (using 'span'), the highlighted text (using the specified
+ * element key), and the after text (using 'span'). Empty segments are filtered
+ * out to avoid creating unnecessary DOM nodes.
+ *
+ * @param splitText - The result of splitting the text containing before, highlight, and after segments
+ * @param nodeTag - The HTML element key to apply to the highlighted segment
+ * @returns An OperateResult containing an array of text segments with element keys or an error
  */
-export type SegmentedHighlightText = { text: string; tag: ElementKey };
+export type SegmentedHighlightText = { text: string; elementKey: ElementKey };
 export function segmentHighlightText(splitText: SplitedHighlightText, nodeTag: ElementKey): OperateResult<SegmentedHighlightText[]> {
 	// Destructure the split text for clarity
 	const { before, highlight, after } = splitText;
@@ -47,9 +59,9 @@ export function segmentHighlightText(splitText: SplitedHighlightText, nodeTag: E
 	return {
 		success: true,
 		data: [
-			{ text: before, tag: 'span' },
-			{ text: highlight, tag: nodeTag },
-			{ text: after, tag: 'span' },
+			{ text: before, elementKey: 'span' },
+			{ text: highlight, elementKey: nodeTag },
+			{ text: after, elementKey: 'span' },
 		].filter((s) => s.text),
 	};
 }

@@ -15,7 +15,7 @@ import TagSelect from "./tag-select";
 
 // Managers
 import { useData } from "@/core/layout/view/managers";
-import { useSelectedNodeKey } from "@/core/block/node/managers";
+import { useSelectedDefinitionKey } from "@/core/block/node/managers";
 import { getDeviceDefinitions, getDeviceDefinition } from "@/core/layout/page/managers/queries/device";
 
 // Queries
@@ -31,7 +31,7 @@ const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }
     const activeDeviceIDs = useData('block', 'activeDeviceIDs') as string[] || [];
 
     // Get selected node for actions
-    const selectedNodeKey = useSelectedNodeKey();
+    const selectedNodeKey = useSelectedDefinitionKey();
 
     // Get actions for the selected node
     const nodeActions = selectedNodeKey ? getActionDefinitions(selectedNodeKey) : [];

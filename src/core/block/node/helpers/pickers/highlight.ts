@@ -4,9 +4,14 @@ import type { PickResult } from '@/shared/types/result';
 import type { BlockStoreState } from '@/core/block/node/states/store';
 
 /**
- * Fetch the highlighted node from the block store state.
+ * Fetch the currently highlighted node from the block store state.
  *
- * @param blockStoreState - the block store state
+ * This function retrieves the highlight information that represents the currently
+ * selected or highlighted text range within the editor. The highlight data includes
+ * the node ID, element key, selected text, and offset positions.
+ *
+ * @param blockStoreState - The current state of the block store containing highlight information
+ * @returns A PickResult containing the highlighted node data or an error if no highlight is active
  */
 export function pickHighlightedNode(blockStoreState: BlockStoreState): PickResult<HighlightedNode> {
 	// 	Check if highlightedNode is undefined

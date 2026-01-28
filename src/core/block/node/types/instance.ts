@@ -1,5 +1,5 @@
 // Types
-import type { NodeKey, NodeContent, NodeStyles, NodeAttributes } from '@/core/block/node/types/definition';
+import type { NodeKey, NodeData, NodeStyles, NodeAttributes } from '@/core/block/node/types/definition';
 import type { ElementKey } from '@/core/block/element/types';
 
 /**
@@ -17,17 +17,17 @@ export interface NodeInstance {
 	/** ID of the parent block, null if root */
 	parentID: NodeID;
 	/** The kind of block (text, container, media) */
-	type: NodeKey;
+	definitionKey: NodeKey;
 	/** The primary HTML tag for this block */
-	tag: ElementKey;
+	elementKey: ElementKey;
 	/** IDs of child blocks in order */
-	contentIDs: NodeID[];
+	childNodeIDs: NodeID[];
 	/** Instance-specific attributes that override defaults */
 	attributes: NodeAttributes;
 	/** Instance-specific styles that override defaults */
 	styles: NodeStyles;
-	/** Generic content data - flexible structure for any block-specific data */
-	content: NodeContent;
+	/** Generic data - flexible structure for any block-specific data */
+	data: NodeData;
 }
 
 /**
@@ -40,7 +40,7 @@ export type StoredNodes = Record<NodeID, NodeInstance>;
  */
 export type HighlightedNode = {
 	id: NodeID;
-	tag: ElementKey;
+	elementKey: ElementKey;
 	text: string;
 	startOffset: number;
 	endOffset: number;

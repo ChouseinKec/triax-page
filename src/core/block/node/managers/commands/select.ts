@@ -12,14 +12,18 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 import { validateNodeID } from '@/core/block/node/helpers';
 
 /**
- * Selects a block as the currently active block for editing in block CRUD operations.
- * Sets the selected block ID in the store.
+ * Sets the currently selected block instance for editing operations.
  *
- * @param nodeID - The block identifier to select, or null to clear selection
+ * This operation updates the global selection state to focus on a specific block,
+ * making it the active target for subsequent editing commands, property changes,
+ * and user interactions. Passing null clears the current selection.
+ *
+ * @param nodeID - The unique identifier of the block to select, or null to clear the selection
+ * @returns void - This function does not return a value but updates the block store selection state
  */
-export function selectNode(nodeID: NodeID | null): void {
+export function setSelectedNodeID(nodeID: NodeID | null): void {
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockCommands → selectNode]')
+	const results = new ResultPipeline('[BlockCommands → setSelectedNodeID]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
@@ -34,14 +38,20 @@ export function selectNode(nodeID: NodeID | null): void {
 }
 
 /**
- * Sets the highlighted text for the currently selected block.
+ * Sets the highlighted text range within the currently selected block.
  *
- * @param textHighlight - The text highlight object to set, or null to clear
+ * This operation updates the text highlight state to specify a range of text that
+ * is currently selected or highlighted within the active block. This information
+ * is used for text manipulation operations like formatting, replacement, or copying.
+ * Passing null clears any existing highlight.
+ *
+ * @param highlightedNode - The highlight data containing start/end offsets and text, or null to clear highlighting
+ * @returns void - This function does not return a value but updates the block store highlight state
  */
-export function setHighlightNodeText(textHighlight: HighlightedNode | null): void {
+export function setHighlightNodeText(highlightedNode: HighlightedNode | null): void {
 	// Set the highlighted block text in the store
 	useBlockStore.setState((state) => ({
 		...state,
-		highlightedNode: textHighlight,
+		highlightedNode: highlightedNode,
 	}));
 }

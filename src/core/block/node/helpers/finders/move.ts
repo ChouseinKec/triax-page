@@ -6,11 +6,11 @@ import type { FindResult } from '@/shared/types/result';
 import { findNodeChildIndex } from '@/core/block/node/helpers/finders/child';
 
 /**
- * Compute the index to use when moving `sourceNodeInstance` *into* the
- * `targetNodeInstance` (i.e., as a new child of the target).
- *
- * @param sourceNodeInstance - block being moved
- * @param targetNodeInstance - block that will become the new parent
+ * Calculates the insertion index for moving a source node as the last child of a target parent node.
+ * Used when performing "move into" operations to append to the end of a parent's child list.
+ * @param sourceNodeInstance - The node instance being moved
+ * @param targetNodeInstance - The node instance that will become the new parent
+ * @returns FindResult containing the insertion index (length of target's child list)
  */
 export function findNodeMoveIntoIndex(sourceNodeInstance: NodeInstance, targetNodeInstance: NodeInstance): FindResult<number> {
 	// If the source is the same as the target, cannot move into itself
@@ -20,16 +20,17 @@ export function findNodeMoveIntoIndex(sourceNodeInstance: NodeInstance, targetNo
 	if (sourceNodeInstance.parentID === targetNodeInstance.id) return { status: 'not-found' };
 
 	// Insert after the last existing child -> use the length as the index
-	return { status: 'found', data: targetNodeInstance.contentIDs.length };
+	return { status: 'found', data: targetNodeInstance.childNodeIDs.length };
 }
 
 /**
- * Compute the insertion index for moving `sourceNodeInstance` so it ends
- * up immediately *before* `targetNodeInstance` within `parentNodeInstance`.
- *
- * @param sourceNodeInstance - block being moved
- * @param targetNodeInstance - block to insert before
- * @param parentNodeInstance - parent that contains the target block
+ * Calculates the insertion index for moving a source node to appear immediately before a target node.
+ * Handles complex index adjustments when the source and target share the same parent.
+ * Essential for precise positioning in drag-and-drop and reordering operations.
+ * @param sourceNodeInstance - The node instance being moved
+ * @param targetNodeInstance - The reference node that the source should be placed before
+ * @param parentNodeInstance - The parent node containing both source and target nodes
+ * @returns FindResult containing the calculated insertion index
  */
 export function findNodeMoveBeforeIndex(sourceNodeInstance: NodeInstance, targetNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): FindResult<number> {
 	// If the source is the same as the target, cannot move before itself
@@ -72,12 +73,13 @@ export function findNodeMoveBeforeIndex(sourceNodeInstance: NodeInstance, target
 }
 
 /**
- * Compute the insertion index for moving `sourceNodeInstance` so it ends
- * up immediately *after* `targetNodeInstance` within `parentNodeInstance`.
- *
- * @param sourceNodeInstance - block being moved
- * @param targetNodeInstance - block to insert after
- * @param parentNodeInstance - parent that contains the target block
+ * Calculates the insertion index for moving a source node to appear immediately after a target node.
+ * Handles complex index adjustments when the source and target share the same parent.
+ * Essential for precise positioning in drag-and-drop and reordering operations.
+ * @param sourceNodeInstance - The node instance being moved
+ * @param targetNodeInstance - The reference node that the source should be placed after
+ * @param parentNodeInstance - The parent node containing both source and target nodes
+ * @returns FindResult containing the calculated insertion index
  */
 export function findNodeMoveAfterIndex(sourceNodeInstance: NodeInstance, targetNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): FindResult<number> {
 	// If the source is the same as the target, cannot move after itself

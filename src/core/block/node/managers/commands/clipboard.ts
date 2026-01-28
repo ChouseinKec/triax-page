@@ -17,10 +17,17 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 let blockClipboard: NodeInstance | null = null;
 
 /**
- * Copies a blockInstance and all its descendants to the clipboard in blockInstance CRUD operations.
- * Stores the complete blockInstance tree for later pasting.
+ * Copies a block instance and all its descendants to the clipboard for later pasting.
  *
- * @param nodeID - The blockInstance identifier to copy
+ * This operation performs a deep clone of the specified node and its entire subtree,
+ * storing the complete hierarchical structure in memory. The copied data can then
+ * be used to overwrite other nodes via the paste operation, enabling content duplication
+ * and replacement workflows.
+ *
+ * @param nodeID - The unique identifier of the block instance to copy to the clipboard
+ * @returns void - This function does not return a value but updates the global clipboard state
+ * @see {@link pasteNode} - The complementary operation that applies the copied content
+ * @see {@link overwriteNodeInTree} - The underlying tree operation used during pasting
  */
 export function copyNode(nodeID: NodeID): void {
 	// Validate and pick the blockInstance to copy
@@ -39,10 +46,19 @@ export function copyNode(nodeID: NodeID): void {
 }
 
 /**
- * Pastes a copied blockInstance by replacing the target blockInstance's content with clipboard content.
- * Maintains the target's position in the hierarchy while updating its type, styles, attributes, and content structure.
+ * Pastes a copied block instance by replacing the target block's content with clipboard content.
  *
- * @param nodeID - The blockInstance identifier to replace with clipboard content
+ * This operation takes the block instance previously stored in the clipboard and uses it
+ * to completely overwrite the target node. The target's position in the hierarchy is preserved,
+ * but its definition key, styles, attributes, and child structure are replaced with those
+ * from the clipboard. This enables content replacement while maintaining layout relationships.
+ *
+ * If no content exists in the clipboard, the operation is silently ignored.
+ *
+ * @param nodeID - The unique identifier of the block instance to replace with clipboard content
+ * @returns void - This function does not return a value but updates the block store state
+ * @see {@link copyNode} - The operation that populates the clipboard with content
+ * @see {@link overwriteNodeInTree} - The core tree manipulation function used for the replacement
  */
 export function pasteNode(nodeID: NodeID): void {
 	if (!blockClipboard) return (devLog.error(`[BlockManager → pasteNode] No blockInstance in clipboard`), undefined);

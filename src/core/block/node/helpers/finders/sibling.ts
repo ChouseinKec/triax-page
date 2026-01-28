@@ -9,10 +9,11 @@ import { findNodeChildIndex } from '@/core/block/node/helpers/finders/child';
 import { isNodeLastChild, isNodeFirstChild } from '@/core/block/node/helpers/checkers';
 
 /**
- * Find the next sibling block instance of the given block instance.
- *
- * @param sourceNodeInstance The block instance whose next sibling is to be found.
- * @param storedNodes The record of all stored block instances.
+ * Finds the immediately following sibling node instance of a given source node.
+ * Essential for keyboard navigation, selection traversal, and hierarchical movement.
+ * @param sourceNodeInstance - The node instance whose next sibling should be found
+ * @param storedNodes - The complete record of all node instances for resolving sibling relationships
+ * @returns FindResult containing the next sibling node instance, or not-found if source is the last child
  */
 export function findNodeNextSibling(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// Find the parent block instance
@@ -30,7 +31,7 @@ export function findNodeNextSibling(sourceNodeInstance: NodeInstance, storedNode
 	if (isNodeLastChildResult.passed === true) return { status: 'not-found' };
 
 	// Fetch the sibling that immediately follows the source
-	const nextSiblingID = parentNodeInstance.data.contentIDs[currentIndexResult.data + 1];
+	const nextSiblingID = parentNodeInstance.data.childNodeIDs[currentIndexResult.data + 1];
 	const nextSiblingResult = pickNodeInstance(nextSiblingID, storedNodes);
 	if (!nextSiblingResult.success) return { status: 'error', error: nextSiblingResult.error };
 
@@ -39,10 +40,11 @@ export function findNodeNextSibling(sourceNodeInstance: NodeInstance, storedNode
 }
 
 /**
- * Find the previous sibling block instance of the given block instance.
- *
- * @param sourceNodeInstance The block instance whose previous sibling is to be found.
- * @param storedNodes The record of all stored block instances.
+ * Finds the immediately preceding sibling node instance of a given source node.
+ * Essential for keyboard navigation, selection traversal, and hierarchical movement.
+ * @param sourceNodeInstance - The node instance whose previous sibling should be found
+ * @param storedNodes - The complete record of all node instances for resolving sibling relationships
+ * @returns FindResult containing the previous sibling node instance, or not-found if source is the first child
  */
 export function findNodePreviousSibling(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// Find the parent block instance
@@ -60,7 +62,7 @@ export function findNodePreviousSibling(sourceNodeInstance: NodeInstance, stored
 	if (isFirstChildResult.passed === true) return { status: 'not-found' };
 
 	// Fetch the sibling that immediately precedes the source
-	const previousSiblingID = parentNodeInstance.data.contentIDs[currentIndexResult.data - 1];
+	const previousSiblingID = parentNodeInstance.data.childNodeIDs[currentIndexResult.data - 1];
 	const previousSiblingResult = pickNodeInstance(previousSiblingID, storedNodes);
 	if (!previousSiblingResult.success) return { status: 'error', error: previousSiblingResult.error };
 
@@ -69,10 +71,12 @@ export function findNodePreviousSibling(sourceNodeInstance: NodeInstance, stored
 }
 
 /**
- * Find the next sibling of the nearest parent of the given block instance.
- *
- * @param sourceNodeInstance The block instance whose next parent's sibling is to be found.
- * @param storedNodes The record of all stored block instances.
+ * Finds the next sibling of the nearest ancestor that has one, enabling hierarchical navigation.
+ * Climbs up the ancestor chain to find the first parent with a following sibling.
+ * Used for advanced traversal scenarios and complex hierarchical movement patterns.
+ * @param sourceNodeInstance - The node instance to start the ancestor search from
+ * @param storedNodes - The complete record of all node instances for resolving ancestor and sibling relationships
+ * @returns FindResult containing the next parent sibling node instance, or not-found if no ancestor has a next sibling
  */
 export function findNodeNextParentSibling(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// Compute ancestor instances once (immediate parent first).
@@ -92,10 +96,10 @@ export function findNodeNextParentSibling(sourceNodeInstance: NodeInstance, stor
 
 		// Try to fetch the next sibling
 		const nextSiblingIndex = parentIndexResult.data + 1;
-		if (nextSiblingIndex >= grandParent.contentIDs.length) continue; // parent is last child
+		if (nextSiblingIndex >= grandParent.childNodeIDs.length) continue; // parent is last child
 
 		// Fetch the sibling block instance
-		const siblingID = grandParent.contentIDs[nextSiblingIndex];
+		const siblingID = grandParent.childNodeIDs[nextSiblingIndex];
 		const siblingResult = pickNodeInstance(siblingID, storedNodes);
 		if (!siblingResult.success) return { status: 'error', error: siblingResult.error };
 

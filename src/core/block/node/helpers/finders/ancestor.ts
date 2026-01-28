@@ -6,11 +6,12 @@ import type { FindResult } from '@/shared/types/result';
 import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
 
 /**
- * Find ancestor NodeInstance objects for the given block instance.
- * Returns an array of instances ordered from immediate parent upward.
- *
- * @param sourceNodeInstance - the instance whose ancestors we want
- * @param storedNodes - record used to resolve parent instances
+ * Traverses up the node hierarchy to find all ancestor nodes of a given source node.
+ * Returns ancestors ordered from immediate parent upward to the root.
+ * Useful for inheritance checks, permission validation, and hierarchical context.
+ * @param sourceNodeInstance - The node instance whose ancestor chain should be traversed
+ * @param storedNodes - The complete record of all node instances for resolving parent relationships
+ * @returns FindResult containing an array of ancestor node instances, ordered from closest to farthest
  */
 export function findNodeAncestors(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance[]> {
 	const ancestors: NodeInstance[] = [];

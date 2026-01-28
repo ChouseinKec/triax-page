@@ -60,13 +60,13 @@ export function getNodeComponent(nodeKey: NodeKey): NodeComponent | undefined {
 }
 
 /**
- * Retrieves the list of available HTML element tags that a specific node type can render as.
+ * Retrieves the list of supported HTML element keys that a specific node type can render as.
  * Node types can support multiple HTML elements, and this function returns all valid options.
- * @param nodeKey - The unique key identifying the node type whose available HTML tags should be retrieved
- * @returns An array of element keys representing valid HTML tags, or undefined if the node type is not found
+ * @param nodeKey - The unique key identifying the node type whose supported HTML element keys should be retrieved
+ * @returns An array of element keys representing valid HTML elements, or undefined if the node type is not found
  */
-export function getNodeAvailableTags(nodeKey: NodeKey): ElementKey[] | undefined {
-	const results = new ResultPipeline('[BlockQueries → getNodeAvailableTags]')
+export function getNodeSupportedElementKeys(nodeKey: NodeKey): ElementKey[] | undefined {
+	const results = new ResultPipeline('[BlockQueries → getNodeSupportedElementKeys]')
 		.validate({
 			nodeKey: validateNodeKey(nodeKey),
 		})
@@ -76,7 +76,7 @@ export function getNodeAvailableTags(nodeKey: NodeKey): ElementKey[] | undefined
 		.execute();
 	if (!results) return;
 
-	return results.nodeDefinition.availableTags;
+	return results.nodeDefinition.supportedElementKeys;
 }
 
 /**
@@ -97,32 +97,4 @@ export function getNodeAllowedAttributes(elementKey: ElementKey): AttributeKey[]
 	if (!results) return;
 
 	return results.elementDefinition.allowedAttributes;
-}
-
-/**
- * Determines whether a node can contain child elements based on its element definition.
- * Checks if the node's element type permits any child content at all.
- * @param nodeID - The ID of the node to check for child-bearing capability
- * @returns True if the node can have children (allowedChildren is undefined, null, or non-empty), false otherwise
- */
-export function canNodeHaveChildren(nodeID: NodeID): boolean {
-	const blockStore = useBlockStore.getState();
-	const results = new ResultPipeline('[BlockQueries → canNodeHaveChildren]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
-		}))
-		.pick((data) => ({
-			elementDefinition: pickElementDefinition(data.blockInstance.tag, getRegisteredElements()),
-		}))
-		.execute();
-	if (!results) return false;
-
-	// If allowedChildren is undefined or null, the block can have any children
-	if (results.elementDefinition.allowedChildren == null) return true;
-
-	// Check if there are any allowed children
-	return results.elementDefinition.allowedChildren.length > 0;
 }

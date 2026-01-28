@@ -6,14 +6,15 @@ import type { FindResult } from '@/shared/types/result';
 import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
 
 /**
- * Find the index position of a child block inside its parent's contentIDs array.
- *
- * @param sourceNodeInstance - the child block instance whose index we're finding
- * @param parentNodeInstance - the parent instance that contains contentIDs
+ * Determines the positional index of a child node within its parent's child list.
+ * Essential for ordering operations, move calculations, and hierarchical positioning.
+ * @param sourceNodeInstance - The child node instance whose position should be found
+ * @param parentNodeInstance - The parent node instance containing the child list to search
+ * @returns FindResult containing the zero-based index position, or not-found if the child doesn't exist in the parent's list
  */
 export function findNodeChildIndex(sourceNodeInstance: NodeInstance, parentNodeInstance: NodeInstance): FindResult<number> {
-	// Compute index in parent's contentIDs array
-	const currentIndex = parentNodeInstance.contentIDs.indexOf(sourceNodeInstance.id);
+	// Compute index in parent's childNodeIDs array
+	const currentIndex = parentNodeInstance.childNodeIDs.indexOf(sourceNodeInstance.id);
 
 	// If missing, return not-found to let callers handle the absence explicitly
 	if (currentIndex === -1) return { status: 'not-found' };
@@ -23,17 +24,18 @@ export function findNodeChildIndex(sourceNodeInstance: NodeInstance, parentNodeI
 }
 
 /**
- * Return the first child NodeInstance of the provided block, if any.
- *
- * @param sourceNodeInstance - parent block instance to inspect
- * @param storedNodes - block record to resolve child instances from
+ * Retrieves the first child node instance of a given parent node.
+ * Useful for depth-first traversals, layout calculations, and hierarchical navigation.
+ * @param sourceNodeInstance - The parent node instance whose first child should be retrieved
+ * @param storedNodes - The complete record of all node instances for resolving the child relationship
+ * @returns FindResult containing the first child node instance, or not-found if the parent has no children
  */
 export function findNodeFirstChild(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// If there are no children, short-circuit with not-found
-	if (sourceNodeInstance.contentIDs.length === 0) return { status: 'not-found' };
+	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found' };
 
 	// Resolve the first child id and fetch the NodeInstance
-	const firstChildID = sourceNodeInstance.contentIDs[0];
+	const firstChildID = sourceNodeInstance.childNodeIDs[0];
 	const firstChildResult = pickNodeInstance(firstChildID, storedNodes);
 	if (!firstChildResult.success) return { status: 'error', error: firstChildResult.error };
 
@@ -42,17 +44,18 @@ export function findNodeFirstChild(sourceNodeInstance: NodeInstance, storedNodes
 }
 
 /**
- * Return the last child NodeInstance of the provided block, if any.
- *
- * @param sourceNodeInstance - parent block instance to inspect
- * @param storedNodes - block record to resolve child instances from
+ * Retrieves the last child node instance of a given parent node.
+ * Useful for depth-first traversals, layout calculations, and finding terminal nodes in hierarchies.
+ * @param sourceNodeInstance - The parent node instance whose last child should be retrieved
+ * @param storedNodes - The complete record of all node instances for resolving the child relationship
+ * @returns FindResult containing the last child node instance, or not-found if the parent has no children
  */
 export function findNodeLastChild(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// If there are no children, short-circuit with not-found
-	if (sourceNodeInstance.contentIDs.length === 0) return { status: 'not-found' };
+	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found' };
 
 	// Resolve the last child id and fetch the NodeInstance
-	const lastChildID = sourceNodeInstance.contentIDs[sourceNodeInstance.contentIDs.length - 1];
+	const lastChildID = sourceNodeInstance.childNodeIDs[sourceNodeInstance.childNodeIDs.length - 1];
 	const lastChildResult = pickNodeInstance(lastChildID, storedNodes);
 	if (!lastChildResult.success) return { status: 'error', error: lastChildResult.error };
 

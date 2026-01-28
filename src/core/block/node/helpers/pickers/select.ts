@@ -4,9 +4,14 @@ import type { BlockStoreState } from '@/core/block/node/states/store';
 import type { PickResult } from '@/shared/types/result';
 
 /**
- * Fetch the selected node ID from the block store state.
+ * Fetch the currently selected node ID from the block store state.
  *
- * @param blockStoreState - the block store state
+ * This function retrieves the identifier of the node that is currently selected
+ * in the editor interface. The selected node is the one that receives focus for
+ * editing operations and user interactions.
+ *
+ * @param blockStoreState - The current state of the block store containing selection information
+ * @returns A PickResult containing the selected node ID or an error if no node is selected
  */
 export function pickSelectedNodeID(blockStoreState: BlockStoreState): PickResult<NodeID> {
 	// Confirm the selectedNodeID exists

@@ -5,8 +5,8 @@ import type { NodeComponentProps } from '@/core/block/node/types/definition';
 import type { HighlightedNode } from '@/core/block/node/types/instance';
 
 // Managers
-import { selectNode, setHighlightNodeText } from '@/core/block/node/managers';
-import { getNodeContent, setNodeContent } from '@/core/block/node/managers';
+import { setSelectedNodeID, setHighlightNodeText } from '@/core/block/node/managers';
+import { getNodeData, setNodeData } from '@/core/block/node/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
 
 // Hooks
@@ -15,15 +15,15 @@ import { useHighlight } from '@/shared/hooks/interface/useHighlight';
 
 const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected, children }) => {
     const nodeID = instance.id;
-    const BlockTag = instance.tag as React.ElementType;
+    const BlockTag = instance.elementKey as React.ElementType;
     const renderedStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
 
-    // Get the current text value from content
-    const content = getNodeContent(nodeID);
-    const text = content?.text || "Enter something...";
+    // Get the current text value from data
+    const data = getNodeData(nodeID);
+    const text = data?.text || "Enter something...";
 
     // Check if this block has child segments
-    const hasChildren = instance.contentIDs.length > 0;
+    const hasChildren = instance.childNodeIDs.length > 0;
 
     // Ref to access the element
     const elementRef = useRef<HTMLElement>(null);
@@ -37,14 +37,14 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
 
         const newHighlight: HighlightedNode = {
             id: nodeID,
-            tag: instance.tag,
+            elementKey: instance.elementKey,
             text: selectedText,
             startOffset: range.startOffset,
             endOffset: range.endOffset,
         };
 
         setHighlightNodeText(newHighlight);
-    }, [isSelected, hasChildren, nodeID, instance.tag]
+    }, [isSelected, hasChildren, nodeID, instance.elementKey]
     );
 
     // Deselect callback
@@ -57,17 +57,17 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
-            selectNode(nodeID);
+            setSelectedNodeID(nodeID);
         },
         [nodeID]
     );
 
-    // Commit text to block content only on blur (focus lost) - only if no children
+    // Commit text to block data only on blur (focus lost) - only if no children
     const handleBlur = useCallback(() => {
         if (hasChildren) return;
 
         const currentText = elementRef.current?.innerText ?? "";
-        setNodeContent(nodeID, { text: currentText });
+        setNodeData(nodeID, { text: currentText });
     }, [nodeID, hasChildren]
     );
 
