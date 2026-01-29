@@ -14,10 +14,20 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 /**
  * Retrieves the next node in the document hierarchy for navigation and traversal operations.
- * Implements depth-first traversal: checks for children first, then next siblings, and finally parent's next sibling.
- * Used for keyboard navigation, selection operations, and hierarchical movement through the document structure.
- * @param nodeID - The unique identifier of the node to find the next node after in the hierarchy
- * @returns The next node instance in the hierarchy, null if at the end of the document, or undefined if the input node is invalid
+ *
+ * This function implements a depth-first traversal strategy to find the subsequent node:
+ * 1. First, checks if the current node has any child nodes; if so, returns the first child.
+ * 2. If no children, looks for the next sibling of the current node.
+ * 3. If no next sibling, recursively climbs up to the parent and finds its next sibling.
+ * 4. Stops at the document root ('root') and returns null if no further nodes exist.
+ * Used primarily for keyboard navigation (e.g., arrow keys), block selection, and hierarchical movement.
+ *
+ * @param nodeID - The unique identifier of the node from which to find the next node in the hierarchy
+ * @returns The next NodeInstance in the hierarchy, or null if at the end of the document (e.g., no more nodes), or undefined if the input nodeID is invalid or not found
+ * @see {@link getPreviousNode} - For retrieving the previous node in the hierarchy
+ * @see {@link findNodeFirstChild} - Helper function used to find the first child of a node
+ * @see {@link findNodeNextSibling} - Helper function used to find the next sibling of a node
+ * @see {@link findNodeNextParentSibling} - Helper function used to find the next sibling of the parent
  */
 export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 	const blockStore = useBlockStore.getState();
@@ -27,9 +37,6 @@ export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 		})
 		.pick((data) => ({
 			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
-		}))
-		.pick((data) => ({
-			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -51,10 +58,18 @@ export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
 
 /**
  * Retrieves the previous node in the document hierarchy for navigation and traversal operations.
- * Implements reverse depth-first traversal: checks for previous sibling's last descendant first, then the sibling itself, or finally the parent.
- * Used for keyboard navigation, selection operations, and hierarchical movement through the document structure.
- * @param nodeID - The unique identifier of the node to find the previous node before in the hierarchy
- * @returns The previous node instance in the hierarchy, null if at the beginning of the document, or undefined if the input node is invalid
+ *
+ * This function implements a reverse depth-first traversal strategy to find the preceding node:
+ * 1. First, checks if the current node has a previous sibling; if so, returns the last descendant of that sibling.
+ * 2. If no previous sibling, returns the parent node of the current node.
+ * 3. Stops at the document root ('root') and returns null if attempting to go beyond the root.
+ * Used primarily for keyboard navigation (e.g., arrow keys), block selection, and hierarchical movement.
+ *
+ * @param nodeID - The unique identifier of the node from which to find the previous node in the hierarchy
+ * @returns The previous NodeInstance in the hierarchy, or null if at the beginning of the document (e.g., no previous nodes), or undefined if the input nodeID is invalid or not found
+ * @see {@link getNextNode} - For retrieving the next node in the hierarchy
+ * @see {@link findNodePreviousSibling} - Helper function used to find the previous sibling of a node
+ * @see {@link findNodeLastDescendant} - Helper function used to find the last descendant of a node
  */
 export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined {
 	const blockStore = useBlockStore.getState();
@@ -66,9 +81,6 @@ export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined
 		})
 		.pick((data) => ({
 			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
-		}))
-		.pick((data) => ({
-			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, blockStore.storedNodes),
 		}))
 		.find((data) => ({
 			prevSiblingInstance: findNodePreviousSibling(data.blockInstance, blockStore.storedNodes),
@@ -83,6 +95,8 @@ export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined
 		return null;
 	}
 
-	// If no previous sibling, return the parent instance fetched earlier (may be undefined)
-	return results.parentNodeInstance;
+	// If no previous sibling, return the parent instance (null if root)
+	const parentPick = results.blockInstance.parentID === 'root' ? { success: false as const, error: 'root' } : pickNodeInstance(results.blockInstance.parentID, blockStore.storedNodes);
+	if (parentPick.success) return parentPick.data;
+	return null;
 }
