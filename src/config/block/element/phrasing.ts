@@ -15,6 +15,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Generic inline container with no semantic meaning. Useful for styling parts of text.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'b',
@@ -24,6 +27,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Stylistically offset text (typically bold) without conveying importance.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'strong',
@@ -33,6 +39,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Indicates strong importance, seriousness, or urgency.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'i',
@@ -42,6 +51,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Text in an alternate voice or mood (typically italic), such as technical terms or idioms.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'em',
@@ -51,6 +63,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Emphasized text indicating stress emphasis.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'u',
@@ -60,6 +75,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Text that is stylistically different from normal text (often underlined).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'small',
@@ -69,6 +87,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Side-comments and small print; typically rendered in a smaller font.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'mark',
@@ -78,6 +99,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Text highlighted for reference or relevance within a context.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'sub',
@@ -87,6 +111,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Subscript inline text for chemical formulas, math, etc.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'sup',
@@ -96,6 +123,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Superscript inline text for footnotes, exponents, etc.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'code',
@@ -105,6 +135,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Inline fragment of computer code.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'abbr',
@@ -114,6 +147,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Abbreviation or acronym; title attribute can provide expansion.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 's',
@@ -123,6 +159,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Text that is no longer accurate or relevant (rendered with a strikethrough).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'del',
@@ -132,6 +171,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'A range of text that has been removed from a document. May carry cite/datetime meta.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'ins',
@@ -141,6 +183,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'A range of text that has been added to a document. May carry cite/datetime meta.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'q',
@@ -150,6 +195,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Short inline quotation; cite attribute may reference the source.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'cite',
@@ -159,6 +207,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Title of a work or reference to a source.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'dfn',
@@ -168,6 +219,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Term being defined; title attribute can provide a definition hint.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'var',
@@ -177,6 +231,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Variable in programming or mathematics.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'samp',
@@ -186,6 +243,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Sample output from programs or systems.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'kbd',
@@ -195,6 +255,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'User input, typically keyboard input.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'time',
@@ -204,6 +267,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Date and/or time, optionally machine-readable via datetime attribute.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'data',
@@ -213,6 +279,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Associates content with a machine-readable value.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'wbr',
@@ -222,6 +291,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Word break opportunity (void element) suggesting where line breaks may occur.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'bdi',
@@ -231,6 +303,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Isolates a span of text with a different directionality from its surroundings.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'bdo',
@@ -240,6 +315,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Overrides the text direction of its children using the dir attribute.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'ruby',
@@ -249,6 +327,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Ruby annotation for East Asian typography. Contains base text with rt/rp annotations.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'rt',
@@ -258,6 +339,9 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Ruby text providing pronunciation or annotation.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'rp',
@@ -267,5 +351,8 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Fallback parentheses for browsers that do not support ruby annotations.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

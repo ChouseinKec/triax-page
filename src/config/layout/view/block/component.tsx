@@ -15,26 +15,25 @@ import TagSelect from "./tag-select";
 
 // Managers
 import { useData } from "@/core/layout/view/managers";
-import { useSelectedDefinitionKey } from "@/core/block/node/managers";
+import { useSelectedActionDefinitions } from "@/core/block/node/managers";
 import { getDeviceDefinitions, getDeviceDefinition } from "@/core/layout/page/managers/queries/device";
-
-// Queries
-import { getActionDefinitions } from "@/core/block/node/managers/queries/action";
 
 /**
  * ViewBlockComponent
- * Renders the main viewport UI with devices grouped by category.
- * Displays multiple device previews, sorted by width and category priority.
+ *
+ * Renders the main viewport UI for block editing with multiple device previews.
+ * Displays devices grouped by category, sorted by width and priority. Includes
+ * a toolbar with tag selection and node-specific actions rendered via portal.
+ * Handles device categorization, sorting, and responsive layout for the block view.
+ *
+ * @param actionContainerRef - Reference to the DOM element where toolbar actions should be portaled
  */
 const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }) => {
     // Fetch active device IDs from viewport data
     const activeDeviceIDs = useData('block', 'activeDeviceIDs') as string[] || [];
 
-    // Get selected node for actions
-    const selectedNodeKey = useSelectedDefinitionKey();
-
     // Get actions for the selected node
-    const nodeActions = selectedNodeKey ? getActionDefinitions(selectedNodeKey) : [];
+    const nodeActions = useSelectedActionDefinitions();
 
     // Memoize the list of all registered devices for performance
     const allDevices = useMemo(() => {

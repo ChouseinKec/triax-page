@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
 import type { HighlightedNode } from '@/core/block/node/types';
@@ -9,5 +9,5 @@ import type { HighlightedNode } from '@/core/block/node/types';
  * @returns The highlighted block text or null if no text is highlighted
  */
 export function useHighlightText(): HighlightedNode {
-    return useBlockStore((state) => state.highlightedNode);
+    return useNodeStore((state) => state.highlightedNode);
 }

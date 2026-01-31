@@ -1,20 +1,37 @@
+// Stores
+import { useNodeStore } from '@/core/block/node/states/store';
+
 // Types
 import type { HighlightedNode } from '@/core/block/node/types/';
 
-// Stores
-import { useBlockStore } from '@/core/block/node/states/store';
-
 // Helpers
+import { pickNodeStoreState } from '@/core/block/node/helpers/pickers';
 import { pickHighlightedNode } from '@/core/block/node/helpers/pickers';
 
+// Utilities
+import { ResultPipeline } from '@/shared/utilities/pipeline';
+
 /**
- * Gets the highlighted text of the currently selected block from the store.
- * @returns The highlighted block text or null
- */
+ * Retrieves the currently highlighted node from the block store.
+ *
+ * This function queries the node store to obtain information about the currently
+ * highlighted node within the editor. The highlighted node typically represents
+ * a text selection or focus area that the user is interacting with.
+ *
+ * If no node is highlighted or if there's an error accessing the store state,
+ * the function returns undefined.
+ *
+ * @returns The highlighted node data, or null if no node is highlighted, or undefined on error */
 export function getHighlightedNode(): HighlightedNode | undefined {
-	// Pick the highlighted node from the store state
-	const result = pickHighlightedNode(useBlockStore.getState());
-	
-	if (result.success) return result.data;
-	return undefined;
+	const validData = new ResultPipeline('[BlockQueries → getHighlightedNode]')
+		.pick(() => ({
+			blockStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			highlightedNode: pickHighlightedNode(data.blockStoreState),
+		}))
+		.execute();
+	if (!validData) return undefined;
+
+	return validData.highlightedNode;
 }

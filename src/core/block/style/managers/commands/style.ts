@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 import { usePageStore } from '@/state/layout/page';
 
 // Types
@@ -41,7 +41,7 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			blockInstance: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			nodeStyles: pickNodeStyles(data.blockInstance),
@@ -67,7 +67,7 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
 	if (!results) return;
 
 	// Update the block styles in the store
-	useBlockStore.setState((state) => {
+	useNodeStore.setState((state) => {
 		const updatedNodes = {
 			...state.storedNodes,
 			[nodeID]: {
@@ -94,7 +94,7 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 			styleKey: validateStyleKey(styleKey),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			blockInstance: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.pick((data) => ({
 			nodeStyles: pickNodeStyles(data.blockInstance),

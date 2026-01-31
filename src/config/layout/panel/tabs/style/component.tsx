@@ -5,7 +5,9 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID } from "@/core/block/node/managers";
+import { useSelectedNodeID, useSelectedElementKey } from "@/core/block/node/managers";
+import { isElementStyleEditable } from "@/core/block/element/managers/queries/definition";
+
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -65,6 +67,9 @@ const TAB_ICONS = {
  */
 const StyleInspector: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
+    const selectedElementKey = useSelectedElementKey();
+    const isStyleable = selectedElementKey ? isElementStyleEditable(selectedElementKey) : false;
+
 
     // Define tabs with renderers
     const tabItems = selectedNodeID
@@ -86,6 +91,15 @@ const StyleInspector: React.FC = () => {
                 </p>
             );
         }
+
+        if (!isStyleable) {
+            return (
+                <p className={CSS.Empty}>
+                    The selected block's element does not support style customization.
+                </p>
+            );
+        }
+
         return (
             <div className={CSS.Layout}>
                 <TabGroup items={tabItems} />

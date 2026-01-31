@@ -33,6 +33,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Hyperlink anchor for navigation or actions. Should not wrap interactive controls.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'button',
@@ -42,6 +45,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Button control for actions and form submission. Cannot be nested within interactive controls.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'input',
@@ -51,6 +57,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Form input control (void element). Type attribute defines behavior.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'select',
@@ -60,6 +69,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Selection dropdown containing option and optgroup elements.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'textarea',
@@ -69,6 +81,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Multi-line text input containing raw text only.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'label',
@@ -78,6 +93,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Caption for a form control. Associates to a control by for attribute or nesting.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'details',
@@ -87,6 +105,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: { summary: 1 },
 		orderedChildren: [['summary']],
 		description: 'Disclosure widget for expandable content. Must include a summary element.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'summary',
@@ -96,6 +117,9 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Caption for the details control.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'dialog',
@@ -105,5 +129,8 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Dialog box or modal window for interactive content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

@@ -19,6 +19,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Generic flow container used to group content without semantic meaning.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'p',
@@ -28,6 +31,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Paragraph for grouping runs of phrasing text.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'main',
@@ -37,6 +43,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Main landmark for dominant page content. Must be unique and typically excludes repeated site-wide content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'pre',
@@ -46,6 +55,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Preformatted text preserving whitespace and newlines.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'blockquote',
@@ -55,6 +67,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Section quoted from another source with optional citation.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'figure',
@@ -64,6 +79,9 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: { figcaption: 1 },
 		orderedChildren: null,
 		description: 'Self-contained content (image, code, etc.) with an optional figcaption.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'figcaption',
@@ -73,5 +91,8 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Caption for the nearest figure.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

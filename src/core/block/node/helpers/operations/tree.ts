@@ -285,3 +285,24 @@ export function cloneNode(rootNodeInstance: NodeInstance, storedNodes: StoredNod
 		clonedNodes,
 	};
 }
+
+/**
+ * Add multiple block instances to the tree progressively.
+ *
+ * This operation adds each node one by one, updating the stored nodes after each addition
+ * to ensure that subsequent additions use the latest state.
+ *
+ * @param nodeInstances - Array of block instances to add
+ * @param storedNodes - The initial record of all block instances in the store
+ * @returns An OperateResult containing the updated store with all nodes added
+ */
+export function addNodesToTree(nodeInstances: NodeInstance[], storedNodes: StoredNodes): OperateResult<StoredNodes> {
+	let currentStoredNodes = storedNodes;
+
+	for (const nodeInstance of nodeInstances) {
+		const result = addNodeToTree(nodeInstance, currentStoredNodes);
+		if (!result.success) return result;
+		currentStoredNodes = result.data;
+	}
+	return { success: true, data: currentStoredNodes };
+}

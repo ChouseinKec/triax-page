@@ -6,8 +6,8 @@ import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useNode, setSelectedNodeID, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/managers";
-import { getNodeIcon } from "@/core/block/node/managers";
+import { useNodeInstance, setSelectedNodeID, useIsNodeSelected, deleteNode, copyNode, pasteNode, duplicateNode, moveNodeAfter, moveNodeBefore, canNodeHaveChildren, moveNodeInto } from "@/core/block/node/managers";
+import { getNodeDefinitionIcon } from "@/core/block/node/managers";
 import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/managers";
 import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/managers";
 
@@ -41,13 +41,13 @@ const Entry: React.FC<EntryProps> = ({ NodeID }) => {
     const [isOpen, setIsOpen] = useState(true);
 
     // Get block instance
-    const block = useNode(NodeID);
+    const block = useNodeInstance(NodeID);
     const NodeKey = block?.definitionKey;
     const NodeDataIDs = block?.childNodeIDs || [];
     const blockTag = block?.elementKey;
 
     const isBlockSelected = useIsNodeSelected(NodeID);
-    const NodeIcon = NodeKey ? getNodeIcon(NodeKey) : null;
+    const NodeIcon = NodeKey ? getNodeDefinitionIcon(NodeKey) : null;
     const canHaveChildren = canNodeHaveChildren(NodeID);
     const hasChildren = NodeDataIDs.length > 0;
 

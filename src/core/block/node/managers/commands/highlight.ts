@@ -1,11 +1,11 @@
 // Store
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Managers
-import { setHighlightNodeText, setNodeData, addNodes } from '@/core/block/node/managers/';
+import { setNodeInstanceData, addNodes } from '@/core/block/node/managers/';
 
 // Types
-import type { NodeKey } from '@/core/block/node/types';
+import type { NodeKey, HighlightedNode } from '@/core/block/node/types';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Helpers
@@ -26,16 +26,16 @@ import { devLog } from '@/shared/utilities/dev';
  * This enables rich text editing by converting plain text selections into structured data
  * with different HTML elements (e.g., converting selected text to bold, italic, or custom elements).
  *
- * @param nodeKey - The unique key identifying the type of nodes to create for each text segment
- * @param nodeTag - The HTML element key to apply to the highlighted text segment
+ * @param nodeDefinitionKey - The unique key identifying the type of nodes to create for each text segment
+ * @param nodeElementKey - The HTML element key to apply to the highlighted text segment
  * @returns void - This function does not return a value but modifies the block store and highlight state
  * @see {@link splitHighlightText} - The function that divides text into segments
  * @see {@link segmentHighlightText} - The function that assigns element keys to segments
  * @see {@link setHighlightNodeText} - The function that clears the highlight state
  */
-export function convertHighlightToNodes(nodeKey: NodeKey, nodeTag: ElementKey): void {
+export function convertHighlightToNodes(nodeDefinitionKey: NodeKey, nodeElementKey: ElementKey): void {
 	// Get a snapshot of the current block store state
-	const blockStoreState = useBlockStore.getState();
+	const blockStoreState = useNodeStore.getState();
 
 	// Validate and gather necessary data from the store
 	const validData = new ResultPipeline('[BlockHighlightManager → convertHighlightToNodes]')
@@ -53,19 +53,37 @@ export function convertHighlightToNodes(nodeKey: NodeKey, nodeTag: ElementKey): 
 			splitedText: splitHighlightText(data.nodeContent.text, data.highlightedNode),
 		}))
 		.operate((data) => ({
-			segmentedText: segmentHighlightText(data.splitedText, nodeTag),
+			segmentedText: segmentHighlightText(data.splitedText, nodeElementKey),
 		}))
 		.execute();
 	if (!validData) return;
 
 	// Create new child blocks for each text segment under the selected node
-	const addedNodes = addNodes(validData.segmentedText.map((segment) => [nodeKey, validData.selectedNodeID, segment.elementKey, { data: { text: segment.text } }]));
+	const addedNodes = addNodes(validData.segmentedText.map((segment) => [nodeDefinitionKey, validData.selectedNodeID, segment.elementKey, { data: { text: segment.text } }]));
 	if (!addedNodes || addedNodes.length === 0) return devLog.error('[BlockHighlightManager → convertHighlightToNodes] Failed to add new nodes for highlighted text replacement.');
 
-
 	// Clear the text data of the parent by setting it to an empty string
-	setNodeData(validData.selectedNodeID, { ...validData.nodeContent, text: '' });
+	setNodeInstanceData(validData.selectedNodeID, { ...validData.nodeContent, text: '' });
 
 	// Clear the highlightedNode text state
 	setHighlightNodeText(null);
+}
+
+/**
+ * Sets the highlighted text range within the currently selected block.
+ *
+ * This operation updates the text highlight state to specify a range of text that
+ * is currently selected or highlighted within the active block. This information
+ * is used for text manipulation operations like formatting, replacement, or copying.
+ * Passing null clears any existing highlight.
+ *
+ * @param highlightedNode - The highlight data containing start/end offsets and text, or null to clear highlighting
+ * @returns void - This function does not return a value but updates the block store highlight state
+ */
+export function setHighlightNodeText(highlightedNode: HighlightedNode | null): void {
+	// Set the highlighted block text in the store
+	useNodeStore.setState((state) => ({
+		...state,
+		highlightedNode,
+	}));
 }

@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -35,13 +35,13 @@ export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, att
 			attributeValue: validateAttributeValue(attributeValue),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			blockInstance: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the block attributes in the store
-	useBlockStore.setState((state) => {
+	useNodeStore.setState((state) => {
 		const updatedNodes = {
 			...state.storedNodes,
 			[results.nodeID]: {
@@ -69,7 +69,7 @@ export function copyNodeAttributes(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			blockInstance: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -93,13 +93,13 @@ export function pasteNodeAttributes(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			targetBlock: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with attributes from clipboard
-	useBlockStore.setState((state) => {
+	useNodeStore.setState((state) => {
 		const updatedNodes = {
 			...state.storedNodes,
 			[results.nodeID]: {

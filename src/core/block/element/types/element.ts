@@ -39,6 +39,7 @@ export interface ElementDefinition {
 	key: ElementKey;
 	/** Human-readable description of the element */
 	description: ElementDescription;
+	
 	/** Array of supported attributes for this element */
 	allowedAttributes: ElementAllowedAttributes;
 	/** Array of allowed child element tags, null for any content */
@@ -49,6 +50,20 @@ export interface ElementDefinition {
 	orderedChildren: ElementOrderedChildren | null;
 	/** Array of element tags that cannot appear as ancestors, null if no restrictions */
 	forbiddenAncestors: ElementForbiddenAncestors | null;
+	
+	/** Whether the element's styles can be edited by users */
+	isStyleEditable?: boolean;
+	/** Whether the element's attributes can be edited by users */
+	isAttributeEditable?: boolean;
+	/** Whether the element can be deleted by users */
+	isDeletable?: boolean;
+	/** Whether the element can be cloned by users */
+	isElementCloneable?: boolean;
+	/** Whether the element can be copied by users */
+	isElementCopyable?: boolean;
+	/** Whether the element can be reordered by dragging or moving */
+	isOrderable?: boolean;
+
 }
 
 /**

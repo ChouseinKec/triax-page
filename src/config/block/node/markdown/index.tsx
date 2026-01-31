@@ -17,7 +17,7 @@ registerNode({
 		</svg>
 	),
 
-	supportedElementKeys: [
+	elementKeys: [
 		"p",
 		"span",
 		"b",

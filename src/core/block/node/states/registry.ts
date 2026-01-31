@@ -9,10 +9,15 @@ import { validateActionDefinition } from '@/core/block/node/helpers/validators/a
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 
+export interface NodeRegistryState {
+	nodes: Readonly<RegisteredNodes>;
+	actions: Readonly<RegisteredActions>;
+}
+
 /**
  * Class-based block registry for managing block definitions
  */
-class NodeEditorRegistry {
+class NodeRegistry {
 	private nodes: Readonly<RegisteredNodes> = {};
 	private actions: RegisteredActions = {};
 
@@ -85,7 +90,7 @@ class NodeEditorRegistry {
 }
 
 // Create singleton instance
-const nodeRegistry = new NodeEditorRegistry();
+const nodeRegistry = new NodeRegistry();
 
 // Export the registry instance methods
 export const registerNode = (nodeDefinition: NodeDefinition): void => {
@@ -93,13 +98,18 @@ export const registerNode = (nodeDefinition: NodeDefinition): void => {
 	if (!result.valid) devLog.error(`[Registry → Block]    ❌ Failed: ${nodeDefinition.key} - ${result.message}`);
 };
 export const registerNodes = (nodeDefinitions: NodeDefinition[]) => nodeDefinitions.forEach(registerNode);
-export const getRegisteredNodes = () => nodeRegistry.getRegisteredNodes();
-export const getRegisteredNode = (nodeKey: NodeKey) => nodeRegistry.getRegisteredNode(nodeKey);
 
 export const registerAction = (actionDefinition: ActionDefinition): void => {
 	const result = nodeRegistry.registerAction(actionDefinition);
 	if (!result.valid) devLog.error(`[Registry → Action]    ❌ Failed: ${actionDefinition.key} - ${result.message}`);
 };
 export const registerActions = (actionDefinitions: ActionDefinition[]) => actionDefinitions.forEach(registerAction);
-export const getRegisteredActions = (nodeKey?: NodeKey) => nodeRegistry.getRegisteredActions(nodeKey);
-export const getRegisteredAction = (actionKey: ActionKey) => nodeRegistry.getRegisteredAction(actionKey);
+
+export const nodeRegistryState: NodeRegistryState = {
+	get nodes() {
+		return nodeRegistry.getRegisteredNodes();
+	},
+	get actions() {
+		return nodeRegistry.getRegisteredActions();
+	},
+};

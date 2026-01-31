@@ -21,6 +21,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: { caption: 1 },
 		orderedChildren: [['caption'], ['colgroup'], ['thead'], ['tbody', 'tfoot', 'tr']],
 		description: 'Tabular data container. May contain caption, column groups, header/body/footer sections, or rows.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'caption',
@@ -30,6 +33,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Table caption describing the table purpose.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'colgroup',
@@ -39,6 +45,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Groups columns for shared presentation. Contains col elements only.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'col',
@@ -48,6 +57,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Represents a table column (void element, no children).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'thead',
@@ -57,6 +69,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Table header section grouping header rows (tr).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'tbody',
@@ -66,6 +81,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Table body section grouping data rows (tr).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'tfoot',
@@ -75,6 +93,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Table footer section grouping summary rows (tr).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'tr',
@@ -84,6 +105,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Table row containing header (th) or data (td) cells.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'th',
@@ -93,6 +117,9 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Header cell for labeling columns/rows. Can contain flow content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'td',
@@ -102,5 +129,8 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Data cell. Can contain flow content such as paragraphs, lists, or images.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

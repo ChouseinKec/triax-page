@@ -1,6 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
-import type { HighlightedNode } from '@/core/block/node/types';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
@@ -31,27 +30,8 @@ export function setSelectedNodeID(nodeID: NodeID | null): void {
 	if (!results) return;
 
 	// Select the block in the store
-	useBlockStore.setState((state) => ({
+	useNodeStore.setState((state) => ({
 		...state,
 		selectedNodeID: results.nodeID,
-	}));
-}
-
-/**
- * Sets the highlighted text range within the currently selected block.
- *
- * This operation updates the text highlight state to specify a range of text that
- * is currently selected or highlighted within the active block. This information
- * is used for text manipulation operations like formatting, replacement, or copying.
- * Passing null clears any existing highlight.
- *
- * @param highlightedNode - The highlight data containing start/end offsets and text, or null to clear highlighting
- * @returns void - This function does not return a value but updates the block store highlight state
- */
-export function setHighlightNodeText(highlightedNode: HighlightedNode | null): void {
-	// Set the highlighted block text in the store
-	useBlockStore.setState((state) => ({
-		...state,
-		highlightedNode: highlightedNode,
 	}));
 }

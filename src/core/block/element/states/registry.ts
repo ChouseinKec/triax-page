@@ -5,6 +5,10 @@ import type { ValidateResult } from '@/shared/types/result';
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 
+export interface ElementRegistryState {
+	elements: Readonly<RegisteredElements>;
+}
+
 /**
  * Class-based element registry for managing HTML element definitions
  */
@@ -46,11 +50,13 @@ const elementRegistry = new ElementRegistry();
 
 // Export the registry instance methods
 export const registerElement = (elementDefinition: ElementDefinition): void => {
-  const result = elementRegistry.registerElement(elementDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Element]  ❌ Failed: ${elementDefinition.key} - ${result.message}`);
-  }
+	const result = elementRegistry.registerElement(elementDefinition);
+	if (!result.valid) devLog.error(`[Registry → Element]  ❌ Failed: ${elementDefinition.key} - ${result.message}`);
 };
 export const registerElements = (elementDefinitions: ElementDefinition[]) => elementDefinitions.forEach(registerElement);
-export const getRegisteredElements = () => elementRegistry.getRegisteredElements();
-export const getRegisteredElement = (elementKey: ElementKey) => elementRegistry.getRegisteredElement(elementKey);
+
+export const elementRegistryState: ElementRegistryState = {
+	get elements() {
+		return elementRegistry.getRegisteredElements();
+	},
+};

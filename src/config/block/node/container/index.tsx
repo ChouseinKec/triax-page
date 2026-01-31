@@ -15,7 +15,7 @@ registerNode({
 		</svg>
 	),
 
-	supportedElementKeys: ['div', 'section', 'article', 'aside', 'nav'],
+	elementKeys: ['div', 'section', 'article', 'aside', 'nav'],
 
 	defaultStyles: {},
 	defaultAttributes: {},

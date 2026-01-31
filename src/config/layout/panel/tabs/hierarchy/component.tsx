@@ -6,7 +6,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useNode, setSelectedNodeID, getPreviousNode, getNextNode, getSelectedNodeID } from "@/core/block/node/managers";
+import { useNodeInstance, selectNextNode, selectPreviousNode } from "@/core/block/node/managers";
 
 // Components
 import Entry from "./entry";
@@ -23,40 +23,14 @@ import Entry from "./entry";
  * @note Supports Arrow Up/Down keys for block navigation when component is focused
  */
 const BlocksHierarchy: React.FC = () => {
-    const rootBlock = useNode('body');
-
-    // Select next block on ArrowDown
-    const handleSelectNext = (e: React.KeyboardEvent) => {
-        if (e.key !== "ArrowDown") return;
-
-        const currentNodeID = getSelectedNodeID();
-        if (!currentNodeID) return;
-
-        const nextBlock = getNextNode(currentNodeID);
-        if (!nextBlock) return;
-
-        setSelectedNodeID(nextBlock.id);
-    }
-
-    // Select previous block on ArrowUp
-    const handleSelectPrevious = (e: React.KeyboardEvent) => {
-        if (e.key !== "ArrowUp") return;
-
-        const currentNodeID = getSelectedNodeID();
-        if (!currentNodeID) return;
-
-        const previousBlock = getPreviousNode(currentNodeID);
-        if (!previousBlock) return;
-
-        setSelectedNodeID(previousBlock.id);
-    };
+    const rootBlock = useNodeInstance('html');
 
     // Handle keyboard navigation
     const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.key === "ArrowDown") {
-            handleSelectNext(e);
+            selectNextNode();
         } else if (e.key === "ArrowUp") {
-            handleSelectPrevious(e);
+            selectPreviousNode();
         }
     };
 

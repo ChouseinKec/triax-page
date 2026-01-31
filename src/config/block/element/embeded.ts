@@ -38,6 +38,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Image element (void). Displays raster graphics. No children.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'iframe',
@@ -47,6 +50,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Inline frame embedding an external HTML page (void element). No children.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'canvas',
@@ -56,6 +62,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Scriptable bitmap canvas with fallback content when scripting is disabled.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'audio',
@@ -65,6 +74,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Audio player with optional source/track elements and fallback content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'video',
@@ -74,6 +86,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Video player with optional source/track elements and fallback content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'source',
@@ -83,6 +98,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Media resource for picture/video/audio (void element). No children.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'track',
@@ -92,6 +110,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Timed text track (captions, subtitles) for video/audio (void element).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'picture',
@@ -101,6 +122,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: { img: 1 },
 		orderedChildren: null,
 		description: 'Container for responsive images. Contains one img and zero or more source elements.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'object',
@@ -110,6 +134,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Generic external resource with fallback content.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'embed',
@@ -119,6 +146,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Container for external resources (void element).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'map',
@@ -128,6 +158,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Image map defining clickable regions via area elements.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'area',
@@ -137,6 +170,9 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Clickable area within an image map (void element). No children.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'svg',
@@ -146,5 +182,8 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Scalable Vector Graphics root element. Content model defined by SVG; any child elements allowed.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

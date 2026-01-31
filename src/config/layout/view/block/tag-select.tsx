@@ -2,10 +2,9 @@
 import React, { useMemo, useCallback } from "react";
 
 // Managers
-import { useSelectedNodeID, useSelectedDefinitionKey, useSelectedElementKey, useSelectedParentID, canNodeAcceptElement } from "@/core/block/node/managers";
-import { getNodeSupportedElementKeys } from "@/core/block/node/managers/queries/node";
-import { setNodeElementKey } from "@/core/block/node/managers/commands/node";
-import { getElementDefinitions } from "@/core/block/element/managers/queries/element";
+import { useSelectedNodeID, useSelectedElementKey, useSelectedParentID } from "@/core/block/node/managers";
+import { getCompatibleElementKeys } from "@/core/block/node/managers";
+import { setNodeInstanceElementKey } from "@/core/block/node/managers/commands/instance";
 
 // Components
 import DropdownSelect from "@/shared/components/select/dropdown/component";
@@ -23,9 +22,9 @@ const icon = (
  * The available tags are filtered based on the selected node's type and its parent's acceptance rules.
  *
  * Features:
- * - Dynamically generates options from the node's supportedElementKeys
+ * - Dynamically generates options from the node's elementKeys
  * - Filters options to ensure only valid child tags for the parent node
- * - Updates the node's tag via the setNodeElementKey command
+ * - Updates the node's tag via the setNodeInstanceElementKey command
  * - Hides when no valid options or no selection exists
  *
  * @returns The dropdown component or null if no options available
@@ -33,38 +32,27 @@ const icon = (
 const TagSelect: React.FC = () => {
     // Retrieve selected node data using selective hooks for granular re-rendering
     const selectedNodeID = useSelectedNodeID();
-    const selectedNodeKey = useSelectedDefinitionKey();
     const selectedNodeTag = useSelectedElementKey();
     const selectedNodeParentID = useSelectedParentID();
 
     // Compute available tags for the selected node, filtered by parent acceptance
-    const supportedElementKeys = useMemo(() => {
-        // Early return if required data is missing
-        if (!selectedNodeKey || !selectedNodeParentID) return [];
-
-        // Get tags available for this node type
-        const supportedElementKeys = getNodeSupportedElementKeys(selectedNodeKey);
-        if (!supportedElementKeys) return [];
-
-        // Filter to only include tags that the parent node can accept as children
-        return supportedElementKeys.filter(tag => canNodeAcceptElement(selectedNodeParentID, tag));
-    }, [selectedNodeKey, selectedNodeParentID]
-    );
+    const elementKeys = useMemo(() => {
+        if (!selectedNodeID || !selectedNodeParentID) return [];
+        return getCompatibleElementKeys(selectedNodeID, selectedNodeParentID);
+    }, [selectedNodeID, selectedNodeParentID]);
 
     // Transform available tags into dropdown options, ensuring elements exist
     const options = useMemo(() => {
-        const elements = getElementDefinitions();
-        return supportedElementKeys
-            .filter(tag => elements[tag]) // Filter out non-existent elements first
+        return elementKeys
             .map(tag => ({
                 name: tag,
                 value: tag,
             }));
-    }, [supportedElementKeys]);
+    }, [elementKeys]);
 
     // Handle tag change by updating the node's tag in the store
     const handleChange = useCallback((value: string) => {
-        setNodeElementKey(selectedNodeID, value);
+        setNodeInstanceElementKey(selectedNodeID, value);
     }, [selectedNodeID]
     );
 

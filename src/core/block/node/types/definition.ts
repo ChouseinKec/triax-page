@@ -99,13 +99,12 @@ export interface NodeDefinition {
 	icon: NodeIcon;
 
 	/** All supported HTML element keys for this block type */
-	supportedElementKeys: ElementKey[];
+	elementKeys: ElementKey[];
 
 	/** Default styles for the block */
 	defaultStyles: NodeStyles;
 	/** Default attributes for the block */
 	defaultAttributes: NodeAttributes;
-
 	/** Default data for the block */
 	defaultData: NodeData;
 

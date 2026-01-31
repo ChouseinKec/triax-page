@@ -15,6 +15,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Introductory content or navigational aids for a section or page header.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'footer',
@@ -24,6 +27,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Footer content for a section or page, typically containing metadata and related links.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'section',
@@ -33,6 +39,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Thematic grouping of content, usually with a heading.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'article',
@@ -42,6 +51,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Self-contained composition (e.g., blog post, comment) intended for reuse or distribution.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'aside',
@@ -51,6 +63,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Tangentially related content (e.g., sidebars, callouts).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'nav',
@@ -60,6 +75,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Section of navigation links (commonly lists and headings).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'address',
@@ -69,6 +87,9 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Contact information for the nearest article or body (names, addresses, links).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'hgroup',
@@ -78,5 +99,8 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Groups a set of h1–h6 headings so they are treated as a single composite heading.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

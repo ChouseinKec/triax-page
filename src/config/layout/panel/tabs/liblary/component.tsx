@@ -5,10 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { addNode, doesNodeSupportElement, findFirstSupportedElement, useSelectedDefinitionKey, useSelectedNodeID } from "@/core/block/node/managers";
-
-// Registry
-import { getRegisteredNodes } from '@/core/block/node/states/registry';
+import { getNodeDefinitions, addNode, doesNodeSupportElement, getNodeSupportedElement, useSelectedDefinitionKey, useSelectedNodeID } from "@/core/block/node/managers";
 
 // Types
 import type { NodeDefinition, NodeKey } from "@/core/block/node/types/definition";
@@ -22,14 +19,14 @@ import GenericInput from "@/shared/components/input/generic/component";
  *
  */
 const BlockLibrary: React.FC = () => {
-    const registeredNodes = getRegisteredNodes();
+    const registeredNodes = getNodeDefinitions();
     const selectedNodeKey = useSelectedDefinitionKey();
     const selectedNodeID = useSelectedNodeID();
     const [search, setSearch] = useState("");
 
     // Handle adding a new block,
     const handleAddBlock = useCallback((nodeKey: NodeKey) => {
-        const acceptableTag = findFirstSupportedElement(selectedNodeID, nodeKey);
+        const acceptableTag = getNodeSupportedElement(selectedNodeID, nodeKey);
         if (!acceptableTag) return;
 
         addNode(nodeKey, selectedNodeID, acceptableTag);
@@ -39,20 +36,18 @@ const BlockLibrary: React.FC = () => {
 
     // Filter blocks based on the selected block's permitted content
     const filteredBlocks = useMemo(() => {
-        return Object.fromEntries(
-            Object.entries(registeredNodes).filter(([, block]) => {
-                return doesNodeSupportElement(selectedNodeID, block.key);
-            })
-        );
+        return registeredNodes.filter((block) => {
+            return doesNodeSupportElement(selectedNodeID, block.key);
+        });
     }, [selectedNodeID, registeredNodes]
     );
 
     // Filter blocks based on the search term
     const searchedBlocks = useMemo(() => {
         const term = search.trim().toLowerCase();
-        if (!term) return Object.values(filteredBlocks);
+        if (!term) return filteredBlocks;
 
-        return Object.values(filteredBlocks).filter(
+        return filteredBlocks.filter(
             (block) =>
                 block.key &&
                 block.key.toLowerCase().startsWith(term)
@@ -114,7 +109,7 @@ const BlockLibrary: React.FC = () => {
     );
 
     // Early exit must come after hooks to keep hook order stable
-    if (!registeredNodes || Object.keys(registeredNodes).length === 0) return <div className={CSS.Fallback}>No blocks available.</div>;
+    if (!registeredNodes || registeredNodes.length === 0) return <div className={CSS.Fallback}>No blocks available.</div>;
 
 
     // If selected block permitted content is Fallback, show an Fallback state

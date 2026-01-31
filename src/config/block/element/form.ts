@@ -16,6 +16,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Form container for collecting user input and submitting data.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'fieldset',
@@ -25,6 +28,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: { legend: 1 },
 		orderedChildren: [['legend']],
 		description: 'Groups related form controls. Typically starts with a legend.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'legend',
@@ -34,6 +40,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Caption describing a fieldset purpose.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'option',
@@ -43,6 +52,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Selectable option within a select or datalist.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'optgroup',
@@ -52,6 +64,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Groups related options inside a select.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'datalist',
@@ -61,6 +76,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Provides suggested options for an associated input.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'output',
@@ -70,6 +88,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Displays the result of a calculation.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'progress',
@@ -79,6 +100,9 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Progress bar indicating completion percenkeye for a task.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 	{
 		key: 'meter',
@@ -88,5 +112,8 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 		uniqueChildren: null,
 		orderedChildren: null,
 		description: 'Displays a scalar measurement within a known range (e.g., disk usage).',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
 	},
 ];

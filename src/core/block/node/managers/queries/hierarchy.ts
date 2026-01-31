@@ -1,102 +1,220 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
-
-// Helpers
-import { validateNodeID } from '@/core/block/node/helpers/validators';
-import { pickNodeInstance } from '@/core/block/node/helpers/pickers';
-import { findNodeFirstChild, findNodeNextSibling, findNodePreviousSibling, findNodeLastDescendant, findNodeNextParentSibling } from '@/core/block/node/helpers/finders';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
-import type { NodeInstance, NodeID } from '@/core/block/node/types/instance';
+import type { NodeID } from '@/core/block/node/types/instance';
+import type { ElementKey } from '@/core/block/element/types';
+import type { NodeKey } from '@/core/block/node/types/definition';
+
+// Helpers
+import { validateNodeElementKey, validateNodeKey, validateNodeID, passesAllRules, pickNodeInstance, pickNodeDefinition, pickNodeStoreState, pickNodeDefinitions } from '@/core/block/node/helpers';
+import { pickElementDefinition, pickElementDefinitions } from '@/core/block/element/helpers';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
+// Registry
+import { nodeRegistryState } from '@/core/block/node/states/registry';
+import { elementRegistryState } from '@/core/block/element/states/registry';
+
 /**
- * Retrieves the next node in the document hierarchy for navigation and traversal operations.
+ * Determines whether a node can contain child elements based on its element definition.
  *
- * This function implements a depth-first traversal strategy to find the subsequent node:
- * 1. First, checks if the current node has any child nodes; if so, returns the first child.
- * 2. If no children, looks for the next sibling of the current node.
- * 3. If no next sibling, recursively climbs up to the parent and finds its next sibling.
- * 4. Stops at the document root ('root') and returns null if no further nodes exist.
- * Used primarily for keyboard navigation (e.g., arrow keys), block selection, and hierarchical movement.
+ * This function checks the element definition of a given node to see if it is permitted
+ * to have child elements. It examines the allowedChildren property: if undefined or null,
+ * any children are allowed; if an array, it checks if the array is non-empty. This is used
+ * for validation during block insertion, movement, and UI rendering to prevent invalid hierarchies.
  *
- * @param nodeID - The unique identifier of the node from which to find the next node in the hierarchy
- * @returns The next NodeInstance in the hierarchy, or null if at the end of the document (e.g., no more nodes), or undefined if the input nodeID is invalid or not found
- * @see {@link getPreviousNode} - For retrieving the previous node in the hierarchy
- * @see {@link findNodeFirstChild} - Helper function used to find the first child of a node
- * @see {@link findNodeNextSibling} - Helper function used to find the next sibling of a node
- * @see {@link findNodeNextParentSibling} - Helper function used to find the next sibling of the parent
+ * @param sourceNodeID - The unique identifier of the node to check for child-bearing capability
+ * @returns True if the node can have children according to its element definition, false otherwise
+ * @see {@link pickElementDefinition} - Helper function used to retrieve element definitions
+ * @see {@link canNodeAcceptElement} - Related function for checking specific element acceptance
  */
-export function getNextNode(nodeID: NodeID): NodeInstance | null | undefined {
-	const blockStore = useBlockStore.getState();
-	const results = new ResultPipeline('[BlockManager → getNextNode]')
+export function canNodeHaveChildren(sourceNodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → canNodeHaveChildren]')
 		.validate({
-			nodeID: validateNodeID(nodeID),
+			sourceNodeID: validateNodeID(sourceNodeID),
 		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+			elementDefinitions: pickElementDefinitions(elementRegistryState),
+		}))
+		.pick((data) => ({
+			elementDefinition: pickElementDefinition(data.blockInstance.elementKey, data.elementDefinitions),
 		}))
 		.execute();
-	if (!results) return;
+	if (!validData) return false;
 
-	// If it has children, return the first child
-	const firstChild = findNodeFirstChild(results.blockInstance, blockStore.storedNodes);
-	if (firstChild.status === 'found') return firstChild.data;
+	// If allowedChildren is undefined or null, the block can have any children
+	if (validData.elementDefinition.allowedChildren == null) return true;
 
-	// If no children, get the next sibling
-	const nextSibling = findNodeNextSibling(results.blockInstance, blockStore.storedNodes);
-	if (nextSibling.status === 'found') return nextSibling.data;
-
-	// If no next sibling, recursively climb up to find the parent's next sibling
-	const nextParentSibling = findNodeNextParentSibling(results.blockInstance, blockStore.storedNodes);
-	if (nextParentSibling.status === 'found') return nextParentSibling.data;
-
-	return null;
+	// Check if there are any allowed children
+	return validData.elementDefinition.allowedChildren.length > 0;
 }
 
 /**
- * Retrieves the previous node in the document hierarchy for navigation and traversal operations.
+ * Determines whether a target node can accept a specific element based on compatibility rules.
  *
- * This function implements a reverse depth-first traversal strategy to find the preceding node:
- * 1. First, checks if the current node has a previous sibling; if so, returns the last descendant of that sibling.
- * 2. If no previous sibling, returns the parent node of the current node.
- * 3. Stops at the document root ('root') and returns null if attempting to go beyond the root.
- * Used primarily for keyboard navigation (e.g., arrow keys), block selection, and hierarchical movement.
+ * This function validates whether a given element can be added to or associated with a target node
+ * by checking element compatibility rules, parent-child relationships, and content structure constraints.
+ * It performs comprehensive validation including element definitions, node instances, and rule checking.
  *
- * @param nodeID - The unique identifier of the node from which to find the previous node in the hierarchy
- * @returns The previous NodeInstance in the hierarchy, or null if at the beginning of the document (e.g., no previous nodes), or undefined if the input nodeID is invalid or not found
- * @see {@link getNextNode} - For retrieving the next node in the hierarchy
- * @see {@link findNodePreviousSibling} - Helper function used to find the previous sibling of a node
- * @see {@link findNodeLastDescendant} - Helper function used to find the last descendant of a node
+ * @param sourceNodeID - The unique identifier of the node that would contain or associate with the element
+ * @param sourceElementKey - The element key to validate for compatibility
+ * @returns boolean - True if the element is compatible and can be accepted, false otherwise
+ * @see {@link doesNodeSupportElement} - For checking if a node supports any element from another node
+ * @see {@link getNodeSupportedElement} - For finding the first compatible element
+ * @see {@link passesAllRules} - The core validation function used internally
  */
-export function getPreviousNode(nodeID: NodeID): NodeInstance | null | undefined {
-	const blockStore = useBlockStore.getState();
-
-	// Validate, pick, and find necessary data
-	const results = new ResultPipeline('[BlockManager → getPreviousNode]')
+export function canNodeAcceptElement(sourceNodeID: NodeID, sourceElementKey: ElementKey): boolean {
+	const validData = new ResultPipeline('[BlockQueries → canNodeAcceptElement]')
 		.validate({
-			nodeID: validateNodeID(nodeID),
+			sourceNodeID: validateNodeID(sourceNodeID),
+			sourceElementKey: validateNodeElementKey(sourceElementKey),
 		})
-		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, blockStore.storedNodes),
+		.pick(() => ({
+			nodeStore: pickNodeStoreState(useNodeStore.getState()),
+			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
 		}))
-		.find((data) => ({
-			prevSiblingInstance: findNodePreviousSibling(data.blockInstance, blockStore.storedNodes),
+		.pick((data) => ({
+			targetNodeInstance: pickNodeInstance(data.sourceNodeID, data.nodeStore.storedNodes),
+			elementDefinitions: pickElementDefinitions(elementRegistryState),
+		}))
+		.pick((data) => ({
+			targetNodeDefinition: pickNodeDefinition(data.targetNodeInstance.definitionKey, data.nodeDefinitions),
+			sourceElementDefinition: pickElementDefinition(data.sourceElementKey, data.elementDefinitions),
+			targetElementDefinition: pickElementDefinition(data.targetNodeInstance.elementKey, data.elementDefinitions),
+		}))
+		.check((data) => {
+			return {
+				passesAllRules: passesAllRules(
+					{
+						id: 'test',
+						parentID: sourceNodeID,
+						definitionKey: 'test',
+						elementKey: data.sourceElementKey,
+						childNodeIDs: [],
+						styles: {},
+						attributes: {},
+						data: {},
+					}, //
+					data.targetNodeInstance,
+					data.targetElementDefinition,
+					data.sourceElementDefinition,
+					data.nodeStore.storedNodes,
+					data.targetNodeInstance.childNodeIDs.length,
+				),
+			};
+		})
+		.execute();
+	if (!validData) return false;
+
+	return true;
+}
+
+/**
+ * Determines whether a target node supports any element from a source node's supported elements.
+ *
+ * This function checks if a target node can accept at least one of the elements that a source node
+ * type is configured to support. It iterates through the source node's supported element keys
+ * and tests each one against the target node's compatibility rules.
+ *
+ * @param sourceNodeID - The unique identifier of the node to check compatibility against
+ * @param sourceNodeKey - The node type key whose supported elements will be tested
+ * @returns boolean - True if at least one supported element is compatible, false otherwise
+ * @see {@link canNodeAcceptElement} - For checking compatibility of a specific element
+ * @see {@link getNodeSupportedElement} - For finding the first compatible element instead of just checking existence
+ * @see {@link getNodeDefinitionElementKeys} - For retrieving the supported elements of a node type
+ */
+export function doesNodeSupportElement(sourceNodeID: NodeID, sourceNodeKey: NodeKey): boolean {
+	const validData = new ResultPipeline('[BlockQueries → doesNodeSupportElement]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+			sourceNodeKey: validateNodeKey(sourceNodeKey),
+		})
+		.pick(() => ({
+			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
+		}))
+		.pick((data) => ({
+			sourceNodeDefinition: pickNodeDefinition(data.sourceNodeKey, data.nodeDefinitions),
 		}))
 		.execute();
-	if (!results) return;
+	if (!validData) return false;
 
-	// If there is a previous sibling, return its last descendant
-	if (results.prevSiblingInstance) {
-		const lastDescResult = findNodeLastDescendant(results.prevSiblingInstance, blockStore.storedNodes);
-		if (lastDescResult.status === 'found') return lastDescResult.data;
-		return null;
-	}
+	// Check if any of the child's available tags can be accepted
+	return validData.sourceNodeDefinition.elementKeys.some((tag) => canNodeAcceptElement(sourceNodeID, tag));
+}
 
-	// If no previous sibling, return the parent instance (null if root)
-	const parentPick = results.blockInstance.parentID === 'root' ? { success: false as const, error: 'root' } : pickNodeInstance(results.blockInstance.parentID, blockStore.storedNodes);
-	if (parentPick.success) return parentPick.data;
-	return null;
+/**
+ * Retrieves the element keys that a child node can use, filtered by what the parent node accepts.
+ *
+ * This function gets the supported element keys for a child node instance and filters them to only include
+ * those that the parent node can accept as children. This is useful for UI components that need to
+ * present valid tag options for a node within its parent context.
+ *
+ * @param sourceNodeID - The unique identifier of the child node instance
+ * @param targetNodeID - The unique identifier of the parent node
+ * @returns An array of element keys that are both supported by the child and accepted by the parent
+ * @see {@link getNodeDefinitionElementKeys} - For getting all supported element keys of a node type
+ * @see {@link canNodeAcceptElement} - For checking if a specific element is accepted
+ */
+export function getCompatibleElementKeys(sourceNodeID: NodeID, targetNodeID: NodeID): ElementKey[] {
+	const validData = new ResultPipeline('[BlockQueries → getCompatibleElementKeys]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+			targetNodeID: validateNodeID(targetNodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			sourceInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.pick(() => ({
+			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
+		}))
+		.pick((data) => ({
+			nodeDefinition: pickNodeDefinition(data.sourceInstance.definitionKey, data.nodeDefinitions),
+		}))
+		.execute();
+	if (!validData) return [];
+
+	// Filter to only include tags that the parent can accept
+	return validData.nodeDefinition.elementKeys.filter((tag) => canNodeAcceptElement(targetNodeID, tag));
+}
+
+/**
+ * Finds the first element that a target node can accept from a source node's supported elements.
+ *
+ * This function searches through the source node's supported element keys in order and returns
+ * the first one that passes compatibility validation with the target node. This is useful for
+ * automatically selecting a compatible element when multiple options exist.
+ *
+ * @param sourceNodeID - The unique identifier of the node to find compatibility for
+ * @param sourceNodeKey - The node type key whose supported elements will be searched
+ * @returns ElementKey | undefined - The first compatible element key, or undefined if none are compatible
+ * @see {@link canNodeAcceptElement} - For checking compatibility of a specific element
+ * @see {@link doesNodeSupportElement} - For checking if any compatible element exists
+ * @see {@link getNodeDefinitionElementKeys} - For retrieving all supported elements of a node type
+ */
+export function getNodeSupportedElement(sourceNodeID: NodeID, sourceNodeKey: NodeKey): ElementKey | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getNodeSupportedElement]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+			sourceNodeKey: validateNodeKey(sourceNodeKey),
+		})
+		.pick(() => ({
+			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
+		}))
+		.pick((data) => ({
+			sourceNodeDefinition: pickNodeDefinition(data.sourceNodeKey, data.nodeDefinitions),
+		}))
+		.execute();
+	if (!validData) return undefined;
+
+	// Find the first tag that can be accepted
+	return validData.sourceNodeDefinition.elementKeys.find((tag) => canNodeAcceptElement(sourceNodeID, tag));
 }

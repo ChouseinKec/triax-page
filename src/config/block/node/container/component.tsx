@@ -5,7 +5,8 @@ import React, { useCallback, useRef, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setSelectedNodeID, getNodeRenderedAttributes } from '@/core/block/node/managers';
+import { setSelectedNodeID } from '@/core/block/node/managers/commands';
+import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
 
 

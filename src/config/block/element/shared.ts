@@ -44,196 +44,184 @@ export const TEXT_ONLY_ATTRIBUTES: AttributeKey[] = ['text'];
 // ============================================
 
 // Links and interactive controls
-export const LINK_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'href', 'target', 'rel', 'download', 'referrerpolicy', 'type'
-];
+export const LINK_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'href', 'target', 'rel', 'download', 'referrerpolicy', 'type'];
 
-export const BUTTON_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'type','disabled','name','value','form','formaction','formmethod'
-];
+export const BUTTON_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'disabled', 'name', 'value', 'form', 'formaction', 'formmethod'];
 
-export const INPUT_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'type','name','value','placeholder','disabled','readonly','required','min','max','step','pattern','accept','checked',
-	'maxlength','minlength','autocomplete','autofocus','list','multiple','size','form'
-];
+export const INPUT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'required', 'min', 'max', 'step', 'pattern', 'accept', 'checked', 'maxlength', 'minlength', 'autocomplete', 'autofocus', 'list', 'multiple', 'size', 'form'];
 
-export const SELECT_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'name','required','multiple','disabled','size','form','autocomplete','autofocus'
-];
+export const SELECT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'required', 'multiple', 'disabled', 'size', 'form', 'autocomplete', 'autofocus'];
 
-export const TEXTAREA_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'name','placeholder','required','disabled','readonly','maxlength','minlength','rows','cols','wrap','form','autocomplete','autofocus'
-];
+export const TEXTAREA_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'placeholder', 'required', 'disabled', 'readonly', 'maxlength', 'minlength', 'rows', 'cols', 'wrap', 'form', 'autocomplete', 'autofocus'];
 
-export const LABEL_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'for','form'
-];
+export const LABEL_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'for', 'form'];
 
-export const DETAILS_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'open'
-];
+export const DETAILS_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'];
 
-export const DIALOG_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'open'
-];
+export const DIALOG_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'];
 
 // Media and embedded
-export const IMAGE_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'alt','src','srcset','sizes','width','height','loading','decoding','crossorigin','referrerpolicy','fetchpriority'
-];
+export const IMAGE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'src', 'srcset', 'sizes', 'width', 'height', 'loading', 'decoding', 'crossorigin', 'referrerpolicy', 'fetchpriority'];
 
-export const IFRAME_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'src','name','referrerpolicy','loading','width','height'
-];
+export const IFRAME_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'name', 'referrerpolicy', 'loading', 'width', 'height'];
 
-export const CANVAS_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'width','height'
-];
+export const CANVAS_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'width', 'height'];
 
-export const AUDIO_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'src','preload','autoplay','loop','muted','controls','crossorigin'
-];
+export const AUDIO_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'crossorigin'];
 
-export const VIDEO_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'src','preload','autoplay','loop','muted','controls','poster','width','height','crossorigin'
-];
+export const VIDEO_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'poster', 'width', 'height', 'crossorigin'];
 
-export const SOURCE_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'src','type','srcset','sizes','media'
-];
+export const SOURCE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'srcset', 'sizes', 'media'];
 
-export const TRACK_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'kind','src','srclang','label','default'
-];
+export const TRACK_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'kind', 'src', 'srclang', 'label', 'default'];
 
-export const OBJECT_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'type','name','form','width','height'
-];
+export const OBJECT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'form', 'width', 'height'];
 
-export const EMBED_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'src','type','width','height'
-];
+export const EMBED_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'width', 'height'];
 
-export const MAP_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'name'
-];
+export const MAP_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name'];
 
-export const AREA_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'alt','href','target','download','rel','referrerpolicy'
-];
+export const AREA_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'href', 'target', 'download', 'rel', 'referrerpolicy'];
 
 // Flow/structure specifics
-export const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'cite'
-];
+export const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'cite'];
 
-export const OL_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	'reversed','start','type'
-];
+export const OL_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'reversed', 'start', 'type'];
 
-export const LI_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	...TEXT_ONLY_ATTRIBUTES,
-	'value'
-];
+export const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'value'];
 
 // Table specifics
-export const TH_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	...TEXT_ONLY_ATTRIBUTES,
-	'scope','colspan','rowspan','headers'
-];
+export const TH_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'scope', 'colspan', 'rowspan', 'headers'];
 
-export const TD_ATTRIBUTES: AttributeKey[] = [
-	...BASE_GLOBAL_ATTRIBUTES,
-	...GENERAL_ARIA_ATTRIBUTES,
-	...TEXT_ONLY_ATTRIBUTES,
-	'colspan','rowspan','headers'
-];
+export const TD_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'colspan', 'rowspan', 'headers'];
 
 // Phrasing content: inline/text-level elements
-export const PHRASING_CONTENT: ElementKey[] = [
-	'span','b','strong','i','em','u','small','mark','sub','sup','code','abbr','s','del','ins','q','cite','dfn',
-	'var','samp','kbd','time','data','wbr','bdi','bdo','ruby','rt','rp','a'
-];
+export const PHRASING_CONTENT: ElementKey[] = ['span', 'b', 'strong', 'i', 'em', 'u', 'small', 'mark', 'sub', 'sup', 'code', 'abbr', 's', 'del', 'ins', 'q', 'cite', 'dfn', 'var', 'samp', 'kbd', 'time', 'data', 'wbr', 'bdi', 'bdo', 'ruby', 'rt', 'rp', 'a'];
 
 // Flow content: broad set of block-level and inline elements for general containers
 export const FLOW_CONTENT: ElementKey[] = [
 	// Sectioning and structural
-	'div','section','article','aside','nav','header','footer','main','address','hgroup',
+	'div',
+	'section',
+	'article',
+	'aside',
+	'nav',
+	'header',
+	'footer',
+	'main',
+	'address',
+	'hgroup',
 	// Text containers and blocks
-	'p','pre','blockquote','figure','figcaption',
+	'p',
+	'pre',
+	'blockquote',
+	'figure',
+	'figcaption',
 	// Headings
-	'h1','h2','h3','h4','h5','h6',
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'h6',
 	// Lists
-	'ul','ol','li','dl','dt','dd',
+	'ul',
+	'ol',
+	'li',
+	'dl',
+	'dt',
+	'dd',
 	// Tables
-	'table','thead','tbody','tfoot','tr','th','td','caption','colgroup','col',
+	'table',
+	'thead',
+	'tbody',
+	'tfoot',
+	'tr',
+	'th',
+	'td',
+	'caption',
+	'colgroup',
+	'col',
 	// Forms and controls
-	'form','fieldset','legend','label','input','select','textarea','button','datalist','optgroup','option','output','progress','meter',
+	'form',
+	'fieldset',
+	'legend',
+	'label',
+	'input',
+	'select',
+	'textarea',
+	'button',
+	'datalist',
+	'optgroup',
+	'option',
+	'output',
+	'progress',
+	'meter',
 	// Interactive containers
-	'details','summary','dialog',
+	'details',
+	'summary',
+	'dialog',
 	// Media and embedded
-	'img','video','audio','iframe','canvas','source','track','picture','object','embed','map','area','svg',
+	'img',
+	'video',
+	'audio',
+	'iframe',
+	'canvas',
+	'source',
+	'track',
+	'picture',
+	'object',
+	'embed',
+	'map',
+	'area',
+	'svg',
 	// Phrasing / inline semantics
-	'a','span','b','strong','i','em','u','small','mark','sub','sup','code','abbr','s','del','ins','q','cite','dfn',
-	'var','samp','kbd','time','data','wbr','bdi','bdo','ruby','rt','rp',
+	'a',
+	'span',
+	'b',
+	'strong',
+	'i',
+	'em',
+	'u',
+	'small',
+	'mark',
+	'sub',
+	'sup',
+	'code',
+	'abbr',
+	's',
+	'del',
+	'ins',
+	'q',
+	'cite',
+	'dfn',
+	'var',
+	'samp',
+	'kbd',
+	'time',
+	'data',
+	'wbr',
+	'bdi',
+	'bdo',
+	'ruby',
+	'rt',
+	'rp',
 	// Other voids
-	'hr','br'
+	'hr',
+	'br',
 ];
 
+// Metadata content: elements allowed in head for document metadata
+export const METADATA_CONTENT: ElementKey[] = ['title', 'meta', 'link', 'style', 'script'];
+
 // Flow content without header/footer (for header/footer themselves)
-export const FLOW_NO_HEADER_FOOTER: ElementKey[] = FLOW_CONTENT.filter(t => t !== 'header' && t !== 'footer');
+export const FLOW_NO_HEADER_FOOTER: ElementKey[] = FLOW_CONTENT.filter((t) => t !== 'header' && t !== 'footer');
 
 // Flow content without forms (for form itself)
-export const FLOW_NO_FORM: ElementKey[] = FLOW_CONTENT.filter(t => t !== 'form');
+export const FLOW_NO_FORM: ElementKey[] = FLOW_CONTENT.filter((t) => t !== 'form');
 
 // Flow content without li (for li itself)
-export const FLOW_NO_LI: ElementKey[] = FLOW_CONTENT.filter(t => t !== 'li');
+export const FLOW_NO_LI: ElementKey[] = FLOW_CONTENT.filter((t) => t !== 'li');
 
 // Flow content with figcaption (for figure)
 export const FLOW_WITH_FIGCAPTION: ElementKey[] = [...FLOW_CONTENT, 'figcaption'];
@@ -245,23 +233,23 @@ export const FLOW_WITH_LEGEND: ElementKey[] = [...FLOW_CONTENT, 'legend'];
 export const FLOW_WITH_SUMMARY: ElementKey[] = [...FLOW_CONTENT, 'summary'];
 
 // Phrasing content with source/track (for audio/video)
-export const PHRASING_WITH_MEDIA: ElementKey[] = [...PHRASING_CONTENT, 'source','track'];
+export const PHRASING_WITH_MEDIA: ElementKey[] = [...PHRASING_CONTENT, 'source', 'track'];
 
 // Phrasing content with area (for map)
 export const PHRASING_WITH_AREA: ElementKey[] = [...PHRASING_CONTENT, 'area'];
 
 // Phrasing content with rt/rp (for ruby)
-export const PHRASING_WITH_RUBY: ElementKey[] = [...PHRASING_CONTENT, 'rt','rp'];
+export const PHRASING_WITH_RUBY: ElementKey[] = [...PHRASING_CONTENT, 'rt', 'rp'];
 
 // Specific element sets
 export const LIST_ITEM_ONLY: ElementKey[] = ['li'];
-export const DESCRIPTION_LIST_CONTENT: ElementKey[] = ['dt','dd'];
-export const SELECT_CONTENT: ElementKey[] = ['option','optgroup'];
+export const DESCRIPTION_LIST_CONTENT: ElementKey[] = ['dt', 'dd'];
+export const SELECT_CONTENT: ElementKey[] = ['option', 'optgroup'];
 export const OPTION_ONLY: ElementKey[] = ['option'];
-export const HEADINGS_ONLY: ElementKey[] = ['h1','h2','h3','h4','h5','h6'];
-export const TABLE_SECTIONS: ElementKey[] = ['caption','colgroup','thead','tbody','tfoot','tr'];
+export const HEADINGS_ONLY: ElementKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+export const TABLE_SECTIONS: ElementKey[] = ['caption', 'colgroup', 'thead', 'tbody', 'tfoot', 'tr'];
 export const COL_ONLY: ElementKey[] = ['col'];
 export const TR_ONLY: ElementKey[] = ['tr'];
-export const TABLE_CELLS: ElementKey[] = ['th','td'];
-export const PICTURE_CONTENT: ElementKey[] = ['source','img'];
+export const TABLE_CELLS: ElementKey[] = ['th', 'td'];
+export const PICTURE_CONTENT: ElementKey[] = ['source', 'img'];
 export const VOID_CONTENT: ElementKey[] = [];

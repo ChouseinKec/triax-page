@@ -6,7 +6,7 @@ import type { HighlightedNode } from '@/core/block/node/types/instance';
 
 // Managers
 import { setSelectedNodeID, setHighlightNodeText } from '@/core/block/node/managers';
-import { getNodeData, setNodeData } from '@/core/block/node/managers';
+import { getNodeInstanceData, setNodeInstanceData } from '@/core/block/node/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
 
 // Hooks
@@ -19,7 +19,7 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     const renderedStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get the current text value from data
-    const data = getNodeData(nodeID);
+    const data = getNodeInstanceData(nodeID);
     const text = data?.text || "Enter something...";
 
     // Check if this block has child segments
@@ -67,7 +67,7 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
         if (hasChildren) return;
 
         const currentText = elementRef.current?.innerText ?? "";
-        setNodeData(nodeID, { text: currentText });
+        setNodeInstanceData(nodeID, { text: currentText });
     }, [nodeID, hasChildren]
     );
 

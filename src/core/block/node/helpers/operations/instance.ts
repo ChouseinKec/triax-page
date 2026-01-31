@@ -75,8 +75,8 @@ export function createNode(
 	const nodeAttributes = nodeDefinition.defaultAttributes;
 
 	// If a tag override is provided, ensure it's valid for this block type
-	const supportedElementKeys = nodeDefinition.supportedElementKeys;
-	if (nodeTag && supportedElementKeys && !supportedElementKeys.includes(nodeTag)) return { success: false, error: `Tag '${nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
+	const elementKeys = nodeDefinition.elementKeys;
+	if (nodeTag && elementKeys && !elementKeys.includes(nodeTag)) return { success: false, error: `Tag '${nodeTag}' is not available for node type '${nodeDefinition.key}'.` };
 
 	// Build an initial NodeInstance using the block definition defaults. The
 	// instance starts with an empty child list (`childNodeIDs`) and the provided

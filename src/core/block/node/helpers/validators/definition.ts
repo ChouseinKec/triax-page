@@ -32,10 +32,10 @@ export function validateNodeKey(nodeKey: unknown): ValidateResult<NodeKey> {
  * are used for rendering nodes.
  *
  * @param blockTag - The value to validate as an element key
- * @param supportedElementKeys - Optional array of element keys that are allowed for this context
+ * @param elementKeys - Optional array of element keys that are allowed for this context
  * @returns A ValidateResult indicating whether the value is a valid element key
  */
-export function validateNodeElementKey(blockTag: unknown, supportedElementKeys?: ElementKey[]): ValidateResult<ElementKey> {
+export function validateNodeElementKey(blockTag: unknown, elementKeys?: ElementKey[]): ValidateResult<ElementKey> {
 	const validation = validateString(blockTag);
 	if (!validation.valid) return validation;
 
@@ -43,9 +43,9 @@ export function validateNodeElementKey(blockTag: unknown, supportedElementKeys?:
 	// 	return { valid: false, message: `Invalid block tag: expected a valid HTML element tag, got "${validation.value}"` };
 	// }
 
-	// If supportedElementKeys is provided, check that blockTag is included
-	if (supportedElementKeys && !supportedElementKeys.includes(validation.value as ElementKey)) {
-		return { valid: false, message: `Invalid block tag: '${validation.value}' is not in supportedElementKeys [${supportedElementKeys.join(', ')}]` };
+	// If elementKeys is provided, check that blockTag is included
+	if (elementKeys && !elementKeys.includes(validation.value as ElementKey)) {
+		return { valid: false, message: `Invalid block tag: '${validation.value}' is not in elementKeys [${elementKeys.join(', ')}]` };
 	}
 
 	return { valid: true, value: validation.value as ElementKey };
@@ -67,7 +67,7 @@ export function validateBlockAvailableTags(blockTags: unknown): ValidateResult<E
 
 	for (const tag of validation.value) {
 		const tagValidation = validateNodeElementKey(tag);
-		if (!tagValidation.valid) return { valid: false, message: `Invalid block supportedElementKeys: '${tag}' is not a valid HTML element tag` };
+		if (!tagValidation.valid) return { valid: false, message: `Invalid block elementKeys: '${tag}' is not a valid HTML element tag` };
 	}
 
 	return { valid: true, value: validation.value as ElementKey[] };
@@ -126,7 +126,7 @@ export function validateNodeIcon(nodeIcon: unknown): ValidateResult<NodeIcon> {
  * Validates that the provided value is a complete and valid node definition.
  *
  * This comprehensive validation checks that the node definition has all required
- * properties (key, icon, category, component, supportedElementKeys) and that each
+ * properties (key, icon, category, component, elementKeys) and that each
  * property conforms to its expected type and validation rules. It ensures that
  * only properly configured node definitions can be registered in the system.
  *
@@ -134,13 +134,13 @@ export function validateNodeIcon(nodeIcon: unknown): ValidateResult<NodeIcon> {
  * @returns A ValidateResult indicating whether the value is a valid node definition
  */
 export function validateNodeDefinition(nodeDefinition: unknown): ValidateResult<NodeDefinition> {
-	const validation = validateObject(nodeDefinition, ['key', 'icon', 'category', 'component', 'supportedElementKeys']);
+	const validation = validateObject(nodeDefinition, ['key', 'icon', 'category', 'component', 'elementKeys']);
 	if (!validation.valid) return { valid: false, message: `Invalid block definition: ${validation.message}` };
 
 	const keyValidation = validateNodeKey(validation.value.key);
 	if (!keyValidation.valid) return { valid: false, message: keyValidation.message };
 
-	const allowedTagsValidation = validateBlockAvailableTags(validation.value.supportedElementKeys);
+	const allowedTagsValidation = validateBlockAvailableTags(validation.value.elementKeys);
 	if (!allowedTagsValidation.valid) return { valid: false, message: allowedTagsValidation.message };
 
 	const renderValidation = validateNodeComponent(validation.value.component);

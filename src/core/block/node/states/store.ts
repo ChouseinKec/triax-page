@@ -17,7 +17,7 @@ interface BlockStoreProps {
 	highlightedNode: HighlightedNode;
 }
 
-export interface BlockStoreState extends BlockStoreProps {}
+export interface NodeStoreState extends BlockStoreProps {}
 
 /**
  * Creates the block store after initialization.
@@ -37,14 +37,14 @@ export function createBlockStore() {
 }
 
 // Export a reference that will be set after initialization
-export let useBlockStore: ReturnType<typeof createBlockStore>;
+export let useNodeStore: ReturnType<typeof createBlockStore>;
 
 /**
  * Initialize the block store.
  */
 export function initializeBlockStore(): Promise<void> {
 	return new Promise((resolve) => {
-		useBlockStore = createBlockStore();
+		useNodeStore = createBlockStore();
 		resolve();
 	});
 }

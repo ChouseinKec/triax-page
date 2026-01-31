@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID } from '@/core/block/node/helpers/validators';
@@ -28,7 +28,7 @@ export function copyNodeStyles(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			blockInstance: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
@@ -52,13 +52,13 @@ export function pasteNodeStyles(nodeID: NodeID): void {
 			nodeID: validateNodeID(nodeID),
 		})
 		.pick((data) => ({
-			targetBlock: pickNodeInstance(data.nodeID, useBlockStore.getState().storedNodes),
+			targetBlock: pickNodeInstance(data.nodeID, useNodeStore.getState().storedNodes),
 		}))
 		.execute();
 	if (!results) return;
 
 	// Update the target blockInstance with styles from clipboard
-	useBlockStore.setState((state) => {
+	useNodeStore.setState((state) => {
 		const updatedNodes = {
 			...state.storedNodes,
 			[results.nodeID]: {

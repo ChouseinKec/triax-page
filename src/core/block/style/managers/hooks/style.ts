@@ -1,5 +1,5 @@
 // Stores
-import { useBlockStore } from '@/core/block/node/states/store';
+import { useNodeStore } from '@/core/block/node/states/store';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -48,7 +48,7 @@ export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | unde
 	const selectedPseudoKey = useSelectedPseudoKey();
 
 	// Subscribe to block store changes and compute the style value reactively
-	return useBlockStore((state) => {
+	return useNodeStore((state) => {
 		// Use a pipeline to safely pick required data and perform operations
 		const results = new ResultPipeline('[BlockQueries → useBlockStyle]')
 			.pick(() => ({
@@ -108,7 +108,7 @@ export function useBlockRenderedStyles(NodeID: NodeID, deviceKey: DeviceKey, ori
 	if (!safeParams) return undefined;
 
 	// Subscribe to block store changes and compute the rendered styles reactively
-	return useBlockStore((state) => {
+	return useNodeStore((state) => {
 		// Use pipeline to safely retrieve and process data
 		const results = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
 			.pick(() => ({

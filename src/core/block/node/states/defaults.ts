@@ -1,6 +1,49 @@
 import type { NodeInstance, NodeID } from '@/core/block/node/types/instance';
 
 export const DefaultBlocks: Record<NodeID, NodeInstance> = {
+	// HTML root wrapper
+	html: {
+		id: 'html',
+		styles: {
+			default: {
+				default: {
+					default: {
+						width: '100%',
+						height: '100%',
+						overflow: 'auto',
+						'background-color': '#ffffff',
+					},
+				},
+			},
+		},
+		elementKey: 'html',
+		attributes: {},
+		parentID: null as any,
+		childNodeIDs: ['head', 'body'],
+		definitionKey: 'core-container',
+		data: {},
+	},
+
+	// Head for global elements
+	head: {
+		id: 'head',
+		styles: {
+			default: {
+				default: {
+					default: {
+						display: 'none', // Head is not visible
+					},
+				},
+			},
+		},
+		elementKey: 'head',
+		attributes: {},
+		parentID: 'html',
+		childNodeIDs: [],
+		definitionKey: 'core-container',
+		data: {},
+	},
+
 	// body container
 	body: {
 		id: 'body',
@@ -9,8 +52,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 				default: {
 					default: {
 						width: '100%',
-						height: '100%',
-						overflow: 'auto',
+						height: 'auto',
 						'background-color': '#ffffff',
 						display: 'flex',
 						'flex-direction': 'column',
@@ -52,7 +94,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		},
 		elementKey: 'body',
 		attributes: {},
-		parentID: 'root',
+		parentID: 'html',
 		childNodeIDs: ['hero', 'features-grid', 'timeline'],
 		definitionKey: 'core-container',
 		data: {},
