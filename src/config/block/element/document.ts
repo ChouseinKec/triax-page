@@ -18,6 +18,8 @@ export const DOCUMENT_DEFINITIONS: ElementDefinition[] = [
 		isStyleEditable: false,
 		isAttributeEditable: true,
 		isDeletable: false,
+		isElementCloneable: false,
+		isElementCopyable: false,
 	},
 	{
 		key: 'head',
@@ -30,6 +32,8 @@ export const DOCUMENT_DEFINITIONS: ElementDefinition[] = [
 		isStyleEditable: false,
 		isAttributeEditable: false,
 		isDeletable: false,
+		isElementCloneable: false,
+		isElementCopyable: false,
 	},
 	{
 		key: 'body',
@@ -42,5 +46,7 @@ export const DOCUMENT_DEFINITIONS: ElementDefinition[] = [
 		isStyleEditable: true,
 		isAttributeEditable: true,
 		isDeletable: false,
+		isElementCloneable: false,
+		isElementCopyable: false,
 	},
 ];

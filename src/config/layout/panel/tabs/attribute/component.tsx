@@ -5,8 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID, useSelectedElementKey } from "@/core/block/node/managers";
-import { isElementAttributeEditable } from "@/core/block/element/managers/queries/definition";
+import { useSelectedNodeID, useSelectedNodeIsAttributeEditable } from "@/core/block/node/managers";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -32,10 +31,7 @@ const TAB_ICONS = {
 
 const BlockAttribute: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
-    const selectedElementKey = useSelectedElementKey();
-    const isAttributeEditable = selectedElementKey
-        ? isElementAttributeEditable(selectedElementKey)
-        : false;
+    const isAttributeEditable = useSelectedNodeIsAttributeEditable();
 
     const tabItems = selectedNodeID
         ? [
@@ -48,7 +44,7 @@ const BlockAttribute: React.FC = () => {
         if (!selectedNodeID) {
             return (
                 <p className={CSS.Empty}>
-                    No block selected. Select a block to see attribute-specific settings.
+                    No block-node selected. Select a block-node to see attribute-specific settings.
                 </p>
             );
         }
@@ -56,7 +52,7 @@ const BlockAttribute: React.FC = () => {
         if (!isAttributeEditable) {
             return (
                 <p className={CSS.Empty}>
-                    The selected block's element does not support attribute customization.
+                    The selected block-node's element does not support attribute customization.
                 </p>
             );
         }

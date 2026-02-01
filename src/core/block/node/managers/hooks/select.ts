@@ -1,91 +1,23 @@
 // Stores
 import { useNodeStore } from '@/core/block/node/states/store';
 
-// Utilities
-import { ResultPipeline } from '@/shared/utilities/pipeline/result';
+// React
+import { useMemo } from 'react';
 
 // Types
-import type { ActionDefinition, NodeID, NodeKey, NodeData, NodeIcon, NodeComponent, NodeName, NodeDescription, NodeStyles, NodeAttributes, NodeCategory } from '@/core/block/node/types/';
+import type { NodeDefinition, NodeInstance, ActionDefinition, NodeID, NodeKey, NodeData, NodeIcon, NodeComponent, NodeName, NodeDescription, NodeStyles, NodeAttributes, NodeCategory } from '@/core/block/node/types/';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Helpers
-import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
+import { pickNodeInstance, pickNodeDefinition, pickActionDefinitions, pickNodeDefinitions } from '@/core/block/node/helpers';
+
+// Registry
+import { nodeRegistryState } from '@/core/block/node/states/registry';
 
 // Managers
-import { getNodeDefinitionActions } from '@/core/block/node/managers';
-import { getNodeInstanceDefinitionKey, getNodeInstanceParentID, getNodeInstanceChildNodeIDs, getNodeInstanceData, getNodeInstanceName, getNodeInstanceIcon, getNodeInstanceComponent, getNodeInstanceElementKeys, getNodeInstanceDescription, getNodeInstanceCategory, getNodeInstanceDefaultStyles, getNodeInstanceDefaultAttributes, getNodeInstanceDefaultData, getNodeInstanceActions } from '@/core/block/node/managers/queries/instance';
-
-/**
- * Checks if a specific node is currently selected in the editor.
- *
- * This reactive hook provides real-time updates on whether the specified node is selected,
- * enabling components to highlight or modify behavior based on selection state.
- *
- * @param nodeID - The unique identifier of the node to check for selection status
- * @returns boolean - True if the specified node is currently selected, false otherwise
- */
-export function useIsNodeSelected(nodeID: NodeID): boolean {
-	// Validate parameters first
-	const results = new ResultPipeline('[BlockQueries → useIsNodeSelected]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.execute();
-	if (!results) return false;
-
-	// Return a reactive selection status
-	return useNodeStore((state) => state.selectedNodeID === results.nodeID);
-}
-
-/**
- * Retrieves the definition key of the currently selected node.
- *
- * This reactive hook accesses the selected node's definition key, which identifies the node type
- * and determines its capabilities, behavior, and available actions.
- *
- * @returns NodeKey | undefined - The definition key identifying the type of the selected node, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
- */
-export function useSelectedDefinitionKey(): NodeKey | undefined {
-	return getNodeInstanceDefinitionKey(useSelectedNodeID());
-}
-
-/**
- * Retrieves the element key of the currently selected node.
- *
- * This reactive hook accesses the selected node's element key, which specifies the HTML tag
- * or element type used for rendering the node in the UI.
- *
- * @returns ElementKey | undefined - The element key identifying the HTML tag of the selected node, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
- */
-export function useSelectedElementKey(): ElementKey | undefined {
-	return useNodeStore((state) => {
-		// Get the selected block ID
-		const selectedNodeID = state.selectedNodeID;
-		if (!selectedNodeID) return undefined;
-
-		// Pick the block instance
-		const selectedBlock = pickNodeInstance(selectedNodeID, state.storedNodes);
-		if (!selectedBlock.success) return undefined;
-
-		// Return the block tag
-		return selectedBlock.data.elementKey;
-	});
-}
-
-/**
- * Retrieves the parent ID of the currently selected node.
- *
- * This reactive hook accesses the selected node's parent ID, indicating its position
- * in the hierarchical node tree structure.
- *
- * @returns NodeID | undefined - The unique identifier of the parent node, or undefined if no selection exists or the selected node is a root node
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
- */
-export function useSelectedParentID(): NodeID | undefined {
-	return getNodeInstanceParentID(useSelectedNodeID());
-}
+import { useNodeCompatibleElementKeys, getNodeCompatibleDefinitions } from '@/core/block/node/managers';
+import { isNodeStyleEditable, isNodeAttributeEditable, isNodeDeletable, isNodeCopyable, isNodeCloneable, isNodeOrderable } from '@/core/block/node/managers/queries/instance';
+import { useNodeIsStyleEditable, useNodeIsAttributeEditable, useNodeIsDeletable, useNodeIsCopyable, useNodeIsCloneable, useNodeIsOrderable } from './node';
 
 /**
  * Retrieves the ID of the currently selected node in the editor.
@@ -100,16 +32,97 @@ export function useSelectedNodeID(): NodeID {
 }
 
 /**
+ * Retrieves the instance of the currently selected node.
+ *
+ * This reactive hook accesses the selected node's complete instance data,
+ * including its properties, and updates reactively when the selected node changes.
+ *
+ * @returns NodeInstance | undefined - The complete node instance of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ */
+export function useSelectedNodeInstance(): NodeInstance | undefined {
+	return useNodeStore((state) => {
+		const selectedNodeID = state.selectedNodeID;
+
+		const selectedNodeInstance = pickNodeInstance(selectedNodeID, state.storedNodes);
+		return selectedNodeInstance.success ? selectedNodeInstance.data : undefined;
+	});
+}
+
+/**
+ * Retrieves the selectedNodeDefinition of the currently selected node.
+ *
+ * This reactive hook accesses the selected node's selectedNodeDefinition, which contains all the metadata
+ * and configuration for the node type.
+ *
+ * @returns NodeDefinition | undefined - The selectedNodeDefinition of the selected node, or undefined if no selection exists or selectedNodeDefinition is not found
+ * @see {@link useSelectedNodeInstance} - For getting the selected node's instance
+ */
+export function useSelectedNodeDefinition(): NodeDefinition | undefined {
+	const selectedNodeInstance = useSelectedNodeInstance();
+	if (!selectedNodeInstance) return undefined;
+
+	const nodeDefinitions = pickNodeDefinitions(nodeRegistryState);
+	if (!nodeDefinitions.success) return undefined;
+
+	const selectedNodeDefinition = pickNodeDefinition(selectedNodeInstance.definitionKey, nodeDefinitions.data);
+	return selectedNodeDefinition.success ? selectedNodeDefinition.data : undefined;
+}
+
+/**
+ * Retrieves the parent ID of the currently selected node.
+ *
+ * This reactive hook accesses the selected node's parent ID, indicating its position
+ * in the hierarchical node tree structure.
+ *
+ * @returns NodeID | undefined - The unique identifier of the parent node, or undefined if no selection exists or the selected node is a root node
+ * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ */
+export function useSelectedParentID(): NodeID | undefined {
+	const selectedNodeInstance = useSelectedNodeInstance();
+	return selectedNodeInstance ? selectedNodeInstance.parentID : undefined;
+}
+
+/**
+ * Retrieves the selectedNodeDefinition key of the currently selected node.
+ *
+ * This reactive hook accesses the selected node's selectedNodeDefinition key, which identifies the node type
+ * and determines its capabilities, behavior, and available actions.
+ *
+ * @returns NodeKey | undefined - The selectedNodeDefinition key identifying the type of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ */
+export function useSelectedDefinitionKey(): NodeKey | undefined {
+	const selectedNodeInstance = useSelectedNodeInstance();
+	return selectedNodeInstance ? selectedNodeInstance.definitionKey : undefined;
+}
+
+/**
+ * Retrieves the element key of the currently selected node.
+ *
+ * This reactive hook accesses the selected node's element key, which specifies the HTML tag
+ * or element type used for rendering the node in the UI.
+ *
+ * @returns ElementKey | undefined - The element key identifying the HTML tag of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ */
+export function useSelectedElementKey(): ElementKey | undefined {
+	const selectedNodeInstance = useSelectedNodeInstance();
+	return selectedNodeInstance ? selectedNodeInstance.elementKey : undefined;
+}
+
+/**
  * Retrieves the child node IDs of the currently selected node.
  *
  * This reactive hook accesses the selected node's child node IDs, representing the nodes
  * directly under it in the hierarchical tree structure.
  *
- * @returns Readonly<NodeID[]> | undefined - A readonly array of child node IDs, or undefined if no selection exists
+ * @returns NodeID[] | undefined - A readonly array of child node IDs, or undefined if no selection exists
  * @see {@link useSelectedNodeID} - For getting the selected node's ID
  */
 export function useSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
-	return getNodeInstanceChildNodeIDs(useSelectedNodeID());
+	const selectedNodeInstance = useSelectedNodeInstance();
+	return selectedNodeInstance ? selectedNodeInstance.childNodeIDs : undefined;
 }
 
 /**
@@ -118,23 +131,25 @@ export function useSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
  * This reactive hook accesses the selected node's data object, which contains custom properties,
  * content, and configuration used for rendering and processing the node.
  *
- * @returns Readonly<NodeData> | undefined - The node's data object, or undefined if no selection exists
+ * @returns NodeData | undefined - The node's data object, or undefined if no selection exists
  * @see {@link useSelectedNodeID} - For getting the selected node's ID
  */
 export function useSelectedNodeData(): Readonly<NodeData> | undefined {
-	return getNodeInstanceData(useSelectedNodeID());
+	const selectedNodeInstance = useSelectedNodeInstance();
+	return selectedNodeInstance ? selectedNodeInstance.data : undefined;
 }
 
 /**
  * Retrieves the name of the currently selected node.
  *
- * This reactive hook accesses the selected node's human-readable name, derived from its definition.
+ * This reactive hook accesses the selected node's human-readable name, derived from its selectedNodeDefinition.
  *
  * @returns NodeName | undefined - The name of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeName(): NodeName | undefined {
-	return getNodeInstanceName(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.name : undefined;
 }
 
 /**
@@ -144,10 +159,11 @@ export function useSelectedNodeName(): NodeName | undefined {
  * in UI elements like menus or toolbars.
  *
  * @returns NodeIcon | undefined - The icon component of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeIcon(): NodeIcon | undefined {
-	return getNodeInstanceIcon(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.icon : undefined;
 }
 
 /**
@@ -157,10 +173,11 @@ export function useSelectedNodeIcon(): NodeIcon | undefined {
  * the node's content and handling its interactions in the UI.
  *
  * @returns NodeComponent | undefined - The React component of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeComponent(): NodeComponent | undefined {
-	return getNodeInstanceComponent(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.component : undefined;
 }
 
 /**
@@ -169,11 +186,12 @@ export function useSelectedNodeComponent(): NodeComponent | undefined {
  * This reactive hook accesses the selected node's supported element keys, which define
  * the HTML elements it can contain or interact with.
  *
- * @returns Readonly<ElementKey[]> | undefined - A readonly array of element keys, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @returns ElementKey[] | undefined - A readonly array of element keys, or undefined if no selection exists
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined {
-	return getNodeInstanceElementKeys(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.elementKeys : undefined;
 }
 
 /**
@@ -183,10 +201,11 @@ export function useSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined
  * about its purpose and usage.
  *
  * @returns NodeDescription | undefined - The description of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeDescription(): NodeDescription | undefined {
-	return getNodeInstanceDescription(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.description : undefined;
 }
 
 /**
@@ -196,10 +215,11 @@ export function useSelectedNodeDescription(): NodeDescription | undefined {
  * and classifying nodes in the UI.
  *
  * @returns NodeCategory | undefined - The category of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeCategory(): NodeCategory | undefined {
-	return getNodeInstanceCategory(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.category : undefined;
 }
 
 /**
@@ -208,11 +228,12 @@ export function useSelectedNodeCategory(): NodeCategory | undefined {
  * This reactive hook accesses the selected node's default styles, organized by device,
  * orientation, and pseudo-states for rendering.
  *
- * @returns Readonly<NodeStyles> | undefined - The default styles of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @returns NodeStyles | undefined - The default styles of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeDefaultStyles(): Readonly<NodeStyles> | undefined {
-	return getNodeInstanceDefaultStyles(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.defaultStyles : undefined;
 }
 
 /**
@@ -221,11 +242,12 @@ export function useSelectedNodeDefaultStyles(): Readonly<NodeStyles> | undefined
  * This reactive hook accesses the selected node's default attributes, applied
  * when creating new instances of the node.
  *
- * @returns Readonly<NodeAttributes> | undefined - The default attributes of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @returns NodeAttributes | undefined - The default attributes of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | undefined {
-	return getNodeInstanceDefaultAttributes(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.defaultAttributes : undefined;
 }
 
 /**
@@ -234,11 +256,12 @@ export function useSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | u
  * This reactive hook accesses the selected node's default data structure,
  * providing initial state for custom node implementations.
  *
- * @returns Readonly<NodeData> | undefined - The default data of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @returns NodeData | undefined - The default data of the selected node, or undefined if no selection exists
+ * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
 export function useSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
-	return getNodeInstanceDefaultData(useSelectedNodeID());
+	const selectedNodeDefinition = useSelectedNodeDefinition();
+	return selectedNodeDefinition ? selectedNodeDefinition.defaultData : undefined;
 }
 
 /**
@@ -247,25 +270,140 @@ export function useSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
  * This reactive hook provides the list of actions applicable to the selected node,
  * sorted by their defined order for consistent UI presentation.
  *
- * @returns Readonly<ActionDefinition[]> - A readonly array of action definitions for the currently selected node
+ * @returns ActionDefinition[] - A readonly array of action definitions for the currently selected node
  * @see {@link useSelectedNodeID} - For getting the selected node's ID
  */
 export function useSelectedNodeActions(): Readonly<ActionDefinition[]> {
-	return getNodeInstanceActions(useSelectedNodeID());
+	const selectedDefinitionKey = useSelectedDefinitionKey();
+
+	return useMemo(() => {
+		if (!selectedDefinitionKey) return [];
+
+		const actions = pickActionDefinitions(nodeRegistryState);
+		if (!actions.success) return [];
+
+		return Object.values(actions.data)
+			.filter((action) => action.nodeKey === selectedDefinitionKey)
+			.sort((a, b) => a.order - b.order);
+	}, [selectedDefinitionKey]);
 }
 
 /**
- * Retrieves action definitions for the currently selected node.
+ * Retrieves the node definitions that the currently selected node can accept as children.
  *
- * This reactive hook provides the list of actions applicable to the selected node's type,
- * sorted by their defined order for consistent UI presentation.
+ * This reactive hook returns an array of node definitions that are compatible with the selected node,
+ * enabling UI components to present valid options for adding child nodes.
  *
- * @returns Readonly<ActionDefinition[]> - A readonly array of action definitions for the currently selected node
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's definition key
+ * @returns NodeDefinition[] - An array of node definitions compatible with the selected node
+ * @see {@link getNodeCompatibleDefinitions} - The underlying query function used
  */
-export function useSelectedActionDefinitions(): Readonly<ActionDefinition[]> {
-	const selectedNodeKey = useSelectedDefinitionKey();
-	if (!selectedNodeKey) return [];
+export function useSelectedNodeCompatibleDefinitions(): NodeDefinition[] {
+	const selectedNodeID = useSelectedNodeID();
 
-	return getNodeDefinitionActions(selectedNodeKey);
+	return getNodeCompatibleDefinitions(selectedNodeID);
+}
+
+/**
+ * Retrieves the element keys that are compatible with the currently selected node.
+ *
+ * This reactive hook returns an array of element keys that the selected node can accept,
+ * useful for UI components that need to display valid element options for the node.
+ *
+ * @returns ElementKey[] - An array of element keys compatible with the selected node
+ * @see {@link useNodeCompatibleElementKeys} - The underlying hook used
+ */
+export function useSelectedNodeCompatibleElementKeys(): ElementKey[] {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeCompatibleElementKeys(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node's styles can be edited.
+ *
+ * This reactive hook returns a boolean indicating if the selected node's styles
+ * are editable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node's styles are editable, false otherwise
+ * @see {@link useNodeIsStyleEditable} - The general hook used internally
+ */
+export function useSelectedNodeIsStyleEditable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsStyleEditable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node's attributes can be edited.
+ *
+ * This reactive hook returns a boolean indicating if the selected node's attributes
+ * are editable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node's attributes are editable, false otherwise
+ * @see {@link useNodeIsAttributeEditable} - The general hook used internally
+ */
+export function useSelectedNodeIsAttributeEditable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsAttributeEditable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node can be deleted.
+ *
+ * This reactive hook returns a boolean indicating if the selected node
+ * is deletable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node is deletable, false otherwise
+ * @see {@link useNodeIsDeletable} - The general hook used internally
+ */
+export function useSelectedNodeIsDeletable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsDeletable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node can be copied.
+ *
+ * This reactive hook returns a boolean indicating if the selected node
+ * is copyable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node is copyable, false otherwise
+ * @see {@link useNodeIsCopyable} - The general hook used internally
+ */
+export function useSelectedNodeIsCopyable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsCopyable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node can be cloned.
+ *
+ * This reactive hook returns a boolean indicating if the selected node
+ * is cloneable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node is cloneable, false otherwise
+ * @see {@link useNodeIsCloneable} - The general hook used internally
+ */
+export function useSelectedNodeIsCloneable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsCloneable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node can be reordered.
+ *
+ * This reactive hook returns a boolean indicating if the selected node
+ * is orderable, based on its element definition.
+ *
+ * @returns boolean - True if the selected node is orderable, false otherwise
+ * @see {@link useNodeIsOrderable} - The general hook used internally
+ */
+export function useSelectedNodeIsOrderable(): boolean {
+	const selectedNodeID = useSelectedNodeID();
+
+	return useNodeIsOrderable(selectedNodeID);
 }

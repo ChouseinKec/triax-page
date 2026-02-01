@@ -1,3 +1,3 @@
 export interface EntryProps {
-	NodeID: string;
+	nodeID: string;
 }

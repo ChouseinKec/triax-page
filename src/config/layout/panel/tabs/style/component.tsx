@@ -5,8 +5,8 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID, useSelectedElementKey } from "@/core/block/node/managers";
-import { isElementStyleEditable } from "@/core/block/element/managers/queries/definition";
+import { useSelectedNodeID } from "@/core/block/node/managers";
+import { useSelectedNodeIsStyleEditable } from "@/core/block/node/managers";
 
 
 // Components
@@ -67,9 +67,7 @@ const TAB_ICONS = {
  */
 const StyleInspector: React.FC = () => {
     const selectedNodeID = useSelectedNodeID();
-    const selectedElementKey = useSelectedElementKey();
-    const isStyleable = selectedElementKey ? isElementStyleEditable(selectedElementKey) : false;
-
+    const isStyleable = useSelectedNodeIsStyleEditable();
 
     // Define tabs with renderers
     const tabItems = selectedNodeID

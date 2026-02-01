@@ -42,7 +42,7 @@ const BlocksHierarchy: React.FC = () => {
         >
             {
                 rootBlock
-                    ? <Entry key={rootBlock.id} NodeID={rootBlock.id} />
+                    ? <Entry key={rootBlock.id} nodeID={rootBlock.id} />
                     : <div className={CSS.Empty}>No blocks available. Add a block to get started.</div>
             }
         </div>

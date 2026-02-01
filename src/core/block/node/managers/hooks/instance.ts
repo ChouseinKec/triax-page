@@ -4,8 +4,8 @@ import { useNodeStore } from '@/core/block/node/states/store';
 // Types
 import type { NodeID, NodeInstance } from '@/core/block/node/types/instance';
 
-// Manager
-import { getNodeInstance } from '@/core/block/node/managers/';
+// Helpers
+import { pickNodeInstance } from '@/core/block/node/helpers';
 
 /**
  * Retrieves all node instances from the store.
@@ -32,12 +32,10 @@ export function useNodeInstances(): NodeInstance[] {
  *
  * @param nodeID - The unique identifier of the node instance to retrieve
  * @returns NodeInstance | undefined - The complete node instance, or undefined if the node is not found
- * @see {@link getNodeInstance} - The underlying manager query
  */
 export function useNodeInstance(nodeID: NodeID): NodeInstance | undefined {
-	// Return a reactive block instance
-	return useNodeStore(() => {
-		// Return the block instance data
-		return getNodeInstance(nodeID);
+	return useNodeStore((state) => {
+		const blockInstance = pickNodeInstance(nodeID, state.storedNodes);
+		return blockInstance.success ? blockInstance.data : undefined;
 	});
 }

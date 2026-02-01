@@ -13,6 +13,7 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Managers
 import { getNodeDefinitionActions, getNodeDefinitionIcon, getNodeDefinitionComponent, getNodeDefinitionElementKeys, getNodeDefinitionName, getNodeDefinitionDescription, getNodeDefinitionCategory, getNodeDefinitionDefaultStyles, getNodeDefinitionDefaultAttributes, getNodeDefinitionDefaultData } from '@/core/block/node/managers/';
+import { isElementStyleEditable, isElementAttributeEditable, isElementDeletable, isElementCopyable, isElementCloneable, isElementOrderable } from '@/core/block/element/managers/queries/definition';
 
 /**
  * Retrieves all node instances currently stored in the node store.
@@ -462,4 +463,166 @@ export function getNodeInstanceData(sourceNodeID: NodeID): Readonly<NodeData> | 
 	if (!validData) return undefined;
 
 	return validData.data;
+}
+
+/**
+ * Determines if a node's styles can be edited based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if its styles
+ * are editable by users. It delegates to the element's style editability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node's styles are editable, false otherwise
+ * @see {@link isElementStyleEditable} - The underlying element check
+ */
+export function isNodeStyleEditable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeStyleEditable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementStyleEditable(validData.nodeInstance.elementKey);
+}
+
+/**
+ * Determines if a node's attributes can be edited based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if its attributes
+ * are editable by users. It delegates to the element's attribute editability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node's attributes are editable, false otherwise
+ * @see {@link isElementAttributeEditable} - The underlying element check
+ */
+export function isNodeAttributeEditable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeAttributeEditable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementAttributeEditable(validData.nodeInstance.elementKey);
+}
+
+/**
+ * Determines if a node can be deleted based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if it can be deleted
+ * by users. It delegates to the element's deletability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node is deletable, false otherwise
+ * @see {@link isElementDeletable} - The underlying element check
+ */
+export function isNodeDeletable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeDeletable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementDeletable(validData.nodeInstance.elementKey);
+}
+
+/**
+ * Determines if a node can be copied based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if it can be copied
+ * by users. It delegates to the element's copyability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node is copyable, false otherwise
+ * @see {@link isElementCopyable} - The underlying element check
+ */
+export function isNodeCopyable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeCopyable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementCopyable(validData.nodeInstance.elementKey);
+}
+
+/**
+ * Determines if a node can be cloned based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if it can be cloned
+ * by users. It delegates to the element's cloneability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node is cloneable, false otherwise
+ * @see {@link isElementCloneable} - The underlying element check
+ */
+export function isNodeCloneable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeCloneable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementCloneable(validData.nodeInstance.elementKey);
+}
+
+/**
+ * Determines if a node can be reordered based on its element definition.
+ *
+ * This function checks the element definition of the given node to see if it can be reordered
+ * by users. It delegates to the element's orderability check.
+ *
+ * @param nodeID - The unique identifier of the node to check
+ * @returns boolean - True if the node is orderable, false otherwise
+ * @see {@link isElementOrderable} - The underlying element check
+ */
+export function isNodeOrderable(nodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → isNodeOrderable]')
+		.validate({
+			nodeID: validateNodeID(nodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return false;
+
+	return isElementOrderable(validData.nodeInstance.elementKey);
 }
