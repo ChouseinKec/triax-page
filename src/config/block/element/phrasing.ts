@@ -2,7 +2,7 @@
 import type { ElementDefinition } from '@/core/block/element/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_RUBY, VOID_CONTENT } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_RUBY } from './shared';
 
 const PHRASING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
 
@@ -286,7 +286,7 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'wbr',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,

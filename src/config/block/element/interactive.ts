@@ -3,7 +3,7 @@ import type { ElementDefinition } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT, FLOW_WITH_SUMMARY, SELECT_CONTENT, VOID_CONTENT } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT, FLOW_WITH_SUMMARY, SELECT_CONTENT} from './shared';
 
 const INTERACTIVE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 const TEXT_INTERACTIVE_ATTRIBUTES: AttributeKey[] = [...INTERACTIVE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
@@ -52,7 +52,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'input',
 		allowedAttributes: INPUT_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -76,7 +76,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'textarea',
 		allowedAttributes: TEXTAREA_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,

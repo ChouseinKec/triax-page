@@ -1,13 +1,17 @@
-import React, { useCallback, useRef, memo } from 'react';
-
+import React, { useCallback, memo } from 'react';
 
 // Types
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
 import { setSelectedNodeID } from '@/core/block/node/managers/commands';
+import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
+import { getNodeInstanceData, setNodeInstanceData } from '@/core/block/node/managers';
 import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
 import { useBlockRenderedStyles } from '@/core/block/style/managers';
+
+// Components
+import Placeholder from '@/shared/components/placeholder/block/component';
 
 
 /**
@@ -18,10 +22,13 @@ import { useBlockRenderedStyles } from '@/core/block/style/managers';
  * @returns JSX element representing the container block
  */
 const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const NodeID = instance.id;
-    const NodeAttributes = getNodeRenderedAttributes(NodeID);
-    const NodeStyles = useBlockRenderedStyles(NodeID, deviceKey, orientationKey, pseudoKey);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const nodeID = instance.id;
+    const nodeAttributes = getNodeRenderedAttributes(nodeID);
+    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+
+    // Get node data to check placeholder setting
+    const data = getNodeInstanceData(nodeID);
+    const hidePlaceholder = data?.placeholder === false;
 
     /**
      * Handles block selection when clicked.
@@ -29,27 +36,69 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(NodeID);
-    }, [NodeID]
+        setSelectedNodeID(nodeID);
+    }, [nodeID]
     );
+
+    /**
+     * Opens the library panel to let users choose what block to add
+     */
+    const handleAddBlock = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        // First select this container
+        setSelectedNodeID(nodeID);
+        // Then open the library panel
+        setPanelOpenState('library', true);
+    }, [nodeID]
+    );
+
+    /**
+     * Hides the placeholder for this container
+     */
+    const handleHidePlaceholder = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setNodeInstanceData(nodeID, { ...data, placeholder: false });
+    }, [nodeID, data]
+    );
+
+    // Check if container is empty (no children)
+    const isEmpty = React.Children.count(children) === 0;
+    const shouldShowPlaceholder = isEmpty && !hidePlaceholder;
 
     return (
         <div
-            className={`block-${NodeID}`}
-            ref={containerRef}
+            className={`block-${nodeID}`}
             onClick={handleSelectBlock}
 
             data-block-type="container"
             data-is-selected={isSelected}
 
-            {...NodeAttributes}
+            {...nodeAttributes}
         >
             {/* Render child blocks */}
             {children}
 
+            {/* Show placeholder when empty and not hidden */}
+            {shouldShowPlaceholder && (
+                <Placeholder
+                    message="Empty Container"
+                    description="Add blocks to this container"
+                    actions={[
+                        {
+                            label: "Add Block",
+                            onClick: handleAddBlock
+                        },
+                        {
+                            label: "Hide",
+                            onClick: handleHidePlaceholder
+                        }
+                    ]}
+                />
+            )}
+
             {/* Inject block-specific styles */}
             <style>
-                {NodeStyles}
+                {nodeStyles}
             </style>
         </div>
     );

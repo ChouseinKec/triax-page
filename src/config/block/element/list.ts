@@ -38,6 +38,18 @@ export const LIST_DEFINITIONS: ElementDefinition[] = [
 		isDeletable: true,
 	},
 	{
+		key: 'menu',
+		allowedAttributes: LIST_ATTRIBUTES,
+		allowedChildren: LIST_ITEM_ONLY,
+		forbiddenAncestors: null,
+		uniqueChildren: null,
+		orderedChildren: null,
+		description: 'Menu element. Contains list items (li) for creating menus or toolbars.',
+		isStyleEditable: true,
+		isAttributeEditable: true,
+		isDeletable: true,
+	},
+	{
 		key: 'li',
 		allowedAttributes: LI_ATTRIBUTES,
 		allowedChildren: FLOW_NO_LI,

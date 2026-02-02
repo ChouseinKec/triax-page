@@ -3,7 +3,7 @@ import type { ElementDefinition } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, VOID_CONTENT, PHRASING_CONTENT, PHRASING_WITH_MEDIA, PICTURE_CONTENT, FLOW_CONTENT, PHRASING_WITH_AREA } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_MEDIA, PICTURE_CONTENT, FLOW_CONTENT, PHRASING_WITH_AREA } from './shared';
 
 const EMBEDDED_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 
@@ -33,7 +33,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'img',
 		allowedAttributes: IMAGE_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -45,7 +45,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'iframe',
 		allowedAttributes: IFRAME_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -93,7 +93,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'source',
 		allowedAttributes: SOURCE_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -105,7 +105,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'track',
 		allowedAttributes: TRACK_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -141,7 +141,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'embed',
 		allowedAttributes: EMBED_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -165,7 +165,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'area',
 		allowedAttributes: AREA_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,

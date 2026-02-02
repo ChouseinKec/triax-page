@@ -4,7 +4,7 @@ import { useNodeStore } from '@/core/block/node/states/store';
 // Helpers
 import { overwriteNodeInTree, pickNodeStoreState, validateNodeInstance, passesAllRules, duplicateNodeInTree, addNodeToTree, addNodesToTree, deleteNodeFromTree, createNode, detachNodeFromParent, pickNodeDefinitions, pickNodeDefinition, pickNodeInstance, validateNodeID, validateNodeKey } from '@/core/block/node/helpers';
 import { pickElementDefinition, pickElementDefinitions } from '@/core/block/element/helpers/pickers';
- 
+
 // Types
 import type { NodeID, NodeKey, NodeInstance } from '@/core/block/node/types';
 import type { ElementKey } from '@/core/block/element/types';
@@ -168,8 +168,6 @@ export function addNodes(nodeConfigs: [NodeKey, NodeID, ElementKey, { data?: {} 
  * @see {@link detachNodeFromParent} - The initial detachment operation
  */
 export function deleteNode(nodeID: NodeID): void {
-	if (nodeID === 'body') return (devLog.error(`[BlockManager → deleteNode] Cannot delete root body block`), undefined);
-
 	// Validate, pick, and operate on necessary data
 	const validData = new ResultPipeline('[BlockManager → deleteNode]')
 		.validate({
@@ -198,12 +196,12 @@ export function deleteNode(nodeID: NodeID): void {
 		return { storedNodes: updatedNodes };
 	});
 
-	// Queue deletion with timeout for React unmounting
-	setTimeout(() => {
+	// Complete the deletion in the next microtask to allow React unmounting
+	queueMicrotask(() => {
 		const currentStore = useNodeStore.getState();
 
 		// Re-validate and pick necessary data
-		const currentResults = new ResultPipeline('[BlockManager → deleteNode → Timeout] ')
+		const currentResults = new ResultPipeline('[BlockManager → deleteNode → Cleanup] ')
 			.pick(() => ({
 				sourceNodeInstance: pickNodeInstance(nodeID, currentStore.storedNodes),
 			}))
@@ -219,20 +217,18 @@ export function deleteNode(nodeID: NodeID): void {
 		// Update store with final state
 		useNodeStore.setState((state) => {
 			const updatedNodes = { ...state.storedNodes, ...currentResults.blocksAfterDeletion };
-			return { storedNodes: updatedNodes };
-		});
-
-		// Update selected node if needed
-		useNodeStore.setState((state) => ({
-			data: {
-				...state.data,
-				global: {
-					...state.data.global,
-					selectedNodeID: finalSelectedID,
+			return {
+				storedNodes: updatedNodes,
+				data: {
+					...state.data,
+					global: {
+						...state.data.global,
+						selectedNodeID: finalSelectedID,
+					},
 				},
-			},
-		}));
-	}, 100);
+			};
+		});
+	});
 }
 
 /**

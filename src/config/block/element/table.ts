@@ -1,9 +1,12 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, TABLE_SECTIONS, COL_ONLY, TR_ONLY, TABLE_CELLS, VOID_CONTENT } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT } from './shared';
+
+// Define table sections that can be direct children of table
+const TABLE_SECTIONS_ONLY: ElementKey[] = ['caption', 'colgroup', 'thead', 'tbody', 'tfoot'];
 
 const TABLE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 const TABLE_TEXT_ATTRIBUTES: AttributeKey[] = [...TABLE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
@@ -16,11 +19,11 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'table',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TABLE_SECTIONS,
+		allowedChildren: TABLE_SECTIONS_ONLY,
 		forbiddenAncestors: null,
 		uniqueChildren: { caption: 1 },
-		orderedChildren: [['caption'], ['colgroup'], ['thead'], ['tbody', 'tfoot', 'tr']],
-		description: 'Tabular data container. May contain caption, column groups, header/body/footer sections, or rows.',
+		orderedChildren: [['caption'], ['colgroup'], ['thead'], ['tbody'], ['tfoot']],
+		description: 'Tabular data container. May contain caption, column groups, header/body/footer sections.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
 		isDeletable: true,
@@ -52,7 +55,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'col',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -64,7 +67,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'thead',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TR_ONLY,
+		allowedChildren: ['tr'],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -76,7 +79,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'tbody',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TR_ONLY,
+		allowedChildren: ['tr'],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -88,7 +91,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'tfoot',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TR_ONLY,
+		allowedChildren: ['tr'],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -100,7 +103,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'tr',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TABLE_CELLS,
+		allowedChildren: ['th', 'td'],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,

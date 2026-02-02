@@ -127,21 +127,10 @@ export const FLOW_CONTENT: ElementKey[] = [
 	// Lists
 	'ul',
 	'ol',
-	'li',
+	'menu',
 	'dl',
 	'dt',
 	'dd',
-	// Tables
-	'table',
-	'thead',
-	'tbody',
-	'tfoot',
-	'tr',
-	'th',
-	'td',
-	'caption',
-	'colgroup',
-	'col',
 	// Forms and controls
 	'form',
 	'fieldset',
@@ -209,6 +198,9 @@ export const FLOW_CONTENT: ElementKey[] = [
 	// Other voids
 	'hr',
 	'br',
+
+	// Table
+	'table',
 ];
 
 // Metadata content: elements allowed in head for document metadata
@@ -241,15 +233,11 @@ export const PHRASING_WITH_AREA: ElementKey[] = [...PHRASING_CONTENT, 'area'];
 // Phrasing content with rt/rp (for ruby)
 export const PHRASING_WITH_RUBY: ElementKey[] = [...PHRASING_CONTENT, 'rt', 'rp'];
 
+
 // Specific element sets
 export const LIST_ITEM_ONLY: ElementKey[] = ['li'];
 export const DESCRIPTION_LIST_CONTENT: ElementKey[] = ['dt', 'dd'];
 export const SELECT_CONTENT: ElementKey[] = ['option', 'optgroup'];
 export const OPTION_ONLY: ElementKey[] = ['option'];
 export const HEADINGS_ONLY: ElementKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-export const TABLE_SECTIONS: ElementKey[] = ['caption', 'colgroup', 'thead', 'tbody', 'tfoot', 'tr'];
-export const COL_ONLY: ElementKey[] = ['col'];
-export const TR_ONLY: ElementKey[] = ['tr'];
-export const TABLE_CELLS: ElementKey[] = ['th', 'td'];
 export const PICTURE_CONTENT: ElementKey[] = ['source', 'img'];
-export const VOID_CONTENT: ElementKey[] = [];

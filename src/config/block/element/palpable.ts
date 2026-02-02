@@ -2,13 +2,13 @@
 import type { ElementDefinition } from '@/core/block/element/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, VOID_CONTENT, FLOW_CONTENT } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, FLOW_CONTENT } from './shared';
 
 export const PALPABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'hr',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,
@@ -20,7 +20,7 @@ export const PALPABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'br',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
-		allowedChildren: VOID_CONTENT,
+		allowedChildren: [],
 		forbiddenAncestors: null,
 		uniqueChildren: null,
 		orderedChildren: null,

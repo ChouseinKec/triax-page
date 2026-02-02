@@ -12,15 +12,18 @@ import { useBlockRenderedStyles } from '@/core/block/style/managers';
 // Hooks
 import { useHighlight } from '@/shared/hooks/interface/useHighlight';
 
+// Components
+// import Placeholder from '@/shared/components/placeholder/block/component';
+
 
 const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected, children }) => {
     const nodeID = instance.id;
-    const BlockTag = instance.elementKey as React.ElementType;
+    const NodeElementKey = instance.elementKey as React.ElementType;
     const renderedStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get the current text value from data
     const data = getNodeInstanceData(nodeID);
-    const text = data?.text || "Enter something...";
+    const text = data?.text || "Start writing your markdown content here...";
 
     // Check if this block has child segments
     const hasChildren = instance.childNodeIDs.length > 0;
@@ -67,16 +70,25 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
         if (hasChildren) return;
 
         const currentText = elementRef.current?.innerText ?? "";
-        setNodeInstanceData(nodeID, { text: currentText });
+        const defaultText = "Start writing your markdown content here...";
+
+        // Only save if text is different from default placeholder
+        if (currentText !== defaultText) {
+            setNodeInstanceData(nodeID, { text: currentText });
+        } else {
+            // Clear the data if it's just the default text
+            setNodeInstanceData(nodeID, { text: "" });
+        }
     }, [nodeID, hasChildren]
     );
 
     // Use highlight hook
     useHighlight(handleHighlight, handleDehighlight);
 
+
     return (
         <>
-            <BlockTag
+            <NodeElementKey
                 ref={elementRef as React.RefObject<any>}
                 className={`block-${nodeID}`}
                 onClick={handleClick}
@@ -87,11 +99,11 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
                 suppressContentEditableWarning={!hasChildren}
             >
                 {hasChildren ? children : text}
-            </BlockTag>
-
-            <style>{renderedStyles}</style>
+            </NodeElementKey>
+            < style > {renderedStyles}</style >
         </>
     );
+
 }
 
 export default memo(BlockMarkdownComponent);
