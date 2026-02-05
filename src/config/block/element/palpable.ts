@@ -10,23 +10,21 @@ export const PALPABLE_DEFINITIONS: ElementDefinition[] = [
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
 		allowedChildren: [],
 		forbiddenAncestors: null,
-		uniqueChildren: null,
-		orderedChildren: null,
+		structure: null,
 		description: 'Thematic break between paragraphs of a section (void element).',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		isDeletable: true,
+		
 	},
 	{
 		key: 'br',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES],
 		allowedChildren: [],
 		forbiddenAncestors: null,
-		uniqueChildren: null,
-		orderedChildren: null,
+		structure: null,
 		description: 'Line break within text (void element).',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		isDeletable: true,
+		
 	},
 ];

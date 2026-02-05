@@ -1,5 +1,5 @@
 // Types
-import type { HighlightedNode } from '@/core/block/node/types';
+import type { NodeHighlight } from '@/core/block/node/types';
 import type { OperateResult } from '@/shared/types/result';
 import type { ElementKey } from '@/core/block/element/types';
 
@@ -16,7 +16,7 @@ import type { ElementKey } from '@/core/block/element/types';
  * @returns An OperateResult containing the split text segments or an error if highlight data is invalid
  */
 export type SplitedHighlightText = { before: string; highlight: string; after: string };
-export function splitHighlightText(originalText: string, highlightedNode: HighlightedNode): OperateResult<SplitedHighlightText> {
+export function splitHighlightText(originalText: string, highlightedNode: NodeHighlight): OperateResult<SplitedHighlightText> {
 	if (!highlightedNode) return { success: false, error: 'No highlighted node data provided.' };
 
 	// Extract the start and end offsets from the highlight data

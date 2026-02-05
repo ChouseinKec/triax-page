@@ -20,9 +20,9 @@ import { validateNodeID } from '@/core/block/node/helpers';
  * @param nodeID - The unique identifier of the block to select, or null to clear the selection
  * @returns void - This function does not return a value but updates the block store selection state
  */
-export function setSelectedNodeID(nodeID: NodeID | null): void {
+export function setBlockNodeSelectedNodeID(nodeID: NodeID): void {
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockCommands → setSelectedNodeID]')
+	const results = new ResultPipeline('[BlockCommands → setBlockNodeSelectedNodeID]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})

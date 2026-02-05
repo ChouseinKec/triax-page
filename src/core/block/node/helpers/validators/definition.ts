@@ -40,7 +40,7 @@ export function validateNodeElementKey(blockTag: unknown, elementKeys?: ElementK
 	const validation = validateString(blockTag);
 	if (!validation.valid) return validation;
 
-	// if (!Object.keys(getElementDefinitions()).includes(validation.value as ElementKey)) {
+	// if (!Object.keys(getBlockElementDefinitions()).includes(validation.value as ElementKey)) {
 	// 	return { valid: false, message: `Invalid block tag: expected a valid HTML element tag, got "${validation.value}"` };
 	// }
 

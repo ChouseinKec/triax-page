@@ -15,9 +15,10 @@ import { pickNodeInstance, pickNodeDefinition, pickActionDefinitions, pickNodeDe
 import { nodeRegistryState } from '@/core/block/node/states/registry';
 
 // Managers
-import { useNodeCompatibleElementKeys, getNodeCompatibleDefinitions } from '@/core/block/node/managers';
-import { isNodeStyleEditable, isNodeAttributeEditable, isNodeDeletable, isNodeCopyable, isNodeCloneable, isNodeOrderable } from '@/core/block/node/managers/queries/instance';
-import { useNodeIsStyleEditable, useNodeIsAttributeEditable, useNodeIsDeletable, useNodeIsCopyable, useNodeIsCloneable, useNodeIsOrderable } from './node';
+import { useBlockNodeCompatibleElementKeys, getBlockNodeCompatibleNodeDefinitions } from '@/core/block/node/managers';
+import { useBlockNodeIsDeletable, useBlockNodeIsCopyable, useBlockNodeIsCloneable, useBlockNodeIsOrderable, useBlockNodeIsPasteable } from './hierarchy';
+import { useBlockStyleIsEditable } from '../../../style/managers/hooks/style';
+import { useBlockAttributeIsEditable } from '../../../attribute/managers/hooks/node';
 
 /**
  * Retrieves the ID of the currently selected node in the editor.
@@ -27,7 +28,7 @@ import { useNodeIsStyleEditable, useNodeIsAttributeEditable, useNodeIsDeletable,
  *
  * @returns NodeID - The unique identifier of the currently selected node
  */
-export function useSelectedNodeID(): NodeID {
+export function useSelectedBlockNodeID(): NodeID {
 	return useNodeStore((state) => state.selectedNodeID);
 }
 
@@ -38,9 +39,9 @@ export function useSelectedNodeID(): NodeID {
  * including its properties, and updates reactively when the selected node changes.
  *
  * @returns NodeInstance | undefined - The complete node instance of the selected node, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedNodeInstance(): NodeInstance | undefined {
+export function useSelectedBlockNode(): NodeInstance | undefined {
 	return useNodeStore((state) => {
 		const selectedNodeID = state.selectedNodeID;
 
@@ -56,10 +57,10 @@ export function useSelectedNodeInstance(): NodeInstance | undefined {
  * and configuration for the node type.
  *
  * @returns NodeDefinition | undefined - The selectedNodeDefinition of the selected node, or undefined if no selection exists or selectedNodeDefinition is not found
- * @see {@link useSelectedNodeInstance} - For getting the selected node's instance
+ * @see {@link useSelectedBlockNode} - For getting the selected node's instance
  */
-export function useSelectedNodeDefinition(): NodeDefinition | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeDefinition(): NodeDefinition | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	if (!selectedNodeInstance) return undefined;
 
 	const nodeDefinitions = pickNodeDefinitions(nodeRegistryState);
@@ -76,10 +77,10 @@ export function useSelectedNodeDefinition(): NodeDefinition | undefined {
  * in the hierarchical node tree structure.
  *
  * @returns NodeID | undefined - The unique identifier of the parent node, or undefined if no selection exists or the selected node is a root node
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedParentID(): NodeID | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeParentID(): NodeID | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	return selectedNodeInstance ? selectedNodeInstance.parentID : undefined;
 }
 
@@ -90,10 +91,10 @@ export function useSelectedParentID(): NodeID | undefined {
  * and determines its capabilities, behavior, and available actions.
  *
  * @returns NodeKey | undefined - The selectedNodeDefinition key identifying the type of the selected node, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedDefinitionKey(): NodeKey | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeDefinitionKey(): NodeKey | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	return selectedNodeInstance ? selectedNodeInstance.definitionKey : undefined;
 }
 
@@ -104,10 +105,10 @@ export function useSelectedDefinitionKey(): NodeKey | undefined {
  * or element type used for rendering the node in the UI.
  *
  * @returns ElementKey | undefined - The element key identifying the HTML tag of the selected node, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedElementKey(): ElementKey | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeElementKey(): ElementKey | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	return selectedNodeInstance ? selectedNodeInstance.elementKey : undefined;
 }
 
@@ -118,10 +119,10 @@ export function useSelectedElementKey(): ElementKey | undefined {
  * directly under it in the hierarchical tree structure.
  *
  * @returns NodeID[] | undefined - A readonly array of child node IDs, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	return selectedNodeInstance ? selectedNodeInstance.childNodeIDs : undefined;
 }
 
@@ -132,10 +133,10 @@ export function useSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
  * content, and configuration used for rendering and processing the node.
  *
  * @returns NodeData | undefined - The node's data object, or undefined if no selection exists
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedNodeData(): Readonly<NodeData> | undefined {
-	const selectedNodeInstance = useSelectedNodeInstance();
+export function useSelectedBlockNodeData(): Readonly<NodeData> | undefined {
+	const selectedNodeInstance = useSelectedBlockNode();
 	return selectedNodeInstance ? selectedNodeInstance.data : undefined;
 }
 
@@ -145,10 +146,10 @@ export function useSelectedNodeData(): Readonly<NodeData> | undefined {
  * This reactive hook accesses the selected node's human-readable name, derived from its selectedNodeDefinition.
  *
  * @returns NodeName | undefined - The name of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeName(): NodeName | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeName(): NodeName | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.name : undefined;
 }
 
@@ -159,10 +160,10 @@ export function useSelectedNodeName(): NodeName | undefined {
  * in UI elements like menus or toolbars.
  *
  * @returns NodeIcon | undefined - The icon component of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeIcon(): NodeIcon | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeIcon(): NodeIcon | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.icon : undefined;
 }
 
@@ -173,10 +174,10 @@ export function useSelectedNodeIcon(): NodeIcon | undefined {
  * the node's content and handling its interactions in the UI.
  *
  * @returns NodeComponent | undefined - The React component of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeComponent(): NodeComponent | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeComponent(): NodeComponent | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.component : undefined;
 }
 
@@ -187,10 +188,10 @@ export function useSelectedNodeComponent(): NodeComponent | undefined {
  * the HTML elements it can contain or interact with.
  *
  * @returns ElementKey[] | undefined - A readonly array of element keys, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeElementKeys(): Readonly<ElementKey[]> | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.elementKeys : undefined;
 }
 
@@ -201,10 +202,10 @@ export function useSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined
  * about its purpose and usage.
  *
  * @returns NodeDescription | undefined - The description of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeDescription(): NodeDescription | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeDescription(): NodeDescription | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.description : undefined;
 }
 
@@ -215,10 +216,10 @@ export function useSelectedNodeDescription(): NodeDescription | undefined {
  * and classifying nodes in the UI.
  *
  * @returns NodeCategory | undefined - The category of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeCategory(): NodeCategory | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeCategory(): NodeCategory | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.category : undefined;
 }
 
@@ -229,10 +230,10 @@ export function useSelectedNodeCategory(): NodeCategory | undefined {
  * orientation, and pseudo-states for rendering.
  *
  * @returns NodeStyles | undefined - The default styles of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeDefaultStyles(): Readonly<NodeStyles> | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeDefaultStyles(): Readonly<NodeStyles> | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.defaultStyles : undefined;
 }
 
@@ -243,10 +244,10 @@ export function useSelectedNodeDefaultStyles(): Readonly<NodeStyles> | undefined
  * when creating new instances of the node.
  *
  * @returns NodeAttributes | undefined - The default attributes of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeDefaultAttributes(): Readonly<NodeAttributes> | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.defaultAttributes : undefined;
 }
 
@@ -257,10 +258,10 @@ export function useSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | u
  * providing initial state for custom node implementations.
  *
  * @returns NodeData | undefined - The default data of the selected node, or undefined if no selection exists
- * @see {@link useSelectedDefinitionKey} - For getting the selected node's selectedNodeDefinition key
+ * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
  */
-export function useSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
-	const selectedNodeDefinition = useSelectedNodeDefinition();
+export function useSelectedBlockNodeDefaultData(): Readonly<NodeData> | undefined {
+	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
 	return selectedNodeDefinition ? selectedNodeDefinition.defaultData : undefined;
 }
 
@@ -271,10 +272,10 @@ export function useSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
  * sorted by their defined order for consistent UI presentation.
  *
  * @returns ActionDefinition[] - A readonly array of action definitions for the currently selected node
- * @see {@link useSelectedNodeID} - For getting the selected node's ID
+ * @see {@link useSelectedBlockNodeID} - For getting the selected node's ID
  */
-export function useSelectedNodeActions(): Readonly<ActionDefinition[]> {
-	const selectedDefinitionKey = useSelectedDefinitionKey();
+export function useSelectedBlockNodeActions(): Readonly<ActionDefinition[]> {
+	const selectedDefinitionKey = useSelectedBlockNodeDefinitionKey();
 
 	return useMemo(() => {
 		if (!selectedDefinitionKey) return [];
@@ -295,12 +296,12 @@ export function useSelectedNodeActions(): Readonly<ActionDefinition[]> {
  * enabling UI components to present valid options for adding child nodes.
  *
  * @returns NodeDefinition[] - An array of node definitions compatible with the selected node
- * @see {@link getNodeCompatibleDefinitions} - The underlying query function used
+ * @see {@link getBlockNodeCompatibleNodeDefinitions} - The underlying query function used
  */
-export function useSelectedNodeCompatibleDefinitions(): NodeDefinition[] {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeCompatibleDefinitions(): NodeDefinition[] {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return getNodeCompatibleDefinitions(selectedNodeID);
+	return getBlockNodeCompatibleNodeDefinitions(selectedNodeID);
 }
 
 /**
@@ -310,12 +311,12 @@ export function useSelectedNodeCompatibleDefinitions(): NodeDefinition[] {
  * useful for UI components that need to display valid element options for the node.
  *
  * @returns ElementKey[] - An array of element keys compatible with the selected node
- * @see {@link useNodeCompatibleElementKeys} - The underlying hook used
+ * @see {@link useBlockNodeCompatibleElementKeys} - The underlying hook used
  */
-export function useSelectedNodeCompatibleElementKeys(): ElementKey[] {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeCompatibleElementKeys(): ElementKey[] {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeCompatibleElementKeys(selectedNodeID);
+	return useBlockNodeCompatibleElementKeys(selectedNodeID);
 }
 
 /**
@@ -325,12 +326,12 @@ export function useSelectedNodeCompatibleElementKeys(): ElementKey[] {
  * are editable, based on its element definition.
  *
  * @returns boolean - True if the selected node's styles are editable, false otherwise
- * @see {@link useNodeIsStyleEditable} - The general hook used internally
+ * @see {@link useBlockStyleIsEditable} - The general hook used internally
  */
-export function useSelectedNodeIsStyleEditable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsStyleEditable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsStyleEditable(selectedNodeID);
+	return useBlockStyleIsEditable(selectedNodeID);
 }
 
 /**
@@ -340,12 +341,12 @@ export function useSelectedNodeIsStyleEditable(): boolean {
  * are editable, based on its element definition.
  *
  * @returns boolean - True if the selected node's attributes are editable, false otherwise
- * @see {@link useNodeIsAttributeEditable} - The general hook used internally
+ * @see {@link useBlockAttributeIsEditable} - The general hook used internally
  */
-export function useSelectedNodeIsAttributeEditable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsAttributeEditable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsAttributeEditable(selectedNodeID);
+	return useBlockAttributeIsEditable(selectedNodeID);
 }
 
 /**
@@ -355,12 +356,12 @@ export function useSelectedNodeIsAttributeEditable(): boolean {
  * is deletable, based on its element definition.
  *
  * @returns boolean - True if the selected node is deletable, false otherwise
- * @see {@link useNodeIsDeletable} - The general hook used internally
+ * @see {@link useBlockNodeIsDeletable} - The general hook used internally
  */
-export function useSelectedNodeIsDeletable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsDeletable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsDeletable(selectedNodeID);
+	return useBlockNodeIsDeletable(selectedNodeID);
 }
 
 /**
@@ -370,12 +371,12 @@ export function useSelectedNodeIsDeletable(): boolean {
  * is copyable, based on its element definition.
  *
  * @returns boolean - True if the selected node is copyable, false otherwise
- * @see {@link useNodeIsCopyable} - The general hook used internally
+ * @see {@link useBlockNodeIsCopyable} - The general hook used internally
  */
-export function useSelectedNodeIsCopyable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsCopyable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsCopyable(selectedNodeID);
+	return useBlockNodeIsCopyable(selectedNodeID);
 }
 
 /**
@@ -385,12 +386,12 @@ export function useSelectedNodeIsCopyable(): boolean {
  * is cloneable, based on its element definition.
  *
  * @returns boolean - True if the selected node is cloneable, false otherwise
- * @see {@link useNodeIsCloneable} - The general hook used internally
+ * @see {@link useBlockNodeIsCloneable} - The general hook used internally
  */
-export function useSelectedNodeIsCloneable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsCloneable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsCloneable(selectedNodeID);
+	return useBlockNodeIsCloneable(selectedNodeID);
 }
 
 /**
@@ -400,10 +401,25 @@ export function useSelectedNodeIsCloneable(): boolean {
  * is orderable, based on its element definition.
  *
  * @returns boolean - True if the selected node is orderable, false otherwise
- * @see {@link useNodeIsOrderable} - The general hook used internally
+ * @see {@link useBlockNodeIsOrderable} - The general hook used internally
  */
-export function useSelectedNodeIsOrderable(): boolean {
-	const selectedNodeID = useSelectedNodeID();
+export function useSelectedBlockNodeIsOrderable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
 
-	return useNodeIsOrderable(selectedNodeID);
+	return useBlockNodeIsOrderable(selectedNodeID);
+}
+
+/**
+ * Retrieves whether the currently selected node can be pasted into.
+ *
+ * This reactive hook returns a boolean indicating if the selected node
+ * can accept a paste operation, based on clipboard content and element definition.
+ *
+ * @returns boolean - True if the selected node can be pasted into, false otherwise
+ * @see {@link useBlockNodeIsPasteable} - The general hook used internally
+ */
+export function useSelectedBlockNodeIsPasteable(): boolean {
+	const selectedNodeID = useSelectedBlockNodeID();
+
+	return useBlockNodeIsPasteable(selectedNodeID);
 }

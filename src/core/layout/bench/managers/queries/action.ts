@@ -14,7 +14,7 @@ import { validateActionKey } from '@/core/layout/view/helpers/validators';
  * Retrieves all registered action definitions for a specific bench.
  * @param benchKey - The key of the bench to retrieve actions for
  */
-export function getActionDefinitions(benchKey?: BenchKey): Readonly<ActionDefinition[]> {
+export function getBlockNodeActionDefinitions(benchKey?: BenchKey): Readonly<ActionDefinition[]> {
 	return Object.values(getRegisteredActions(benchKey)).sort((a, b) => a.order - b.order);
 }
 
@@ -23,8 +23,8 @@ export function getActionDefinitions(benchKey?: BenchKey): Readonly<ActionDefini
  * @param actionKey - The key of the action definition to retrieve
  * @param benchKey - The key of the bench to which the action belongs
  */
-export function getActionDefinition(actionKey: ActionKey): Readonly<ActionDefinition> | undefined {
-	const safeData = new ResultPipeline('[ViewEditorQueries → getActionDefinition]')
+export function getBlockNodeActionDefinition(actionKey: ActionKey): Readonly<ActionDefinition> | undefined {
+	const safeData = new ResultPipeline('[ViewEditorQueries → getBlockNodeActionDefinition]')
 		.validate({
 			actionKey: validateActionKey(actionKey),
 		})

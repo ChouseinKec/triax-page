@@ -41,17 +41,19 @@ export function pick<T extends Record<string, PickResult<unknown>>>(fetches: T):
 
 /**
  * Batch finds multiple FindResult objects.
- * Returns the first error encountered, or an object with found data (null for not-found) if all succeed.
+ * Returns the first error or not-found encountered, or an object with found data if all succeed.
  */
-export function find<T extends Record<string, FindResult<unknown>>>(finds: T): { success: true; data: { [K in keyof T]: T[K] extends FindResult<infer U> ? U | null : never } } | { success: false; error: string } {
-	const data = {} as { [K in keyof T]: T[K] extends FindResult<infer U> ? U | null : never };
+export function find<T extends Record<string, FindResult<unknown>>>(finds: T): { success: true; data: { [K in keyof T]: T[K] extends FindResult<infer U> ? U : never } } | { success: false; error: string } {
+	const data = {} as { [K in keyof T]: T[K] extends FindResult<infer U> ? U : never };
 
 	for (const key in finds) {
 		const result = finds[key];
 		if (result.status === 'error') {
 			return { success: false, error: result.error };
+		} else if (result.status === 'not-found') {
+			return { success: false, error: result.message };
 		}
-		(data as Record<string, unknown>)[key] = result.status === 'found' ? result.data : null;
+		(data as Record<string, unknown>)[key] = result.data;
 	}
 
 	return { success: true, data };
@@ -157,8 +159,8 @@ export class ResultPipeline<TData extends Record<string, unknown> = Record<strin
 		return this as ResultPipeline<TData & { [K in keyof TFetches]: TFetches[K] extends PickResult<infer U> ? U : never }>;
 	}
 
-	find<TFinds extends Record<string, FindResult<unknown>>>(finds: TFinds | ((data: TData) => TFinds)): ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U | null : never }> {
-		if (this.hasFailed) return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U | null : never }>; // Skip if already failed
+	find<TFinds extends Record<string, FindResult<unknown>>>(finds: TFinds | ((data: TData) => TFinds)): ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U : never }> {
+		if (this.hasFailed) return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U : never }>; // Skip if already failed
 
 		const findObj = typeof finds === 'function' ? finds(this.validatedData as TData) : finds;
 
@@ -166,11 +168,11 @@ export class ResultPipeline<TData extends Record<string, unknown> = Record<strin
 		if (!result.success) {
 			devLog.error(`${this.context} ${result.error}`);
 			this.hasFailed = true;
-			return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U | null : never }>;
+			return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U : never }>;
 		}
 
 		Object.assign(this.validatedData, result.data);
-		return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U | null : never }>;
+		return this as ResultPipeline<TData & { [K in keyof TFinds]: TFinds[K] extends FindResult<infer U> ? U : never }>;
 	}
 
 	collect<TCollects extends Record<string, CollectResult<unknown>>>(collects: TCollects | ((data: TData) => TCollects)): ResultPipeline<TData & { [K in keyof TCollects]: TCollects[K] extends CollectResult<infer U> ? U : never }> {

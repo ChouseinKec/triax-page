@@ -4,10 +4,10 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setSelectedNodeID } from '@/core/block/node/managers/commands';
+import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
 import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -22,8 +22,8 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 const BlockTableCellComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const nodeID = instance.id;
     const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
      * Handles block selection when clicked.
@@ -31,7 +31,7 @@ const BlockTableCellComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]);
 
     /**
@@ -40,7 +40,7 @@ const BlockTableCellComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
     const handleAddBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         // First select this table cell
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
         // Then open the library panel
         setPanelOpenState('library', true);
     }, [nodeID]);
@@ -69,12 +69,13 @@ const BlockTableCellComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
     ) : (
         <Placeholder
             as="td"
-            message="Add content"
-            description="Insert text, images, or other blocks into this table cell"
+            message="Empty Table Cell"
+            description="Insert text, images, or other blocks to populate this table cell"
             actions={[{
                 label: "Add Block",
                 onClick: handleAddBlock
             }]}
+            isSelected={isSelected}
         />
     );
 };

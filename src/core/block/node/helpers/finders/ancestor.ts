@@ -36,7 +36,7 @@ export function findNodeAncestors(sourceNodeInstance: NodeInstance, storedNodes:
 	}
 
 	// No ancestors found
-	if (ancestors.length === 0) return { status: 'not-found' };
+	if (ancestors.length === 0) return { status: 'not-found', message: 'Node has no ancestors.' };
 
 	// Return the list of ancestor instances
 	return { status: 'found', data: ancestors };

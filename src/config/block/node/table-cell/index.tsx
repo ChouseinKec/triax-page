@@ -7,7 +7,7 @@ import BlockTableCellComponent from '@/config/block/node/table-cell/component';
 registerNode({
     key: 'core-table-cell',
     name: "Table Cell",
-    description: "A table cell block for use within table rows.",
+    description: "A table data cell block for use within table rows.",
     category: 'table',
     icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256">
@@ -15,7 +15,7 @@ registerNode({
         </svg>
     ),
 
-    elementKeys: ['td', 'th'],
+    elementKeys: ['td'],
 
     defaultStyles: {},
     defaultAttributes: {},

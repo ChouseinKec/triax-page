@@ -4,9 +4,9 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { addNode, setSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -21,8 +21,8 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 const BlockTableComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const nodeID = instance.id;
     const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
      * Handles block selection when clicked.
@@ -30,7 +30,7 @@ const BlockTableComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientat
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]);
 
     /**
@@ -38,7 +38,7 @@ const BlockTableComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientat
      */
     const handleAddTableSection = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        addNode('core-table-body', nodeID, 'tbody');
+        addBlockNode('core-table-body', nodeID, 'tbody');
     }, [nodeID]);
 
 
@@ -67,14 +67,16 @@ const BlockTableComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientat
         )
         : (
             <Placeholder
-                as="div"
-                message="Build your table"
+                as="table"
+                message="Empty Table"
                 description="Add header, body, or footer sections to organize your content"
                 actions={[{
                     label: "Add Body",
                     onClick: handleAddTableSection
                 }]}
                 onSelect={handleSelectBlock}
+                isSelected={isSelected}
+                wrap={['tbody', 'tr', 'td']}
             />
         );
 };

@@ -20,8 +20,8 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  * @returns An array of all registered action definitions
  * @see {@link pickActionDefinitions} - Helper function used to extract definitions from registry
  */
-export function getActionDefinitions(): Readonly<ActionDefinition[]> {
-	const validData = new ResultPipeline('[NodeEditorQueries → getActionDefinitions]')
+export function getBlockNodeActionDefinitions(): Readonly<ActionDefinition[]> {
+	const validData = new ResultPipeline('[NodeEditorQueries → getBlockNodeActionDefinitions]')
 		.pick(() => ({
 			actionDefinitions: pickActionDefinitions(nodeRegistryState),
 		}))
@@ -43,8 +43,8 @@ export function getActionDefinitions(): Readonly<ActionDefinition[]> {
  * @see {@link pickActionDefinition} - Helper function used to extract the definition from registry
  * @see {@link validateActionKey} - Validation function for action keys
  */
-export function getActionDefinition(actionKey: ActionKey): Readonly<ActionDefinition> | undefined {
-	const validData = new ResultPipeline('[NodeEditorQueries → getActionDefinition]')
+export function getBlockNodeActionDefinition(actionKey: ActionKey): Readonly<ActionDefinition> | undefined {
+	const validData = new ResultPipeline('[NodeEditorQueries → getBlockNodeActionDefinition]')
 		.validate({
 			actionKey: validateActionKey(actionKey),
 		})

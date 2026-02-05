@@ -23,12 +23,12 @@ export function findNodeNextSibling(sourceNodeInstance: NodeInstance, storedNode
 	// Find the source's position inside the parent's children.
 	const currentIndexResult = findNodeChildIndex(sourceNodeInstance, parentNodeInstance.data);
 	if (currentIndexResult.status === 'error') return { status: 'error', error: currentIndexResult.error };
-	if (currentIndexResult.status === 'not-found') return { status: 'not-found' };
+	if (currentIndexResult.status === 'not-found') return { status: 'not-found', message: 'Source node not found in parent.' };
 
 	// If the source is the last child there is no next sibling.
 	const isNodeLastChildResult = isNodeLastChild(sourceNodeInstance, parentNodeInstance.data);
 	if (!isNodeLastChildResult.success) return { status: 'error', error: isNodeLastChildResult.error };
-	if (isNodeLastChildResult.passed === true) return { status: 'not-found' };
+	if (isNodeLastChildResult.passed === true) return { status: 'not-found', message: 'Node is the last child, no next sibling.' };
 
 	// Fetch the sibling that immediately follows the source
 	const nextSiblingID = parentNodeInstance.data.childNodeIDs[currentIndexResult.data + 1];
@@ -54,12 +54,12 @@ export function findNodePreviousSibling(sourceNodeInstance: NodeInstance, stored
 	// Find the source's position inside the parent's children.
 	const currentIndexResult = findNodeChildIndex(sourceNodeInstance, parentNodeInstance.data);
 	if (currentIndexResult.status === 'error') return { status: 'error', error: currentIndexResult.error };
-	if (currentIndexResult.status === 'not-found') return { status: 'not-found' };
+	if (currentIndexResult.status === 'not-found') return { status: 'not-found', message: 'Source node not found in parent.' };
 
 	// If the source is the first child there is no previous sibling.
 	const isFirstChildResult = isNodeFirstChild(sourceNodeInstance, parentNodeInstance.data);
 	if (!isFirstChildResult.success) return { status: 'error', error: isFirstChildResult.error };
-	if (isFirstChildResult.passed === true) return { status: 'not-found' };
+	if (isFirstChildResult.passed === true) return { status: 'not-found', message: 'Node is the first child, no previous sibling.' };
 
 	// Fetch the sibling that immediately precedes the source
 	const previousSiblingID = parentNodeInstance.data.childNodeIDs[currentIndexResult.data - 1];
@@ -82,7 +82,7 @@ export function findNodeNextParentSibling(sourceNodeInstance: NodeInstance, stor
 	// Compute ancestor instances once (immediate parent first).
 	const ancestorsResult = findNodeAncestors(sourceNodeInstance, storedNodes);
 	if (ancestorsResult.status === 'error') return { status: 'error', error: ancestorsResult.error };
-	if (ancestorsResult.status === 'not-found') return { status: 'not-found' };
+	if (ancestorsResult.status === 'not-found') return { status: 'not-found', message: 'Node has no ancestors.' };
 
 	// Loop through ancestors to find the first with a next sibling.
 	for (let i = 0; i < ancestorsResult.data.length - 1; i++) {
@@ -108,5 +108,36 @@ export function findNodeNextParentSibling(sourceNodeInstance: NodeInstance, stor
 	}
 
 	// No ancestor had a next sibling — return not-found.
-	return { status: 'not-found' };
+	return { status: 'not-found', message: 'No ancestor has a next sibling.' };
+}
+
+/**
+ * Finds all sibling nodes that have the same element key as the source node.
+ * Useful for checking element count constraints and validation rules.
+ * @param sourceNodeInstance - The node instance whose identical siblings should be found
+ * @param storedNodes - The complete record of all node instances
+ * @returns FindResult containing an array of sibling node instances with matching element keys
+ */
+export function findNodeIdenticalSiblings(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance[]> {
+	// Find the parent node
+	const parentNodeResult = pickNodeInstance(sourceNodeInstance.parentID, storedNodes);
+	if (!parentNodeResult.success) return { status: 'error', error: parentNodeResult.error };
+
+	const parentNode = parentNodeResult.data;
+	const identicalSiblings: NodeInstance[] = [];
+
+	for (const childID of parentNode.childNodeIDs) {
+		const childNode = storedNodes[childID];
+		if (!childNode) continue; // Skip invalid nodes
+
+		if (childNode.elementKey === sourceNodeInstance.elementKey) {
+			identicalSiblings.push(childNode);
+		}
+	}
+
+	if (identicalSiblings.length === 0) {
+		return { status: 'not-found', message: `No siblings found with element key '${sourceNodeInstance.elementKey}'.` };
+	}
+
+	return { status: 'found', data: identicalSiblings };
 }

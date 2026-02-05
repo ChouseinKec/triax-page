@@ -5,7 +5,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useSelectedNodeID, useSelectedNodeIsAttributeEditable } from "@/core/block/node/managers";
+import { useSelectedBlockNodeID, useSelectedBlockNodeIsAttributeEditable } from "@/core/block/node/managers";
 
 // Components
 import TabGroup from "@/shared/components/group/tab/component";
@@ -30,8 +30,8 @@ const TAB_ICONS = {
 };
 
 const BlockAttribute: React.FC = () => {
-    const selectedNodeID = useSelectedNodeID();
-    const isAttributeEditable = useSelectedNodeIsAttributeEditable();
+    const selectedNodeID = useSelectedBlockNodeID();
+    const isAttributeEditable = useSelectedBlockNodeIsAttributeEditable();
 
     const tabItems = selectedNodeID
         ? [

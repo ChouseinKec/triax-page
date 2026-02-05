@@ -38,7 +38,7 @@ export function validateNodeID(nodeID: unknown): ValidateResult<NodeID> {
  * @returns A ValidateResult indicating whether the value is a valid node instance
  */
 export function validateNodeInstance(nodeInstance: unknown): ValidateResult<NodeInstance> {
-	const validation = validateObject(nodeInstance, ['id', 'type', 'parentID', 'childNodeIDs', 'attributes', 'styles']);
+	const validation = validateObject(nodeInstance, ['id', 'parentID', 'definitionKey','elementKey',  'childNodeIDs', 'attributes', 'styles', 'data']);
 	if (!validation.valid) return { valid: false, message: `Invalid block instance: ${validation.message}` };
 
 	const typeValidation = validateNodeKey(validation.value.definitionKey);

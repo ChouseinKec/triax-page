@@ -2,10 +2,10 @@
 import { useNodeStore } from '@/core/block/node/states/store';
 
 // Managers
-import { setNodeInstanceData, addNodes } from '@/core/block/node/managers/';
+import { setBlockNodeData, addBlockNodes } from '@/core/block/node/managers/';
 
 // Types
-import type { NodeKey, HighlightedNode } from '@/core/block/node/types';
+import type { NodeKey, NodeHighlight } from '@/core/block/node/types';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Helpers
@@ -31,14 +31,14 @@ import { devLog } from '@/shared/utilities/dev';
  * @returns void - This function does not return a value but modifies the block store and highlight state
  * @see {@link splitHighlightText} - The function that divides text into segments
  * @see {@link segmentHighlightText} - The function that assigns element keys to segments
- * @see {@link setHighlightNodeText} - The function that clears the highlight state
+ * @see {@link setBlockNodeHighlight} - The function that clears the highlight state
  */
-export function convertHighlightToNodes(nodeDefinitionKey: NodeKey, nodeElementKey: ElementKey): void {
+export function convertBlockNodeHighlightToNodes(nodeDefinitionKey: NodeKey, nodeElementKey: ElementKey): void {
 	// Get a snapshot of the current block store state
 	const blockStoreState = useNodeStore.getState();
 
 	// Validate and gather necessary data from the store
-	const validData = new ResultPipeline('[BlockHighlightManager → convertHighlightToNodes]')
+	const validData = new ResultPipeline('[BlockHighlightManager → convertBlockNodeHighlightToNodes]')
 		.pick({
 			selectedNodeID: pickSelectedNodeID(blockStoreState),
 		})
@@ -59,14 +59,14 @@ export function convertHighlightToNodes(nodeDefinitionKey: NodeKey, nodeElementK
 	if (!validData) return;
 
 	// Create new child blocks for each text segment under the selected node
-	const addedNodes = addNodes(validData.segmentedText.map((segment) => [nodeDefinitionKey, validData.selectedNodeID, segment.elementKey, { data: { text: segment.text } }]));
-	if (!addedNodes || addedNodes.length === 0) return devLog.error('[BlockHighlightManager → convertHighlightToNodes] Failed to add new nodes for highlighted text replacement.');
+	const addedNodes = addBlockNodes(validData.segmentedText.map((segment) => [nodeDefinitionKey, validData.selectedNodeID, segment.elementKey, { data: { text: segment.text } }]));
+	if (!addedNodes || addedNodes.length === 0) return devLog.error('[BlockHighlightManager → convertBlockNodeHighlightToNodes] Failed to add new nodes for highlighted text replacement.');
 
 	// Clear the text data of the parent by setting it to an empty string
-	setNodeInstanceData(validData.selectedNodeID, { ...validData.nodeContent, text: '' });
+	setBlockNodeData(validData.selectedNodeID, { ...validData.nodeContent, text: '' });
 
 	// Clear the highlightedNode text state
-	setHighlightNodeText(null);
+	setBlockNodeHighlight(null);
 }
 
 /**
@@ -80,7 +80,7 @@ export function convertHighlightToNodes(nodeDefinitionKey: NodeKey, nodeElementK
  * @param highlightedNode - The highlight data containing start/end offsets and text, or null to clear highlighting
  * @returns void - This function does not return a value but updates the block store highlight state
  */
-export function setHighlightNodeText(highlightedNode: HighlightedNode | null): void {
+export function setBlockNodeHighlight(highlightedNode: NodeHighlight | null): void {
 	// Set the highlighted block text in the store
 	useNodeStore.setState((state) => ({
 		...state,

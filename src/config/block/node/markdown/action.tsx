@@ -7,7 +7,7 @@ import CSS from './styles.module.scss';
 import type { ElementKey } from '@/core/block/element/types';
 
 // Managers
-import { convertHighlightToNodes, useHighlightText, useSelectedElementKey } from '@/core/block/node/managers';
+import { convertBlockNodeHighlightToNodes, useBlockNodeHighlight, useSelectedBlockNodeElementKey } from '@/core/block/node/managers';
 
 // Components
 import ActionGroup from '@/shared/components/group/action/component';
@@ -92,8 +92,8 @@ const createActionButton = (
  * Component that renders a toolbar with buttons for all supported markdown actions.
  */
 const MarkdownActionToolbar: React.FC = () => {
-    const highlightedText = useHighlightText();
-    const selectedTag = useSelectedElementKey();
+    const highlightedText = useBlockNodeHighlight();
+    const selectedTag = useSelectedBlockNodeElementKey();
 
     if (!selectedTag) return null;
 
@@ -109,13 +109,13 @@ const MarkdownActionToolbar: React.FC = () => {
                     anchor="top"
                 >
                     {dropdown.actions.map(action =>
-                        createActionButton(action, selectedTag, highlightedText, tag => convertHighlightToNodes('core-markdown', tag), CSS.Action)
+                        createActionButton(action, selectedTag, highlightedText, tag => convertBlockNodeHighlightToNodes('core-markdown', tag), CSS.Action)
                     )}
                 </DropdownReveal>
             ))}
 
             {buttonActions.map(action =>
-                createActionButton(action, selectedTag, highlightedText, tag => convertHighlightToNodes('core-markdown', tag))
+                createActionButton(action, selectedTag, highlightedText, tag => convertBlockNodeHighlightToNodes('core-markdown', tag))
             )}
         </ActionGroup>
     );

@@ -17,7 +17,7 @@ export function findNodeMoveIntoIndex(sourceNodeInstance: NodeInstance, targetNo
 	if (sourceNodeInstance.id === targetNodeInstance.id) return { status: 'error', error: 'Source and target blocks are the same.' };
 
 	// If the source is already inside the target, there is nothing to do
-	if (sourceNodeInstance.parentID === targetNodeInstance.id) return { status: 'not-found' };
+	if (sourceNodeInstance.parentID === targetNodeInstance.id) return { status: 'not-found', message: 'Source is already inside the target.' };
 
 	// Insert after the last existing child -> use the length as the index
 	return { status: 'found', data: targetNodeInstance.childNodeIDs.length };
@@ -62,7 +62,7 @@ export function findNodeMoveBeforeIndex(sourceNodeInstance: NodeInstance, target
 
 	// Moving an item to the position immediately before its current spot
 	// (source immediately before target) is a no-op.
-	if (sourceIndex === targetIndex - 1) return { status: 'not-found' };
+	if (sourceIndex === targetIndex - 1) return { status: 'not-found', message: 'Source is already immediately before the target.' };
 
 	// If the source is located before the target the target's index will
 	// shift left once after removal; otherwise it remains unchanged.
@@ -107,7 +107,7 @@ export function findNodeMoveAfterIndex(sourceNodeInstance: NodeInstance, targetN
 	if (sourceIndex === -1) return { status: 'error', error: 'Source block not found in parent.' };
 
 	// If the source is already immediately after the target, it's a no-op
-	if (sourceIndex === targetIndex + 1) return { status: 'not-found' };
+	if (sourceIndex === targetIndex + 1) return { status: 'not-found', message: 'Source is already immediately after the target.' };
 
 	// When the source is located before the target the removal will cause the
 	// target index to move left; insertion after must account for that shift.

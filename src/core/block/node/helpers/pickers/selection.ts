@@ -2,7 +2,7 @@
 import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeStoreState } from '@/core/block/node/states/store';
 import type { PickResult } from '@/shared/types/result';
-import type { HighlightedNode } from '@/core/block/node/types/instance';
+import type { NodeHighlight } from '@/core/block/node/types/instance';
 
 /**
  * Validate and fetch the block store state structure.
@@ -51,7 +51,7 @@ export function pickSelectedNodeID(blockStoreState: NodeStoreState): PickResult<
  * @param blockStoreState - The current state of the block store containing highlight information
  * @returns A PickResult containing the highlighted node data or an error if no highlight is active
  */
-export function pickHighlightedNode(blockStoreState: NodeStoreState): PickResult<HighlightedNode> {
+export function pickHighlightedNode(blockStoreState: NodeStoreState): PickResult<NodeHighlight> {
 	// 	Check if highlightedNode is undefined
 	if (blockStoreState.highlightedNode === undefined) return { success: false, error: 'Highlighted node data is undefined in the store.' };
 

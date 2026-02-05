@@ -19,17 +19,17 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  * configurations, which can be used for rendering, validation, or other operations.
  *
  * @returns Readonly<NodeDefinition[]> - A collection of all node definitions
- * @see {@link getNodeDefinition} - For retrieving a single node definition by key
+ * @see {@link getBlockNodeDefinition} - For retrieving a single node definition by key
  */
-export function getNodeDefinitions(): Readonly<NodeDefinition[]> {
-	const validData = new ResultPipeline('[BlockQueries → getNodeDefinitions]')
+export function getBlockNodeDefinitions(): Readonly<NodeDefinition[]> {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefinitions]')
 		.pick(() => ({
 			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
 		}))
 		.execute();
 	if (!validData) return [];
 
-	return Object.values(validData.nodeDefinitions);
+	return validData.nodeDefinitions;
 }
 
 /**
@@ -41,11 +41,11 @@ export function getNodeDefinitions(): Readonly<NodeDefinition[]> {
  *
  * @param sourceNodeKey - The unique identifier of the node to retrieve
  * @returns Readonly<NodeDefinition> | undefined - The node definition object, or undefined if not found or invalid
- * @see {@link getNodeDefinitions} - For retrieving all node definitions
+ * @see {@link getBlockNodeDefinitions} - For retrieving all node definitions
  * @see {@link validateNodeKey} - The validation function used internally
  */
-export function getNodeDefinition(sourceNodeKey: NodeKey): Readonly<NodeDefinition> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeDefinition]')
+export function getBlockNodeDefinition(sourceNodeKey: NodeKey): Readonly<NodeDefinition> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefinition]')
 		.validate({
 			sourceNodeKey: validateNodeKey(sourceNodeKey),
 		})
@@ -70,10 +70,10 @@ export function getNodeDefinition(sourceNodeKey: NodeKey): Readonly<NodeDefiniti
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns NodeIcon | undefined - The icon component, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionIcon(sourceNodeKey: NodeKey): NodeIcon | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionIcon(sourceNodeKey: NodeKey): NodeIcon | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.icon;
@@ -88,10 +88,10 @@ export function getNodeDefinitionIcon(sourceNodeKey: NodeKey): NodeIcon | undefi
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns NodeComponent | undefined - The React component, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionComponent(sourceNodeKey: NodeKey): NodeComponent | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionComponent(sourceNodeKey: NodeKey): NodeComponent | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.component;
@@ -106,10 +106,10 @@ export function getNodeDefinitionComponent(sourceNodeKey: NodeKey): NodeComponen
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns Readonly<ElementKey[]> | undefined - An array of supported element keys, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionElementKeys(sourceNodeKey: NodeKey): Readonly<ElementKey[]> | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionElementKeys(sourceNodeKey: NodeKey): Readonly<ElementKey[]> | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.elementKeys;
@@ -123,10 +123,10 @@ export function getNodeDefinitionElementKeys(sourceNodeKey: NodeKey): Readonly<E
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns NodeName | undefined - The name of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionName(sourceNodeKey: NodeKey): NodeName | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionName(sourceNodeKey: NodeKey): NodeName | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.name;
@@ -140,10 +140,10 @@ export function getNodeDefinitionName(sourceNodeKey: NodeKey): NodeName | undefi
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns NodeDescription | undefined - The description of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionDescription(sourceNodeKey: NodeKey): NodeDescription | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionDescription(sourceNodeKey: NodeKey): NodeDescription | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.description;
@@ -157,10 +157,10 @@ export function getNodeDefinitionDescription(sourceNodeKey: NodeKey): NodeDescri
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns NodeCategory | undefined - The category of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionCategory(sourceNodeKey: NodeKey): NodeCategory | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionCategory(sourceNodeKey: NodeKey): NodeCategory | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.category;
@@ -174,10 +174,10 @@ export function getNodeDefinitionCategory(sourceNodeKey: NodeKey): NodeCategory 
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns Readonly<NodeStyles> | undefined - The default styles of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionDefaultStyles(sourceNodeKey: NodeKey): Readonly<NodeStyles> | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionDefaultStyles(sourceNodeKey: NodeKey): Readonly<NodeStyles> | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.defaultStyles;
@@ -191,10 +191,10 @@ export function getNodeDefinitionDefaultStyles(sourceNodeKey: NodeKey): Readonly
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns Readonly<NodeAttributes> | undefined - The default attributes of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionDefaultAttributes(sourceNodeKey: NodeKey): Readonly<NodeAttributes> | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionDefaultAttributes(sourceNodeKey: NodeKey): Readonly<NodeAttributes> | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.defaultAttributes;
@@ -208,10 +208,10 @@ export function getNodeDefinitionDefaultAttributes(sourceNodeKey: NodeKey): Read
  *
  * @param sourceNodeKey - The unique identifier of the node
  * @returns Readonly<NodeData> | undefined - The default data of the node, or undefined if the node is not found
- * @see {@link getNodeDefinition} - The underlying function that retrieves the node definition
+ * @see {@link getBlockNodeDefinition} - The underlying function that retrieves the node definition
  */
-export function getNodeDefinitionDefaultData(sourceNodeKey: NodeKey): Readonly<NodeData> | undefined {
-	const nodeDefinition = getNodeDefinition(sourceNodeKey);
+export function getBlockNodeDefinitionDefaultData(sourceNodeKey: NodeKey): Readonly<NodeData> | undefined {
+	const nodeDefinition = getBlockNodeDefinition(sourceNodeKey);
 	if (!nodeDefinition) return undefined;
 
 	return nodeDefinition.defaultData;
@@ -227,10 +227,10 @@ export function getNodeDefinitionDefaultData(sourceNodeKey: NodeKey): Readonly<N
  * @param sourceNodeKey - The key of the node type to filter actions for
  * @returns Readonly<ActionDefinition[]> - An array of action definitions, sorted by order
  * @see {@link getRegisteredActions} - Registry function that provides the source action data
- * @see {@link getActionDefinition} - For retrieving a single action by key
+ * @see {@link getBlockNodeActionDefinition} - For retrieving a single action by key
  */
-export function getNodeDefinitionActions(sourceNodeKey: NodeKey): Readonly<ActionDefinition[]> {
-	const validData = new ResultPipeline('[NodeEditorQueries → getNodeDefinitionActions]')
+export function getBlockNodeDefinitionActions(sourceNodeKey: NodeKey): Readonly<ActionDefinition[]> {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefinitionActions]')
 		.validate({
 			sourceNodeKey: validateNodeKey(sourceNodeKey),
 		})

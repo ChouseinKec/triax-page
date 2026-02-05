@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { getNodeDefinitions, addNode, useSelectedNodeCompatibleDefinitions, getNodeFirstCompatibleElementKey, useSelectedDefinitionKey, useSelectedNodeID } from "@/core/block/node/managers";
+import { getBlockNodeDefinitions, addBlockNode, useSelectedBlockNodeCompatibleDefinitions, getBlockNodeFirstCompatibleElementKey, useSelectedBlockNodeDefinitionKey, useSelectedBlockNodeID } from "@/core/block/node/managers";
 
 // Types
 import type { NodeDefinition, NodeKey } from "@/core/block/node/types/definition";
@@ -19,18 +19,18 @@ import GenericInput from "@/shared/components/input/generic/component";
  *
  */
 const NodeLiblary: React.FC = () => {
-    const registeredNodes = getNodeDefinitions();
-    const selectedNodeKey = useSelectedDefinitionKey();
-    const selectedNodeID = useSelectedNodeID();
-    const compatibleNodes = useSelectedNodeCompatibleDefinitions();
+    const registeredNodes = getBlockNodeDefinitions();
+    const selectedNodeKey = useSelectedBlockNodeDefinitionKey();
+    const selectedNodeID = useSelectedBlockNodeID();
+    const compatibleNodes = useSelectedBlockNodeCompatibleDefinitions();
     const [search, setSearch] = useState("");
 
     // Handle adding a new block,
     const handleAddBlock = useCallback((nodeKey: NodeKey) => {
-        const acceptableTag = getNodeFirstCompatibleElementKey(selectedNodeID, nodeKey);
+        const acceptableTag = getBlockNodeFirstCompatibleElementKey(selectedNodeID, nodeKey);
         if (!acceptableTag) return;
 
-        addNode(nodeKey, selectedNodeID, acceptableTag);
+        addBlockNode(nodeKey, selectedNodeID, acceptableTag);
 
     }, [selectedNodeID]
     );

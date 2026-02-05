@@ -4,10 +4,10 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getNodeInstanceData } from '@/core/block/node/managers';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { getBlockNodeData } from '@/core/block/node/managers';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -21,11 +21,11 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 const BlockImageComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance }) => {
     const nodeID = instance.id;
     const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get image data
-    const data = getNodeInstanceData(nodeID);
+    const data = getBlockNodeData(nodeID);
     const src = data?.src || '';
     const alt = data?.alt || '';
 
@@ -35,7 +35,7 @@ const BlockImageComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientat
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]);
 
     /**
@@ -72,6 +72,7 @@ const BlockImageComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientat
                         label: "Upload Image",
                         onClick: handleUploadImage
                     }]}
+                    isSelected={isSelected}
                 />
             )}
 

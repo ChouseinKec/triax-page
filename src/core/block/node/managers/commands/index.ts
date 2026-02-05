@@ -1,5 +1,5 @@
 export * from './select';
-export * from './instance';
 export * from './node';
+export * from './hierarchy';
 export * from './navigation';
 export * from './highlight';

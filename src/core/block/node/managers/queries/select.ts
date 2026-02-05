@@ -12,8 +12,8 @@ import { pickSelectedNodeID, pickNodeStoreState } from '@/core/block/node/helper
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline';
 // Managers
-import { getNodeInstanceChildNodeIDs, getNodeInstanceData, getNodeInstanceName, getNodeInstanceIcon, getNodeInstanceComponent, getNodeInstanceElementKeys, getNodeInstanceDescription, getNodeInstanceCategory, getNodeInstanceDefaultStyles, getNodeInstanceDefaultAttributes, getNodeInstanceDefaultData, getNodeInstanceActions, getNodeInstanceDefinitionKey } from '@/core/block/node/managers/queries/instance';
-import { getNodeDefinitionActions } from '@/core/block/node/managers/queries/definition';
+import { getBlockNodeChildNodeIDs, getBlockNodeData, getBlockNodeName, getBlockNodeIcon, getBlockNodeComponent, getBlockNodeElementKeys, getBlockNodeDescription, getBlockNodeCategory, getBlockNodeDefaultStyles, getBlockNodeDefaultAttributes, getBlockNodeDefaultData, getBlockNodeActions } from '@/core/block/node/managers/queries/node';
+import { getBlockNodeDefinitionActions } from '@/core/block/node/managers/queries/definition';
 /**
  * Retrieves the currently selected node ID from the block store.
  *
@@ -23,8 +23,8 @@ import { getNodeDefinitionActions } from '@/core/block/node/managers/queries/def
  *
  * @returns NodeID - The unique identifier of the currently selected node, or 'html' as fallback
  */
-export function getSelectedNodeID(): NodeID {
-	const validData = new ResultPipeline('[BlockQueries → getSelectedNodeID]')
+export function getSelectedBlockNodeID(): NodeID {
+	const validData = new ResultPipeline('[BlockQueries → getSelectedBlockNodeID]')
 		.pick(() => ({
 			blockStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
@@ -44,14 +44,14 @@ export function getSelectedNodeID(): NodeID {
  * directly under it in the hierarchical tree structure.
  *
  * @returns Readonly<NodeID[]> | undefined - A readonly array of child node IDs, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceChildNodeIDs} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeChildNodeIDs} - The underlying instance query
  */
-export function getSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceChildNodeIDs(selectedID);
+	return getBlockNodeChildNodeIDs(selectedID);
 }
 
 /**
@@ -61,14 +61,14 @@ export function getSelectedNodeChildNodeIDs(): Readonly<NodeID[]> | undefined {
  * properties and state specific to the node's implementation.
  *
  * @returns Readonly<NodeData> | undefined - The node's data object, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceData} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeData} - The underlying instance query
  */
-export function getSelectedNodeData(): Readonly<NodeData> | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeData(): Readonly<NodeData> | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceData(selectedID);
+	return getBlockNodeData(selectedID);
 }
 
 /**
@@ -78,14 +78,14 @@ export function getSelectedNodeData(): Readonly<NodeData> | undefined {
  * display purposes in the UI and editor interfaces.
  *
  * @returns NodeName | undefined - The name of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceName} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeName} - The underlying instance query
  */
-export function getSelectedNodeName(): NodeName | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeName(): NodeName | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceName(selectedID);
+	return getBlockNodeName(selectedID);
 }
 
 /**
@@ -95,14 +95,14 @@ export function getSelectedNodeName(): NodeName | undefined {
  * typically used for visual representation in the editor UI.
  *
  * @returns NodeIcon | undefined - The icon component of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceIcon} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeIcon} - The underlying instance query
  */
-export function getSelectedNodeIcon(): NodeIcon | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeIcon(): NodeIcon | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceIcon(selectedID);
+	return getBlockNodeIcon(selectedID);
 }
 
 /**
@@ -112,14 +112,14 @@ export function getSelectedNodeIcon(): NodeIcon | undefined {
  * defining how it appears and behaves in the application.
  *
  * @returns NodeComponent | undefined - The React component of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceComponent} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeComponent} - The underlying instance query
  */
-export function getSelectedNodeComponent(): NodeComponent | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeComponent(): NodeComponent | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceComponent(selectedID);
+	return getBlockNodeComponent(selectedID);
 }
 
 /**
@@ -129,14 +129,14 @@ export function getSelectedNodeComponent(): NodeComponent | undefined {
  * defining the types of HTML elements it can represent.
  *
  * @returns Readonly<ElementKey[]> | undefined - A readonly array of element keys, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceElementKeys} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeElementKeys} - The underlying instance query
  */
-export function getSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeElementKeys(): Readonly<ElementKey[]> | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceElementKeys(selectedID);
+	return getBlockNodeElementKeys(selectedID);
 }
 
 /**
@@ -146,14 +146,14 @@ export function getSelectedNodeElementKeys(): Readonly<ElementKey[]> | undefined
  * information about its purpose and functionality.
  *
  * @returns NodeDescription | undefined - The description of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceDescription} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeDescription} - The underlying instance query
  */
-export function getSelectedNodeDescription(): NodeDescription | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeDescription(): NodeDescription | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceDescription(selectedID);
+	return getBlockNodeDescription(selectedID);
 }
 
 /**
@@ -163,48 +163,14 @@ export function getSelectedNodeDescription(): NodeDescription | undefined {
  * used for organizing and grouping similar node types.
  *
  * @returns NodeCategory | undefined - The category of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceCategory} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeCategory} - The underlying instance query
  */
-export function getSelectedNodeCategory(): NodeCategory | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeCategory(): NodeCategory | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceCategory(selectedID);
-}
-
-/**
- * Retrieves the default styles of the currently selected node.
- *
- * This function returns the default CSS styles applied to the selected node,
- * defining its initial visual appearance.
- *
- * @returns Readonly<NodeStyles> | undefined - The default styles of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceDefaultStyles} - The underlying instance query
- */
-export function getSelectedNodeDefaultStyles(): Readonly<NodeStyles> | undefined {
-	const selectedID = getSelectedNodeID();
-	if (!selectedID || selectedID === 'html') return undefined;
-
-	return getNodeInstanceDefaultStyles(selectedID);
-}
-
-/**
- * Retrieves the default attributes of the currently selected node.
- *
- * This function returns the default HTML attributes applied to the selected node,
- * defining its initial properties and behavior.
- *
- * @returns Readonly<NodeAttributes> | undefined - The default attributes of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceDefaultAttributes} - The underlying instance query
- */
-export function getSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | undefined {
-	const selectedID = getSelectedNodeID();
-	if (!selectedID || selectedID === 'html') return undefined;
-
-	return getNodeInstanceDefaultAttributes(selectedID);
+	return getBlockNodeCategory(selectedID);
 }
 
 /**
@@ -214,14 +180,14 @@ export function getSelectedNodeDefaultAttributes(): Readonly<NodeAttributes> | u
  * containing initial state and configuration values.
  *
  * @returns Readonly<NodeData> | undefined - The default data of the selected node, or undefined if no selection exists
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceDefaultData} - The underlying instance query
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeDefaultData} - The underlying instance query
  */
-export function getSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeDefaultData(): Readonly<NodeData> | undefined {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return undefined;
 
-	return getNodeInstanceDefaultData(selectedID);
+	return getBlockNodeDefaultData(selectedID);
 }
 
 /**
@@ -231,34 +197,13 @@ export function getSelectedNodeDefaultData(): Readonly<NodeData> | undefined {
  * instance-specific and definition-level actions.
  *
  * @returns Readonly<ActionDefinition[]> - A readonly array of action definitions for the currently selected node
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceActions} - For instance-level actions
- * @see {@link getNodeDefinitionActions} - For definition-level actions
+ * @see {@link getSelectedBlockNodeID} - For getting the selected node's ID
+ * @see {@link getBlockNodeActions} - For instance-level actions
+ * @see {@link getBlockNodeDefinitionActions} - For definition-level actions
  */
-export function getSelectedNodeActions(): Readonly<ActionDefinition[]> {
-	const selectedID = getSelectedNodeID();
+export function getSelectedBlockNodeActions(): Readonly<ActionDefinition[]> {
+	const selectedID = getSelectedBlockNodeID();
 	if (!selectedID || selectedID === 'html') return [];
 
-	return getNodeInstanceActions(selectedID);
-}
-
-/**
- * Retrieves the action definitions for the currently selected node.
- *
- * This function returns the action definitions from the node's definition,
- * providing the blueprint for available actions.
- *
- * @returns Readonly<ActionDefinition[]> - A readonly array of action definitions for the currently selected node
- * @see {@link getSelectedNodeID} - For getting the selected node's ID
- * @see {@link getNodeInstanceDefinitionKey} - For getting the definition key
- * @see {@link getNodeDefinitionActions} - The underlying definition query
- */
-export function getSelectedActionDefinitions(): Readonly<ActionDefinition[]> {
-	const selectedID = getSelectedNodeID();
-	if (!selectedID || selectedID === 'html') return [];
-
-	const selectedKey = getNodeInstanceDefinitionKey(selectedID);
-	if (!selectedKey) return [];
-
-	return getNodeDefinitionActions(selectedKey);
+	return getBlockNodeActions(selectedID);
 }

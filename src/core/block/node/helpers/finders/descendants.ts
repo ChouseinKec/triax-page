@@ -49,7 +49,7 @@ export function findNodeDescendants(sourceNodeInstance: NodeInstance, storedNode
 	if (!initialChildren.success) return { status: 'error', error: `Failed to find descendants: ${initialChildren.error}` };
 
 	// If there are no direct children, we don't have descendants
-	if (initialChildren.data.length === 0) return { status: 'not-found' };
+	if (initialChildren.data.length === 0) return { status: 'not-found', message: 'Node has no descendants.' };
 
 	// Loop until there are no more nodes to process
 	const stack: NodeInstance[] = [...initialChildren.data];

@@ -2,8 +2,8 @@
 import React, { useMemo, useCallback } from "react";
 
 // Managers
-import { useSelectedNodeID, useSelectedElementKey, useSelectedParentID, useSelectedNodeCompatibleElementKeys } from "@/core/block/node/managers";
-import { setNodeInstanceElementKey } from "@/core/block/node/managers/commands/instance";
+import { useSelectedBlockNodeID, useSelectedBlockNodeElementKey, useSelectedBlockNodeParentID, useSelectedBlockNodeCompatibleElementKeys } from "@/core/block/node/managers";
+import { setBlockNodeElementKey } from "@/core/block/node/managers/commands/node";
 
 // Components
 import DropdownSelect from "@/shared/components/select/dropdown/component";
@@ -21,17 +21,17 @@ const icon = (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fil
  * Features:
  * - Dynamically generates options from the node's selectedNodeCompatibleElementKeys
  * - Filters options to ensure only valid child tags for the parent node
- * - Updates the node's tag via the setNodeInstanceElementKey command
+ * - Updates the node's tag via the setBlockNodeElementKey command
  * - Hides when no valid options or no selection exists
  *
  * @returns The dropdown component or null if no options available
  */
 const ElementSelect: React.FC = () => {
     // Retrieve selected node data using selective hooks for granular re-rendering
-    const selectedNodeID = useSelectedNodeID();
-    const selectedNodeElementKey = useSelectedElementKey();
-    const selectedNodeParentID = useSelectedParentID();
-    const selectedNodeCompatibleElementKeys = useSelectedNodeCompatibleElementKeys();
+    const selectedNodeID = useSelectedBlockNodeID();
+    const selectedElementKey = useSelectedBlockNodeElementKey();
+    const selectedParentID = useSelectedBlockNodeParentID();
+    const selectedNodeCompatibleElementKeys = useSelectedBlockNodeCompatibleElementKeys();
 
     // Transform available element keys into dropdown options, ensuring elements exist
     const options = useMemo(() => {
@@ -44,17 +44,17 @@ const ElementSelect: React.FC = () => {
 
     // Handle element key change by updating the node's element key in the store
     const handleChange = useCallback((value: string) => {
-        setNodeInstanceElementKey(selectedNodeID, value);
+        setBlockNodeElementKey(selectedNodeID, value);
     }, [selectedNodeID]
     );
 
     // Render nothing if no selection, current element key, or options exist
-    if (!selectedNodeID || !selectedNodeElementKey || options.length === 0) return null;
+    if (!selectedNodeID || !selectedElementKey || options.length === 0) return null;
 
     return (
         <DropdownSelect
-            key={`${selectedNodeID}-${selectedNodeParentID}`}
-            value={selectedNodeElementKey}
+            key={`${selectedNodeID}-${selectedParentID}`}
+            value={selectedElementKey}
             options={options}
             onChange={handleChange}
             placeholder={icon}

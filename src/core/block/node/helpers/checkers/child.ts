@@ -16,7 +16,7 @@ export function isNodeChild(sourceNodeInstance: NodeInstance, parentNodeInstance
 	// Find the child index to determine if it's a child
 	const childIndex = findNodeChildIndex(sourceNodeInstance, parentNodeInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, passed: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false, message: 'Node is not a child of the specified parent' };
 
 	// Return true since the child was found
 	return { success: true, passed: true };
@@ -33,10 +33,14 @@ export function isNodeLastChild(sourceNodeInstance: NodeInstance, parentNodeInst
 	// Find the child's index inside the parent
 	const childIndex = findNodeChildIndex(sourceNodeInstance, parentNodeInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, passed: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false, message: 'Node is not a child of the specified parent' };
 
 	// Compare index with parent's length to determine last-child status.
-	return { success: true, passed: childIndex.data === parentNodeInstance.childNodeIDs.length - 1 };
+	if (childIndex.data === parentNodeInstance.childNodeIDs.length - 1) {
+		return { success: true, passed: true };
+	} else {
+		return { success: true, passed: false, message: 'Node is not the last child' };
+	}
 }
 
 /**
@@ -50,8 +54,12 @@ export function isNodeFirstChild(sourceNodeInstance: NodeInstance, parentNodeIns
 	// Find the child's index inside the parent
 	const childIndex = findNodeChildIndex(sourceNodeInstance, parentNodeInstance);
 	if (childIndex.status === 'error') return { success: false, error: childIndex.error };
-	if (childIndex.status === 'not-found') return { success: true, passed: false };
+	if (childIndex.status === 'not-found') return { success: true, passed: false, message: 'Node is not a child of the specified parent' };
 
 	// Return true if the index is 0
-	return { success: true, passed: childIndex.data === 0 };
+	if (childIndex.data === 0) {
+		return { success: true, passed: true };
+	} else {
+		return { success: true, passed: false, message: 'Node is not the first child' };
+	}
 }

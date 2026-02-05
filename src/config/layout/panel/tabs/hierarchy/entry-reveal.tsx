@@ -4,7 +4,7 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { getNodeDefinitionIcon } from "@/core/block/node/managers";
+import { getBlockNodeDefinitionIcon } from "@/core/block/node/managers";
 
 // Types
 import type { NodeID } from "@/core/block/node/types/instance";
@@ -21,7 +21,7 @@ interface HierarchyEntryButtonProps {
     onLeftClick: () => void;
     onRightClick: (e: React.MouseEvent) => void;
     onArrowClick: () => void;
-    onDragStart: (e: React.DragEvent, nodeID: NodeID) => void;
+    onDragStart?: (e: React.DragEvent, nodeID: NodeID) => void;
     onDragEnd: () => void;
     onDragOver?: (e: React.DragEvent) => void;
     onDragLeave?: () => void;
@@ -51,7 +51,7 @@ const Reveal: React.FC<HierarchyEntryButtonProps> = ({
     onDragLeave,
     onDrop,
 }) => {
-    const NodeIcon = nodeKey ? getNodeDefinitionIcon(nodeKey) : null;
+    const NodeIcon = nodeKey ? getBlockNodeDefinitionIcon(nodeKey) : null;
 
     const attributes = {
         ref: buttonRef,
@@ -59,12 +59,14 @@ const Reveal: React.FC<HierarchyEntryButtonProps> = ({
         'data-is-selected': isBlockSelected,
         onClick: onLeftClick,
         onContextMenu: onRightClick,
-        draggable: true,
-        onDragStart: (e: React.DragEvent) => {
-            onDragStart(e, nodeID);
-            e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
-        },
-        onDragEnd,
+        ...(onDragStart && {
+            draggable: true,
+            onDragStart: (e: React.DragEvent) => {
+                onDragStart(e, nodeID);
+                e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+            },
+            onDragEnd,
+        }),
         // Conditionally add drag handlers for blocks that can have children but don't have any yet
         ...(canHaveChildren && !hasChildren && onDragOver && onDragLeave && onDrop && {
             onDragOver,

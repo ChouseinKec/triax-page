@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // Types
-import type { NodeID, StoredNodes, HighlightedNode } from '@/core/block/node/types/instance';
+import type { NodeID, StoredNodes, NodeHighlight } from '@/core/block/node/types/instance';
 
 // Default
 import { DefaultBlocks } from '@/core/block/node/states/defaults';
@@ -14,7 +14,7 @@ interface BlockStoreProps {
 	data: BlockStoreData;
 	storedNodes: StoredNodes;
 	selectedNodeID: NodeID;
-	highlightedNode: HighlightedNode;
+	highlightedNode: NodeHighlight;
 }
 
 export interface NodeStoreState extends BlockStoreProps {}

@@ -8,7 +8,7 @@ import CSS from "./styles.module.scss";
 import type { BenchEditorProps } from "./types";
 
 // Managers
-import { useSelectedBench, getActionDefinitions } from "@/core/layout/bench/managers/";
+import { useSelectedBench, getBlockNodeActionDefinitions } from "@/core/layout/bench/managers/";
 
 // Components
 import ActionGroup from "@/shared/components/group/action/component";
@@ -25,7 +25,7 @@ const BenchEditor: React.FC<BenchEditorProps> = () => {
     const selectedBench = useSelectedBench();
     if (!selectedBench) return null;
 
-    const actions = getActionDefinitions(selectedBench.key);
+    const actions = getBlockNodeActionDefinitions(selectedBench.key);
 
     return (
         <div className={CSS.BenchEditor}>

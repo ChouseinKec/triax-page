@@ -11,16 +11,14 @@ import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/ty
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers/';
-import { cascadeNodeStyle, pickNodeStyles, renderNodeStyles, pickStyleDefinition } from '@/core/block/style/helpers';
 import { validateStyleKey } from '@/core/block/style/helpers';
 import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/core/layout/page/helpers';
 
 // Managers
-import { getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
 import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/core/layout/page/managers/';
 
-// Registry
-import { getRegisteredStyles } from '@/core/block/style/state/registry';
+// Queries
+import { getBlockStyle, getBlockStylesRendered, canBlockStyleBeEdited } from '@/core/block/style/managers/queries/style';
 
 /**
  * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.
@@ -29,14 +27,14 @@ import { getRegisteredStyles } from '@/core/block/style/state/registry';
  * This hook performs cascading resolution: for pseudo-classes, it first checks pseudo-specific styles,
  * then falls back to base styles. Across devices, it prioritizes current device over default device.
  *
- * @param NodeID - The unique identifier of the block
+ * @param nodeID - The unique identifier of the block
  * @param styleKey - The CSS style property key to retrieve (e.g., 'backgroundColor', 'width')
  */
-export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | undefined {
+export function useBlockStyle(nodeID: NodeID, styleKey: StyleKey): string | undefined {
 	// Validate input parameters to ensure they are valid before proceeding
 	const safeParams = new ResultPipeline('[BlockQueries → useBlockStyle]')
 		.validate({
-			NodeID: validateNodeID(NodeID),
+			nodeID: validateNodeID(nodeID),
 			styleKey: validateStyleKey(styleKey),
 		})
 		.execute();
@@ -49,37 +47,11 @@ export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | unde
 
 	// Subscribe to block store changes and compute the style value reactively
 	return useNodeStore((state) => {
-		// Use a pipeline to safely pick required data and perform operations
-		const results = new ResultPipeline('[BlockQueries → useBlockStyle]')
-			.pick(() => ({
-				// Retrieve the block instance from the store
-				blockInstance: pickNodeInstance(safeParams.NodeID, state.storedNodes),
-			}))
-			.pick((data) => ({
-				// Extract styles from the block instance
-				NodeStyles: pickNodeStyles(data.blockInstance),
-				// Get the style definition for validation and processing
-				styleDefinition: pickStyleDefinition(safeParams.styleKey, getRegisteredStyles()),
-			}))
-			.operate((data) => ({
-				// Resolve the style value using cascading logic
-				styleValue: cascadeNodeStyle(
-					safeParams.styleKey,
-					data.NodeStyles,
-					data.styleDefinition,
-					selectedDeviceKey,
-					selectedOrientationKey,
-					selectedPseudoKey,
-					getDefaultDeviceKey(),
-					getDefaultOrientationKey(),
-					getDefaultPseudoKey(),
-				),
-			}))
-			.execute();
-		if (!results) return undefined;
+		// Check if node exists first
+		const nodeExists = pickNodeInstance(safeParams.nodeID, state.storedNodes).success;
+		if (!nodeExists) return undefined;
 
-		// Extract and return the final resolved style value
-		return results.styleValue;
+		return getBlockStyle(state.storedNodes, safeParams.nodeID, safeParams.styleKey, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 	});
 }
 
@@ -90,16 +62,16 @@ export function useBlockStyle(NodeID: NodeID, styleKey: StyleKey): string | unde
  * This hook generates CSS rules for the block, either for all pseudo-classes or a specific one,
  * considering the provided device, orientation, and pseudo contexts.
  *
- * @param NodeID - The unique identifier of the block
+ * @param nodeID - The unique identifier of the block
  * @param deviceKey - The device context (e.g., 'default', 'tablet-sm')
  * @param orientationKey - The orientation context (e.g., 'portrait', 'landscape')
  * @param pseudoKey - The pseudo-class context ('all' for all pseudos, or specific like 'hover')
  */
-export function useBlockRenderedStyles(NodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
+export function useBlockStylesRendered(nodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
 	// Validate input parameters
-	const safeParams = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
+	const safeParams = new ResultPipeline('[BlockQueries → useBlockStylesRendered]')
 		.validate({
-			NodeID: validateNodeID(NodeID),
+			nodeID: validateNodeID(nodeID),
 			deviceKey: validateDeviceKey(deviceKey),
 			orientationKey: validateOrientationKey(orientationKey),
 			pseudoKey: validatePseudoKey(pseudoKey),
@@ -109,35 +81,29 @@ export function useBlockRenderedStyles(NodeID: NodeID, deviceKey: DeviceKey, ori
 
 	// Subscribe to block store changes and compute the rendered styles reactively
 	return useNodeStore((state) => {
-		// Use pipeline to safely retrieve and process data
-		const results = new ResultPipeline('[BlockQueries → useBlockRenderedStyles]')
-			.pick(() => ({
-				// Retrieve the block instance
-				blockInstance: pickNodeInstance(safeParams.NodeID, state.storedNodes),
-			}))
-			.pick((data) => ({
-				// Extract styles from the block instance
-				NodeStyles: pickNodeStyles(data.blockInstance),
-			}))
-			.operate((data) => ({
-				// Render the styles into CSS string
-				renderedStyles: renderNodeStyles(
-					data.NodeStyles,
-					safeParams.NodeID,
-					getRegisteredStyles(),
-					getPseudoDefinitions(),
-					safeParams.deviceKey,
-					safeParams.orientationKey,
-					safeParams.pseudoKey,
-					getDefaultDeviceKey(),
-					getDefaultOrientationKey(),
-					getDefaultPseudoKey(),
-				),
-			}))
-			.execute();
-		if (!results) return undefined;
+		// Check if node exists first
+		const nodeExists = pickNodeInstance(safeParams.nodeID, state.storedNodes).success;
+		if (!nodeExists) return undefined;
 
-		// Return the rendered CSS string
-		return results.renderedStyles;
+		return getBlockStylesRendered(state.storedNodes, safeParams.nodeID, safeParams.deviceKey, safeParams.orientationKey, safeParams.pseudoKey);
+	});
+}
+
+/**
+ * Checks if a specific block's styles can be edited.
+ *
+ * This hook determines whether the styles of the given block are editable,
+ * based on its element definition. It provides a reactive way to access this information.
+ *
+ * @param sourceNodeID - The unique identifier of the block to check
+ * @returns boolean - True if the block's styles are editable, false otherwise
+ * @see {@link canBlockStyleBeEdited} - The underlying query function
+ */
+export function useBlockStyleIsEditable(sourceNodeID: NodeID): boolean {
+	return useNodeStore((state) => {
+		const instance = pickNodeInstance(sourceNodeID, state.storedNodes);
+		if (!instance.success) return false;
+
+		return canBlockStyleBeEdited(sourceNodeID);
 	});
 }

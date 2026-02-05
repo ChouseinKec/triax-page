@@ -4,11 +4,11 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setSelectedNodeID } from '@/core/block/node/managers/commands';
+import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
 import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
-import { getNodeInstanceData, setNodeInstanceData } from '@/core/block/node/managers';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { getBlockNodeData, setBlockNodeData } from '@/core/block/node/managers';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -23,11 +23,11 @@ import Placeholder from '@/shared/components/placeholder/block/component';
  */
 const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const nodeID = instance.id;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get node data to check placeholder setting
-    const data = getNodeInstanceData(nodeID);
+    const data = getBlockNodeData(nodeID);
     const hidePlaceholder = data?.placeholder === false;
 
     /**
@@ -36,7 +36,7 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]
     );
 
@@ -46,7 +46,7 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
     const handleAddBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         // First select this container
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
         // Then open the library panel
         setPanelOpenState('library', true);
     }, [nodeID]
@@ -57,7 +57,7 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleHidePlaceholder = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setNodeInstanceData(nodeID, { ...data, placeholder: false });
+        setBlockNodeData(nodeID, { ...data, placeholder: false });
     }, [nodeID, data]
     );
 
@@ -93,6 +93,7 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
                             onClick: handleHidePlaceholder
                         }
                     ]}
+                    isSelected={isSelected}
                 />
             )}
 

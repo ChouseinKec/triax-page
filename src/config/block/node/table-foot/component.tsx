@@ -4,9 +4,9 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { addNode, setSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -21,8 +21,8 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const nodeID = instance.id;
     const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
      * Handles block selection when clicked.
@@ -30,7 +30,7 @@ const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleSelectBlock = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]);
 
     /**
@@ -38,7 +38,7 @@ const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
      */
     const handleAddTableRow = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        addNode('core-table-row', nodeID, 'tr');
+        addBlockNode('core-table-row', nodeID, 'tr');
     }, [nodeID]);
 
     // Check if table foot has children
@@ -65,13 +65,15 @@ const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
     ) : (
         <Placeholder
             as="tfoot"
-            message="Add footer rows"
+            message="Empty Table Foot"
             description="Create table footer rows with summary data"
             actions={[{
                 label: "Add Row",
                 onClick: handleAddTableRow
             }]}
             onSelect={handleSelectBlock}
+            isSelected={isSelected}
+            wrap={['tr', 'td']}
         />
     );
 };

@@ -24,4 +24,10 @@ export interface PlaceholderProps {
 
 	/** Optional element to render as instead of div */
 	as?: React.ElementType;
+
+	/** Whether the placeholder is selected */
+	isSelected?: boolean;
+
+	/** Optional array of elements to wrap the content in, from outermost to innermost */
+	wrap?: (React.ElementType | string)[];
 }

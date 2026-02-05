@@ -3,3 +3,12 @@
 .Action {
 	@include inputMixins.components--button($background: var(--theme-color-primary));
 }
+
+
+.Input{
+	outline:none;
+	border:none;
+	background: transparent;
+	border-bottom: 1px solid gray;
+	text-align: center;
+}

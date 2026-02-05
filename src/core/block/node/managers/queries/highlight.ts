@@ -2,7 +2,7 @@
 import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
-import type { HighlightedNode } from '@/core/block/node/types/';
+import type { NodeHighlight } from '@/core/block/node/types/';
 
 // Helpers
 import { pickNodeStoreState } from '@/core/block/node/helpers/pickers';
@@ -22,8 +22,8 @@ import { ResultPipeline } from '@/shared/utilities/pipeline';
  * the function returns undefined.
  *
  * @returns The highlighted node data, or null if no node is highlighted, or undefined on error */
-export function getHighlightedNode(): HighlightedNode | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getHighlightedNode]')
+export function getBlockNodeHighlight(): NodeHighlight | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeHighlight]')
 		.pick(() => ({
 			blockStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))

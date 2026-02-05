@@ -13,7 +13,7 @@ import Select from "./select";
 import ActionGroup from "@/shared/components/group/action/component";
 
 // Managers
-import { useSelectedView, getActionDefinitions } from "@/core/layout/view/managers";
+import { useSelectedView, getBlockNodeActionDefinitions } from "@/core/layout/view/managers";
 import { useSelectedBenchKey } from "@/core/layout/bench/managers/";
 
 
@@ -21,7 +21,7 @@ import { useSelectedBenchKey } from "@/core/layout/bench/managers/";
 const ViewEditor: React.FC<ViewEditorProps> = () => {
     const selectedBenchKey = useSelectedBenchKey();
     const viewDefinition = useSelectedView(selectedBenchKey);
-    const actionDefinitions = Object.values(getActionDefinitions(viewDefinition?.key)).sort((a, b) => a.order - b.order);
+    const actionDefinitions = Object.values(getBlockNodeActionDefinitions(viewDefinition?.key)).sort((a, b) => a.order - b.order);
     
     // Ref for view actions container
     const viewActionContainerRef = useRef<HTMLDivElement>(null);

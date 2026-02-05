@@ -1,6 +1,6 @@
 // Types
 import type { CheckResult } from '@/shared/types/result';
-import type { NodeData, HighlightedNode } from '@/core/block/node/types/';
+import type { NodeData, NodeHighlight } from '@/core/block/node/types/';
 
 /**
  * Checks whether the highlightedNode's text matches the substring in nodeContent.text defined by its startOffset and endOffset.
@@ -9,7 +9,7 @@ import type { NodeData, HighlightedNode } from '@/core/block/node/types/';
  * @param highlightedNode - The highlighted node data with text and offsets.
  * @returns CheckResult indicating if the highlight is valid.
  */
-export function includesHighlightText(nodeContent: NodeData, highlightedNode: HighlightedNode): CheckResult {
+export function includesHighlightText(nodeContent: NodeData, highlightedNode: NodeHighlight): CheckResult {
 	// Return false if no highlightedNode data is provided
 	if (!highlightedNode) return { success: false, error: 'No highlighted node data provided.' };
 
@@ -19,7 +19,7 @@ export function includesHighlightText(nodeContent: NodeData, highlightedNode: Hi
 
 	// Check if offsets are within bounds
 	const { startOffset, endOffset, text: highlightedText } = highlightedNode;
-	if (startOffset < 0 || endOffset > originalText.length || startOffset >= endOffset) return { success: true, passed: false };
+	if (startOffset < 0 || endOffset > originalText.length || startOffset >= endOffset) return { success: true, passed: false, message: 'Invalid start or end offsets' };
 
 	// Extract the substring from the original text using offsets
 	const extractedText = originalText.slice(startOffset, endOffset).trim();
@@ -27,5 +27,9 @@ export function includesHighlightText(nodeContent: NodeData, highlightedNode: Hi
 	// Compare the extracted text with the highlighted text (case-sensitive, trimmed for forgiveness)
 	const passed = extractedText === highlightedText.trim();
 
-	return { success: true, passed };
+	if (passed) {
+		return { success: true, passed: true };
+	} else {
+		return { success: true, passed: false, message: 'Highlighted text does not match the extracted text' };
+	}
 }

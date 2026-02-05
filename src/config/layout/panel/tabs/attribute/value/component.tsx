@@ -5,7 +5,7 @@ import { memo, useCallback } from "react";
 import type { NodeAttributesValueProps } from "./types";
 
 // Managers
-import { useNodeAttribute, setNodeAttribute } from "@/core/block/attribute/managers";
+import { useBlockAttribute, setBlockAttribute } from "@/core/block/attribute/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
@@ -30,10 +30,10 @@ import RadioSelect from "@/shared/components/select/radio/component";
  * @returns ReactElement - The rendered value editor UI for the property.
  */
 const BlockAttributeValue: React.FC<NodeAttributesValueProps> = ({ NodeID, attribute }) => {
-    const value = useNodeAttribute(NodeID, attribute) || "";
+    const value = useBlockAttribute(NodeID, attribute) || "";
 
     const handleChange = useCallback((newValue: string) => {
-        setNodeAttribute(NodeID, attribute, newValue);
+        setBlockAttribute(NodeID, attribute, newValue);
     }, [NodeID, attribute]
     );
 

@@ -22,12 +22,12 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  *
  * @param sourceNodeID - The unique identifier of the node to find the next node for
  * @returns The next node instance in the hierarchy, null if at the end of the document, or undefined if the input node is invalid
- * @see {@link getPreviousNode} - For retrieving the previous node in the hierarchy
+ * @see {@link getBlockNodePreviousNode} - For retrieving the previous node in the hierarchy
  * @see {@link findNodeNextSibling} - Helper function used to find the next sibling of a node
  * @see {@link findNodeFirstChild} - Helper function used to find the first child of a node
  */
-export function getNextNode(sourceNodeID: NodeID): NodeInstance | null | undefined {
-	const validData = new ResultPipeline('[BlockManager → getNextNode]')
+export function getBlockNodeNextNode(sourceNodeID: NodeID): NodeInstance | null | undefined {
+	const validData = new ResultPipeline('[BlockManager → getBlockNodeNextNode]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -65,14 +65,14 @@ export function getNextNode(sourceNodeID: NodeID): NodeInstance | null | undefin
  *
  * @param sourceNodeID - The unique identifier of the node to find the previous node for
  * @returns The previous node instance in the hierarchy, null if at the beginning of the document or if sourceNodeID is 'html', or undefined if the input node is invalid
- * @see {@link getNextNode} - For retrieving the next node in the hierarchy
+ * @see {@link getBlockNodeNextNode} - For retrieving the next node in the hierarchy
  * @see {@link findNodePreviousSibling} - Helper function used to find the previous sibling of a node
  * @see {@link findNodeLastDescendant} - Helper function used to find the last descendant of a node
  */
-export function getPreviousNode(sourceNodeID: NodeID): NodeInstance | null | undefined {
+export function getBlockNodePreviousNode(sourceNodeID: NodeID): NodeInstance | null | undefined {
 	if (sourceNodeID === 'html') return null;
 
-	const validData = new ResultPipeline('[BlockManager → getPreviousNode]')
+	const validData = new ResultPipeline('[BlockManager → getBlockNodePreviousNode]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -85,15 +85,15 @@ export function getPreviousNode(sourceNodeID: NodeID): NodeInstance | null | und
 		.pick((data) => ({
 			parentNodeInstance: pickNodeInstance(data.blockInstance.parentID, data.nodeStore.storedNodes),
 		}))
-		.find((data) => ({
-			prevSiblingInstance: findNodePreviousSibling(data.blockInstance, data.nodeStore.storedNodes),
-		}))
+
 		.execute();
 	if (!validData) return;
 
+	const prevSiblingResult = findNodePreviousSibling(validData.blockInstance, validData.nodeStore.storedNodes);
+
 	// If there is a previous sibling, return its last descendant
-	if (validData.prevSiblingInstance) {
-		const lastDescResult = findNodeLastDescendant(validData.prevSiblingInstance, validData.nodeStore.storedNodes);
+	if (prevSiblingResult.status === 'found') {
+		const lastDescResult = findNodeLastDescendant(prevSiblingResult.data, validData.nodeStore.storedNodes);
 		if (lastDescResult.status === 'found') return lastDescResult.data;
 		return null;
 	}

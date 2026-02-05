@@ -4,9 +4,9 @@ import React, { useCallback, useRef, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { addNode, setSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getNodeRenderedAttributes } from '@/core/block/attribute/managers';
-import { useBlockRenderedStyles } from '@/core/block/style/managers';
+import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
 import Placeholder from '@/shared/components/placeholder/block/component';
@@ -21,8 +21,8 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
     const nodeID = instance.id;
     const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getNodeRenderedAttributes(nodeID);
-    const nodeStyles = useBlockRenderedStyles(nodeID, deviceKey, orientationKey, pseudoKey);
+    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
      * Handles block selection when clicked.
@@ -30,7 +30,7 @@ const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientati
      */
     const handleSelect = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedNodeID(nodeID);
+        setBlockNodeSelectedNodeID(nodeID);
     }, [nodeID]);
 
     /**
@@ -38,7 +38,7 @@ const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientati
      */
     const handleAddItem = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        addNode('core-list-item', nodeID, 'li');
+        addBlockNode('core-list-item', nodeID, 'li');
     }, [nodeID]);
 
 
@@ -60,6 +60,8 @@ const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientati
                         label: "Add List Item",
                         onClick: handleAddItem
                     }]}
+                    isSelected={isSelected}
+                    wrap={['li']}
                 />
             )}
 

@@ -38,7 +38,7 @@ export type StoredNodes = Record<NodeID, NodeInstance>;
 /**
  * Represents highlighted text within a node, including the text and its position offsets.
  */
-export type HighlightedNode = {
+export type NodeHighlight = {
 	id: NodeID;
 	elementKey: ElementKey;
 	text: string;

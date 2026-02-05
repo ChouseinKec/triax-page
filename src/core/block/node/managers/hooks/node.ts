@@ -5,13 +5,10 @@ import { useNodeStore } from '@/core/block/node/states/store';
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
-import type { NodeID } from '@/core/block/node/types/';
+import type { NodeID, NodeInstance } from '@/core/block/node/types/';
 
 // Helpers
-import { validateNodeID } from '@/core/block/node/helpers';
-
-// Managers
-import { isNodeStyleEditable, isNodeAttributeEditable, isNodeDeletable, isNodeCopyable, isNodeCloneable, isNodeOrderable } from '@/core/block/node/managers/queries/instance';
+import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
 
 /**
  * Checks if a specific node is currently selected in the editor.
@@ -22,9 +19,9 @@ import { isNodeStyleEditable, isNodeAttributeEditable, isNodeDeletable, isNodeCo
  * @param nodeID - The unique identifier of the node to check for selection status
  * @returns boolean - True if the specified node is currently selected, false otherwise
  */
-export function useNodeIsSelected(nodeID: NodeID): boolean {
+export function useBlockNodeIsSelected(nodeID: NodeID): boolean {
 	// Validate parameters first
-	const results = new ResultPipeline('[BlockQueries → useNodeIsSelected]')
+	const results = new ResultPipeline('[BlockQueries → useBlockNodeIsSelected]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
@@ -36,85 +33,34 @@ export function useNodeIsSelected(nodeID: NodeID): boolean {
 }
 
 /**
- * Checks if a specific node's styles can be edited.
+ * Retrieves all node instances from the store.
  *
- * This hook determines whether the styles of the given node are editable,
- * based on its element definition. It provides a reactive way to access this information.
+ * This reactive hook accesses the node store to get an array of all node instances,
+ * and updates reactively when any node is added, removed, or modified.
  *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node's styles are editable, false otherwise
- * @see {@link isNodeStyleEditable} - The underlying query function
+ * @returns NodeInstance[] - An array of all node instances in the store
+ * @see {@link getNodeInstances} - The underlying manager query
  */
-export function useNodeIsStyleEditable(nodeID: NodeID): boolean {
-	return isNodeStyleEditable(nodeID);
+export function useBlockNodes(): NodeInstance[] {
+	// Return all reactive block instances
+	return useNodeStore((state) => {
+		// Map stored nodes to their instances
+		return Object.values(state.storedNodes);
+	});
 }
 
 /**
- * Checks if a specific node's attributes can be edited.
+ * Retrieves a complete node instance by its ID.
  *
- * This hook determines whether the attributes of the given node are editable,
- * based on its element definition. It provides a reactive way to access this information.
+ * This reactive hook accesses the node store to get the full node instance data,
+ * including its properties, and updates reactively when the node changes.
  *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node's attributes are editable, false otherwise
- * @see {@link isNodeAttributeEditable} - The underlying query function
+ * @param nodeID - The unique identifier of the node instance to retrieve
+ * @returns NodeInstance | undefined - The complete node instance, or undefined if the node is not found
  */
-export function useNodeIsAttributeEditable(nodeID: NodeID): boolean {
-	return isNodeAttributeEditable(nodeID);
-}
-
-/**
- * Checks if a specific node can be deleted.
- *
- * This hook determines whether the given node can be deleted,
- * based on its element definition. It provides a reactive way to access this information.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is deletable, false otherwise
- * @see {@link isNodeDeletable} - The underlying query function
- */
-export function useNodeIsDeletable(nodeID: NodeID): boolean {
-	return isNodeDeletable(nodeID);
-}
-
-/**
- * Checks if a specific node can be copied.
- *
- * This hook determines whether the given node can be copied,
- * based on its element definition. It provides a reactive way to access this information.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is copyable, false otherwise
- * @see {@link isNodeCopyable} - The underlying query function
- */
-export function useNodeIsCopyable(nodeID: NodeID): boolean {
-	return isNodeCopyable(nodeID);
-}
-
-/**
- * Checks if a specific node can be cloned.
- *
- * This hook determines whether the given node can be cloned,
- * based on its element definition. It provides a reactive way to access this information.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is cloneable, false otherwise
- * @see {@link isNodeCloneable} - The underlying query function
- */
-export function useNodeIsCloneable(nodeID: NodeID): boolean {
-	return isNodeCloneable(nodeID);
-}
-
-/**
- * Checks if a specific node can be reordered.
- *
- * This hook determines whether the given node can be reordered,
- * based on its element definition. It provides a reactive way to access this information.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is orderable, false otherwise
- * @see {@link isNodeOrderable} - The underlying query function
- */
-export function useNodeIsOrderable(nodeID: NodeID): boolean {
-	return isNodeOrderable(nodeID);
+export function useBlockNode(nodeID: NodeID): NodeInstance | undefined {
+	return useNodeStore((state) => {
+		const blockInstance = pickNodeInstance(nodeID, state.storedNodes);
+		return blockInstance.success ? blockInstance.data : undefined;
+	});
 }

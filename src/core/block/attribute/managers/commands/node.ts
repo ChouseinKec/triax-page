@@ -26,9 +26,9 @@ let attributesClipboard: NodeAttributes | null = null;
  * @param attributeKey - The attribute key to set
  * @param attributeValue - The new value for the attribute
  */
-export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
+export function setBlockAttribute(nodeID: NodeID, attributeKey: AttributeKey, attributeValue: AttributeValue): void {
 	// Validate, pick, and operate on necessary data
-	const results = new ResultPipeline('[BlockManager → setNodeAttribute]')
+	const results = new ResultPipeline('[BlockManager → setBlockAttribute]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 			attributeKey: validateAttributeKey(attributeKey),
@@ -62,9 +62,9 @@ export function setNodeAttribute(nodeID: NodeID, attributeKey: AttributeKey, att
  *
  * @param nodeID - The blockInstance identifier to copy attributes from
  */
-export function copyNodeAttributes(nodeID: NodeID): void {
+export function copyBlockAttributes(nodeID: NodeID): void {
 	// Validate and pick the blockInstance to copy attributes from
-	const results = new ResultPipeline('[BlockManager → copyNodeAttributes]')
+	const results = new ResultPipeline('[BlockManager → copyBlockAttributes]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})
@@ -84,11 +84,11 @@ export function copyNodeAttributes(nodeID: NodeID): void {
  *
  * @param nodeID - The blockInstance identifier to paste attributes to
  */
-export function pasteNodeAttributes(nodeID: NodeID): void {
-	if (!attributesClipboard) return (devLog.error(`[BlockManager → pasteNodeAttributes] No attributes in clipboard`), undefined);
+export function pasteBlockAttributes(nodeID: NodeID): void {
+	if (!attributesClipboard) return (devLog.error(`[BlockManager → pasteBlockAttributes] No attributes in clipboard`), undefined);
 
 	// Validate and pick the target blockInstance to paste attributes into
-	const results = new ResultPipeline('[BlockManager → pasteNodeAttributes]')
+	const results = new ResultPipeline('[BlockManager → pasteBlockAttributes]')
 		.validate({
 			nodeID: validateNodeID(nodeID),
 		})

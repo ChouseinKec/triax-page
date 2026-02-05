@@ -86,6 +86,10 @@
 
 	border-top: 1px solid var(--theme-color-primary-tint);
 
+	> button {
+		@include inputMixins.components--button($background: var(--theme-color-primary));
+	}
+
 	:global(.RadioSelect) {
 		background: transparent !important;
 		border: none !important;

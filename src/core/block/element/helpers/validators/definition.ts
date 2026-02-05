@@ -1,5 +1,5 @@
 // Types
-import type { ElementKey, ElementDefinition, ElementDescription, ElementAllowedAttributes, ElementForbiddenAncestors, ElementOrderedChildren, ElementUniqueChildren } from '@/core/block/element/types';
+import type { ElementKey, ElementDefinition, ElementDescription, ElementAllowedAttributes, ElementForbiddenAncestors } from '@/core/block/element/types';
 import type { ValidateResult } from '@/shared/types/result';
 
 // Utilities
@@ -44,34 +44,6 @@ export function validateElementForbiddenAncestors(forbiddenAncestors: unknown): 
 }
 
 /**
- * Validates an array of ordered children for an element.
- *
- * @param orderedChildren - The ordered children to validate
- */
-export function validateElementOrderedChildren(orderedChildren: unknown): ValidateResult<ElementOrderedChildren | null> {
-	if (orderedChildren === null) return { valid: true, value: null };
-
-	const arrayValidation = validateArray(orderedChildren);
-	if (!arrayValidation.valid) return arrayValidation;
-
-	return { valid: true, value: arrayValidation.value as ElementOrderedChildren };
-}
-
-/**
- * Validates a record of unique children for an element.
- *
- * @param uniqueChildren - The unique children to validate
- */
-export function validateElementUniqueChildren(uniqueChildren: unknown): ValidateResult<ElementUniqueChildren | null> {
-	if (uniqueChildren === null) return { valid: true, value: null };
-
-	const objectValidation = validateObject(uniqueChildren);
-	if (!objectValidation.valid) return objectValidation;
-
-	return { valid: true, value: objectValidation.value as ElementUniqueChildren };
-}
-
-/**
  * Validates an array of allowed attribute keys for an element.
  *
  * @param allowedAttributes - The allowed attributes to validate
@@ -84,12 +56,36 @@ export function validateElementAllowedAttributes(allowedAttributes: unknown): Va
 }
 
 /**
+ * Validates an array of allowed children for an element.
+ *
+ * @param allowedChildren - The allowed children to validate
+ */
+export function validateElementAllowedChildren(allowedChildren: unknown): ValidateResult<ElementKey[] | null> {
+	if (allowedChildren === null) return { valid: true, value: null };
+
+	const arrayValidation = validateArray(allowedChildren);
+	if (!arrayValidation.valid) return arrayValidation;
+
+	return { valid: true, value: arrayValidation.value as ElementKey[] };
+}
+
+export function validateElementStructure(structure: unknown): ValidateResult<ElementDefinition['structure']> {
+	if (structure === null) return { valid: true, value: null };
+
+	const arrayValidation = validateArray(structure);
+	if (!arrayValidation.valid) return arrayValidation;
+
+
+	return { valid: true, value: arrayValidation.value as ElementDefinition['structure'] };
+}
+
+/**
  * Validates an ElementDefinition object.
  *
  * @param elementDefinition - The element definition to validate
  */
 export function validateElementDefinition(elementDefinition: unknown): ValidateResult<ElementDefinition> {
-	const objectValidation = validateObject(elementDefinition, ['key', 'description', 'allowedAttributes', 'allowedChildren', 'forbiddenAncestors', 'uniqueChildren', 'orderedChildren']);
+	const objectValidation = validateObject(elementDefinition, ['key', 'description', 'allowedAttributes', 'allowedChildren', 'forbiddenAncestors', 'structure']);
 	if (!objectValidation.valid) return objectValidation;
 
 	const keyValidation = validateElementKey(objectValidation.value.key);
@@ -101,14 +97,14 @@ export function validateElementDefinition(elementDefinition: unknown): ValidateR
 	const forbiddenAncestorsValidation = validateElementForbiddenAncestors(objectValidation.value.forbiddenAncestors);
 	if (!forbiddenAncestorsValidation.valid) return forbiddenAncestorsValidation;
 
-	const orderedChildrenValidation = validateElementOrderedChildren(objectValidation.value.orderedChildren);
-	if (!orderedChildrenValidation.valid) return orderedChildrenValidation;
-
-	const uniqueChildrenValidation = validateElementUniqueChildren(objectValidation.value.uniqueChildren);
-	if (!uniqueChildrenValidation.valid) return uniqueChildrenValidation;
-
 	const allowedAttributesValidation = validateElementAllowedAttributes(objectValidation.value.allowedAttributes);
 	if (!allowedAttributesValidation.valid) return allowedAttributesValidation;
+
+	const allowedChildrenValidation = validateElementAllowedChildren(objectValidation.value.allowedChildren);
+	if (!allowedChildrenValidation.valid) return allowedChildrenValidation;
+
+	const structureValidation = validateElementStructure(objectValidation.value.structure);
+	if (!structureValidation.valid) return structureValidation;
 
 	return { valid: true, value: objectValidation.value as unknown as ElementDefinition };
 }

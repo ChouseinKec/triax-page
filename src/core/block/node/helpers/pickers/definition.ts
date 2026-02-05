@@ -14,7 +14,7 @@ import type { PickResult } from '@/shared/types/result';
  * @param nodeRegistryState - The registry containing all available node definitions
  * @returns A PickResult containing all node definitions or an error if none are registered
  */
-export function pickNodeDefinitions(nodeRegistryState: NodeRegistryState): PickResult<RegisteredNodes> {
+export function pickNodeDefinitions(nodeRegistryState: NodeRegistryState): PickResult<NodeDefinition[]> {
 	// If the registered nodes object is undefined, return an error
 	if (!nodeRegistryState.nodes) return { success: false, error: 'Registered nodes object is undefined' };
 
@@ -22,7 +22,7 @@ export function pickNodeDefinitions(nodeRegistryState: NodeRegistryState): PickR
 	if (Object.keys(nodeRegistryState.nodes).length === 0) return { success: false, error: 'No block types are registered in the system' };
 
 	// Return all registered node definitions
-	return { success: true, data: nodeRegistryState.nodes };
+	return { success: true, data: Object.values(nodeRegistryState.nodes) };
 }
 
 /**
@@ -36,9 +36,9 @@ export function pickNodeDefinitions(nodeRegistryState: NodeRegistryState): PickR
  * @param registeredNodes - The registry containing all available node definitions
  * @returns A PickResult containing the node definition or an error if the type is not registered
  */
-export function pickNodeDefinition(nodeKey: NodeKey, registeredNodes: RegisteredNodes): PickResult<NodeDefinition> {
+export function pickNodeDefinition(nodeKey: NodeKey, nodeDefinitions: NodeDefinition[]): PickResult<NodeDefinition> {
 	// Lookup the block type in the registry map
-	const nodeDefinition = registeredNodes[nodeKey];
+	const nodeDefinition = nodeDefinitions.find((def) => def.key === nodeKey);
 
 	// If missing, return an error
 	if (!nodeDefinition) return { success: false, error: `Block type not registered: '${nodeKey}' is not a recognized block type` };

@@ -12,8 +12,7 @@ import { validateNodeID, pickNodeInstance, pickNodeStoreState, pickNodeData } fr
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Managers
-import { getNodeDefinitionActions, getNodeDefinitionIcon, getNodeDefinitionComponent, getNodeDefinitionElementKeys, getNodeDefinitionName, getNodeDefinitionDescription, getNodeDefinitionCategory, getNodeDefinitionDefaultStyles, getNodeDefinitionDefaultAttributes, getNodeDefinitionDefaultData } from '@/core/block/node/managers/';
-import { isElementStyleEditable, isElementAttributeEditable, isElementDeletable, isElementCopyable, isElementCloneable, isElementOrderable } from '@/core/block/element/managers/queries/definition';
+import { getBlockNodeDefinitionActions, getBlockNodeDefinitionIcon, getBlockNodeDefinitionComponent, getBlockNodeDefinitionElementKeys, getBlockNodeDefinitionName, getBlockNodeDefinitionDescription, getBlockNodeDefinitionCategory, getBlockNodeDefinitionDefaultStyles, getBlockNodeDefinitionDefaultAttributes, getBlockNodeDefinitionDefaultData } from '@/core/block/node/managers/';
 
 /**
  * Retrieves all node instances currently stored in the node store.
@@ -23,8 +22,8 @@ import { isElementStyleEditable, isElementAttributeEditable, isElementDeletable,
  *
  * @returns Readonly<NodeInstance[]> - An array of all node instances
  */
-export function getNodeInstances(): Readonly<NodeInstance[]> {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstances]')
+export function getBlockNodes(): Readonly<NodeInstance[]> {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodes]')
 		.pick(() => ({
 			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
@@ -45,8 +44,8 @@ export function getNodeInstances(): Readonly<NodeInstance[]> {
  * @see {@link pickNodeInstance} - Helper function used to extract the instance from store
  * @see {@link validateNodeID} - Validation function for node IDs
  */
-export function getNodeInstance(sourceNodeID: NodeID): Readonly<NodeInstance> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstance]')
+export function getBlockNode(sourceNodeID: NodeID): Readonly<NodeInstance> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNode]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -70,10 +69,10 @@ export function getNodeInstance(sourceNodeID: NodeID): Readonly<NodeInstance> | 
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeIcon | undefined - The icon component, or undefined if the instance is not found
- * @see {@link getNodeDefinitionIcon} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionIcon} - The underlying definition query
  */
-export function getNodeInstanceIcon(sourceNodeID: NodeID): NodeIcon | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceIcon]')
+export function getBlockNodeIcon(sourceNodeID: NodeID): NodeIcon | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeIcon]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -86,7 +85,7 @@ export function getNodeInstanceIcon(sourceNodeID: NodeID): NodeIcon | undefined 
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionIcon(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionIcon(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -97,10 +96,10 @@ export function getNodeInstanceIcon(sourceNodeID: NodeID): NodeIcon | undefined 
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeComponent | undefined - The React component, or undefined if the instance is not found
- * @see {@link getNodeDefinitionComponent} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionComponent} - The underlying definition query
  */
-export function getNodeInstanceComponent(sourceNodeID: NodeID): NodeComponent | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceComponent]')
+export function getBlockNodeComponent(sourceNodeID: NodeID): NodeComponent | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeComponent]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -113,7 +112,7 @@ export function getNodeInstanceComponent(sourceNodeID: NodeID): NodeComponent | 
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionComponent(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionComponent(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -124,10 +123,10 @@ export function getNodeInstanceComponent(sourceNodeID: NodeID): NodeComponent | 
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<ElementKey[]> | undefined - An array of supported element keys, or undefined if the instance is not found
- * @see {@link getNodeDefinitionElementKeys} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionElementKeys} - The underlying definition query
  */
-export function getNodeInstanceElementKeys(sourceNodeID: NodeID): Readonly<ElementKey[]> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceElementKeys]')
+export function getBlockNodeElementKeys(sourceNodeID: NodeID): Readonly<ElementKey[]> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeElementKeys]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -140,7 +139,7 @@ export function getNodeInstanceElementKeys(sourceNodeID: NodeID): Readonly<Eleme
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionElementKeys(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionElementKeys(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -151,10 +150,10 @@ export function getNodeInstanceElementKeys(sourceNodeID: NodeID): Readonly<Eleme
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeName | undefined - The name of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionName} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionName} - The underlying definition query
  */
-export function getNodeInstanceName(sourceNodeID: NodeID): NodeName | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceName]')
+export function getBlockNodeName(sourceNodeID: NodeID): NodeName | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeName]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -167,7 +166,7 @@ export function getNodeInstanceName(sourceNodeID: NodeID): NodeName | undefined 
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionName(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionName(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -178,10 +177,10 @@ export function getNodeInstanceName(sourceNodeID: NodeID): NodeName | undefined 
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeDescription | undefined - The description of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionDescription} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionDescription} - The underlying definition query
  */
-export function getNodeInstanceDescription(sourceNodeID: NodeID): NodeDescription | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceDescription]')
+export function getBlockNodeDescription(sourceNodeID: NodeID): NodeDescription | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDescription]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -194,7 +193,7 @@ export function getNodeInstanceDescription(sourceNodeID: NodeID): NodeDescriptio
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionDescription(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionDescription(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -205,10 +204,10 @@ export function getNodeInstanceDescription(sourceNodeID: NodeID): NodeDescriptio
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeCategory | undefined - The category of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionCategory} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionCategory} - The underlying definition query
  */
-export function getNodeInstanceCategory(sourceNodeID: NodeID): NodeCategory | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceCategory]')
+export function getBlockNodeCategory(sourceNodeID: NodeID): NodeCategory | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeCategory]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -221,7 +220,7 @@ export function getNodeInstanceCategory(sourceNodeID: NodeID): NodeCategory | un
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionCategory(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionCategory(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -232,10 +231,10 @@ export function getNodeInstanceCategory(sourceNodeID: NodeID): NodeCategory | un
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<NodeStyles> | undefined - The default styles of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionDefaultStyles} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionDefaultStyles} - The underlying definition query
  */
-export function getNodeInstanceDefaultStyles(sourceNodeID: NodeID): Readonly<NodeStyles> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceDefaultStyles]')
+export function getBlockNodeDefaultStyles(sourceNodeID: NodeID): Readonly<NodeStyles> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefaultStyles]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -248,7 +247,7 @@ export function getNodeInstanceDefaultStyles(sourceNodeID: NodeID): Readonly<Nod
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionDefaultStyles(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionDefaultStyles(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -259,10 +258,10 @@ export function getNodeInstanceDefaultStyles(sourceNodeID: NodeID): Readonly<Nod
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<NodeAttributes> | undefined - The default attributes of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionDefaultAttributes} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionDefaultAttributes} - The underlying definition query
  */
-export function getNodeInstanceDefaultAttributes(sourceNodeID: NodeID): Readonly<NodeAttributes> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceDefaultAttributes]')
+export function getBlockNodeDefaultAttributes(sourceNodeID: NodeID): Readonly<NodeAttributes> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefaultAttributes]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -275,7 +274,7 @@ export function getNodeInstanceDefaultAttributes(sourceNodeID: NodeID): Readonly
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionDefaultAttributes(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionDefaultAttributes(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -286,10 +285,10 @@ export function getNodeInstanceDefaultAttributes(sourceNodeID: NodeID): Readonly
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<NodeData> | undefined - The default data of the node, or undefined if the instance is not found
- * @see {@link getNodeDefinitionDefaultData} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionDefaultData} - The underlying definition query
  */
-export function getNodeInstanceDefaultData(sourceNodeID: NodeID): Readonly<NodeData> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceDefaultData]')
+export function getBlockNodeDefaultData(sourceNodeID: NodeID): Readonly<NodeData> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefaultData]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -302,7 +301,7 @@ export function getNodeInstanceDefaultData(sourceNodeID: NodeID): Readonly<NodeD
 		.execute();
 	if (!validData) return undefined;
 
-	return getNodeDefinitionDefaultData(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionDefaultData(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -313,10 +312,10 @@ export function getNodeInstanceDefaultData(sourceNodeID: NodeID): Readonly<NodeD
  *
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<ActionDefinition[]> - A readonly array of action definitions, sorted by order
- * @see {@link getNodeDefinitionActions} - The underlying definition query
+ * @see {@link getBlockNodeDefinitionActions} - The underlying definition query
  */
-export function getNodeInstanceActions(sourceNodeID: NodeID): Readonly<ActionDefinition[]> {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceActions]')
+export function getBlockNodeActions(sourceNodeID: NodeID): Readonly<ActionDefinition[]> {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeActions]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -329,7 +328,7 @@ export function getNodeInstanceActions(sourceNodeID: NodeID): Readonly<ActionDef
 		.execute();
 	if (!validData) return [];
 
-	return getNodeDefinitionActions(validData.blockInstance.definitionKey);
+	return getBlockNodeDefinitionActions(validData.blockInstance.definitionKey);
 }
 
 /**
@@ -341,8 +340,8 @@ export function getNodeInstanceActions(sourceNodeID: NodeID): Readonly<ActionDef
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeID | undefined - The parent ID, or undefined if the instance is not found
  */
-export function getNodeInstanceParentID(sourceNodeID: NodeID): NodeID | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceParentID]')
+export function getBlockNodeParentID(sourceNodeID: NodeID): NodeID | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeParentID]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -367,8 +366,8 @@ export function getNodeInstanceParentID(sourceNodeID: NodeID): NodeID | undefine
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns NodeKey | undefined - The definition key, or undefined if the instance is not found
  */
-export function getNodeInstanceDefinitionKey(sourceNodeID: NodeID): NodeKey | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceDefinitionKey]')
+export function getBlockNodeDefinitionKey(sourceNodeID: NodeID): NodeKey | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefinitionKey]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -393,8 +392,8 @@ export function getNodeInstanceDefinitionKey(sourceNodeID: NodeID): NodeKey | un
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns Readonly<NodeID[]> | undefined - An array of child node IDs, or undefined if the instance is not found
  */
-export function getNodeInstanceChildNodeIDs(sourceNodeID: NodeID): Readonly<NodeID[]> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceChildNodeIDs]')
+export function getBlockNodeChildNodeIDs(sourceNodeID: NodeID): Readonly<NodeID[]> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeChildNodeIDs]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -419,8 +418,8 @@ export function getNodeInstanceChildNodeIDs(sourceNodeID: NodeID): Readonly<Node
  * @param sourceNodeID - The unique identifier of the node instance
  * @returns ElementKey | undefined - The element key, or undefined if the instance is not found
  */
-export function getNodeInstanceElementKey(sourceNodeID: NodeID): ElementKey | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceElementKey]')
+export function getBlockNodeElementKey(sourceNodeID: NodeID): ElementKey | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeElementKey]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -448,8 +447,8 @@ export function getNodeInstanceElementKey(sourceNodeID: NodeID): ElementKey | un
  * @see {@link pickNodeData} - Helper function used to extract data from stored nodes
  * @see {@link validateNodeID} - Validation function for node identifiers
  */
-export function getNodeInstanceData(sourceNodeID: NodeID): Readonly<NodeData> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getNodeInstanceData]')
+export function getBlockNodeData(sourceNodeID: NodeID): Readonly<NodeData> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockNodeData]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -463,166 +462,4 @@ export function getNodeInstanceData(sourceNodeID: NodeID): Readonly<NodeData> | 
 	if (!validData) return undefined;
 
 	return validData.data;
-}
-
-/**
- * Determines if a node's styles can be edited based on its element definition.
- *
- * This function checks the element definition of the given node to see if its styles
- * are editable by users. It delegates to the element's style editability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node's styles are editable, false otherwise
- * @see {@link isElementStyleEditable} - The underlying element check
- */
-export function isNodeStyleEditable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeStyleEditable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementStyleEditable(validData.nodeInstance.elementKey);
-}
-
-/**
- * Determines if a node's attributes can be edited based on its element definition.
- *
- * This function checks the element definition of the given node to see if its attributes
- * are editable by users. It delegates to the element's attribute editability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node's attributes are editable, false otherwise
- * @see {@link isElementAttributeEditable} - The underlying element check
- */
-export function isNodeAttributeEditable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeAttributeEditable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementAttributeEditable(validData.nodeInstance.elementKey);
-}
-
-/**
- * Determines if a node can be deleted based on its element definition.
- *
- * This function checks the element definition of the given node to see if it can be deleted
- * by users. It delegates to the element's deletability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is deletable, false otherwise
- * @see {@link isElementDeletable} - The underlying element check
- */
-export function isNodeDeletable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeDeletable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementDeletable(validData.nodeInstance.elementKey);
-}
-
-/**
- * Determines if a node can be copied based on its element definition.
- *
- * This function checks the element definition of the given node to see if it can be copied
- * by users. It delegates to the element's copyability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is copyable, false otherwise
- * @see {@link isElementCopyable} - The underlying element check
- */
-export function isNodeCopyable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeCopyable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementCopyable(validData.nodeInstance.elementKey);
-}
-
-/**
- * Determines if a node can be cloned based on its element definition.
- *
- * This function checks the element definition of the given node to see if it can be cloned
- * by users. It delegates to the element's cloneability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is cloneable, false otherwise
- * @see {@link isElementCloneable} - The underlying element check
- */
-export function isNodeCloneable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeCloneable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementCloneable(validData.nodeInstance.elementKey);
-}
-
-/**
- * Determines if a node can be reordered based on its element definition.
- *
- * This function checks the element definition of the given node to see if it can be reordered
- * by users. It delegates to the element's orderability check.
- *
- * @param nodeID - The unique identifier of the node to check
- * @returns boolean - True if the node is orderable, false otherwise
- * @see {@link isElementOrderable} - The underlying element check
- */
-export function isNodeOrderable(nodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → isNodeOrderable]')
-		.validate({
-			nodeID: validateNodeID(nodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			nodeInstance: pickNodeInstance(data.nodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return false;
-
-	return isElementOrderable(validData.nodeInstance.elementKey);
 }

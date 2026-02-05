@@ -17,7 +17,7 @@ export function findNodeChildIndex(sourceNodeInstance: NodeInstance, parentNodeI
 	const currentIndex = parentNodeInstance.childNodeIDs.indexOf(sourceNodeInstance.id);
 
 	// If missing, return not-found to let callers handle the absence explicitly
-	if (currentIndex === -1) return { status: 'not-found' };
+	if (currentIndex === -1) return { status: 'not-found', message: 'Node is not a child of the parent.' };
 
 	// Otherwise return the found index
 	return { status: 'found', data: currentIndex };
@@ -32,7 +32,7 @@ export function findNodeChildIndex(sourceNodeInstance: NodeInstance, parentNodeI
  */
 export function findNodeFirstChild(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// If there are no children, short-circuit with not-found
-	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found' };
+	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found', message: 'Parent has no children.' };
 
 	// Resolve the first child id and fetch the NodeInstance
 	const firstChildID = sourceNodeInstance.childNodeIDs[0];
@@ -52,7 +52,7 @@ export function findNodeFirstChild(sourceNodeInstance: NodeInstance, storedNodes
  */
 export function findNodeLastChild(sourceNodeInstance: NodeInstance, storedNodes: StoredNodes): FindResult<NodeInstance> {
 	// If there are no children, short-circuit with not-found
-	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found' };
+	if (sourceNodeInstance.childNodeIDs.length === 0) return { status: 'not-found', message: 'Parent has no children.' };
 
 	// Resolve the last child id and fetch the NodeInstance
 	const lastChildID = sourceNodeInstance.childNodeIDs[sourceNodeInstance.childNodeIDs.length - 1];

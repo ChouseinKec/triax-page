@@ -1,5 +1,5 @@
 // Types
-import type { ElementDefinition, ElementKey, RegisteredElements } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { PickResult } from '@/shared/types/result';
 import type { ElementRegistryState } from '../../states/registry';
 /**
@@ -12,7 +12,7 @@ import type { ElementRegistryState } from '../../states/registry';
  * @param registeredElements - The complete registry of element definitions
  * @returns A PickResult containing all registered element definitions or an error
  */
-export function pickElementDefinitions(elementRegistryState: ElementRegistryState): PickResult<RegisteredElements> {
+export function pickElementDefinitions(elementRegistryState: ElementRegistryState): PickResult<ElementDefinition[]> {
 	// If the registered elements object is undefined, return an error
 	if (!elementRegistryState.elements) return { success: false, error: 'Registered elements object is undefined' };
 
@@ -20,7 +20,7 @@ export function pickElementDefinitions(elementRegistryState: ElementRegistryStat
 	if (Object.keys(elementRegistryState.elements).length === 0) return { success: false, error: 'No element types are registered in the system' };
 
 	// Return all registered element definitions
-	return { success: true, data: elementRegistryState.elements };
+	return { success: true, data: Object.values(elementRegistryState.elements) };
 }
 
 /**
@@ -31,16 +31,16 @@ export function pickElementDefinitions(elementRegistryState: ElementRegistryStat
  * result if the key is not registered in the system.
  *
  * @param elementKey - The unique key identifying the element type to retrieve
- * @param registeredElements - The registry of element definitions to search in
+ * @param elementDefinitions - The array of element definitions to search in
  * @returns A PickResult containing the element definition or an error if not found
  */
-export function pickElementDefinition(elementKey: ElementKey, registeredElements: RegisteredElements): PickResult<ElementDefinition> {
-	// Lookup the block type in the registry map
-	const elementDefinition = registeredElements[elementKey];
+export function pickElementDefinition(elementKey: ElementKey, elementDefinitions: ElementDefinition[]): PickResult<ElementDefinition> {
+	// Lookup the element type in the definitions array
+	const elementDefinition = elementDefinitions.find((def) => def.key === elementKey);
 
 	// If missing, return an error
 	if (!elementDefinition) return { success: false, error: `Element type not registered: '${elementKey}' is not a recognized element type` };
 
-	// Return the found block definition
+	// Return the found element definition
 	return { success: true, data: elementDefinition };
 }

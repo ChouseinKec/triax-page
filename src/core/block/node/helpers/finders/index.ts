@@ -3,3 +3,5 @@ export * from './sibling';
 export * from './move';
 export * from './descendants';
 export * from './ancestor';
+export * from './definition';
+export * from './hierarchy';

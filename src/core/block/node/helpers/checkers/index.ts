@@ -1,3 +1,3 @@
 export * from './child';
-export * from './rules';
+export * from './hierarchy';
 export * from './highlight';

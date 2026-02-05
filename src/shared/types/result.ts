@@ -36,11 +36,10 @@ export type PickResult<T> = { success: true; data: T } | { success: false; error
  * - { status: 'not-found' } — lookup completed successfully but nothing was found (not an error)
  * - { status: 'error', error } — lookup failed with an error
  */
-export type FindResult<T> = { status: 'found'; data: T } | { status: 'not-found' } | { status: 'error'; error: string };
+export type FindResult<T> = { status: 'found'; data: T } | { status: 'not-found'; message: string } | { status: 'error'; error: string };
 
 /**
  * Check-style result used for boolean validations.
  * Returns success:true with passed:boolean on non-error cases, or failure with error message.
  */
-export type CheckResult = { success: true; passed: boolean } | { success: false; error: string };
-
+export type CheckResult = { success: true; passed: true } | { success: true; passed: false; message: string } | { success: false; error: string };

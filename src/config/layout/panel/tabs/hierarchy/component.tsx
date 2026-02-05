@@ -6,7 +6,7 @@ import React from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { useNodeInstance, selectNextNode, selectPreviousNode } from "@/core/block/node/managers";
+import { useBlockNode, selectBlockNodeNextNode, selectBlockNodePreviousNode } from "@/core/block/node/managers";
 
 // Components
 import Entry from "./entry";
@@ -23,14 +23,14 @@ import Entry from "./entry";
  * @note Supports Arrow Up/Down keys for block navigation when component is focused
  */
 const BlocksHierarchy: React.FC = () => {
-    const rootBlock = useNodeInstance('html');
+    const rootBlock = useBlockNode('html');
 
     // Handle keyboard navigation
     const handleKeyUp = (e: React.KeyboardEvent) => {
         if (e.key === "ArrowDown") {
-            selectNextNode();
+            selectBlockNodeNextNode();
         } else if (e.key === "ArrowUp") {
-            selectPreviousNode();
+            selectBlockNodePreviousNode();
         }
     };
 

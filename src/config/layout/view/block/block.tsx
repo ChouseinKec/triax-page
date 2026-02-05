@@ -6,8 +6,8 @@ import type { NodeID } from "@/core/block/node/types/instance";
 import type { DeviceKey, OrientationKey, PseudoKey } from "@/core/layout/page/types";
 
 // Manager
-import { useNodeInstance, useNodeIsSelected } from "@/core/block/node/managers";
-import { getNodeInstanceComponent, } from "@/core/block/node/managers";
+import { useBlockNode, useBlockNodeIsSelected } from "@/core/block/node/managers";
+import { getBlockNodeComponent, } from "@/core/block/node/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
@@ -31,9 +31,9 @@ interface BlockProps {
  * @returns The rendered block with recursive children for block editing
  */
 const Block: React.FC<BlockProps> = ({ NodeID, deviceKey, orientationKey, pseudoKey, isDeviceSelected }) => {
-    const instance = useNodeInstance(NodeID);
-    const NodeComponent = getNodeInstanceComponent(NodeID);
-    const isBlockSelected = useNodeIsSelected(NodeID);
+    const instance = useBlockNode(NodeID);
+    const NodeComponent = getBlockNodeComponent(NodeID);
+    const isBlockSelected = useBlockNodeIsSelected(NodeID);
 
     // Render child blocks recursively
     const children = useMemo(() => {

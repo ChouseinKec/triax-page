@@ -4,10 +4,12 @@ import React, { memo } from "react";
 import CSS from "./styles.module.scss";
 
 // Managers
-import { copyNode, pasteNode, duplicateNode, deleteNode } from "@/core/block/node/managers";
+import { copyBlockNode, pasteBlockNode, duplicateBlockNode, deleteBlockNode } from "@/core/block/node/managers";
 import { copyNodeStyles, pasteNodeStyles } from "@/core/block/style/managers";
-import { copyNodeAttributes, pasteNodeAttributes } from "@/core/block/attribute/managers";
-import { useNodeIsDeletable, useNodeIsCopyable, useNodeIsCloneable, useNodeIsStyleEditable, useNodeIsAttributeEditable } from "@/core/block/node/managers/hooks/node";
+import { copyBlockAttributes, pasteBlockAttributes } from "@/core/block/attribute/managers";
+import { useBlockNodeIsPasteable, useBlockNodeIsDeletable, useBlockNodeIsCopyable, useBlockNodeIsCloneable } from "@/core/block/node/managers/hooks/hierarchy";
+import { useBlockStyleIsEditable } from "@/core/block/style/managers/hooks/style";
+import { useBlockAttributeIsEditable } from "@/core/block/attribute/managers/hooks/node";
 
 // Types
 import type { NodeID } from "@/core/block/node/types/instance";
@@ -70,11 +72,12 @@ interface ContextMenuProps {
  * @returns Rendered context menu
  */
 const Menu: React.FC<ContextMenuProps> = ({ nodeID, isOpen, onVisibilityChange, targetRef }) => {
-    const isDeletable = useNodeIsDeletable(nodeID);
-    const isCopyable = useNodeIsCopyable(nodeID);
-    const isCloneable = useNodeIsCloneable(nodeID);
-    const isStyleEditable = useNodeIsStyleEditable(nodeID);
-    const isAttributeEditable = useNodeIsAttributeEditable(nodeID);
+    const isDeletable = useBlockNodeIsDeletable(nodeID);
+    const isCopyable = useBlockNodeIsCopyable(nodeID);
+    const isCloneable = useBlockNodeIsCloneable(nodeID);
+    const isPasteable = useBlockNodeIsPasteable(nodeID);
+    const isStyleEditable = useBlockStyleIsEditable(nodeID);
+    const isAttributeEditable = useBlockAttributeIsEditable(nodeID);
 
     // Handle action click
     const handleActionClick = (action: () => void) => {
@@ -100,13 +103,13 @@ const Menu: React.FC<ContextMenuProps> = ({ nodeID, isOpen, onVisibilityChange, 
                 offset={15}
                 isDisabled={!isCopyable && !isStyleEditable && !isAttributeEditable}
             >
-                <button className={CSS.Action} data-is-disabled={!isCopyable} onClick={() => handleActionClick(() => copyNode(nodeID))}>
+                <button className={CSS.Action} data-is-disabled={!isCopyable} onClick={() => handleActionClick(() => copyBlockNode(nodeID))}>
                     Copy Block
                 </button>
                 <button className={CSS.Action} data-is-disabled={!isStyleEditable} onClick={() => handleActionClick(() => copyNodeStyles(nodeID))}>
                     Copy Styles
                 </button>
-                <button className={CSS.Action} data-is-disabled={!isAttributeEditable} onClick={() => handleActionClick(() => copyNodeAttributes(nodeID))}>
+                <button className={CSS.Action} data-is-disabled={!isAttributeEditable} onClick={() => handleActionClick(() => copyBlockAttributes(nodeID))}>
                     Copy Attributes
                 </button>
             </DropdownReveal>
@@ -117,25 +120,25 @@ const Menu: React.FC<ContextMenuProps> = ({ nodeID, isOpen, onVisibilityChange, 
                 className={CSS.Dropdown}
                 anchor="right"
                 offset={15}
-                isDisabled={!isCopyable && !isStyleEditable && !isAttributeEditable}
+                isDisabled={!isPasteable && !isStyleEditable && !isAttributeEditable}
             >
-                <button className={CSS.Action} data-is-disabled={!isCopyable} onClick={() => handleActionClick(() => pasteNode(nodeID))}>
+                <button className={CSS.Action} data-is-disabled={!isPasteable} onClick={() => handleActionClick(() => pasteBlockNode(nodeID))}>
                     Paste Block
                 </button>
                 <button className={CSS.Action} data-is-disabled={!isStyleEditable} onClick={() => handleActionClick(() => pasteNodeStyles(nodeID))}>
                     Paste Styles
                 </button>
-                <button className={CSS.Action} data-is-disabled={!isAttributeEditable} onClick={() => handleActionClick(() => pasteNodeAttributes(nodeID))}>
+                <button className={CSS.Action} data-is-disabled={!isAttributeEditable} onClick={() => handleActionClick(() => pasteBlockAttributes(nodeID))}>
                     Paste Attributes
                 </button>
             </DropdownReveal>
 
-            <button className={CSS.Action} data-is-disabled={!isCloneable} onClick={() => handleActionClick(() => duplicateNode(nodeID))}>
+            <button className={CSS.Action} data-is-disabled={!isCloneable} onClick={() => handleActionClick(() => duplicateBlockNode(nodeID))}>
                 {duplicateIcon}
                 Duplicate Block
             </button>
 
-            <button className={CSS.Action} data-is-disabled={!isDeletable} onClick={() => handleActionClick(() => deleteNode(nodeID))}>
+            <button className={CSS.Action} data-is-disabled={!isDeletable} onClick={() => handleActionClick(() => deleteBlockNode(nodeID))}>
                 {deleteIcon}
                 Delete Block
             </button>

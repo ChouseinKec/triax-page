@@ -12,10 +12,11 @@ import CSS from "./styles.module.scss";
 import Device from "./device";
 import ActionGroup from "@/shared/components/group/action/component";
 import ElementSelect from "./element-select";
+import NodeCrud from "./node-crud";
 
 // Managers
 import { useData } from "@/core/layout/view/managers";
-import { useSelectedNodeActions } from "@/core/block/node/managers";
+import { useSelectedBlockNodeActions } from "@/core/block/node/managers";
 import { getDeviceDefinitions, getDeviceDefinition } from "@/core/layout/page/managers/queries/device";
 
 /**
@@ -33,7 +34,7 @@ const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }
     const activeDeviceIDs = useData('block', 'activeDeviceIDs') as string[] || [];
 
     // Get actions for the selected node
-    const nodeActions = useSelectedNodeActions();
+    const nodeActions = useSelectedBlockNodeActions();
 
     // Memoize the list of all registered devices for performance
     const allDevices = useMemo(() => {
@@ -86,6 +87,7 @@ const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }
             {actionContainerRef.current && createPortal(
                 <div className={CSS.Toolbar}>
                     <ElementSelect />
+                    <NodeCrud />
                     <span className={CSS.Divider} />
 
                     <ActionGroup>
