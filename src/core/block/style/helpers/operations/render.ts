@@ -1,5 +1,5 @@
 // Types
-import type {  NodeID } from '@/core/block/node/types/instance';
+import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeStyles } from '@/core/block/node/types/definition';
 import type { OperateResult } from '@/shared/types/result';
 import type { RegisteredStyles } from '@/core/block/style/types';
@@ -53,7 +53,7 @@ function renderNodeStylesAllPseudos(
 			defaultDeviceKey,
 			defaultOrientationKey,
 			defaultPseudoKey,
-			true // Include pseudo-selector in CSS selector
+			true, // Include pseudo-selector in CSS selector
 		);
 		if (!result.success) return result;
 		css += result.data;
@@ -94,16 +94,7 @@ function renderNodeStylesSinglePseudo(
 	includePseudoInSelector: boolean = true,
 ): OperateResult<string> {
 	// Cascade styles for the specified pseudo, resolving all properties
-	const cssStylesRes = cascadeNodeStyles(
-		styles,
-		styleDefinitions,
-		deviceKey,
-		orientationKey,
-		pseudoKey,
-		defaultDeviceKey,
-		defaultOrientationKey,
-		defaultPseudoKey
-	);
+	const cssStylesRes = cascadeNodeStyles(styles, styleDefinitions, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 	if (!cssStylesRes.success) return { success: false, error: cssStylesRes.error };
 
 	// Determine the pseudo key for the selector (use default if not including pseudo)
@@ -152,20 +143,7 @@ export function renderNodeStyles(
 	defaultPseudoKey: PseudoKey,
 ): OperateResult<string> {
 	// If pseudo is 'all', render styles for all registered pseudo-classes
-	if (pseudoKey === defaultPseudoKey) {
-		return renderNodeStylesAllPseudos(
-			styles,
-			NodeID,
-			styleDefinitions,
-			pseudoDefinitions,
-			deviceKey,
-			orientationKey,
-			pseudoKey,
-			defaultDeviceKey,
-			defaultOrientationKey,
-			defaultPseudoKey
-		);
-	}
+	if (pseudoKey === defaultPseudoKey) return renderNodeStylesAllPseudos(styles, NodeID, styleDefinitions, pseudoDefinitions, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 
 	// Otherwise, render styles for the selected pseudo only (for preview)
 	return renderNodeStylesSinglePseudo(
@@ -178,6 +156,6 @@ export function renderNodeStyles(
 		defaultDeviceKey,
 		defaultOrientationKey,
 		defaultPseudoKey,
-		false // Do not include pseudo in selector for previews
+		false, // Do not include pseudo in selector for previews
 	);
 }

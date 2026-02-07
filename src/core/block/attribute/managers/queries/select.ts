@@ -11,7 +11,7 @@ import { pickSelectedNodeID, pickNodeStoreState } from '@/core/block/node/helper
 import { ResultPipeline } from '@/shared/utilities/pipeline';
 
 // Managers
-import { getBlockNodeDefaultAttributes } from '@/core/block/node/managers/queries/node';
+import { getBlockAttributesDefaults } from '@/core/block/attribute/managers/';
 
 /**
  * Retrieves the default attributes of the currently selected node.
@@ -21,8 +21,8 @@ import { getBlockNodeDefaultAttributes } from '@/core/block/node/managers/querie
  *
  * @returns Readonly<NodeAttributes> | undefined - The default attributes of the selected node, or undefined if no selection exists
  */
-export function getSelectedBlockAttributeDefaults(): Readonly<NodeAttributes> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getSelectedBlockAttributeDefaults]')
+export function getSelectedBlockAttributesDefaults(): Readonly<NodeAttributes> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getSelectedBlockAttributesDefaults]')
 		.pick(() => ({
 			blockStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
@@ -32,5 +32,5 @@ export function getSelectedBlockAttributeDefaults(): Readonly<NodeAttributes> | 
 		.execute();
 	if (!validData || validData.selectedNodeID === 'html') return undefined;
 
-	return getBlockNodeDefaultAttributes(validData.selectedNodeID);
+	return getBlockAttributesDefaults(validData.selectedNodeID);
 }

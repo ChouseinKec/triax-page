@@ -3,19 +3,22 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 20px;
+	gap: var(--size-lg);
+	padding: 10px;
 	text-align: center;
 	color: #666;
 	background-color: #fafafa;
-	border: 2px dashed #ddd;
+
+	outline: 2px dashed #ddd;
+	outline-offset: -2px;
+
 	border-radius: 8px;
-	min-height: 120px;
 	width: 100%;
 
 	overflow: hidden;
 
 	&[data-is-selected='true'] {
-		border-color: var(--theme-color-secondary);
+		outline-color: var(--theme-color-secondary);
 		background-color: #e6f2ff;
 	}
 }
@@ -35,18 +38,10 @@
 }
 
 .description {
-	font-size: 14px;
 	color: #888;
-	margin-bottom: 16px;
-	max-width: 300px;
-
-	&.noAction {
-		margin-bottom: 0;
-	}
 }
 
 .customComponent {
-	margin-bottom: 16px;
 	width: 100%;
 }
 

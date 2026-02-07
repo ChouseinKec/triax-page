@@ -15,10 +15,8 @@ import { pickNodeInstance, pickNodeDefinition, pickActionDefinitions, pickNodeDe
 import { nodeRegistryState } from '@/core/block/node/states/registry';
 
 // Managers
-import { useBlockNodeCompatibleElementKeys, getBlockNodeCompatibleNodeDefinitions } from '@/core/block/node/managers';
+import { useBlockNodeElementKey, useBlockNodeCompatibleElementKeys, getBlockNodeCompatibleNodeDefinitions } from '@/core/block/node/managers';
 import { useBlockNodeIsDeletable, useBlockNodeIsCopyable, useBlockNodeIsCloneable, useBlockNodeIsOrderable, useBlockNodeIsPasteable } from './hierarchy';
-import { useBlockStyleIsEditable } from '../../../style/managers/hooks/style';
-import { useBlockAttributeIsEditable } from '../../../attribute/managers/hooks/node';
 
 /**
  * Retrieves the ID of the currently selected node in the editor.
@@ -109,7 +107,9 @@ export function useSelectedBlockNodeDefinitionKey(): NodeKey | undefined {
  */
 export function useSelectedBlockNodeElementKey(): ElementKey | undefined {
 	const selectedNodeInstance = useSelectedBlockNode();
-	return selectedNodeInstance ? selectedNodeInstance.elementKey : undefined;
+	if (!selectedNodeInstance) return undefined;
+
+	return useBlockNodeElementKey(selectedNodeInstance.id);
 }
 
 /**
@@ -224,34 +224,6 @@ export function useSelectedBlockNodeCategory(): NodeCategory | undefined {
 }
 
 /**
- * Retrieves the default styles of the currently selected node.
- *
- * This reactive hook accesses the selected node's default styles, organized by device,
- * orientation, and pseudo-states for rendering.
- *
- * @returns NodeStyles | undefined - The default styles of the selected node, or undefined if no selection exists
- * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
- */
-export function useSelectedBlockNodeDefaultStyles(): Readonly<NodeStyles> | undefined {
-	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
-	return selectedNodeDefinition ? selectedNodeDefinition.defaultStyles : undefined;
-}
-
-/**
- * Retrieves the default attributes of the currently selected node.
- *
- * This reactive hook accesses the selected node's default attributes, applied
- * when creating new instances of the node.
- *
- * @returns NodeAttributes | undefined - The default attributes of the selected node, or undefined if no selection exists
- * @see {@link useSelectedBlockNodeDefinitionKey} - For getting the selected node's selectedNodeDefinition key
- */
-export function useSelectedBlockNodeDefaultAttributes(): Readonly<NodeAttributes> | undefined {
-	const selectedNodeDefinition = useSelectedBlockNodeDefinition();
-	return selectedNodeDefinition ? selectedNodeDefinition.defaultAttributes : undefined;
-}
-
-/**
  * Retrieves the default data of the currently selected node.
  *
  * This reactive hook accesses the selected node's default data structure,
@@ -317,36 +289,6 @@ export function useSelectedBlockNodeCompatibleElementKeys(): ElementKey[] {
 	const selectedNodeID = useSelectedBlockNodeID();
 
 	return useBlockNodeCompatibleElementKeys(selectedNodeID);
-}
-
-/**
- * Retrieves whether the currently selected node's styles can be edited.
- *
- * This reactive hook returns a boolean indicating if the selected node's styles
- * are editable, based on its element definition.
- *
- * @returns boolean - True if the selected node's styles are editable, false otherwise
- * @see {@link useBlockStyleIsEditable} - The general hook used internally
- */
-export function useSelectedBlockNodeIsStyleEditable(): boolean {
-	const selectedNodeID = useSelectedBlockNodeID();
-
-	return useBlockStyleIsEditable(selectedNodeID);
-}
-
-/**
- * Retrieves whether the currently selected node's attributes can be edited.
- *
- * This reactive hook returns a boolean indicating if the selected node's attributes
- * are editable, based on its element definition.
- *
- * @returns boolean - True if the selected node's attributes are editable, false otherwise
- * @see {@link useBlockAttributeIsEditable} - The general hook used internally
- */
-export function useSelectedBlockNodeIsAttributeEditable(): boolean {
-	const selectedNodeID = useSelectedBlockNodeID();
-
-	return useBlockAttributeIsEditable(selectedNodeID);
 }
 
 /**

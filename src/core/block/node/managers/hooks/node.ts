@@ -6,6 +6,10 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Types
 import type { NodeID, NodeInstance } from '@/core/block/node/types/';
+import type { ElementKey } from '@/core/block/element/types';
+
+// Manager
+import { getBlockNodeElementKey } from '@/core/block/node/managers';
 
 // Helpers
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
@@ -19,17 +23,17 @@ import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
  * @param nodeID - The unique identifier of the node to check for selection status
  * @returns boolean - True if the specified node is currently selected, false otherwise
  */
-export function useBlockNodeIsSelected(nodeID: NodeID): boolean {
+export function useBlockNodeIsSelected(sourceNodeID: NodeID): boolean {
 	// Validate parameters first
 	const results = new ResultPipeline('[BlockQueries → useBlockNodeIsSelected]')
 		.validate({
-			nodeID: validateNodeID(nodeID),
+			sourceNodeID: validateNodeID(sourceNodeID),
 		})
 		.execute();
 	if (!results) return false;
 
 	// Return a reactive selection status
-	return useNodeStore((state) => state.selectedNodeID === results.nodeID);
+	return useNodeStore((state) => state.selectedNodeID === results.sourceNodeID);
 }
 
 /**
@@ -58,9 +62,18 @@ export function useBlockNodes(): NodeInstance[] {
  * @param nodeID - The unique identifier of the node instance to retrieve
  * @returns NodeInstance | undefined - The complete node instance, or undefined if the node is not found
  */
-export function useBlockNode(nodeID: NodeID): NodeInstance | undefined {
+export function useBlockNode(sourceNodeID: NodeID): NodeInstance | undefined {
 	return useNodeStore((state) => {
-		const blockInstance = pickNodeInstance(nodeID, state.storedNodes);
+		const blockInstance = pickNodeInstance(sourceNodeID, state.storedNodes);
 		return blockInstance.success ? blockInstance.data : undefined;
+	});
+}
+
+export function useBlockNodeElementKey(sourceNodeID: NodeID): ElementKey | undefined {
+	return useNodeStore((state) => {
+		const blockInstance = pickNodeInstance(sourceNodeID, state.storedNodes);
+		if (!blockInstance.success) return undefined;
+
+		return getBlockNodeElementKey(sourceNodeID);
 	});
 }

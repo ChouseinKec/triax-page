@@ -1,5 +1,5 @@
 "use client";
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -39,10 +39,12 @@ const TooltipReveal: React.FC<TooltipRevealProps> = ({
 }) => {
 
     // Hover state management
-    const isHovered = useHover(targetRef, hoverDelay);
+    const floatRef = useRef<HTMLDivElement>(null);
+    const isHovered = useHover([targetRef, floatRef], hoverDelay);
 
     return (
         <FloatReveal
+            ref={floatRef}
             targetRef={targetRef}
             anchor={anchor}
             isOpen={isHovered}

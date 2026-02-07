@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { RefObject } from 'react';
 
-const useHover = (ref: RefObject<HTMLElement | null>, delay = 200): boolean => {
+const useHover = (ref: RefObject<HTMLElement | null> | RefObject<HTMLElement | null>[], delay = 200): boolean => {
 	const [isHovered, setisHovered] = useState(false);
 	const showTimeoutRef = useRef<number | null>(null);
 	const hideTimeoutRef = useRef<number | null>(null);
@@ -33,18 +33,22 @@ const useHover = (ref: RefObject<HTMLElement | null>, delay = 200): boolean => {
 	}, [delay]);
 
 	useEffect(() => {
-		const element = ref.current;
-		if (!element) return;
+		const elements = (Array.isArray(ref) ? ref.map(r => r.current).filter(Boolean) : [ref.current].filter(Boolean)) as HTMLElement[];
+		if (elements.length === 0) return;
 
 		const handleEnter = () => show();
 		const handleLeave = () => hide();
 
-		element.addEventListener('mouseenter', handleEnter);
-		element.addEventListener('mouseleave', handleLeave);
+		elements.forEach(element => {
+			element.addEventListener('mouseenter', handleEnter);
+			element.addEventListener('mouseleave', handleLeave);
+		});
 
 		return () => {
-			element.removeEventListener('mouseenter', handleEnter);
-			element.removeEventListener('mouseleave', handleLeave);
+			elements.forEach(element => {
+				element.removeEventListener('mouseenter', handleEnter);
+				element.removeEventListener('mouseleave', handleLeave);
+			});
 		};
 	}, [ref, show, hide]);
 

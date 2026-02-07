@@ -5,6 +5,10 @@ import type { ValidateResult } from '@/shared/types/result';
 // Utilities
 import { devLog } from '@/shared/utilities/dev';
 
+export interface AttributeRegistryState {
+	attributes: Readonly<AttributeDefinitionRecord>;
+}
+
 /**
  * Class-based attribute registry for managing HTML attribute definitions
  */
@@ -46,11 +50,15 @@ const attributeRegistry = new AttributeRegistry();
 
 // Export the registry instance methods
 export const registerAttribute = (attributeDefinition: AttributeDefinition): void => {
-  const result = attributeRegistry.registerAttribute(attributeDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Attribute] ❌ Failed: ${attributeDefinition.key} - ${result.message}`);
-  }
+	const result = attributeRegistry.registerAttribute(attributeDefinition);
+	if (!result.valid) {
+		devLog.error(`[Registry → Attribute] ❌ Failed: ${attributeDefinition.key} - ${result.message}`);
+	}
 };
 export const registerAttributes = (attributeDefinitions: AttributeDefinition[]) => attributeDefinitions.forEach(registerAttribute);
-export const getRegisteredAttributes = () => attributeRegistry.getRegisteredAttributes();
-export const getRegisteredAttribute = (attributeName: AttributeKey) => attributeRegistry.getRegisteredAttribute(attributeName);
+
+export const attributeRegistryState: AttributeRegistryState = {
+	get attributes() {
+		return attributeRegistry.getRegisteredAttributes();
+	},
+};

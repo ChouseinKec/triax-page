@@ -1,5 +1,5 @@
 // Types
-import type { ElementKey, ElementDefinition } from '@/core/block/element/types';
+import type { ElementKey, ElementDefinition, ElementAllowedAttributes } from '@/core/block/element/types';
 
 // Helpers
 import { pickElementDefinitions, pickElementDefinition } from '@/core/block/element/helpers';
@@ -7,6 +7,7 @@ import { validateElementKey } from '@/core/block/element/helpers/validators';
 
 // Registry
 import { elementRegistryState } from '@/core/block/element/states/registry';
+
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -34,7 +35,7 @@ export function getBlockElementDefinition(elementKey: ElementKey): ElementDefini
 		.validate({
 			elementKey: validateElementKey(elementKey),
 		})
-		.pick((data) => ({
+		.pick(() => ({
 			elementDefinitions: pickElementDefinitions(elementRegistryState),
 		}))
 
@@ -81,3 +82,18 @@ export function getBlockElementIsAttributeEditable(elementKey: ElementKey): bool
 	return elementDefinition.isAttributeEditable ?? true;
 }
 
+/**
+ * Retrieves the allowed attributes for a specific element type.
+ *
+ * This function returns the list of attributes that are permitted for the given element
+ * according to its definition. This includes global, accessibility, and element-specific attributes.
+ *
+ * @param elementKey - The key of the element type to get allowed attributes for
+ * @returns Array of allowed attribute keys, or empty array if element not found
+ */
+export function getBlockElementAllowedAttributes(elementKey: ElementKey): ElementAllowedAttributes {
+	const elementDefinition = getBlockElementDefinition(elementKey);
+	if (!elementDefinition) return [];
+
+	return elementDefinition.allowedAttributes;
+}

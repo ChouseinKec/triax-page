@@ -4,9 +4,9 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { setBlockNodeSelectedNodeID, useBlockNodeElementKey } from '@/core/block/node/managers';
 import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -19,10 +19,9 @@ import Placeholder from '@/shared/components/placeholder/block/component';
  * @param children - Child blocks to render inside this table header cell
  * @returns JSX element representing the table header cell block
  */
-const BlockTableHeaderCellComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockTableHeaderCellComponent: React.FC<NodeComponentProps> = ({ nodeID, deviceKey, orientationKey, pseudoKey, isSelected, children }) => {
+    const nodeElementKey = useBlockNodeElementKey(nodeID);
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
@@ -47,9 +46,9 @@ const BlockTableHeaderCellComponent: React.FC<NodeComponentProps> = ({ deviceKey
 
     // Check if table header cell has children
     const hasChildren = React.Children.count(children) > 0;
-
+    const Tag = nodeElementKey as React.ElementType;
     return hasChildren ? (
-        <NodeElementKey
+        <Tag
             className={`block-${nodeID}`}
             onClick={handleSelectBlock}
 
@@ -65,11 +64,11 @@ const BlockTableHeaderCellComponent: React.FC<NodeComponentProps> = ({ deviceKey
             <style>
                 {nodeStyles}
             </style>
-        </NodeElementKey>
+        </Tag>
     ) : (
         <Placeholder
             as="th"
-            message="Add header content"
+            title="Add header content"
             description="Insert text or other blocks into this table header cell"
             actions={[{
                 label: "Add Block",

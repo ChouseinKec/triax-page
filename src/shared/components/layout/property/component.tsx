@@ -67,9 +67,9 @@ const Property: React.FC<PropertyProps> = ({
                         </div>
 
                         {/* Render action buttons */}
-                        <div className={CSS.Actions} role="group" aria-label="Property Actions">
+                        {/* <div className={CSS.Actions} role="group" aria-label="Property Actions">
                             {actions()}
-                        </div>
+                        </div> */}
 
                     </TooltipReveal>
                 </div>

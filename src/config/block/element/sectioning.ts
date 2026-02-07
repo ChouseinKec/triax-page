@@ -1,8 +1,10 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, FLOW_CONTENT, FLOW_NO_HEADER_FOOTER, PHRASING_CONTENT, HEADINGS_ONLY } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT } from './shared';
+
+const FLOW_NO_HEADER_FOOTER: ElementKey[] = FLOW_CONTENT.filter((t) => t !== 'header' && t !== 'footer');
 
 const SECTIONING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 
@@ -87,7 +89,7 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'hgroup',
 		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedChildren: HEADINGS_ONLY,
+		allowedChildren: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'Groups a set of h1–h6 headings so they are treated as a single composite heading.',

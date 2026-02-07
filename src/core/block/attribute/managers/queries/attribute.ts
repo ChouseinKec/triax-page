@@ -2,14 +2,16 @@
 import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
-import type { NodeID } from '@/core/block/node/types/instance';
+import type { NodeID, NodeAttributes } from '@/core/block/node/types';
+import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Helpers
 import { validateNodeID, pickNodeStoreState, pickNodeInstance } from '@/core/block/node/helpers';
 import { pickNodeAttributes, renderNodeAttributes } from '@/core/block/attribute/helpers/';
-
-// Managers
-import { getBlockElementIsAttributeEditable } from '@/core/block/element/managers/queries/definition';
+import { pickElementDefinitions, pickElementDefinition } from '@/core/block/element/helpers/pickers/definition';
+import { elementRegistryState } from '@/core/block/element/states/registry';
+import { pickNodeDefinitions, pickNodeDefinition } from '@/core/block/node/helpers/pickers/definition';
+import { nodeRegistryState } from '@/core/block/node/states/registry';
 
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
@@ -24,8 +26,8 @@ import { ResultPipeline } from '@/shared/utilities/pipeline/result';
  * @returns boolean - True if the block's attributes are editable, false otherwise
  * @see {@link getBlockElementIsAttributeEditable} - The underlying element check
  */
-export function canBlockAttributeBeEdited(sourceNodeID: NodeID): boolean {
-	const validData = new ResultPipeline('[BlockQueries → canBlockAttributeBeEdited]')
+export function canBlockAttributesBeEdited(sourceNodeID: NodeID): boolean {
+	const validData = new ResultPipeline('[BlockQueries → canBlockAttributesBeEdited]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 		})
@@ -35,10 +37,16 @@ export function canBlockAttributeBeEdited(sourceNodeID: NodeID): boolean {
 		.pick((data) => ({
 			sourceNodeInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
 		}))
+		.pick(() => ({
+			elementDefinitions: pickElementDefinitions(elementRegistryState),
+		}))
+		.pick((data) => ({
+			elementDefinition: pickElementDefinition(data.sourceNodeInstance.elementKey, data.elementDefinitions),
+		}))
 		.execute();
 	if (!validData) return false;
 
-	return getBlockElementIsAttributeEditable(validData.sourceNodeInstance.elementKey);
+	return validData.elementDefinition.isAttributeEditable ?? true;
 }
 
 /**
@@ -55,17 +63,87 @@ export function canBlockAttributeBeEdited(sourceNodeID: NodeID): boolean {
  * @see {@link renderNodeAttributes} - Function that performs the attribute rendering transformation
  */
 export function getBlockAttributesRendered(sourceNodeID: NodeID): Record<string, string | boolean> | undefined {
-	const nodeStore = useNodeStore.getState();
-
 	// Validate, pick, and operate on necessary data
 	const results = new ResultPipeline('[BlockQueries → getBlockAttributesRendered]')
-		.validate({ sourceNodeID: validateNodeID(sourceNodeID) })
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
 		.pick((data) => ({
-			attributes: pickNodeAttributes(data.sourceNodeID, nodeStore.storedNodes),
+			attributes: pickNodeAttributes(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.operate((data) => ({
+			renderedAttributes: renderNodeAttributes(data.attributes),
 		}))
 		.execute();
 	if (!results) return undefined;
 
-	// Render and return the block attributes
-	return renderNodeAttributes(results.attributes);
+	return results.renderedAttributes;
+}
+
+/**
+ * Retrieves the allowed attributes for a block.
+ *
+ * This function returns the list of attributes that are permitted for the block's element
+ * according to its definition. This includes global, accessibility, and element-specific attributes.
+ *
+ * @param sourceNodeID - The unique identifier of the block to get allowed attributes for
+ * @returns Array of allowed attribute keys, or empty array if the block is invalid
+ */
+export function getBlockAttributesAllowed(sourceNodeID: NodeID): AttributeKey[] {
+	const validData = new ResultPipeline('[BlockQueries → getBlockAttributesAllowed]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.pick(() => ({
+			elementDefinitions: pickElementDefinitions(elementRegistryState),
+		}))
+		.pick((data) => ({
+			elementDefinition: pickElementDefinition(data.blockInstance.elementKey, data.elementDefinitions),
+		}))
+		.execute();
+	if (!validData) return [];
+
+	return validData.elementDefinition.allowedAttributes;
+}
+
+/**
+ * Retrieves the default attributes of a specific node instance.
+ *
+ * This function accesses the node instance to obtain the definition key, then retrieves
+ * the default attributes from the node definition.
+ *
+ * @param sourceNodeID - The unique identifier of the node instance
+ * @returns Readonly<NodeAttributes> | undefined - The default attributes of the node, or undefined if the instance is not found
+ * @see {@link getBlockNodeDefinitionDefaultAttributes} - The underlying definition query
+ */
+export function getBlockAttributesDefaults(sourceNodeID: NodeID): Readonly<NodeAttributes> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockAttributesDefaults]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.pick(() => ({
+			nodeDefinitions: pickNodeDefinitions(nodeRegistryState),
+		}))
+		.pick((data) => ({
+			nodeDefinition: pickNodeDefinition(data.blockInstance.definitionKey, data.nodeDefinitions),
+		}))
+		.execute();
+	if (!validData) return undefined;
+
+	return validData.nodeDefinition.defaultAttributes;
 }

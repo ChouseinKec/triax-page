@@ -4,13 +4,12 @@ import React, { memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 
 const BlockTableColComponent: React.FC<NodeComponentProps> = ({
-    instance,
+    nodeID,
 }) => {
-    const nodeID = instance.id;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
 
     return (
         <col

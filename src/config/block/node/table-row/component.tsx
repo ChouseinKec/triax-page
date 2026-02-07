@@ -4,8 +4,8 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { addBlockNode, setBlockNodeSelectedNodeID, useBlockNodeElementKey } from '@/core/block/node/managers/';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -18,10 +18,9 @@ import Placeholder from '@/shared/components/placeholder/block/component';
  * @param children - Child blocks to render inside this table row
  * @returns JSX element representing the table row block
  */
-const BlockTableRowComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockTableRowComponent: React.FC<NodeComponentProps> = ({ nodeID, deviceKey, orientationKey, pseudoKey, isSelected, children }) => {
+    const nodeElementKey = useBlockNodeElementKey(nodeID);
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
@@ -43,9 +42,9 @@ const BlockTableRowComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
 
     // Check if table row has children
     const hasChildren = React.Children.count(children) > 0;
-
+    const Tag = nodeElementKey as React.ElementType;
     return hasChildren ? (
-        <NodeElementKey
+        <Tag
             className={`block-${nodeID}`}
             onClick={handleSelectBlock}
 
@@ -61,12 +60,12 @@ const BlockTableRowComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
             <style>
                 {nodeStyles}
             </style>
-        </NodeElementKey>
+        </Tag>
     ) : (
 
         <Placeholder
             as="tr"
-            message="Empty Table Row"
+            title="Empty Table Row"
             description="Create cells to hold your table data and content"
             actions={[{
                 label: "Add Cell",

@@ -6,7 +6,7 @@ import CSS from "./styles.module.scss";
 
 // Managers
 import { useSelectedBlockNodeID } from "@/core/block/node/managers";
-import { useSelectedBlockNodeIsStyleEditable } from "@/core/block/node/managers";
+import { useSelectedBlockStyleIsEditable } from "@/core/block/style/managers";
 
 
 // Components
@@ -67,7 +67,7 @@ const TAB_ICONS = {
  */
 const StyleInspector: React.FC = () => {
     const selectedNodeID = useSelectedBlockNodeID();
-    const isStyleable = useSelectedBlockNodeIsStyleEditable();
+    const isStyleable = useSelectedBlockStyleIsEditable();
 
     // Define tabs with renderers
     const tabItems = selectedNodeID

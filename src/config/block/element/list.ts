@@ -1,16 +1,15 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, LIST_ITEM_ONLY, DESCRIPTION_LIST_CONTENT, FLOW_NO_LI, PHRASING_CONTENT, FLOW_CONTENT } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT } from './shared';
+
+const LIST_ITEM_ONLY: ElementKey[] = ['li'];
+const DESCRIPTION_LIST_CONTENT: ElementKey[] = ['dt', 'dd'];
 
 const LIST_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 const LIST_TEXT_ATTRIBUTES: AttributeKey[] = [...LIST_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
-
-const OL_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'reversed', 'start', 'type'];
-
-const LI_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'value'];
 
 export const LIST_DEFINITIONS: ElementDefinition[] = [
 	{
@@ -26,7 +25,7 @@ export const LIST_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'ol',
-		allowedAttributes: OL_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'reversed', 'start', 'type'],
 		allowedChildren: LIST_ITEM_ONLY,
 		forbiddenAncestors: null,
 		structure: [{ key: 'li', order: null, min: 1, max: null }],
@@ -48,8 +47,8 @@ export const LIST_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'li',
-		allowedAttributes: LI_ATTRIBUTES,
-		allowedChildren: FLOW_NO_LI,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'value'],
+		allowedChildren: FLOW_CONTENT.filter((t) => t !== 'li'),
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'List item. May contain flow content such as paragraphs, nested lists, or other blocks.',
@@ -60,7 +59,7 @@ export const LIST_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'dl',
 		allowedAttributes: LIST_ATTRIBUTES,
-		allowedChildren: DESCRIPTION_LIST_CONTENT,
+		allowedChildren: ['dt', 'dd'],
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'Description list (also called definition list). Contains terms (dt) and descriptions (dd).',

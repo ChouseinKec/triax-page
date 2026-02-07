@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, memo, useState } from "react";
+import React, { useCallback, useRef, memo, useState, useEffect } from "react";
 
 // Style
 import CSS from './styles.module.scss';
@@ -9,7 +9,7 @@ import type { NodeHighlight } from '@/core/block/node/types/instance';
 
 // Managers
 import { setBlockNodeSelectedNodeID, setBlockNodeHighlight } from '@/core/block/node/managers';
-import { getBlockNodeData, setBlockNodeData } from '@/core/block/node/managers';
+import { getBlockNodeData, setBlockNodeData, getBlockNodeChildNodeIDs, useBlockNodeElementKey } from '@/core/block/node/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Hooks
@@ -20,61 +20,72 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 
 // Custom input component for markdown placeholder
 const MarkdownInput: React.FC<{ nodeID: string }> = ({ nodeID }) => {
-    const [inputValue, setInputValue] = useState('');
+    const spanRef = useRef<HTMLSpanElement>(null);
+    const defaultText = "Start writing your markdown content here...";
 
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        setInputValue(newValue);
-    }, []);
+    // Set initial text
+    useEffect(() => {
+        if (spanRef.current) spanRef.current.innerText = defaultText;
 
-    const handleOnBlur = useCallback(() => {
-        setBlockNodeData(nodeID, { text: inputValue });
-    }, [inputValue, nodeID]);
+    }, []
+    );
+
+    const handleSpanBlur = useCallback(() => {
+        const currentText = spanRef.current?.innerText ?? "";
+        const trimmedText = currentText.trim();
+
+        // Only save if text is different from default placeholder and not empty
+        if (trimmedText && trimmedText !== defaultText) {
+            setBlockNodeData(nodeID, { text: trimmedText });
+        } else {
+            // Clear the data if it's just the default text or empty/whitespace
+            setBlockNodeData(nodeID, { text: "" });
+        }
+    }, [nodeID, defaultText]);
 
     return (
-        <input
-            className={CSS.Input}
-            type="text"
-            onBlur={handleOnBlur}
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder="Enter markdown text..."
+        <span
+            ref={spanRef}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleSpanBlur}
+            className={CSS.EditableSpan}
         />
     );
 };
 
 
-const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, instance, isSelected, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
+const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, nodeID, isSelected, children }) => {
+    const nodeElementKey = useBlockNodeElementKey(nodeID);
     const renderedStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get the current text value from data
     const data = getBlockNodeData(nodeID);
 
     // Check if this block has child segments
-    const hasChildren = instance.childNodeIDs.length > 0;
+    const childNodeIDs = getBlockNodeChildNodeIDs(nodeID);
+    const hasChildren = childNodeIDs ? childNodeIDs.length > 0 : false;
 
     // Ref to access the element
     const elementRef = useRef<HTMLElement>(null);
 
     // Callbacks for select/deselect
     const handleHighlight = useCallback((range: Range, selectedText: string) => {
-        if (!isSelected || hasChildren) return;
+        if (!isSelected || !nodeElementKey || hasChildren) return;
 
         // Check if the selection is within this element
         if (!elementRef.current?.contains(range.commonAncestorContainer)) return;
 
         const newHighlight: NodeHighlight = {
             id: nodeID,
-            elementKey: instance.elementKey,
+            elementKey: nodeElementKey,
             text: selectedText,
             startOffset: range.startOffset,
             endOffset: range.endOffset,
         };
 
         setBlockNodeHighlight(newHighlight);
-    }, [isSelected, hasChildren, nodeID, instance.elementKey]
+    }, [isSelected, hasChildren, nodeID, nodeElementKey]
     );
 
     // Deselect callback
@@ -105,12 +116,13 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
     // Use highlight hook
     useHighlight(handleHighlight, handleDehighlight);
 
-    const hasContent = hasChildren || (data?.text && data.text.trim().length > 0);
+    const showPlaceholder = (hasChildren || (data?.text && data.text.trim().length > 0));
+    const Tag = nodeElementKey as React.ElementType;
     return (
         <>
-            {hasContent
+            {showPlaceholder
                 ? (
-                    <NodeElementKey
+                    <Tag
                         ref={elementRef as React.RefObject<any>}
                         className={`block-${nodeID}`}
                         onClick={handleClick}
@@ -122,12 +134,10 @@ const BlockMarkdownComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
                     >
                         {hasChildren ? children : data?.text}
                         <style>{renderedStyles}</style>
-                    </NodeElementKey>
+                    </Tag>
                 )
                 : (
                     <Placeholder
-                        message="Empty Markdown Block"
-                        description="Start writing your markdown content"
                         component={() => <MarkdownInput nodeID={nodeID} />}
                         onSelect={handleClick}
                         isSelected={isSelected}

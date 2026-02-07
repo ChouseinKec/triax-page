@@ -1,17 +1,19 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_NO_FORM, FLOW_WITH_LEGEND, PHRASING_CONTENT, OPTION_ONLY } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT } from './shared';
 
 const FORM_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 const FORM_TEXT_ATTRIBUTES = [...FORM_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
+
+const OPTION_ONLY: ElementKey[] = ['option'];
 
 export const FORM_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'form',
 		allowedAttributes: [...FORM_ATTRIBUTES, 'action', 'method', 'autocomplete', 'name', 'target'],
-		allowedChildren: FLOW_NO_FORM,
+		allowedChildren: FLOW_CONTENT.filter((t) => t !== 'form'),
 		forbiddenAncestors: ['form'],
 		structure: null,
 		description: 'Form container for collecting user input and submitting data.',
@@ -22,7 +24,7 @@ export const FORM_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'fieldset',
 		allowedAttributes: [...FORM_ATTRIBUTES, 'disabled', 'form', 'name'],
-		allowedChildren: FLOW_WITH_LEGEND,
+		allowedChildren: [...FLOW_CONTENT, 'legend'],
 		forbiddenAncestors: null,
 		structure: [{ key: 'legend', order: 0, min: 0, max: 1 }],
 		description: 'Groups related form controls. Typically starts with a legend.',

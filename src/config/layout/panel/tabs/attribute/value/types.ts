@@ -10,7 +10,7 @@ import type { NodeID } from '@/core/block/node/types/instance';
  */
 export interface NodeAttributesValueProps {
 	/** ID of the block being edited */
-	NodeID: NodeID;
+	nodeID: NodeID;
 	/** Name of the attribute being edited */
 	attribute: AttributeKey;
 }

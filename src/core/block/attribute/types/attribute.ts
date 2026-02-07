@@ -171,7 +171,7 @@ export type AttributeKey =
 	| 'loading'
 	| 'decoding'
 	| 'sizes'
-	| 'srcset'
+	| 'srcSet'
 	| 'width'
 	| 'height'
 	| 'controls'

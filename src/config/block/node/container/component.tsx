@@ -7,7 +7,7 @@ import type { NodeComponentProps } from '@/core/block/node/types/definition';
 import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
 import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
 import { getBlockNodeData, setBlockNodeData } from '@/core/block/node/managers';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -17,18 +17,17 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 /**
  * Renders a container block that can hold other blocks.
  * 
- * @param instance - The block instance data
+ * @param nodeID - The unique identifier of the block instance
  * @param children - Child blocks to render inside this container
  * @returns JSX element representing the container block
  */
-const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, nodeID, children }) => {
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     // Get node data to check placeholder setting
     const data = getBlockNodeData(nodeID);
-    const hidePlaceholder = data?.placeholder === false;
+    const hidePlaceholder = data?.hidePlaceholder === true;
 
     /**
      * Handles block selection when clicked.
@@ -63,46 +62,46 @@ const BlockContainerComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
 
     // Check if container is empty (no children)
     const isEmpty = React.Children.count(children) === 0;
-    const shouldShowPlaceholder = isEmpty && !hidePlaceholder;
+    const showPlaceholder = !(isEmpty && !hidePlaceholder);
 
-    return (
-        <div
-            className={`block-${nodeID}`}
-            onClick={handleSelectBlock}
+    return showPlaceholder
+        ? (
+            <div
+                className={`block-${nodeID}`}
+                onClick={handleSelectBlock}
 
-            data-block-type="container"
-            data-is-selected={isSelected}
+                data-block-type="container"
+                data-is-selected={isSelected}
 
-            {...nodeAttributes}
-        >
-            {/* Render child blocks */}
-            {children}
+                {...nodeAttributes}
+            >
+                {/* Render child blocks */}
+                {children}
 
-            {/* Show placeholder when empty and not hidden */}
-            {shouldShowPlaceholder && (
-                <Placeholder
-                    message="Empty Container"
-                    description="Add blocks to this container"
-                    actions={[
-                        {
-                            label: "Add Block",
-                            onClick: handleAddBlock
-                        },
-                        {
-                            label: "Hide",
-                            onClick: handleHidePlaceholder
-                        }
-                    ]}
-                    isSelected={isSelected}
-                />
-            )}
-
-            {/* Inject block-specific styles */}
-            <style>
-                {nodeStyles}
-            </style>
-        </div>
-    );
+                {/* Inject block-specific styles */}
+                <style>
+                    {nodeStyles}
+                </style>
+            </div>
+        )
+        : (
+            <Placeholder
+                title="Empty Container"
+                description="Add blocks to this container"
+                actions={[
+                    {
+                        label: "Add Block",
+                        onClick: handleAddBlock
+                    },
+                    {
+                        label: "Hide",
+                        onClick: handleHidePlaceholder
+                    }
+                ]}
+                isSelected={isSelected}
+                onSelect={handleSelectBlock}
+            />
+        );
 }
 
 

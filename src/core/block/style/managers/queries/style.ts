@@ -1,6 +1,5 @@
 // Types
-import type { NodeID } from '@/core/block/node/types/instance';
-import type { StoredNodes } from '@/core/block/node/types/instance';
+import type { StoredNodes, NodeID, NodeStyles } from '@/core/block/node/types';
 import type { StyleKey, StyleValue } from '@/core/block/style/types';
 import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
@@ -13,10 +12,13 @@ import { useNodeStore } from '@/core/block/node/states/store';
 // Helpers
 import { validateNodeID, pickNodeStoreState, pickNodeInstance } from '@/core/block/node/helpers';
 import { cascadeNodeStyle, pickNodeStyles, pickStyleDefinition, renderNodeStyles } from '@/core/block/style/helpers';
+import { validateStyleKey } from '@/core/block/style/helpers';
 
 // Managers
 import { getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
+import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/core/layout/page/helpers';
 import { getBlockElementIsStyleEditable } from '@/core/block/element/managers/queries/definition';
+import { getBlockNodeDefinitionDefaultStyles } from '@/core/block/node/managers/';
 
 // Registry
 import { getRegisteredStyles } from '@/core/block/style/state/registry';
@@ -28,30 +30,32 @@ import { getRegisteredStyles } from '@/core/block/style/state/registry';
  * This function performs cascading resolution: for pseudo-classes, it first checks pseudo-specific styles,
  * then falls back to base styles. Across devices, it prioritizes current device over default device.
  *
- * @param storedNodes - The current stored nodes
- * @param nodeID - The unique identifier of the block
+ * @param sourceNodeID - The unique identifier of the block
  * @param styleKey - The CSS style property key to retrieve (e.g., 'backgroundColor', 'width')
  * @param deviceKey - The device context
  * @param orientationKey - The orientation context
  * @param pseudoKey - The pseudo-class context
  * @returns The resolved style value or undefined if not found
  */
-export function getBlockStyle(storedNodes: StoredNodes, nodeID: NodeID, styleKey: StyleKey, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): StyleValue | undefined {
+export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): StyleValue | undefined {
 	// Use a pipeline to safely pick required data and perform operations
 	const results = new ResultPipeline('[BlockQueries → getBlockStyle]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+			styleKey: validateStyleKey(styleKey),
+		})
 		.pick(() => ({
-			// Retrieve the block instance from the store
-			blockInstance: pickNodeInstance(nodeID, storedNodes),
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
 		.pick((data) => ({
-			// Extract styles from the block instance
-			NodeStyles: pickNodeStyles(data.blockInstance),
-			// Get the style definition for validation and processing
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
 			styleDefinition: pickStyleDefinition(styleKey, getRegisteredStyles()),
 		}))
+		.pick((data) => ({
+			nodeStyles: pickNodeStyles(data.blockInstance),
+		}))
 		.operate((data) => ({
-			// Resolve the style value using cascading logic
-			styleValue: cascadeNodeStyle(styleKey, data.NodeStyles, data.styleDefinition, deviceKey, orientationKey, pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
+			styleValue: cascadeNodeStyle(styleKey, data.nodeStyles, data.styleDefinition, deviceKey, orientationKey, pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
 		}))
 		.execute();
 	if (!results) return undefined;
@@ -67,33 +71,65 @@ export function getBlockStyle(storedNodes: StoredNodes, nodeID: NodeID, styleKey
  * This function generates CSS rules for the block, either for all pseudo-classes or a specific one,
  * considering the provided device, orientation, and pseudo contexts.
  *
- * @param storedNodes - The current stored nodes
- * @param nodeID - The unique identifier of the block
+ * @param sourceNodeID - The unique identifier of the block
  * @param deviceKey - The device context
  * @param orientationKey - The orientation context
  * @param pseudoKey - The pseudo-class context
  * @returns The rendered CSS string or undefined if not found
  */
-export function getBlockStylesRendered(storedNodes: StoredNodes, nodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
+export function getBlockStylesRendered(sourceNodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
 	// Use pipeline to safely retrieve and process data
 	const results = new ResultPipeline('[BlockQueries → getBlockStylesRendered]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+			deviceKey: validateDeviceKey(deviceKey),
+			orientationKey: validateOrientationKey(orientationKey),
+			pseudoKey: validatePseudoKey(pseudoKey),
+		})
 		.pick(() => ({
-			// Retrieve the block instance
-			blockInstance: pickNodeInstance(nodeID, storedNodes),
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
 		.pick((data) => ({
-			// Extract styles from the block instance
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.pick((data) => ({
 			NodeStyles: pickNodeStyles(data.blockInstance),
 		}))
 		.operate((data) => ({
-			// Render the styles into CSS string
-			renderedStyles: renderNodeStyles(data.NodeStyles, nodeID, getRegisteredStyles(), getPseudoDefinitions(), deviceKey, orientationKey, pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
+			renderedStyles: renderNodeStyles(data.NodeStyles, data.sourceNodeID, getRegisteredStyles(), getPseudoDefinitions(), data.deviceKey, data.orientationKey, data.pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
 		}))
 		.execute();
 	if (!results) return undefined;
 
 	// Return the rendered CSS string
 	return results.renderedStyles;
+}
+
+/**
+ * Retrieves the default styles of a specific node instance.
+ *
+ * This function accesses the node instance to obtain the definition key, then retrieves
+ * the default styles from the node definition.
+ *
+ * @param sourceNodeID - The unique identifier of the node instance
+ * @returns Readonly<NodeStyles> | undefined - The default styles of the node, or undefined if the instance is not found
+ * @see {@link getBlockNodeDefinitionDefaultStyles} - The underlying definition query
+ */
+export function getBlockStylesDefaults(sourceNodeID: NodeID): Readonly<NodeStyles> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getBlockStylesDefaults]')
+		.validate({
+			sourceNodeID: validateNodeID(sourceNodeID),
+		})
+		.pick(() => ({
+			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
+		}))
+		.pick((data) => ({
+			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
+		}))
+		.execute();
+	if (!validData) return undefined;
+
+	return getBlockNodeDefinitionDefaultStyles(validData.blockInstance.definitionKey);
 }
 
 /**

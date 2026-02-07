@@ -4,8 +4,8 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { addBlockNode, setBlockNodeSelectedNodeID, useBlockNodeElementKey } from '@/core/block/node/managers/';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -18,10 +18,9 @@ import Placeholder from '@/shared/components/placeholder/block/component';
  * @param children - Child blocks to render inside this table foot
  * @returns JSX element representing the table foot block
  */
-const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ nodeID, deviceKey, orientationKey, pseudoKey, isSelected, children }) => {
+    const nodeElementKey = useBlockNodeElementKey(nodeID);
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
@@ -43,9 +42,9 @@ const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
 
     // Check if table foot has children
     const hasChildren = React.Children.count(children) > 0;
-
+    const Tag = nodeElementKey as React.ElementType;
     return hasChildren ? (
-        <NodeElementKey
+        <Tag
             className={`block-${nodeID}`}
             onClick={handleSelectBlock}
 
@@ -61,11 +60,11 @@ const BlockTableFootComponent: React.FC<NodeComponentProps> = ({ deviceKey, orie
             <style>
                 {nodeStyles}
             </style>
-        </NodeElementKey>
+        </Tag>
     ) : (
         <Placeholder
             as="tfoot"
-            message="Empty Table Foot"
+            title="Empty Table Foot"
             description="Create table footer rows with summary data"
             actions={[{
                 label: "Add Row",

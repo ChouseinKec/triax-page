@@ -5,7 +5,8 @@ import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
 import { addBlockNode, setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { getBlockNodeElementKey } from '@/core/block/node/managers';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -14,14 +15,13 @@ import Placeholder from '@/shared/components/placeholder/block/component';
 /**
  * Renders a list block that can be either an unordered list (ul) or ordered list (ol).
  *
- * @param instance - The block instance data
+ * @param nodeID - The unique identifier of the block instance
  * @param children - Child blocks to render inside this list
  * @returns JSX element representing the list block
  */
-const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, nodeID, children }) => {
+    const NodeElementKey = getBlockNodeElementKey(nodeID) as React.ElementType;
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
@@ -55,7 +55,7 @@ const BlockListComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientati
             {/* Render child blocks (list items) or placeholder */}
             {React.Children.count(children) > 0 ? children : (
                 <Placeholder
-                    message="This list is empty"
+                    title="This list is empty"
                     actions={[{
                         label: "Add List Item",
                         onClick: handleAddItem

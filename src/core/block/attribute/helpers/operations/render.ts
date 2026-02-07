@@ -1,6 +1,7 @@
 // Types
 import type { NodeAttributes } from '@/core/block/node/types/definition';
 import type { AttributeKey } from '@/core/block/attribute/types';
+import type { OperateResult } from '@/shared/types/result';
 
 // Utilities
 import { normalizeAttributeValue, normalizeAttributeKey } from '@/core/block/attribute/utilities';
@@ -10,7 +11,7 @@ import { normalizeAttributeValue, normalizeAttributeKey } from '@/core/block/att
  * Converts HTML attribute names to React equivalents and normalizes boolean values.
  * @param attributes - The block's attribute definition object
  */
-export function renderNodeAttributes(attributes: NodeAttributes): Record<string, string | boolean> {
+export function renderNodeAttributes(attributes: NodeAttributes): OperateResult<Record<string, string | boolean>> {
 	const normalizedAttributes: Record<string, string | boolean> = {};
 	for (const [property, value] of Object.entries(attributes)) {
 		if (!value) continue;
@@ -18,5 +19,5 @@ export function renderNodeAttributes(attributes: NodeAttributes): Record<string,
 		const normalizedValue = normalizeAttributeValue(value);
 		normalizedAttributes[normalizedProperty] = normalizedValue;
 	}
-	return normalizedAttributes;
+	return { success: true, data: normalizedAttributes };
 }

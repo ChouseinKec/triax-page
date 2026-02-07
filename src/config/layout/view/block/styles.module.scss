@@ -29,7 +29,7 @@
 	// &[data-is-selected='true'] {
 	*[class*='block'] {
 		&[data-is-selected='true'] {
-			outline: 2px solid var(--theme-color-secondary) !important;
+			outline: 2px dashed var(--theme-color-secondary) !important;
 			outline-offset: -2px;
 		}
 	}
@@ -72,8 +72,6 @@
 	bottom: 1%;
 	left: 50%;
 	transform: translateX(-50%);
-
-	margin-top: 10px;
 
 	display: flex;
 	flex-direction: row;

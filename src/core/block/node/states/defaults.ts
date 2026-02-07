@@ -41,7 +41,9 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 		parentID: 'html',
 		childNodeIDs: [],
 		definitionKey: 'core-container',
-		data: {},
+		data: {
+			hidePlaceholder: true,
+		},
 	},
 
 	// body container

@@ -12,8 +12,7 @@ import CSS from './styles.module.scss';
  * A flexible placeholder component for empty states in block components.
  * Provides consistent styling with customization options.
  */
-const Placeholder: React.FC<PlaceholderProps> = ({ message, description, actions, icon, component: CustomComponent, onSelect, as: Element = 'div', isSelected, wrap }) => {
-
+const Placeholder: React.FC<PlaceholderProps> = ({ title, description, actions, icon, component: CustomComponent, onSelect, as: Element = 'div', isSelected, wrap }) => {
     const renderWrapped = (content: React.ReactNode, wrappers: (React.ElementType | string)[]): React.ReactNode => {
         return wrappers.reduceRight((acc, Wrapper) => React.createElement(Wrapper, {}, acc), content);
     };
@@ -26,9 +25,11 @@ const Placeholder: React.FC<PlaceholderProps> = ({ message, description, actions
                 </div>
             )}
 
-            <div className={CSS.message}>
-                {message}
-            </div>
+            {title && (
+                <div className={CSS.title}>
+                    {title}
+                </div>
+            )}
 
             {description && (
                 <div className={CSS.description}>

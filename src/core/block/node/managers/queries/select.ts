@@ -12,7 +12,7 @@ import { pickSelectedNodeID, pickNodeStoreState } from '@/core/block/node/helper
 // Utilities
 import { ResultPipeline } from '@/shared/utilities/pipeline';
 // Managers
-import { getBlockNodeChildNodeIDs, getBlockNodeData, getBlockNodeName, getBlockNodeIcon, getBlockNodeComponent, getBlockNodeElementKeys, getBlockNodeDescription, getBlockNodeCategory, getBlockNodeDefaultStyles, getBlockNodeDefaultAttributes, getBlockNodeDefaultData, getBlockNodeActions } from '@/core/block/node/managers/queries/node';
+import { getBlockNodeChildNodeIDs, getBlockNodeData, getBlockNodeName, getBlockNodeIcon, getBlockNodeComponent, getBlockNodeElementKeys, getBlockNodeDescription, getBlockNodeCategory, getBlockNodeDefaultData, getBlockNodeActions } from '@/core/block/node/managers/queries/node';
 import { getBlockNodeDefinitionActions } from '@/core/block/node/managers/queries/definition';
 /**
  * Retrieves the currently selected node ID from the block store.

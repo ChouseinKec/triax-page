@@ -46,12 +46,14 @@
 	text-transform: capitalize;
 	font-size: var(--font-size-lg);
 	font-weight: 600;
+	color: var(--color-white);
 }
 
 .Description {
 	font-size: var(--font-size-md);
 	line-height: var(--size-xl);
 	max-width: 200px;
+	color: var(--color-white);
 }
 
 .Actions {

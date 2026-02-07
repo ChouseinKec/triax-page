@@ -198,7 +198,7 @@ export const ELEMENT_DEFINITIONS: AttributeDefinition[] = [
 		category: 'element',
 	},
 	{
-		key: 'srcset',
+		key: 'srcSet',
 		syntax: { type: 'string' },
 		description: 'Specifies a list of image sources for responsive images.',
 		category: 'element',

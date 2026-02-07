@@ -1,7 +1,7 @@
 // Types
 import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { PickResult } from '@/shared/types/result';
-import type { ElementRegistryState } from '../../states/registry';
+import type { ElementRegistryState } from '@/core/block/element/states/registry';
 /**
  * Retrieves all registered element definitions from the system registry.
  *

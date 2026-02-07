@@ -105,7 +105,7 @@ const Device: React.FC<DeviceProps> = ({ deviceKey }) => {
             {/* Render the root block if available */}
             {
                 rootBlock
-                    ? <Block key={rootBlock.id} NodeID={rootBlock.id} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />
+                    ? <Block key={rootBlock.id} nodeID={rootBlock.id} deviceKey={deviceKey} orientationKey={orientationKey} pseudoKey={pseudoKey} isDeviceSelected={isDeviceSelected} />
                     : null
             }
         </div>

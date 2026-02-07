@@ -1,8 +1,8 @@
 import type { ReactNode, ComponentType } from 'react';
 
 export interface PlaceholderProps {
-	/** The main message to display */
-	message: string;
+	/** The main title to display */
+	title?: string;
 
 	/** Optional description text */
 	description?: string;

@@ -1,38 +1,17 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_MEDIA, PICTURE_CONTENT, FLOW_CONTENT, PHRASING_WITH_AREA } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT } from './shared';
 
+const PHRASING_WITH_MEDIA: ElementKey[] = [...PHRASING_CONTENT, 'source', 'track'];
 const EMBEDDED_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
-
-const IMAGE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'src', 'srcset', 'sizes', 'width', 'height', 'loading', 'decoding', 'crossorigin', 'referrerpolicy', 'fetchpriority'];
-
-const IFRAME_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'name', 'referrerpolicy', 'loading', 'width', 'height'];
-
-const CANVAS_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'width', 'height'];
-
-const AUDIO_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'crossorigin'];
-
-const VIDEO_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'poster', 'width', 'height', 'crossorigin'];
-
-const SOURCE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'srcset', 'sizes', 'media'];
-
-const TRACK_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'kind', 'src', 'srclang', 'label', 'default'];
-
-const OBJECT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'form', 'width', 'height'];
-
-const EMBED_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'width', 'height'];
-
-const MAP_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name'];
-
-const AREA_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'href', 'target', 'download', 'rel', 'referrerpolicy'];
 
 export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'img',
-		allowedAttributes: IMAGE_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'src', 'srcSet', 'sizes', 'width', 'height', 'loading', 'decoding', 'crossorigin', 'referrerpolicy', 'fetchpriority'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -43,7 +22,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'iframe',
-		allowedAttributes: IFRAME_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'name', 'referrerpolicy', 'loading', 'width', 'height'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -54,7 +33,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'canvas',
-		allowedAttributes: CANVAS_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'width', 'height'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -65,7 +44,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'audio',
-		allowedAttributes: AUDIO_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'crossorigin'],
 		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
 		structure: null,
@@ -76,7 +55,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'video',
-		allowedAttributes: VIDEO_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'preload', 'autoplay', 'loop', 'muted', 'controls', 'poster', 'width', 'height', 'crossorigin'],
 		allowedChildren: PHRASING_WITH_MEDIA,
 		forbiddenAncestors: null,
 		structure: null,
@@ -87,7 +66,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'source',
-		allowedAttributes: SOURCE_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'srcSet', 'sizes', 'media'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -98,7 +77,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'track',
-		allowedAttributes: TRACK_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'kind', 'src', 'srclang', 'label', 'default'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -110,7 +89,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'picture',
 		allowedAttributes: EMBEDDED_ATTRIBUTES,
-		allowedChildren: PICTURE_CONTENT,
+		allowedChildren: ['source', 'img'],
 		forbiddenAncestors: null,
 		structure: [{ key: 'img', order: null, min: 1, max: 1 }],
 		description: 'Container for responsive images. Contains one img and zero or more source elements.',
@@ -120,7 +99,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'object',
-		allowedAttributes: OBJECT_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'form', 'width', 'height'],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -131,7 +110,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'embed',
-		allowedAttributes: EMBED_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'src', 'type', 'width', 'height'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -142,8 +121,8 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'map',
-		allowedAttributes: MAP_ATTRIBUTES,
-		allowedChildren: PHRASING_WITH_AREA,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name'],
+		allowedChildren: [...PHRASING_CONTENT, 'area'],
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'Image map defining clickable regions via area elements.',
@@ -153,7 +132,7 @@ export const EMBEDDED_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'area',
-		allowedAttributes: AREA_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'alt', 'href', 'target', 'download', 'rel', 'referrerpolicy'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,

@@ -18,20 +18,21 @@ import { getBlockAttributeCompatibleDefinitions } from '@/core/block/attribute/m
 import { toKebabCase } from "@/shared/utilities/string";
 
 
-export const renderAccessibilityTab = (nodeID: NodeID): React.ReactElement => {
-    const blockAccessibilityAttributes = getBlockAttributeCompatibleDefinitions(nodeID, "accessibility");
-    if (blockAccessibilityAttributes.length === 0) {
+export const renderElementTab = (nodeID: NodeID): React.ReactElement => {
+    const blockElementAttributes = getBlockAttributeCompatibleDefinitions(nodeID, "element");
+    if (blockElementAttributes.length === 0) {
         return (
             <p className={CSS.Empty}>
-                The selected block-node's element does not have any accessibility-specific customizable attributes.
+                The selected block-node's element does not have any element-specific customizable attributes.
             </p>
         );
     }
 
+
     return (
         <GroupLayout
             styles={{ gridTemplateColumns: "1fr" }}
-            content={() => blockAccessibilityAttributes.map((attribute) => {
+            content={() => blockElementAttributes.map((attribute) => {
                 return renderAttributeRow({
                     nodeID,
                     label: toKebabCase(attribute.key).replace('-', ' '),

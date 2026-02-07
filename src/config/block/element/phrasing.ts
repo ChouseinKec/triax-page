@@ -1,8 +1,8 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, PHRASING_WITH_RUBY } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT } from './shared';
 
 const PHRASING_ATTRIBUTES = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
 
@@ -296,7 +296,7 @@ export const PHRASING_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'ruby',
 		allowedAttributes: PHRASING_ATTRIBUTES,
-		allowedChildren: PHRASING_WITH_RUBY,
+		allowedChildren: [...PHRASING_CONTENT, 'rt', 'rp'],
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'Ruby annotation for East Asian typography. Contains base text with rt/rp annotations.',

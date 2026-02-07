@@ -8,8 +8,8 @@ import PropertyActions from "@/config/layout/panel/tabs/attribute/action/compone
 // Types
 import type { RenderAttributeRowProps } from "@/config/layout/panel/tabs/attribute/factory/types";
 
-// Registry
-import { getRegisteredAttribute } from "@/core/block/attribute/states/registry";
+// Managers
+import { getBlockAttributeDefinition } from "@/core/block/attribute/managers/";
 
 // Utilties
 import { devRender } from "@/shared/utilities/dev";
@@ -20,20 +20,20 @@ import { devRender } from "@/shared/utilities/dev";
 export function renderAttributeRow(options: RenderAttributeRowProps): React.ReactElement | null {
     if (options?.hidden) return null;
 
-    const attributeDefinition = getRegisteredAttribute(options.attributeKey);
+    const attributeDefinition = getBlockAttributeDefinition(options.attributeKey);
     if (!attributeDefinition) return devRender.error("[renderAttributeRow] No attribute definition found");
 
     return (
         <Property
-            key={`${options.NodeID}-${options.attributeKey}`}
+            key={`${options.nodeID}-${options.attributeKey}`}
             label={options.label}
             name={options.label || attributeDefinition.key}
 
             description={attributeDefinition.description}
             styles={{ flexDirection: "row" }}
             disabled={options.disabled}
-            content={() => <BlockAttributeValue NodeID={options.NodeID} attribute={options.attributeKey} />}
-            actions={() => <PropertyActions NodeID={options.NodeID} property={options.attributeKey} />}
+            content={() => <BlockAttributeValue nodeID={options.nodeID} attribute={options.attributeKey} />}
+            actions={() => <PropertyActions nodeID={options.nodeID} property={options.attributeKey} />}
         />
     );
 }

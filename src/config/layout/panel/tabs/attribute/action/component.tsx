@@ -17,7 +17,7 @@ import type { PropertyActionsProps } from "./types";
  */
 
 
-const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) => {
+const PropertyActions: React.FC<PropertyActionsProps> = ({ nodeID, property }) => {
 
     return (
         <p>

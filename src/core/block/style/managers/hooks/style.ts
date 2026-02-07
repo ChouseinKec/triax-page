@@ -51,7 +51,7 @@ export function useBlockStyle(nodeID: NodeID, styleKey: StyleKey): string | unde
 		const nodeExists = pickNodeInstance(safeParams.nodeID, state.storedNodes).success;
 		if (!nodeExists) return undefined;
 
-		return getBlockStyle(state.storedNodes, safeParams.nodeID, safeParams.styleKey, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
+		return getBlockStyle(safeParams.nodeID, safeParams.styleKey, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 	});
 }
 
@@ -85,7 +85,7 @@ export function useBlockStylesRendered(nodeID: NodeID, deviceKey: DeviceKey, ori
 		const nodeExists = pickNodeInstance(safeParams.nodeID, state.storedNodes).success;
 		if (!nodeExists) return undefined;
 
-		return getBlockStylesRendered(state.storedNodes, safeParams.nodeID, safeParams.deviceKey, safeParams.orientationKey, safeParams.pseudoKey);
+		return getBlockStylesRendered(safeParams.nodeID, safeParams.deviceKey, safeParams.orientationKey, safeParams.pseudoKey);
 	});
 }
 

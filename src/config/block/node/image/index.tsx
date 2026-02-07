@@ -15,7 +15,7 @@ registerNode({
         </svg>
     ),
 
-    elementKeys: ['div', 'figure'],
+    elementKeys: ['img'],
 
     defaultStyles: {},
     defaultAttributes: {},

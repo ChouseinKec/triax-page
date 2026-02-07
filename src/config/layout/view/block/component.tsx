@@ -88,7 +88,9 @@ const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }
                 <div className={CSS.Toolbar}>
                     <ElementSelect />
                     <NodeCrud />
-                    <span className={CSS.Divider} />
+
+
+                    {nodeActions.length > 0 && <span className={CSS.Divider} />}
 
                     <ActionGroup>
                         {nodeActions.map((action) => (

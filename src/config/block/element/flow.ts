@@ -1,14 +1,12 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT, FLOW_WITH_FIGCAPTION } from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT, PHRASING_CONTENT } from './shared';
 
 const FLOW_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
 const TEXT_ATTRIBUTES: AttributeKey[] = [...FLOW_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
-
-const BLOCKQUOTE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'cite'];
 
 export const FLOW_DEFINITIONS: ElementDefinition[] = [
 	{
@@ -57,7 +55,7 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'blockquote',
-		allowedAttributes: BLOCKQUOTE_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'cite'],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -69,7 +67,7 @@ export const FLOW_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'figure',
 		allowedAttributes: FLOW_ATTRIBUTES,
-		allowedChildren: FLOW_WITH_FIGCAPTION,
+		allowedChildren: [...FLOW_CONTENT, 'figcaption'],
 		forbiddenAncestors: null,
 		structure: [{ key: 'figcaption', order: null, min: 0, max: 1 }],
 		description: 'Self-contained content (image, code, etc.) with an optional figcaption.',

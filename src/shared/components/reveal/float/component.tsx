@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, memo, useCallback } from "react";
+import React, { useRef, useEffect, memo, useCallback, forwardRef } from "react";
 import { createPortal } from "react-dom";
 
 // Styles
@@ -33,7 +33,7 @@ import usePosition from "@/shared/hooks/interface/usePosition";
  *
  * @note Requires the target element to be mounted for proper positioning calculations
  */
-const FloatReveal: React.FC<FloatRevealProps> = ({
+const FloatReveal = forwardRef<HTMLDivElement, FloatRevealProps>(({
     children,
     targetRef,
     anchor = "top",
@@ -43,13 +43,11 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
     closeOnEscape = true,
     onVisibilityChange,
     className = "",
-}) => {
-    const floatRef = useRef<HTMLDivElement | null>(null);
+}, ref) => {
+    const internalRef = useRef<HTMLDivElement | null>(null);
+    const floatRef = ref as React.RefObject<HTMLDivElement> || internalRef;
     const position = usePosition(targetRef, floatRef, anchor, isOpen, offset);
-    const styles = {
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-    };
+    const styles = { top: `${position.top}px`, left: `${position.left}px`, };
 
     // Handle keyboard events for auto-close
     const handleKeyDown = useCallback((event: KeyboardEvent): void => {
@@ -112,7 +110,7 @@ const FloatReveal: React.FC<FloatRevealProps> = ({
         </div>,
         document.body
     );
-};
+});
 
 FloatReveal.displayName = "FloatReveal";
 export default memo(FloatReveal);

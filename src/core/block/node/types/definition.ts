@@ -1,13 +1,11 @@
 import type { ReactElement, ComponentType } from 'react';
 
 // Types
+import type { NodeID } from '@/core/block/node/types/instance';
 import type { StyleKey, StyleValue } from '@/core/block/style/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 import type { ElementKey } from '@/core/block/element/types';
-import type { DeviceKey } from '@/core/layout/page/types';
-import type { OrientationKey } from '@/core/layout/page/types';
-import type { PseudoKey } from '@/core/layout/page/types';
-import type { NodeInstance } from '@/core/block/node/types/instance';
+import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 /**
  * The kind of block (text, container, media).
@@ -33,7 +31,6 @@ export type NodeCategory = string;
  * Icon for representing the block in the UI
  */
 export type NodeIcon = ReactElement;
-
 
 /**
  * Block styles structure:
@@ -69,7 +66,7 @@ export type NodeChildren = ReactElement | ReactElement[];
  * Props for block render components
  */
 export interface NodeComponentProps {
-	instance: NodeInstance;
+	nodeID: NodeID;
 	deviceKey: DeviceKey;
 	orientationKey: OrientationKey;
 	pseudoKey: PseudoKey;

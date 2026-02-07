@@ -5,21 +5,15 @@ import type { AttributeKey } from '@/core/block/attribute/types';
 // Shared
 import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, FLOW_CONTENT } from './shared';
 
-// Define table sections that can be direct children of table
-const TABLE_SECTIONS_ONLY: ElementKey[] = ['caption', 'colgroup', 'thead', 'tbody', 'tfoot'];
-
 const TABLE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
-const TABLE_TEXT_ATTRIBUTES: AttributeKey[] = [...TABLE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
 
-const TH_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'scope', 'colspan', 'rowspan', 'headers'];
-
-const TD_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'colspan', 'rowspan', 'headers'];
+const COL_ATTRIBUTES: AttributeKey[] = [...TABLE_ATTRIBUTES, 'span'];
 
 export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'table',
 		allowedAttributes: TABLE_ATTRIBUTES,
-		allowedChildren: TABLE_SECTIONS_ONLY,
+		allowedChildren: ['caption', 'colgroup', 'thead', 'tbody', 'tfoot'],
 		forbiddenAncestors: null,
 		structure: [
 			{ key: 'caption', order: 0, min: 0, max: 1 },
@@ -35,7 +29,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'caption',
-		allowedAttributes: TABLE_TEXT_ATTRIBUTES,
+		allowedAttributes: [...TABLE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -45,7 +39,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'colgroup',
-		allowedAttributes: TABLE_ATTRIBUTES,
+		allowedAttributes: COL_ATTRIBUTES,
 		allowedChildren: ['col'],
 		forbiddenAncestors: null,
 		structure: [{ key: 'col', min: 1, max: null, order: null }],
@@ -55,7 +49,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'col',
-		allowedAttributes: TABLE_ATTRIBUTES,
+		allowedAttributes: COL_ATTRIBUTES,
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -98,14 +92,14 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 		allowedAttributes: TABLE_ATTRIBUTES,
 		allowedChildren: ['th', 'td'],
 		forbiddenAncestors: null,
-		structure: [{ key: 'td', min: 1, max: null, order: null }],
+		structure: [{ key: 'th', min: 0, max: null, order: null }, { key: 'td', min: 0, max: null, order: null }],
 		description: 'Table row containing header (th) or data (td) cells.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
 	},
 	{
 		key: 'th',
-		allowedAttributes: TH_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'scope', 'colspan', 'rowspan', 'headers'],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -115,7 +109,7 @@ export const TABLE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'td',
-		allowedAttributes: TD_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES, 'colspan', 'rowspan', 'headers'],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,

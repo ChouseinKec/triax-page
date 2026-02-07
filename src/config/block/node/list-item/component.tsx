@@ -4,9 +4,9 @@ import React, { useCallback, memo } from 'react';
 import type { NodeComponentProps } from '@/core/block/node/types/definition';
 
 // Manager
-import { setBlockNodeSelectedNodeID } from '@/core/block/node/managers/commands';
+import { setBlockNodeSelectedNodeID, useBlockNodeElementKey } from '@/core/block/node/managers';
 import { setPanelOpenState } from '@/core/layout/panel/managers/commands/panel';
-import { getBlockAttributesRendered } from '@/core/block/attribute/managers';
+import { useBlockAttributesRendered } from '@/core/block/attribute/managers';
 import { useBlockStylesRendered } from '@/core/block/style/managers';
 
 // Components
@@ -19,10 +19,9 @@ import Placeholder from '@/shared/components/placeholder/block/component';
  * @param children - Child blocks to render inside this list item
  * @returns JSX element representing the list item block
  */
-const BlockListItemComponent: React.FC<NodeComponentProps> = ({ deviceKey, orientationKey, pseudoKey, isSelected, instance, children }) => {
-    const nodeID = instance.id;
-    const NodeElementKey = instance.elementKey as React.ElementType;
-    const nodeAttributes = getBlockAttributesRendered(nodeID);
+const BlockListItemComponent: React.FC<NodeComponentProps> = ({ nodeID, deviceKey, orientationKey, pseudoKey, isSelected, children }) => {
+    const NodeElementKey = useBlockNodeElementKey(nodeID) as React.ElementType;
+    const nodeAttributes = useBlockAttributesRendered(nodeID);
     const nodeStyles = useBlockStylesRendered(nodeID, deviceKey, orientationKey, pseudoKey);
 
     /**
@@ -58,7 +57,7 @@ const BlockListItemComponent: React.FC<NodeComponentProps> = ({ deviceKey, orien
             {/* Render child blocks or placeholder */}
             {React.Children.count(children) > 0 ? children : (
                 <Placeholder
-                    message="List item is empty"
+                    title="List item is empty"
                     actions={[{
                         label: "Add Block",
                         onClick: handleAddBlock

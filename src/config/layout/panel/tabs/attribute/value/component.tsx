@@ -5,13 +5,11 @@ import { memo, useCallback } from "react";
 import type { NodeAttributesValueProps } from "./types";
 
 // Managers
-import { useBlockAttribute, setBlockAttribute } from "@/core/block/attribute/managers";
+import { useBlockAttribute, setBlockAttribute, getBlockAttributeDefinition } from "@/core/block/attribute/managers";
 
 // Utilities
 import { devRender } from "@/shared/utilities/dev";
 
-// Registry
-import { getRegisteredAttribute } from "@/core/block/attribute/states/registry";
 
 // Styles
 import CSS from "./styles.module.scss";
@@ -29,15 +27,15 @@ import RadioSelect from "@/shared/components/select/radio/component";
  * @param propertyName - The HTML property key
  * @returns ReactElement - The rendered value editor UI for the property.
  */
-const BlockAttributeValue: React.FC<NodeAttributesValueProps> = ({ NodeID, attribute }) => {
-    const value = useBlockAttribute(NodeID, attribute) || "";
+const BlockAttributeValue: React.FC<NodeAttributesValueProps> = ({ nodeID, attribute }) => {
+    const value = useBlockAttribute(nodeID, attribute) || "";
 
     const handleChange = useCallback((newValue: string) => {
-        setBlockAttribute(NodeID, attribute, newValue);
-    }, [NodeID, attribute]
+        setBlockAttribute(nodeID, attribute, newValue);
+    }, [nodeID, attribute]
     );
 
-    const attributeDefinition = getRegisteredAttribute(attribute);
+    const attributeDefinition = getBlockAttributeDefinition(attribute);
     if (!attributeDefinition) return devRender.error(`[BlockAttributeValue] No attributeDefinition found for ${attribute}`, { attributeDefinition });
 
     const renderValue = () => {

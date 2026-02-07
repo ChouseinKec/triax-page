@@ -4,7 +4,7 @@ import type { NodeID } from '@/core/block/node/types/instance';
 import type { CSSProperties } from 'react';
 
 export type RenderAttributeRowProps = {
-    NodeID: NodeID;
+    nodeID: NodeID;
     attributeKey: AttributeKey;
     label: string | null;
     disabled?: boolean;

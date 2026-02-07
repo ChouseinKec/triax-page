@@ -3,7 +3,7 @@ import { useNodeStore } from '@/core/block/node/states/store';
 
 // Types
 import type { ElementKey } from '@/core/block/element/types';
-import type { NodeInstance, NodeIcon, NodeKey, NodeID, NodeData, NodeComponent, NodeCategory, NodeStyles, NodeAttributes, NodeDescription, NodeName, ActionDefinition } from '@/core/block/node/types';
+import type { NodeInstance, NodeIcon, NodeKey, NodeID, NodeData, NodeComponent, NodeCategory, NodeDescription, NodeName, ActionDefinition } from '@/core/block/node/types';
 
 // Helpers
 import { validateNodeID, pickNodeInstance, pickNodeStoreState, pickNodeData } from '@/core/block/node/helpers';
@@ -12,7 +12,7 @@ import { validateNodeID, pickNodeInstance, pickNodeStoreState, pickNodeData } fr
 import { ResultPipeline } from '@/shared/utilities/pipeline/result';
 
 // Managers
-import { getBlockNodeDefinitionActions, getBlockNodeDefinitionIcon, getBlockNodeDefinitionComponent, getBlockNodeDefinitionElementKeys, getBlockNodeDefinitionName, getBlockNodeDefinitionDescription, getBlockNodeDefinitionCategory, getBlockNodeDefinitionDefaultStyles, getBlockNodeDefinitionDefaultAttributes, getBlockNodeDefinitionDefaultData } from '@/core/block/node/managers/';
+import { getBlockNodeDefinitionActions, getBlockNodeDefinitionIcon, getBlockNodeDefinitionComponent, getBlockNodeDefinitionElementKeys, getBlockNodeDefinitionName, getBlockNodeDefinitionDescription, getBlockNodeDefinitionCategory, getBlockNodeDefinitionDefaultData } from '@/core/block/node/managers/';
 
 /**
  * Retrieves all node instances currently stored in the node store.
@@ -221,60 +221,6 @@ export function getBlockNodeCategory(sourceNodeID: NodeID): NodeCategory | undef
 	if (!validData) return undefined;
 
 	return getBlockNodeDefinitionCategory(validData.blockInstance.definitionKey);
-}
-
-/**
- * Retrieves the default styles of a specific node instance.
- *
- * This function accesses the node instance to obtain the definition key, then retrieves
- * the default styles from the node definition.
- *
- * @param sourceNodeID - The unique identifier of the node instance
- * @returns Readonly<NodeStyles> | undefined - The default styles of the node, or undefined if the instance is not found
- * @see {@link getBlockNodeDefinitionDefaultStyles} - The underlying definition query
- */
-export function getBlockNodeDefaultStyles(sourceNodeID: NodeID): Readonly<NodeStyles> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefaultStyles]')
-		.validate({
-			sourceNodeID: validateNodeID(sourceNodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return undefined;
-
-	return getBlockNodeDefinitionDefaultStyles(validData.blockInstance.definitionKey);
-}
-
-/**
- * Retrieves the default attributes of a specific node instance.
- *
- * This function accesses the node instance to obtain the definition key, then retrieves
- * the default attributes from the node definition.
- *
- * @param sourceNodeID - The unique identifier of the node instance
- * @returns Readonly<NodeAttributes> | undefined - The default attributes of the node, or undefined if the instance is not found
- * @see {@link getBlockNodeDefinitionDefaultAttributes} - The underlying definition query
- */
-export function getBlockNodeDefaultAttributes(sourceNodeID: NodeID): Readonly<NodeAttributes> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getBlockNodeDefaultAttributes]')
-		.validate({
-			sourceNodeID: validateNodeID(sourceNodeID),
-		})
-		.pick(() => ({
-			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
-		}))
-		.pick((data) => ({
-			blockInstance: pickNodeInstance(data.sourceNodeID, data.nodeStoreState.storedNodes),
-		}))
-		.execute();
-	if (!validData) return undefined;
-
-	return getBlockNodeDefinitionDefaultAttributes(validData.blockInstance.definitionKey);
 }
 
 /**

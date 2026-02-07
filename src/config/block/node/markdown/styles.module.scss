@@ -11,4 +11,30 @@
 	background: transparent;
 	border-bottom: 1px solid gray;
 	text-align: center;
+
+
+	width: 70%;
+}
+
+.Textarea {
+	outline: none;
+	border: none;
+	background: transparent;
+	resize: vertical;
+	min-height: 100px;
+	width: 100%;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.EditableSpan {
+	outline: none;
+	border: none;
+	background: transparent;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	min-width: 200px;
+	display: inline-block;
 }

@@ -11,7 +11,7 @@ import { pickSelectedNodeID, pickNodeStoreState } from '@/core/block/node/helper
 import { ResultPipeline } from '@/shared/utilities/pipeline';
 
 // Managers
-import { getBlockNodeDefaultStyles } from '@/core/block/node/managers/queries/node';
+import { getBlockStylesDefaults } from '@/core/block/style/managers/';
 
 /**
  * Retrieves the default styles of the currently selected node.
@@ -21,8 +21,8 @@ import { getBlockNodeDefaultStyles } from '@/core/block/node/managers/queries/no
  *
  * @returns Readonly<NodeStyles> | undefined - The default styles of the selected node, or undefined if no selection exists
  */
-export function getSelectedBlockStyleDefaults(): Readonly<NodeStyles> | undefined {
-	const validData = new ResultPipeline('[BlockQueries → getSelectedBlockStyleDefaults]')
+export function getSelectedBlockStylesDefaults(): Readonly<NodeStyles> | undefined {
+	const validData = new ResultPipeline('[BlockQueries → getSelectedBlockStylesDefaults]')
 		.pick(() => ({
 			blockStoreState: pickNodeStoreState(useNodeStore.getState()),
 		}))
@@ -32,5 +32,5 @@ export function getSelectedBlockStyleDefaults(): Readonly<NodeStyles> | undefine
 		.execute();
 	if (!validData || validData.selectedNodeID === 'html') return undefined;
 
-	return getBlockNodeDefaultStyles(validData.selectedNodeID);
+	return getBlockStylesDefaults(validData.selectedNodeID);
 }

@@ -1,33 +1,16 @@
 // Types
-import type { ElementDefinition } from '@/core/block/element/types';
+import type { ElementDefinition, ElementKey } from '@/core/block/element/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 
 // Shared
-import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT, FLOW_WITH_SUMMARY, SELECT_CONTENT} from './shared';
+import { BASE_GLOBAL_ATTRIBUTES, GENERAL_ARIA_ATTRIBUTES, TEXT_ONLY_ATTRIBUTES, PHRASING_CONTENT, FLOW_CONTENT } from './shared';
 
 const INTERACTIVE_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES];
-const TEXT_INTERACTIVE_ATTRIBUTES: AttributeKey[] = [...INTERACTIVE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES];
-
-const LINK_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'href', 'target', 'rel', 'download', 'referrerpolicy', 'type'];
-
-const BUTTON_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'disabled', 'name', 'value', 'form', 'formaction', 'formmethod'];
-
-const INPUT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'required', 'min', 'max', 'step', 'pattern', 'accept', 'checked', 'maxlength', 'minlength', 'autocomplete', 'autofocus', 'list', 'multiple', 'size', 'form'];
-
-const SELECT_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'required', 'multiple', 'disabled', 'size', 'form', 'autocomplete', 'autofocus'];
-
-const TEXTAREA_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'placeholder', 'required', 'disabled', 'readonly', 'maxlength', 'minlength', 'rows', 'cols', 'wrap', 'form', 'autocomplete', 'autofocus'];
-
-const LABEL_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'for', 'form'];
-
-const DETAILS_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'];
-
-const DIALOG_ATTRIBUTES: AttributeKey[] = [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'];
 
 export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	{
 		key: 'a',
-		allowedAttributes: LINK_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'href', 'target', 'rel', 'download', 'referrerpolicy', 'type'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
 		structure: null,
@@ -38,7 +21,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'button',
-		allowedAttributes: BUTTON_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'disabled', 'name', 'value', 'form', 'formaction', 'formmethod'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: ['a', 'button'],
 		structure: null,
@@ -49,7 +32,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'input',
-		allowedAttributes: INPUT_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'type', 'name', 'value', 'placeholder', 'disabled', 'readonly', 'required', 'min', 'max', 'step', 'pattern', 'accept', 'checked', 'maxlength', 'minlength', 'autocomplete', 'autofocus', 'list', 'multiple', 'size', 'form'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -60,8 +43,8 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'select',
-		allowedAttributes: SELECT_ATTRIBUTES,
-		allowedChildren: SELECT_CONTENT,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'required', 'multiple', 'disabled', 'size', 'form', 'autocomplete', 'autofocus'],
+		allowedChildren: ['option', 'optgroup'],
 		forbiddenAncestors: null,
 		structure: null,
 		description: 'Selection dropdown containing option and optgroup elements.',
@@ -71,7 +54,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'textarea',
-		allowedAttributes: TEXTAREA_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'name', 'placeholder', 'required', 'disabled', 'readonly', 'maxlength', 'minlength', 'rows', 'cols', 'wrap', 'form', 'autocomplete', 'autofocus'],
 		allowedChildren: [],
 		forbiddenAncestors: null,
 		structure: null,
@@ -82,7 +65,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'label',
-		allowedAttributes: LABEL_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'for', 'form'],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -93,8 +76,8 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'details',
-		allowedAttributes: DETAILS_ATTRIBUTES,
-		allowedChildren: FLOW_WITH_SUMMARY,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'],
+		allowedChildren: [...FLOW_CONTENT, 'summary'],
 		forbiddenAncestors: null,
 		structure: [{ key: 'summary', order: 0, min: 0, max: 1 }],
 		description: 'Disclosure widget for expandable content. Must include a summary element.',
@@ -104,7 +87,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'summary',
-		allowedAttributes: TEXT_INTERACTIVE_ATTRIBUTES,
+		allowedAttributes: [...INTERACTIVE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
 		structure: null,
@@ -115,7 +98,7 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 	},
 	{
 		key: 'dialog',
-		allowedAttributes: DIALOG_ATTRIBUTES,
+		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'],
 		allowedChildren: FLOW_CONTENT,
 		forbiddenAncestors: ['dialog'],
 		structure: null,
