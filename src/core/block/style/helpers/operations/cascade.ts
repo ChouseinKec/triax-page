@@ -1,103 +1,59 @@
 // Types
 import type { NodeStyles } from '@/core/block/node/types/definition';
-import type { StyleKey, StyleRecord, StyleValue, StyleDefinition, RegisteredStyles } from '@/core/block/style/types';
-import type { DeviceKey, PseudoKey, OrientationKey } from '@/core/layout/page/types';
+import type { StyleCascadePath, StyleKey, StyleRecord, StyleValue, StyleDefinition, RegisteredStyles } from '@/core/block/style/types';
 import type { OperateResult } from '@/shared/types/result';
 
 // Helpers
 import { resolveStyleLonghand } from '@/core/block/style/helpers/';
-import { collectBlockStyleKeys, generateCascadePaths, pickStyleLonghand, pickStyleDefinition } from '@/core/block/style/helpers';
+import { collectBlockStyleKeys, pickStyleLonghand, pickStyleDefinition } from '@/core/block/style/helpers';
 
 /**
- * Helper function to find a style value in a list of cascade paths.
- * Iterates through paths and returns the first non-empty value found.
+ * Resolves a single style value using the pre-computed cascade order.
  *
- * @param NodeStyles - The block's style definitions
- * @param styleKey - The style property to look for
- * @param paths - Array of [device, orientation, pseudo] paths to check
+ * This function iterates through an ordered list of cascade paths (device/orientation/pseudo combinations)
+ * and returns the first non-empty style value found. The cascade order represents CSS specificity,
+ * prioritizing device-specific and pseudo-class-specific styles before falling back to defaults.
+ *
+ * The function enables efficient style resolution by accepting pre-computed paths in priority order,
+ * eliminating the need to recalculate cascade order for each property lookup.
+ *
+ * @param styleKey - The CSS style property key to resolve (e.g., 'backgroundColor', 'width')
+ * @param nodeStyles - The block's complete style definition object containing all style values
+ * @param styleCascadePaths - Pre-computed cascade paths in priority order, each path is a [device, orientation, pseudo] tuple
+ * @returns Operation result containing the resolved style value, or empty string if not found
  */
-function findValueInPaths(NodeStyles: NodeStyles, styleKey: StyleKey, paths: Array<[DeviceKey, OrientationKey, PseudoKey]>): string {
-	for (const [device, orientation, pseudo] of paths) {
-		const candidate = NodeStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
+function cascadeStyleLonghandValue(styleKey: StyleKey, nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
+	// Find style value in cascade paths - returns first non-empty match
+	for (const [device, orientation, pseudo] of styleCascadePaths) {
+		const candidate = nodeStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
 		if (candidate != null && candidate !== '') {
-			return candidate;
+			return { success: true, data: candidate };
 		}
 	}
-	return '';
+	return { success: true, data: '' };
 }
 
 /**
- * Resolves a single style value using the custom cascade order.
- * Checks all combinations of device, orientation, and pseudo, falling back to defaults as needed.
- * For pseudo-classes, first checks pseudo-specific paths, then base paths.
+ * Resolves and merges longhand values for a shorthand CSS property using cascade logic.
  *
- * @param NodeStyles - The block's complete style definition object
- * @param styleKey - The style property key to resolve
- * @param deviceKey - Current device context
- * @param orientationKey - Current orientation context
- * @param pseudoKey - Current pseudo context
- * @param defaultDeviceKey - Default device key
- * @param defaultOrientationKey - Default orientation key
- * @param defaultPseudoKey - Default pseudo key
- */
-function cascadeStyleLonghandValue(
-	styleKey: StyleKey,
-	NodeStyles: NodeStyles,
-
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
-
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
-): OperateResult<StyleValue> {
-	let value: string = '';
-
-	// For pseudo-classes, prioritize pseudo-specific cascading before base
-	if (pseudoKey !== defaultPseudoKey) {
-		const pseudoPaths = generateCascadePaths(deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
-		value = findValueInPaths(NodeStyles, styleKey, pseudoPaths);
-		if (value !== '') return { success: true, data: value };
-	}
-
-	// Check base cascading (or only base for base pseudo)
-	const basePaths = generateCascadePaths(deviceKey, orientationKey, defaultPseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
-	value = findValueInPaths(NodeStyles, styleKey, basePaths);
-
-	return { success: true, data: value };
-}
-
-/**
- * Resolves and merges longhand values for a shorthand style key using cascade logic.
- * Handles shorthand properties by resolving each constituent longhand property.
+ * This function handles CSS shorthand properties (e.g., 'padding', 'border') by resolving each
+ * constituent longhand property (e.g., 'paddingTop', 'paddingRight') using the same cascade paths,
+ * then merging them back into a shorthand value. This enables consistent cascade behavior for both
+ * simple properties and complex shorthand combinations.
  *
- * @param styleKeys - Array of longhand style keys that make up the shorthand
- * @param NodeStyles - The block's style definitions
- * @param deviceKey - Current device context
- * @param orientationKey - Current orientation context
- * @param pseudoKey - Current pseudo context
- * @param defaultDeviceKey - Default device key
- * @param defaultOrientationKey - Default orientation key
- * @param defaultPseudoKey - Default pseudo key
+ * @param styleKeys - Array of longhand style keys that compose the shorthand property
+ * @param nodeStyles - The block's style definitions
+ * @param styleCascadePaths - Pre-computed cascade paths in priority order
+ * @returns Operation result containing the merged shorthand value, or error if resolution fails
+ * @see {@link cascadeStyleLonghandValue} - The function that resolves individual longhand values
+ * @see {@link resolveStyleLonghand} - The function that merges longhand values into shorthand
  */
-function cascadeStyleShorthandValue(
-	styleKeys: StyleKey[],
-	NodeStyles: NodeStyles,
-
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
-
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
-): OperateResult<StyleValue> {
+function cascadeStyleShorthandValue(styleKeys: StyleKey[], nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
 	const values: string[] = [];
 
 	// Resolve each longhand property in the shorthand
 	for (const styleKey of styleKeys) {
-		const longhandResult = cascadeStyleLonghandValue(styleKey, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+		const longhandResult = cascadeStyleLonghandValue(styleKey, nodeStyles, styleCascadePaths);
 		if (!longhandResult.success) return { success: false, error: longhandResult.error };
 		values.push(longhandResult.data);
 	}
@@ -107,32 +63,24 @@ function cascadeStyleShorthandValue(
 }
 
 /**
- * Collects all style keys and produces a cascaded map.
- * Gathers all possible style keys from the block styles and resolves each one.
+ * Collects all style keys from a block and produces a completely cascaded style map.
  *
- * @param NodeStyles - The block's complete style definition object
- * @param styleDefinitions - Registry of style definitions
- * @param deviceKey - Current device context
- * @param orientationKey - Current orientation context
- * @param pseudoKey - Current pseudo context
- * @param defaultDeviceKey - Default device key
- * @param defaultOrientationKey - Default orientation key
- * @param defaultPseudoKey - Default pseudo key
+ * This function is the main orchestrator for style cascading. It gathers all unique style keys
+ * present in the block's styles, then resolves each one using the pre-computed cascade paths.
+ * For each style key, it determines whether it's a shorthand or longhand property and resolves
+ * accordingly, building a complete resolved style record that represents the final computed styles
+ * for the block in the current device/orientation/pseudo context.
+ *
+ * @param nodeStyles - The block's complete style definition object containing all unresolved styles
+ * @param styleDefinitions - Registry of all available style definitions and their properties
+ * @param styleCascadePaths - Pre-computed cascade paths in priority order
+ * @returns Operation result containing the fully cascaded style record, or error if resolution fails
+ * @see {@link cascadeNodeStyle} - The function that resolves individual style keys
+ * @see {@link collectBlockStyleKeys} - The function that gathers unique style keys from block styles
  */
-export function cascadeNodeStyles(
-	NodeStyles: NodeStyles,
-	styleDefinitions: RegisteredStyles,
-
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
-
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
-): OperateResult<StyleRecord> {
+export function cascadeNodeStyles(nodeStyles: NodeStyles, styleDefinitions: RegisteredStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleRecord> {
 	// Collect all unique style keys present in the block styles
-	const keyResult = collectBlockStyleKeys(NodeStyles);
+	const keyResult = collectBlockStyleKeys(nodeStyles);
 	if (!keyResult.success) return { success: false, error: keyResult.error };
 
 	const resolved: StyleRecord = {};
@@ -143,8 +91,8 @@ export function cascadeNodeStyles(
 		const styleDefinition = pickStyleDefinition(styleKey, styleDefinitions);
 		if (!styleDefinition.success) return { success: false, error: `No style definition found for key '${styleKey}'.` };
 
-		// Cascade the style value
-		const cascadeResult = cascadeNodeStyle(styleKey, NodeStyles, styleDefinition.data, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+		// Cascade the style value with pre-computed styleCascadePaths
+		const cascadeResult = cascadeNodeStyle(styleKey, nodeStyles, styleDefinition.data, styleCascadePaths);
 		if (!cascadeResult.success) return cascadeResult;
 		resolved[styleKey] = cascadeResult.data;
 	}
@@ -154,37 +102,29 @@ export function cascadeNodeStyles(
 
 /**
  * Resolves a style value that may be shorthand, using cascade and shorthand merging logic.
- * Determines if the style is shorthand and handles accordingly.
  *
- * @param styleKey - The style key to resolve (shorthand or longhand)
- * @param NodeStyles - The block's style definitions
- * @param styleDefinition - The definition of the style property
- * @param deviceKey - Current device context
- * @param orientationKey - Current orientation context
- * @param pseudoKey - Current pseudo context
- * @param defaultDeviceKey - Default device key
- * @param defaultOrientationKey - Default orientation key
- * @param defaultPseudoKey - Default pseudo key
+ * This function acts as a dispatcher for style resolution. It first determines whether the requested
+ * style key represents a shorthand property (like 'padding') or a longhand property (like 'paddingTop').
+ * If shorthand, it delegates to shorthand resolution which resolves all constituent longhand properties
+ * and merges them. If longhand, it delegates directly to longhand resolution. This unified approach
+ * ensures consistent cascade behavior regardless of whether the property is shorthand or longhand.
+ *
+ * @param styleKey - The CSS style key to resolve (shorthand or longhand, e.g., 'padding' or 'paddingTop')
+ * @param nodeStyles - The block's style definitions containing all style values
+ * @param styleDefinition - The definition of the style property including metadata and constraints
+ * @param styleCascadePaths - Pre-computed cascade paths in priority order for style resolution
+ * @returns Operation result containing the resolved style value, or error if resolution fails
+ * @see {@link cascadeStyleShorthandValue} - Called when style is a shorthand property
+ * @see {@link cascadeStyleLonghandValue} - Called when style is a longhand property
+ * @see {@link pickStyleLonghand} - The function that determines if a style is shorthand
  */
-export function cascadeNodeStyle(
-	styleKey: StyleKey,
-	NodeStyles: NodeStyles,
-	styleDefinition: StyleDefinition,
-
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
-
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
-): OperateResult<StyleValue> {
+export function cascadeNodeStyle(styleKey: StyleKey, nodeStyles: NodeStyles, styleDefinition: StyleDefinition, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
 	// Check if this is a shorthand property
 	const longhandResult = pickStyleLonghand(styleDefinition);
 
 	// If shorthand, resolve and merge the longhand properties
-	if (longhandResult.success === true) return cascadeStyleShorthandValue(longhandResult.data, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+	if (longhandResult.success === true) return cascadeStyleShorthandValue(longhandResult.data, nodeStyles, styleCascadePaths);
 
 	// Otherwise, resolve as a single longhand property
-	return cascadeStyleLonghandValue(styleKey, NodeStyles, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+	return cascadeStyleLonghandValue(styleKey, nodeStyles, styleCascadePaths);
 }

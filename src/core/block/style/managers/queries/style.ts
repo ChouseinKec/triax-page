@@ -11,11 +11,11 @@ import { useNodeStore } from '@/core/block/node/states/store';
 
 // Helpers
 import { validateNodeID, pickNodeStoreState, pickNodeInstance } from '@/core/block/node/helpers';
-import { cascadeNodeStyle, pickNodeStyles, pickStyleDefinition, renderNodeStyles } from '@/core/block/style/helpers';
+import { generateCascadePaths, cascadeNodeStyle, pickNodeStyles, pickStyleDefinition, renderNodeStyles } from '@/core/block/style/helpers';
 import { validateStyleKey } from '@/core/block/style/helpers';
 
 // Managers
-import { getPseudoDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
+import { getPseudoDefinitions, getDeviceDefinitions, getDefaultOrientationKey, getDefaultPseudoKey, getDefaultDeviceKey } from '@/core/layout/page/managers/queries';
 import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/core/layout/page/helpers';
 import { getBlockElementIsStyleEditable } from '@/core/block/element/managers/queries/definition';
 import { getBlockNodeDefinitionDefaultStyles } from '@/core/block/node/managers/';
@@ -38,11 +38,16 @@ import { getRegisteredStyles } from '@/core/block/style/state/registry';
  * @returns The resolved style value or undefined if not found
  */
 export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): StyleValue | undefined {
+	const deviceDefinitions = getDeviceDefinitions();
+
 	// Use a pipeline to safely pick required data and perform operations
-	const results = new ResultPipeline('[BlockQueries → getBlockStyle]')
+	const validData = new ResultPipeline('[BlockQueries → getBlockStyle]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 			styleKey: validateStyleKey(styleKey),
+			deviceKey: validateDeviceKey(deviceKey),
+			orientationKey: validateOrientationKey(orientationKey),
+			pseudoKey: validatePseudoKey(pseudoKey),
 		})
 		.pick(() => ({
 			nodeStoreState: pickNodeStoreState(useNodeStore.getState()),
@@ -55,13 +60,16 @@ export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKe
 			nodeStyles: pickNodeStyles(data.blockInstance),
 		}))
 		.operate((data) => ({
-			styleValue: cascadeNodeStyle(styleKey, data.nodeStyles, data.styleDefinition, deviceKey, orientationKey, pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
+			cascadePaths: generateCascadePaths(data.deviceKey, data.orientationKey, data.pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey(), deviceDefinitions),
+		}))
+		.operate((data) => ({
+			styleValue: cascadeNodeStyle(styleKey, data.nodeStyles, data.styleDefinition, data.cascadePaths),
 		}))
 		.execute();
-	if (!results) return undefined;
+	if (!validData) return undefined;
 
 	// Extract and return the final resolved style value
-	return results.styleValue;
+	return validData.styleValue;
 }
 
 /**
@@ -79,7 +87,7 @@ export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKe
  */
 export function getBlockStylesRendered(sourceNodeID: NodeID, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): string | undefined {
 	// Use pipeline to safely retrieve and process data
-	const results = new ResultPipeline('[BlockQueries → getBlockStylesRendered]')
+	const validData = new ResultPipeline('[BlockQueries → getBlockStylesRendered]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 			deviceKey: validateDeviceKey(deviceKey),
@@ -99,10 +107,10 @@ export function getBlockStylesRendered(sourceNodeID: NodeID, deviceKey: DeviceKe
 			renderedStyles: renderNodeStyles(data.NodeStyles, data.sourceNodeID, getRegisteredStyles(), getPseudoDefinitions(), data.deviceKey, data.orientationKey, data.pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey()),
 		}))
 		.execute();
-	if (!results) return undefined;
+	if (!validData) return undefined;
 
 	// Return the rendered CSS string
-	return results.renderedStyles;
+	return validData.renderedStyles;
 }
 
 /**

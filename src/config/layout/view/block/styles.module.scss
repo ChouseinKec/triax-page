@@ -17,6 +17,7 @@
 	display: flex;
 	flex-direction: column;
 	padding: var(--size-sm);
+	overflow: hidden;
 	&[data-is-selected='true'] {
 		outline: 3px solid var(--theme-color-secondary) !important;
 		outline-offset: -3px;
@@ -24,6 +25,10 @@
 
 	&[data-is-selected='false'] {
 		filter: brightness(0.8);
+	}
+
+	> [class='block-html'] {
+		height: calc(100% - 25px) !important;
 	}
 
 	// &[data-is-selected='true'] {
@@ -37,7 +42,8 @@
 
 	.Header {
 		width: 100%;
-		padding: var(--size-sm);
+		height: 25px;
+		padding: 0 var(--size-sm);
 
 		display: flex;
 		flex-direction: row;

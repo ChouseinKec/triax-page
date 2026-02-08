@@ -3,10 +3,13 @@ import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeStyles } from '@/core/block/node/types/definition';
 import type { OperateResult } from '@/shared/types/result';
 import type { RegisteredStyles } from '@/core/block/style/types';
-import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition } from '@/core/layout/page/types';
+import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition, DeviceDefinition } from '@/core/layout/page/types';
 
 // Helpers
-import { cascadeNodeStyles, generateCSSSelector, generateCSSRule } from '@/core/block/style/helpers/';
+import { cascadeNodeStyles, generateCSSSelector, generateCSSRule, generateCascadePaths } from '@/core/block/style/helpers/';
+
+// Managers
+import { getDeviceDefinitions } from '@/core/layout/page/managers/queries';
 
 /**
  * Renders CSS rules for all pseudo-classes for a block.
@@ -25,42 +28,42 @@ import { cascadeNodeStyles, generateCSSSelector, generateCSSRule } from '@/core/
  * @returns Operation result with the combined CSS string for all pseudos
  */
 function renderNodeStylesAllPseudos(
-	styles: NodeStyles,
-	NodeID: NodeID,
-	styleDefinitions: RegisteredStyles,
-	pseudoDefinitions: PseudoDefinition[],
+    styles: NodeStyles,
+    nodeID: NodeID,
+    styleDefinitions: RegisteredStyles,
+    pseudoDefinitions: PseudoDefinition[],
 
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
+    deviceKey: DeviceKey,
+    orientationKey: OrientationKey,
+    pseudoKey: PseudoKey,
 
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
+    defaultDeviceKey: DeviceKey,
+    defaultOrientationKey: OrientationKey,
+    defaultPseudoKey: PseudoKey,
 ): OperateResult<string> {
-	let css = '';
+    let css = '';
 
-	// Loop through each registered pseudo-class definition
-	for (const pseudo of pseudoDefinitions) {
-		// Render styles for the current pseudo and append to the CSS string
-		const result = renderNodeStylesSinglePseudo(
-			styles,
-			NodeID,
-			styleDefinitions,
-			deviceKey,
-			orientationKey,
-			pseudo.key, // Use the specific pseudo key
-			defaultDeviceKey,
-			defaultOrientationKey,
-			defaultPseudoKey,
-			true, // Include pseudo-selector in CSS selector
-		);
-		if (!result.success) return result;
-		css += result.data;
-	}
+    // Loop through each registered pseudo-class definition
+    for (const pseudo of pseudoDefinitions) {
+        // Render styles for the current pseudo and append to the CSS string
+        const result = renderNodeStylesSinglePseudo(
+            styles,
+            nodeID,
+            styleDefinitions,
+            deviceKey,
+            orientationKey,
+            pseudo.key, // Use the specific pseudo key
+            defaultDeviceKey,
+            defaultOrientationKey,
+            defaultPseudoKey,
+            true, // Include pseudo-selector in CSS selector
+        );
+        if (!result.success) return result;
+        css += result.data;
+    }
 
-	// Return the combined CSS string for all pseudo-classes
-	return { success: true, data: css };
+    // Return the combined CSS string for all pseudo-classes
+    return { success: true, data: css };
 }
 
 /**
@@ -79,37 +82,46 @@ function renderNodeStylesAllPseudos(
  * @param includePseudoInSelector - Whether to include the pseudo-selector in the CSS selector
  */
 function renderNodeStylesSinglePseudo(
-	styles: NodeStyles,
-	NodeID: NodeID,
-	styleDefinitions: RegisteredStyles,
+    styles: NodeStyles,
+    nodeID: NodeID,
+    styleDefinitions: RegisteredStyles,
 
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
+    deviceKey: DeviceKey,
+    orientationKey: OrientationKey,
+    pseudoKey: PseudoKey,
 
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
+    defaultDeviceKey: DeviceKey,
+    defaultOrientationKey: OrientationKey,
+    defaultPseudoKey: PseudoKey,
 
-	includePseudoInSelector: boolean = true,
+    includePseudoInSelector: boolean = true,
 ): OperateResult<string> {
-	// Cascade styles for the specified pseudo, resolving all properties
-	const cssStylesRes = cascadeNodeStyles(styles, styleDefinitions, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
-	if (!cssStylesRes.success) return { success: false, error: cssStylesRes.error };
+    // Pre-compute cascade paths with device category fallback
+    const pseudoPathsRes = generateCascadePaths(deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey, getDeviceDefinitions());
+    if (!pseudoPathsRes.success) return { success: false, error: pseudoPathsRes.error };
 
-	// Determine the pseudo key for the selector (use default if not including pseudo)
-	const selectorPseudoKey = includePseudoInSelector ? pseudoKey : defaultPseudoKey;
+    const basePathsRes = generateCascadePaths(deviceKey, orientationKey, defaultPseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey, getDeviceDefinitions());
+    if (!basePathsRes.success) return { success: false, error: basePathsRes.error };
 
-	// Generate the CSS selector string
-	const cssSelectorRes = generateCSSSelector(NodeID, selectorPseudoKey, deviceKey, defaultPseudoKey);
-	if (!cssSelectorRes.success) return { success: false, error: cssSelectorRes.error };
+    const cascadePaths = pseudoKey === defaultPseudoKey ? basePathsRes.data : [...pseudoPathsRes.data, ...basePathsRes.data];
 
-	// Generate the complete CSS rule
-	const cssRuleRes = generateCSSRule(cssSelectorRes.data, cssStylesRes.data);
-	if (!cssRuleRes.success) return { success: false, error: cssRuleRes.error };
+    // Cascade styles for the specified pseudo, resolving all properties
+    const cssStylesRes = cascadeNodeStyles(styles, styleDefinitions, cascadePaths);
+    if (!cssStylesRes.success) return { success: false, error: cssStylesRes.error };
 
-	// Return the generated CSS rule
-	return { success: true, data: cssRuleRes.data };
+    // Determine the pseudo key for the selector (use default if not including pseudo)
+    const selectorPseudoKey = includePseudoInSelector ? pseudoKey : defaultPseudoKey;
+
+    // Generate the CSS selector string
+    const cssSelectorRes = generateCSSSelector(nodeID, selectorPseudoKey, deviceKey, defaultPseudoKey);
+    if (!cssSelectorRes.success) return { success: false, error: cssSelectorRes.error };
+
+    // Generate the complete CSS rule
+    const cssRuleRes = generateCSSRule(cssSelectorRes.data, cssStylesRes.data);
+    if (!cssRuleRes.success) return { success: false, error: cssRuleRes.error };
+
+    // Return the generated CSS rule
+    return { success: true, data: cssRuleRes.data };
 }
 
 /**
@@ -129,33 +141,33 @@ function renderNodeStylesSinglePseudo(
  * @param defaultPseudoKey - Default pseudo key
  */
 export function renderNodeStyles(
-	styles: NodeStyles,
-	NodeID: NodeID,
-	styleDefinitions: RegisteredStyles,
-	pseudoDefinitions: PseudoDefinition[],
+    styles: NodeStyles,
+    nodeID: NodeID,
+    styleDefinitions: RegisteredStyles,
+    pseudoDefinitions: PseudoDefinition[],
 
-	deviceKey: DeviceKey,
-	orientationKey: OrientationKey,
-	pseudoKey: PseudoKey,
+    deviceKey: DeviceKey,
+    orientationKey: OrientationKey,
+    pseudoKey: PseudoKey,
 
-	defaultDeviceKey: DeviceKey,
-	defaultOrientationKey: OrientationKey,
-	defaultPseudoKey: PseudoKey,
+    defaultDeviceKey: DeviceKey,
+    defaultOrientationKey: OrientationKey,
+    defaultPseudoKey: PseudoKey,
 ): OperateResult<string> {
-	// If pseudo is 'all', render styles for all registered pseudo-classes
-	if (pseudoKey === defaultPseudoKey) return renderNodeStylesAllPseudos(styles, NodeID, styleDefinitions, pseudoDefinitions, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
+    // If pseudo is 'all', render styles for all registered pseudo-classes
+    if (pseudoKey === defaultPseudoKey) return renderNodeStylesAllPseudos(styles, nodeID, styleDefinitions, pseudoDefinitions, deviceKey, orientationKey, pseudoKey, defaultDeviceKey, defaultOrientationKey, defaultPseudoKey);
 
-	// Otherwise, render styles for the selected pseudo only (for preview)
-	return renderNodeStylesSinglePseudo(
-		styles,
-		NodeID,
-		styleDefinitions,
-		deviceKey,
-		orientationKey,
-		pseudoKey,
-		defaultDeviceKey,
-		defaultOrientationKey,
-		defaultPseudoKey,
-		false, // Do not include pseudo in selector for previews
-	);
+    // Otherwise, render styles for the selected pseudo only (for preview)
+    return renderNodeStylesSinglePseudo(
+        styles,
+        nodeID,
+        styleDefinitions,
+        deviceKey,
+        orientationKey,
+        pseudoKey,
+        defaultDeviceKey,
+        defaultOrientationKey,
+        defaultPseudoKey,
+        false, // Do not include pseudo in selector for previews
+    );
 }

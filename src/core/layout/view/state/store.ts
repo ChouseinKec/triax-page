@@ -25,7 +25,7 @@ export function createViewEditorStore() {
 					},
 				},
 				block: {
-					activeDeviceIDs: ['default', 'mobile-sm', 'mobile-lg', 'tablet-sm'],
+					activeDeviceIDs: ['default', 'mobile-default', 'tablet-default'],
 				},
 			},
 		};

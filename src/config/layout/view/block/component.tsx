@@ -65,9 +65,27 @@ const ViewBlockComponent: React.FC<ViewComponentProps> = ({ actionContainerRef }
 
             result[category].push(deviceKey);
         });
+
+        // Sort devices within each category: "-default" first, then by width descending
+        Object.keys(result).forEach(category => {
+            result[category].sort((a, b) => {
+                const aIsDefault = a.endsWith('-default');
+                const bIsDefault = b.endsWith('-default');
+
+                // If one is default and the other isn't, default comes first
+                if (aIsDefault && !bIsDefault) return -1;
+                if (!aIsDefault && bIsDefault) return 1;
+
+                // If both are default or both aren't, sort by width descending
+                const widthA = allDevices.find(d => d.key === a)?.template?.width || 0;
+                const widthB = allDevices.find(d => d.key === b)?.template?.width || 0;
+                return widthB - widthA;
+            });
+        });
+
         return result;
     },
-        [sortedActiveDeviceIDs]
+        [sortedActiveDeviceIDs, allDevices]
     );
 
     // Sort categories with 'default' first, then by minimum width

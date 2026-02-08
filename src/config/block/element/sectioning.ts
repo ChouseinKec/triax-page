@@ -86,15 +86,5 @@ export const SECTIONING_DEFINITIONS: ElementDefinition[] = [
 		isAttributeEditable: true,
 		
 	},
-	{
-		key: 'hgroup',
-		allowedAttributes: SECTIONING_ATTRIBUTES,
-		allowedChildren: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
-		forbiddenAncestors: null,
-		structure: null,
-		description: 'Groups a set of h1–h6 headings so they are treated as a single composite heading.',
-		isStyleEditable: true,
-		isAttributeEditable: true,
-		
-	},
+
 ];

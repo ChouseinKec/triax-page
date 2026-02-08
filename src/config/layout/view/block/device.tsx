@@ -92,7 +92,7 @@ const Device: React.FC<DeviceProps> = ({ deviceKey }) => {
 
 
     return (
-        <div className={`${CSS.Device} device-${deviceKey}`} data-is-selected={isDeviceSelected} style={{ width: `${dimensions.width}px`, height: `${dimensions.height}px` }} onClickCapture={handleClick}>
+        <div className={`${CSS.Device} device-${deviceKey}`} data-is-selected={isDeviceSelected} style={{ width: `${dimensions.width}px`, height: `${dimensions.height + 25}px` }} onClickCapture={handleClick}>
 
             <div className={CSS.Header}>
                 <span className={CSS.Title}>{`${deviceKey} (${dimensions.width}x${dimensions.height})`}</span>

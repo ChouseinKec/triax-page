@@ -11,12 +11,12 @@ import { ResultPipeline } from '@/shared/utilities/pipeline';
 import { devLog } from '@/shared/utilities/dev';
 
 // Helpers
-import { cascadeNodeStyle, updateBlockStyle, pickNodeStyles, pickStyleDefinition } from '@/core/block/style/helpers';
+import { cascadeNodeStyle, updateBlockStyle, pickNodeStyles, pickStyleDefinition, generateCascadePaths } from '@/core/block/style/helpers';
 import { validateStyleKey, validateStyleValue } from '@/core/block/style/helpers';
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
 
 // Managers
-import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey, getSelectedDeviceKey, getSelectedOrientationKey, getSelectedPseudoKey } from '@/core/layout/page/managers/queries';
+import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey, getSelectedDeviceKey, getSelectedOrientationKey, getSelectedPseudoKey, getDeviceDefinitions } from '@/core/layout/page/managers/queries';
 
 // Registry
 import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } from '@/core/block/style/state/registry';
@@ -105,20 +105,35 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 			selectedOrientationKey: { success: true, data: usePageStore.getState().selected.orientationKey },
 			selectedPseudoKey: { success: true, data: usePageStore.getState().selected.pseudoKey },
 		}))
-		.operate((data) => ({
-			styleValue: cascadeNodeStyle(
-				//
-				data.styleKey,
-				data.nodeStyles,
-				data.styleDefinition,
+		.operate((data) => {
+			const pseudoPathsRes = generateCascadePaths(
 				data.selectedDeviceKey,
 				data.selectedOrientationKey,
 				data.selectedPseudoKey,
 				getDefaultDeviceKey(),
 				getDefaultOrientationKey(),
 				getDefaultPseudoKey(),
-			),
-		}))
+				getDeviceDefinitions(),
+			);
+			if (!pseudoPathsRes.success) return { styleValue: pseudoPathsRes };
+
+			const basePathsRes = generateCascadePaths(
+				data.selectedDeviceKey,
+				data.selectedOrientationKey,
+				getDefaultPseudoKey(),
+				getDefaultDeviceKey(),
+				getDefaultOrientationKey(),
+				getDefaultPseudoKey(),
+				getDeviceDefinitions(),
+			);
+			if (!basePathsRes.success) return { styleValue: basePathsRes };
+
+			const cascadePaths = data.selectedPseudoKey === getDefaultPseudoKey() ? basePathsRes.data : [...pseudoPathsRes.data, ...basePathsRes.data];
+
+			return {
+				styleValue: cascadeNodeStyle(data.styleKey, data.nodeStyles, data.styleDefinition, cascadePaths),
+			};
+		})
 		.execute();
 	if (!results) return;
 

@@ -200,10 +200,10 @@ class ActionRegistry {
 // Create singleton instance
 const deviceRegistry = new DeviceRegistry();
 export const registerDevice = (deviceDefinition: DeviceDefinition): void => {
-  const result = deviceRegistry.registerDevice(deviceDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Device]   ❌ Failed: ${deviceDefinition.key} - ${result.message}`);
-  }
+	const result = deviceRegistry.registerDevice(deviceDefinition);
+	if (!result.valid) {
+		devLog.error(`[Registry → Device]   ❌ Failed: ${deviceDefinition.key} - ${result.message}`);
+	}
 };
 export const registerDevices = (deviceDefinitions: DeviceDefinition[]) => deviceDefinitions.forEach(registerDevice);
 export const getRegisteredDevices = () => deviceRegistry.getRegisteredDevices();
@@ -212,10 +212,10 @@ export const getDefaultDeviceKey = () => deviceRegistry.getDefaultDeviceKey();
 
 const orientationRegistry = new OrientationRegistry();
 export const registerOrientation = (orientationDefinition: OrientationDefinition): void => {
-  const result = orientationRegistry.registerOrientation(orientationDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Orientation] ❌ Failed: ${orientationDefinition.key} - ${result.message}`);
-  }
+	const result = orientationRegistry.registerOrientation(orientationDefinition);
+	if (!result.valid) {
+		devLog.error(`[Registry → Orientation] ❌ Failed: ${orientationDefinition.key} - ${result.message}`);
+	}
 };
 export const registerOrientations = (orientationDefinitions: OrientationDefinition[]) => orientationDefinitions.forEach(registerOrientation);
 export const getRegisteredOrientations = () => orientationRegistry.getRegisteredOrientations();
@@ -224,10 +224,10 @@ export const getDefaultOrientationKey = () => orientationRegistry.getDefaultOrie
 
 const pseudoRegistry = new PseudoRegistry();
 export const registerPseudo = (pseudoDefinition: PseudoDefinition): void => {
-  const result = pseudoRegistry.registerPseudo(pseudoDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Pseudo]   ❌ Failed: ${pseudoDefinition.key} - ${result.message}`);
-  }
+	const result = pseudoRegistry.registerPseudo(pseudoDefinition);
+	if (!result.valid) {
+		devLog.error(`[Registry → Pseudo]   ❌ Failed: ${pseudoDefinition.key} - ${result.message}`);
+	}
 };
 export const registerPseudos = (pseudoDefinitions: PseudoDefinition[]) => pseudoDefinitions.forEach(registerPseudo);
 export const getRegisteredPseudos = () => pseudoRegistry.getRegisteredPseudos();
@@ -236,10 +236,10 @@ export const getDefaultPseudoKey = () => pseudoRegistry.getDefaultPseudoKey();
 
 const actionRegistry = new ActionRegistry();
 export const registerAction = (actionDefinition: ActionDefinition): void => {
-  const result = actionRegistry.registerAction(actionDefinition);
-  if (!result.valid) {
-    devLog.error(`[Registry → Action]   ❌ Failed: ${actionDefinition.id} - ${result.message}`);
-  }
+	const result = actionRegistry.registerAction(actionDefinition);
+	if (!result.valid) {
+		devLog.error(`[Registry → Action]   ❌ Failed: ${actionDefinition.id} - ${result.message}`);
+	}
 };
 export const registerActions = (actionDefinitions: ActionDefinition[]) => actionDefinitions.forEach(registerAction);
 export const getRegisteredActions = () => actionRegistry.getRegisteredActions();

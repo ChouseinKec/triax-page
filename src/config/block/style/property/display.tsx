@@ -170,6 +170,21 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 		syntax: '<row-gap> <column-gap>',
 	},
 	{
+		key: 'flex-grow',
+		description: 'Defines how much a flex item will grow relative to other flex items.',
+		syntax: '<number>',
+	},
+	{
+		key: 'flex-shrink',
+		description: 'Defines how much a flex item will shrink relative to other flex items.',
+		syntax: '<number>',
+	},
+	{
+		key: 'flex-basis',
+		description: 'Defines the default size of a flex item before the remaining space is distributed.',
+		syntax: '<length> | <percentage> | auto',
+	},
+	{
 		key: 'justify-items',
 		description: 'Aligns items along the main axis in a single line or grid cell.',
 		syntax: 'flex-start | flex-end | center | baseline | stretch',

@@ -17,7 +17,6 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Hyperlink anchor for navigation or actions. Should not wrap interactive controls.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'button',
@@ -28,7 +27,6 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Button control for actions and form submission. Cannot be nested within interactive controls.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'input',
@@ -39,7 +37,6 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Form input control (void element). Type attribute defines behavior.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'select',
@@ -50,7 +47,6 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Selection dropdown containing option and optgroup elements.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'textarea',
@@ -61,7 +57,6 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Multi-line text input containing raw text only.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'label',
@@ -72,29 +67,26 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Caption for a form control. Associates to a control by for attribute or nesting.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'details',
 		allowedAttributes: [...BASE_GLOBAL_ATTRIBUTES, ...GENERAL_ARIA_ATTRIBUTES, 'open'],
 		allowedChildren: [...FLOW_CONTENT, 'summary'],
 		forbiddenAncestors: null,
-		structure: [{ key: 'summary', order: 0, min: 0, max: 1 }],
+		structure: [{ key: 'summary', order: 0, min: 1, max: 1 }],
 		description: 'Disclosure widget for expandable content. Must include a summary element.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'summary',
 		allowedAttributes: [...INTERACTIVE_ATTRIBUTES, ...TEXT_ONLY_ATTRIBUTES],
 		allowedChildren: PHRASING_CONTENT,
 		forbiddenAncestors: null,
-		structure: null,
+		structure: [{ key: 'span', order: null, min: 1, max: null }],
 		description: 'Caption for the details control.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 	{
 		key: 'dialog',
@@ -105,6 +97,5 @@ export const INTERACTIVE_DEFINITIONS: ElementDefinition[] = [
 		description: 'Dialog box or modal window for interactive content.',
 		isStyleEditable: true,
 		isAttributeEditable: true,
-		
 	},
 ];

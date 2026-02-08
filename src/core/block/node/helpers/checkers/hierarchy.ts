@@ -50,18 +50,21 @@ export function isNodeOrderValid(targetNodeInstance: NodeInstance, targetNodeEle
 
 	const children = targetNodeInstance.childNodeIDs.map((id) => storedNodes[id]).filter(Boolean);
 
-	// Get the order for each child
-	const orders: number[] = [];
-	for (const child of children) {
-		const item = targetNodeElementStructure.find((s) => s.key === child.elementKey);
-		const order = item?.order ?? -1; // Elements without order are treated as -1 (can be anywhere)
-		orders.push(order);
-	}
+	// Only validate order for elements that have explicit structure constraints
+	const orderedChildren = children
+		.map((child, index) => {
+			const item = targetNodeElementStructure.find((s) => s.key === child.elementKey);
+			return item ? { child, order: item.order, index } : null;
+		})
+		.filter((item): item is NonNullable<typeof item> => item !== null)
+		.sort((a, b) => a.index - b.index); // Keep original order
 
-	// Check that orders are non-decreasing
-	for (let i = 1; i < orders.length; i++) {
-		if (orders[i] < orders[i - 1]) {
-			return { success: true, passed: false, message: `Elements out of order: ${children[i].elementKey} (order ${orders[i]}) cannot come after ${children[i - 1].elementKey} (order ${orders[i - 1]})` };
+	// Check that ordered elements appear in correct sequence
+	for (let i = 1; i < orderedChildren.length; i++) {
+		const prev = orderedChildren[i - 1];
+		const curr = orderedChildren[i];
+		if (curr.order != null && prev.order != null && curr.order < prev.order) {
+			return { success: true, passed: false, message: `Elements out of order: ${curr.child.elementKey} (order ${curr.order}) cannot come after ${prev.child.elementKey} (order ${prev.order})` };
 		}
 	}
 

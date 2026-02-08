@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, memo, useState, useEffect } from "react";
+import React, { useCallback, useRef, memo, useEffect } from "react";
 
 // Style
 import CSS from './styles.module.scss';

@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import { StyleValue } from '@/core/block/style/types/value';
+import { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 /**
  * All valid CSS property names supported by the style system.
@@ -52,7 +53,6 @@ export type StyleSyntaxSeparators = string[][];
  */
 export type StyleLonghand = StyleKey[];
 
-
 /**
  * Represents a single CSS property definition, including its name, description, category,
  * and value definition syntax (raw, expanded, and parsed forms).
@@ -88,7 +88,8 @@ export interface StyleDefinition {
 	icons?: StyleTokenIcons;
 }
 
-
 export type RegisteredStyles = Record<StyleKey, StyleDefinition>;
 
 export type StyleRecord = Partial<Record<StyleKey, StyleValue>>;
+
+export type StyleCascadePath = [DeviceKey, OrientationKey, PseudoKey];
