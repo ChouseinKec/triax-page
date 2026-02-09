@@ -38,14 +38,26 @@ import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getR
 const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefinition }) => {
     // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the styleDefinition definition
     const syntaxParsed = getSyntaxParsed(styleDefinition.key, styleDefinition.syntax, getRegisteredTokens(), getRegisteredTokenTypes());
-    const syntaxSet = getSyntaxSet(styleDefinition.key, syntaxParsed);
     const syntaxNormalized = getSyntaxNormalized(styleDefinition.key, syntaxParsed, getRegisteredTokenTypes());
     const syntaxSeparators = getSyntaxSeparators(styleDefinition.key, syntaxParsed);
     const values = splitAdvanced(value);
+    const syntaxSet = getSyntaxSet(styleDefinition.key, syntaxParsed);
     const slotsOptions = createOptionTable(styleDefinition.key, syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes(), getRegisteredTokens(), getRegisteredStyles(), getRegisteredUnits());
 
+    if (styleDefinition.key.includes('padding')) {
+        console.log(styleDefinition.key);
+        console.log("--------------------------------------------------");
+        console.log(styleDefinition.syntax);
+        console.log("--------------------------------------------------");
+        console.log(syntaxParsed);
+        console.log("--------------------------------------------------");
+        console.log(syntaxSet);
+        console.log("--------------------------------------------------");
+        console.log(slotsOptions);
+    }
 
     if (!slotsOptions) return <GenericInput className={CSS.fallback} value={value} onChange={onChange} placeholder={`Enter ${styleDefinition.key} value`} />;
+
 
 
     // Handler to update slot values and join with correct separators

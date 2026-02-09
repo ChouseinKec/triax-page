@@ -9,11 +9,11 @@ registerNode({
     name: "Table Col",
     description: "Represents a table column (void element, no children).",
     category: 'table',
-    icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256">
-            <path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM40,112H80v32H40Zm56,0H136v32H96Zm56,0h40v32H152ZM40,160H80v32H40Zm56,0H136v32H96Zm56,0h40v32H152ZM208,192H32V176H208v16Zm0-48H176V112h32v32Zm-56,0H96V112h56v32Zm-80,0H40V112H72v32Z" />
-        </svg>
-    ),
+	icon: (
+		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256">
+			<path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z" />
+		</svg>
+	),
 
     elementKeys: ['col'],
 

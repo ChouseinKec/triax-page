@@ -84,7 +84,7 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 	},
 	{
 		key: '<track-repeat>',
-		syntax: 'repeat(<integer [1,∞]> , [<track-size>]+)',
+		syntax: 'repeat(<integer [1,∞]> | auto-fit , [<track-size>]+)',
 		type: 'composed',
 	},
 	{
@@ -212,27 +212,7 @@ export const TOKEN_DEFINITIONS: TokenDefinition[] = [
 
 	{
 		key: '<spread-shadow>',
-		syntax: '<box-shadow-position> <length> <length>   <box-shadow-blur> <box-shadow-spread>  <box-shadow-color> ',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-blur>',
-		syntax: '<length [0,∞]>',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-spread>',
-		syntax: '<length>',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-color>',
-		syntax: '<color>',
-		type: 'composed',
-	},
-	{
-		key: '<box-shadow-position>',
-		syntax: 'outset | inset',
+		syntax: '[inset? <length [0,∞]> <length [0,∞]> <length>? <length>? <color>?]',
 		type: 'composed',
 	},
 ];

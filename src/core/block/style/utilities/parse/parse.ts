@@ -2,11 +2,18 @@
 import type { StyleSyntaxRaw, StyleSyntaxParsed } from '@/core/block/style/types/';
 
 // Utilities
-import { hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './combinator';
+import { hasBrackets, parseBrackets, hasDoubleBar, hasDoubleAmp, hasSingleBar, hasComma, hasSequence, parseDoubleBar, parseDoubleAmp, parseSingleBar, parseComma, parseSequence } from './combinator';
 import { hasMultiplier, parseMultiplier } from './multiplier';
-import { hasBrackets, parseBrackets, hasBracketsMultiplier, parseBracketsMultiplier } from './bracket';
 
 export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
+
+// Memoization cache for parseSyntax to avoid redundant recursive parsing
+const parseSyntaxCache = new Map<string, StyleSyntaxParsed>();
+
+// Pre-compiled regex patterns (compiled once, reused for performance)
+const SINGLE_BAR_REGEX = /(?<!\|)\s*\|\s*(?!\|)/g;
+const MULTIPLIER_SUFFIX_REGEX = /\s+([*+?])/g;
+const MULTI_SPACE_REGEX = /\s{2,}/g;
 
 /**
  * Normalizes a CSS Value Definition Syntax string for internal parsing.
@@ -18,32 +25,45 @@ export const MAX_MULTIPLIER_DEPTH = 2; // Default max depth for multipliers
  * @param syntax - The syntax string
  */
 export function normalizeSyntax(syntax: string): string {
+	const trimmed = syntax.trim();
+	if (!trimmed) return '';
+
 	// Normalize '||' to have spaces before and after
-	syntax = syntax.replace(/\s*\|\|\s*/g, ' || ');
+	let normalized = trimmed.replace(/\s*\|\|\s*/g, ' || ');
 
 	// Normalize '&&' to have no spaces before or after
-	syntax = syntax.replace(/\s*&&\s*/g, '&&');
+	normalized = normalized.replace(/\s*&&\s*/g, '&&');
 
 	// Normalize '|' to have no spaces before or after (but not '||')
-	// Use negative lookbehind and lookahead to avoid '||'
-	syntax = syntax.replace(/(?<!\|)\s*\|\s*(?!\|)/g, '|');
+	normalized = normalized.replace(SINGLE_BAR_REGEX, '|');
 
 	// Remove spaces before *, +, ?
-	syntax = syntax.replace(/\s+([*+?])/g, '$1');
+	normalized = normalized.replace(MULTIPLIER_SUFFIX_REGEX, '$1');
 
 	// Remove multiple spaces
-	syntax = syntax.replace(/\s{2,}/g, ' ');
+	normalized = normalized.replace(MULTI_SPACE_REGEX, ' ');
 
-	return syntax.trim();
+	return normalized.trim();
 }
 
 /**
  * Main parser for CSS Value Definition Syntax.
  * Recursively parses the syntax string, handling combinators in precedence order.
+ *
+ * Operator Precedence (lowest to highest):
+ * 1. Comma (,)
+ * 2. Single Bar (|) - alternation
+ * 3. Double Bar (||) - independent components
+ * 4. Double Ampersand (&&) - conjunctions
+ * 5. Space - sequence (highest)
+ *
  * @param syntax - The syntax string
  */
 export function parseSyntax(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
-	const normalizedSyntax = normalizeSyntax(syntax.trim());
+	// Check cache first
+	if (parseSyntaxCache.has(syntax)) return parseSyntaxCache.get(syntax)!;
+
+	const normalizedSyntax = normalizeSyntax(syntax);
 
 	let results: StyleSyntaxParsed = [];
 
@@ -51,7 +71,11 @@ export function parseSyntax(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	if (hasComma(normalizedSyntax)) {
 		results = parseComma(normalizedSyntax);
 	}
-	// Handle '||' (double bar) first (lowest precedence)
+	// Handle '|' (single bar) - before space to get correct precedence
+	else if (hasSingleBar(normalizedSyntax)) {
+		results = parseSingleBar(normalizedSyntax);
+	}
+	// Handle '||' (double bar) - independent components
 	else if (hasDoubleBar(normalizedSyntax)) {
 		results = parseDoubleBar(normalizedSyntax);
 	}
@@ -59,31 +83,31 @@ export function parseSyntax(syntax: StyleSyntaxRaw): StyleSyntaxParsed {
 	else if (hasDoubleAmp(normalizedSyntax)) {
 		results = parseDoubleAmp(normalizedSyntax);
 	}
-	// Handle space-separated sequence
+	// Handle space-separated sequence (highest precedence)
 	else if (hasSequence(normalizedSyntax)) {
 		results = parseSequence(normalizedSyntax);
 	}
-	// Handle '|' (single bar)
-	else if (hasSingleBar(normalizedSyntax)) {
-		results = parseSingleBar(normalizedSyntax);
-	}
-	// Handle '[]' (optional group)
-	else if (hasBrackets(normalizedSyntax)) {
-		results = parseBrackets(normalizedSyntax);
-	}
-	// Handle optional group in brackets or brackets with multipliers
-	else if (hasBracketsMultiplier(normalizedSyntax)) {
-		results = parseBracketsMultiplier(normalizedSyntax);
-	}
-	// Handle multipliers (?, +, *, {m,n})
+	// Handle multipliers (?, +, *, #, {m,n}) or bracketed groups with multipliers (highest binding)
 	else if (hasMultiplier(normalizedSyntax)) {
 		results = parseMultiplier(normalizedSyntax);
 	}
-	// Base case: atomic value
+	// Handle '[]' (optional group) - after multipliers to correctly handle [a b]+
+	else if (hasBrackets(normalizedSyntax)) {
+		results = parseBrackets(normalizedSyntax);
+	}
+	// Base case: atomic value (empty or non-empty)
 	else {
 		results = [normalizedSyntax];
 	}
 
-	// Remove duplicates and sort by length
-	return Array.from(new Set(results)).sort((a, b) => a.length - b.length);
+	// Remove duplicates and sort by length (efficient single pass with Map)
+	const seen = new Map<string, true>();
+	for (const result of results) seen.set(result, true);
+
+	const finalResults = Array.from(seen.keys()).sort((a, b) => a.length - b.length);
+
+	// Cache the result before returning
+	parseSyntaxCache.set(syntax, finalResults);
+
+	return finalResults;
 }

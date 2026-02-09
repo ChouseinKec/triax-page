@@ -132,6 +132,21 @@ export function expandTokens(syntax: string, tokenDefinitions: RegisteredTokens,
 
 		// If the original token had a range, propagate it to all <...> tokens in the expanded string
 		if (range) expanded = expanded.replace(/<([^>]+)>/g, `<$1 ${range}>`);
+		
+		// Check if expanded syntax contains alternation operators (| or ||)
+		const hasAlternation = expanded.includes('|');
+		
+		// Check what comes after the token in the original result
+		const tokenIndex = result.indexOf(token);
+		const afterToken = result.substring(tokenIndex + token.length);
+		const hasFollowingModifier = /^[*+?#]|\{\d+/.test(afterToken);
+		
+		// If expanded form has alternation and token is followed by multiplier/modifier,
+		// wrap it in brackets to preserve precedence
+		if (hasAlternation && hasFollowingModifier) {
+			expanded = `[${expanded}]`;
+		}
+		
 		// Replace the token in the result string with its expanded form
 		result = result.replace(token, expanded);
 

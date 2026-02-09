@@ -7,24 +7,37 @@ import { getTokenType, getTokenCanonical, getTokenBase, getValueTokens } from '@
 import { devLog } from '@/shared/utilities/dev';
 
 /**
- * Validates if a token is a valid option for a slot, considering current values and syntax.
+ * Context object for option generation, reducing parameter passing.
+ */
+interface OptionGenerationContext {
+	styleKey: StyleKey;
+	tokenTypeDefinitions: RegisteredTokenTypes;
+	tokenDefinitions: RegisteredTokens;
+	styleDefinitions: RegisteredStyles;
+	unitDefinitions: UnitDefinitionRecord;
+	syntaxNormalized: string[];
+	valueTokens: string[];
+}
+
+/**
+ * Determines if a slot is beyond the current value length (extending the value).
+ * @param slotIndex - The index of the slot
+ * @param currentLength - The current number of tokens
+ * @returns True if this slot would extend the current value
+ */
+function canExtendSlot(slotIndex: number, currentLength: number): boolean {
+	return slotIndex >= currentLength;
+}
+
+/**
+ * Validates if a token is valid for a slot by checking if it produces a valid syntax.
  * @param tokenCanonical - The canonical form of the token to validate
  * @param slotIndex - The index of the slot in the syntax
- * @param validValueSet - Array of normalized valid value strings
+ * @param validVariations - Array of normalized valid syntax variations
  * @param currentTokens - Array of current canonical tokens for all slots
- * @param syntaxSet - Array of sets containing possible tokens for each slot
- * @returns True if the token is valid for the slot, false otherwise
+ * @returns True if the token produces a valid syntax, false otherwise
  */
-export function validateSlotOption(tokenCanonical: TokenCanonical, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
-
-
-	// Always allow if the current value for this slot matches the candidate token
-	if (currentTokens[slotIndex] === tokenCanonical) return true;
-
-	// For slots beyond the current value length, allow any token to enable extending the value
-	// if (slotIndex >= currentTokens.length) return true;
-
-	// Replace only the relevant slot and check validity
+function isValidTokenForSlot(tokenCanonical: TokenCanonical, slotIndex: number, validVariations: string[], currentTokens: string[]): boolean {
 	const testTokens = [...currentTokens];
 	testTokens[slotIndex] = tokenCanonical;
 
@@ -32,54 +45,140 @@ export function validateSlotOption(tokenCanonical: TokenCanonical, slotIndex: nu
 		.filter((t) => t)
 		.join(' ')
 		.trim();
-	const matches = validValueSet.find((value) => value.startsWith(testString));
 
-	if (!matches) return false;
-	return true;
+	return validVariations.some((variation) => variation.startsWith(testString));
+}
+
+/**
+ * Validates if a token is a valid option for a slot, considering current values and syntax.
+ * @param tokenCanonical - The canonical form of the token to validate
+ * @param slotIndex - The index of the slot in the syntax
+ * @param validValueSet - Array of normalized valid value strings
+ * @param currentTokens - Array of current canonical tokens for all slots
+ * @returns True if the token is valid for the slot, false otherwise
+ */
+export function validateSlotOption(tokenCanonical: TokenCanonical, slotIndex: number, validValueSet: string[], currentTokens: string[]): boolean {
+	// Always allow if the current value for this slot matches the candidate token
+	if (currentTokens[slotIndex] === tokenCanonical) return true;
+
+	// For slots beyond the current value length, allow any token to enable extending the value
+	if (canExtendSlot(slotIndex, currentTokens.length)) return true;
+
+	// Validate the token produces a valid syntax
+	return isValidTokenForSlot(tokenCanonical, slotIndex, validValueSet, currentTokens);
+}
+
+/**
+ * Creates option definitions for a token based on its type.
+ * @param tokenRaw - The raw token string
+ * @param tokenCanonical - The canonical form of the token (to avoid redundant lookups)
+ * @param tokenBase - The base form of the token (to avoid redundant lookups)
+ * @param context - Option generation context with required registries and state
+ * @returns Option definition(s) or undefined if creation fails
+ */
+function createOptionWithContext(tokenRaw: TokenRaw, tokenCanonical: TokenCanonical, tokenBase: TokenRaw, context: OptionGenerationContext): OptionDefinition | OptionDefinition[] | undefined {
+	// Determine the type of the token
+	const tokenType = getTokenType(tokenRaw, context.tokenTypeDefinitions);
+	if (!tokenType) return (devLog.warn(`Unable to determine token type for "${tokenRaw}" in style "${context.styleKey}"`), undefined);
+
+	// Get the definition for this token type
+	const tokenTypeDefinition = context.tokenTypeDefinitions[tokenType];
+	if (!tokenTypeDefinition?.createOption) return (devLog.warn(`No option creation function for token type "${tokenType}" in style "${context.styleKey}"`), undefined);
+
+	// Prepare parameters for the option creation function
+	const params = {
+		tokenDefinitions: context.tokenDefinitions,
+		tokenTypeDefinitions: context.tokenTypeDefinitions,
+		styleDefinitions: context.styleDefinitions,
+		unitDefinitions: context.unitDefinitions,
+		tokenRaw,
+		tokenCanonical,
+		tokenBase,
+		styleKey: context.styleKey,
+	};
+
+	const createdOption = tokenTypeDefinition.createOption(params);
+	if (!createdOption || (Array.isArray(createdOption) && createdOption.length === 0)) return (devLog.warn(`Option creation failed for token "${tokenRaw}" of type "${tokenType}" in style "${context.styleKey}"`), undefined);
+
+	return createdOption;
 }
 
 /**
  * Creates option definitions for a token based on its type.
  * @param styleKey - The CSS property key for context
  * @param tokenRaw - The raw token string
+ * @param tokenCanonical - The canonical form of the token (to avoid redundant lookups)
+ * @param tokenBase - The base form of the token (to avoid redundant lookups)
  * @param tokenTypeDefinitions - Registry of token type definitions
  * @param tokenDefinitions - Registry of token definitions
  * @param styleDefinitions - Registry of style definitions
  * @param unitDefinitions - Registry of unit definitions
  * @returns Option definition(s) or undefined if creation fails
  */
-export function createOption(styleKey: StyleKey, tokenRaw: TokenRaw, tokenTypeDefinitions: RegisteredTokenTypes, tokenDefinitions: RegisteredTokens, styleDefinitions: RegisteredStyles, unitDefinitions: UnitDefinitionRecord): OptionDefinition | OptionDefinition[] | undefined {
-	// Determine the type of the token
-	const tokenType = getTokenType(tokenRaw, tokenTypeDefinitions);
-	if (!tokenType) return devLog.warn(`Unable to determine token type for "${tokenRaw}" in style "${styleKey}"`), undefined;
-
-	// Get the definition for this token type
-	const tokenTypeDefinition = tokenTypeDefinitions[tokenType];
-	if (!tokenTypeDefinition?.createOption) return devLog.warn(`No option creation function for token type "${tokenType}" in style "${styleKey}"`), undefined;
-
-	// Get the canonical form of the token
-	const tokenCanonical = getTokenCanonical(tokenRaw, tokenTypeDefinitions);
-	if (!tokenCanonical) return devLog.warn(`Unable to determine canonical form for token "${tokenRaw}" in style "${styleKey}"`), undefined;
-
-	// Get the base form of the token
-	const tokenBase = getTokenBase(tokenRaw, tokenTypeDefinitions);
-	if (!tokenBase) return devLog.warn(`Unable to determine base form for token "${tokenRaw}" in style "${styleKey}"`), undefined;
-	// Prepare parameters for the option creation function
-	const params = {
-		tokenDefinitions,
+export function createOption(styleKey: StyleKey, tokenRaw: TokenRaw, tokenCanonical: TokenCanonical, tokenBase: TokenRaw, tokenTypeDefinitions: RegisteredTokenTypes, tokenDefinitions: RegisteredTokens, styleDefinitions: RegisteredStyles, unitDefinitions: UnitDefinitionRecord): OptionDefinition | OptionDefinition[] | undefined {
+	const context: OptionGenerationContext = {
+		styleKey,
 		tokenTypeDefinitions,
+		tokenDefinitions,
 		styleDefinitions,
 		unitDefinitions,
-		tokenRaw,
-		tokenCanonical,
-		tokenBase,
-		styleKey,
+		syntaxNormalized: [],
+		valueTokens: [],
 	};
 
-	const createdOption = tokenTypeDefinition.createOption(params);
-	if (!createdOption || (Array.isArray(createdOption) && createdOption.length === 0)) return devLog.warn(`Option creation failed for token "${tokenRaw}" of type "${tokenType}" in style "${styleKey}"`), undefined;
+	return createOptionWithContext(tokenRaw, tokenCanonical, tokenBase, context);
+}
 
-	return createdOption;
+/**
+ * Builds options for a single slot by processing its tokens.
+ * Caches validation results to avoid redundant computations.
+ * Uses context object to reduce parameter passing.
+ * @param tokenSet - Set of tokens available for this slot
+ * @param setIndex - Index of this slot
+ * @param context - Option generation context with required registries and state
+ * @returns Array of option definitions for the slot
+ */
+function createSlotOptionsWithContext(tokenSet: Set<string>, setIndex: number, context: OptionGenerationContext): OptionDefinition[] {
+	// Cache for validation results to avoid redundant checks
+	const validationCache = new Map<string, boolean>();
+
+	// Initialize array to collect options for this slot
+	const options: OptionDefinition[] = [];
+
+	// Iterate over each token in the set
+	for (const token of tokenSet) {
+		// Cache canonical and base forms to avoid redundant lookups
+		const tokenCanonical = getTokenCanonical(token, context.tokenTypeDefinitions);
+		if (!tokenCanonical) {
+			devLog.warn(`Failed to get canonical for token "${token}" in style "${context.styleKey}"`);
+			continue;
+		}
+
+		const tokenBase = getTokenBase(token, context.tokenTypeDefinitions);
+		if (!tokenBase) {
+			devLog.warn(`Failed to get base for token "${token}" in style "${context.styleKey}"`);
+			continue;
+		}
+
+		// Check validation cache to avoid redundant validation
+		let isValid = validationCache.get(tokenCanonical);
+		if (isValid === undefined) {
+			// Validate if this token is allowed for the slot
+			isValid = validateSlotOption(tokenCanonical, setIndex, context.syntaxNormalized, context.valueTokens);
+			validationCache.set(tokenCanonical, isValid);
+		}
+
+		if (!isValid) continue;
+
+		// Create option(s) for the token (pass cached forms to avoid redundant lookups)
+		const option = createOption(context.styleKey, token, tokenCanonical, tokenBase, context.tokenTypeDefinitions, context.tokenDefinitions, context.styleDefinitions, context.unitDefinitions);
+
+		// Add to options array if created successfully
+		if (option) options.push(...(Array.isArray(option) ? option : [option]));
+	}
+
+	// Return the collected options
+	return options;
 }
 
 /**
@@ -97,30 +196,17 @@ export function createOption(styleKey: StyleKey, tokenRaw: TokenRaw, tokenTypeDe
  * @returns Array of option definitions for the slot
  */
 export function createSlotOptions(tokenSet: Set<string>, setIndex: number, syntaxNormalized: string[], valueTokens: string[], tokenTypeDefinitions: RegisteredTokenTypes, styleKey: StyleKey, tokenDefinitions: RegisteredTokens, styleDefinitions: RegisteredStyles, unitDefinitions: UnitDefinitionRecord, syntaxSet: Set<string>[]): OptionDefinition[] {
-	// Initialize array to collect options for this slot
-	const options: OptionDefinition[] = [];
+	const context: OptionGenerationContext = {
+		styleKey,
+		tokenTypeDefinitions,
+		tokenDefinitions,
+		styleDefinitions,
+		unitDefinitions,
+		syntaxNormalized,
+		valueTokens,
+	};
 
-	// Iterate over each token in the set
-	for (const token of tokenSet) {
-		// Get canonical form; skip if not available
-		const tokenCanonical = getTokenCanonical(token, tokenTypeDefinitions);
-		if (!tokenCanonical) {
-			devLog.warn(`Failed to get canonical for token "${token}" in style "${styleKey}"`);
-			continue;
-		}
-
-		// Validate if this token is allowed for the slot
-		if (!validateSlotOption(tokenCanonical, setIndex, syntaxNormalized, valueTokens)) continue;
-
-		// Create option(s) for the token
-		const option = createOption(styleKey, token, tokenTypeDefinitions, tokenDefinitions, styleDefinitions, unitDefinitions);
-
-		// Add to options array if created successfully
-		if (option) options.push(...(Array.isArray(option) ? option : [option]));
-	}
-
-	// Return the collected options
-	return options;
+	return createSlotOptionsWithContext(tokenSet, setIndex, context);
 }
 
 /**

@@ -31,7 +31,7 @@ const NodeStyleslots: React.FC<NodeStyleslotsProps> = ({ values, options, onChan
     const nextOptions = options[valuesLength];
     const slotsLength = options.length;
     const hasNext = valuesLength < slotsLength && nextOptions?.length > 0;
-
+    
 
     // Handle changes to individual slot values
     const handleSlotChange = (newValue: string, slotIndex: number) => {
