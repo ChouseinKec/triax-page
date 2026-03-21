@@ -1,7 +1,7 @@
 // Types
 import type { NodeInstance } from '@/core/block/node/types/instance';
 import type { NodeStyles } from '@/core/block/node/types/definition';
-import type { StyleLonghand, StyleDefinition, RegisteredStyles, StyleKey } from '@/core/block/style/types';
+import type { StyleLonghand, StyleDefinition, StyleDefinitionRecord, StyleKey } from '@/core/block/style/types';
 
 import type { PickResult } from '@/shared/types/result';
 /**
@@ -35,7 +35,7 @@ export function pickStyleLonghand(styleDefinition: StyleDefinition): PickResult<
  * @param styleKey - the style key to look up
  * @param styleDefinitions - the record of all style definitions
  */
-export function pickStyleDefinition(styleKey: StyleKey, styleDefinitions: RegisteredStyles): PickResult<StyleDefinition> {
+export function pickStyleDefinition(styleKey: StyleKey, styleDefinitions: StyleDefinitionRecord): PickResult<StyleDefinition> {
 	const styleDefinition = styleDefinitions[styleKey];
 	if (!styleDefinition) return { success: false, error: `Style definition not found for key: '${styleKey}'` };
 

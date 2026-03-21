@@ -9,7 +9,7 @@ export type UnitKey = string;
  * Groups of CSS dimensions based on their functional use.
  * Used for categorizing dimensions in the style system.
  */
-export type UnitType = 'length' | 'angle' | 'flex' | 'percentage';
+export type UnitType = '<length>' | '<angle>' | '<flex>' | '<percentage>';
 
 /**
  * Represents a valid CSS unit value combining a numeric value with a unit key.
@@ -24,7 +24,7 @@ export type UnitDefault = `${number}${UnitKey}`; // e.g. '0px', '100%', '1fr'
 export interface UnitDefinition {
 	/** The canonical name of the CSS unit (e.g. 'px', 'em', 'vh'). */
 	key: UnitKey;
-	/** The group of the CSS unit (e.g. 'length', 'angle', 'percentage', 'flex'). */
+	/** The group of the CSS unit (e.g. '<length>', '<angle>', '<percentage>', '<flex>'). */
 	type: UnitType;
 }
 

@@ -12,22 +12,23 @@ import { renderStyleRow } from "../factory/component";
  * Renders the Effects tab content
  * Shows filters, transforms, shadows, and opacity controls
  * 
- * @param NodeID - The selected block identifier
+ * @param nodeID - The selected block identifier
  * @returns JSX for the effects tab
  */
-export const renderEffectTab = (NodeID: NodeID): React.ReactElement => {
+export const renderEffectTab = (nodeID: NodeID): React.ReactElement => {
 
     return (
         <>
             {/* Effect Properties */}
             <GroupLayout
+                dividerTitle="Generic"
                 content={() => (
                     <>
-                        {renderStyleRow({ NodeID, label: "Filter", propertyName: "filter" })}
-                        {renderStyleRow({ NodeID, label: "Backdrop", propertyName: "backdrop-filter" })}
-                        {renderStyleRow({ NodeID, label: "Transform", propertyName: "transform" })}
-                        {renderStyleRow({ NodeID, label: "Box-Shadow", propertyName: "box-shadow" })}
-                        {renderStyleRow({ NodeID, label: "Opacity", propertyName: "opacity" })}
+                        {renderStyleRow({ nodeID, label: "Filter", propertyName: "filter" })}
+                        {renderStyleRow({ nodeID, label: "Backdrop", propertyName: "backdrop-filter" })}
+                        {renderStyleRow({ nodeID, label: "Transform", propertyName: "transform" })}
+                        {renderStyleRow({ nodeID, label: "Box-Shadow", propertyName: "box-shadow" })}
+                        {renderStyleRow({ nodeID, label: "Opacity", propertyName: "opacity" })}
                     </>
                 )}
             />

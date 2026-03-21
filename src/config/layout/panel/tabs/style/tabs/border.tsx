@@ -19,10 +19,10 @@ import { generateStyleKey } from "@/core/block/style/utilities/key";
  * Renders the Border & Outline tab content
  * Shows border width/style/color controls, border-radius, outline, and box-decoration
  * 
- * @param NodeID - The selected block identifier
+ * @param nodeID - The selected block identifier
  * @returns JSX for the border tab
  */
-export const renderBorderTab = (NodeID: NodeID): React.ReactElement => {
+export const renderBorderTab = (nodeID: NodeID): React.ReactElement => {
     const [currentSide, setCurrentSide] = useState<Side>("top");
     const [currentCorner, setCurrentCorner] = useState<Corner>(null);
 
@@ -39,6 +39,7 @@ export const renderBorderTab = (NodeID: NodeID): React.ReactElement => {
         <>
             {/* Border Properties */}
             <GroupLayout
+                dividerTitle="Border"
                 styles={{ gridTemplateColumns: "repeat(3,minmax(0, 1fr))" }}
                 content={() => (
                     <>
@@ -58,15 +59,15 @@ export const renderBorderTab = (NodeID: NodeID): React.ReactElement => {
                             actions={() => null}
                         />
 
-                        {renderStyleRow({ NodeID, label: "Width", propertyName: borderWidth as any, disabled: sideControlsDisabled })}
-                        {renderStyleRow({ NodeID, label: "Style", propertyName: borderStyle as any, disabled: sideControlsDisabled })}
-                        {renderStyleRow({ NodeID, label: "Radius", propertyName: borderRadius as any, disabled: cornerControlsDisabled })}
-                        {renderStyleRow({ NodeID, label: "Color", propertyName: borderColor as any, disabled: sideControlsDisabled })}
-                        {renderStyleRow({ NodeID, label: "Image Source", propertyName: "border-image-source" })}
-                        {renderStyleRow({ NodeID, label: "Image Repeat", propertyName: "border-image-repeat", styles: { gridColumn: "2/-1" } })}
-                        {renderStyleRow({ NodeID, label: "Image Slice", propertyName: "border-image-slice" })}
-                        {renderStyleRow({ NodeID, label: "Image Width", propertyName: "border-image-width" })}
-                        {renderStyleRow({ NodeID, label: "Image Outset", propertyName: "border-image-outset" })}
+                        {renderStyleRow({ nodeID, label: "Width", propertyName: borderWidth as any, disabled: sideControlsDisabled })}
+                        {renderStyleRow({ nodeID, label: "Style", propertyName: borderStyle as any, disabled: sideControlsDisabled })}
+                        {renderStyleRow({ nodeID, label: "Radius", propertyName: borderRadius as any, disabled: cornerControlsDisabled })}
+                        {renderStyleRow({ nodeID, label: "Color", propertyName: borderColor as any, disabled: sideControlsDisabled })}
+                        {renderStyleRow({ nodeID, label: "Image Source", propertyName: "border-image-source" })}
+                        {renderStyleRow({ nodeID, label: "Image Repeat", propertyName: "border-image-repeat", styles: { gridColumn: "2/-1" } })}
+                        {renderStyleRow({ nodeID, label: "Image Slice", propertyName: "border-image-slice" })}
+                        {renderStyleRow({ nodeID, label: "Image Width", propertyName: "border-image-width" })}
+                        {renderStyleRow({ nodeID, label: "Image Outset", propertyName: "border-image-outset" })}
                     </>
                 )}
             />
@@ -74,13 +75,13 @@ export const renderBorderTab = (NodeID: NodeID): React.ReactElement => {
             {/* Outline Properties */}
             <GroupLayout
                 dividerTitle="Outline"
-                styles={{ gridTemplateColumns: "repeat(3,minmax(0, 1fr))" }}
+                styles={{ gridTemplateColumns: "repeat(2,minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ NodeID, label: "Width", propertyName: "outline-width" })}
-                        {renderStyleRow({ NodeID, label: "Style", propertyName: "outline-style" })}
-                        {renderStyleRow({ NodeID, label: "Color", propertyName: "outline-color" })}
-                        {renderStyleRow({ NodeID, label: "Offset", propertyName: "outline-offset", styles: { gridColumn: "1/3" } })}
+                        {renderStyleRow({ nodeID, label: "Width", propertyName: "outline-width" })}
+                        {renderStyleRow({ nodeID, label: "Style", propertyName: "outline-style" })}
+                        {renderStyleRow({ nodeID, label: "Color", propertyName: "outline-color" })}
+                        {renderStyleRow({ nodeID, label: "Offset", propertyName: "outline-offset"})}
                     </>
                 )}
             />

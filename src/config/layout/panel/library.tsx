@@ -9,7 +9,7 @@ const Liblary: PanelDefinition = {
 	key: "library",
 	benchKey: "main",
 	title: "Library",
-	position: { top: 3.5, left: 12 },
+	position: { top: 0.5, left: 17.5 },
 	size: { width: 10, height: 40, minWidth: 200, minHeight: 500 },
 	icon: (
 		<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 -960 960 960" fill="white">

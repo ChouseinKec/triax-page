@@ -170,15 +170,18 @@ export function isValueColor(input: string): boolean {
 		'yellowgreen',
 	];
 
-	if (hexColorRegex.test(input) || rgbRegex.test(input) || rgbaRegex.test(input) || hslRegex.test(input) || hslaRegex.test(input) || cssColorNames.includes(input.toLowerCase())) return true;
+	// Modern color functions: color(), lab(), lch(), oklch(), oklab(), hwb(), color-mix(), device-cmyk()
+	const modernColorFnRegex = /^(color|lab|lch|oklch|oklab|hwb|color-mix|device-cmyk)\s*\(.*\)$/i;
 
-	return false;
+	return hexColorRegex.test(input) || rgbRegex.test(input) || rgbaRegex.test(input) || hslRegex.test(input) || hslaRegex.test(input) || modernColorFnRegex.test(input) || cssColorNames.includes(input.toLowerCase());
 }
 
 /**
- * Checks if a value is a link (e.g., 'https://example.com', '/path/to/resource').
+ * Checks if a value is a CSS gradient (e.g., 'linear-gradient(to right, red, blue)').
+ * Covers all standard gradient functions including their repeating variants.
  * @param input - The string to check.
  */
-export function isValueLink(input: string): boolean {
-	return /^"?https?:\/\/[^\s"]+"?$/.test(input) || /^"?\/[^\s"]+"?$/.test(input);
+export function isValueGradient(input: string): boolean {
+	return /^(repeating-)?(linear|radial|conic)-gradient\s*\(.*\)$/i.test(input);
 }
+

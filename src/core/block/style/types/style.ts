@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { StyleValue } from '@/core/block/style/types/value';
+import { Value } from '@/core/block/style/types/value';
 import { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 /**
@@ -88,8 +88,8 @@ export interface StyleDefinition {
 	icons?: StyleTokenIcons;
 }
 
-export type RegisteredStyles = Record<StyleKey, StyleDefinition>;
+export type StyleDefinitionRecord = Record<StyleKey, StyleDefinition>;
 
-export type StyleRecord = Partial<Record<StyleKey, StyleValue>>;
+export type StyleRecord = Partial<Record<StyleKey, Value>>;
 
 export type StyleCascadePath = [DeviceKey, OrientationKey, PseudoKey];

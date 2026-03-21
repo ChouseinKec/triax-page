@@ -76,6 +76,93 @@ export const devLog = {
 };
 
 /**
+ * Development performance profiling utility (dev only, no-ops in production).
+ * Wraps function calls with `console.time` so you can see exactly which
+ * functions are slow and how often they are called.
+ *
+ * @example
+ * // Wrap a single call and get the return value back:
+ * const result = devPerf.time('deriveVariations', () => deriveVariations(constraint));
+ *
+ * // Wrap a function permanently so every call is timed:
+ * const timedDerive = devPerf.wrap('deriveVariations', deriveVariations);
+ *
+ * // Manual start/stop:
+ * devPerf.start('myLabel');
+ * doExpensiveWork();
+ * devPerf.end('myLabel');
+ *
+ * // Print a call-count + total-time summary:
+ * devPerf.report();
+ *
+ * // Reset all accumulated data:
+ * devPerf.reset();
+ */
+const _perfMap: Record<string, { calls: number; total: number }> = {};
+
+export const devPerf = {
+	/** Run `fn`, log its duration under `label`, return its result. */
+	time<T>(label: string, fn: () => T): T {
+		if (!isDevelopment) return fn();
+		const t0 = performance.now();
+		const result = fn();
+		const elapsed = performance.now() - t0;
+		if (!_perfMap[label]) _perfMap[label] = { calls: 0, total: 0 };
+		_perfMap[label].calls++;
+		_perfMap[label].total += elapsed;
+		console.log(`[perf] ${label}: ${elapsed.toFixed(3)}ms  (call #${_perfMap[label].calls}, cumulative ${_perfMap[label].total.toFixed(3)}ms)`);
+		return result;
+	},
+
+	/** Mark the start of a manual measurement. Pair with `devPerf.end(label)`. */
+	start(label: string): void {
+		if (isDevelopment) performance.mark(`${label}:start`);
+	},
+
+	/** Mark the end of a manual measurement and log elapsed time. */
+	end(label: string): void {
+		if (!isDevelopment) return;
+		performance.mark(`${label}:end`);
+		const m = performance.measure(label, `${label}:start`, `${label}:end`);
+		if (!_perfMap[label]) _perfMap[label] = { calls: 0, total: 0 };
+		_perfMap[label].calls++;
+		_perfMap[label].total += m.duration;
+		console.log(`[perf] ${label}: ${m.duration.toFixed(3)}ms  (call #${_perfMap[label].calls}, cumulative ${_perfMap[label].total.toFixed(3)}ms)`);
+	},
+
+	/**
+	 * Wrap a function so every invocation is automatically timed.
+	 * The label defaults to the function's `.name`.
+	 */
+	wrap<T extends (...args: never[]) => unknown>(label: string, fn: T): T {
+		if (!isDevelopment) return fn;
+		return ((...args: Parameters<T>) => devPerf.time(label, () => fn(...args))) as T;
+	},
+
+	/** Print a summary table of all accumulated timings to the console. */
+	report(): void {
+		if (!isDevelopment) return;
+		console.group('[perf] Summary');
+		console.table(
+			Object.entries(_perfMap)
+				.sort(([, a], [, b]) => b.total - a.total)
+				.map(([label, { calls, total }]) => ({
+					label,
+					calls,
+					'total ms': +total.toFixed(3),
+					'avg ms': +(total / calls).toFixed(3),
+				}))
+		);
+		console.groupEnd();
+	},
+
+	/** Reset all accumulated timing data. */
+	reset(): void {
+		for (const key of Object.keys(_perfMap)) delete _perfMap[key];
+	},
+};
+
+/**
  * Development UI rendering utility that only renders components in development environment.
  * Returns null in production. Provides error indicators and debug components for development.
  */

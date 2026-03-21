@@ -8,54 +8,54 @@ import type { UnitDefinition } from '@/core/block/style/types';
 export const UNIT_DEFINITIONS: UnitDefinition[] = [
 	{
 		key: 'fr',
-		type: 'flex',
+		type: '<flex>',
 	},
 	{
 		key: 'px',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'em',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'rem',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'vh',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'vw',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'vmax',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'vmin',
-		type: 'length',
+		type: '<length>',
 	},
 	{
 		key: 'deg',
-		type: 'angle',
+		type: '<angle>',
 	},
 	{
 		key: 'grad',
-		type: 'angle',
+		type: '<angle>',
 	},
 	{
 		key: 'rad',
-		type: 'angle',
+		type: '<angle>',
 	},
 	{
 		key: 'turn',
-		type: 'angle',
+		type: '<angle>',
 	},
 	{
 		key: '%',
-		type: 'percentage',
+		type: '<percentage>',
 	},
 ];

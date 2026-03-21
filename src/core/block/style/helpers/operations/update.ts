@@ -1,6 +1,6 @@
 // Types
 import type { NodeStyles } from '@/core/block/node/types/definition';
-import type { StyleDefinition, StyleKey, StyleRecord, StyleValue } from '@/core/block/style/types';
+import type { StyleDefinition, StyleKey, StyleRecord, Value } from '@/core/block/style/types';
 import type { OperateResult } from '@/shared/types/result';
 import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
@@ -15,15 +15,15 @@ import { pickStyleLonghand } from '@/core/block/style/helpers/pickers/';
  * @see {@link updateNodeStyles}, {@link updateBlockStyle}
  *
  * @param styleLonghand - the list of longhand style keys for the shorthand
- * @param styleValue - the value to set for each longhand key
+ * @param Value - the value to set for each longhand key
  * @param NodeStyles - the current NodeStyles map to update
  * @param selectedDeviceKey - the selected device key
  * @param selectedOrientationKey - the selected orientation key
  * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleValue, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
+export function updateBlockValues(styleKeys: StyleKey[], Value: Value, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Build the property updates map
-	const propertyUpdates: StyleRecord = Object.fromEntries(styleKeys.map((key) => [key, styleValue]));
+	const propertyUpdates: StyleRecord = Object.fromEntries(styleKeys.map((key) => [key, Value]));
 
 	// Return the updated styles
 	return updateNodeStyles(NodeStyles, propertyUpdates, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
@@ -37,15 +37,15 @@ export function updateBlockStyleValues(styleKeys: StyleKey[], styleValue: StyleV
  * @see {@link updateNodeStyles}, {@link updateBlockStyle}
  *
  * @param styleKey - the longhand style key to update
- * @param styleValue - the value to set for the style key
+ * @param Value - the value to set for the style key
  * @param NodeStyles - the current NodeStyles map to update
  * @param selectedDeviceKey - the selected device key
  * @param selectedOrientationKey - the selected orientation key
  * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
+export function updateBlockValue(styleKey: StyleKey, Value: Value, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Build the property updates map
-	const properties: StyleRecord = { [styleKey]: styleValue };
+	const properties: StyleRecord = { [styleKey]: Value };
 
 	// Return the updated styles
 	return updateNodeStyles(NodeStyles, properties, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
@@ -56,7 +56,7 @@ export function updateBlockStyleValue(styleKey: StyleKey, styleValue: StyleValue
  *
  * This merges the provided property updates into the correct device/orientation/pseudo context.
  * Does not mutate the original styles object; returns a new NodeStyles object.
- * @see {@link updateBlockStyleValue}, {@link updateBlockStyleValues}, {@link updateBlockStyle}
+ * @see {@link updateBlockValue}, {@link updateBlockValues}, {@link updateBlockStyle}
  *
  * @param NodeStyles - the current NodeStyles map to update
  * @param newStyles - the style properties and values to update
@@ -88,23 +88,23 @@ export function updateNodeStyles(NodeStyles: NodeStyles, newStyles: StyleRecord,
  * Update a style property for a block instance, supporting both shorthand and longhand keys.
  *
  * This checks if the style key is a longhand, expands it if needed, and updates the relevant properties.
- * @see {@link updateBlockStyleValue}, {@link updateBlockStyleValues}, {@link updateNodeStyles}
+ * @see {@link updateBlockValue}, {@link updateBlockValues}, {@link updateNodeStyles}
  *
  * @param styleKey - the style key to update (shorthand or longhand)
  * @param styleDefinition - the definition of the style property
- * @param styleValue - the value to set for the style key(s)
+ * @param Value - the value to set for the style key(s)
  * @param NodeStyles - the current NodeStyles map to update
  * @param selectedDeviceKey - the selected device key
  * @param selectedOrientationKey - the selected orientation key
  * @param selectedPseudoKey - the selected pseudo key
  */
-export function updateBlockStyle(styleKey: StyleKey, styleValue: StyleValue, styleDefinition: StyleDefinition, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
+export function updateBlockStyle(styleKey: StyleKey, Value: Value, styleDefinition: StyleDefinition, NodeStyles: NodeStyles, selectedDeviceKey: DeviceKey, selectedOrientationKey: OrientationKey, selectedPseudoKey: PseudoKey): OperateResult<NodeStyles> {
 	// Pick longhand keys from the style definition
 	const longhandResult = pickStyleLonghand(styleDefinition);
 
 	// Apply longhand if found
-	if (longhandResult.success === true) return updateBlockStyleValues(longhandResult.data, styleValue, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
+	if (longhandResult.success === true) return updateBlockValues(longhandResult.data, Value, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 
 	// Otherwise, apply shorthand
-	return updateBlockStyleValue(styleKey, styleValue, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
+	return updateBlockValue(styleKey, Value, NodeStyles, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 }

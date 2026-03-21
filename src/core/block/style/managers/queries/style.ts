@@ -1,6 +1,6 @@
 // Types
 import type { StoredNodes, NodeID, NodeStyles } from '@/core/block/node/types';
-import type { StyleKey, StyleValue } from '@/core/block/style/types';
+import type { StyleKey, Value } from '@/core/block/style/types';
 import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
 
 // Utilities
@@ -37,11 +37,11 @@ import { getRegisteredStyles } from '@/core/block/style/state/registry';
  * @param pseudoKey - The pseudo-class context
  * @returns The resolved style value or undefined if not found
  */
-export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): StyleValue | undefined {
+export function getBlockStyleValue(sourceNodeID: NodeID, styleKey: StyleKey, deviceKey: DeviceKey, orientationKey: OrientationKey, pseudoKey: PseudoKey): Value | undefined {
 	const deviceDefinitions = getDeviceDefinitions();
 
 	// Use a pipeline to safely pick required data and perform operations
-	const validData = new ResultPipeline('[BlockQueries → getBlockStyle]')
+	const validData = new ResultPipeline('[BlockQueries → getBlockStyleValue]')
 		.validate({
 			sourceNodeID: validateNodeID(sourceNodeID),
 			styleKey: validateStyleKey(styleKey),
@@ -63,13 +63,13 @@ export function getBlockStyle(sourceNodeID: NodeID, styleKey: StyleKey, deviceKe
 			cascadePaths: generateCascadePaths(data.deviceKey, data.orientationKey, data.pseudoKey, getDefaultDeviceKey(), getDefaultOrientationKey(), getDefaultPseudoKey(), deviceDefinitions),
 		}))
 		.operate((data) => ({
-			styleValue: cascadeNodeStyle(styleKey, data.nodeStyles, data.styleDefinition, data.cascadePaths),
+			Value: cascadeNodeStyle(styleKey, data.nodeStyles, data.styleDefinition, data.cascadePaths),
 		}))
 		.execute();
 	if (!validData) return undefined;
 
 	// Extract and return the final resolved style value
-	return validData.styleValue;
+	return validData.Value;
 }
 
 /**

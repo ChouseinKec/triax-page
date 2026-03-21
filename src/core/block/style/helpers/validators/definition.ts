@@ -1,11 +1,7 @@
 // Types
-import type { RegisteredTokenTypes, StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, StyleValue, RegisteredTokens } from '@/core/block/style/types/';
+import type { StyleDefinition, StyleKey, StyleDescription, StyleSyntaxRaw, StyleIcon, StyleLonghand, Value, TerminalDefinitionRecord } from '@/core/block/style/types/';
 import type { ValidateResult } from '@/shared/types/result';
 
-// Utilities
-import { splitAdvanced } from '@/shared/utilities/string';
-import { getValueTokens } from '@/core/block/style/utilities';
-import { getSyntaxNormalized, getSyntaxParsed } from '@/core/block/style/utilities';
 
 // Helpers
 import { validateString, validateObject, validateArray } from '@/shared/helpers';
@@ -112,32 +108,34 @@ export function validateStyleDefinition(styleDefinition: unknown): ValidateResul
  * Checks if the value is valid for the given CSS property according to the style definitions and syntax rules.
  *
  * @param styleKey - The CSS property key this value is for
- * @param styleValue - The CSS style value to validate
+ * @param styleDefinition - The style definition for the property
+ * @param Value - The CSS style value to validate
+ * @param tokenDefinitions - The registered terminals
  */
-export function validateStyleValue(styleKey: StyleKey, styleDefinition: StyleDefinition, styleValue: unknown, tokenTypeDefinitions: RegisteredTokenTypes, tokenDefinitions: RegisteredTokens): ValidateResult<StyleValue> {
-	// Empty strings are valid CSS values (used to clear/reset properties)
-	if (styleValue === '') return { valid: true, value: '' };
+export function validateValue(styleKey: StyleKey, styleDefinition: StyleDefinition, Value: unknown, tokenDefinitions: TerminalDefinitionRecord): ValidateResult<Value> {
+    return { valid: true, value: Value as Value };
 
-	// Validate that the value is a non-empty string
-	const valueValidation = validateString(styleValue);
-	if (!valueValidation.valid) return { valid: false, message: valueValidation.message };
+    // // Empty strings are valid CSS values (used to clear/reset properties)
+	// if (Value === '') return { valid: true, value: '' };
 
-	// Fetch the normalized syntax variations for the property
-	const syntaxParsed = getSyntaxParsed(styleDefinition.key, styleDefinition.syntax, tokenDefinitions, tokenTypeDefinitions);
-	const syntaxNormalized = getSyntaxNormalized(styleDefinition.key, syntaxParsed, tokenTypeDefinitions);
-	if (!syntaxNormalized) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
+	// // Validate that the value is a non-empty string
+	// const valueValidation = validateString(Value);
+	// if (!valueValidation.valid) return { valid: false, message: valueValidation.message };
 
-	// Split the value into its components
-	const values = splitAdvanced(valueValidation.value);
+	// // Compile the constraint tree for this syntax
+	// const constraint = getCompiledConstraint(styleDefinition.syntax);
+	// if (!constraint) return { valid: false, message: `Invalid style property: no syntax defined for '${styleKey}'` };
 
-	// Convert the values to their token representations
-	const valueTokens = getValueTokens(values, tokenTypeDefinitions).join(' ');
-	if (valueTokens.length === 0) return { valid: false, message: `Invalid style value: '${styleValue}' contains no valid tokens for property '${styleKey}'` };
+	// // Split the value into its components and convert to canonical token form
+	// const values = splitAdvanced(valueValidation.value);
+	// const valueTokens = getTerminals(values, tokenDefinitions).join(' ');
 
-	// Check if the tokenized value matches any of the valid syntax patterns
-	const isValid = syntaxNormalized.some((syntax) => syntax === valueTokens);
+	// if (valueTokens.length === 0) return { valid: false, message: `Invalid style value: '${Value}' contains no valid tokens for property '${styleKey}'` };
 
-	if (!isValid) return { valid: false, message: `Invalid style value: '${styleValue}' is not valid for property '${styleKey}'` };
+	// // Validate against the constraint tree
+	// const isValid = validateConstraint(valueTokens, constraint);
 
-	return { valid: true, value: styleValue as StyleValue };
+	// if (!isValid) return { valid: false, message: `Invalid style value: '${Value}' is not valid for property '${styleKey}'` };
+
+	// return { valid: true, value: Value as Value };
 }

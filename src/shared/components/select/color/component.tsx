@@ -11,6 +11,11 @@ import type { ColorSelectProps } from "./types";
 // Hooks
 import { useDebouncedCallback } from "@/shared/hooks/utility/useCallback";
 
+// Components
+import ColorPicker from 'react-best-gradient-color-picker'
+import DropdownReveal from "@/shared/components/reveal/dropdown/component";
+
+
 /**
  * ColorSelect Component
  *
@@ -29,16 +34,19 @@ const ColorSelect: React.FC<ColorSelectProps> = ({
     onChange,
 }): ReactElement => {
     const debouncedOnChange = useDebouncedCallback(onChange, 100);
-    
-    // Handle input change events with debounced callback
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        debouncedOnChange(event.target.value);
-    };
 
     return (
-        <div className={`${CSS.ColorSelect} ColorSelect`} style={{ backgroundColor: value }}>
-            <input className={`${CSS.Input} Input`} type="color" value={value} onChange={handleChange} />
-        </div>
+        <DropdownReveal
+            className={`${CSS.ColorSelect} ColorSelect`}
+            placeholder={value}
+
+            title="Edit Color Value"
+            closeOnChange={false}
+            toggleColor={value}
+        >
+            <ColorPicker hideControls={true} hideEyeDrop={true} hideColorTypeBtns={true} hidePresets={true} hideColorGuide={true} hideAdvancedSliders={true} value={value} onChange={(color) => debouncedOnChange(color)} />
+
+        </DropdownReveal>
     );
 
 };

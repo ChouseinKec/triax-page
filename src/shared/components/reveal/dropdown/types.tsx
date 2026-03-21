@@ -20,4 +20,6 @@ export interface DropdownRevealProps {
     anchor?: Anchor;
     /** Optional offset in pixels for the floating element */
     offset?: number;
+    /** Optional inline styles for the dropdown button */
+    toggleColor?: string;
 };

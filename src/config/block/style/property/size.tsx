@@ -4,33 +4,33 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'width',
 		description: 'Specifies the width of the element\'s content area.',
-		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 	{
 		key: 'min-width',
-		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content',
 		description: 'Sets the minimum width the element\'s content area can be.',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 	{
 		key: 'max-width',
 		description: 'Sets the maximum width the element\'s content area can be.',
-		syntax: '<length-percentage [0,∞]> | min-content | max-content | fit-content',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 
 	{
 		key: 'height',
 		description: 'Specifies the height of the element\'s content area.',
-		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 	{
 		key: 'min-height',
 		description: 'Sets the minimum height the element\'s content area can be.',
-		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 	{
 		key: 'max-height',
 		description: 'Sets the maximum height the element\'s content area can be.',
-		syntax: '<length-percentage [0,∞]> | min-content | max-content | fit-content',
+		syntax: 'auto | <length-percentage [0,∞]> | min-content | max-content | fit-content( <length-percentage [0,∞]> ) | <calc-size()> | stretch | fit-content | contain',
 	},
 
 	{
@@ -47,7 +47,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'overflow',
 		description: 'Controls what happens when content overflows the element\'s box.',
-		syntax: '[<overflow-block>]{1,2}',
+		syntax: '<overflow-block>{1,2}',
 		icons: {
 			'clip': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z" /></svg>
@@ -69,7 +69,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'position',
 		description: 'Specifies the positioning method for the element.',
-		syntax: 'static | relative | absolute | fixed | sticky',
+		syntax: 'static | relative | absolute | sticky | fixed ',
 		icons: {
 			'fixed': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M235.32,81.37,174.63,20.69a16,16,0,0,0-22.63,0L98.37,74.49c-10.66-3.34-35-7.37-60.4,13.14a16,16,0,0,0-1.29,23.78L85,159.71,42.34,202.34a8,8,0,0,0,11.32,11.32L96.29,171l48.29,48.29A16,16,0,0,0,155.9,224c.38,0,.75,0,1.13,0a15.93,15.93,0,0,0,11.64-6.33c19.64-26.1,17.75-47.32,13.19-60L235.33,104A16,16,0,0,0,235.32,81.37ZM224,92.69h0l-57.27,57.46a8,8,0,0,0-1.49,9.22c9.46,18.93-1.8,38.59-9.34,48.62L48,100.08c12.08-9.74,23.64-12.31,32.48-12.31A40.13,40.13,0,0,1,96.81,91a8,8,0,0,0,9.25-1.51L163.32,32,224,92.68Z" /></svg>
@@ -93,7 +93,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'padding',
 		description: 'Sets the space between the element\'s content and all its borders.',
-		syntax: '<length-percentage [0,∞]>{1,4}',
+		syntax: '<length-percentage [0,∞]>',
 		longhand: ['padding-top', 'padding-right', 'padding-bottom', 'padding-left']
 	},
 	{
@@ -120,28 +120,28 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'margin',
 		description: 'Sets the space outside all the element\'s borders.',
-		syntax: 'auto | <length-percentage>{1,4}',
+		syntax: '<length-percentage> | auto',
 		longhand: ['margin-top', 'margin-right', 'margin-bottom', 'margin-left']
 	},
 	{
 		key: 'margin-top',
 		description: 'Sets the space outside the element\'s top border.',
-		syntax: 'auto | <length-percentage>',
+		syntax: '<length-percentage> | auto',
 	},
 	{
 		key: 'margin-right',
 		description: 'Sets the space outside the element\'s right border.',
-		syntax: 'auto | <length-percentage>',
+		syntax: '<length-percentage> | auto',
 	},
 	{
 		key: 'margin-bottom',
 		description: 'Sets the space outside the element\'s bottom border.',
-		syntax: 'auto | <length-percentage>',
+		syntax: '<length-percentage> | auto',
 	},
 	{
 		key: 'margin-left',
 		description: 'Sets the space outside the element\'s left border.',
-		syntax: 'auto | <length-percentage>',
+		syntax: '<length-percentage> | auto',
 	},
 
 	{
@@ -161,26 +161,26 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	},
 	{
 		key: 'left',
-		syntax: 'auto | <length-percentage>',
 		description: 'Specifies the horizontal offset of a positioned element from its containing block\'s left edge.',
+		syntax: 'auto | <length-percentage>',
 	},
 
 	{
 		key: 'z-index',
 		description: 'Controls the stacking order of positioned elements.',
-		syntax: '<integer>',
+		syntax: 'auto | <integer> | inherit',
 	},
 
 
 	{
 		key: 'scroll-behavior',
 		description: 'Specifies the scrolling behavior for the element when scrolling is triggered.',
-		syntax: 'auto|smooth',
+		syntax: 'auto | smooth',
 		icons: {
 			'auto': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="M276-280h76l40-112h176l40 112h76L520-720h-80L276-280Zm138-176 64-182h4l64 182H414Zm66 376q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z" /></svg>
 			),
-			'xsmooth': (
+			'smooth': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M239.24,131.4c-22,46.8-41.4,68.6-61.2,68.6-25.1,0-40.73-33.32-57.28-68.6C107.7,103.56,92.9,72,78,72c-16.4,0-36.31,37.21-46.72,59.4a8,8,0,0,1-14.48-6.8C38.71,77.8,58.16,56,78,56c25.1,0,40.73,33.32,57.28,68.6C148.3,152.44,163.1,184,178,184c16.4,0,36.31-37.21,46.72-59.4a8,8,0,0,1,14.48,6.8Z" /></svg>
 			),
 		},
@@ -188,7 +188,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'scroll-snap-stop',
 		description: 'Controls whether the scroll snap point is always respected or not.',
-		syntax: 'normal|always',
+		syntax: 'normal | always',
 		icons: {
 			'normal': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z" /></svg>
@@ -201,7 +201,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'overscroll-behavior',
 		description: 'Specifies the behavior when scrolling reaches the boundary of a scroll container.',
-		syntax: '[contain|none|auto]{1,2}',
+		syntax: '[ contain | none | auto ]{1,2}',
 		icons: {
 			'auto': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="M276-280h76l40-112h176l40 112h76L520-720h-80L276-280Zm138-176 64-182h4l64 182H414Zm66 376q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z" /></svg>
@@ -217,7 +217,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'scroll-snap-type',
 		description: 'Defines how the element\'s children snap to a grid or points when scrolling.',
-		syntax: 'none|[[x|y|block|inline|both] [mandatory|proximity]?]',
+		syntax: 'none | [ x | y | block | inline | both ] [ mandatory | proximity ]?',
 		icons: {
 			'x': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M237.66,133.66l-32,32a8,8,0,0,1-11.32-11.32L212.69,136H43.31l18.35,18.34a8,8,0,0,1-11.32,11.32l-32-32a8,8,0,0,1,0-11.32l32-32a8,8,0,0,1,11.32,11.32L43.31,120H212.69l-18.35-18.34a8,8,0,0,1,11.32-11.32l32,32A8,8,0,0,1,237.66,133.66Z" /></svg>
@@ -248,7 +248,7 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'scroll-snap-align',
 		description: 'Defines the alignment of the element\'s children within the scroll container.',
-		syntax: '  [none|start|end|center]{1,2}',
+		syntax: '[ none | start | end | center ]{1,2}',
 		icons: {
 			'start': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M224,40a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,40ZM208,80v96a16,16,0,0,1-16,16H152a16,16,0,0,1-16-16V80a16,16,0,0,1,16-16h40A16,16,0,0,1,208,80Zm-16,0H152v96h40Zm-72,0V216a16,16,0,0,1-16,16H64a16,16,0,0,1-16-16V80A16,16,0,0,1,64,64h40A16,16,0,0,1,120,80Zm-16,0H64V216h40Z" /></svg>
@@ -270,9 +270,39 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 		syntax: '<length>{1,4}',
 	},
 	{
+		key: 'scroll-margin-top',
+		description: 'Sets the margin around the element for scroll snapping on the top side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-margin-right',
+		description: 'Sets the margin around the element for scroll snapping on the right side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-margin-bottom',
+		description: 'Sets the margin around the element for scroll snapping on the bottom side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-margin-left',
+		description: 'Sets the margin around the element for scroll snapping on the left side.',
+		syntax: '<length>',
+	},
+	{
 		key: 'scroll-margin-block',
 		description: 'Sets the margin around the element for scroll snapping in the block direction.',
 		syntax: '<length>{1,2}',
+	},
+	{
+		key: 'scroll-margin-block-start',
+		description: 'Sets the margin around the element for scroll snapping in the block start direction.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-margin-block-end',
+		description: 'Sets the margin around the element for scroll snapping in the block end direction.',
+		syntax: '<length>',
 	},
 	{
 		key: 'scroll-margin-inline',
@@ -280,18 +310,73 @@ export const SIZE_DEFINITIONS: StyleDefinition[] = [
 		syntax: '<length>{1,2}',
 	},
 	{
+		key: 'scroll-margin-inline-start',
+		description: 'Sets the margin around the element for scroll snapping in the inline start direction.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-margin-inline-end',
+		description: 'Sets the margin around the element for scroll snapping in the inline end direction.',
+		syntax: '<length>',
+	},
+
+
+	{
 		key: 'scroll-padding',
 		description: 'Sets the padding around the element for scroll snapping.',
-		syntax: '[auto|<length-percentage [0,∞]>]{1,4}',
+		syntax: '<length>{1,4}',
+	},
+
+	{
+		key: 'scroll-padding-top',
+		description: 'Sets the padding around the element for scroll snapping on the top side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-padding-right',
+		description: 'Sets the padding around the element for scroll snapping on the right side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-padding-bottom',
+		description: 'Sets the padding around the element for scroll snapping on the bottom side.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-padding-left',
+		description: 'Sets the padding around the element for scroll snapping on the left side.',
+		syntax: '<length>',
 	},
 	{
 		key: 'scroll-padding-block',
 		description: 'Sets the padding around the element for scroll snapping in the block direction.',
-		syntax: '[auto|<length-percentage [0,∞]>]{1,2}',
+		syntax: '<length>{1,2}',
+	},
+	{
+		key: 'scroll-padding-block-start',
+		description: 'Sets the padding around the element for scroll snapping in the block start direction.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-padding-block-end',
+		description: 'Sets the padding around the element for scroll snapping in the block end direction.',
+		syntax: '<length>',
 	},
 	{
 		key: 'scroll-padding-inline',
 		description: 'Sets the padding around the element for scroll snapping in the inline direction.',
-		syntax: '[auto|<length-percentage [0,∞]>]{1,2}',
+		syntax: '<length>{1,2}',
 	},
+	{
+		key: 'scroll-padding-inline-start',
+		description: 'Sets the padding around the element for scroll snapping in the inline start direction.',
+		syntax: '<length>',
+	},
+	{
+		key: 'scroll-padding-inline-end',
+		description: 'Sets the padding around the element for scroll snapping in the inline end direction.',
+		syntax: '<length>',
+	},
+
+
 ]

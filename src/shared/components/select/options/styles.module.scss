@@ -34,5 +34,8 @@
 }
 
 .Items {
-	@include inputMixins.components--flex-vertical($align: center);
+	@include inputMixins.components--flex-vertical($align: center,$justify: flex-start);
+
+	max-height: 70vh;
+	overflow: auto;
 }

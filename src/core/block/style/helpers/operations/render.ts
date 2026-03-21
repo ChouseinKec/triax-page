@@ -2,7 +2,7 @@
 import type { NodeID } from '@/core/block/node/types/instance';
 import type { NodeStyles } from '@/core/block/node/types/definition';
 import type { OperateResult } from '@/shared/types/result';
-import type { RegisteredStyles } from '@/core/block/style/types';
+import type { StyleDefinitionRecord } from '@/core/block/style/types';
 import type { DeviceKey, PseudoKey, OrientationKey, PseudoDefinition, DeviceDefinition } from '@/core/layout/page/types';
 
 // Helpers
@@ -30,7 +30,7 @@ import { getDeviceDefinitions } from '@/core/layout/page/managers/queries';
 function renderNodeStylesAllPseudos(
     styles: NodeStyles,
     nodeID: NodeID,
-    styleDefinitions: RegisteredStyles,
+    styleDefinitions: StyleDefinitionRecord,
     pseudoDefinitions: PseudoDefinition[],
 
     deviceKey: DeviceKey,
@@ -84,7 +84,7 @@ function renderNodeStylesAllPseudos(
 function renderNodeStylesSinglePseudo(
     styles: NodeStyles,
     nodeID: NodeID,
-    styleDefinitions: RegisteredStyles,
+    styleDefinitions: StyleDefinitionRecord,
 
     deviceKey: DeviceKey,
     orientationKey: OrientationKey,
@@ -143,7 +143,7 @@ function renderNodeStylesSinglePseudo(
 export function renderNodeStyles(
     styles: NodeStyles,
     nodeID: NodeID,
-    styleDefinitions: RegisteredStyles,
+    styleDefinitions: StyleDefinitionRecord,
     pseudoDefinitions: PseudoDefinition[],
 
     deviceKey: DeviceKey,

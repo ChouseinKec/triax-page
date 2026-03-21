@@ -1,23 +1,41 @@
-.Group {
-	display: grid;
-	align-items: flex-start;
-	gap: var(--size-lg);
-	position: relative;
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
 
-	:global(.DividerReveal) {
-		grid-column: 1/-1;
-	}
+.GroupLayout {
+	display: flex;
+	flex-direction: column;
 
-	:global(.HorizontalDivider) {
-		grid-column: 1/-1;
-		margin-top: var(--size-2xl);
+	overflow: hidden;
+	border-radius: var(--size-sm);
+	border: 1px solid var(--theme-color-primary-tint);
+}
+
+.Header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	padding: var(--size-sm) var(--size-md);
+
+	font-size: calc(var(--size-lg) * 0.85);
+	font-weight: var(--font-weight-bold);
+	color: var(--color-text-secondary);
+	background-color: var(--theme-color-primary-tint);
+
+	outline: none;
+	box-shadow: none;
+	border: none;
+
+	&[data-is-open] {
+		@include inputMixins.icon-arrow;
+		cursor:pointer;
 	}
 }
 
 .Content {
-	padding-bottom: var(--size-md);
-	padding-top: var(--size-lg);
+	padding: var(--size-md);
 
 	display: grid;
+
 	gap: var(--size-lg);
 }

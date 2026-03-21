@@ -1,110 +1,93 @@
 "use client";
-import { memo } from "react";
+import { memo, useCallback, useMemo } from "react";
+
 // Styles
 import CSS from "./styles.module.scss";
 
 // Types
-import type { BlockStyleValue } from "./types";
+import type { StyleValue } from "./types";
+import type { ValueToken } from "@/core/block/style/types";
 
 // Utilities
-import { splitAdvanced, joinAdvanced } from "@/shared/utilities/string";
-import { createOptionTable, getValueTokens, getTokenValues } from "@/core/block/style/utilities";
-import { mergeArrays } from "@/shared/utilities/array";
-import { devLog } from "@/shared/utilities/dev";
-import { getSyntaxParsed, getSyntaxNormalized, getSyntaxSet, getSyntaxSeparators } from '@/core/block/style/utilities/syntax';
+import { resolveValueTokens, matchVariations, groupValueTokens, deriveSchema, deriveValueTokens, simplifyValueTokens, deriveVariations, simplifyVariations, serializeValueTokens } from "@/core/block/style/utilities";
 
 // Components
-import NodeStyleslots from "@/config/layout/panel/tabs/style/slots/component";
+import StyleValueSlots from "@/config/layout/panel/tabs/style/value/slots/component";
 import GenericInput from "@/shared/components/input/generic/component";
 
-// Registry
-import { getRegisteredTokenTypes, getRegisteredTokens, getRegisteredStyles, getRegisteredUnits } from "@/core/block/style/state/registry";
+// Managers
+import { getTerminalDefinitions } from "@/core/block/style/managers";
 
 /**
- * BlockStyleValue Component
+ * StyleValue Component
  *
- * The primary CSS styleDefinition value editor that orchestrates complex syntax parsing and multi-slot editing.
- * Handles CSS styleDefinition syntax normalization, value tokenization, and separator management for advanced properties.
- * Automatically determines appropriate editing UI based on styleDefinition syntax definitions and current values.
- *
- * @param  props - Component properties
- * @param  props.value - Current CSS styleDefinition value string
- * @param  props.styleDefinition - Complete CSS styleDefinition definition with syntax and constraints
- * @param  props.onChange - Callback triggered when styleDefinition value changes
- * @returns Rendered multi-slot value editor with syntax-aware editing capabilities
- *
- * @note Performs complex syntax matching and normalization to maintain valid CSS while providing intuitive editing
+ * Top-level CSS property value editor.
+ * Compiles the property's VDS syntax into a flat variation list, derives a
+ * positional derivedSchema, then matches the current value to find the active
+ * variation and splits it into individual slot derivedValueTokens for rendering.
  */
-const BlockStyleValue: React.FC<BlockStyleValue> = ({ value, onChange, styleDefinition }) => {
-    // Get the syntaxSet (all possible tokens for each slot) and normalized variations from the styleDefinition definition
-    const syntaxParsed = getSyntaxParsed(styleDefinition.key, styleDefinition.syntax, getRegisteredTokens(), getRegisteredTokenTypes());
-    const syntaxNormalized = getSyntaxNormalized(styleDefinition.key, syntaxParsed, getRegisteredTokenTypes());
-    const syntaxSeparators = getSyntaxSeparators(styleDefinition.key, syntaxParsed);
-    const values = splitAdvanced(value);
-    const syntaxSet = getSyntaxSet(styleDefinition.key, syntaxParsed);
-    const slotsOptions = createOptionTable(styleDefinition.key, syntaxNormalized, syntaxSet, values, getRegisteredTokenTypes(), getRegisteredTokens(), getRegisteredStyles(), getRegisteredUnits());
+const StyleValue: React.FC<StyleValue> = ({ value, onChange, constraint, styleKey, terminalDefinitions: terminalDefinitionsProp, derivedVariations: derivedVariationsProp, simplifiedVariations: simplifiedVariationsProp, inline }) => {
+    const terminalDefinitions = useMemo(() => terminalDefinitionsProp ?? getTerminalDefinitions(), [terminalDefinitionsProp]);
+    const derivedVariations = useMemo(() => derivedVariationsProp ?? deriveVariations(constraint), [derivedVariationsProp, constraint]);
+    const simplifiedVariations = useMemo(() => simplifiedVariationsProp ?? simplifyVariations(derivedVariations), [simplifiedVariationsProp, derivedVariations]);
 
-    if (styleDefinition.key.includes('padding')) {
-        console.log(styleDefinition.key);
-        console.log("--------------------------------------------------");
-        console.log(styleDefinition.syntax);
-        console.log("--------------------------------------------------");
-        console.log(syntaxParsed);
-        console.log("--------------------------------------------------");
-        console.log(syntaxSet);
-        console.log("--------------------------------------------------");
-        console.log(slotsOptions);
-    }
+    const handleChange = useCallback((valueTokens: ValueToken[]) => {
+        // If the new value is empty, return an empty string 
+        if (valueTokens.length === 0) return onChange('');
 
-    if (!slotsOptions) return <GenericInput className={CSS.fallback} value={value} onChange={onChange} placeholder={`Enter ${styleDefinition.key} value`} />;
+        // Resolve the new value tokens against the simplified variations to ensure they form a valid value.
+        // terminalDefinitions is passed so partial matches can be completed with per-type defaults.
+        const resolved = resolveValueTokens(valueTokens, derivedVariations, simplifiedVariations, terminalDefinitions);
+        if (!resolved) return;
 
+        // Serialize the resolved token stream back into a CSS value string and pass it to onChange.
+        onChange(serializeValueTokens(resolved));
+    },
+        [derivedVariations, simplifiedVariations, onChange]
+    );
 
+    // Parse the current value into tokens — memoized so re-renders with the same value are free.
+    const derivedValueTokens = useMemo(() => deriveValueTokens(value, terminalDefinitions), [value, terminalDefinitions]);
 
-    // Handler to update slot values and join with correct separators
-    const handleSlotsChange = (input: string[]) => {
-        if (!input || (input.length === 1 && input[0] === "")) return onChange("");
+    // Match against full variations — memoized on tokens + variations.
+    const matchedVariation = useMemo(() => matchVariations(derivedValueTokens, derivedVariations, false), [derivedValueTokens, derivedVariations]);
+    const variationIndex = matchedVariation.full >= 0 ? matchedVariation.full : 0;
 
-        // Normalize updated values to canonical tokens
-        const valueTokens = getValueTokens(input, getRegisteredTokenTypes()).join(" ");
+    // Group + simplify tokens for the active variation.
+    // Skip the work when value is malformed (we'll fallback to a raw input below).
+    const isFallback = matchedVariation.full === -1 && !!value;
+    const groupedValueTokens = useMemo(() => {
+        if (isFallback) return [];
+        return simplifyValueTokens(groupValueTokens(derivedValueTokens, derivedVariations[variationIndex]));
+    }, [isFallback, derivedValueTokens, derivedVariations, variationIndex]
+    );
 
-        // Find the index of the matching variation with strict matching
-        // This will return the index of the variation that matches the updated value tokens
-        let variationIndex = syntaxNormalized.findIndex((value) => value === valueTokens)
+    // Derive schema for the active variation — memoized on grouped tokens + simplified variations.
+    const derivedSchema = useMemo(() => {
+        if (isFallback) return [];
+        return deriveSchema(groupedValueTokens, simplifiedVariations);
+    }, [isFallback, groupedValueTokens, simplifiedVariations]
+    );
 
-
-        // If no matching variation is found,
-        // Find the index of the matching variation with non-strict matching
-        // This will return the index of the variation that starts with the updated value tokens
-        // Needed for variations with tuple values
-        if (variationIndex === -1) {
-            variationIndex = syntaxParsed.findIndex((value) => value.startsWith(valueTokens));
-
-            // If still no match, return early
-            // This will prevent assignment of invalid syntax when the slot is set to "" or empty
-            if (variationIndex === -1) return devLog.warn("No matching syntax variation found for value tokens:", { valueTokens, syntaxParsed }), undefined;
-
-            // Rebuild the input array based on the matched variation's full syntax
-            // This ensures all required tokens are included
-            // For example, if the variation is "<length> <length> <color>" and input is ["10px"],
-            // this will expand input to ["10px", "0px", "#ffffff"] using default token values
-            const syntax = syntaxNormalized[variationIndex];
-            input = mergeArrays(input, getTokenValues(splitAdvanced(syntax), getRegisteredTokens(), getRegisteredTokenTypes()));
-        }
-
-        // Get separators for this variation
-        const separators = syntaxSeparators[variationIndex]
-
-        // Join values with the determined separators
-        const joinedValue = joinAdvanced(input, separators);
-
-        // Trigger the change callback
-        onChange(joinedValue);
-    }
-
-    // Render the slot-based value editor, passing separators and new onChange
-    return <NodeStyleslots values={values} options={slotsOptions} onChange={handleSlotsChange} />
+    return (
+        isFallback
+            // If the value is malformed, render a freeform input instead of the slots editor. 
+            ? <GenericInput
+                className={CSS.Fallback}
+                value={value}
+                onChange={onChange}
+            />
+            // Otherwise, render the slots editor with the derived schema and value tokens.
+            : <StyleValueSlots
+                styleKey={styleKey}
+                valueTokens={groupedValueTokens}
+                derivedSchema={derivedSchema}
+                terminalDefinitions={terminalDefinitions}
+                onChange={handleChange}
+                inline={inline}
+            />
+    )
 };
 
-BlockStyleValue.displayName = "BlockStyleValue";
-export default memo(BlockStyleValue);
-
+StyleValue.displayName = "StyleValue";
+export default memo(StyleValue);

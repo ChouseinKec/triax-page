@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 // Components
 import DividerReveal from '@/shared/components/reveal/divider/component';
@@ -18,29 +18,32 @@ export const GroupLayout: React.FC<GroupLayoutProps> = ({
     styles,
 }) => {
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
     if (isHidden) return null;
 
-    if (isExpandable) {
-        return (
-            <div className={CSS.GroupLayout}>
-                <DividerReveal title={dividerTitle}>
-                    <div className={CSS.Content} style={styles}>
-                        {content()}
-                    </div>
-                </DividerReveal>
-            </div>
-        );
-    }
+    const isContentVisible = !isExpandable || isExpanded;
+
+    const Header = isExpandable ? 'button' : 'div';
 
     return (
         <div className={CSS.GroupLayout}>
 
-            {dividerTitle && <HorizontalDivider title={dividerTitle} />}
+            <Header
+                className={CSS.Header}
+                {...(isExpandable && {
+                    onClick: () => setIsExpanded(prev => !prev),
+                    'data-is-open': isExpanded,
+                })}
+            >
+                <span>{dividerTitle}</span>
+            </Header>
 
-            <div className={CSS.Content} style={styles}>
-                {content()}
-            </div>
-
+            {isContentVisible && (
+                <div className={CSS.Content} style={styles}>
+                    {content()}
+                </div>
+            )}
 
         </div>
     );

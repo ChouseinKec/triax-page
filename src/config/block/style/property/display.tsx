@@ -4,7 +4,7 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'display',
 		description: 'Controls the element\'s display type and how it participates in layout.',
-		syntax: 'block | inline | inline-block | flex | grid | none ',
+		syntax: '[<display-outside> || <display-inside>] | <display-box> | <display-outside>  [<display-inside> | math]',
 		icons: {
 			'block': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /></svg>
@@ -21,9 +21,12 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 			'inline': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M5 12h14" /></svg>
 			),
-			'inline-block': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="12" x="2" y="6" rx="2" /></svg>
+			'flow-root': (
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M208,96a16,16,0,0,0,16-16V48a16,16,0,0,0-16-16H176a16,16,0,0,0-16,16v8H96V48A16,16,0,0,0,80,32H48A16,16,0,0,0,32,48V80A16,16,0,0,0,48,96h8v64H48a16,16,0,0,0-16,16v32a16,16,0,0,0,16,16H80a16,16,0,0,0,16-16v-8h64v8a16,16,0,0,0,16,16h32a16,16,0,0,0,16-16V176a16,16,0,0,0-16-16h-8V96ZM176,48h32V80H176ZM48,48H80V63.9a.51.51,0,0,0,0,.2V80H48ZM80,208H48V176H80v15.9a.51.51,0,0,0,0,.2V208Zm128,0H176V176h32Zm-24-48h-8a16,16,0,0,0-16,16v8H96v-8a16,16,0,0,0-16-16H72V96h8A16,16,0,0,0,96,80V72h64v8a16,16,0,0,0,16,16h8Z" /></svg>
 			),
+			'math': (
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M112,72a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16h64A8,8,0,0,1,112,72Zm-8,104H80V152a8,8,0,0,0-16,0v24H40a8,8,0,0,0,0,16H64v24a8,8,0,0,0,16,0V192h24a8,8,0,0,0,0-16Zm48,0h64a8,8,0,0,0,0-16H152a8,8,0,0,0,0,16Zm64,16H152a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm-61.66-90.34a8,8,0,0,0,11.32,0L184,83.31l18.34,18.35a8,8,0,0,0,11.32-11.32L195.31,72l18.35-18.34a8,8,0,0,0-11.32-11.32L184,60.69,165.66,42.34a8,8,0,0,0-11.32,11.32L172.69,72,154.34,90.34A8,8,0,0,0,154.34,101.66Z" /></svg>
+			)
 		},
 	},
 	{
@@ -65,151 +68,79 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'align-items',
 		description: 'Aligns flex items along the cross axis of the flex container.',
-		syntax: 'flex-start | flex-end | center | baseline | stretch',
-		icons: {
-			'center': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
-			),
-			'flex-start': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-760v-80h640v80H160Zm280 640v-408L336-424l-56-56 200-200 200 200-56 56-104-104v408h-80Z" /></svg>
-			),
-			'flex-end': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-120v-80h640v80H160Zm320-160L280-480l56-56 104 104v-408h80v408l104-104 56 56-200 200Z" /></svg>
-			),
-			'stretch': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><polygon fill='black' points="13,6.99 16,6.99 12,3 8,6.99 11,6.99 11,17.01 8,17.01 12,21 16,17.01 13,17.01" /></svg>
-			),
-			'baseline': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>
-			),
-		},
+		syntax: 'normal | stretch | <baseline-position> | <overflow-position>? <self-position>',
 	},
 	{
 		key: 'align-content',
 		description: 'Aligns flex lines within a flex container when there is extra space.',
-		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly | stretch',
-		icons: {
-			'flex-end': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill="black" d="M22,22H2v-2h20V22z M10,2H7v16h3V2z M17,8h-3v10h3V8z" /></svg>
-			),
-			'flex-start': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill="black" d="M22,2v2H2V2H22z M7,22h3V6H7V22z M14,16h3V6h-3V16z" /></svg>
-			),
-			'center': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><polygon fill='black' points="22,11 17,11 17,6 14,6 14,11 10,11 10,3 7,3 7,11 1.84,11 1.84,13 7,13 7,21 10,21 10,13 14,13 14,18 17,18 17,13 22,13" /></svg>
-			),
-			'space-between': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M22,2v2H2V2H22z M7,10.5v3h10v-3H7z M2,20v2h20v-2H2z" /></svg>
-			),
-			'space-around': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z" /></svg>
-			),
-			'space-evenly': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z" /></svg>
-			),
-			'stretch': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><polygon fill='black' points="13,6.99 16,6.99 12,3 8,6.99 11,6.99 11,17.01 8,17.01 12,21 16,17.01 13,17.01" /></svg>
-			),
-		},
+		syntax: 'normal | <baseline-position> | <content-distribution> | <overflow-position>? <content-position> ',
+
 	},
 	{
 		key: 'justify-content',
 		description: 'Aligns flex items along the main axis of the flex container.',
-		syntax: 'flex-start | flex-end | center | space-between | space-around | space-evenly',
-		icons: {
-			'center': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><polygon fill="black" points="11,2 13,2 13,7 21,7 21,10 13,10 13,14 18,14 18,17 13,17 13,22 11,22 11,17 6,17 6,14 11,14 11,10 3,10 3,7 11,7" /></svg>
-			),
-			'flex-start': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill='black' d="M4,22H2V2h2V22z M22,7H6v3h16V7z M16,14H6v3h10V14z" /></svg>
-			),
-			'flex-end': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill='black' d="M20,2h2v20h-2V2z M2,10h16V7H2V10z M8,17h10v-3H8V17z" /></svg>
-			),
-			'space-between': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M22,2v2H2V2H22z M7,10.5v3h10v-3H7z M2,20v2h20v-2H2z" /></svg>
-			),
-			'space-around': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z" /></svg>
-			),
-			'space-evenly': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M6 7h2.5L5 3.5 1.5 7H4v10H1.5L5 20.5 8.5 17H6V7zm4-2v2h12V5H10zm0 14h12v-2H10v2zm0-6h12v-2H10v2z" /></svg>
-			),
-		},
-	},
-	{
-		key: 'row-gap',
-		description: 'Sets the size of the gap between grid rows.',
-		syntax: '<length-percentage>',
-		icons: {
-			'center': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
-			),
-			'stretch': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><polygon fill='black' points="13,6.99 16,6.99 12,3 8,6.99 11,6.99 11,17.01 8,17.01 12,21 16,17.01 13,17.01" /></svg>
-			),
-			'flex-end': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-120v-80h640v80H160Zm320-160L280-480l56-56 104 104v-408h80v408l104-104 56 56-200 200Z" /></svg>
-			),
-			'baseline': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>
-			),
-			'flex-start': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-760v-80h640v80H160Zm280 640v-408L336-424l-56-56 200-200 200 200-56 56-104-104v408h-80Z" /></svg>
-			),
-		}
-	},
-	{
-		key: 'column-gap',
-		description: 'Sets the size of the gap between grid columns.',
-		syntax: '<length-percentage>',
+		syntax: 'normal | <content-distribution> | <overflow-position>? [<content-position> | left | right]',
+
 	},
 	{
 		key: 'gap',
 		description: 'Shorthand for setting both row-gap and column-gap.',
-		syntax: '<row-gap> <column-gap>',
+		syntax: '<row-gap> <column-gap>?',
 	},
+	{
+		key: 'row-gap',
+		description: 'Sets the size of the gap between grid rows.',
+		syntax: '<row-gap>',
+	},
+	{
+		key: 'column-gap',
+		description: 'Sets the size of the gap between grid columns.',
+		syntax: '<column-gap>',
+	},
+
 	{
 		key: 'flex-grow',
 		description: 'Defines how much a flex item will grow relative to other flex items.',
-		syntax: '<number>',
+		syntax: '<number [0,∞]>',
 	},
 	{
 		key: 'flex-shrink',
 		description: 'Defines how much a flex item will shrink relative to other flex items.',
-		syntax: '<number>',
+		syntax: '<number [0,∞]>',
 	},
 	{
 		key: 'flex-basis',
 		description: 'Defines the default size of a flex item before the remaining space is distributed.',
-		syntax: '<length> | <percentage> | auto',
+		syntax: 'content | <width>',
 	},
+
+	{
+		key: 'align-self',
+		description: 'Allows a flex item to override the align-items value for its own alignment.',
+		syntax: 'auto | <overflow-position>? [ normal | <self-position> ] | stretch | <baseline-position>'
+	},
+	{
+		key: 'justify-self',
+		description: 'Allows a flex item to override the justify-content value for its own alignment.',
+		syntax: 'auto | <overflow-position>? [ normal | <self-position> | left | right ] | stretch | <baseline-position>'
+	},
+	{
+		key: 'order',
+		description: 'Defines the order of flex items within a flex container.',
+		syntax: '<integer>',
+	},
+
+
+
 	{
 		key: 'justify-items',
 		description: 'Aligns items along the main axis in a single line or grid cell.',
-		syntax: 'flex-start | flex-end | center | baseline | stretch',
-		icons: {
-			'center': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M280-120v-320H80v-80h200v-320h120v320h160v-200h120v200h200v80H680v200H560v-200H400v320H280Z" /></svg>
-			),
-			'flex-start': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-760v-80h640v80H160Zm280 640v-408L336-424l-56-56 200-200 200 200-56 56-104-104v408h-80Z" /></svg>
-			),
-			'flex-end': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"><path fill='black' d="M160-120v-80h640v80H160Zm320-160L280-480l56-56 104 104v-408h80v408l104-104 56 56-200 200Z" /></svg>
-			),
-			'stretch': (
-				<svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px"><polygon fill='black' points="13,6.99 16,6.99 12,3 8,6.99 11,6.99 11,17.01 8,17.01 12,21 16,17.01 13,17.01" /></svg>
-			),
-			'baseline': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M60.59,175.24a8,8,0,0,0,10.65-3.83L87.9,136h80.2l16.66,35.41a8,8,0,1,0,14.48-6.82l-64-136a8,8,0,0,0-14.48,0l-64,136A8,8,0,0,0,60.59,175.24ZM128,50.79,160.57,120H95.43ZM224,216a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,216Z" /></svg>
-			),
-		},
+		syntax: 'normal | stretch | <baseline-position> | <overflow-position>? [<self-position> | left | right] | legacy | legacy && [left | right | center]',
 	},
 	{
 		key: 'grid-auto-flow',
 		description: 'Controls the placement algorithm for auto-placed grid items.',
-		syntax: '[row|column] || dense',
+		syntax: '[row | column] || dense',
 		icons: {
 			'column': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path fill='black' d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" /></svg>
@@ -226,22 +157,30 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'grid-auto-rows',
 		description: 'Specifies the size of rows created automatically in the grid.',
-		syntax: '[<track-size>]+',
+		syntax: '<track-size>+',
 	},
 	{
 		key: 'grid-auto-columns',
 		description: 'Specifies the size of columns created automatically in the grid.',
-		syntax: '[<track-size>]+',
+		syntax: '<track-size>+ ',
+	},
+
+	{
+		key: 'grid-template-areas',
+		description: 'Defines named grid areas for layout.',
+		syntax: 'none | <string>+',
 	},
 	{
 		key: 'grid-template-rows',
 		description: 'Defines the row structure of the grid.',
-		syntax: 'none | <track-list>',
+		syntax: 'none | subgrid | <track-list> | <auto-track-list>',
+
 	},
 	{
 		key: 'grid-template-columns',
 		description: 'Defines the column structure of the grid.',
-		syntax: '<track-list>',
+		syntax: 'none | subgrid | <track-list> | <auto-track-list> ',
+
 	},
 	{
 		key: 'direction',
@@ -276,10 +215,10 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 		syntax: 'visible | hidden | collapse',
 		icons: {
 			'visible': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" /></svg>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z" /></svg>
 			),
 			'hidden': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z" /></svg>
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
 			),
 			'collapse': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="m296-80-56-56 240-240 240 240-56 56-184-184L296-80Zm184-504L240-824l56-56 184 184 184-184 56 56-240 240Z" /></svg>
@@ -290,47 +229,22 @@ export const DISPLAY_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'float',
 		description: 'Removes the element from normal flow and positions it to the left or right.',
-		syntax: 'left|right|none',
-		icons: {
-			'left': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 19V5" /><path fill='black' d="m13 6-6 6 6 6" /><path fill='black' d="M7 12h14" /></svg>
-			),
-			'right': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M17 12H3" /><path fill='black' d="m11 18 6-6-6-6" /><path fill='black' d="M21 5v14" /></svg>
-			),
-			'none': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
-			),
-		},
+		syntax: 'block-start | block-end | inline-start | inline-end | snap-block | <snap-block()> | snap-inline | <snap-inline()> | left | right | top | bottom | none | footnote',
 	},
 	{
 		key: 'clear',
 		description: 'Specifies which sides of an element floating elements are not allowed to be adjacent to.',
-		syntax: 'none|left|right|both',
-		icons: {
-			'left': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M3 19V5" /><path fill='black' d="m13 6-6 6 6 6" /><path fill='black' d="M7 12h14" /></svg>
-			),
-			'right': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="M17 12H3" /><path fill='black' d="m11 18 6-6-6-6" /><path fill='black' d="M21 5v14" /></svg>
-			),
-			'none': (
-				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black"><path fill='black' d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /></svg>
-			),
-			'both': (
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path fill='black' d="m18 8 4 4-4 4" /><path fill='black' d="M2 12h20" /><path fill='black' d="m6 8-4 4 4 4" /></svg>
-			),
-		},
+		syntax: 'inline-start | inline-end | block-start | block-end | left | right | top | bottom | both-inline | both-block | both | none',
 	},
 	{
 		key: 'object-position',
 		description: 'Defines the alignment of replaced content within its box.',
-		syntax: '[[left|center|right]&&[top|center|bottom]] | <length-percentage> | [<length-percentage> <length-percentage>]',
+		syntax: '<position>',
 	},
 	{
 		key: 'object-fit',
 		description: 'Specifies how replaced content should be resized to fit its container.',
-		syntax: 'fill|contain|cover|none|scale-down',
+		syntax: 'fill | none | [contain | cover] || scale-down ',
 		icons: {
 			'fill': (
 				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="black"><path fill="black" d="M18 4H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H6V6h12v12z" /></svg>

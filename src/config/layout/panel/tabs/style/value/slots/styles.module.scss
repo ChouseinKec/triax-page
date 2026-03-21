@@ -1,0 +1,24 @@
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.StyleValueSlots {
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	gap: var(--size-sm);
+
+	overflow: hidden;
+	position: relative;
+	> :global(.SlotNext) {
+		flex: unset;
+		width: auto;
+		min-width: 25px;
+		:global(.Toggle) {
+			@include inputMixins.components--button-dropdown($isRound: true);
+		}
+	}
+	> * {
+		flex: 1 1 auto;
+		width: 100%;
+	}
+}

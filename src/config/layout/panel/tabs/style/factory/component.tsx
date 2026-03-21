@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 // Managers
-import { setBlockStyle, useBlockStyle, } from '@/core/block/style/managers';
-
+import { setBlockStyle, useBlockStyle } from '@/core/block/style/managers';
+import { getNonTerminalDefinitions } from '@/core/block/style/managers';
 
 // Components
-import BlockStyleValue from '@/config/layout/panel/tabs/style/value/component';
+import StyleValue from '@/config/layout/panel/tabs/style/value/component';
 import Property from '@/shared/components/layout/property/component';
 import PropertyActions from '@/config/layout/panel/tabs/style/action/component';
 
@@ -15,6 +15,7 @@ import type { RenderStyleRowOptions } from './types';
 
 // Utilties
 import { devRender } from '@/shared/utilities/dev';
+import { deriveConstraint } from '@/core/block/style/utilities';
 
 // Registry
 import { getRegisteredStyle } from '@/core/block/style/state/registry';
@@ -23,24 +24,30 @@ import { getRegisteredStyle } from '@/core/block/style/state/registry';
  * Memoized component to render the appropriate value editor for a CSS property
  * Handles data fetching and component selection reactively
  */
-const StyleValueRenderer = React.memo(({ NodeID, propertyName }: { NodeID: string; propertyName: StyleKey }): React.ReactElement | null => {
-    const value = useBlockStyle(NodeID, propertyName);
+const ValueRenderer = React.memo(({ nodeID, propertyName }: { nodeID: string; propertyName: StyleKey }): React.ReactElement | null => {
+    const value = useBlockStyle(nodeID, propertyName);
     const styleDefinition = getRegisteredStyle(propertyName);
+    const nonTerminalDefinitions = useMemo(() => getNonTerminalDefinitions(), []);
+    const constraint = useMemo(
+        () => styleDefinition ? deriveConstraint(styleDefinition.syntax, nonTerminalDefinitions) : null,
+        [styleDefinition, nonTerminalDefinitions]
+    );
 
-    if (!styleDefinition) return devRender.error("[StyleValueRenderer] No property definition found", { propertyName });
+    if (!styleDefinition || !constraint) return devRender.error("[ValueRenderer] No property definition found", { propertyName });
 
     return (
-        <BlockStyleValue
+        <StyleValue
             value={value || ''}
-            onChange={(newValue) => setBlockStyle(NodeID, propertyName, newValue)}
-            styleDefinition={styleDefinition}
+            styleKey={styleDefinition.key}
+            constraint={constraint}
+            onChange={(newValue) => setBlockStyle(nodeID, propertyName, newValue)}
         />
     );
 });
 
-StyleValueRenderer.displayName = 'StyleValueRenderer';
+ValueRenderer.displayName = 'ValueRenderer';
 
-export { StyleValueRenderer };
+export { ValueRenderer };
 
 
 /**
@@ -48,7 +55,7 @@ export { StyleValueRenderer };
  */
 export function renderStyleRow(options: RenderStyleRowOptions): React.ReactElement | null {
     if (options?.hidden) return null;
-    const { NodeID, propertyName } = options;
+    const { nodeID, propertyName } = options;
 
     const styleDefinition = getRegisteredStyle(propertyName);
     if (!styleDefinition) return devRender.error("[renderStyleRow] No style definition found", { propertyName });
@@ -60,8 +67,8 @@ export function renderStyleRow(options: RenderStyleRowOptions): React.ReactEleme
             label={options.label ?? null}
             styles={options?.styles}
             disabled={options?.disabled}
-            content={() => (<StyleValueRenderer NodeID={NodeID} propertyName={propertyName} />)}
-            actions={() => <PropertyActions NodeID={NodeID} property={propertyName} />}
+            content={() => (<ValueRenderer nodeID={nodeID} propertyName={propertyName} />)}
+            actions={() => <PropertyActions nodeID={nodeID} property={propertyName} />}
         />
     );
 }

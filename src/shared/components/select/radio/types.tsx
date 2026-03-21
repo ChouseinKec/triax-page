@@ -7,7 +7,9 @@ export type RadioSelectProps = {
     /** The list of options available for selection. */
     options: OptionDefinition[];
     /** Callback function to handle changes in the selected value. */
-    onChange: (value: string | string[]) => void;
+    // onChange: (value: string | string[]) => void;
+    onChange: (value: string) => void;
+
     /** Optional class name for custom styling. */
     className?: string;
     /** Optional flag to prioritize icons over text in the options. */

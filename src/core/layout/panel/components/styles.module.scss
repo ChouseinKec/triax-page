@@ -1,7 +1,7 @@
 .Panel {
 	padding: var(--size-md);
 	padding-top: calc(var(--size-2xl) * 2);
-	position: fixed;
+	position: absolute;
 
 	border-radius: var(--size-md);
 	background: var(--theme-color-primary);
@@ -99,7 +99,7 @@
 	left: 0;
 
 	padding: var(--size-sm);
-	background: var(--theme-color-primary-shade);
+	background: var(--theme-color-primary-tint);
 	border-top-left-radius: var(--size-md);
 	border-top-right-radius: var(--size-md);
 	box-shadow: var(--theme-shadow-border);

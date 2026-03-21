@@ -14,19 +14,19 @@ import { copyBlockStyle, pasteBlockStyle, resetBlockStyle } from '@/core/block/s
  * Renders action buttons (copy, paste, reset) for a specific style property.
  * Checks if the block can have the style before rendering actions.
  * 
- * @param NodeID - The block identifier
+ * @param nodeID - The block identifier
  * @param property - The CSS property key
  * @returns Action buttons or null if block cannot have this style
  */
 
 
-const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) => {
+const PropertyActions: React.FC<PropertyActionsProps> = ({ nodeID, property }) => {
 
     return (
         <>
             <button
                 title="Copy Property"
-                onClick={() => copyBlockStyle(NodeID, property)}
+                onClick={() => copyBlockStyle(nodeID, property)}
                 aria-label={`Copy ${property}`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
@@ -35,7 +35,7 @@ const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) =
             </button>
             <button
                 title="Paste Property"
-                onClick={() => pasteBlockStyle(NodeID, property)}
+                onClick={() => pasteBlockStyle(nodeID, property)}
                 aria-label={`Paste ${property}`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">
@@ -44,7 +44,7 @@ const PropertyActions: React.FC<PropertyActionsProps> = ({ NodeID, property }) =
             </button>
             <button
                 title="Reset Property"
-                onClick={() => resetBlockStyle(NodeID, property)}
+                onClick={() => resetBlockStyle(nodeID, property)}
                 aria-label={`Reset ${property}`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">

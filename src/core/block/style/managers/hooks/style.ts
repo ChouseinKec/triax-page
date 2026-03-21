@@ -18,7 +18,7 @@ import { validateDeviceKey, validateOrientationKey, validatePseudoKey } from '@/
 import { useSelectedOrientationKey, useSelectedDeviceKey, useSelectedPseudoKey } from '@/core/layout/page/managers/';
 
 // Queries
-import { getBlockStyle, getBlockStylesRendered, canBlockStyleBeEdited } from '@/core/block/style/managers/queries/style';
+import { getBlockStyleValue, getBlockStylesRendered, canBlockStyleBeEdited } from '@/core/block/style/managers/queries/style';
 
 /**
  * Reactive hook to get a block's style value with CSS cascade fallback logic for block style operations.
@@ -51,7 +51,7 @@ export function useBlockStyle(nodeID: NodeID, styleKey: StyleKey): string | unde
 		const nodeExists = pickNodeInstance(safeParams.nodeID, state.storedNodes).success;
 		if (!nodeExists) return undefined;
 
-		return getBlockStyle(safeParams.nodeID, safeParams.styleKey, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
+		return getBlockStyleValue(safeParams.nodeID, safeParams.styleKey, selectedDeviceKey, selectedOrientationKey, selectedPseudoKey);
 	});
 }
 

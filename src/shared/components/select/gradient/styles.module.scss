@@ -1,0 +1,7 @@
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.GradientSelect {
+	*::after {
+		content: none !important;
+	}
+}

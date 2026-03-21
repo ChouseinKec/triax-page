@@ -1,0 +1,106 @@
+@use '@/shared/styles/mixins/mixins.module.scss' as inputMixins;
+
+.Slot {
+	&[data-type='combinator'],
+	&[data-type='literal'] {
+		flex: unset;
+		color: var(--color-white);
+		opacity: 0.3;
+	}
+
+	&[data-type='group'] {
+		width: 100%;
+	}
+
+	&[data-type='function'] {
+		width: 100%;
+	}
+}
+
+.GroupSegment {
+	width: 100%;
+
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+
+	.SlotIndex {
+		position: relative;
+		margin-right: var(--size-sm);
+		span {
+			width: 25px;
+			height: 25px;
+			background: var(--theme-color-primary-tint);
+
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			font-size: var(--font-size-md);
+			color: var(--color-gray);
+
+			border-radius: var(--size-sm);
+		}
+
+		&::before {
+			content: ' ';
+
+			position: absolute;
+			width: 1px;
+			height: 105%;
+			top: 35%;
+			left: 50%;
+			border-left: 1px solid var(--theme-color-primary-tint);
+
+			transform: translate(-50%, 0);
+
+			z-index: -1;
+		}
+
+		&[data-is-open='true'] {
+			&::after {
+				content: ' ';
+
+				position: absolute;
+				width: 75%;
+
+				top: 65%;
+				left: 50%;
+				height: 1px;
+				border-top: 1px solid var(--theme-color-primary-tint);
+
+				transform: translate(0, -50%);
+
+				z-index: -1;
+			}
+		}
+	}
+
+	> :global(.StyleValueSlots) {
+		border-radius: var(--size-sm);
+		border: 1px solid var(--theme-color-primary-tint);
+		background: var(--theme-color-primary-shade);
+		padding: var(--size-sm);
+	}
+
+	.SlotActions {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: var(--size-sm);
+
+		.SlotAction {
+			@include inputMixins.components--button($background: var(--theme-color-primary-tint));
+
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	.SegmentToggle {
+		@include inputMixins.components--button($background: var(--theme-color-primary-tint));
+
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+}

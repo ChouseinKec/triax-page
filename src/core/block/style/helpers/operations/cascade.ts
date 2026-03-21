@@ -1,6 +1,6 @@
 // Types
 import type { NodeStyles } from '@/core/block/node/types/definition';
-import type { StyleCascadePath, StyleKey, StyleRecord, StyleValue, StyleDefinition, RegisteredStyles } from '@/core/block/style/types';
+import type { StyleCascadePath, StyleKey, StyleRecord, Value, StyleDefinition, StyleDefinitionRecord } from '@/core/block/style/types';
 import type { OperateResult } from '@/shared/types/result';
 
 // Helpers
@@ -22,7 +22,7 @@ import { collectBlockStyleKeys, pickStyleLonghand, pickStyleDefinition } from '@
  * @param styleCascadePaths - Pre-computed cascade paths in priority order, each path is a [device, orientation, pseudo] tuple
  * @returns Operation result containing the resolved style value, or empty string if not found
  */
-function cascadeStyleLonghandValue(styleKey: StyleKey, nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
+function cascadeStyleLonghandValue(styleKey: StyleKey, nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<Value> {
 	// Find style value in cascade paths - returns first non-empty match
 	for (const [device, orientation, pseudo] of styleCascadePaths) {
 		const candidate = nodeStyles[device]?.[orientation]?.[pseudo]?.[styleKey];
@@ -48,7 +48,7 @@ function cascadeStyleLonghandValue(styleKey: StyleKey, nodeStyles: NodeStyles, s
  * @see {@link cascadeStyleLonghandValue} - The function that resolves individual longhand values
  * @see {@link resolveStyleLonghand} - The function that merges longhand values into shorthand
  */
-function cascadeStyleShorthandValue(styleKeys: StyleKey[], nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
+function cascadeStyleShorthandValue(styleKeys: StyleKey[], nodeStyles: NodeStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<Value> {
 	const values: string[] = [];
 
 	// Resolve each longhand property in the shorthand
@@ -78,7 +78,7 @@ function cascadeStyleShorthandValue(styleKeys: StyleKey[], nodeStyles: NodeStyle
  * @see {@link cascadeNodeStyle} - The function that resolves individual style keys
  * @see {@link collectBlockStyleKeys} - The function that gathers unique style keys from block styles
  */
-export function cascadeNodeStyles(nodeStyles: NodeStyles, styleDefinitions: RegisteredStyles, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleRecord> {
+export function cascadeNodeStyles(nodeStyles: NodeStyles, styleDefinitions: StyleDefinitionRecord, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleRecord> {
 	// Collect all unique style keys present in the block styles
 	const keyResult = collectBlockStyleKeys(nodeStyles);
 	if (!keyResult.success) return { success: false, error: keyResult.error };
@@ -118,7 +118,7 @@ export function cascadeNodeStyles(nodeStyles: NodeStyles, styleDefinitions: Regi
  * @see {@link cascadeStyleLonghandValue} - Called when style is a longhand property
  * @see {@link pickStyleLonghand} - The function that determines if a style is shorthand
  */
-export function cascadeNodeStyle(styleKey: StyleKey, nodeStyles: NodeStyles, styleDefinition: StyleDefinition, styleCascadePaths: StyleCascadePath[]): OperateResult<StyleValue> {
+export function cascadeNodeStyle(styleKey: StyleKey, nodeStyles: NodeStyles, styleDefinition: StyleDefinition, styleCascadePaths: StyleCascadePath[]): OperateResult<Value> {
 	// Check if this is a shorthand property
 	const longhandResult = pickStyleLonghand(styleDefinition);
 

@@ -6,7 +6,7 @@ import '@/config/block/attribute/index';
 import '@/config/layout/page/index';
 import '@/config/layout/panel/index';
 import '@/config/block/style/property/index';
-import '@/config/block/style/token/index';
+import '@/config/block/style/terminal/index';
 import '@/config/block/style/unit/index';
 import '@/config/block/node/container/index.tsx';
 import '@/config/block/node/details/index.tsx';

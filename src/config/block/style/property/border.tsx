@@ -4,7 +4,7 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-style',
 		description: 'Sets the style of all sides of the element\'s borders.',
-		syntax: 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset',
+		syntax: '<line-style>{1,4}',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -42,7 +42,7 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-top-style',
 		description: 'Sets the style of the top border of the element.',
-		syntax: 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset',
+		syntax: '<line-style>',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -79,7 +79,7 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-right-style',
 		description: 'Sets the style of the right border of the element.',
-		syntax: 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset',
+		syntax: '<line-style>',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -116,7 +116,7 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-bottom-style',
 		description: 'Sets the style of the bottom border of the element.',
-		syntax: 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset',
+		syntax: '<line-style>',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -153,7 +153,7 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-left-style',
 		description: 'Sets the style of the left border of the element.',
-		syntax: 'none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset',
+		syntax: '<line-style>',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -192,110 +192,110 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'border-width',
 		description: 'Sets the width of all sides of the element\'s borders.',
-		syntax: '<length [0,∞]>',
+		syntax: '<line-width>{1,4}',
 		longhand: ['border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width']
 	},
 	{
 		key: 'border-top-width',
 		description: 'Sets the width of the top border of the element.',
-		syntax: '<length [0,∞]>',
+		syntax: '<line-width>',
 	},
 	{
 		key: 'border-right-width',
 		description: 'Sets the width of the right border of the element.',
-		syntax: '<length [0,∞]>',
+		syntax: '<line-width>',
 	},
 	{
 		key: 'border-bottom-width',
 		description: 'Sets the width of the bottom border of the element.',
-		syntax: '<length [0,∞]>',
+		syntax: '<line-width>',
 	},
 	{
 		key: 'border-left-width',
 		description: 'Sets the width of the left border of the element.',
-		syntax: '<length [0,∞]>',
+		syntax: '<line-width>',
 	},
 
 
 	{
 		key: 'border-color',
 		description: 'Sets the color of all sides of the element\'s borders.',
-		syntax: '<color>',
+		syntax: '[ <color> | <image-1D> ]{1,4}',
 		longhand: ['border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color']
 	},
 	{
 		key: 'border-top-color',
 		description: 'Sets the color of the top border of the element.',
-		syntax: '<color>',
+		syntax: '<color> | <image-1D>',
 	},
 	{
 		key: 'border-right-color',
 		description: 'Sets the color of the right border of the element.',
-		syntax: '<color>',
+		syntax: '<color> | <image-1D>',
 	},
 	{
 		key: 'border-bottom-color',
 		description: 'Sets the color of the bottom border of the element.',
-		syntax: '<color>',
+		syntax: '<color> | <image-1D>',
 	},
 	{
 		key: 'border-left-color',
 		description: 'Sets the color of the left border of the element.',
-		syntax: '<color>',
+		syntax: '<color> | <image-1D>',
 	},
 
 
 	{
 		key: 'border-radius',
 		description: 'Rounds all corners of the element.',
-		syntax: '<length-percentage>{1,4} [/ <length-percentage>{1,4}]?',
+		syntax: '<slash-separated-border-radius-syntax>',
 	},
 	{
 		key: 'border-top-left-radius',
 		description: 'Rounds the top-left corner of the element.',
-		syntax: '<length-percentage>',
+		syntax: '<slash-separated-border-radius-syntax> | <legacy-border-radius-syntax>',
 	},
 	{
 		key: 'border-top-right-radius',
 		description: 'Rounds the top-right corner of the element.',
-		syntax: '<length-percentage>',
+		syntax: '<slash-separated-border-radius-syntax> | <legacy-border-radius-syntax>',
 	},
 	{
 		key: 'border-bottom-right-radius',
 		description: 'Rounds the bottom-right corner of the element.',
-		syntax: '<length-percentage>',
+		syntax: '<slash-separated-border-radius-syntax> | <legacy-border-radius-syntax>',
 	},
 	{
 		key: 'border-bottom-left-radius',
 		description: 'Rounds the bottom-left corner of the element.',
-		syntax: '<length-percentage>',
+		syntax: '<slash-separated-border-radius-syntax> | <legacy-border-radius-syntax>',
 	},
 
 
 	{
 		key: 'border-image-source',
 		description: 'Specifies the source image for the border.',
-		syntax: 'none|<border-image-source>',
+		syntax: 'none | <image>',
 	},
 	{
 		key: 'border-image-slice',
 		description: 'Defines how the border image is sliced into regions.',
-		syntax: '<border-image-slice>',
+		syntax: '[ <number [0,∞]> | <percentage [0,∞]> ]{1,4} && fill?',
 	},
 	{
 		key: 'border-image-width',
 		description: 'Sets the width of the border image.',
-		syntax: '<border-image-width>',
+		syntax: '[ <length-percentage [0,∞]> | <number [0,∞]> | auto ]{1,4}',
 	},
 	{
 		key: 'border-image-outset',
 		description: 'Specifies the amount by which the border image area extends beyond the border box.',
-		syntax: '<border-image-outset>',
+		syntax: '[ <length [0,∞]> | <number [0,∞]> ]{1,4}',
 	},
 	{
 		key: 'border-image-repeat',
 		description: 'Specifies how the border image is repeated or stretched.',
-		syntax: '<border-image-repeat>',
+		syntax: '[ stretch | repeat | round | space ]{1,2}',
 		icons: {
 			'space': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z" /></svg>
@@ -316,12 +316,12 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'outline-width',
 		description: 'Sets the width of the outline around the element.',
-		syntax: 'medium|thin|thick|<length [0,∞]>',
+		syntax: '<line-width>',
 	},
 	{
 		key: 'outline-style',
 		description: 'Sets the style of the outline around the element.',
-		syntax: 'none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset',
+		syntax: 'auto | <outline-line-style>',
 		icons: {
 			'none': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M228,175a8,8,0,0,1-10.92-3l-19-33.2A123.23,123.23,0,0,1,162,155.46l5.87,35.22a8,8,0,0,1-6.58,9.21A8.4,8.4,0,0,1,160,200a8,8,0,0,1-7.88-6.69l-5.77-34.58a133.06,133.06,0,0,1-36.68,0l-5.77,34.58A8,8,0,0,1,96,200a8.4,8.4,0,0,1-1.32-.11,8,8,0,0,1-6.58-9.21L94,155.46a123.23,123.23,0,0,1-36.06-16.69L39,172A8,8,0,1,1,25.06,164l20-35a153.47,153.47,0,0,1-19.3-20A8,8,0,1,1,38.22,99c16.6,20.54,45.64,45,89.78,45s73.18-24.49,89.78-45A8,8,0,1,1,230.22,109a153.47,153.47,0,0,1-19.3,20l20,35A8,8,0,0,1,228,175Z" /></svg>
@@ -358,11 +358,11 @@ export const BORDER_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'outline-color',
 		description: 'Sets the color of the outline around the element.',
-		syntax: '<color>',
+		syntax: 'auto | <color> | <image-1D>',
 	},
 	{
 		key: 'outline-offset',
 		description: 'Sets the space between the outline and the edge of the element\'s border.',
-		syntax: '<length [0,∞]>',
+		syntax: '<length>',
 	},
 ]

@@ -66,7 +66,7 @@ export const DefaultBlocks: Record<NodeID, NodeInstance> = {
 
 						'row-gap': '8rem',
 
-						'font-family': 'Geist, Arial, sans-serif',
+						'font-family': 'Geist, Arial, Sans-Serif',
 						'line-height': '1.6',
 						color: 'rgb(28, 28, 28)',
 						'background-image': 'linear-gradient(135deg, rgb(248, 249, 250) 0%, rgb(233, 236, 239) 100%)',

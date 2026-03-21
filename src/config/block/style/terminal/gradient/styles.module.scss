@@ -1,0 +1,23 @@
+.GradientValue {
+	min-width: 20px;
+	overflow: hidden;
+
+	display: flex;
+	flex-direction: row;
+
+	:global(.GradientSelect) {
+		flex: 1;
+
+		button {
+			border-top-right-radius: 0 !important;
+			border-bottom-right-radius: 0 !important;
+		}
+	}
+
+	:global(.DropdownSelect) {
+		button {
+			border-top-left-radius: 0 !important;
+			border-bottom-left-radius: 0 !important;
+		}
+	}
+}

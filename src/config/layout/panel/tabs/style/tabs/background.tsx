@@ -12,27 +12,31 @@ import { renderStyleRow } from "../factory/component";
  * Renders the Background & Mask tab content
  * Shows background image, color, blend mode, and mask properties
  * 
- * @param NodeID - The selected block identifier
+ * @param nodeID - The selected block identifier
  * @returns JSX for the background tab
  */
-export const renderBackgroundTab = (NodeID: NodeID): React.ReactElement => {
+export const renderBackgroundTab = (nodeID: NodeID): React.ReactElement => {
 
     return (
         <>
             {/* Background Properties */}
             <GroupLayout
+                dividerTitle="Background"
                 styles={{ gridTemplateColumns: "repeat(3,minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ NodeID, label: "Image", propertyName: "background-image" })}
-                        {renderStyleRow({ NodeID, label: "Color", propertyName: "background-color" })}
-                        {renderStyleRow({ NodeID, label: "Blend", propertyName: "background-blend-mode" })}
-                        {renderStyleRow({ NodeID, label: "Repeat", propertyName: "background-repeat", styles: { gridColumn: "1/-1" } })}
-                        {renderStyleRow({ NodeID, label: "Attachment", propertyName: "background-attachment" })}
-                        {renderStyleRow({ NodeID, label: "Clip", propertyName: "background-clip" })}
-                        {renderStyleRow({ NodeID, label: "Origin", propertyName: "background-origin" })}
-                        {renderStyleRow({ NodeID, label: "Size", propertyName: "background-size" })}
-                        {renderStyleRow({ NodeID, label: "Position", propertyName: "background-position", styles: { gridColumn: "2/-1" } })}
+                        {renderStyleRow({ nodeID, label: "Image", propertyName: "background-image" })}
+                        {renderStyleRow({ nodeID, label: "Color", propertyName: "background-color" })}
+                        {renderStyleRow({ nodeID, label: "Blend", propertyName: "background-blend-mode" })}
+
+                        {renderStyleRow({ nodeID, label: "Attachment", propertyName: "background-attachment" })}
+                        {renderStyleRow({ nodeID, label: "Clip", propertyName: "background-clip" })}
+                        {renderStyleRow({ nodeID, label: "Origin", propertyName: "background-origin" })}
+
+                        {renderStyleRow({ nodeID, label: "Size", propertyName: "background-size" })}
+                        {renderStyleRow({ nodeID, label: "Position", propertyName: "background-position" })}
+                        {renderStyleRow({ nodeID, label: "Repeat", propertyName: "background-repeat" })}
+
                     </>
                 )}
             />
@@ -43,15 +47,28 @@ export const renderBackgroundTab = (NodeID: NodeID): React.ReactElement => {
                 styles={{ gridTemplateColumns: "repeat(3,minmax(0, 1fr))" }}
                 content={() => (
                     <>
-                        {renderStyleRow({ NodeID, label: "Image", propertyName: "mask-image" })}
-                        {renderStyleRow({ NodeID, label: "Type", propertyName: "mask-type" })}
-                        {renderStyleRow({ NodeID, label: "Mode", propertyName: "mask-mode" })}
-                        {renderStyleRow({ NodeID, label: "Clip", propertyName: "mask-clip", styles: { gridColumn: "1/-1" } })}
-                        {renderStyleRow({ NodeID, label: "Repeat", propertyName: "mask-repeat", styles: { gridColumn: "1/-1" } })}
-                        {renderStyleRow({ NodeID, label: "Composite", propertyName: "mask-composite" })}
-                        {renderStyleRow({ NodeID, label: "Origin", propertyName: "mask-origin", styles: { gridColumn: "2/-1" } })}
-                        {renderStyleRow({ NodeID, label: "Size", propertyName: "mask-size" })}
-                        {renderStyleRow({ NodeID, label: "Position", propertyName: "mask-position", styles: { gridColumn: "2/-1" } })}
+                        {renderStyleRow({ nodeID, label: "Image", propertyName: "mask-image" })}
+                        {renderStyleRow({ nodeID, label: "Type", propertyName: "mask-type" })}
+                        {renderStyleRow({ nodeID, label: "Mode", propertyName: "mask-mode" })}
+
+                        {renderStyleRow({ nodeID, label: "Composite", propertyName: "mask-composite" })}
+                        {renderStyleRow({ nodeID, label: "Clip", propertyName: "mask-clip" })}
+                        {renderStyleRow({ nodeID, label: "Origin", propertyName: "mask-origin" })}
+
+                        {renderStyleRow({ nodeID, label: "Size", propertyName: "mask-size" })}
+                        {renderStyleRow({ nodeID, label: "Position", propertyName: "mask-position" })}
+                        {renderStyleRow({ nodeID, label: "Repeat", propertyName: "mask-repeat" })}
+                    </>
+                )}
+            />
+
+
+            <GroupLayout
+                dividerTitle="Generic"
+                styles={{ gridTemplateColumns: "repeat(3,minmax(0, 1fr))" }}
+                content={() => (
+                    <>
+                        {renderStyleRow({ nodeID, label: "Blend Mode", propertyName: "mix-blend-mode" })}
                     </>
                 )}
             />

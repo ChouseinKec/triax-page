@@ -2,7 +2,7 @@ import type { ReactElement, ComponentType } from 'react';
 
 // Types
 import type { NodeID } from '@/core/block/node/types/instance';
-import type { StyleKey, StyleValue } from '@/core/block/style/types';
+import type { StyleKey, Value } from '@/core/block/style/types';
 import type { AttributeKey } from '@/core/block/attribute/types';
 import type { ElementKey } from '@/core/block/element/types';
 import type { DeviceKey, OrientationKey, PseudoKey } from '@/core/layout/page/types';
@@ -40,7 +40,7 @@ export type NodeStyles = {
 	[deviceKey: DeviceKey]: {
 		[orientationKey: OrientationKey]: {
 			[pseudoKey: PseudoKey]: {
-				[key in StyleKey]?: StyleValue;
+				[key in StyleKey]?: Value;
 			};
 		};
 	};

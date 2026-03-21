@@ -4,7 +4,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'background-image',
 		description: 'Applies a background image to the element.',
-		syntax: 'none|<bg-image>',
+		syntax: '<bg-image>#',
 	},
 	{
 		key: 'background-color',
@@ -12,21 +12,15 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 		syntax: '<color>',
 	},
 	{
-		key: 'background',
-		description: 'Shorthand for setting all background properties in one declaration.',
-		syntax: '<color>',
-
-	},
-	{
 		key: 'background-blend-mode',
 		description: 'Specifies how multiple background layers blend with each other.',
-		syntax: 'normal|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity',
+		syntax: '<blend-mode>#',
 
 	},
 	{
 		key: 'background-repeat',
 		description: 'Repeats the background image of the element.',
-		syntax: 'repeat-x|repeat-y|[repeat|space|round|no-repeat]{1,2}',
+		syntax: '<repeat-style>#',
 		icons: {
 			'space': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z" /></svg>
@@ -51,7 +45,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'background-attachment',
 		description: 'Determines if the background image scrolls with the page or stays fixed.',
-		syntax: 'scroll|fixed|local',
+		syntax: '<attachment>#',
 		icons: {
 			'fixed': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M235.32,81.37,174.63,20.69a16,16,0,0,0-22.63,0L98.37,74.49c-10.66-3.34-35-7.37-60.4,13.14a16,16,0,0,0-1.29,23.78L85,159.71,42.34,202.34a8,8,0,0,0,11.32,11.32L96.29,171l48.29,48.29A16,16,0,0,0,155.9,224c.38,0,.75,0,1.13,0a15.93,15.93,0,0,0,11.64-6.33c19.64-26.1,17.75-47.32,13.19-60L235.33,104A16,16,0,0,0,235.32,81.37ZM224,92.69h0l-57.27,57.46a8,8,0,0,0-1.49,9.22c9.46,18.93-1.8,38.59-9.34,48.62L48,100.08c12.08-9.74,23.64-12.31,32.48-12.31A40.13,40.13,0,0,1,96.81,91a8,8,0,0,0,9.25-1.51L163.32,32,224,92.68Z" /></svg>
@@ -67,7 +61,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'background-clip',
 		description: 'Defines how far the background extends within the element.',
-		syntax: 'border-box|padding-box|content-box|text',
+		syntax: '<bg-clip>#',
 		icons: {
 			'text': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M87.24,52.59a8,8,0,0,0-14.48,0l-64,136a8,8,0,1,0,14.48,6.81L39.9,160h80.2l16.66,35.4a8,8,0,1,0,14.48-6.81ZM47.43,144,80,74.79,112.57,144ZM200,96c-12.76,0-22.73,3.47-29.63,10.32a8,8,0,0,0,11.26,11.36c3.8-3.77,10-5.68,18.37-5.68,13.23,0,24,9,24,20v3.22A42.76,42.76,0,0,0,200,128c-22.06,0-40,16.15-40,36s17.94,36,40,36a42.73,42.73,0,0,0,24-7.25,8,8,0,0,0,16-.75V132C240,112.15,222.06,96,200,96Zm0,88c-13.23,0-24-9-24-20s10.77-20,24-20,24,9,24,20S213.23,184,200,184Z" /></svg>
@@ -86,7 +80,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'background-origin',
 		description: 'Determines the positioning area for the background image.',
-		syntax: 'border-box|padding-box|content-box',
+		syntax: '<visual-box>#',
 		icons: {
 			'border-box': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Z" /></svg>
@@ -102,22 +96,24 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'background-size',
 		description: 'Resizes the background image of the element.',
-		syntax: '<bg-size>',
+		syntax: '<bg-size>#',
 	},
 	{
 		key: 'background-position',
 		description: 'Positions the background image within the element.',
-		syntax: '<bg-position>',
+		syntax: '<bg-position>#',
 	},
+
+
 	{
 		key: 'mask-image',
 		description: 'Applies a mask image to the element.',
-		syntax: 'none|<image>',
+		syntax: '<mask-reference>#',
 	},
 	{
 		key: 'mask-type',
 		description: 'Specifies the mask type for the element.',
-		syntax: 'luminance|alpha',
+		syntax: 'luminance | alpha',
 		icons: {
 			'alpha': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM200,144a70.57,70.57,0,0,1-.46,8H136V136h63.64Q200,140,200,144ZM183.39,88H136V72h36.89A175.85,175.85,0,0,1,183.39,88ZM136,200h37.19A71.67,71.67,0,0,1,136,215.54Zm0-16V168h59.87a72,72,0,0,1-8,16Zm0-64V104h55.39a116.84,116.84,0,0,1,5.45,16Zm23.89-64H136V32.6A257.22,257.22,0,0,1,159.89,56ZM56,144c0-50,42.26-92.71,64-111.4V215.54A72.08,72.08,0,0,1,56,144Z" /></svg>
@@ -130,7 +126,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-mode',
 		description: 'Specifies the mask mode for the element.',
-		syntax: 'match-source|alpha|luminance',
+		syntax: '<masking-mode>#',
 		icons: {
 			'alpha': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM200,144a70.57,70.57,0,0,1-.46,8H136V136h63.64Q200,140,200,144ZM183.39,88H136V72h36.89A175.85,175.85,0,0,1,183.39,88ZM136,200h37.19A71.67,71.67,0,0,1,136,215.54Zm0-16V168h59.87a72,72,0,0,1-8,16Zm0-64V104h55.39a116.84,116.84,0,0,1,5.45,16Zm23.89-64H136V32.6A257.22,257.22,0,0,1,159.89,56ZM56,144c0-50,42.26-92.71,64-111.4V215.54A72.08,72.08,0,0,1,56,144Z" /></svg>
@@ -146,7 +142,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-clip',
 		description: 'Defines how far the mask extends within the element.',
-		syntax: 'no-clip|view-box|fill-box|stroke-box|content-box|padding-box|border-box',
+		syntax: '[<coord-box> | no-clip]#',
 		icons: {
 			'no-clip': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M53.92,34.62A8,8,0,1,0,42.08,45.38L61.32,66.55C25,88.84,9.38,123.2,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208a127.11,127.11,0,0,0,52.07-10.83l22,24.21a8,8,0,1,0,11.84-10.76Zm47.33,75.84,41.67,45.85a32,32,0,0,1-41.67-45.85ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.16,133.16,0,0,1,25,128c4.69-8.79,19.66-33.39,47.35-49.38l18,19.75a48,48,0,0,0,63.66,70l14.73,16.2A112,112,0,0,1,128,192Zm6-95.43a8,8,0,0,1,3-15.72,48.16,48.16,0,0,1,38.77,42.64,8,8,0,0,1-7.22,8.71,6.39,6.39,0,0,1-.75,0,8,8,0,0,1-8-7.26A32.09,32.09,0,0,0,134,96.57Zm113.28,34.69c-.42.94-10.55,23.37-33.36,43.8a8,8,0,1,1-10.67-11.92A132.77,132.77,0,0,0,231.05,128a133.15,133.15,0,0,0-23.12-30.77C185.67,75.19,158.78,64,128,64a118.37,118.37,0,0,0-19.36,1.57A8,8,0,1,1,106,49.79,134,134,0,0,1,128,48c34.88,0,66.57,13.26,91.66,38.35,18.83,18.83,27.3,37.62,27.65,38.41A8,8,0,0,1,247.31,131.26Z" /></svg>
@@ -174,7 +170,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-repeat',
 		description: 'Repeats the mask image of the element.',
-		syntax: 'repeat-x|repeat-y|[repeat|space|round|no-repeat]{1,2}',
+		syntax: '<repeat-style>#',
 		icons: {
 			'space': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z" /></svg>
@@ -199,7 +195,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-composite',
 		description: 'Defines how multiple mask images are combined.',
-		syntax: 'add|subtract|intersect|exclude',
+		syntax: '<compositing-operator>#',
 		icons: {
 			'add': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M208,64v80a80,80,0,0,1-160,0V64a8,8,0,0,1,16,0v80a64,64,0,0,0,128,0V64a8,8,0,0,1,16,0Z" /></svg>
@@ -218,7 +214,7 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-origin',
 		description: 'Determines the positioning area for the mask image.',
-		syntax: 'view-box|fill-box|stroke-box|content-box|padding-box|border-box',
+		syntax: '<coord-box>#',
 		icons: {
 			'border-box': (
 				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" viewBox="0 0 256 256"><path fill='black' d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Z" /></svg>
@@ -243,11 +239,17 @@ export const BACKGROUND_DEFINITIONS: StyleDefinition[] = [
 	{
 		key: 'mask-size',
 		description: 'Resizes the mask image of the element.',
-		syntax: '<bg-size>',
+		syntax: '<bg-size>#',
 	},
 	{
 		key: 'mask-position',
 		description: 'Positions the mask image within the element.',
-		syntax: '<bg-position>',
+		syntax: '<position>#',
+	},
+
+	{
+		key: 'mix-blend-mode',
+		description: 'Defines how the content of the element blends with the background.',
+		syntax: '<blend-mode> | plus-lighter',
 	},
 ]

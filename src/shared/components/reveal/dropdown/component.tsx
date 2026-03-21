@@ -42,6 +42,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = ({
     className = "",
     anchor = "bottom",
     offset = 5,
+    toggleColor
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -94,6 +95,7 @@ const DropdownReveal: React.FC<DropdownRevealProps> = ({
                 data-is-disabled={isDisabled}
                 data-is-open={isOpen}
                 data-anchor={anchor}
+                style={{ backgroundColor: toggleColor }}
                 title={title}
             >
 

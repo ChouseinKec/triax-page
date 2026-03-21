@@ -47,7 +47,7 @@ const FloatReveal = forwardRef<HTMLDivElement, FloatRevealProps>(({
     const internalRef = useRef<HTMLDivElement | null>(null);
     const floatRef = ref as React.RefObject<HTMLDivElement> || internalRef;
     const position = usePosition(targetRef, floatRef, anchor, isOpen, offset);
-    const styles = { top: `${position.top}px`, left: `${position.left}px`, };
+    const styles = { top: `${position.top}px`, left: `${position.left}px`, minWidth: targetRef.current?.clientWidth };
 
     // Handle keyboard events for auto-close
     const handleKeyDown = useCallback((event: KeyboardEvent): void => {

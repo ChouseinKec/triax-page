@@ -12,14 +12,14 @@ import { devLog } from '@/shared/utilities/dev';
 
 // Helpers
 import { cascadeNodeStyle, updateBlockStyle, pickNodeStyles, pickStyleDefinition, generateCascadePaths } from '@/core/block/style/helpers';
-import { validateStyleKey, validateStyleValue } from '@/core/block/style/helpers';
+import { validateStyleKey, validateValue } from '@/core/block/style/helpers';
 import { validateNodeID, pickNodeInstance } from '@/core/block/node/helpers';
 
 // Managers
 import { getDefaultDeviceKey, getDefaultOrientationKey, getDefaultPseudoKey, getSelectedDeviceKey, getSelectedOrientationKey, getSelectedPseudoKey, getDeviceDefinitions } from '@/core/layout/page/managers/queries';
 
 // Registry
-import { getRegisteredStyles, getRegisteredTokenTypes, getRegisteredTokens } from '@/core/block/style/state/registry';
+import { getRegisteredStyles, getRegisteredTerminals } from '@/core/block/style/state/registry';
 
 /**
  * Sets a style key value for the current device/orientation/pseudo context in block style operations.
@@ -50,7 +50,7 @@ export function setBlockStyle(nodeID: NodeID, styleKey: StyleKey, value: string)
 			styleDefinition: pickStyleDefinition(data.styleKey, getRegisteredStyles()),
 		}))
 		.validate((data) => ({
-			value: validateStyleValue(data.styleKey, data.styleDefinition, value, getRegisteredTokenTypes(), getRegisteredTokens()),
+			value: validateValue(data.styleKey, data.styleDefinition, value, getRegisteredTerminals()),
 		}))
 		.operate((data) => ({
 			updatedStyles: updateBlockStyle(
@@ -115,7 +115,7 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 				getDefaultPseudoKey(),
 				getDeviceDefinitions(),
 			);
-			if (!pseudoPathsRes.success) return { styleValue: pseudoPathsRes };
+			if (!pseudoPathsRes.success) return { Value: pseudoPathsRes };
 
 			const basePathsRes = generateCascadePaths(
 				data.selectedDeviceKey,
@@ -126,12 +126,12 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 				getDefaultPseudoKey(),
 				getDeviceDefinitions(),
 			);
-			if (!basePathsRes.success) return { styleValue: basePathsRes };
+			if (!basePathsRes.success) return { Value: basePathsRes };
 
 			const cascadePaths = data.selectedPseudoKey === getDefaultPseudoKey() ? basePathsRes.data : [...pseudoPathsRes.data, ...basePathsRes.data];
 
 			return {
-				styleValue: cascadeNodeStyle(data.styleKey, data.nodeStyles, data.styleDefinition, cascadePaths),
+				Value: cascadeNodeStyle(data.styleKey, data.nodeStyles, data.styleDefinition, cascadePaths),
 			};
 		})
 		.execute();
@@ -139,9 +139,9 @@ export function copyBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 
 	// Copy the value to clipboard
 	navigator.clipboard
-		.writeText(results.styleValue)
+		.writeText(results.Value)
 		.then(() => {
-			devLog.info(`Copied style ${results.styleKey}: ${results.styleValue}`);
+			devLog.info(`Copied style ${results.styleKey}: ${results.Value}`);
 		})
 		.catch((err) => {
 			devLog.error(`Failed to copy style ${results.styleKey}:`, err);
@@ -170,7 +170,7 @@ export function pasteBlockStyle(nodeID: NodeID, styleKey: StyleKey): void {
 	navigator.clipboard
 		.readText()
 		.then((text) => {
-			const safeValue = validateStyleValue(results.styleKey, results.styleDefinition, text, getRegisteredTokenTypes(), getRegisteredTokens());
+			const safeValue = validateValue(results.styleKey, results.styleDefinition, text, getRegisteredTerminals());
 			if (!safeValue.valid) return devLog.error(`[BlockManager → pasteBlockStyle] ${safeValue.message}`);
 
 			setBlockStyle(results.nodeID, results.styleKey, safeValue.value);
